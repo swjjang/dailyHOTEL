@@ -6,6 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.twoheart.dailyhotel.Const;
 import com.twoheart.dailyhotel.DailyAssert;
+import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.User;
 import com.twoheart.dailyhotel.util.Constants;
@@ -15,6 +16,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -23,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -38,7 +41,7 @@ import retrofit2.Response;
 @RunWith(AndroidJUnit4.class)
 public class DailyMobileAPITest
 {
-    private static final String mNetworkTag = DailyNetworkAPITest.class.getSimpleName();
+    private static final String mNetworkTag = DailyMobileAPITest.class.getSimpleName();
 
     private Context mContext;
 
@@ -643,6 +646,7 @@ public class DailyMobileAPITest
                     try
                     {
                         JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
 
                         int msgCode = responseJSONObject.getInt("msgCode");
                         DailyAssert.assertEquals(100, msgCode);
@@ -681,49 +685,574 @@ public class DailyMobileAPITest
     @Test
     public void requestUserProfileBenefit() throws Exception
     {
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            DailyAssert.assertTrue(dataJSONObject.has("bonusAmount"));
+                            DailyAssert.assertTrue(dataJSONObject.has("couponTotalCount"));
+                            DailyAssert.assertTrue(dataJSONObject.has("exceedLimitedBonus"));
+
+                            DailyAssert.assertTrue(dataJSONObject.getInt("bonusAmount") > 0);
+                            DailyAssert.assertTrue(dataJSONObject.getInt("couponTotalCount") > 0);
+
+                            boolean isExceedBonus = dataJSONObject.getBoolean("exceedLimitedBonus");
+                        } else
+                        {
+                            String msg = responseJSONObject.getString("msg");
+                            DailyAssert.fail(msg);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, networkCallback);
     }
 
     @Test
     public void requestUserCheckEmail() throws Exception
     {
+        retrofit2.Callback mUserCheckEmailCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        String result = responseJSONObject.getString("isSuccess");
+                        DailyAssert.assertNotNull(result);
+
+                        DailyAssert.assertEquals("true", result);
+                        if ("true".equalsIgnoreCase(result) == true)
+                        {
+                            // do nothing
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (JSONException e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Const.TEST_CHECK_EMAIL_ADDRESS, mUserCheckEmailCallback);
     }
 
     @Test
     public void requestUserChangePassword() throws Exception
     {
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        String result = responseJSONObject.getString("isSuccess");
+                        DailyAssert.assertEquals("true", result);
+
+                        if ("true".equalsIgnoreCase(result) == true)
+                        {
+                            // do nothing!
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (JSONException e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserChangePassword(mNetworkTag, Const.TEST_EMAIL, networkCallback);
     }
 
     @Test
     public void requestUserInformationForPayment() throws Exception
     {
+        retrofit2.Callback mUserInformationFinalCheckCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(0, msgCode);
+
+                        if (msgCode == 0)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            String name = dataJSONObject.getString("user_name");
+                            String phone = dataJSONObject.getString("user_phone");
+                            String email = dataJSONObject.getString("user_email");
+                            String userIndex = dataJSONObject.getString("user_idx");
+
+                            DailyAssert.assertNotNull(name);
+                            DailyAssert.assertNotNull(phone);
+                            DailyAssert.assertNotNull(email);
+                            DailyAssert.assertNotNull(userIndex);
+
+                            if (mUser != null)
+                            {
+                                DailyAssert.assertEquals(mUser.getName(), name);
+                                DailyAssert.assertEquals(mUser.getPhone(), phone);
+                                DailyAssert.assertEquals(mUser.getEmail(), email);
+                                DailyAssert.assertEquals(mUser.getUserIdx(), userIndex);
+                            }
+
+                            int bonus = dataJSONObject.getInt("user_bonus");
+                            DailyAssert.assertTrue(bonus >= 0);
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckCallback);
     }
 
     @Test
     public void requestUserUpdateInformationForSocial() throws Exception
     {
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            boolean result = dataJSONObject.getBoolean("is_success");
+                            DailyAssert.assertTrue(result);
+
+                            String serverDate = dataJSONObject.getString("serverDate");
+                            DailyAssert.assertNotNull(serverDate);
+
+                            if (result == true)
+                            {
+                                // do nothing
+                            } else
+                            {
+                                String message = responseJSONObject.getString("msg");
+                                DailyAssert.fail(message);
+                            }
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_idx", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_INDEX));
+        params.put("user_email", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_EMAIL));
+        params.put("user_name", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_NAME));
+        params.put("birthday", Const.TEST_USER_BIRTHDAY);
+
+        // 전화번호 일단 패스
+        String phoneNumber = "";
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            params.put("user_phone", phoneNumber.replaceAll("-", ""));
+        }
+
+        // 추천도 일단 패스
+        String recommender = "";
+        if (Util.isTextEmpty(recommender) == false)
+        {
+            params.put("recommendation_code", recommender);
+        }
+
+        // 베내핏도 패스
+        boolean isBenefit = true;
+        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+
+        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, networkCallback);
     }
 
     @Test
     public void requestUserBillingCardList() throws Exception
     {
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                        DailyAssert.assertNotNull(dataJSONArray);
+
+                        ArrayList<CreditCard> creditCardArrayList = new ArrayList<>();
+
+                        int length = dataJSONArray.length();
+                        if (length == 0)
+                        {
+                            // do nothing
+                        } else
+                        {
+                            JSONObject jsonObject;
+                            for (int i = 0; i < length; i++)
+                            {
+                                jsonObject = dataJSONArray.getJSONObject(i);
+
+                                // 목록에서는 빌링키가 필요없다.
+                                CreditCard creditCard = new CreditCard(//
+                                    jsonObject.getString("card_name"), //
+                                    jsonObject.getString("print_cardno"),//
+                                    jsonObject.getString("billkey"), //
+                                    jsonObject.getString("cardcd"));
+
+                                creditCardArrayList.add(creditCard);
+
+                                DailyAssert.assertFalse("카드 이름", Util.isTextEmpty(creditCard.name));
+                                DailyAssert.assertFalse("카드 번호", Util.isTextEmpty(creditCard.number));
+                                DailyAssert.assertFalse("카드 키", Util.isTextEmpty(creditCard.billingkey));
+                                DailyAssert.assertFalse("카드 사명", Util.isTextEmpty(creditCard.cardcd));
+
+                                String cardcds = CreditCard.getCardCDName(mContext, creditCard.cardcd);
+                                DailyAssert.assertFalse("카드사명 찾기 실패", Util.isTextEmpty(cardcds));
+                            }
+
+                            if (creditCardArrayList.size() > 0)
+                            {
+                                String checkNum = Crypto.getUrlDecoderEx(Const.TEST_SKIP_DELETE_CREDITCARD_NUMBER);
+
+                                boolean isNeedCheck = Util.isTextEmpty(checkNum) == false ? true : false;
+                                if (isNeedCheck == false)
+                                {
+                                    CreditCard creditCard = creditCardArrayList.get(creditCardArrayList.size() - 1);
+                                    requestUserDeleteBillingCard(creditCard.billingkey);
+                                } else
+                                {
+                                    for (int i = creditCardArrayList.size() - 1; i >= 0; i--)
+                                    {
+                                        CreditCard creditCard = creditCardArrayList.get(i);
+                                        if (checkNum.equalsIgnoreCase(creditCard.number) == false)
+                                        {
+                                            requestUserDeleteBillingCard(creditCard.billingkey);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserBillingCardList(mNetworkTag, networkCallback);
     }
 
-    @Test
-    public void requestUserDeleteBillingCard() throws Exception
+    @Ignore
+    public void requestUserDeleteBillingCard(String billingkey) throws Exception
     {
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        DailyAssert.assertNotNull(dataJSONObject);
+
+                        boolean result = false;
+
+                        if (dataJSONObject != null)
+                        {
+                            result = dataJSONObject.getInt("isSuccess") == 1;
+                        }
+
+                        DailyAssert.assertTrue(result);
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserDeleteBillingCard(mNetworkTag, billingkey, networkCallback);
     }
 
     @Test
     public void requestStayList() throws Exception
     {
-
+//        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+//        {
+//            @Override
+//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+//            {
+//                DailyAssert.setData(call, response);
+//
+//                if (response != null && response.isSuccessful() && response.body() != null)
+//                {
+//                    int hotelSaleCount;
+//
+//                    try
+//                    {
+//                        JSONObject responseJSONObject = response.body();
+//                        DailyAssert.assertNotNull(responseJSONObject);
+//
+//                        int msgCode = responseJSONObject.getInt("msgCode");
+//                        DailyAssert.assertEquals(100, msgCode);
+//                        if (msgCode == 100)
+//                        {
+//                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+//                            DailyAssert.assertNotNull(dataJSONObject);
+//
+//                            hotelSaleCount = dataJSONObject.getInt("hotelSalesCount");
+//                            DailyAssert.assertNotNull(hotelSaleCount);
+//                        } else
+//                        {
+//                            hotelSaleCount = 0;
+//                        }
+//                    } catch (Exception e)
+//                    {
+//                        hotelSaleCount = 0;
+//                    }
+//
+//
+//                } else
+//                {
+//                    DailyAssert.fail();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSONObject> call, Throwable t)
+//            {
+//                mOnNetworkControllerListener.onError(t);
+//            }
+//        };
+//
+//        HashMap<String, Object> queryhMap = new HashMap<>();
+//
+//        queryhMap.put("dateCheckIn", dateCheckIn);
+//        queryhMap.put("stays", stays);
+//        queryhMap.put("provinceIdx", provinceIdx);
+//
+//        if (areaIdx != 0)
+//        {
+//            queryhMap.put("areaIdx", areaIdx);
+//        }
+//
+//        if (persons != 0)
+//        {
+//            queryhMap.put("persons", persons);
+//        }
+//
+//        if (category != null && Category.ALL.code.equalsIgnoreCase(category.code) == false)
+//        {
+//            queryhMap.put("category", category.code);
+//        }
+//
+//        //        if(mBedTypeList != null && mBedTypeList.size() > 0)
+//        //        {
+//        //            hashMap.put("bedType", mBedTypeList);
+//        //        }
+//        //
+//        //        if(mLuxuryList != null && mLuxuryList.size() > 0)
+//        //        {
+//        //            hashMap.put("luxury", mLuxuryList);
+//        //        }
+//
+//        if (page > 0)
+//        {
+//            queryhMap.put("page", page);
+//            queryhMap.put("limit", limit);
+//        }
+//
+//        if (Constants.SortType.DEFAULT != mSort)
+//        {
+//            if (Util.isTextEmpty(sortProperty) == false)
+//            {
+//                queryhMap.put("sortProperty", sortProperty);
+//            }
+//
+//            if (Util.isTextEmpty(sortDirection) == false)
+//            {
+//                queryhMap.put("sortDirection", sortDirection);
+//            }
+//
+//            if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
+//            {
+//                queryhMap.put("latitude", latitude);
+//                queryhMap.put("longitude", longitude);
+//            }
+//        }
+//
+//        queryhMap.put("details", details);
+//
+//        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, params.toParamsMap(), params.getBedTypeList(), params.getLuxuryList(), networkCallback);
     }
 
     @Test
