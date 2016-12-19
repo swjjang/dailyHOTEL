@@ -262,9 +262,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
     private void startGourmetCall(final String phoneNumber)
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
-
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
             @Override
@@ -279,6 +276,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+
+                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(GourmetBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
