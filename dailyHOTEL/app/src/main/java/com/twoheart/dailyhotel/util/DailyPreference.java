@@ -64,8 +64,10 @@ public class DailyPreference
     private static final String KEY_STAY_RECENT_PLACES = "210";
     private static final String KEY_GOURMET_RECENT_PLACES = "211";
 
+
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
+    private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
 
     private static final String KEY_SETTING_MIGRATION_FLAG = "1003";
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
@@ -794,6 +796,16 @@ public class DailyPreference
     public void setBackgroundAppTime(long value)
     {
         setValue(mEditor, KEY_BACKGROUND_APP_TIME, value);
+    }
+
+    public String getBaseUrl()
+    {
+        return getValue(mPreferences, KEY_BASE_URL, Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT));
+    }
+
+    public void setBaseUrl(String value)
+    {
+        setValue(mEditor, KEY_BASE_URL, value);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

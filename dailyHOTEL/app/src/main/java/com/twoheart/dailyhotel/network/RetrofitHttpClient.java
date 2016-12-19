@@ -8,6 +8,8 @@ import com.twoheart.dailyhotel.network.factory.JSONConverterFactory;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,10 +74,21 @@ public class RetrofitHttpClient implements Constants
 
         mTagCancellableCallAdapterFactory = TagCancellableCallAdapterFactory.create();
 
-        mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
-            .client(mOkHttpClient)//
-            .addConverterFactory(JSONConverterFactory.create())//
-            .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
+        if(Constants.DEBUG == true)
+        {
+            String baseUrl = DailyPreference.getInstance(context).getBaseUrl();
+
+            mRetrofit = new Retrofit.Builder().baseUrl(baseUrl)//
+                .client(mOkHttpClient)//
+                .addConverterFactory(JSONConverterFactory.create())//
+                .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
+        } else
+        {
+            mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
+                .client(mOkHttpClient)//
+                .addConverterFactory(JSONConverterFactory.create())//
+                .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
+        }
 
         mDailyMobileService = mRetrofit.create(DailyMobileService.class);
     }

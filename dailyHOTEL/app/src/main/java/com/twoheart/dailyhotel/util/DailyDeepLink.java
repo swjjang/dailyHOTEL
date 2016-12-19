@@ -109,8 +109,10 @@ public class DailyDeepLink
     private static final String WISHLIST_GOURMET_V9 = "wlg"; // 위시리스트 고메
     private static final String COLECTION_VIWE_V9 = "cv"; // 모아보기 화면
 
+    private static final String PARAM_V10_BASE_URL = "baseUrl"; // 서버 BASE URL 변경
+
     private static final int MINIMUM_VERSION_CODE = 2;
-    private static final int MAXIMUM_VERSION_CODE = 10;
+    private static final int MAXIMUM_VERSION_CODE = 11;
 
     private static DailyDeepLink mInstance;
 
@@ -178,7 +180,24 @@ public class DailyDeepLink
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    // Version 9
+    // Version 11
+    public String getBaseUrl()
+    {
+        String value;
+
+        if (mVersionCode >= 11)
+        {
+            value = mParams.get(PARAM_V10_BASE_URL);
+        } else
+        {
+            value = null;
+        }
+
+        return value;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 10
     public String getStartDate()
     {
         String value;
@@ -1215,14 +1234,6 @@ public class DailyDeepLink
         if (putVersionCode(versionCode) == false)
         {
             // 현재 버전 Deeplink 동작가능범위 초과!
-            clear();
-            return false;
-        }
-
-        String requiredParam = versionCode > MINIMUM_VERSION_CODE ? PARAM_V3_VIEW : PARAM_V2_VIEW;
-        if (keySet.contains(requiredParam) == false)
-        {
-            // view는 기본요소라서 없으면 안된다
             clear();
             return false;
         }
