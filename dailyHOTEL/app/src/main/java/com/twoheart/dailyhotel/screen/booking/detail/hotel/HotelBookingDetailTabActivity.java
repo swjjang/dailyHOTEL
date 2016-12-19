@@ -330,7 +330,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
 
-                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_FRONT, null);
                     } catch (ActivityNotFoundException e)
                     {
@@ -382,7 +382,7 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
 
-                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_RESERVATION, null);
                     } catch (ActivityNotFoundException e)
                     {
