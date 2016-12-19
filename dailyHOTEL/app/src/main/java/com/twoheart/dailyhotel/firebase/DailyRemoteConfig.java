@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -139,7 +140,10 @@ public class DailyRemoteConfig
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.logException(e);
+                    if (e instanceof FirebaseRemoteConfigFetchThrottledException == false)
+                    {
+                        Crashlytics.logException(e);
+                    }
                 } else
                 {
                     ExLog.e(e.toString());
