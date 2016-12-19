@@ -441,7 +441,7 @@ public class StayMainFragment extends PlaceMainFragment
 
             Intent intent = StayRegionListActivity.newInstance(getContext(), //
                 mStayCuration.getProvince(), checkInSaleTime, night);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+            getActivity().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
             {
@@ -1293,6 +1293,8 @@ public class StayMainFragment extends PlaceMainFragment
 
         SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
         int night = checkInSaleTime.getOffsetDailyDay();
+
+        boolean isOverseas = DailyDeepLink.getInstance().getIsOverseas();
 
         Intent intent = StayRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, checkInSaleTime, night);
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);

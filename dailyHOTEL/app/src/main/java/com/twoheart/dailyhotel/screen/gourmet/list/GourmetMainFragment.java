@@ -367,7 +367,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             Province province = mGourmetCuration.getProvince();
 
             Intent intent = GourmetRegionListActivity.newInstance(getContext(), province, saleTime);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+            getActivity().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
             {
