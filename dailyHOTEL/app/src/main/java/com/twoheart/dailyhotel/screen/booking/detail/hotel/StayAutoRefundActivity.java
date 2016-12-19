@@ -479,6 +479,7 @@ public class StayAutoRefundActivity extends BaseActivity
 
             boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
             setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
+
             mDialog.show();
         } catch (Exception e)
         {
