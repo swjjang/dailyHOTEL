@@ -262,7 +262,6 @@ public class DailyMobileAPITest
             || Const.TEST_PASSWORD.equalsIgnoreCase(mUser.getPassword()) == false//
             || Const.TEST_USER_BIRTHDAY.equalsIgnoreCase(mUser.getBirthDay()) == false)
         {
-
             retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
             {
                 @Override
