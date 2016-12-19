@@ -177,7 +177,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, networkCallback);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserLogin(mNetworkTag, params, networkCallback);
     }
 
     @Ignore
