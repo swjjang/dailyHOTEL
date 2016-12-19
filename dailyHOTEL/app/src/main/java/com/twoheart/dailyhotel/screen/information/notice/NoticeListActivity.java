@@ -185,9 +185,10 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
                             if (mNoticeListAdapter == null)
                             {
                                 mNoticeListAdapter = new NoticeListAdapter(NoticeListActivity.this, 0, new ArrayList<Notice>());
+                            } else
+                            {
+                                mNoticeListAdapter.clear();
                             }
-
-                            mNoticeListAdapter.clear();
 
                             mListView.setVisibility(View.VISIBLE);
                             mEmptyView.setVisibility(View.GONE);

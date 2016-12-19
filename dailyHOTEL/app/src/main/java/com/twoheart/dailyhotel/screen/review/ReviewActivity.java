@@ -727,49 +727,6 @@ public class ReviewActivity extends BaseActivity
         }
     }
 
-    private void recordAnalytics(PlaceType placeType, String ratingName, boolean isSatisfaction)
-    {
-        //        if (isSatisfaction == true)
-        //        {
-        //            switch (placeType)
-        //            {
-        //                case HOTEL:
-        //                {
-        //                    AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-        //                        , AnalyticsManager.Action.HOTEL_SATISFACTION_DETAILED_POPPEDUP, ratingName, null);
-        //                    break;
-        //                }
-        //
-        //                case FNB:
-        //                {
-        //                    AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-        //                        , AnalyticsManager.Action.GOURMET_SATISFACTION_DETAILED_POPPEDUP, ratingName, null);
-        //                    break;
-        //                }
-        //            }
-        //        } else
-        //        {
-        //            switch (placeType)
-        //            {
-        //                case HOTEL:
-        //                {
-        //                    Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
-        //                    AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-        //                        , AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
-        //                    break;
-        //                }
-        //
-        //                case FNB:
-        //                {
-        //                    Map<String, String> eventParams = Collections.singletonMap(AnalyticsManager.KeyType.TICKET_NAME, mTicketName);
-        //                    AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-        //                        , AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP, ratingName, eventParams);
-        //                    break;
-        //                }
-        //            }
-        //        }
-    }
-
     private ReviewLayout.OnEventListener mOnEventListener = new ReviewLayout.OnEventListener()
     {
         private void sendMessageDelayed(int position)

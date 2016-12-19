@@ -118,9 +118,10 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
         if (mBonusListAdapter == null)
         {
             mBonusListAdapter = new BonusListAdapter(mContext, 0, new ArrayList<Bonus>());
+        } else
+        {
+            mBonusListAdapter.clear();
         }
-
-        mBonusListAdapter.clear();
 
         if (list != null && list.size() != 0)
         {

@@ -45,6 +45,8 @@ public abstract class KeyframesDrawableAnimationCallback {
 
   private long mMinimumMillisBetweenProgressUpdates = -1;
   private long mPreviousProgressMillis = 0;
+  private long mPausedCalibrateMillis;
+  private long mSavedCalibrateMillis;
 
   /**
    * Creates a KeyframesDrawableAnimationCallback appropriate for the API level of the device.
@@ -99,6 +101,8 @@ public abstract class KeyframesDrawableAnimationCallback {
   public void start() {
     mStopAtLoopEnd = false;
     mStartTimeMillis = 0;
+    mPausedCalibrateMillis = 0;
+    mSavedCalibrateMillis = 0;
     mCurrentLoopNumber = -1;
     cancelCallback();
     postCallback();
@@ -110,6 +114,8 @@ public abstract class KeyframesDrawableAnimationCallback {
   public void stop() {
     cancelCallback();
     mStartTimeMillis = 0;
+    mPausedCalibrateMillis = 0;
+    mSavedCalibrateMillis = 0;
     mCurrentLoopNumber = -1;
     mListener.get().onStop();
   }
@@ -118,6 +124,11 @@ public abstract class KeyframesDrawableAnimationCallback {
    * Pauses the callbacks animation and saves start time.
    */
   public void pause() {
+    if(mStartTimeMillis < 0)
+    {
+      return;
+    }
+
     cancelCallback();
     mStartTimeMillis *= -1;
   }
@@ -129,6 +140,12 @@ public abstract class KeyframesDrawableAnimationCallback {
    * or #pause() when no longer in use!
    */
   public void resume() {
+    if(mStartTimeMillis >= 0)
+    {
+      return;
+    }
+
+    mPausedCalibrateMillis = mPreviousProgressMillis;
     mStopAtLoopEnd = false;
     cancelCallback();
     postCallback();
@@ -142,7 +159,22 @@ public abstract class KeyframesDrawableAnimationCallback {
     mStopAtLoopEnd = true;
   }
 
-  protected void advanceAnimation(final long frameTimeMillis) {
+  protected void advanceAnimation(long frameTimeMillis) {
+    long currentTimeMillis = frameTimeMillis;
+
+    if(mPausedCalibrateMillis != 0)
+    {
+      if(mStartTimeMillis < 0)
+      {
+        frameTimeMillis = mPausedCalibrateMillis;
+        mSavedCalibrateMillis = currentTimeMillis;
+        mStartTimeMillis *= -1;
+      } else
+      {
+        frameTimeMillis = mPausedCalibrateMillis + (frameTimeMillis - mSavedCalibrateMillis);
+      }
+    }
+
     if (mListener.get() == null) {
       cancelCallback();
       mStartTimeMillis = 0;
@@ -152,10 +184,6 @@ public abstract class KeyframesDrawableAnimationCallback {
     }
     if (mStartTimeMillis == 0) {
       mStartTimeMillis = frameTimeMillis;
-    } else if (mStartTimeMillis < 0) {
-      long pausedTimeMillis = frameTimeMillis - mPreviousProgressMillis;
-      mStartTimeMillis = mStartTimeMillis * -1 + pausedTimeMillis;
-      mPreviousProgressMillis += pausedTimeMillis;
     }
 
     int currentLoopNumber = (int) (frameTimeMillis - mStartTimeMillis) / mMillisPerLoop;
@@ -172,6 +200,12 @@ public abstract class KeyframesDrawableAnimationCallback {
       shouldUpdateProgress = false;
     } else {
       mPreviousProgressMillis = frameTimeMillis;
+
+      if(mPausedCalibrateMillis != 0)
+      {
+        mPausedCalibrateMillis = mPreviousProgressMillis;
+        mSavedCalibrateMillis = currentTimeMillis;
+      }
     }
 
     if (shouldUpdateProgress) {

@@ -64,7 +64,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
         params.put("social_id", "0");
         params.put("user_type", Constants.DAILY_USER);
 
-        DailyMobileAPI.getInstance(mContext).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginCallback);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserLogin(mNetworkTag, params, mDailyUserLoginCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

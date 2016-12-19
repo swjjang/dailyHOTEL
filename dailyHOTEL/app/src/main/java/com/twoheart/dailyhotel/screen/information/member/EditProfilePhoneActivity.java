@@ -70,7 +70,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         Intent intent = getIntent();
         mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
-        Type type = null;
+        Type type;
 
         try
         {

@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.util.Crypto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -65,6 +66,8 @@ public class RetrofitHttpClient implements Constants
         mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslSocketFactory, Platform.get()//
             .trustManager(sslSocketFactory))//
             .addInterceptor(new HeaderInterceptor())//
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build();
 
         mTagCancellableCallAdapterFactory = TagCancellableCallAdapterFactory.create();

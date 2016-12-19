@@ -505,7 +505,6 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             {
                 float vectorValue = (float) scrollY / halfToolbarHeight;
 
-                int alphaValue = (int) (0x4d * vectorValue);
                 mToolbar.setBackgroundColor(0x00000000);
 
                 float textAlphaValue = 1 - vectorValue * 2;
@@ -522,8 +521,6 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
                 int alphaValue = (int) (0x4d * vectorValue);
                 mToolbar.setBackgroundColor((alphaValue << 24) & 0xff000000);
 
-                float textAlphaValue = 1 - vectorValue * 2;
-                textAlphaValue = textAlphaValue < 0 ? 0 : textAlphaValue;
                 mPlaceNameTextView.setAlpha(0.0f);
                 mPeriodTextView.setAlpha(0.0f);
 

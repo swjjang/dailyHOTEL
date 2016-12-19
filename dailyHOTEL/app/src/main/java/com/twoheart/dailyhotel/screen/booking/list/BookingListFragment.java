@@ -141,9 +141,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     mAdapter.setOnUserActionListener(mOnUserActionListener);
                     mListView.setOnItemClickListener(BookingListFragment.this);
                     mListView.setAdapter(mAdapter);
+                } else
+                {
+                    mAdapter.clear();
                 }
 
-                mAdapter.clear();
                 mAdapter.addAll(bookingArrayList);
                 mAdapter.notifyDataSetChanged();
 
@@ -286,7 +288,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             return;
         }
 
-        Intent intent = null;
+        Intent intent;
 
         if (booking.payType == CODE_PAY_TYPE_CARD_COMPLETE || booking.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
         {
@@ -360,7 +362,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
     private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType, int reservationIndex)
     {
-        Intent intent = null;
+        Intent intent;
 
         switch (placeType)
         {

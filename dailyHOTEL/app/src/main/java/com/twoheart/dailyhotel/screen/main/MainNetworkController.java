@@ -450,7 +450,7 @@ public class MainNetworkController extends BaseNetworkController
                     }
                 } catch (Exception e)
                 {
-                    mOnNetworkControllerListener.onError(e);
+                    // do nothing
                 }
             } else
             {
@@ -461,7 +461,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            // do nothing
         }
     };
 

@@ -44,9 +44,10 @@ public class CountryCodeListLayout implements OnItemClickListener
         if (mCountryCodeListAdapter == null)
         {
             mCountryCodeListAdapter = new CountryCodeListAdapter(mContext, 0, new ArrayList<String[]>());
+        } else
+        {
+            mCountryCodeListAdapter.clear();
         }
-
-        mCountryCodeListAdapter.clear();
 
         if (list == null)
         {

@@ -140,6 +140,9 @@ public class CreditCardLayout extends FrameLayout
         {
             mAdapter = new CreditCardListAdapter(getContext(), R.layout.list_row_creditcard, null);
             mListView.setAdapter(mAdapter);
+        } else
+        {
+            mAdapter.clear();
         }
 
         if (arrayList == null || arrayList.size() == 0)
@@ -152,7 +155,6 @@ public class CreditCardLayout extends FrameLayout
             mBottomLayout.setVisibility(View.VISIBLE);
         }
 
-        mAdapter.clear();
         mAdapter.addAll(arrayList);
 
         if (selectedCreditCard != null)

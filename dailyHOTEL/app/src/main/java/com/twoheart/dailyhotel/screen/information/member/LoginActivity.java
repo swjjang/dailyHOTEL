@@ -342,7 +342,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyMobileAPI.getInstance(this).requestFacebookUserSignin(mNetworkTag, params, mSocialUserLoginCallback);
+        DailyMobileAPI.getInstance(this).requestFacebookUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }
 
     private void registerKakaokUser(long id)
@@ -368,7 +368,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.putAll(params);
         mStoreParams.put("market_type", RELEASE_STORE.getName());
 
-        DailyMobileAPI.getInstance(this).requestKakaoUserSignin(mNetworkTag, params, mSocialUserLoginCallback);
+        DailyMobileAPI.getInstance(this).requestKakaoUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }
 
     @Override
@@ -468,7 +468,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         mStoreParams.putAll(params);
 
-        DailyMobileAPI.getInstance(this).requestDailyUserSignin(mNetworkTag, params, mDailyUserLoginCallback);
+        DailyMobileAPI.getInstance(this).requestDailyUserLogin(mNetworkTag, params, mDailyUserLoginCallback);
 
         AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
@@ -822,11 +822,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                             if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                             {
-                                DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+                                DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
                                 AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
                             } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                             {
-                                DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserSignin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+                                DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
                                 AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
                             }
 

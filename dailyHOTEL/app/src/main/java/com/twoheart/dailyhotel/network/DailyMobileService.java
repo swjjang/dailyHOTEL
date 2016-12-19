@@ -25,318 +25,327 @@ public interface DailyMobileService
     Call<JSONObject> requestStatusServer(@Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/common/version")
-    Call<JSONObject> requestCommonVersion();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCommonVersion(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/common/datetime")
-    Call<JSONObject> requestCommonDateTime();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCommonDateTime(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/users/profile")
-    Call<JSONObject> requestUserProfile();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestUserProfile(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
-    @GET("user/session/bonus/all")
-    Call<JSONObject> requestUserBonus();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestUserBonus(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
-    @POST("api/v4/users/profile")
-    Call<JSONObject> requestUserInformationUpdate(@FieldMap Map<String, String> params);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserInformationUpdate(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> params);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/users/profile/benefit")
-    Call<JSONObject> requestUserProfileBenefit();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestUserProfileBenefit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
-    @POST("user/check/email_auth")
-    Call<JSONObject> requestUserCheckEmail(@Field("userEmail") String userEmail);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserCheckEmail(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("userEmail") String userEmail);
 
     @FormUrlEncoded
-    @POST("user/change_pw")
-    Call<JSONObject> requestUserChangePassword(@Field("userEmail") String userEmail);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserChangePassword(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("userEmail") String userEmail);
 
-    @GET("api/user/information")
-    Call<JSONObject> requestUserInformationForPayment();
-
-    @FormUrlEncoded
-    @POST("api/user/session/update/fb_user")
-    Call<JSONObject> requestUserUpdateInformationForSocial(@FieldMap Map<String, String> params);
-
-    @POST("api/user/session/billing/card/info")
-    Call<JSONObject> requestUserBillingCardList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestUserInformationForPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
-    @POST("api/user/session/billing/card/del")
-    Call<JSONObject> requestUserDeleteBillingCard(@Field("billkey") String billkey);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserUpdateInformationForSocial(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> params);
+
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserBillingCardList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @FormUrlEncoded
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserDeleteBillingCard(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("billkey") String billkey);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotels/sales")
-    Call<JSONObject> requestStayList(@QueryMap Map<String, Object> queryMap, @Query("bedType") List<String> bedTypeList, @Query("luxury") List<String> luxuryList);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStayList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                     @QueryMap Map<String, Object> queryMap, //
+                                     @Query("bedType") List<String> bedTypeList, //
+                                     @Query("luxury") List<String> luxuryList);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotels/sales/search/auto_complete")
-    Call<JSONObject> requestStaySearchAutoCompleteList(@Query("dateCheckIn") String date, @Query("stays") int stays, @Query("term") String term);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStaySearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                       @Query("dateCheckIn") String date, //
+                                                       @Query("stays") int stays, //
+                                                       @Query("term") String term);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotel/region")
-    Call<JSONObject> requestStayRegionList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStayRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
-    @GET("api/hotel/v1/payment/detail")
-    Call<JSONObject> requestStayPaymentInformation(@Query("room_idx") int roomIndex,//
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStayPaymentInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                   @Query("room_idx") int roomIndex,//
                                                    @Query("checkin_date") String date,//
                                                    @Query("nights") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotel/{hotelIdx}")
-    Call<JSONObject> requestStayDetailInformation(@Path("hotelIdx") int index, @Query("dateCheckIn") String date, @Query("stays") int nights);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStayDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateCheckIn") String date, @Query("stays") int nights);
 
     @FormUrlEncoded
-    @POST("api/hotel/v1/payment/session/easy")
-    Call<JSONObject> requestStayPayment(@FieldMap Map<String, String> fieldMap);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestStayPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> fieldMap);
 
-    @FormUrlEncoded
-    @POST("api/fnb/reservation/session/rating/msg/update")
-    Call<JSONObject> requestGourmetDetailRating(@FieldMap Map<String, String> fieldMap);
-
-    @GET("api/fnb/reservation/booking/list")
-    Call<JSONObject> requestBookingList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestBookingList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/reservation/fnb/{fnbReservationIdx}")
-    Call<JSONObject> requestGourmetBookingDetailInformation(@Path("fnbReservationIdx") int index);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetBookingDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
-    @GET("api/v2/reservation/fnb/{reservationIdx}/receipt")
-    Call<JSONObject> requestGourmetReceipt(@Path("reservationIdx") int index);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetReceipt(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
-    @POST("api/fnb/reservation/session/hidden")
-    Call<JSONObject> requestGourmetHiddenBooking(@Field("reservation_rec_idx") int index);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestGourmetHiddenBooking(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("reservation_rec_idx") int index);
 
-    @GET("api/fnb/reservation/session/vbank/account/info")
-    Call<JSONObject> requestGourmetAccountInformation(@Query("tid") String tid);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetAccountInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("tid") String tid);
 
-    @GET("gourmet/region/v1/list")
-    Call<JSONObject> requestGourmetRegionList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/gourmet/sales")
-    Call<JSONObject> requestGourmetList(@QueryMap Map<String, Object> queryMap,//
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                        @QueryMap Map<String, Object> queryMap,//
                                         @Query("category") List<String> categoryList,//
                                         @Query("timeFrame") List<String> timeList,//
                                         @Query("luxury") List<String> luxuryList);
 
-    @GET("api/v3/gourmet/sales/search/auto_complete")
-    Call<JSONObject> requestGourmetSearchAutoCompleteList(@Query("reserveDate") String date, @Query("term") String term);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetSearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reserveDate") String date, @Query("term") String term);
 
-    @GET("api/v3/gourmet/{restaurantIdx}")
-    Call<JSONObject> requestGourmetDetailInformation(@Path("restaurantIdx") int index, @Query("dateSale") String date);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateSale") String date);
 
-    @GET("api/fnb/sale/ticket/payment/info")
-    Call<JSONObject> requestGourmetPaymentInformation(@Query("sale_reco_idx") int index);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetPaymentInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("sale_reco_idx") int index);
 
-    @GET("api/fnb/sale/session/ticket/sell/check")
-    Call<JSONObject> requestGourmetCheckTicket(@Query("sale_reco_idx") int index,//
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestGourmetCheckTicket(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                               @Query("sale_reco_idx") int index,//
                                                @Query("sday") String day,//
                                                @Query("ticket_count") int count,//
                                                @Query("arrival_time") String time);
 
     @FormUrlEncoded
-    @POST("api/fnb/payment/session/easy")
-    Call<JSONObject> requestGourmetPayment(@FieldMap Map<String, String> fieldMap);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestGourmetPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> fieldMap);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/reservation/account/{tid}")
-    Call<JSONObject> requestDepositWaitDetailInformation(@Path("tid") String tid);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestDepositWaitDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/reservation/hotel/{hotelReservationIdx}")
-    Call<JSONObject> requestStayBookingDetailInformation(@Path("hotelReservationIdx") int index);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStayBookingDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
-    @POST("api/reserv/mine/hidden")
-    Call<JSONObject> requestStayHiddenBooking(@Field("idx") int index);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestStayHiddenBooking(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("idx") int index);
 
-    @GET("api/reserv/receipt")
-    Call<JSONObject> requestStayReceipt(@Query("reservation_idx") String index);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestStayReceipt(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reservation_idx") String index);
 
-    @GET("api/daily/event/list")
-    Call<JSONObject> requestEventList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestEventList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
-    @GET("api/v1/notice/new")
-    Call<JSONObject> requestEventNCouponNNoticeNewCount(@Query("eventLatestDate") String eventLatestDate,//
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestEventNCouponNNoticeNewCount(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                        @Query("eventLatestDate") String eventLatestDate,//
                                                         @Query("couponLatestDate") String couponLatestDate,//
                                                         @Query("noticesLatestDate") String noticeLatestDate);
 
-    @GET("api/daily/event/page")
-    Call<JSONObject> requestEventPageUrl(@Query("daily_event_idx") int eventIndex, @Query("store_type") String store);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestEventPageUrl(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                         @Query("daily_event_idx") int eventIndex, //
+                                         @Query("store_type") String store);
 
-    @GET("event/v1/banner")
-    Call<JSONObject> requestEventBannerList(@Query("type") String place);
-
-    @FormUrlEncoded
-    @POST("api/v3/users/myself/phones/verification/start")
-    Call<JSONObject> requestDailyUserVerification(@Field("phone") String phone, @Field("force_to_proceed") boolean force);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestEventBannerList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("type") String place);
 
     @FormUrlEncoded
-    @POST("api/v3/users/myself/phones/verification/check")
-    Call<JSONObject> requestDailyUserUpdatePhoneNumber(@Field("phone") String phone, @Field("code") String code);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestDailyUserVerification(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                  @Field("phone") String phone, //
+                                                  @Field("force_to_proceed") boolean force);
 
     @FormUrlEncoded
-    @POST("api/v3/users/signup/normal/validation")
-    Call<JSONObject> requestSignupValidation(@FieldMap Map<String, String> fieldMap);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestDailyUserUpdatePhoneNumber(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                       @Field("phone") String phone, //
+                                                       @Field("code") String code);
 
     @FormUrlEncoded
-    @POST("api/v3/users/signup/normal/phones/verification/start")
-    Call<JSONObject> requestDailyUserSignupVerfication(@Field("signup_key") String signupKey,//
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestSignupValidation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> fieldMap);
+
+    @FormUrlEncoded
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestDailyUserSignupVerfication(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                       @Field("signup_key") String signupKey,//
                                                        @Field("phone") String phone,//
                                                        @Field("force_to_proceed") boolean force);
 
     @FormUrlEncoded
-    @POST("api/v3/users/signup/normal/phones/verification/check")
-    Call<JSONObject> requestDailyUserSignup(@Field("signup_key") String signupKey,//
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestDailyUserSignup(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                            @Field("signup_key") String signupKey,//
                                             @Field("code") String code, @Field("phone") String phone);
 
     @FormUrlEncoded
-    @POST("api/v3/users/signup/{type}")
-    Call<JSONObject> requestUserSignup(@Path("type") String type, @FieldMap Map<String, String> fieldMap);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserSignup(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> fieldMap);
 
     @FormUrlEncoded
-    @POST("api/v3/users/signin/{type}")
-    Call<JSONObject> requestUserSignin(@Path("type") String type, @FieldMap Map<String, String> fieldMap);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestUserLogin(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> fieldMap);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/users/coupons")
-    Call<JSONObject> requestCouponList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/payment/coupons")
-    Call<JSONObject> requestCouponList(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx, //
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                       @Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx, //
                                        @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/gourmet/payment/coupons")
-    Call<JSONObject> requestCouponList(@Query("saleIdx") int saleIdx, @Query("countOfTicket") int countOfTicket);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                       @Query("saleIdx") int saleIdx, @Query("countOfTicket") int countOfTicket);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/users/coupons/history")
-    Call<JSONObject> requestCouponHistoryList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCouponHistoryList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v1/notice/agreement/confirm")
-    Call<JSONObject> requestNoticeAgreement();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestNoticeAgreement(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @PUT("api/v1/notice/agreement/result")
-    Call<JSONObject> requestNoticeAgreementResult(@Query("isAgreed") boolean isAgree);
+    @PUT("{mobileAPI}")
+    Call<JSONObject> requestNoticeAgreementResult(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("isAgreed") boolean isAgree);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v1/notice/benefit")
-    Call<JSONObject> requestBenefitMessage();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestBenefitMessage(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @PUT("api/v3/users/coupons/download")
-    Call<JSONObject> requestDownloadCoupon(@Query("userCouponCode") String userCouponCode);
+    @PUT("{mobileAPI}")
+    Call<JSONObject> requestDownloadCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("userCouponCode") String userCouponCode);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @PUT("api/v3/users/coupons/download")
-    Call<JSONObject> requestDownloadEventCoupon(@Query("couponCode") String couponCode);
+    @PUT("{mobileAPI}")
+    Call<JSONObject> requestDownloadEventCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("couponCode") String couponCode);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotel/{hotelIdx}/coupons/exist")
-    Call<JSONObject> requestHasCoupon(@Path("hotelIdx") int placeIndex, @Query("dateCheckIn") String date,//
-                                      @Query("stays") int nights);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestHasCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                      @Query("dateCheckIn") String date, @Query("stays") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/gourmet/{restaurantIdx}/coupons/exist")
-    Call<JSONObject> requestHasCoupon(@Path("restaurantIdx") int placeIndex, @Query("dateSale") String dateSale);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestHasCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateSale") String dateSale);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotel/{hotelIdx}/coupons")
-    Call<JSONObject> requestCouponList(@Path("hotelIdx") int placeIndex, @Query("dateCheckIn") String date,//
-                                       @Query("stays") int nights);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                       @Query("dateCheckIn") String date, @Query("stays") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/gourmet/{restaurantIdx}/coupons")
-    Call<JSONObject> requestCouponList(@Path("restaurantIdx") int placeIndex, @Query("dateSale") String dateSale);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateSale") String dateSale);
 
     @FormUrlEncoded
-    @POST("api/v3/users/coupons/keyword")
-    Call<JSONObject> requestRegisterKeywordCoupon(@Field("keyword") String keyword);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestRegisterKeywordCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("keyword") String keyword);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @PUT("api/v1/notice/benefit")
-    Call<JSONObject> requestUpdateBenefitAgreement(@Query("isAgreed") boolean isAgree);
+    @PUT("{mobileAPI}")
+    Call<JSONObject> requestUpdateBenefitAgreement(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("isAgreed") boolean isAgree);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/users/tracking")
-    Call<JSONObject> requestUserTracking();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestUserTracking(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/common/notices")
-    Call<JSONObject> requestNoticeList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestNoticeList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/hotels/sales")
-    Call<JSONObject> requestRecentStayList(@QueryMap Map<String, String> stayParams);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v3/gourmet/sales")
-    Call<JSONObject> requestRecentGourmetList(@QueryMap Map<String, String> gourmetParams);
-
-    @POST("api/v3/users/reservations/{kind}/{reservationIdx}/receipts")
-    Call<JSONObject> requestReceiptByEmail(@Path("kind") String placeType, //
-                                           @Path("reservationIdx") String reservationIdx, //
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestReceiptByEmail(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                            @Query("emails") String emails);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/wishes")
-    Call<JSONObject> requestWishListCount();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestWishListCount(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/wishes/{type}")
-    Call<JSONObject> requestWishList(@Path("type") String placeType);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("api/v4/wishes/{type}/add/{itemIdx}")
-    Call<JSONObject> requestAddWishList(@Path("type") String placeType, @Path("itemIdx") int placeIndex);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestAddWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("api/v4/wishes/{type}/remove/{itemIdx}")
-    Call<JSONObject> requestRemoveWishList(@Path("type") String placeType, @Path("itemIdx") int placeIndex);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestRemoveWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/payment/policy_refund")
-    Call<JSONObject> requestPolicyRefund(@Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx,//
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestPolicyRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                         @Query("hotelIdx") int hotelIdx, @Query("roomIdx") int roomIdx,//
                                          @Query("dateCheckIn") String dateCheckIn, @Query("dateCheckOut") String dateCheckOut);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/reservation/hotel/policy_refund")
-    Call<JSONObject> requestPolicyRefund(@Query("hotelReservationIdx") int hotelReservationIdx, @Query("transactionType") String transactionType);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestPolicyRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                         @Query("hotelReservationIdx") int hotelReservationIdx, //
+                                         @Query("transactionType") String transactionType);
 
     @FormUrlEncoded
-    @POST("api/v2/payment/refund")
-    Call<JSONObject> requestRefund(@Field("hotelIdx") int hotelIdx, @Field("dateCheckIn") String dateCheckIn,//
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestRefund(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                   @Field("hotelIdx") int hotelIdx, @Field("dateCheckIn") String dateCheckIn,//
                                    @Field("transactionType") String transactionType, @Field("hotelReservationIdx") int hotelReservationIdx, //
                                    @Field("reasonRefund") String reasonRefund, @Field("accountHolder") String accountHolder, //
                                    @Field("bankAccount") String bankAccount, @Field("bankCode") String bankCode);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v2/payment/bank")
-    Call<JSONObject> requestBankList();
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestBankList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/review/{type}/question")
-    Call<JSONObject> requestReviewInformation(@Path("type") String type);
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestReviewInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("api/v4/review/{type}/{reserveIdx}/question")
-    Call<JSONObject> requestReviewInformation(@Path("type") String type, @Path("reserveIdx") int reserveIdx);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestAddReviewInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                 @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("api/v4/review/add")
-    Call<JSONObject> requestAddReviewInformation(@Body JSONObject jsonObject);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("api/v4/review/add/detail")
-    Call<JSONObject> requestAddReviewDetailInformation(@Body JSONObject jsonObject);
+    @POST("{mobileAPI}")
+    Call<JSONObject> requestAddReviewDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                       @Body JSONObject jsonObject);
 }
