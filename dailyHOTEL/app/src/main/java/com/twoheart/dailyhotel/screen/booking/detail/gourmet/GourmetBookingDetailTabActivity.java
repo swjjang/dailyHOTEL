@@ -277,7 +277,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
 
-                        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                        AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
                     } catch (ActivityNotFoundException e)
                     {
