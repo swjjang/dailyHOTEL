@@ -120,10 +120,10 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         if (Util.isTextEmpty(mGourmetBookingDetail.phone1) == false)
         {
-            phone = mGourmetBookingDetail.phone1;
+            phone = mGourmetBookingDetail.phone2;
         } else if (Util.isTextEmpty(mGourmetBookingDetail.phone2) == false)
         {
-            phone = mGourmetBookingDetail.phone2;
+            phone = mGourmetBookingDetail.phone1;
         } else if (Util.isTextEmpty(mGourmetBookingDetail.phone3) == false)
         {
             phone = mGourmetBookingDetail.phone3;
