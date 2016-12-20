@@ -310,7 +310,6 @@ public class MainActivity extends BaseActivity implements Constants
                 mNetworkController.requestNoticeAgreement();
                 break;
 
-            case CODE_REQUEST_ACTIVITY_REGIONLIST:
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
             case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
@@ -326,6 +325,24 @@ public class MainActivity extends BaseActivity implements Constants
                 }
 
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                } else
+                {
+                    mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
+                if (data == null && (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY))
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
                 } else
