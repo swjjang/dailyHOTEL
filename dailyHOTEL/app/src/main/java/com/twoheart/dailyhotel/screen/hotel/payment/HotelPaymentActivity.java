@@ -1799,6 +1799,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
+        public void onVisitType(boolean isWalking)
+        {
+            ((HotelPaymentInformation) mPaymentInformation).isVisitWalking = isWalking;
+        }
+
+        @Override
         public void finish()
         {
             HotelPaymentActivity.this.finish();
@@ -2011,6 +2017,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             roomInformation.totalDiscount = discount;
 
                             setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
+
+                            hotelPaymentInformation.visitType = "NONE";
+
+                            mHotelPaymentLayout.setVisitTypeInformation(hotelPaymentInformation);
 
                             // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                             if (isOnSale == false || availableRooms == 0)

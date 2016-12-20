@@ -770,11 +770,11 @@ public class StayMainFragment extends PlaceMainFragment
                 unLockUI();
 
                 return moveDeepLinkEventBannerWeb(baseActivity);
-//            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
-//            {
-//                unLockUI();
-//
-//                return moveDeepLinkRegionList(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkRegionList(baseActivity);
             } else if (DailyDeepLink.getInstance().isHotelSearchView() == true)
             {
                 unLockUI();

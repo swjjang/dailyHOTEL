@@ -501,7 +501,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/howToVisitView"
+        android:id="@+id/howToVisitLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
@@ -537,9 +537,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:drawablePadding="4dp"
+                    android:duplicateParentState="true"
+                    android:gravity="center_vertical"
                     android:text="@string/label_visit_walk"
-                    android:textColor="@color/default_text_c929292"
+                    android:textColor="@drawable/selector_text_color_c929292_c900034"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/payment_ic_walk"/>
             </FrameLayout>
@@ -558,8 +559,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawablePadding="4dp"
+                    android:duplicateParentState="true"
+                    android:gravity="center_vertical"
                     android:text="@string/label_visit_car"
-                    android:textColor="@color/default_text_c929292"
+                    android:textColor="@drawable/selector_text_color_c929292_c900034"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/payment_ic_parking"/>
             </FrameLayout>

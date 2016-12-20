@@ -673,11 +673,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                 unLockUI();
 
                 return moveDeepLinkEventBannerWeb(baseActivity);
-//            } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
-//            {
-//                unLockUI();
-//
-//                return moveDeepLinkRegionList(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkRegionList(baseActivity);
             } else if (DailyDeepLink.getInstance().isGourmetSearchView() == true)
             {
                 unLockUI();
