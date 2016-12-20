@@ -71,14 +71,14 @@ public class DailyDeepLink
 
     private static final String HOTEL_V3_LIST = "hl"; // 호텔리스트
     private static final String HOTEL_V3_DETAIL = "hd"; // 호텔 상세
-    private static final String HOTEL_V3_REGION_LIST = "hrl"; // 호텔 지역 리스트
+//    private static final String HOTEL_V3_REGION_LIST = "hrl"; // 호텔 지역 리스트 (deprecated)
     private static final String HOTEL_V3_EVENT_BANNER_WEB = "hebw"; // 이벤트 배너 웹
     private static final String HOTEL_V6_SEARCH = "hs"; // 호텔 검색화면
     private static final String HOTEL_V6_SEARCH_RESULT = "hsr"; // 호텔 검색 결과 화면
 
     private static final String GOURMET_V3_LIST = "gl"; // 고메 리스트
     private static final String GOURMET_V3_DETAIL = "gd"; // 고메 상세
-    private static final String GOURMET_V3_REGION_LIST = "grl"; // 고메 지역 리스트
+//    private static final String GOURMET_V3_REGION_LIST = "grl"; // 고메 지역 리스트 (deprecated)
     private static final String GOURMET_V3_EVENT_BANNER_WEB = "gebw"; // 이벤트 배너 웹
     private static final String GOURMET_V6_SEARCH = "gs"; // 고메 검색화면
     private static final String GOURMET_V6_SEARCH_RESULT = "gsr"; // 고메 검색 결과 화면
@@ -861,7 +861,7 @@ public class DailyDeepLink
         {
             return HOTEL_V3_LIST.equalsIgnoreCase(view)//
                 || HOTEL_V3_DETAIL.equalsIgnoreCase(view)//
-                || HOTEL_V3_REGION_LIST.equalsIgnoreCase(view)//
+//                || HOTEL_V3_REGION_LIST.equalsIgnoreCase(view)//
                 || HOTEL_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view)//
                 || HOTEL_V6_SEARCH.equalsIgnoreCase(view) //
                 || HOTEL_V6_SEARCH_RESULT.equalsIgnoreCase(view);
@@ -900,18 +900,18 @@ public class DailyDeepLink
         }
     }
 
-    public boolean isHotelRegionListView()
-    {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return HOTEL_V3_REGION_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
-    }
+//    public boolean isHotelRegionListView()
+//    {
+//        String view = getView();
+//
+//        if (mVersionCode >= 3)
+//        {
+//            return HOTEL_V3_REGION_LIST.equalsIgnoreCase(view);
+//        } else
+//        {
+//            return false;
+//        }
+//    }
 
     public boolean isHotelEventBannerWebView()
     {
@@ -934,7 +934,7 @@ public class DailyDeepLink
         {
             return GOURMET_V3_LIST.equalsIgnoreCase(view) //
                 || GOURMET_V3_DETAIL.equalsIgnoreCase(view) //
-                || GOURMET_V3_REGION_LIST.equalsIgnoreCase(view) //
+//                || GOURMET_V3_REGION_LIST.equalsIgnoreCase(view) //
                 || GOURMET_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view) //
                 || GOURMET_V6_SEARCH.equalsIgnoreCase(view) //
                 || GOURMET_V6_SEARCH_RESULT.equalsIgnoreCase(view); //
@@ -972,18 +972,18 @@ public class DailyDeepLink
         }
     }
 
-    public boolean isGourmetRegionListView()
-    {
-        String view = getView();
-
-        if (mVersionCode >= 3)
-        {
-            return GOURMET_V3_REGION_LIST.equalsIgnoreCase(view);
-        } else
-        {
-            return false;
-        }
-    }
+//    public boolean isGourmetRegionListView()
+//    {
+//        String view = getView();
+//
+//        if (mVersionCode >= 3)
+//        {
+//            return GOURMET_V3_REGION_LIST.equalsIgnoreCase(view);
+//        } else
+//        {
+//            return false;
+//        }
+//    }
 
     public boolean isGourmetEventBannerWebView()
     {
