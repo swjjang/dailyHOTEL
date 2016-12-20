@@ -753,7 +753,7 @@
     <string name="label_receipt_total_payment">총 결제 금액(부가세 포함)</string>
     <string name="label_receipt_bonus">적립금 사용</string>
     <string name="label_receipt_coupon">할인쿠폰 사용</string>
-    <string name="label_receipt_paymenttype">지불 방식</string>
+    <string name="label_receipt_paymenttype">결제수단</string>
     <string name="label_receipt_provider">공급자</string>
     <string name="label_receipt_business_license">상호 | %1$s</string>
     <string name="label_receipt_registeration_number">등록번호 | %1$s</string>

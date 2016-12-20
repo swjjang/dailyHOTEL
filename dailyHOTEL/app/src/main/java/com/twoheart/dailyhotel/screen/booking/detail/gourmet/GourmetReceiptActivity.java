@@ -93,9 +93,19 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
         paymentDayTextView.setText(DailyCalendar.convertDateFormatString(valueDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
 
-        // 지불 방식
-        TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
-        paymentTypeTextView.setText(paymentType);
+        // 결제수단
+        View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
+
+        if (Util.isTextEmpty(paymentType) == true)
+        {
+            paymentTypeLayout.setVisibility(View.GONE);
+        } else
+        {
+            paymentTypeLayout.setVisibility(View.VISIBLE);
+
+            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+            paymentTypeTextView.setText(paymentType);
+        }
 
         // 소계
         TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
