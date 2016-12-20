@@ -71,6 +71,7 @@
 
     <string name="label_visit_walk">도보</string>
     <string name="label_visit_car">차량</string>
+    <string name="label_parking_information">주차 정보 안내</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>

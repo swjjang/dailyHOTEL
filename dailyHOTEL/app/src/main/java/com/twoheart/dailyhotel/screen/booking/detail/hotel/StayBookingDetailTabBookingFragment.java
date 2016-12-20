@@ -353,6 +353,50 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         guestNameTextView.setText(bookingDetail.guestName);
         guestPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
         guestEmailTextView.setText(bookingDetail.guestEmail);
+
+        View visitTypeLayout = view.findViewById(R.id.visitTypeLayout);
+        View guideVisitMemoLayout = view.findViewById(R.id.guideVisitMemoLayout);
+
+        TextView visitTypeTitleTextView = (TextView) view.findViewById(R.id.visitTypeTitleTextView);
+        TextView visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
+        TextView guideVisitMemoView = (TextView) view.findViewById(R.id.guideVisitMemoView);
+
+        switch (bookingDetail.visitType)
+        {
+            case "CAR":
+                visitTypeLayout.setVisibility(View.VISIBLE);
+
+                visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                visitTypeTextView.setText(R.string.label_visit_car);
+
+                guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                guideVisitMemoView.setText(R.string.message_visit_car_memo);
+                break;
+
+            case "NO_PARKING":
+                visitTypeLayout.setVisibility(View.VISIBLE);
+
+                visitTypeTitleTextView.setText(R.string.label_parking_information);
+                visitTypeTextView.setText(R.string.label_no_parking);
+
+                guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                guideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
+                break;
+
+            case "NONE":
+                visitTypeLayout.setVisibility(View.GONE);
+                guideVisitMemoLayout.setVisibility(View.GONE);
+                break;
+
+            case "WALKING":
+                visitTypeLayout.setVisibility(View.VISIBLE);
+
+                visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                visitTypeTextView.setText(R.string.label_visit_walk);
+
+                guideVisitMemoLayout.setVisibility(View.GONE);
+                break;
+        }
     }
 
     private void initPaymentInformationLayout(View view, HotelBookingDetail bookingDetail)

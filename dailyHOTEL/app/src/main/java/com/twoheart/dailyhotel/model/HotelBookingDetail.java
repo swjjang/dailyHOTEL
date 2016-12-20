@@ -31,6 +31,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public boolean isVisibleRefundPolicy; // 하단에 정책을 보여줄지 말지.
     public String mRefundComment; // 환분 불가 내용
 
+    public String visitType; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
+
     public HotelBookingDetail()
     {
     }
@@ -126,6 +128,8 @@ public class HotelBookingDetail extends PlaceBookingDetail
         {
             reviewStatusType = ReviewStatusType.NONE;
         }
+
+        visitType = "NONE";
     }
 
     @Override

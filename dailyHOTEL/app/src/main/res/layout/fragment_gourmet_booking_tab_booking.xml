@@ -153,13 +153,13 @@
         </RelativeLayout>
 
         <include
-            layout="@layout/fragment_courmetbooking_tab_booking_01"
+            layout="@layout/fragment_gourmetbooking_tab_booking_01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
 
         <include
-            layout="@layout/fragment_courmetbooking_tab_booking_02"
+            layout="@layout/fragment_gourmetbooking_tab_booking_02"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
