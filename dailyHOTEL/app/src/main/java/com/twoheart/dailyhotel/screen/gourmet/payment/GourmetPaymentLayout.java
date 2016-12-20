@@ -60,6 +60,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private TextView mUsedCouponTextView;
 
     // 결제 수단 선택
+    private View mFreePaymentView;
+    private View paymentTypeInformationLayout;
+
     private View mSimpleCardLayout;
     private TextView mSimpleCardNumberTextView;
     private TextView mSimpleCardLogoTextView;
@@ -231,6 +234,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     private void initPaymentInformation(View view)
     {
+        paymentTypeInformationLayout = view.findViewById(R.id.paymentTypeInformationLayout);
+
         mAmountNightsTextView = (TextView) view.findViewById(R.id.amountNightsTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
@@ -298,6 +303,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mSelectedSimpleCardLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
+        mFreePaymentView = view.findViewById(R.id.freePaymentView);
     }
 
     public void setPaymentMemoTextView(String text, boolean visible)
@@ -558,6 +564,16 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
 
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
+
+        if (payPrice == 0)
+        {
+            paymentTypeInformationLayout.setVisibility(View.GONE);
+            mFreePaymentView.setVisibility(View.VISIBLE);
+        } else
+        {
+            paymentTypeInformationLayout.setVisibility(View.VISIBLE);
+            mFreePaymentView.setVisibility(View.GONE);
+        }
     }
 
     public void setTicketCount(int count)

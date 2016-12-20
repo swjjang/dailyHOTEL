@@ -59,7 +59,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     //    private EditText mMemoEditText;
     private View mUserLayout;
     private View mGuestFrameLayout, mGuestLinearLayout;
-
+    //
     private TextView mGuestNameHintEditText;
     private TextView mGuideNameMemo;
     private CheckBox mGuestCheckBox;
@@ -83,6 +83,9 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private DailyToolbarLayout mDailyToolbarLayout;
 
     // 결제 수단 선택
+    private View mFreePaymentView;
+    private View paymentTypeInformationLayout;
+
     private View mSimpleCardLayout;
     private TextView mSimpleCardNumberTextView;
     private TextView mSimpleCardLogoTextView;
@@ -267,6 +270,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     private void initPaymentInformation(View view)
     {
+        paymentTypeInformationLayout = view.findViewById(R.id.paymentTypeInformationLayout);
+
         mAmountNightsTextView = (TextView) view.findViewById(R.id.amountNightsTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
@@ -342,6 +347,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mSelectedSimpleCardLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
+        mFreePaymentView = view.findViewById(R.id.freePaymentView);
     }
 
     private void initRefundPolicy(View view)
@@ -713,6 +719,16 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
 
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
+
+        if (payPrice == 0)
+        {
+            paymentTypeInformationLayout.setVisibility(View.GONE);
+            mFreePaymentView.setVisibility(View.VISIBLE);
+        } else
+        {
+            paymentTypeInformationLayout.setVisibility(View.VISIBLE);
+            mFreePaymentView.setVisibility(View.GONE);
+        }
     }
 
     public void setRefundPolicyText(String text)
