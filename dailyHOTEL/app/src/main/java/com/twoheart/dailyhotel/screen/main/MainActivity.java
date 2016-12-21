@@ -78,15 +78,12 @@ public class MainActivity extends BaseActivity implements Constants
                 case 0:
                     if (mIsInitialization == true)
                     {
-                        lockUI();
+                        showLockUIProgress();
                     }
                     break;
 
                 case 1:
-                    if (isVisibleLockUI() == true)
-                    {
-                        showLockUIProgress();
-                    }
+                    showLockUIProgress();
                     break;
 
                 case 2:

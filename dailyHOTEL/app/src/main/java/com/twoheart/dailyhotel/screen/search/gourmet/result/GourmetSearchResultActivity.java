@@ -246,7 +246,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Util.restartApp(this);
             return;
         }
-        
+
         Location location = null;
         Keyword keyword = null;
         double radius = DEFAULT_SEARCH_RADIUS;

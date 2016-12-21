@@ -40,9 +40,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected static final int STATUS_INITIALIZE_LAYOUT = 2; // 데이터를 받아서 레이아웃을 만든 상태
     protected static final int STATUS_INITIALIZE_COMPLETE = -1; // 완료
 
-    protected static final int HANDLE_MESSAGE_SHOW_PROGRESS = 1;
-
-
     protected PlaceDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
@@ -62,19 +59,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected int mViewPrice; // Analytics용 리스트 가격
     protected int mOpenTicketIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
 
-    protected Handler mHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            switch (msg.what)
-            {
-                case HANDLE_MESSAGE_SHOW_PROGRESS:
-                    lockUI();
-                    break;
-            }
-        }
-    };
+    protected Handler mHandler = new Handler();
 
     private int mResultCode;
     protected Intent mResultIntent;

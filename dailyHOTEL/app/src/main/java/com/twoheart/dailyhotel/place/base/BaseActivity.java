@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,6 +47,8 @@ import retrofit2.Response;
 
 public abstract class BaseActivity extends AppCompatActivity implements Constants
 {
+    private static final int MESSAGE_SHOW_LOADING_PROGRESS = 1;
+
     protected interface OnCallDialogListener
     {
         void onShowDialog();
@@ -57,8 +60,21 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
 
     private Dialog mDialog;
     private LoadingDialog mLockUI;
-    private Handler handler;
     protected String mNetworkTag;
+
+    private Handler mHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case MESSAGE_SHOW_LOADING_PROGRESS:
+                    showLockUIProgress();
+                    break;
+            }
+        }
+    };
 
     /**
      * UI Component의 잠금 상태인지 확인하는 변수..
@@ -72,7 +88,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onCreate(savedInstanceState);
 
         mLockUI = new LoadingDialog(this);
-        handler = new Handler();
         mNetworkTag = getClass().getName();
 
         if (Util.isOverAPI21() == true && Util.isOverAPI23() == false)
@@ -201,15 +216,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * LoadingDialog를 띄워 로딩 중임을 나타내어 사용자가 UI를 사용할 수 없도록 한다.
-     */
-
-    public boolean isVisibleLockUI()
-    {
-        return mLockUI.isVisible();
-    }
-
     protected void setLockUICancelable(boolean flag)
     {
         mLockUI.setCancelable(flag);
@@ -231,13 +237,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                 mLockUI = new LoadingDialog(this);
             }
 
-            mLockUI.show(isShowProgress);
+            mHandler.removeMessages(MESSAGE_SHOW_LOADING_PROGRESS);
+            mHandler.sendEmptyMessageDelayed(MESSAGE_SHOW_LOADING_PROGRESS, 1000);
         }
     }
 
     public void showLockUIProgress()
     {
-        if (mLockUI != null)
+        if (mLockUI != null && isFinishing() == false)
         {
             mLockUI.showProgress();
         }
@@ -250,6 +257,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     public void unLockUI()
     {
         releaseUiComponent();
+
+        mHandler.removeMessages(MESSAGE_SHOW_LOADING_PROGRESS);
 
         if (isFinishing() == false && mLockUI != null)
         {
@@ -398,7 +407,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         unLockUI();
 
         // 혹시나 스레드 상태에서 호출이 될경우를 대비해서
-        handler.post(new Runnable()
+        mHandler.post(new Runnable()
         {
             @Override
             public void run()
@@ -437,7 +446,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             onError();
         } else
         {
-            handler.post(new Runnable()
+            mHandler.post(new Runnable()
             {
                 @Override
                 public void run()

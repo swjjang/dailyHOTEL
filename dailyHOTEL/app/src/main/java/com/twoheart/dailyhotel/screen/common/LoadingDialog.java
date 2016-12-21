@@ -137,15 +137,12 @@ public class LoadingDialog
 
     public void showProgress()
     {
-        if (mActivity == null || mActivity.isFinishing() == true)
+        if (mActivity == null || mActivity.isFinishing() == true || mDialog == null)
         {
             return;
         }
 
-        if (mDialog != null && mDialog.isShowing() == true)
-        {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
+        show(true);
     }
 
 
