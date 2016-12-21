@@ -79,7 +79,7 @@ dependencies {
     compile 'com.facebook.fresco:imagepipeline-okhttp3:1.0.0'
     compile 'com.kakao.sdk:kakaolink:1.1.25'
     compile 'com.kakao.sdk:kakaotalk:1.1.25'
-    compile 'com.appboy:android-sdk-ui:1.15.+'
+    compile 'com.appboy:android-sdk-ui:1.17.+'
     compile 'com.adjust.sdk:adjust-android:4.10.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
