@@ -20,6 +20,7 @@ import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -720,7 +721,15 @@ public class ReviewActivity extends BaseActivity
         try
         {
             mDialog.setContentView(view);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(mDialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

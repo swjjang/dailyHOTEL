@@ -12,9 +12,11 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -491,7 +493,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(dialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(PlaceDetailActivity.this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -548,7 +558,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
             try
             {
                 shareDialog.setContentView(dialogView);
+
+                WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+                params.copyFrom(shareDialog.getWindow().getAttributes());
+                params.width = Util.getLCDWidth(PlaceDetailActivity.this) * 13 / 15 ;
+                params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
                 shareDialog.show();
+
+                shareDialog.getWindow().setAttributes(params);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

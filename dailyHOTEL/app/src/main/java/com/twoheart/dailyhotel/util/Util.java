@@ -888,7 +888,14 @@ public class Util implements Constants
 
         try
         {
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(dialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(baseActivity) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(params);
 
             return dialog;
         } catch (Exception e)
@@ -1241,7 +1248,15 @@ public class Util implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(dialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(activity) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1456,7 +1471,15 @@ public class Util implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(dialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(baseActivity) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

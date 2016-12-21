@@ -251,7 +251,14 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
         try
         {
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(mMobileDialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             mMobileDialog.show();
+
+            mMobileDialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

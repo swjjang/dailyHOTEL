@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -183,7 +185,15 @@ public class FAQActivity extends WebViewActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(dialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

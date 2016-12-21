@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -514,7 +515,14 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         try
         {
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(mFinalCheckDialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             mFinalCheckDialog.show();
+
+            mFinalCheckDialog.getWindow().setAttributes(params);
 
             recordAnalyticsAgreeTermDialog(mPaymentInformation);
         } catch (Exception e)

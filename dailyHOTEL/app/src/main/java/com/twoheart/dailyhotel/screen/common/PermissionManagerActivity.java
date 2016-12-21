@@ -21,6 +21,7 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -358,7 +359,15 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         try
         {
             mDialog.setContentView(view);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(mDialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -447,7 +456,15 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         try
         {
             mDialog.setContentView(view);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(mDialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -578,7 +595,15 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(dialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15 ;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

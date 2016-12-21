@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -679,7 +680,14 @@ public class MainActivity extends BaseActivity implements Constants
 
         try
         {
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+            params.copyFrom(mSettingNetworkDialog.getWindow().getAttributes());
+            params.width = Util.getLCDWidth(this) * 13 / 15;
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
             mSettingNetworkDialog.show();
+
+            mSettingNetworkDialog.getWindow().setAttributes(params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
