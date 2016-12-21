@@ -394,14 +394,67 @@ public abstract class PlacePaymentActivity extends BaseActivity
         unLockUI();
 
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
-
-        if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
+        if(mPaymentInformation.isFree == true)
         {
-            Intent intent = new Intent(this, RegisterCreditCardActivity.class);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT);
+            showAgreeTermDialog();
         } else
         {
-            showAgreeTermDialog(mPaymentInformation.paymentType);
+            if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
+            {
+                Intent intent = new Intent(this, RegisterCreditCardActivity.class);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT);
+            } else
+            {
+                showAgreeTermDialog(mPaymentInformation.paymentType);
+            }
+        }
+    }
+
+    /**
+     * 무료 결제인 경우 결제 팝업
+     */
+    protected void showAgreeTermDialog()
+    {
+        if (mFinalCheckDialog != null)
+        {
+            mFinalCheckDialog.cancel();
+        }
+
+        mFinalCheckDialog = null;
+        mFinalCheckDialog = getPaymentConfirmDialog(PlacePaymentInformation.PaymentType.CARD);
+
+        if (mFinalCheckDialog == null || isFinishing() == true)
+        {
+            return;
+        }
+
+        mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        });
+
+        mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                    , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
+            }
+        });
+
+        try
+        {
+            mFinalCheckDialog.show();
+
+            recordAnalyticsAgreeTermDialog(mPaymentInformation);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 

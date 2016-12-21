@@ -614,6 +614,15 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 mNoParkingView.setVisibility(View.GONE);
 
                 mGuideVisitMemoView.setText(R.string.message_visit_car_memo);
+
+                // 디폴트로 도보가 기본이다.
+                if (hotelPaymentInformation.isVisitWalking == true)
+                {
+                    mVisitWalkView.performClick();
+                } else
+                {
+                    mVisitCarView.performClick();
+                }
                 break;
 
             case "NONE":

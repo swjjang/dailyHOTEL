@@ -324,6 +324,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         unLockUI();
 
+        setBonusSelected(false);
+        setCouponSelected(false);
         setPaymentInformation((HotelPaymentInformation) mPaymentInformation);
 
         showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
@@ -348,6 +350,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
             Action.SOLDOUT, ((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+    }
+
+    @Override
+    protected void showChangedBonusDialog()
+    {
+        unLockUI();
+
+        setBonusSelected(false);
+        setCouponSelected(false);
+        setPaymentInformation((HotelPaymentInformation) mPaymentInformation);
+
+        super.showChangedBonusDialog();
     }
 
     @Override
@@ -1290,6 +1304,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 mHotelPaymentLayout.setPaymentInformation(hotelPaymentInformation.discountType, originalPrice, 0, payPrice, nights);
                 break;
+        }
+
+        if (payPrice == 0)
+        {
+            hotelPaymentInformation.isFree = true;
+        } else
+        {
+            hotelPaymentInformation.isFree = false;
         }
 
         mHotelPaymentLayout.setBonusTextView(hotelPaymentInformation.bonus);
@@ -2263,12 +2285,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             } else
             {
                 HotelPaymentActivity.this.onErrorResponse(call, response);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+
             HotelPaymentActivity.this.onError(t);
         }
     };

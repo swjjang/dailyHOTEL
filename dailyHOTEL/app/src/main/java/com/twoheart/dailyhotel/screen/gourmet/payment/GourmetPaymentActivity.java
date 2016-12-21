@@ -312,6 +312,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     {
         unLockUI();
 
+        mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         setPaymentInformation((GourmetPaymentInformation) mPaymentInformation);
 
         showChangedValueDialog(R.string.message_gourmet_detail_changed_price, new DialogInterface.OnDismissListener()
@@ -1134,6 +1135,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
+        if (payPrice == 0)
+        {
+            gourmetPaymentInformation.isFree = true;
+        } else
+        {
+            gourmetPaymentInformation.isFree = false;
+        }
+
         // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
         if (payPrice > 0 && payPrice < 1000)
         {
@@ -1907,7 +1916,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
                     } else
                     {
-                        onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
+                        onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                                finish();
+                            }
+                        });
                     }
                 } catch (Exception e)
                 {
@@ -1921,12 +1938,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             } else
             {
                 GourmetPaymentActivity.this.onErrorResponse(call, response);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetPaymentActivity.this.onError(t);
         }
     };
