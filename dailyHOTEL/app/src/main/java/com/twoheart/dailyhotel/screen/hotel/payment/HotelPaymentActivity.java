@@ -2038,6 +2038,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             roomInformation.totalDiscount = discount;
 
+                            if (DEBUG == false && (checkInDate == 0 || checkOutDate == 0))
+                            {
+                                Crashlytics.log(responseJSONObject.toString());
+                                Crashlytics.logException(new RuntimeException(call.request().url().toString()));
+
+                                Util.restartExitApp(HotelPaymentActivity.this);
+                                return;
+                            }
+
                             setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
 
                             hotelPaymentInformation.visitType = "NONE";
