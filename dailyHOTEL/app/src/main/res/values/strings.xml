@@ -1103,13 +1103,15 @@
         <item>\@daum.net</item>
         <item>\@hotmail.com</item>
         <item>\@lycos.co.kr</item>
-        <item>\@korea.com</item>
-        <item>\@qq.com</item>
-        <item>\@qq.com</item>
-        <item>\@qq.com</item>
+        <item>\@dreamwiz.com</item>
         <item>\@empal.com</item>
-        <item>\@paran.com</item>
+        <item>\@korea.com</item>
         <item>\@yahoo.com</item>
-        <item>\@emapss.com</item>
+        <item>\@paran.com</item>
+        <item>\@empas.com</item>
+        <item>\@icloud.com</item>
+        <item>\@me.com</item>
+        <item>\@outlook.com</item>
+        <item>\@qq.com</item>
     </string-array>
 </resources>
