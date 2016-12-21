@@ -680,14 +680,11 @@ public class MainActivity extends BaseActivity implements Constants
 
         try
         {
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mSettingNetworkDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mSettingNetworkDialog);
 
             mSettingNetworkDialog.show();
 
-            mSettingNetworkDialog.getWindow().setAttributes(params);
+            mSettingNetworkDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

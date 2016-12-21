@@ -481,14 +481,11 @@ public class StayAutoRefundActivity extends BaseActivity
             boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
             setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
-            mDialog.getWindow().setAttributes(params);
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -592,14 +589,11 @@ public class StayAutoRefundActivity extends BaseActivity
         {
             mDialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
-            mDialog.getWindow().setAttributes(params);
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

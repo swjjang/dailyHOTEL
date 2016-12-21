@@ -360,14 +360,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             mDialog.setContentView(view);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
-            mDialog.getWindow().setAttributes(params);
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -457,14 +454,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             mDialog.setContentView(view);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
-            mDialog.getWindow().setAttributes(params);
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -596,14 +590,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(dialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 
-            dialog.getWindow().setAttributes(params);
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

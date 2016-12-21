@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -16,7 +15,6 @@ import android.view.WindowManager;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -494,14 +492,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(dialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(PlaceDetailActivity.this) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 
-            dialog.getWindow().setAttributes(params);
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -559,14 +554,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 shareDialog.setContentView(dialogView);
 
-                WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-                params.copyFrom(shareDialog.getWindow().getAttributes());
-                params.width = Util.getLCDWidth(PlaceDetailActivity.this) * 13 / 15 ;
-                params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(PlaceDetailActivity.this, shareDialog);
 
                 shareDialog.show();
 
-                shareDialog.getWindow().setAttributes(params);
+                shareDialog.getWindow().setAttributes(layoutParams);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

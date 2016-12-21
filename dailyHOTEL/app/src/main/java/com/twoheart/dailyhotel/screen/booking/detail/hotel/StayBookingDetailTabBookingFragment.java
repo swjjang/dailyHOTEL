@@ -842,14 +842,11 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(dialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(baseActivity) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
 
             dialog.show();
 
-            dialog.getWindow().setAttributes(params);
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

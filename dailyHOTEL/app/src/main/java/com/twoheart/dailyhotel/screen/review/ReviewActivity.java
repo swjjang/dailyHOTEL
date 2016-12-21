@@ -722,14 +722,11 @@ public class ReviewActivity extends BaseActivity
         {
             mDialog.setContentView(view);
 
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
-            mDialog.getWindow().setAttributes(params);
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

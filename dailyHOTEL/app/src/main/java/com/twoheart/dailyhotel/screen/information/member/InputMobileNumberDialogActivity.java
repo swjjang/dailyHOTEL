@@ -151,14 +151,6 @@ public class InputMobileNumberDialogActivity extends BaseActivity
         mMobileDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         mMobileDialog.setCanceledOnTouchOutside(false);
 
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        Window window = mMobileDialog.getWindow();
-        layoutParams.copyFrom(window.getAttributes());
-
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(layoutParams);
-
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.view_mobiledialog_layout, null, false);
 
@@ -251,14 +243,11 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
         try
         {
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mMobileDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mMobileDialog);
 
             mMobileDialog.show();
 
-            mMobileDialog.getWindow().setAttributes(params);
+            mMobileDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

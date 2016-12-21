@@ -395,7 +395,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         unLockUI();
 
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
-        if(mPaymentInformation.isFree == true)
+        if (mPaymentInformation.isFree == true)
         {
             showAgreeTermDialog();
         } else
@@ -515,14 +515,11 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         try
         {
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-            params.copyFrom(mFinalCheckDialog.getWindow().getAttributes());
-            params.width = Util.getLCDWidth(this) * 13 / 15 ;
-            params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mFinalCheckDialog);
 
             mFinalCheckDialog.show();
 
-            mFinalCheckDialog.getWindow().setAttributes(params);
+            mFinalCheckDialog.getWindow().setAttributes(layoutParams);
 
             recordAnalyticsAgreeTermDialog(mPaymentInformation);
         } catch (Exception e)
