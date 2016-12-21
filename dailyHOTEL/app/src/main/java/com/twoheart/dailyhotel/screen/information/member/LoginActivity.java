@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
+import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -54,6 +55,8 @@ import com.twoheart.dailyhotel.widget.FontManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +68,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 {
     public CallbackManager mCallbackManager;
     private ScrollView mScrollView;
-    private DailyEditText mEmailEditText, mPasswordEditText;
+    private DailyAutoCompleteEditText mEmailEditText;
+    private DailyEditText mPasswordEditText;
     private TextView mLoginView, mFindPasswordView;
     private View mEmailView, mPasswordView, mSnsLoginLayout;
     private com.facebook.login.widget.LoginButton mFacebookLoginView;
@@ -168,7 +172,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initEditTextsLayout()
     {
         mEmailView = findViewById(R.id.emailView);
-        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyAutoCompleteEditText) findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnTouchListener(new View.OnTouchListener()
@@ -189,6 +193,9 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 return false;
             }
         });
+
+        EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(this, Arrays.asList(getResources().getStringArray(R.array.company_email_postfix_array)));
+        mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);

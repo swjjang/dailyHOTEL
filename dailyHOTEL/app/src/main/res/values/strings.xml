@@ -1094,4 +1094,22 @@
         <item>호텔 쿠폰 보기</item>
         <item>고메 쿠폰 보기</item>
     </string-array>
+
+    <string-array name="company_email_postfix_array">
+        <item>\@naver.com</item>
+        <item>\@hanmail.com</item>
+        <item>\@nate.com</item>
+        <item>\@gmail.com</item>
+        <item>\@daum.net</item>
+        <item>\@hotmail.com</item>
+        <item>\@lycos.co.kr</item>
+        <item>\@korea.com</item>
+        <item>\@qq.com</item>
+        <item>\@qq.com</item>
+        <item>\@qq.com</item>
+        <item>\@empal.com</item>
+        <item>\@paran.com</item>
+        <item>\@yahoo.com</item>
+        <item>\@emapss.com</item>
+    </string-array>
 </resources>

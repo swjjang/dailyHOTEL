@@ -20,9 +20,11 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
@@ -30,7 +32,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
-    private DailyEditText mEmailEditText, mNameEditText, mPasswordEditText;
+    private DailyAutoCompleteEditText mEmailEditText;
+    private DailyEditText mNameEditText, mPasswordEditText;
     private DailyEditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
     private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;
@@ -84,9 +87,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
 
         mEmailView = view.findViewById(R.id.emailView);
-        mEmailEditText = (DailyEditText) view.findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyAutoCompleteEditText) view.findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
+
+        EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
+        mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mNameView = view.findViewById(R.id.nameView);
         mNameEditText = (DailyEditText) view.findViewById(R.id.nameEditText);
