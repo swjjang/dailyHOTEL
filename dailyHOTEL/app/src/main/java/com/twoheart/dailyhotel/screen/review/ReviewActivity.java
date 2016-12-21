@@ -732,7 +732,11 @@ public class ReviewActivity extends BaseActivity
         private void sendMessageDelayed(int position)
         {
             mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
-            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, position, 0);
+
+            Message message = new Message();
+            message.what = REQUEST_NEXT_FOCUSE;
+            message.arg1 = position;
+
             mHandler.sendMessageDelayed(message, 1500);
         }
 

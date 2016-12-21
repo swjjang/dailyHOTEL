@@ -172,14 +172,21 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         for (int i = position; i < count; i++)
         {
-            ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
+            final ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
 
             if (childReviewCardLayout.isChecked() == false)
             {
                 int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
-                int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+                final int cardHeight = Util.getRatioHeightType4x3(cardWidth);
 
-                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
+                mNestedScrollView.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
+                    }
+                });
 
                 hasNext = true;
                 break;
@@ -190,14 +197,21 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         {
             for (int i = 0; i < position; i++)
             {
-                ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
+                final ReviewCardLayout childReviewCardLayout = (ReviewCardLayout) mScrollLayout.getChildAt(i);
 
                 if (childReviewCardLayout.isChecked() == false)
                 {
                     int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
-                    int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+                    final int cardHeight = Util.getRatioHeightType4x3(cardWidth);
 
-                    mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
+                    mNestedScrollView.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
+                        }
+                    });
 
                     hasNext = true;
                     break;
