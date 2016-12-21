@@ -236,7 +236,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initIntent(Intent intent)
     {
-        SaleTime saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        SaleTime saleTime;
+
+        try
+        {
+            saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
+        
         Location location = null;
         Keyword keyword = null;
         double radius = DEFAULT_SEARCH_RADIUS;
