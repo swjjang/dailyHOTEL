@@ -83,7 +83,6 @@ public class MainActivity extends BaseActivity implements Constants
                     break;
 
                 case 1:
-                    showLockUIProgress();
                     break;
 
                 case 2:
@@ -691,7 +690,6 @@ public class MainActivity extends BaseActivity implements Constants
     {
         mDelayTimeHandler.sendEmptyMessageDelayed(2, 2000);
         mDelayTimeHandler.removeMessages(0);
-        mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
         mNetworkController.requestCommonDatetime();
     }
