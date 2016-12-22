@@ -19,12 +19,14 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +37,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 {
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
 
-    private DailyEditText mEmailEditText;
+    private DailyAutoCompleteEditText mEmailEditText;
     private View mConfirmView, mEmailView;
     private String mUserIndex;
 
@@ -81,7 +83,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
     {
         mEmailView = findViewById(R.id.emailView);
 
-        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
+        mEmailEditText = (DailyAutoCompleteEditText) findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(true, null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.addTextChangedListener(new TextWatcher()
@@ -130,6 +132,9 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 }
             }
         });
+
+        EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(this, Arrays.asList(getResources().getStringArray(R.array.company_email_postfix_array)));
+        mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mConfirmView = findViewById(R.id.confirmView);
         mConfirmView.setEnabled(false);
