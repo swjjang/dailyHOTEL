@@ -32,10 +32,6 @@ public class InformationNetworkController extends BaseNetworkController
         void onPushBenefitMessage(String message);
 
         void onBenefitAgreement(boolean isAgree, String updateDate);
-
-        void onReviewGourmet(Review review);
-
-        void onReviewStay(Review review);
     }
 
     public InformationNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -61,16 +57,6 @@ public class InformationNetworkController extends BaseNetworkController
     public void requestPushBenefit(boolean isAgree)
     {
         DailyMobileAPI.getInstance(mContext).requestUpdateBenefitAgreement(mNetworkTag, isAgree, mUpdateBenefitCallback);
-    }
-
-    protected void requestReviewGourmet()
-    {
-        DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mReviewGourmetCallback);
-    }
-
-    protected void requestReviewStay()
-    {
-        DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewStayCallback);
     }
 
     /**
@@ -261,80 +247,6 @@ public class InformationNetworkController extends BaseNetworkController
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
-        }
-    };
-
-    private retrofit2.Callback mReviewGourmetCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            Review review = null;
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    // 리뷰가 존재하지 않는 경우 msgCode : 701
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100 && responseJSONObject.has("data") == true)
-                    {
-                        review = new Review(responseJSONObject.getJSONObject("data"));
-
-
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-            }
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewGourmet(review);
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewGourmet(null);
-        }
-    };
-
-    private retrofit2.Callback mReviewStayCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            Review review = null;
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    // 리뷰가 존재하지 않는 경우 msgCode : 701
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100 && responseJSONObject.has("data") == true)
-                    {
-                        review = new Review(responseJSONObject.getJSONObject("data"));
-                    }
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-            }
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(review);
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(null);
         }
     };
 }

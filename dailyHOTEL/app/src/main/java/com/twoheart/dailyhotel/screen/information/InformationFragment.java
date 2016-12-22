@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
@@ -34,7 +33,6 @@ import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesTabAct
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
-import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -224,9 +222,6 @@ public class InformationFragment extends BaseFragment implements Constants
             case CODE_REQUEST_ACTIVITY_LOGIN:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    lockUIImmediately();
-
-                    mNetworkController.requestReviewStay();
                 }
                 break;
 
@@ -257,12 +252,6 @@ public class InformationFragment extends BaseFragment implements Constants
             case CODE_REQUEST_ACTIVITY_FEEDBACK:
             case CODE_REQUEST_ACTIVITY_CONTACT_US:
                 mDontReload = false;
-                break;
-
-            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
-                lockUIImmediately();
-
-                mNetworkController.requestReviewGourmet();
                 break;
         }
     }
@@ -905,39 +894,6 @@ public class InformationFragment extends BaseFragment implements Constants
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
             }
-        }
-
-        @Override
-        public void onReviewGourmet(Review review)
-        {
-            unLockUI();
-
-            if (review == null)
-            {
-                return;
-            }
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            Intent intent = ReviewActivity.newInstance(baseActivity, review);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
-        }
-
-        @Override
-        public void onReviewStay(Review review)
-        {
-            unLockUI();
-
-            if (review == null)
-            {
-                mNetworkController.requestReviewGourmet();
-                return;
-            }
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            Intent intent = ReviewActivity.newInstance(baseActivity, review);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 
         @Override
