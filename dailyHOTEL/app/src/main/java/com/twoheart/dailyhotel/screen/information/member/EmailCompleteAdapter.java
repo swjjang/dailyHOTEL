@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.member;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class EmailCompleteAdapter extends ArrayAdapter<String>
 
         if (convertView == null)
         {
-            view = LayoutInflater.from(mContext).inflate(R.layout.list_row_coupon_sort_dropdown_item, parent, false);
+            view = LayoutInflater.from(mContext).inflate(R.layout.layout_autocomplete_email_item, parent, false);
         } else
         {
             view = convertView;
@@ -63,8 +63,6 @@ public class EmailCompleteAdapter extends ArrayAdapter<String>
         String emailPostfix = mFilterEmailPostfixList.get(position);
 
         TextView textView = (TextView) view;
-
-        textView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
         textView.setText(emailPostfix);
 
         return view;
@@ -75,6 +73,7 @@ public class EmailCompleteAdapter extends ArrayAdapter<String>
         private EmailCompleteAdapter mAdapter;
         private List<String> mOriginalList;
         private List<String> mFilteredList;
+        private String mEmailPrefix;
 
         public EmailFilter(EmailCompleteAdapter adapter, List<String> originalList)
         {
@@ -100,14 +99,14 @@ public class EmailCompleteAdapter extends ArrayAdapter<String>
 
                 if (atSignPosition >= 0)
                 {
-                    String emailPrefix = email.substring(0, atSignPosition);
+                    mEmailPrefix = email.substring(0, atSignPosition);
                     String emailPostfix = email.substring(atSignPosition);
 
                     for (String companyEmailPostfix : mOriginalList)
                     {
                         if (companyEmailPostfix.startsWith(emailPostfix) == true)
                         {
-                            mFilteredList.add(emailPrefix + companyEmailPostfix);
+                            mFilteredList.add(mEmailPrefix + companyEmailPostfix);
                         }
                     }
                 }
@@ -117,6 +116,18 @@ public class EmailCompleteAdapter extends ArrayAdapter<String>
             results.count = mFilteredList.size();
 
             return results;
+        }
+
+        @Override
+        public CharSequence convertResultToString(Object resultValue)
+        {
+            if (Util.isTextEmpty(mEmailPrefix) == true)
+            {
+                return super.convertResultToString(resultValue);
+            } else
+            {
+                return resultValue == null ? "" : mEmailPrefix + resultValue.toString();
+            }
         }
 
         @Override
