@@ -27,7 +27,7 @@ public class MainNetworkController extends BaseNetworkController
 
         void onReviewGourmet(Review review);
 
-        void onReviewHotel(Review review);
+        void onReviewStay(Review review);
 
         void onCheckServerResponse(String title, String message);
 
@@ -344,7 +344,7 @@ public class MainNetworkController extends BaseNetworkController
                     {
                         Review review = new Review(responseJSONObject.getJSONObject("data"));
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewHotel(review);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(review);
                     } else
                     {
                         requestReviewGourmet();

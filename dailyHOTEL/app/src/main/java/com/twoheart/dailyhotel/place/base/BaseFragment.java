@@ -143,6 +143,18 @@ public abstract class BaseFragment extends Fragment implements Constants
         baseActivity.unLockUI();
     }
 
+    public void lockUIImmediately()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.lockUIImmediately();
+    }
+
     /**
      * UI Component의 잠금 상태를 확인하는 변수..
      *

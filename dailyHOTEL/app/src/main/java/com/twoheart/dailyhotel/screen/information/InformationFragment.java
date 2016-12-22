@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
@@ -32,6 +34,7 @@ import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesTabAct
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -218,6 +221,15 @@ public class InformationFragment extends BaseFragment implements Constants
 
         switch (requestCode)
         {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    lockUIImmediately();
+
+                    mNetworkController.requestReviewStay();
+                }
+                break;
+
             case CODE_REQEUST_ACTIVITY_SIGNUP:
             {
                 break;
@@ -245,6 +257,10 @@ public class InformationFragment extends BaseFragment implements Constants
             case CODE_REQUEST_ACTIVITY_FEEDBACK:
             case CODE_REQUEST_ACTIVITY_CONTACT_US:
                 mDontReload = false;
+                break;
+
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+                mNetworkController.requestReviewGourmet();
                 break;
         }
     }
@@ -311,7 +327,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivity(LoginActivity.newInstance(baseActivity));
+            startActivityForResult(LoginActivity.newInstance(baseActivity), CODE_REQUEST_ACTIVITY_LOGIN);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
@@ -887,6 +903,37 @@ public class InformationFragment extends BaseFragment implements Constants
                 AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
             }
+        }
+
+        @Override
+        public void onReviewGourmet(Review review)
+        {
+            unLockUI();
+
+            if (review == null)
+            {
+                return;
+            }
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            Intent intent = ReviewActivity.newInstance(baseActivity, review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+        }
+
+        @Override
+        public void onReviewStay(Review review)
+        {
+            if (review == null)
+            {
+                mNetworkController.requestReviewGourmet();
+                return;
+            }
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            Intent intent = ReviewActivity.newInstance(baseActivity, review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 
         @Override

@@ -165,7 +165,7 @@
     <string name="actionbar_title_payment_wait_reservation_place_title">예약 장소</string>
     <string name="actionbar_title_creditcard_activity">간편결제 카드 관리</string>
     <string name="actionbar_title_event_list_frag">이벤트</string>
-    <string name="actionbar_title_edit_email">폰이메일 설정</string>
+    <string name="actionbar_title_edit_email">이메일 설정</string>
     <string name="actionbar_title_edit_name">이름 설정</string>
     <string name="actionbar_title_edit_birthday">생일 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>

@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity implements Constants
                 case 0:
                     if (mIsInitialization == true)
                     {
-                        showLockUIProgress();
+                        lockUIImmediately();
                     }
                     break;
 
@@ -781,7 +781,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onReviewHotel(Review review)
+        public void onReviewStay(Review review)
         {
             Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);

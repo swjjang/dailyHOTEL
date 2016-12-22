@@ -70,7 +70,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             switch (msg.what)
             {
                 case MESSAGE_SHOW_LOADING_PROGRESS:
-                    showLockUIProgress();
+                    lockUIImmediately();
                     break;
             }
         }
@@ -242,10 +242,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
-    public void showLockUIProgress()
+    public void lockUIImmediately()
     {
+        lockUiComponent();
+
         if (mLockUI != null && isFinishing() == false)
         {
+            if (mLockUI == null)
+            {
+                mLockUI = new LoadingDialog(this);
+            }
+
             mLockUI.showProgress();
         }
     }
