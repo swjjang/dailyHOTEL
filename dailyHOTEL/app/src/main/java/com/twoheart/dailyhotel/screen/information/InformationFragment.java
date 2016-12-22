@@ -260,6 +260,8 @@ public class InformationFragment extends BaseFragment implements Constants
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+                lockUIImmediately();
+
                 mNetworkController.requestReviewGourmet();
                 break;
         }
@@ -924,6 +926,8 @@ public class InformationFragment extends BaseFragment implements Constants
         @Override
         public void onReviewStay(Review review)
         {
+            unLockUI();
+
             if (review == null)
             {
                 mNetworkController.requestReviewGourmet();
