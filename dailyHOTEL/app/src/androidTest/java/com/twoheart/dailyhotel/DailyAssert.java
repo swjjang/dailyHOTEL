@@ -412,6 +412,11 @@ public class DailyAssert
 
     private static String bodyToString(final RequestBody request)
     {
+        if (request == null)
+        {
+            return null;
+        }
+
         try
         {
             Buffer buffer = new Buffer();
