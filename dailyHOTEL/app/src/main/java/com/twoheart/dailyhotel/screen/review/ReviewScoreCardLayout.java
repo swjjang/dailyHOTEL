@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -328,18 +329,24 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationUpdate(ValueAnimator animation)
             {
-                int value = (int) animation.getAnimatedValue();
-                float vectorValue = (VALUE_DP7 - value) / VALUE_DP15;
+                try
+                {
+                    int value = (int) animation.getAnimatedValue();
+                    float vectorValue = (VALUE_DP7 - value) / VALUE_DP15;
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                layoutParams.leftMargin = value;
-                layoutParams.rightMargin = value;
-                view.setLayoutParams(layoutParams);
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                    layoutParams.leftMargin = value;
+                    layoutParams.rightMargin = value;
+                    view.setLayoutParams(layoutParams);
 
-                int paddingValue1 = (int) (vectorValue * VALUE_DP30_DIV2);
-                int paddingValue2 = (int) (vectorValue * VALUE_DP30);
+                    int paddingValue1 = (int) (vectorValue * VALUE_DP30_DIV2);
+                    int paddingValue2 = (int) (vectorValue * VALUE_DP30);
 
-                view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
+                    view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
             }
         });
 
@@ -394,18 +401,24 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationUpdate(ValueAnimator animation)
             {
-                int value = (int) animation.getAnimatedValue();
+                try
+                {
+                    int value = (int) animation.getAnimatedValue();
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                layoutParams.leftMargin = value;
-                layoutParams.rightMargin = value;
-                view.setLayoutParams(layoutParams);
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                    layoutParams.leftMargin = value;
+                    layoutParams.rightMargin = value;
+                    view.setLayoutParams(layoutParams);
 
-                float vectorValue = (VALUE_DP8 + value) / VALUE_DP15;
-                int paddingValue1 = (int) ((1.0f - vectorValue) * VALUE_DP30_DIV2);
-                int paddingValue2 = (int) ((1.0f - vectorValue) * VALUE_DP30);
+                    float vectorValue = (VALUE_DP8 + value) / VALUE_DP15;
+                    int paddingValue1 = (int) ((1.0f - vectorValue) * VALUE_DP30_DIV2);
+                    int paddingValue2 = (int) ((1.0f - vectorValue) * VALUE_DP30);
 
-                view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
+                    view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
             }
         });
 

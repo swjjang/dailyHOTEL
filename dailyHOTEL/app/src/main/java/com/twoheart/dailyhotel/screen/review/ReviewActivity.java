@@ -560,10 +560,16 @@ public class ReviewActivity extends BaseActivity
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
-                        float value = (float) animation.getAnimatedValue();
-                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
+                        try
+                        {
+                            float value = (Float) animation.getAnimatedValue();
+                            final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
-                        mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                            mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
                     }
                 });
 
@@ -625,10 +631,16 @@ public class ReviewActivity extends BaseActivity
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
-                        float value = (float) animation.getAnimatedValue();
-                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
+                        try
+                        {
+                            float value = (Float) animation.getAnimatedValue();
+                            final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
-                        mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                            mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
                     }
                 });
 
