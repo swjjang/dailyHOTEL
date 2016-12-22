@@ -42,6 +42,9 @@ public class LauncherActivity extends Activity
 
         DailyDeepLink.getInstance().clear();
 
+        // 리뷰 초기화
+        DailyPreference.getInstance(this).setIsRequestReview(false);
+
         // 선택 날짜를 초기화 한다.
         DailyPreference.getInstance(this).setStayLastViewDate(null);
         DailyPreference.getInstance(this).setGourmetLastViewDate(null);

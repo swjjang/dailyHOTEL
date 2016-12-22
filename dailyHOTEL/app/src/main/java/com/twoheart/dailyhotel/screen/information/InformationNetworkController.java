@@ -3,13 +3,11 @@ package com.twoheart.dailyhotel.screen.information;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
 

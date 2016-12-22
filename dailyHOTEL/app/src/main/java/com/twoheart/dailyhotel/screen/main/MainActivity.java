@@ -714,12 +714,24 @@ public class MainActivity extends BaseActivity implements Constants
                 case 0:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
 
+                    if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
+                        mNetworkController.requestReviewStay();
+                    }
+
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
                     break;
 
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+
+                    if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
+                        mNetworkController.requestReviewStay();
+                    }
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
@@ -1196,6 +1208,17 @@ public class MainActivity extends BaseActivity implements Constants
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);
+        }
+
+        @Override
+        public void onUserProfileBenefit(boolean isExceedBonus)
+        {
+            DailyPreference.getInstance(MainActivity.this).setUserExceedBonus(isExceedBonus);
+            AnalyticsManager.getInstance(MainActivity.this).setExceedBonus(isExceedBonus);
+
+            mNetworkController.requestReviewStay();
+
+            DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
         }
     };
 }

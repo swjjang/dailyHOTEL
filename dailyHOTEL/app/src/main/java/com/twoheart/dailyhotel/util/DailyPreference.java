@@ -50,6 +50,8 @@ public class DailyPreference
     private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
     private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
 
+    private static final String KEY_IS_REQUEST_REVIEW_ = "32";
+
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
@@ -770,6 +772,16 @@ public class DailyPreference
     public boolean isViewSearchTooltip()
     {
         return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
+    }
+
+    public void setIsRequestReview(boolean value)
+    {
+        setValue(mEditor, KEY_IS_REQUEST_REVIEW_, value);
+    }
+
+    public boolean isRequestReview()
+    {
+        return getValue(mPreferences, KEY_IS_REQUEST_REVIEW_, false);
     }
 
     public void setStayCategory(String name, String code)
