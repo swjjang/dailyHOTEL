@@ -551,7 +551,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
-                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                //                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -602,7 +602,7 @@ public class ReviewActivity extends BaseActivity
                 }
 
                 // 테스트 코드
-                //                mOnNetworkControllerListener.onAddReviewInformation(Review.GRADE_GOOD);
+                mOnNetworkControllerListener.onAddReviewInformation(Review.GRADE_GOOD);
             }
         });
 

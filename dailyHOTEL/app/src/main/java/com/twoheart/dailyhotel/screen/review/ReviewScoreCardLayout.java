@@ -8,13 +8,12 @@
 package com.twoheart.dailyhotel.screen.review;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,14 +25,16 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
-public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnClickListener
+public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTouchListener
 {
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
     private DailyEmoticonImageView mSelectedEmoticonView;
     private int mReviewScore; // min : 1 ~ max : 5
     private OnScoreClickListener mOnScoreClickListener;
-    private AnimatorSet mAnimatorSet;
+    //    private AnimatorSet mAnimatorSet;
     private DailyTextView mResultTextView;
+    private View mEmoticonLayout;
+    private boolean mUnabledDragEmotionLayout;
 
     public interface OnScoreClickListener
     {
@@ -66,21 +67,25 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 
         View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_score, this);
 
+        View reviewScoreScrollView = (View) view.findViewById(R.id.reviewScoreScrollView);
+        reviewScoreScrollView.setClickable(true);
+        reviewScoreScrollView.setOnTouchListener(this);
+
         TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         TextView descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
 
         titleTextView.setText(reviewScoreQuestion.title);
         descriptionTextView.setText(reviewScoreQuestion.description);
 
-        View emoticonView = view.findViewById(R.id.emoticonView);
+        mEmoticonLayout = view.findViewById(R.id.emoticonLayout);
 
         mDailyEmoticonImageView = new DailyEmoticonImageView[5];
 
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView0);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView1);
-        mDailyEmoticonImageView[2] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView2);
-        mDailyEmoticonImageView[3] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView3);
-        mDailyEmoticonImageView[4] = (DailyEmoticonImageView) emoticonView.findViewById(R.id.emoticonImageView4);
+        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView0);
+        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView1);
+        mDailyEmoticonImageView[2] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView2);
+        mDailyEmoticonImageView[3] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView3);
+        mDailyEmoticonImageView[4] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView4);
 
         mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-618-01_worst.kf.json");
         mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-74-02_bad.kf.json");
@@ -94,12 +99,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
         {
             dailyEmoticonImageView.setPadding(DP30_DIV2, DP30, DP30_DIV2, 0);
-            dailyEmoticonImageView.setOnClickListener(this);
         }
 
         mResultTextView = (DailyTextView) view.findViewById(R.id.resultTextView);
 
-        RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(Util.dpToPx(mContext, 96), Util.dpToPx(mContext, 24));
+        RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         resultLayoutParams.bottomMargin = cardHeight * 18 / 100;
         resultLayoutParams.topMargin = cardHeight * 12 / 100;
         resultLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -202,51 +206,101 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
     }
 
     @Override
-    public void onClick(View view)
+    public boolean onTouch(View view, MotionEvent event)
     {
-        if (mSelectedEmoticonView != null && mSelectedEmoticonView.getId() == view.getId())
+        int action = event.getAction() & MotionEvent.ACTION_MASK;
+
+        if (mUnabledDragEmotionLayout == true)
         {
-            return;
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL)
+            {
+                mUnabledDragEmotionLayout = false;
+            }
+
+            return true;
         }
 
-        if (mAnimatorSet != null && (mAnimatorSet.isStarted() == true || mAnimatorSet.isRunning()))
+        float x = event.getX();
+        float y = event.getY();
+
+        switch (action)
         {
-            return;
+            case MotionEvent.ACTION_DOWN:
+                if (mEmoticonLayout.getTop() < y && mEmoticonLayout.getBottom() > y)
+                {
+                    mUnabledDragEmotionLayout = false;
+                    view.getParent().requestDisallowInterceptTouchEvent(true);
+                } else
+                {
+                    mUnabledDragEmotionLayout = true;
+                    return true;
+                }
+
+            case MotionEvent.ACTION_MOVE:
+            {
+                DailyEmoticonImageView selectedEmoticonView = null;
+
+                for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+                {
+                    if (mEmoticonLayout.getLeft() + dailyEmoticonImageView.getLeft() < x && mEmoticonLayout.getLeft() + dailyEmoticonImageView.getRight() > x)
+                    {
+                        selectedEmoticonView = dailyEmoticonImageView;
+                        break;
+                    }
+                }
+
+                if (selectedEmoticonView == null || mSelectedEmoticonView != null && mSelectedEmoticonView.getId() == selectedEmoticonView.getId())
+                {
+                    return true;
+                }
+
+                ValueAnimator scaleDownAnimator = null, scaleUpAnimator = null;
+
+                if (mSelectedEmoticonView != null)
+                {
+                    ValueAnimator valueAnimator = (ValueAnimator) mSelectedEmoticonView.getTag();
+                    if (valueAnimator != null)
+                    {
+                        valueAnimator.cancel();
+                    }
+
+                    scaleDownAnimator = getScaleDownAnimator(mSelectedEmoticonView);
+                    mSelectedEmoticonView.setTag(scaleDownAnimator);
+                    scaleDownAnimator.start();
+                }
+
+                checkedReviewEmoticon(selectedEmoticonView);
+
+                mSelectedEmoticonView = selectedEmoticonView;
+
+                if (selectedEmoticonView != null)
+                {
+                    ValueAnimator valueAnimator = (ValueAnimator) selectedEmoticonView.getTag();
+                    if (valueAnimator != null)
+                    {
+                        valueAnimator.cancel();
+                    }
+
+                    scaleUpAnimator = getScaleUpAnimator(selectedEmoticonView);
+                    selectedEmoticonView.setTag(scaleUpAnimator);
+                    scaleUpAnimator.start();
+                }
+                break;
+            }
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                mUnabledDragEmotionLayout = false;
+                view.getParent().requestDisallowInterceptTouchEvent(false);
+
+                if (mOnScoreClickListener != null)
+                {
+                    mOnScoreClickListener.onClick(this, mReviewScore);
+                }
+                break;
         }
 
-        mAnimatorSet = new AnimatorSet();
-        ValueAnimator scaleDownAnimator = null, scaleUpAnimator = null;
-
-        if (mSelectedEmoticonView != null)
-        {
-            scaleDownAnimator = getScaleDownAnimator(mSelectedEmoticonView);
-        }
-
-        checkedReviewEmoticon(view);
-
-        mSelectedEmoticonView = (DailyEmoticonImageView) view;
-
-        if (view != null)
-        {
-            scaleUpAnimator = getScaleUpAnimator(view);
-        }
-
-        if (scaleDownAnimator != null && scaleUpAnimator != null)
-        {
-            mAnimatorSet.playTogether(scaleDownAnimator, scaleUpAnimator);
-        } else if (scaleUpAnimator != null)
-        {
-            mAnimatorSet.playTogether(scaleUpAnimator);
-        }
-
-        mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        mAnimatorSet.start();
-
-        // 순서가 중요 위의 체크가 끝나야한다.
-        if (mOnScoreClickListener != null)
-        {
-            mOnScoreClickListener.onClick(this, mReviewScore);
-        }
+        return true;
     }
 
     @Override
@@ -318,7 +372,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         final float VALUE_DP15 = Util.dpToPx(mContext, 15);
         final int VALUE_DP8 = Util.dpToPx(mContext, 8);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt((int) VALUE_DP7, -VALUE_DP8);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, -VALUE_DP8);
         valueAnimator.setDuration(200);
 
         final int VALUE_DP30 = Util.dpToPx(mContext, 30);
@@ -352,6 +406,8 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 
         valueAnimator.addListener(new Animator.AnimatorListener()
         {
+            private boolean mIsCancel;
+
             @Override
             public void onAnimationStart(Animator animation)
             {
@@ -361,6 +417,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                if (mIsCancel == true)
+                {
+                    return;
+                }
+
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 layoutParams.leftMargin = -VALUE_DP8;
                 layoutParams.rightMargin = -VALUE_DP8;
@@ -371,7 +432,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationCancel(Animator animation)
             {
-
+                mIsCancel = true;
             }
 
             @Override
@@ -390,7 +451,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
         final float VALUE_DP15 = Util.dpToPx(mContext, 15);
         final int VALUE_DP7 = Util.dpToPx(mContext, 7);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(Util.dpToPx(mContext, -8), VALUE_DP7);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, VALUE_DP7);
         valueAnimator.setDuration(200);
 
         final int VALUE_DP30 = Util.dpToPx(mContext, 30);
@@ -424,6 +485,8 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
 
         valueAnimator.addListener(new Animator.AnimatorListener()
         {
+            private boolean mIsCancel;
+
             @Override
             public void onAnimationStart(Animator animation)
             {
@@ -433,6 +496,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                if (mIsCancel == true)
+                {
+                    return;
+                }
+
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
                 layoutParams.leftMargin = VALUE_DP7;
                 layoutParams.rightMargin = VALUE_DP7;
@@ -443,7 +511,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnCl
             @Override
             public void onAnimationCancel(Animator animation)
             {
-
+                mIsCancel = true;
             }
 
             @Override
