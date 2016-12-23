@@ -968,8 +968,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            Intent intent = ImageDetailListActivity.newInstance(GourmetDetailActivity.this, placeDetail.name, imageInformationArrayList, mCurrentImage);
+            Intent intent = ImageDetailListActivity.newInstance(GourmetDetailActivity.this, PlaceType.FNB, placeDetail.name, imageInformationArrayList, mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
+
+            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+                AnalyticsManager.Action.GOURMET_IMAGE_CLICKED, placeDetail.name, null);
         }
 
         @Override

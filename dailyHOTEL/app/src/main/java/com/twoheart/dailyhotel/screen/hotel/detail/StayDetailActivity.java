@@ -955,8 +955,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, placeDetail.name, imageInformationArrayList, mCurrentImage);
+            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, PlaceType.HOTEL, placeDetail.name, imageInformationArrayList, mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
+
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, placeDetail.name, null);
         }
 
         @Override

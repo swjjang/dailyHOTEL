@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -36,6 +37,7 @@ import java.util.List;
 
 public class ImageDetailListActivity extends BaseActivity implements Constants
 {
+    private static final String INTENT_EXTRA_DATA_PLACETYPE = "placeType";
     private static final String INTENT_EXTRA_DATA_TITLE = "title";
 
     private DailyPlaceDetailListView mListView;
@@ -45,9 +47,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     private VelocityTracker mVelocityTracker;
     private View mToolbarView;
 
-    public static Intent newInstance(Context context, String title, ArrayList<ImageInformation> arrayList, int position)
+    private PlaceType mPlaceType;
+
+    public static Intent newInstance(Context context, Constants.PlaceType placeType, String title, ArrayList<ImageInformation> arrayList, int position)
     {
         Intent intent = new Intent(context, ImageDetailListActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, arrayList);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, position);
@@ -75,6 +80,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
         } else
         {
+            mPlaceType = Constants.PlaceType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_PLACETYPE));
             title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
             arrayList = intent.getParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
             position = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, 0);
@@ -90,6 +96,23 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         initLayout(arrayList, position);
     }
 
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_HOTELIMAGEVIEW);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_GOURMETIMAGEVIEW);
+                break;
+        }
+    }
+
     private void initToolbar(String title)
     {
         mToolbarView = findViewById(R.id.toolbar);
@@ -99,6 +122,19 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View v)
             {
+                switch (mPlaceType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(ImageDetailListActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                            AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, AnalyticsManager.Label.CLOSE, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(ImageDetailListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+                            AnalyticsManager.Action.GOURMET_IMAGE_CLICKED, AnalyticsManager.Label.CLOSE, null);
+                        break;
+                }
+
                 finish();
             }
         });
@@ -226,6 +262,19 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
                             if (yVelocity > 5.0f || Math.abs(mListView.getTranslationY()) > (Util.getLCDHeight(ImageDetailListActivity.this) / 4))
                             {
+                                switch (mPlaceType)
+                                {
+                                    case HOTEL:
+                                        AnalyticsManager.getInstance(ImageDetailListActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                                            AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, AnalyticsManager.Label.SWIPE, null);
+                                        break;
+
+                                    case FNB:
+                                        AnalyticsManager.getInstance(ImageDetailListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+                                            AnalyticsManager.Action.GOURMET_IMAGE_CLICKED, AnalyticsManager.Label.SWIPE, null);
+                                        break;
+                                }
+
                                 finish();
                                 return false;
                             }
@@ -280,6 +329,25 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         } else
         {
             overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+
+        switch (mPlaceType)
+        {
+            case HOTEL:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                    AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, AnalyticsManager.Label.BACK, null);
+                break;
+
+            case FNB:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+                    AnalyticsManager.Action.GOURMET_IMAGE_CLICKED, AnalyticsManager.Label.BACK, null);
+                break;
         }
     }
 

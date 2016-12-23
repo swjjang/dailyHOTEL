@@ -678,6 +678,10 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_REVIEWDETAIL = "DailyGourmet_ReviewDetail";
         public static final String DAILYGOURMET_REVIEWWRITE = "DailyGourmet_ReviewWrite";
         public static final String DAILYGOURMET_REVIEWEDIT = "DailyGourmet_ReviewEdit";
+
+        // Detail Image List
+        public static final String DAILYHOTEL_HOTELIMAGEVIEW = "DailyHotel_HotelImageView";
+        public static final String DAILYGOURMET_GOURMETIMAGEVIEW = "DailyGourmet_GourmetImageView";
     }
 
     public static class Action
@@ -853,6 +857,10 @@ public class AnalyticsManager
         public static final String REVIEW_DETAIL = "ReviewDetail";
         public static final String REVIEW_POPUP = "ReviewPopup";
         public static final String REVIEW_WRITE = "ReviewWrite";
+
+        // Detail Image List
+        public static final String HOTEL_IMAGE_CLICKED = "HotelImageClicked";
+        public static final String GOURMET_IMAGE_CLICKED = "GourmetImageClicked";
     }
 
     public static class Category
@@ -1012,6 +1020,8 @@ public class AnalyticsManager
         public static final String NO = "No";
         public static final String BACK = "Back";
         public static final String CONFIRM = "Confirm";
+        public static final String CLOSE = "Close";
+        public static final String SWIPE = "Swipe";
 
         public static final String DIRECTCALL_FRONT = "DirectCall_Front";
         public static final String DIRECTCALL_RESERVATION = "DirectCall_Reservation";
