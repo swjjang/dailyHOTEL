@@ -899,6 +899,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mBookingTextViewAnimator = null;
         }
 
+        if (mBookingTextView == null)
+        {
+            return;
+        }
+
         final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
