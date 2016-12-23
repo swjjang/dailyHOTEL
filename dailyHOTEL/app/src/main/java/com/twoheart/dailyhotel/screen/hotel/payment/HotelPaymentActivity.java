@@ -1968,15 +1968,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
                         , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
                         , hotelPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationCallback);
-
-                    if (DEBUG == false)
-                    {
-                        if (Util.isTextEmpty(name) == true)
-                        {
-                            Crashlytics.log("HotelPaymentActivity::requestUserInformationForPayment :: name=" //
-                                + name + " , userIndex=" + userIndex + " , user_email=" + email);
-                        }
-                    }
                 } catch (Exception e)
                 {
                     onError(e);
