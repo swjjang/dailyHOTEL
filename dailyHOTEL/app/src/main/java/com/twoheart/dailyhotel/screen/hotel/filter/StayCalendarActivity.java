@@ -33,6 +33,11 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
     {
+        if (saleTime == null)
+        {
+            return null;
+        }
+
         SaleTime startSaleTime = saleTime.getClone(0);
 
         return newInstance(context, saleTime, nights, startSaleTime, null, screen, isSelected, isAnimation);

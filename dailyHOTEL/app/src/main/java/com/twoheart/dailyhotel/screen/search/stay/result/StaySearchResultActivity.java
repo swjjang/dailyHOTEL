@@ -489,6 +489,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, //
                 checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+
+            if (intent == null)
+            {
+                Util.restartApp(StaySearchResultActivity.this);
+                return;
+            }
+
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //

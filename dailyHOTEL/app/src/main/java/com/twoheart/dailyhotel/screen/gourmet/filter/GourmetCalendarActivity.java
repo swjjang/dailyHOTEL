@@ -30,6 +30,11 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, String screen, boolean isSelected, boolean isAnimation)
     {
+        if (saleTime == null)
+        {
+            return null;
+        }
+
         SaleTime startSaleTime = saleTime.getClone(0);
 
         return newInstance(context, saleTime, startSaleTime, null, screen, isSelected, isAnimation);

@@ -298,7 +298,14 @@ public class StayMainFragment extends PlaceMainFragment
         SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
         int nights = mStayCuration.getNights();
 
-        Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, callByScreen, true, true);
+        Intent intent = StayCalendarActivity.newInstance(mBaseActivity, checkInSaleTime, nights, callByScreen, true, true);
+
+        if (intent == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
