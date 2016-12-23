@@ -626,6 +626,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String posTitle = getString(R.string.dialog_btn_text_confirm);
         View.OnClickListener posListener = null;
 
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION) == true)
+        {
+            Customer customer = mPaymentInformation.getCustomer();
+
+            if (customer == null || Util.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
+            {
+                mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+            }
+        }
+
         switch (resultCode)
         {
             // 결제가 성공한 경우 GA와 믹스패널에 등록

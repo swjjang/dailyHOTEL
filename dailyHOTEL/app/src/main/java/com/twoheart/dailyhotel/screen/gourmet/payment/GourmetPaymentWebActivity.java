@@ -57,6 +57,8 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
     private static String QUOTA = "";
     public int m_nStat = PROGRESS_STAT_NOT_START;
 
+    private GourmetPaymentInformation mGourmetPaymentInformation;
+
     private WebView mWebView;
     private Handler handler = new Handler();
 
@@ -75,16 +77,16 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        GourmetPaymentInformation gourmetPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+        mGourmetPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
 
-        if (gourmetPaymentInformation == null)
+        if (mGourmetPaymentInformation == null)
         {
             DailyToast.showToast(GourmetPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
 
-        if (gourmetPaymentInformation.getTicketInformation().index == 0)
+        if (mGourmetPaymentInformation.getTicketInformation().index == 0)
         {
             // 세션이 만료되어 재시작 요청.
             restartExpiredSession();
@@ -146,7 +148,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        requestPostPaymentWebView(mWebView, gourmetPaymentInformation);
+        requestPostPaymentWebView(mWebView, mGourmetPaymentInformation);
     }
 
     private void requestPostPaymentWebView(WebView webView, GourmetPaymentInformation gourmetPaymentInformation)
@@ -475,7 +477,11 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             }
         }
 
-        setResult(resultCode);
+
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+
+        setResult(resultCode, intent);
         finish();
     }
 
@@ -579,12 +585,15 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
             mWebView.loadUrl("about:blank");
 
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+
             if (Util.isAvailableNetwork(GourmetPaymentWebActivity.this) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
             } else
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR, intent);
             }
 
             finish();
@@ -633,7 +642,10 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         @JavascriptInterface
         public void Result(final String val)
         {
-            setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE);
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+
+            setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
             finish();
         }
 
@@ -643,7 +655,10 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         @JavascriptInterface
         public void BestClose()
         {
-            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED);
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+
+            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
             finish();
         }
     }
@@ -842,6 +857,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 }
             }
 
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
             setResult(resultCode, intent);
             finish();
         }
@@ -896,14 +912,17 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         @Override
         protected void onPostExecute(String data)
         {
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+
             if (Util.isTextEmpty(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
                 finish();
                 return;
             } else if ("401".equalsIgnoreCase(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION, intent);
                 finish();
                 return;
             }
@@ -913,7 +932,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 mWebView.loadDataWithBaseURL(mUrl, data, "text/html", "utf-8", null);
             } catch (Exception e)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
                 finish();
             }
         }

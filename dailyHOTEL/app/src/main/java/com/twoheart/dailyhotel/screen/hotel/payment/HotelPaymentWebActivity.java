@@ -57,6 +57,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     private static String CARD_CD = "";
     private static String QUOTA = "";
     public int m_nStat = PROGRESS_STAT_NOT_START;
+    private HotelPaymentInformation mHotelPaymentInformation;
 
     private WebView mWebView;
     private Handler handler = new Handler();
@@ -76,17 +77,17 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        HotelPaymentInformation hotelPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+        mHotelPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
         SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
-        if (hotelPaymentInformation == null)
+        if (mHotelPaymentInformation == null)
         {
             DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
 
-        if (hotelPaymentInformation.getSaleRoomInformation().roomIndex == 0)
+        if (mHotelPaymentInformation.getSaleRoomInformation().roomIndex == 0)
         {
             // 세션이 만료되어 재시작 요청.
             restartExpiredSession();
@@ -148,7 +149,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        requestPostPaymentWebView(mWebView, hotelPaymentInformation, saleTime);
+        requestPostPaymentWebView(mWebView, mHotelPaymentInformation, saleTime);
     }
 
     private void requestPostPaymentWebView(WebView webView, HotelPaymentInformation hotelPaymentInformation, SaleTime saleTime)
@@ -508,7 +509,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }
 
-        setResult(resultCode);
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+
+        setResult(resultCode, intent);
         finish();
     }
 
@@ -614,12 +618,15 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
             mWebView.loadUrl("about:blank");
 
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+
             if (Util.isAvailableNetwork(HotelPaymentWebActivity.this) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
             } else
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_NETWORK_ERROR, intent);
             }
 
             finish();
@@ -668,7 +675,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         @JavascriptInterface
         public void Result(final String val)
         {
-            setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE);
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+
+            setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
             finish();
         }
 
@@ -678,7 +688,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         @JavascriptInterface
         public void BestClose()
         {
-            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED);
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+
+            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
             finish();
         }
     }
@@ -892,7 +905,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
             }
 
-            setResult(resultCode);
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+
+            setResult(resultCode, intent);
             finish();
         }
 
@@ -903,6 +919,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         {
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
 
             setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
             finish();
@@ -958,14 +975,17 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         @Override
         protected void onPostExecute(String data)
         {
+            Intent intent = new Intent();
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+
             if (Util.isTextEmpty(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
                 finish();
                 return;
             } else if ("401".equalsIgnoreCase(data) == true)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION, intent);
                 finish();
                 return;
             }
@@ -975,7 +995,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 mWebView.loadDataWithBaseURL(mUrl, data, "text/html", "utf-8", null);
             } catch (Exception e)
             {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
                 finish();
             }
         }
