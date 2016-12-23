@@ -103,13 +103,13 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
 
         mResultTextView = (DailyTextView) view.findViewById(R.id.resultTextView);
 
-        RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        resultLayoutParams.bottomMargin = cardHeight * 18 / 100;
-        resultLayoutParams.topMargin = cardHeight * 12 / 100;
-        resultLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        //        RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //        resultLayoutParams.bottomMargin = cardHeight * 18 / 100;
+        //        resultLayoutParams.topMargin = cardHeight * 12 / 100;
+        //        resultLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //        resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
-        mResultTextView.setLayoutParams(resultLayoutParams);
+        //        mResultTextView.setLayoutParams(resultLayoutParams);
     }
 
     public void setOnScoreClickListener(OnScoreClickListener listener)

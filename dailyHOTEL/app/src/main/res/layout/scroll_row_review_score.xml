@@ -23,11 +23,30 @@
         android:textColor="@color/default_text_c323232"
         android:textSize="17dp"/>
 
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/resultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descriptionTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/selector_review_resultlayout"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:text="@string/label_review_score_default"
+        android:textColor="@color/white"
+        android:textSize="13dp"
+        dailyFont:style="Medium"/>
+
     <RelativeLayout
         android:id="@+id/emoticonLayout"
         android:layout_width="wrap_content"
         android:layout_height="66dp"
-        android:layout_above="@+id/resultTextView"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/resultTextView"
         android:layout_centerHorizontal="true"
         android:gravity="bottom|center_horizontal">
 
@@ -76,23 +95,23 @@
             android:layout_toRightOf="@+id/emoticonImageView3"/>
     </RelativeLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/resultTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="44dp"
-        android:background="@drawable/selector_review_resultlayout"
-        android:gravity="center"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp"
-        android:text="@string/label_review_score_default"
-        android:textColor="@color/white"
-        android:textSize="13dp"
-        dailyFont:style="Medium"/>
+    <!--<com.twoheart.dailyhotel.widget.DailyTextView-->
+        <!--android:id="@+id/resultTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="44dp"-->
+        <!--android:background="@drawable/selector_review_resultlayout"-->
+        <!--android:gravity="center"-->
+        <!--android:paddingBottom="5dp"-->
+        <!--android:paddingLeft="10dp"-->
+        <!--android:paddingRight="10dp"-->
+        <!--android:paddingTop="5dp"-->
+        <!--android:text="@string/label_review_score_default"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="13dp"-->
+        <!--dailyFont:style="Medium"/>-->
 
     <View
         android:id="@+id/reviewScoreScrollView"

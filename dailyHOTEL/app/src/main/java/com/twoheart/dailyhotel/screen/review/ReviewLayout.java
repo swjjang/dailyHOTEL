@@ -179,14 +179,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
                 int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
                 final int cardHeight = Util.getRatioHeightType4x3(cardWidth);
 
-                mNestedScrollView.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
-                    }
-                });
+                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
                 hasNext = true;
                 break;
@@ -204,14 +197,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
                     int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
                     final int cardHeight = Util.getRatioHeightType4x3(cardWidth);
 
-                    mNestedScrollView.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
-                        }
-                    });
+                    mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
                     hasNext = true;
                     break;

@@ -690,8 +690,6 @@ public class ReviewActivity extends BaseActivity
 
                 mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
-                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
-
                 switch (reviewItem.placeType)
                 {
                     case HOTEL:
@@ -755,49 +753,29 @@ public class ReviewActivity extends BaseActivity
             message.what = REQUEST_NEXT_FOCUSE;
             message.arg1 = position;
 
-            mHandler.sendMessageDelayed(message, 1500);
+            mHandler.sendMessageDelayed(message, 300);
         }
 
         @Override
         public void onReviewScoreTypeClick(int position, int reviewScore)
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI(false);
-
             setConfirmTextView();
 
             if (mReviewLayout.hasUncheckedReview() == true)
             {
 
                 sendMessageDelayed(position);
-            } else
-            {
-                unLockUI();
             }
         }
 
         @Override
         public void onReviewPickTypeClick(int position, int selectedType)
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI(false);
-
             setConfirmTextView();
 
             if (mReviewLayout.hasUncheckedReview() == true)
             {
                 sendMessageDelayed(position);
-            } else
-            {
-                unLockUI();
             }
         }
 
@@ -970,7 +948,10 @@ public class ReviewActivity extends BaseActivity
 
             mReviewGrade = grade;
 
-            if (Review.GRADE_NONE.equalsIgnoreCase(grade) == false)
+            if (Review.GRADE_NONE.equalsIgnoreCase(grade) == true)
+            {
+                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
+            } else
             {
                 setResult(RESULT_OK);
 
