@@ -10,10 +10,11 @@
  * @author Mike Han(mike@dailyhotel.co.kr)
  * @since 2014-02-24
  */
-package com.twoheart.dailyhotel.network;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.content.Context;
 
+import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
