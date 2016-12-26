@@ -20,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -286,7 +287,12 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -315,9 +321,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
     private void startFrontCall(final String phoneNumber)
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_FRONT, null);
-
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
             @Override
@@ -332,6 +335,9 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+
+                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_FRONT, null);
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(HotelBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
@@ -367,9 +373,6 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
     private void startReservationCall(final String phoneNumber)
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_RESERVATION, null);
-
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
             @Override
@@ -384,6 +387,9 @@ public class HotelBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+
+                        AnalyticsManager.getInstance(HotelBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_RESERVATION, null);
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(HotelBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);

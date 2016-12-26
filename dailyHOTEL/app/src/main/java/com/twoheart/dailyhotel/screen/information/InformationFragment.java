@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -218,6 +219,12 @@ public class InformationFragment extends BaseFragment implements Constants
 
         switch (requestCode)
         {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                }
+                break;
+
             case CODE_REQEUST_ACTIVITY_SIGNUP:
             {
                 break;
@@ -311,7 +318,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivity(LoginActivity.newInstance(baseActivity));
+            startActivityForResult(LoginActivity.newInstance(baseActivity), CODE_REQUEST_ACTIVITY_LOGIN);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);

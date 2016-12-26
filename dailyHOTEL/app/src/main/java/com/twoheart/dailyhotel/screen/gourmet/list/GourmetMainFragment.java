@@ -234,7 +234,14 @@ public class GourmetMainFragment extends PlaceMainFragment
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(getContext(), mGourmetCuration.getSaleTime(), callByScreen, true, true);
+        Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mGourmetCuration.getSaleTime(), callByScreen, true, true);
+
+        if (intent == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -371,7 +378,7 @@ public class GourmetMainFragment extends PlaceMainFragment
             Province province = mGourmetCuration.getProvince();
 
             Intent intent = GourmetRegionListActivity.newInstance(getContext(), province, saleTime);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+            getActivity().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
             {
@@ -673,11 +680,11 @@ public class GourmetMainFragment extends PlaceMainFragment
                 unLockUI();
 
                 return moveDeepLinkEventBannerWeb(baseActivity);
-            } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkRegionList(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkRegionList(baseActivity);
             } else if (DailyDeepLink.getInstance().isGourmetSearchView() == true)
             {
                 unLockUI();

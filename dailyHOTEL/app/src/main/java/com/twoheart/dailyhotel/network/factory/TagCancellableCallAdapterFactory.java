@@ -125,10 +125,10 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
             mTag = tag;
             mQueuedCalls = queuedCalls;
 
-            addQueue(tag);
+            setTag(tag);
         }
 
-        public void addQueue(String tag)
+        public void setTag(String tag)
         {
             mTag = tag;
             mQueuedCalls.put(this, tag);

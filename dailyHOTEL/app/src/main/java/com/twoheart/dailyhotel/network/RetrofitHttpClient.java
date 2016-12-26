@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.network.factory.JSONConverterFactory;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,16 +67,25 @@ public class RetrofitHttpClient implements Constants
         mOkHttpClient = mOkHttpClient.newBuilder().sslSocketFactory(sslSocketFactory, Platform.get()//
             .trustManager(sslSocketFactory))//
             .addInterceptor(new HeaderInterceptor())//
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build();
+            .readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
 
         mTagCancellableCallAdapterFactory = TagCancellableCallAdapterFactory.create();
 
-        mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
-            .client(mOkHttpClient)//
-            .addConverterFactory(JSONConverterFactory.create())//
-            .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
+        if (Constants.DEBUG == true)
+        {
+            String baseUrl = DailyPreference.getInstance(context).getBaseUrl();
+
+            mRetrofit = new Retrofit.Builder().baseUrl(baseUrl)//
+                .client(mOkHttpClient)//
+                .addConverterFactory(JSONConverterFactory.create())//
+                .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
+        } else
+        {
+            mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
+                .client(mOkHttpClient)//
+                .addConverterFactory(JSONConverterFactory.create())//
+                .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
+        }
 
         mDailyMobileService = mRetrofit.create(DailyMobileService.class);
     }

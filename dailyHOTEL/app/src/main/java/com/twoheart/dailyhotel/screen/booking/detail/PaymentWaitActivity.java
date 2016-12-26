@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -283,7 +284,12 @@ public class PaymentWaitActivity extends BaseActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

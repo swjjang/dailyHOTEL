@@ -35,14 +35,16 @@ public class KakaoLinkManager implements Constants
         return new KakaoLinkManager(context);
     }
 
-    public void sendInviteKakaoLink(String text)
+    public void sendInviteKakaoLink(String text, String recommendCode)
     {
+        final String URL = "https://app.adjust.com/lkhiuk?campaign=referral-in_app&adgroup=invite_friend&creative=app_download&deep_link=dailyhotel%3A%2F%2Fdailyhotel.co.kr%3Fvc%3D6%26v%3Dsu%26rc%3D" + recommendCode;
+
         try
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
             messageBuilder.addImage("http://img.dailyhotel.me/app_static/kakao01.jpg", 300, 400);
             messageBuilder.addText(text);
-            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
+            messageBuilder.addWebButton(mContext.getString(R.string.kakao_btn_invited_friend), URL);
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (KakaoParameterException e)
         {

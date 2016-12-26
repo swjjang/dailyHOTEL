@@ -25,7 +25,6 @@
 
 
             <!-- 결제 정보 -->
-
             <LinearLayout
                 android:id="@+id/paymentInfoLayout"
                 android:layout_width="match_parent"
@@ -70,8 +69,8 @@
                         android:textSize="11dp"/>
                 </RelativeLayout>
 
-
                 <RelativeLayout
+                    android:id="@+id/paymentTypeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="11dp"

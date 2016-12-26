@@ -115,6 +115,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                     mDontReloadAtOnResume = true;
                 } else
                 {
+                    mDontReloadAtOnResume = false;
                     mIsDeepLink = false;
                 }
 

@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -222,7 +223,12 @@ public class SignupStep2Activity extends BaseActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

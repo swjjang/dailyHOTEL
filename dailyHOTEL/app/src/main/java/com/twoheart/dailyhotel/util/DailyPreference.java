@@ -50,6 +50,8 @@ public class DailyPreference
     private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
     private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
 
+    private static final String KEY_IS_REQUEST_REVIEW_ = "32";
+
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
@@ -64,8 +66,10 @@ public class DailyPreference
     private static final String KEY_STAY_RECENT_PLACES = "210";
     private static final String KEY_GOURMET_RECENT_PLACES = "211";
 
+
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
+    private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
 
     private static final String KEY_SETTING_MIGRATION_FLAG = "1003";
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
@@ -760,6 +764,16 @@ public class DailyPreference
         return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
     }
 
+    public void setIsRequestReview(boolean value)
+    {
+        setValue(mEditor, KEY_IS_REQUEST_REVIEW_, value);
+    }
+
+    public boolean isRequestReview()
+    {
+        return getValue(mPreferences, KEY_IS_REQUEST_REVIEW_, false);
+    }
+
     public void setStayCategory(String name, String code)
     {
         setValue(mEditor, KEY_STAY_CATEGORY_NAME, name);
@@ -784,6 +798,16 @@ public class DailyPreference
     public void setBackgroundAppTime(long value)
     {
         setValue(mEditor, KEY_BACKGROUND_APP_TIME, value);
+    }
+
+    public String getBaseUrl()
+    {
+        return getValue(mPreferences, KEY_BASE_URL, Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT));
+    }
+
+    public void setBaseUrl(String value)
+    {
+        setValue(mEditor, KEY_BASE_URL, value);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

@@ -31,6 +31,21 @@
         android:background="@color/default_line_cf0f0f0"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/freePaymentView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:drawablePadding="5dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="21dp"
+        android:text="@string/message_payment_free_payment"
+        android:textColor="@color/default_text_c900034"
+        android:textSize="13dp"
+        android:visibility="gone"
+        app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/guidePaymentMemoView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,6 +61,7 @@
         app:drawableCompatLeft="@drawable/ic_payment_notice"/>
 
     <LinearLayout
+        android:id="@+id/paymentTypeInformationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"

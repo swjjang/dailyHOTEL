@@ -244,7 +244,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initIntent(Intent intent)
     {
-        SaleTime saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        SaleTime saleTime;
+
+        try
+        {
+            saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         int nights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
 
         Location location = null;
@@ -479,6 +489,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, //
                 checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+
+            if (intent == null)
+            {
+                Util.restartApp(StaySearchResultActivity.this);
+                return;
+            }
+
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //

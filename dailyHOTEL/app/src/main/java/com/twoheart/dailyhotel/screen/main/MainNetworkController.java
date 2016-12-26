@@ -9,7 +9,6 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -27,7 +26,7 @@ public class MainNetworkController extends BaseNetworkController
 
         void onReviewGourmet(Review review);
 
-        void onReviewHotel(Review review);
+        void onReviewStay(Review review);
 
         void onCheckServerResponse(String title, String message);
 
@@ -40,6 +39,8 @@ public class MainNetworkController extends BaseNetworkController
         void onNoticeAgreementResult(String agreeMessage, String cancelMessage);
 
         void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime);
+
+        void onUserProfileBenefit(boolean isExceedBonus);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -47,7 +48,7 @@ public class MainNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestCheckServer()
+    protected void requestCheckServer()
     {
         // 서버 상태 체크
         DailyMobileAPI.getInstance(mContext).requestStatusServer(mNetworkTag, mStatusCallback);
@@ -61,7 +62,7 @@ public class MainNetworkController extends BaseNetworkController
     /**
      * 이벤트가 있는지를 요청한다. 실패 하더라도 무시한다.
      */
-    public void requestCommonDatetime()
+    protected void requestCommonDatetime()
     {
         DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<JSONObject>()
         {
@@ -110,12 +111,17 @@ public class MainNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestEventNCouponNNoticeNewCount(mNetworkTag, lastEventTime, lastCouponTime, lastNoticeTime, mDailyEventCountCallback);
     }
 
-    public void requestVersion()
+    protected void requestVersion()
     {
         DailyMobileAPI.getInstance(mContext).requestCommonVersion(mNetworkTag, mCommonVersionCallback);
     }
 
-    public void requestReviewGourmet()
+    protected void requestReviewStay()
+    {
+        DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewStayCallback);
+    }
+
+    protected void requestReviewGourmet()
     {
         DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mReviewGourmetCallback);
     }
@@ -341,7 +347,7 @@ public class MainNetworkController extends BaseNetworkController
                     {
                         Review review = new Review(responseJSONObject.getJSONObject("data"));
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewHotel(review);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(review);
                     } else
                     {
                         requestReviewGourmet();
@@ -399,9 +405,6 @@ public class MainNetworkController extends BaseNetworkController
 
                         // 누적 적립금 판단.
                         DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserProfileBenefitCallback);
-
-                        // 호텔 평가요청
-                        DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewStayCallback);
                     } else
                     {
                         mOnNetworkControllerListener.onError(null);
@@ -442,8 +445,7 @@ public class MainNetworkController extends BaseNetworkController
 
                         boolean isExceedBonus = dataJSONObject.getBoolean("exceedLimitedBonus");
 
-                        DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
-                        AnalyticsManager.getInstance(mContext).setExceedBonus(isExceedBonus);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfileBenefit(isExceedBonus);
                     } else
                     {
                         // 에러가 나도 특별히 해야할일은 없다.

@@ -234,7 +234,12 @@ public class AddProfileSocialActivity extends BaseActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -363,7 +368,12 @@ public class AddProfileSocialActivity extends BaseActivity
             try
             {
                 dialog.setContentView(dialogView);
+
+                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(AddProfileSocialActivity.this, dialog);
+
                 dialog.show();
+
+                dialog.getWindow().setAttributes(layoutParams);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

@@ -23,10 +23,9 @@
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/mapImageView"
                 android:layout_width="match_parent"
-                android:layout_height="242dp"
-                android:layout_marginTop="-71dp"
+                android:layout_height="202dp"
                 android:adjustViewBounds="true"
-                fresco:actualImageScaleType="centerCrop"/>
+                fresco:actualImageScaleType="focusCrop"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -47,13 +46,13 @@
                 android:id="@+id/emptyView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/placeInformationTextView"
+                android:layout_alignBottom="@+id/placeInformationLayout"
                 android:layout_below="@+id/lineView"
                 android:background="@color/default_background"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="55dp"
                 android:layout_below="@+id/emptyView"
                 android:background="@color/default_background"
                 android:gravity="center_vertical"
@@ -65,14 +64,14 @@
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
+            <!-- 소스에서 Margin Top 조절 -->
             <LinearLayout
-                android:id="@+id/placeInformationTextView"
+                android:id="@+id/placeInformationLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/mapImageView"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="-71dp"
+                android:layout_marginTop="131dp"
                 android:background="@drawable/shape_fillrect_l1a000000_bffffff"
                 android:orientation="vertical">
 
@@ -154,13 +153,13 @@
         </RelativeLayout>
 
         <include
-            layout="@layout/fragment_courmetbooking_tab_booking_01"
+            layout="@layout/fragment_gourmetbooking_tab_booking_01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
 
         <include
-            layout="@layout/fragment_courmetbooking_tab_booking_02"
+            layout="@layout/fragment_gourmetbooking_tab_booking_02"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>

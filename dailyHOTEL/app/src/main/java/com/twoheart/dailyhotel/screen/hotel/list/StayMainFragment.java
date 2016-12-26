@@ -298,7 +298,14 @@ public class StayMainFragment extends PlaceMainFragment
         SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
         int nights = mStayCuration.getNights();
 
-        Intent intent = StayCalendarActivity.newInstance(getContext(), checkInSaleTime, nights, callByScreen, true, true);
+        Intent intent = StayCalendarActivity.newInstance(mBaseActivity, checkInSaleTime, nights, callByScreen, true, true);
+
+        if (intent == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
@@ -445,7 +452,7 @@ public class StayMainFragment extends PlaceMainFragment
 
             Intent intent = StayRegionListActivity.newInstance(getContext(), //
                 mStayCuration.getProvince(), checkInSaleTime, night);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+            getActivity().startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
             {
@@ -770,11 +777,11 @@ public class StayMainFragment extends PlaceMainFragment
                 unLockUI();
 
                 return moveDeepLinkEventBannerWeb(baseActivity);
-            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkRegionList(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkRegionList(baseActivity);
             } else if (DailyDeepLink.getInstance().isHotelSearchView() == true)
             {
                 unLockUI();
@@ -1297,6 +1304,8 @@ public class StayMainFragment extends PlaceMainFragment
 
         SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
         int night = checkInSaleTime.getOffsetDailyDay();
+
+        boolean isOverseas = DailyDeepLink.getInstance().getIsOverseas();
 
         Intent intent = StayRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, checkInSaleTime, night);
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);

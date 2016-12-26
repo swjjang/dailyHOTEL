@@ -246,7 +246,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
                 message = getString(R.string.kakaolink_msg_none_name_invited_friend, recommendCode, recommendCode);
             }
 
-            KakaoLinkManager.newInstance(this).sendInviteKakaoLink(message);
+            KakaoLinkManager.newInstance(this).sendInviteKakaoLink(message, recommendCode);
 
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND, //
                 Action.KAKAO_FRIEND_INVITED, mRecommendCode, null);

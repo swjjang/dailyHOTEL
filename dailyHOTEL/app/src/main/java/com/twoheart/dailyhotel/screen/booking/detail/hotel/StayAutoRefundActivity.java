@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -479,7 +480,12 @@ public class StayAutoRefundActivity extends BaseActivity
 
             boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
             setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -582,7 +588,12 @@ public class StayAutoRefundActivity extends BaseActivity
         try
         {
             mDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -20,6 +20,7 @@ import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -559,10 +560,16 @@ public class ReviewActivity extends BaseActivity
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
-                        float value = (float) animation.getAnimatedValue();
-                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
+                        try
+                        {
+                            float value = (Float) animation.getAnimatedValue();
+                            final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
-                        mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                            mDailyEmoticonImageView[1].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
                     }
                 });
 
@@ -624,10 +631,16 @@ public class ReviewActivity extends BaseActivity
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation)
                     {
-                        float value = (float) animation.getAnimatedValue();
-                        final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
+                        try
+                        {
+                            float value = (Float) animation.getAnimatedValue();
+                            final int paddingValue = (int) (VALUE_DP100 * (1.0f - value) / 2);
 
-                        mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                            mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
                     }
                 });
 
@@ -677,8 +690,6 @@ public class ReviewActivity extends BaseActivity
 
                 mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
-                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
-
                 switch (reviewItem.placeType)
                 {
                     case HOTEL:
@@ -720,7 +731,12 @@ public class ReviewActivity extends BaseActivity
         try
         {
             mDialog.setContentView(view);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -732,50 +748,34 @@ public class ReviewActivity extends BaseActivity
         private void sendMessageDelayed(int position)
         {
             mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
-            Message message = mHandler.obtainMessage(REQUEST_NEXT_FOCUSE, position, 0);
-            mHandler.sendMessageDelayed(message, 1500);
+
+            Message message = new Message();
+            message.what = REQUEST_NEXT_FOCUSE;
+            message.arg1 = position;
+
+            mHandler.sendMessageDelayed(message, 500);
         }
 
         @Override
         public void onReviewScoreTypeClick(int position, int reviewScore)
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI(false);
-
             setConfirmTextView();
 
             if (mReviewLayout.hasUncheckedReview() == true)
             {
 
                 sendMessageDelayed(position);
-            } else
-            {
-                unLockUI();
             }
         }
 
         @Override
         public void onReviewPickTypeClick(int position, int selectedType)
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI(false);
-
             setConfirmTextView();
 
             if (mReviewLayout.hasUncheckedReview() == true)
             {
                 sendMessageDelayed(position);
-            } else
-            {
-                unLockUI();
             }
         }
 
@@ -948,7 +948,10 @@ public class ReviewActivity extends BaseActivity
 
             mReviewGrade = grade;
 
-            if (Review.GRADE_NONE.equalsIgnoreCase(grade) == false)
+            if (Review.GRADE_NONE.equalsIgnoreCase(grade) == true)
+            {
+                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
+            } else
             {
                 setResult(RESULT_OK);
 

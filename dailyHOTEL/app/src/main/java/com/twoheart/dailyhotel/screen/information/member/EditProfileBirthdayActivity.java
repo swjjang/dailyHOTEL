@@ -463,7 +463,12 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

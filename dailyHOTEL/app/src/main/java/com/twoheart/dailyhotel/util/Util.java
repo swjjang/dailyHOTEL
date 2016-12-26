@@ -888,7 +888,11 @@ public class Util implements Constants
 
         try
         {
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
 
             return dialog;
         } catch (Exception e)
@@ -1241,7 +1245,12 @@ public class Util implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(activity, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1456,7 +1465,12 @@ public class Util implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1757,5 +1771,20 @@ public class Util implements Constants
                 break;
         }
         return result;
+    }
+
+    public static WindowManager.LayoutParams getDialogWidthLayoutParams(Context context, Dialog dialog)
+    {
+        if (dialog == null)
+        {
+            return null;
+        }
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = Util.getLCDWidth(context) * 13 / 15;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        return layoutParams;
     }
 }

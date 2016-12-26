@@ -396,7 +396,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     } else
                     {
                         // 애니메이션이 끝났으나 아직 데이터가 로드 되지 않은 경우에는 프로그래스 바를 그리도록 한다.
-                        mHandler.sendEmptyMessageDelayed(HANDLE_MESSAGE_SHOW_PROGRESS, 2000);
+                        lockUI();
                     }
                 }
 
@@ -955,8 +955,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, placeDetail.name, imageInformationArrayList, mCurrentImage);
+            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, PlaceType.HOTEL, placeDetail.name, imageInformationArrayList, mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
+
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, placeDetail.name, null);
         }
 
         @Override
@@ -1261,7 +1264,6 @@ public class StayDetailActivity extends PlaceDetailActivity
                 finish();
             } finally
             {
-                mHandler.removeMessages(HANDLE_MESSAGE_SHOW_PROGRESS);
                 unLockUI();
             }
         }

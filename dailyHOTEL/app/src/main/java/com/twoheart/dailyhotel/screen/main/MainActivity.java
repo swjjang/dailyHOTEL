@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -78,15 +79,11 @@ public class MainActivity extends BaseActivity implements Constants
                 case 0:
                     if (mIsInitialization == true)
                     {
-                        lockUI();
+                        lockUIImmediately();
                     }
                     break;
 
                 case 1:
-                    if (isVisibleLockUI() == true)
-                    {
-                        showLockUIProgress();
-                    }
                     break;
 
                 case 2:
@@ -325,6 +322,24 @@ public class MainActivity extends BaseActivity implements Constants
                 }
 
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                } else
+                {
+                    mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
+                if (data == null && (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY))
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
                 } else
@@ -665,7 +680,11 @@ public class MainActivity extends BaseActivity implements Constants
 
         try
         {
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mSettingNetworkDialog);
+
             mSettingNetworkDialog.show();
+
+            mSettingNetworkDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -676,7 +695,6 @@ public class MainActivity extends BaseActivity implements Constants
     {
         mDelayTimeHandler.sendEmptyMessageDelayed(2, 2000);
         mDelayTimeHandler.removeMessages(0);
-        mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
         mNetworkController.requestCommonDatetime();
     }
@@ -696,12 +714,24 @@ public class MainActivity extends BaseActivity implements Constants
                 case 0:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
 
+                    if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
+                        mNetworkController.requestReviewStay();
+                    }
+
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
                     break;
 
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+
+                    if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
+                        mNetworkController.requestReviewStay();
+                    }
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
@@ -763,7 +793,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onReviewHotel(Review review)
+        public void onReviewStay(Review review)
         {
             Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
@@ -1178,6 +1208,17 @@ public class MainActivity extends BaseActivity implements Constants
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);
+        }
+
+        @Override
+        public void onUserProfileBenefit(boolean isExceedBonus)
+        {
+            DailyPreference.getInstance(MainActivity.this).setUserExceedBonus(isExceedBonus);
+            AnalyticsManager.getInstance(MainActivity.this).setExceedBonus(isExceedBonus);
+
+            mNetworkController.requestReviewStay();
+
+            DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
         }
     };
 }

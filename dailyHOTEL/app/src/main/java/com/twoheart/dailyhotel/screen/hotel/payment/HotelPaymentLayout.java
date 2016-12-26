@@ -59,10 +59,14 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     //    private EditText mMemoEditText;
     private View mUserLayout;
     private View mGuestFrameLayout, mGuestLinearLayout;
-
+    //
     private TextView mGuestNameHintEditText;
     private TextView mGuideNameMemo;
     private CheckBox mGuestCheckBox;
+
+    private View mHowToVisitLayout;
+    private View mVisitWalkView, mVisitCarView, mNoParkingView;
+    private TextView mGuideVisitMemoView;
 
     // 할인 정보
     private ImageView mBonusRadioButton;
@@ -79,6 +83,9 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private DailyToolbarLayout mDailyToolbarLayout;
 
     // 결제 수단 선택
+    private View mFreePaymentView;
+    private View paymentTypeInformationLayout;
+
     private View mSimpleCardLayout;
     private TextView mSimpleCardNumberTextView;
     private TextView mSimpleCardLogoTextView;
@@ -121,6 +128,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         void onBonusClick(boolean isRadioLayout);
 
         void onCouponClick(boolean isRadioLayout);
+
+        void onVisitType(boolean isWalking);
     }
 
     public HotelPaymentLayout(Context context, OnEventListener mOnEventListener)
@@ -139,6 +148,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mBookingLayout = mScrollView.findViewById(R.id.bookingLayout);
 
         initReservationInformation(view);
+        initVisitType(view);
         initBookingMemo(view);
         initPaymentInformation(view);
         initPaymentTypeInformation(view);
@@ -234,6 +244,25 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mGuestCheckBox.setOnCheckedChangeListener(this);
     }
 
+    /**
+     * 방문 타입.
+     *
+     * @param view
+     */
+    private void initVisitType(View view)
+    {
+        mHowToVisitLayout = view.findViewById(R.id.howToVisitLayout);
+
+        mVisitWalkView = mHowToVisitLayout.findViewById(R.id.visitWalkView);
+        mVisitCarView = mHowToVisitLayout.findViewById(R.id.visitCarView);
+        mNoParkingView = mHowToVisitLayout.findViewById(R.id.noParkingView);
+
+        mGuideVisitMemoView = (TextView) mHowToVisitLayout.findViewById(R.id.guideVisitMemoView);
+
+        mVisitWalkView.setOnClickListener(this);
+        mVisitCarView.setOnClickListener(this);
+    }
+
     private void initBookingMemo(View view)
     {
         //        mMemoEditText = (EditText) view.findViewById(R.id.memoEditText);
@@ -241,6 +270,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     private void initPaymentInformation(View view)
     {
+        paymentTypeInformationLayout = view.findViewById(R.id.paymentTypeInformationLayout);
+
         mAmountNightsTextView = (TextView) view.findViewById(R.id.amountNightsTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.originalPriceTextView);
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
@@ -316,6 +347,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mSelectedSimpleCardLayout.setOnClickListener(this);
 
         mGuidePaymentMemoView = (TextView) view.findViewById(R.id.guidePaymentMemoView);
+        mFreePaymentView = view.findViewById(R.id.freePaymentView);
     }
 
     private void initRefundPolicy(View view)
@@ -571,6 +603,43 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
     }
 
+    public void setVisitTypeInformation(HotelPaymentInformation hotelPaymentInformation)
+    {
+        switch (hotelPaymentInformation.visitType)
+        {
+            case "CAR_WALKING":
+                mHowToVisitLayout.setVisibility(View.VISIBLE);
+                mVisitCarView.setVisibility(View.VISIBLE);
+                mVisitWalkView.setVisibility(View.VISIBLE);
+                mNoParkingView.setVisibility(View.GONE);
+
+                mGuideVisitMemoView.setText(R.string.message_visit_car_memo);
+
+                // 디폴트로 도보가 기본이다.
+                if (hotelPaymentInformation.isVisitWalking == true)
+                {
+                    mVisitWalkView.performClick();
+                } else
+                {
+                    mVisitCarView.performClick();
+                }
+                break;
+
+            case "NONE":
+                mHowToVisitLayout.setVisibility(View.GONE);
+                break;
+
+            case "NO_PARKING":
+                mHowToVisitLayout.setVisibility(View.VISIBLE);
+                mVisitCarView.setVisibility(View.GONE);
+                mVisitWalkView.setVisibility(View.GONE);
+                mNoParkingView.setVisibility(View.VISIBLE);
+
+                mGuideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
+                break;
+        }
+    }
+
     public void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation, CreditCard creditCard)
     {
         if (hotelPaymentInformation == null)
@@ -659,6 +728,16 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
 
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
+
+        if (payPrice == 0)
+        {
+            paymentTypeInformationLayout.setVisibility(View.GONE);
+            mFreePaymentView.setVisibility(View.VISIBLE);
+        } else
+        {
+            paymentTypeInformationLayout.setVisibility(View.VISIBLE);
+            mFreePaymentView.setVisibility(View.GONE);
+        }
     }
 
     public void setRefundPolicyText(String text)
@@ -956,6 +1035,20 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             case R.id.selectedSimpleCardLayout:
                 ((OnEventListener) mOnEventListener).changedPaymentType(PlacePaymentInformation.PaymentType.EASY_CARD);
+                break;
+
+            case R.id.visitWalkView:
+                mVisitWalkView.setSelected(true);
+                mVisitCarView.setSelected(false);
+
+                ((OnEventListener) mOnEventListener).onVisitType(true);
+                break;
+
+            case R.id.visitCarView:
+                mVisitWalkView.setSelected(false);
+                mVisitCarView.setSelected(true);
+
+                ((OnEventListener) mOnEventListener).onVisitType(false);
                 break;
         }
     }

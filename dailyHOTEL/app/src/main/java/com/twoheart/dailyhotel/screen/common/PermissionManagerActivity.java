@@ -21,6 +21,7 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -358,7 +359,12 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         try
         {
             mDialog.setContentView(view);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -447,7 +453,12 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         try
         {
             mDialog.setContentView(view);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -578,7 +589,12 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

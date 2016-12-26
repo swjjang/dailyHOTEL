@@ -13,12 +13,10 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -102,18 +100,16 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     @Override
     protected void initLayout(View view)
     {
-        BaseActivity baseActivity = (BaseActivity) mContext;
-
-        initToolbar(baseActivity, view);
+        initToolbar(mContext, view);
 
         ScrollView scrollView = (ScrollView) view.findViewById(R.id.informationScrollView);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, baseActivity.getResources().getColor(R.color.default_over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mProfileLayout = view.findViewById(R.id.profileLayout);
         mAccountInfoLayout = view.findViewById(R.id.accountInfoLayout);
 
-        initProfileLayout(baseActivity, view);
-        initAccountInfoLayout(baseActivity, view);
+        initProfileLayout(mContext, view);
+        initAccountInfoLayout(mContext, view);
 
         View eventLayout = view.findViewById(R.id.eventLayout);
         View noticeLayout = view.findViewById(R.id.noticeLayout);
@@ -145,14 +141,14 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushBenefitTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushBenefitTextView);
 
         initSnsLayout(view);
-        initBusinessLayout(baseActivity, view);
+        initBusinessLayout(mContext, view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
         if (Constants.DEBUG == true)
         {
             String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
-            versionTextView.setText(version + "\n" + Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT));
+            versionTextView.setText(version + "\n" + DailyPreference.getInstance(mContext).getBaseUrl());
         } else
         {
             versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE));
@@ -238,7 +234,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         youtubeLinkView.setOnClickListener(this);
     }
 
-    private void initBusinessLayout(BaseActivity baseActivity, View view)
+    private void initBusinessLayout(Context context, View view)
     {
         TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
         TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
@@ -247,19 +243,19 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView business5TextView = (TextView) view.findViewById(R.id.business5TextView);
 
         business1TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license01//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyCEO()//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyCEO()//
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyPhoneNumber()));
 
-        business2TextView.setText(DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress());
+        business2TextView.setText(DailyPreference.getInstance(context).getRemoteConfigCompanyAddress());
 
         business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license02//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyBizRegNumber()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyBizRegNumber()));
 
         business4TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyItcRegNumber()));
 
         business5TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license04//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPrivacyEmail()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyPrivacyEmail()));
     }
 
     public void updatePushIcon(boolean onOff)

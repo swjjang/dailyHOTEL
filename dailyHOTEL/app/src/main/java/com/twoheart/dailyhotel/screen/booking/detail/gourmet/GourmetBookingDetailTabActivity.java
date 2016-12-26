@@ -20,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -118,12 +119,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         final String phone;
 
-        if (Util.isTextEmpty(mGourmetBookingDetail.phone1) == false)
-        {
-            phone = mGourmetBookingDetail.phone1;
-        } else if (Util.isTextEmpty(mGourmetBookingDetail.phone2) == false)
+        if (Util.isTextEmpty(mGourmetBookingDetail.phone2) == false)
         {
             phone = mGourmetBookingDetail.phone2;
+        } else if (Util.isTextEmpty(mGourmetBookingDetail.phone1) == false)
+        {
+            phone = mGourmetBookingDetail.phone1;
         } else if (Util.isTextEmpty(mGourmetBookingDetail.phone3) == false)
         {
             phone = mGourmetBookingDetail.phone3;
@@ -233,7 +234,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -262,9 +268,6 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
     private void startGourmetCall(final String phoneNumber)
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
-
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
             @Override
@@ -279,6 +282,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+
+                        AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
                     } catch (ActivityNotFoundException e)
                     {
                         DailyToast.showToast(GourmetBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);

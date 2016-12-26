@@ -364,7 +364,12 @@ public class SignupStep1Activity extends BaseActivity
             try
             {
                 dialog.setContentView(dialogView);
+
+                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(SignupStep1Activity.this, dialog);
+
                 dialog.show();
+
+                dialog.getWindow().setAttributes(layoutParams);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

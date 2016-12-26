@@ -324,6 +324,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         unLockUI();
 
+        setBonusSelected(false);
+        setCouponSelected(false);
         setPaymentInformation((HotelPaymentInformation) mPaymentInformation);
 
         showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
@@ -348,6 +350,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
             Action.SOLDOUT, ((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+    }
+
+    @Override
+    protected void showChangedBonusDialog()
+    {
+        unLockUI();
+
+        setBonusSelected(false);
+        setCouponSelected(false);
+        setPaymentInformation((HotelPaymentInformation) mPaymentInformation);
+
+        super.showChangedBonusDialog();
     }
 
     @Override
@@ -664,6 +678,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String msg;
         String posTitle = getString(R.string.dialog_btn_text_confirm);
         OnClickListener posListener = null;
+
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION) == true)
+        {
+            Customer customer = mPaymentInformation.getCustomer();
+
+            if (customer == null || Util.isTextEmpty(customer.getName(), customer.getUserIdx()) == true //
+                || ((HotelPaymentInformation) mPaymentInformation).checkInDate == 0//
+                || ((HotelPaymentInformation) mPaymentInformation).checkOutDate == 0)
+            {
+                mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+            }
+        }
 
         switch (resultCode)
         {
@@ -1292,6 +1318,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
+        if (payPrice == 0)
+        {
+            hotelPaymentInformation.isFree = true;
+        } else
+        {
+            hotelPaymentInformation.isFree = false;
+        }
+
         mHotelPaymentLayout.setBonusTextView(hotelPaymentInformation.bonus);
 
         // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
@@ -1799,6 +1833,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
+        public void onVisitType(boolean isWalking)
+        {
+            ((HotelPaymentInformation) mPaymentInformation).isVisitWalking = isWalking;
+        }
+
+        @Override
         public void finish()
         {
             HotelPaymentActivity.this.finish();
@@ -1928,15 +1968,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
                         , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
                         , hotelPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationCallback);
-
-                    if (DEBUG == false)
-                    {
-                        if (Util.isTextEmpty(name) == true)
-                        {
-                            Crashlytics.log("HotelPaymentActivity::requestUserInformationForPayment :: name=" //
-                                + name + " , userIndex=" + userIndex + " , user_email=" + email);
-                        }
-                    }
                 } catch (Exception e)
                 {
                     onError(e);
@@ -2010,7 +2041,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             roomInformation.totalDiscount = discount;
 
+                            if (DEBUG == false && (checkInDate == 0 || checkOutDate == 0))
+                            {
+                                Crashlytics.log(responseJSONObject.toString());
+                                Crashlytics.logException(new RuntimeException(call.request().url().toString()));
+
+                                Util.restartExitApp(HotelPaymentActivity.this);
+                                return;
+                            }
+
                             setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
+
+                            hotelPaymentInformation.visitType = "NONE";
+
+                            mHotelPaymentLayout.setVisitTypeInformation(hotelPaymentInformation);
 
                             // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
                             if (isOnSale == false || availableRooms == 0)
@@ -2253,12 +2297,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             } else
             {
                 HotelPaymentActivity.this.onErrorResponse(call, response);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+
             HotelPaymentActivity.this.onError(t);
         }
     };

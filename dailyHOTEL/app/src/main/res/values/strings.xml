@@ -71,6 +71,7 @@
 
     <string name="label_visit_walk">도보</string>
     <string name="label_visit_car">차량</string>
+    <string name="label_parking_information">주차 정보 안내</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -164,7 +165,7 @@
     <string name="actionbar_title_payment_wait_reservation_place_title">예약 장소</string>
     <string name="actionbar_title_creditcard_activity">간편결제 카드 관리</string>
     <string name="actionbar_title_event_list_frag">이벤트</string>
-    <string name="actionbar_title_edit_email">폰이메일 설정</string>
+    <string name="actionbar_title_edit_email">이메일 설정</string>
     <string name="actionbar_title_edit_name">이름 설정</string>
     <string name="actionbar_title_edit_birthday">생일 설정</string>
     <string name="actionbar_title_edit_password">비밀번호 설정</string>
@@ -568,7 +569,8 @@
     <string name="message_gourmet_check_other_user">예약자와 방문자가 다를 경우 체크해주세요.</string>
     <string name="message_gourmet_cancel_coupon_by_count">구매 수량 변경시\n사용하신 할인 쿠폰을\n다시 적용해야 합니다.\n수량을 변경할까요?</string>
     <string name="message_visit_car_memo">업체 사정상 주차장 이용이 어려울 수 있습니다.\n주차가 불가능할 경우 업체에서 사전에 연락을 드릴 예정입니다.</string>
-    <string name="message_visit_no_parking_memo">업체 사정상 주차장 이용이 불가능합니다.\n방문시 도보나 대중교통을 이용해주세요.</string>
+    <string name="message_visit_no_parking_memo">업체 사정상 주차장 이용이 불가능합니다.\n방문 시 도보나 대중교통을 이용해주세요.</string>
+    <string name="message_payment_free_payment">결제하실 금액이 없습니다.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -751,7 +753,7 @@
     <string name="label_receipt_total_payment">총 결제 금액(부가세 포함)</string>
     <string name="label_receipt_bonus">적립금 사용</string>
     <string name="label_receipt_coupon">할인쿠폰 사용</string>
-    <string name="label_receipt_paymenttype">지불 방식</string>
+    <string name="label_receipt_paymenttype">결제수단</string>
     <string name="label_receipt_provider">공급자</string>
     <string name="label_receipt_business_license">상호 | %1$s</string>
     <string name="label_receipt_registeration_number">등록번호 | %1$s</string>
@@ -827,7 +829,7 @@
     <string name="label_settime">시간설정</string>
     <string name="label_parking">주차가능</string>
     <string name="label_unabled_parking">주차불가</string>
-    <string name="label_allowed_pet">애완동물</string>
+    <string name="label_allowed_pet">반려동물</string>
     <string name="label_allowed_barbecue">공동바베큐</string>
     <string name="label_valet_available">발렛가능</string>
     <string name="label_private_room">프라이빗룸</string>
@@ -1091,5 +1093,25 @@
         <item>전체 쿠폰 보기</item>
         <item>호텔 쿠폰 보기</item>
         <item>고메 쿠폰 보기</item>
+    </string-array>
+
+    <string-array name="company_email_postfix_array">
+        <item>\@naver.com</item>
+        <item>\@hanmail.com</item>
+        <item>\@nate.com</item>
+        <item>\@gmail.com</item>
+        <item>\@daum.net</item>
+        <item>\@hotmail.com</item>
+        <item>\@lycos.co.kr</item>
+        <item>\@dreamwiz.com</item>
+        <item>\@empal.com</item>
+        <item>\@korea.com</item>
+        <item>\@yahoo.com</item>
+        <item>\@paran.com</item>
+        <item>\@empas.com</item>
+        <item>\@icloud.com</item>
+        <item>\@me.com</item>
+        <item>\@outlook.com</item>
+        <item>\@qq.com</item>
     </string-array>
 </resources>

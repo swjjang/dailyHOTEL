@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -41,6 +42,9 @@ public class LauncherActivity extends Activity
 
         DailyDeepLink.getInstance().clear();
 
+        // 리뷰 초기화
+        DailyPreference.getInstance(this).setIsRequestReview(false);
+
         // 선택 날짜를 초기화 한다.
         DailyPreference.getInstance(this).setStayLastViewDate(null);
         DailyPreference.getInstance(this).setGourmetLastViewDate(null);
@@ -60,6 +64,19 @@ public class LauncherActivity extends Activity
 
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
+                if (Constants.DEBUG == true)
+                {
+                    String baseURL = DailyDeepLink.getInstance().getBaseUrl();
+
+                    if (Util.isTextEmpty(baseURL) == false)
+                    {
+                        DailyPreference.getInstance(this).setBaseUrl(baseURL);
+                        DailyDeepLink.getInstance().clear();
+                        Util.restartExitApp(this);
+                        return;
+                    }
+                }
+
                 AnalyticsManager.getInstance(this).recordDeepLink(DailyDeepLink.getInstance());
 
                 newIntent.setData(uri);

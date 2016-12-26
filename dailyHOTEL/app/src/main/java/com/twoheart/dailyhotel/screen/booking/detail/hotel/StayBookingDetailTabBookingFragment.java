@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -137,8 +139,10 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
         layoutParams.width = (int) width;
-        layoutParams.height = (int) height + Util.dpToPx(context, 71);
+        layoutParams.height = (int) height;
 
+        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
+        mapImageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, PLACE_INFORMATION_LAYOUT_RATIO));
         mapImageView.setLayoutParams(layoutParams);
 
         if (width >= 720)
@@ -148,12 +152,16 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
         height = width * ratio;
 
-        String size = String.format("%dx%d", (int) width, (int) height);
+        String size = String.format("%dx%d", (int) width * 3 / 5, (int) height * 5 / 7);
         String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
         String url = String.format("https://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
             , size, iconUrl, bookingDetail.latitude, bookingDetail.longitude, Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
         mapImageView.setImageURI(Uri.parse(url));
+
+        View placeInformationLayout = view.findViewById(R.id.placeInformationLayout);
+        RelativeLayout.LayoutParams placeInformationLayoutParams = (RelativeLayout.LayoutParams) placeInformationLayout.getLayoutParams();
+        placeInformationLayoutParams.topMargin = (int) (PLACE_INFORMATION_LAYOUT_RATIO * layoutParams.height);
 
         TextView placeNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
         placeNameTextView.setText(bookingDetail.placeName);
@@ -346,6 +354,50 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         guestNameTextView.setText(bookingDetail.guestName);
         guestPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
         guestEmailTextView.setText(bookingDetail.guestEmail);
+
+        View visitTypeLayout = view.findViewById(R.id.visitTypeLayout);
+        View guideVisitMemoLayout = view.findViewById(R.id.guideVisitMemoLayout);
+
+        TextView visitTypeTitleTextView = (TextView) view.findViewById(R.id.visitTypeTitleTextView);
+        TextView visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
+        TextView guideVisitMemoView = (TextView) view.findViewById(R.id.guideVisitMemoView);
+
+        switch (bookingDetail.visitType)
+        {
+            case "CAR":
+                visitTypeLayout.setVisibility(View.VISIBLE);
+
+                visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                visitTypeTextView.setText(R.string.label_visit_car);
+
+                guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                guideVisitMemoView.setText(R.string.message_visit_car_memo);
+                break;
+
+            case "NO_PARKING":
+                visitTypeLayout.setVisibility(View.VISIBLE);
+
+                visitTypeTitleTextView.setText(R.string.label_parking_information);
+                visitTypeTextView.setText(R.string.label_no_parking);
+
+                guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                guideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
+                break;
+
+            case "NONE":
+                visitTypeLayout.setVisibility(View.GONE);
+                guideVisitMemoLayout.setVisibility(View.GONE);
+                break;
+
+            case "WALKING":
+                visitTypeLayout.setVisibility(View.VISIBLE);
+
+                visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                visitTypeTextView.setText(R.string.label_visit_walk);
+
+                guideVisitMemoLayout.setVisibility(View.GONE);
+                break;
+        }
     }
 
     private void initPaymentInformationLayout(View view, HotelBookingDetail bookingDetail)
@@ -789,7 +841,12 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

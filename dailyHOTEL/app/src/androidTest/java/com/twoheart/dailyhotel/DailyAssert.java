@@ -27,23 +27,30 @@ public class DailyAssert
     private static Call<JSONObject> mCall;
     private static Response<JSONObject> mResponse;
 
-    //    private class DailyAssertHolder
-    //    {
-    //        public final DailyAssert INSTANCE = new DailyAssert();
-    //    }
-    //
-    //    public final DailyAssert getInstance() {
-    //        return DailyAssertHolder.INSTANCE;
-    //    }
+//        private static class DailyAssertHolder
+//        {
+//            public static final DailyAssert INSTANCE = new DailyAssert();
+//        }
+//
+//        public final DailyAssert getInstance() {
+//            return DailyAssertHolder.INSTANCE;
+//        }
 
     public static void setData(@NonNull Call<JSONObject> call, Response<JSONObject> response)
     {
+        ExLog.d("setData");
+
         mCall = call;
         mResponse = response;
+
+        Assert.assertNotNull(mCall);
+        Assert.assertNotNull(mCall.request());
+        Assert.assertNotNull(mResponse);
     }
 
     public static void clearData()
     {
+        ExLog.d("clearData");
         mCall = null;
         mResponse = null;
     }
@@ -433,6 +440,10 @@ public class DailyAssert
 
     private static String getNetworkMessage(@NonNull Call<JSONObject> call, Response<JSONObject> response, String message)
     {
+
+        Assert.assertNotNull(call);
+        Assert.assertNotNull(call.request());
+
         String url = call.request().url().toString();
         String body = bodyToString(call.request().body());
 

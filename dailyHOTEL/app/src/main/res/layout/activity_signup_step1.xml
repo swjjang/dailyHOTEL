@@ -43,7 +43,7 @@
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyEditText
+            <com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

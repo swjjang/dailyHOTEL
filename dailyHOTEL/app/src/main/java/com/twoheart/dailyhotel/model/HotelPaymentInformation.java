@@ -11,9 +11,12 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     public long checkOutDate;
     public int nights;
 
-    // None Parcelable
     public String checkInDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
     public String checkOutDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
+
+    //
+    public String visitType; // 방문 형태로 : "NONE" : 아무것도 표시하지 않음 "CAR_WALKING" : 도보/주차 표시 "NO_PARKING" : 주차 불가능.
+    public boolean isVisitWalking = true; // 방문 방법 : 기본이 도보(visitType == "NONE", "NO_PARKING" 이면 서버로 아무것도 전송하지 않음)
 
     public HotelPaymentInformation()
     {
@@ -31,7 +34,13 @@ public class HotelPaymentInformation extends PlacePaymentInformation
         super.writeToParcel(dest, flags);
 
         dest.writeParcelable(mRoomInformation, flags);
-
+        dest.writeLong(checkInDate);
+        dest.writeLong(checkOutDate);
+        dest.writeLong(nights);
+        dest.writeString(checkInDateFormat);
+        dest.writeString(checkOutDateFormat);
+        dest.writeString(visitType);
+        dest.writeInt(isVisitWalking ? 1 : 0);
     }
 
     @Override
@@ -40,6 +49,13 @@ public class HotelPaymentInformation extends PlacePaymentInformation
         super.readFromParcel(in);
 
         mRoomInformation = in.readParcelable(RoomInformation.class.getClassLoader());
+        checkInDate = in.readLong();
+        checkOutDate = in.readLong();
+        nights = in.readInt();
+        checkInDateFormat = in.readString();
+        checkOutDateFormat = in.readString();
+        visitType = in.readString();
+        isVisitWalking = in.readInt() == 1;
     }
 
     public RoomInformation getSaleRoomInformation()

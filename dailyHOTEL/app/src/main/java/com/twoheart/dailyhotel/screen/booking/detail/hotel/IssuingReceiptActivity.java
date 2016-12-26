@@ -251,7 +251,12 @@ public class IssuingReceiptActivity extends BaseActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -284,8 +289,8 @@ public class IssuingReceiptActivity extends BaseActivity
             //            String currency = receiptJSONObject.getString("currency");
             int discount = receiptJSONObject.getInt("discount");
             int vat = receiptJSONObject.getInt("vat");
-            int supoplyValue = receiptJSONObject.getInt("supply_value");
-            String paymentName = receiptJSONObject.getString("payment_name");
+            int supplyValue = receiptJSONObject.getInt("supply_value");
+            String paymentType = receiptJSONObject.getString("payment_name");
 
             int bonus = receiptJSONObject.getInt("bonus");
             int counpon = receiptJSONObject.getInt("coupon_amount");
@@ -325,13 +330,23 @@ public class IssuingReceiptActivity extends BaseActivity
             TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
             paymentDayTextView.setText(valueDate);
 
-            // 지불 방식
-            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
-            paymentTypeTextView.setText(paymentName);
+            // 결제수단
+            View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
+
+            if (Util.isTextEmpty(paymentType) == true)
+            {
+                paymentTypeLayout.setVisibility(View.GONE);
+            } else
+            {
+                paymentTypeLayout.setVisibility(View.VISIBLE);
+
+                TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+                paymentTypeTextView.setText(paymentType);
+            }
 
             // 소계
             TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-            supplyValueTextView.setText(Util.getPriceFormat(this, supoplyValue, true));
+            supplyValueTextView.setText(Util.getPriceFormat(this, supplyValue, true));
 
             // 세금 및 수수료
             TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
