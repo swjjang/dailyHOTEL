@@ -632,6 +632,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             if (customer == null || Util.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
             {
+                if (DEBUG == false)
+                {
+                    Crashlytics.log("GourmetPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
+                }
+
                 mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
             }
         }
