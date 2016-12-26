@@ -69,7 +69,7 @@ public class DailyEditText extends AppCompatEditText
 
         if (mHasDeleteButton == true)
         {
-            if (isFocused() == true && lengthAfter > 0)
+            if (isFocused() == true && text != null && text.length() > 0)
             {
                 setDeleteDrawable();
             } else
@@ -131,7 +131,9 @@ public class DailyEditText extends AppCompatEditText
     {
         if (mHasDeleteButton == true)
         {
-            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
+            int action = event.getAction() & MotionEvent.ACTION_MASK;
+
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN)
             {
                 Drawable[] drawables = getCompoundDrawables();
 
@@ -142,7 +144,7 @@ public class DailyEditText extends AppCompatEditText
 
                 int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
 
-                if (event.getRawX() >= (getRight() - withDrawable))
+                if (event.getX() >= (getRight() - withDrawable))
                 {
                     setText(null);
 
@@ -167,6 +169,11 @@ public class DailyEditText extends AppCompatEditText
             setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
         } else
         {
+            if (drawables[DRAWABLE_RIGHT] != null)
+            {
+                return;
+            }
+
             Context context = getContext();
 
             Drawable rightDrawable = AppCompatDrawableManager.get().getDrawable(context, R.drawable.search_ic_01_delete);

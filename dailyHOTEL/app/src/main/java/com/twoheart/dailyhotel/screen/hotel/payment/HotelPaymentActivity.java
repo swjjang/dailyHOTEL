@@ -687,6 +687,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 || ((HotelPaymentInformation) mPaymentInformation).checkInDate == 0//
                 || ((HotelPaymentInformation) mPaymentInformation).checkOutDate == 0)
             {
+                if (DEBUG == false)
+                {
+                    Crashlytics.log("HotelPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
+                }
+
                 mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
             }
         }
@@ -1318,13 +1323,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
-        if (payPrice == 0)
-        {
-            hotelPaymentInformation.isFree = true;
-        } else
-        {
-            hotelPaymentInformation.isFree = false;
-        }
+        //        if (payPrice == 0)
+        //        {
+        //            hotelPaymentInformation.isFree = true;
+        //        } else
+        //        {
+        //            hotelPaymentInformation.isFree = false;
+        //        }
 
         mHotelPaymentLayout.setBonusTextView(hotelPaymentInformation.bonus);
 
@@ -1836,6 +1841,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         public void onVisitType(boolean isWalking)
         {
             ((HotelPaymentInformation) mPaymentInformation).isVisitWalking = isWalking;
+
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                Action.WAYTOVISIT_SELECTED, isWalking == true ? Label.WALK : Label.CAR, null);
         }
 
         @Override

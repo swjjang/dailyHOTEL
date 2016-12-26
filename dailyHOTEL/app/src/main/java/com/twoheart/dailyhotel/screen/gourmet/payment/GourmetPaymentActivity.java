@@ -632,6 +632,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
             if (customer == null || Util.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
             {
+                if (DEBUG == false)
+                {
+                    Crashlytics.log("GourmetPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
+                }
+
                 mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
             }
         }
@@ -1145,13 +1150,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
-        if (payPrice == 0)
-        {
-            gourmetPaymentInformation.isFree = true;
-        } else
-        {
-            gourmetPaymentInformation.isFree = false;
-        }
+        //        if (payPrice == 0)
+        //        {
+        //            gourmetPaymentInformation.isFree = true;
+        //        } else
+        //        {
+        //            gourmetPaymentInformation.isFree = false;
+        //        }
 
         // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
         if (payPrice > 0 && payPrice < 1000)

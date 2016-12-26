@@ -565,11 +565,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
 
-        if (payPrice == 0)
-        {
-            paymentTypeInformationLayout.setVisibility(View.GONE);
-            mFreePaymentView.setVisibility(View.VISIBLE);
-        } else
+        // 다음 버전에서 진행.
+        //        if (payPrice == 0)
+        //        {
+        //            paymentTypeInformationLayout.setVisibility(View.GONE);
+        //            mFreePaymentView.setVisibility(View.VISIBLE);
+        //        } else
         {
             paymentTypeInformationLayout.setVisibility(View.VISIBLE);
             mFreePaymentView.setVisibility(View.GONE);

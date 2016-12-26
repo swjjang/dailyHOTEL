@@ -123,7 +123,10 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-
+                if (mVerificationLayout != null && mVerificationLayout.getVisibility() == View.VISIBLE && count > 0 && s.length() == 0)
+                {
+                    hideVerificationVisible();
+                }
             }
 
             @Override
@@ -321,6 +324,15 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             }
         });
     }
+
+    public void hideVerificationVisible()
+    {
+        mVerificationLayout.setVisibility(View.INVISIBLE);
+
+        mSignUpView.setVisibility(View.INVISIBLE);
+        mSignUpView.setEnabled(false);
+    }
+
 
     public void resetPhoneNumber()
     {
