@@ -333,10 +333,10 @@ public class IssuingReceiptActivity extends BaseActivity
             // 결제수단
             View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
 
-            if (Util.isTextEmpty(paymentType) == true)
-            {
-                paymentTypeLayout.setVisibility(View.GONE);
-            } else
+            //            if (Util.isTextEmpty(paymentType) == true)
+            //            {
+            //                paymentTypeLayout.setVisibility(View.GONE);
+            //            } else
             {
                 paymentTypeLayout.setVisibility(View.VISIBLE);
 
