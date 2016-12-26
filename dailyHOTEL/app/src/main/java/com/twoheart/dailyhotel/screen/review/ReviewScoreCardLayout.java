@@ -322,11 +322,9 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
             if (dailyEmoticonImageView.getId() == emoticonView.getId())
             {
                 dailyEmoticonImageView.setAlpha(1.0f);
-                dailyEmoticonImageView.startAnimation();
             } else
             {
                 dailyEmoticonImageView.setAlpha(0.5f);
-                dailyEmoticonImageView.stopAnimation();
             }
         }
 
@@ -386,6 +384,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                 try
                 {
                     int value = (int) animation.getAnimatedValue();
+
                     float vectorValue = (VALUE_DP7 - value) / VALUE_DP15;
 
                     RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
@@ -397,6 +396,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                     int paddingValue2 = (int) (vectorValue * VALUE_DP30);
 
                     view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
+                    view.invalidate();
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -427,6 +427,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                 layoutParams.rightMargin = -VALUE_DP8;
                 view.setLayoutParams(layoutParams);
                 view.setPadding(VALUE_DP30_DIV2, VALUE_DP30, VALUE_DP30_DIV2, 0);
+                view.invalidate();
             }
 
             @Override
@@ -476,6 +477,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                     int paddingValue2 = (int) ((1.0f - vectorValue) * VALUE_DP30);
 
                     view.setPadding(paddingValue1, paddingValue2, paddingValue1, 0);
+                    view.invalidate();
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
@@ -506,6 +508,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                 layoutParams.rightMargin = VALUE_DP7;
                 view.setLayoutParams(layoutParams);
                 view.setPadding(0, 0, 0, 0);
+                view.invalidate();
             }
 
             @Override

@@ -753,7 +753,7 @@ public class ReviewActivity extends BaseActivity
             message.what = REQUEST_NEXT_FOCUSE;
             message.arg1 = position;
 
-            mHandler.sendMessageDelayed(message, 300);
+            mHandler.sendMessageDelayed(message, 500);
         }
 
         @Override
