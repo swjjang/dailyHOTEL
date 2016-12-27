@@ -329,7 +329,7 @@ public class DailyMobileAPITest
 
             Map<String, String> params = new HashMap<>();
             params.put("birthday", Const.TEST_USER_BIRTHDAY);
-            params.put("user_name", Crypto.getUrlDecoderEx(Const.TEST_USER_NAME));
+            params.put("user_name", Const.TEST_USER_NAME);
             params.put("pw", Crypto.getUrlDecoderEx(Const.TEST_PASSWORD));
 
             DailyMobileAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, networkCallback);
@@ -781,6 +781,7 @@ public class DailyMobileAPITest
                             DailyAssert.assertTrue(dataJSONObject.getInt("bonusAmount") > 0);
                             DailyAssert.assertTrue(dataJSONObject.getInt("couponTotalCount") > 0);
 
+                            DailyAssert.assertNotNull(dataJSONObject.has("exceedLimitedBonus"));
                             boolean isExceedBonus = dataJSONObject.getBoolean("exceedLimitedBonus");
                         } else
                         {
@@ -816,7 +817,7 @@ public class DailyMobileAPITest
     {
         mLock = new CountDownLatch(1);
 
-        retrofit2.Callback mUserCheckEmailCallback = new retrofit2.Callback<JSONObject>()
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
         {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -862,7 +863,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Const.TEST_CHECK_EMAIL_ADDRESS, mUserCheckEmailCallback);
+        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Const.TEST_CHECK_EMAIL_ADDRESS, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
