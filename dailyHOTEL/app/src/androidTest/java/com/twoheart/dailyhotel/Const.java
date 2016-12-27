@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel;
 
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -33,6 +34,23 @@ public class Const implements Constants
     public static final String TEST_FACEBOOK_USER_INDEX = "MzQkMjIkMSQ0MyQxMyQzMCQyMCQxMiQxNiQxMCQ4JDMwJDIkNDMkNTYkNTUk$OOLTI2OEEQ4QRkZIBDRFjNBQzCJBNjHMJGRUIP3OTMyNQzRQ5RDgxMODTDY=$";
 
     public static final String TEST_SKIP_DELETE_CREDITCARD_NUMBER = "MTQkMTIkMzkkMTQkMzckMzIkMjQkMTIkNDkkNCQxOSQwJDI5JDEkNTUkNTUk$VGMzFDFNDBDQTZCXDNSjDSFEMTQ4NRSDcxODI1MRzI1Q0UIxMUUYyQSYGUU=$";
+
+    public static final int TEST_NIGHTS = 1;
+    public static final int TEST_PROVINCE_INDEX = 5;
+    public static final int TEST_PERSONS = 2;
+    public static final String TEST_CATEGORY_CODE = Category.ALL.code;
+    public static final int TEST_PAGE_INDEX = 1;
+    public static final int TEST_LIMIT_LIST_COUNT = 200;
+
+    public static final String TEST_AUTO_SEARCH_TEXT = "신라";
+
+    public static final boolean TEST_IS_SHOW_LIST_DETAIL = true;
+
+    public static final int TEST_MIN_RATING_PERSONS = 15;
+
+    public static final int TEST_STAY_INDEX = 981;
+    public static final int TEST_STAY_SALE_ROOM_INDEX = 11709705; // stay index dependency
+
 
     private static String getBirthDayText(int year, int month, int dayOfMonth)
     {
