@@ -179,6 +179,11 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     public void showKeyboard()
     {
+        if (mEditTextView == null)
+        {
+            return;
+        }
+
         mEditTextView.postDelayed(new Runnable()
         {
             @Override
