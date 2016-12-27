@@ -155,7 +155,21 @@ public class WriteReviewCommentActivity extends BaseActivity
                                 ExLog.d(e.toString());
                             }
                         }
-                    }, null, null, new DialogInterface.OnDismissListener()
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mLayout.showKeyboard();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            mLayout.showKeyboard();
+                        }
+                    }, new DialogInterface.OnDismissListener()
                     {
                         @Override
                         public void onDismiss(DialogInterface dialog)
@@ -207,7 +221,21 @@ public class WriteReviewCommentActivity extends BaseActivity
                                 ExLog.d(e.toString());
                             }
                         }
-                    }, null, null, new DialogInterface.OnDismissListener()
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            mLayout.showKeyboard();
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+                            mLayout.showKeyboard();
+                        }
+                    }, new DialogInterface.OnDismissListener()
                     {
                         @Override
                         public void onDismiss(DialogInterface dialog)
