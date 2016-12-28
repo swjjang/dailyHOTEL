@@ -101,15 +101,21 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
             dailyEmoticonImageView.setPadding(DP30_DIV2, DP30, DP30_DIV2, 0);
         }
 
+        RelativeLayout.LayoutParams emoticonLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, Util.dpToPx(context, 66));
+        emoticonLayoutParams.bottomMargin = cardHeight * 27 / 100;
+        emoticonLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        emoticonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+
+        mEmoticonLayout.setLayoutParams(emoticonLayoutParams);
+
         mResultTextView = (DailyTextView) view.findViewById(R.id.resultTextView);
 
-        //        RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //        resultLayoutParams.bottomMargin = cardHeight * 18 / 100;
-        //        resultLayoutParams.topMargin = cardHeight * 12 / 100;
-        //        resultLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        //        resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        resultLayoutParams.topMargin = cardHeight * 5 / 100;
+        resultLayoutParams.addRule(RelativeLayout.BELOW, R.id.descriptionTextView);
+        resultLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
-        //        mResultTextView.setLayoutParams(resultLayoutParams);
+        mResultTextView.setLayoutParams(resultLayoutParams);
     }
 
     public void setOnScoreClickListener(OnScoreClickListener listener)
@@ -322,9 +328,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
             if (dailyEmoticonImageView.getId() == emoticonView.getId())
             {
                 dailyEmoticonImageView.setAlpha(1.0f);
+                dailyEmoticonImageView.startAnimation();
             } else
             {
                 dailyEmoticonImageView.setAlpha(0.5f);
+                dailyEmoticonImageView.stopAnimation();
             }
         }
 

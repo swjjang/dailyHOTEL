@@ -530,7 +530,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         } else
         {
             mPlaceImaegView.setTranslationY(-toolbarHeight * 0.5f);
-            mToolbar.setBackgroundColor(0x4f000000);
+            mToolbar.setBackgroundColor(0x4d000000);
 
             mPlaceNameTextView.setAlpha(0.0f);
             mPeriodTextView.setAlpha(0.0f);

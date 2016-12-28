@@ -36,7 +36,7 @@ public class HotelPaymentInformation extends PlacePaymentInformation
         dest.writeParcelable(mRoomInformation, flags);
         dest.writeLong(checkInDate);
         dest.writeLong(checkOutDate);
-        dest.writeLong(nights);
+        dest.writeInt(nights);
         dest.writeString(checkInDateFormat);
         dest.writeString(checkOutDateFormat);
         dest.writeString(visitType);

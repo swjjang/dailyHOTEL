@@ -112,6 +112,7 @@
                 android:layout_marginTop="2dp"
                 android:freezesText="true"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="12dp"/>
 
@@ -123,6 +124,7 @@
                 android:background="@drawable/shape_fillrect_bf2f2f3"
                 android:freezesText="true"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:gravity="center_vertical"

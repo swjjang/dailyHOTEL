@@ -32,6 +32,7 @@
             android:freezesText="true"
             android:gravity="center"
             android:maxLines="1"
+            android:singleLine="true"
             android:text="@string/label_copy_address"
             android:textColor="@color/hoteldetail_title_text"
             android:textSize="11dp"/>
