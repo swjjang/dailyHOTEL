@@ -36,23 +36,23 @@ public class Const implements Constants
     public static final String TEST_SKIP_DELETE_CREDITCARD_NUMBER = "MTQkMTIkMzkkMTQkMzckMzIkMjQkMTIkNDkkNCQxOSQwJDI5JDEkNTUkNTUk$VGMzFDFNDBDQTZCXDNSjDSFEMTQ4NRSDcxODI1MRzI1Q0UIxMUUYyQSYGUU=$";
 
     public static final int TEST_NIGHTS = 1;
-    public static final int TEST_PROVINCE_INDEX = 5;
     public static final int TEST_PERSONS = 2;
-    public static final String TEST_CATEGORY_CODE = Category.ALL.code;
     public static final int TEST_PAGE_INDEX = 1;
     public static final int TEST_LIMIT_LIST_COUNT = 200;
-
-    public static final String TEST_AUTO_SEARCH_TEXT = "신라";
-
+    public static final String TEST_EASY_CARD_BILLINGKEY = "3df689cd659fc6a81175779fa41d96ffedf57133";
     public static final boolean TEST_IS_SHOW_LIST_DETAIL = true;
-
     public static final int TEST_MIN_RATING_PERSONS = 15;
 
+    public static final String TEST_STAY_AUTO_SEARCH_TEXT = "신라";
+    public static final int TEST_STAY_PROVINCE_INDEX = 5;
+    public static final String TEST_STAY_CATEGORY_CODE = Category.ALL.code;
     public static final int TEST_STAY_INDEX = 981;
     public static final int TEST_STAY_SALE_ROOM_INDEX = 11709705; // stay index dependency
-    public static final String TEST_EASY_CARD_BILLINGKEY = "3df689cd659fc6a81175779fa41d96ffedf57133";
     public static final int TEST_STAY_RESERVATION_INDEX = 1406222;
+
     public static final int TEST_GOURMET_RESERVATION_INDEX = 49941;
+    public static final int TEST_GOURMET_INDEX = 50461;
+    public static final int TEST_GOURMET_PROVINCE_INDEX = 5;
 
 
     private static String getBirthDayText(int year, int month, int dayOfMonth)

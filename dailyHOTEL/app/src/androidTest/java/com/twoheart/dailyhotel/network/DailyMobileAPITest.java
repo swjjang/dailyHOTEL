@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Province;
@@ -1405,14 +1406,14 @@ public class DailyMobileAPITest
 
         paramMap.put("dateCheckIn", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         paramMap.put("stays", Const.TEST_NIGHTS);
-        paramMap.put("provinceIdx", Const.TEST_PROVINCE_INDEX);
+        paramMap.put("provinceIdx", Const.TEST_STAY_PROVINCE_INDEX);
         // area skip
         //        queryMap.put("areaIdx", areaIdx);
 
         paramMap.put("persons", Const.TEST_PERSONS);
-        if (Category.ALL.code.equalsIgnoreCase(Const.TEST_CATEGORY_CODE) == false)
+        if (Category.ALL.code.equalsIgnoreCase(Const.TEST_STAY_CATEGORY_CODE) == false)
         {
-            paramMap.put("category", Const.TEST_CATEGORY_CODE);
+            paramMap.put("category", Const.TEST_STAY_CATEGORY_CODE);
         }
 
         //        if(mBedTypeList != null && mBedTypeList.size() > 0)
@@ -1535,7 +1536,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
-            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, Const.TEST_AUTO_SEARCH_TEXT, networkCallback);
+            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -2446,6 +2447,7 @@ public class DailyMobileAPITest
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
             {
                 DailyAssert.setData(call, response);
+
                 if (response != null && response.isSuccessful() && response.body() != null)
                 {
                     try
@@ -2495,6 +2497,8 @@ public class DailyMobileAPITest
                 {
                     DailyAssert.fail();
                 }
+
+                mLock.countDown();
             }
 
             @Override
@@ -2512,15 +2516,337 @@ public class DailyMobileAPITest
     @Test
     public void requestGourmetRegionList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                            DailyAssert.assertNotNull(provinceArray);
+                            ArrayList<Province> provinceList = makeProvinceList(provinceArray);
+                            DailyAssert.assertNotNull(provinceList);
+
+                            JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                            ArrayList<Area> areaList = makeAreaList(areaJSONArray);
+                            DailyAssert.assertNotNull(areaList);
+
+                            String imageUrl = dataJSONObject.getString("imgUrl");
+                            DailyAssert.assertNotNull(imageUrl);
+
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+
+            private ArrayList<Area> makeAreaList(JSONArray jsonArray) throws JSONException
+            {
+                ArrayList<Area> areaList = new ArrayList<>();
+
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    DailyAssert.assertNotNull(jsonObject);
+
+                    try
+                    {
+                        Area area = new Area(jsonObject);
+                        areaList.add(area);
+                    } catch (JSONException e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                }
+
+                return areaList;
+            }
+
+            private ArrayList<Province> makeProvinceList(JSONArray jsonArray)
+            {
+                ArrayList<Province> provinceList = new ArrayList<>();
+
+                try
+                {
+                    int length = jsonArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        DailyAssert.assertNotNull(jsonObject);
+
+                        try
+                        {
+                            Province province = new Province(jsonObject, null);
+                            provinceList.add(province);
+                        } catch (JSONException e)
+                        {
+                            DailyAssert.fail(e);
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    DailyAssert.fail(e);
+                }
+
+                return provinceList;
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetRegionList(mNetworkTag, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test
     public void requestGourmetList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            JSONArray gourmetJSONArray = null;
+
+                            if (dataJSONObject.has("gourmetSales") == true)
+                            {
+                                gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
+                                DailyAssert.assertNotNull(gourmetJSONArray);
+                            }
+
+                            int totalCount = dataJSONObject.getInt("searchCount");
+                            int maxCount = dataJSONObject.getInt("searchMaxCount");
+
+                            DailyAssert.assertTrue(totalCount >= 0);
+                            DailyAssert.assertTrue(maxCount >= 0);
+
+                            int page;
+                            String imageUrl;
+
+                            ArrayList<Gourmet> gourmetList = new ArrayList<>();
+
+                            if (gourmetJSONArray != null)
+                            {
+                                imageUrl = dataJSONObject.getString("imgUrl");
+                                DailyAssert.assertNotNull(imageUrl);
+
+                                checkGourmetList(gourmetJSONArray);
+                            }
+
+                            JSONObject filterJSONObject = dataJSONObject.getJSONObject("filter");
+                            DailyAssert.assertNotNull(filterJSONObject);
+
+                            JSONArray categoryJSONArray = filterJSONObject.getJSONArray("categories");
+                            DailyAssert.assertNotNull(categoryJSONArray);
+
+                            int categoryCount = categoryJSONArray.length();
+                            // 필터 정보 넣기
+                            for (int i = 0; i < categoryCount; i++)
+                            {
+                                JSONObject categoryJSONObject = categoryJSONArray.getJSONObject(i);
+                                DailyAssert.assertNotNull(categoryJSONObject);
+
+                                int categoryCode = categoryJSONObject.getInt("code");
+                                int categorySeq = categoryJSONObject.getInt("sequence");
+                                String categoryName = categoryJSONObject.getString("name");
+
+                                DailyAssert.assertTrue(categoryCode >= 0);
+                                DailyAssert.assertTrue(categorySeq >= 0);
+                                DailyAssert.assertNotNull(categoryName);
+                            }
+
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+
+            private void checkGourmetList(JSONArray jsonArray) throws JSONException
+            {
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    DailyAssert.assertNotNull(jsonObject);
+
+                    int index = jsonObject.getInt("restaurantIdx");
+
+                    String name = null;
+                    if (jsonObject.has("restaurantName") == true)
+                    {
+                        name = jsonObject.getString("restaurantName");
+                    } else if (jsonObject.has("name") == true)
+                    {
+                        name = jsonObject.getString("name");
+                    }
+
+                    DailyAssert.assertTrue(index > 0);
+                    DailyAssert.assertNotNull(name);
+
+                    DailyAssert.assertTrue(jsonObject.getInt("price") >= 0);
+                    DailyAssert.assertTrue(jsonObject.getInt("discount") >= 0);
+
+                    DailyAssert.assertNotNull(jsonObject.getString("addrSummary"));
+                    DailyAssert.assertNotNull(jsonObject.getString("districtName"));
+
+                    DailyAssert.assertTrue(jsonObject.getDouble("latitude") >= 0.0);
+                    DailyAssert.assertTrue(jsonObject.getDouble("longitude") >= 0.0);
+
+                    DailyAssert.assertTrue(jsonObject.has("isDailychoice"));
+                    DailyAssert.assertTrue(jsonObject.has("isSoldOut"));
+
+                    DailyAssert.assertTrue(jsonObject.getInt("persons") > 0);
+
+                    DailyAssert.assertNotNull(jsonObject.getString("category"));
+
+                    DailyAssert.assertTrue(jsonObject.getInt("categoryCode") >= 0);
+                    DailyAssert.assertTrue(jsonObject.getInt("categorySeq") >= 0);
+
+                    if (jsonObject.has("categorySub") == true)
+                    {
+                        DailyAssert.assertNotNull(jsonObject.getString("categorySub"));
+                    }
+
+                    if (jsonObject.has("rating") == true)
+                    {
+                        DailyAssert.assertTrue(jsonObject.getInt("rating") >= 0);
+                    }
+
+                    if (jsonObject.has("distance") == true)
+                    {
+                        DailyAssert.assertTrue(jsonObject.getDouble("distance") >= 0);
+                    }
+
+                    JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
+                    DailyAssert.assertNotNull(imageJSONObject);
+
+                    Iterator<String> iterator = imageJSONObject.keys();
+                    while (iterator.hasNext())
+                    {
+                        String key = iterator.next();
+                        JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                        DailyAssert.assertNotNull(pathJSONArray);
+                        DailyAssert.assertNotNull(pathJSONArray.getString(0));
+                        break;
+                    }
+
+                    if (jsonObject.has("benefit") == true)
+                    {
+                        DailyAssert.assertNotNull(jsonObject.getString("benefit"));
+                    }
+                }
+            }
+        };
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("reserveDate", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+        hashMap.put("provinceIdx", Const.TEST_GOURMET_PROVINCE_INDEX);
+        // skip Area
+//        hashMap.put("areaIdx", areaIdx);
+        hashMap.put("persons", Const.TEST_PERSONS);
+
+        if (Const.TEST_PAGE_INDEX > 0)
+        {
+            hashMap.put("page", Const.TEST_PAGE_INDEX);
+            hashMap.put("limit", Const.TEST_LIMIT_LIST_COUNT);
+        }
+
+        //skip sort
+        //        if (Constants.SortType.DEFAULT != mSort)
+        //        {
+        //            if (Util.isTextEmpty(sortProperty) == false)
+        //            {
+        //                hashMap.put("sortProperty", sortProperty);
+        //            }
+        //
+        //            if (Util.isTextEmpty(sortDirection) == false)
+        //            {
+        //                hashMap.put("sortDirection", sortDirection);
+        //            }
+        //
+        //            if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
+        //            {
+        //                hashMap.put("latitude", latitude);
+        //                hashMap.put("longitude", longitude);
+        //            }
+        //    }
+
+        hashMap.put("details", Const.TEST_IS_SHOW_LIST_DETAIL);
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetList(mNetworkTag, hashMap, null, null, null, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test
