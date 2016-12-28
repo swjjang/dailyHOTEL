@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
-import com.twoheart.dailyhotel.model.HotelBookingDetail;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -49,7 +49,7 @@ public class StayAutoRefundActivity extends BaseActivity
 
     protected StayAutoRefundLayout mStayAutoRefundLayout;
     protected StayAutoRefundNetworkController mStayAutoRefundNetworkController;
-    private HotelBookingDetail mHotelBookingDetail;
+    private StayBookingDetail mStayBookingDetail;
     private Dialog mDialog;
 
     private int mSelectedCancelReason;
@@ -57,10 +57,10 @@ public class StayAutoRefundActivity extends BaseActivity
     private Bank mSelectedBank;
     private List<Bank> mBankList;
 
-    public static Intent newInstance(Context context, HotelBookingDetail hotelBookingDetail)
+    public static Intent newInstance(Context context, StayBookingDetail stayBookingDetail)
     {
         Intent intent = new Intent(context, StayAutoRefundActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL, hotelBookingDetail);
+        intent.putExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL, stayBookingDetail);
 
         return intent;
     }
@@ -85,9 +85,9 @@ public class StayAutoRefundActivity extends BaseActivity
             return;
         }
 
-        mHotelBookingDetail = intent.getParcelableExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL);
+        mStayBookingDetail = intent.getParcelableExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL);
 
-        if (mHotelBookingDetail == null)
+        if (mStayBookingDetail == null)
         {
             Util.restartApp(this);
             return;
@@ -99,10 +99,10 @@ public class StayAutoRefundActivity extends BaseActivity
         mStayAutoRefundLayout.setRefundButtonEnabled(false);
 
         // 시작시에 은행 계좌인 경우에는 은행 리스트를 먼저 받아야한다.
-        mStayAutoRefundLayout.setPlaceBookingDetail(mHotelBookingDetail);
+        mStayAutoRefundLayout.setPlaceBookingDetail(mStayBookingDetail);
 
         // 계좌 이체인 경우
-        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
+        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
         {
             mStayAutoRefundLayout.setAccountLayoutVisible(true);
 
@@ -639,7 +639,7 @@ public class StayAutoRefundActivity extends BaseActivity
             return false;
         }
 
-        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
+        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
         {
             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
             String accountName = mStayAutoRefundLayout.getAccountName();
@@ -706,25 +706,25 @@ public class StayAutoRefundActivity extends BaseActivity
 
                         lockUI();
 
-                        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mHotelBookingDetail.transactionType) == true && mHotelBookingDetail.bonus == 0)
+                        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
                         {
                             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
                             String accountName = mStayAutoRefundLayout.getAccountName();
 
-                            mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage//
+                            mStayAutoRefundNetworkController.requestRefund(mStayBookingDetail.placeIndex, mStayBookingDetail.checkInDate//
+                                , mStayBookingDetail.transactionType, mStayBookingDetail.reservationIndex, mCancelReasonMessage//
                                 , accountName, accountNumber, mSelectedBank.code);
 
                         } else
                         {
-                            mStayAutoRefundNetworkController.requestRefund(mHotelBookingDetail.placeIndex, mHotelBookingDetail.checkInDate//
-                                , mHotelBookingDetail.transactionType, mHotelBookingDetail.reservationIndex, mCancelReasonMessage);
+                            mStayAutoRefundNetworkController.requestRefund(mStayBookingDetail.placeIndex, mStayBookingDetail.checkInDate//
+                                , mStayBookingDetail.transactionType, mStayBookingDetail.reservationIndex, mCancelReasonMessage);
                         }
 
                         Map<String, String> params = new HashMap<>();
-                        params.put(AnalyticsManager.KeyType.NAME, mHotelBookingDetail.roomName);
-                        params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mHotelBookingDetail.price));
-                        params.put(AnalyticsManager.KeyType.COUNTRY, mHotelBookingDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                        params.put(AnalyticsManager.KeyType.NAME, mStayBookingDetail.roomName);
+                        params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mStayBookingDetail.price));
+                        params.put(AnalyticsManager.KeyType.COUNTRY, mStayBookingDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
 
                         String cancelMessage = null;
 

@@ -28,7 +28,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.HotelPaymentInformation;
+import com.twoheart.dailyhotel.model.StayPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -450,15 +450,15 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setReservationInformation(HotelPaymentInformation hotelPaymentInformation)
+    public void setReservationInformation(StayPaymentInformation stayPaymentInformation)
     {
         // 예약 장소
-        mPlaceNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName);
+        mPlaceNameTextView.setText(stayPaymentInformation.getSaleRoomInformation().hotelName);
 
         // 객실 타입
-        mRoomTypeTextView.setText(hotelPaymentInformation.getSaleRoomInformation().roomName);
+        mRoomTypeTextView.setText(stayPaymentInformation.getSaleRoomInformation().roomName);
 
-        String checkInDateFormat = DailyCalendar.format(hotelPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkInDateFormat = DailyCalendar.format(stayPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
         checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkInDateFormat.length() - 3, checkInDateFormat.length(),//
@@ -466,7 +466,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckinDayTextView.setText(checkInSpannableStringBuilder);
 
-        String checkOutDateFormat = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkOutDateFormat = DailyCalendar.format(stayPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
         checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
@@ -474,7 +474,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckoutDayTextView.setText(checkOutSpannableStringBuilder);
 
-        mNightsTextView.setText(mContext.getString(R.string.label_nights, hotelPaymentInformation.nights));
+        mNightsTextView.setText(mContext.getString(R.string.label_nights, stayPaymentInformation.nights));
     }
 
     protected void setUserInformation(Customer user, boolean isOverseas)
@@ -603,11 +603,11 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, mobileNumber));
     }
 
-    public void setVisitTypeInformation(HotelPaymentInformation hotelPaymentInformation)
+    public void setVisitTypeInformation(StayPaymentInformation stayPaymentInformation)
     {
-        switch (hotelPaymentInformation.visitType)
+        switch (stayPaymentInformation.visitType)
         {
-            case "CAR_WALKING":
+            case StayPaymentInformation.VISIT_TYPE_PARKING:
                 mHowToVisitLayout.setVisibility(View.VISIBLE);
                 mVisitCarView.setVisibility(View.VISIBLE);
                 mVisitWalkView.setVisibility(View.VISIBLE);
@@ -616,7 +616,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 mGuideVisitMemoView.setText(R.string.message_visit_car_memo);
 
                 // 디폴트로 도보가 기본이다.
-                if (hotelPaymentInformation.isVisitWalking == true)
+                if (stayPaymentInformation.isVisitWalking == true)
                 {
                     mVisitWalkView.performClick();
                 } else
@@ -625,11 +625,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 }
                 break;
 
-            case "NONE":
-                mHowToVisitLayout.setVisibility(View.GONE);
-                break;
-
-            case "NO_PARKING":
+            case StayPaymentInformation.VISIT_TYPE_NO_PARKING:
                 mHowToVisitLayout.setVisibility(View.VISIBLE);
                 mVisitCarView.setVisibility(View.GONE);
                 mVisitWalkView.setVisibility(View.GONE);
@@ -637,12 +633,16 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
                 mGuideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
                 break;
+
+            default:
+                mHowToVisitLayout.setVisibility(View.GONE);
+                break;
         }
     }
 
-    public void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation, CreditCard creditCard)
+    public void setPaymentInformation(StayPaymentInformation stayPaymentInformation, CreditCard creditCard)
     {
-        if (hotelPaymentInformation == null)
+        if (stayPaymentInformation == null)
         {
             return;
         }

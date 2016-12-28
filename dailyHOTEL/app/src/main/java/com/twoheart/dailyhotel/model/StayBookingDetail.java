@@ -9,13 +9,18 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class HotelBookingDetail extends PlaceBookingDetail
+public class StayBookingDetail extends PlaceBookingDetail
 {
     public static final String STATUS_NO_CHARGE_REFUND = "NO_CHARGE_REFUND"; // 무료 환불
     public static final String STATUS_SURCHARGE_REFUND = "SURCHARGE_REFUND"; // 부분 환불
     public static final String STATUS_NRD = "NRD";
     public static final String STATUS_WAIT_REFUND = "WAIT_REFUND";
     public static final String STATUS_NONE = "NONE";
+
+    public static final String VISIT_TYPE_NONE = "NONE";
+    public static final String VISIT_TYPE_WALKING = "PARKING";
+    public static final String VISIT_TYPE_CAR = "CAR";
+    public static final String VISIT_TYPE_NO_PARKING = "NO_PARKING";
 
     public boolean isOverseas;
     public String checkInDate;
@@ -32,13 +37,13 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public boolean isVisibleRefundPolicy; // 하단에 정책을 보여줄지 말지.
     public String mRefundComment; // 환분 불가 내용
 
-    public String visitType = "NONE"; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
+    public String visitType = VISIT_TYPE_NONE; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
 
-    public HotelBookingDetail()
+    public StayBookingDetail()
     {
     }
 
-    public HotelBookingDetail(Parcel in)
+    public StayBookingDetail(Parcel in)
     {
         readFromParcel(in);
     }
@@ -136,31 +141,31 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
             if (Util.isTextEmpty(guestTransportation) == true)
             {
-                visitType = "NONE";
+                visitType = VISIT_TYPE_NONE;
             } else
             {
                 switch (guestTransportation)
                 {
                     case "CAR":
-                        visitType = "CAR";
+                        visitType = VISIT_TYPE_CAR;
                         break;
 
                     case "NO_PARKING":
-                        visitType = "NO_PARKING";
+                        visitType = VISIT_TYPE_NO_PARKING;
                         break;
 
                     case "WALKING":
-                        visitType = "WALKING";
+                        visitType = VISIT_TYPE_WALKING;
                         break;
 
                     default:
-                        visitType = "NONE";
+                        visitType = VISIT_TYPE_NONE;
                         break;
                 }
             }
         } else
         {
-            visitType = "NONE";
+            visitType = VISIT_TYPE_NONE;
         }
     }
 
@@ -207,15 +212,15 @@ public class HotelBookingDetail extends PlaceBookingDetail
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public HotelBookingDetail createFromParcel(Parcel in)
+        public StayBookingDetail createFromParcel(Parcel in)
         {
-            return new HotelBookingDetail(in);
+            return new StayBookingDetail(in);
         }
 
         @Override
-        public HotelBookingDetail[] newArray(int size)
+        public StayBookingDetail[] newArray(int size)
         {
-            return new HotelBookingDetail[size];
+            return new StayBookingDetail[size];
         }
     };
 }

@@ -16,7 +16,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelBookingDetail;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
@@ -40,7 +40,7 @@ import retrofit2.Response;
 
 public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
-    public HotelBookingDetail mHotelBookingDetail;
+    public StayBookingDetail mStayBookingDetail;
     public StayBookingDetailTabBookingFragment mStayBookingDetailTabBookingFragment;
 
     @Override
@@ -48,7 +48,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     {
         super.onCreate(savedInstanceState);
 
-        mHotelBookingDetail = new HotelBookingDetail();
+        mStayBookingDetail = new StayBookingDetail();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         if (mStayBookingDetailTabBookingFragment != null)
         {
-            mStayBookingDetailTabBookingFragment.updateRefundPolicyLayout((HotelBookingDetail) placeBookingDetail);
+            mStayBookingDetailTabBookingFragment.updateRefundPolicyLayout((StayBookingDetail) placeBookingDetail);
             return;
         }
 
@@ -148,7 +148,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             }
         });
 
-        if (Util.isTextEmpty(mHotelBookingDetail.phone1) == false)
+        if (Util.isTextEmpty(mStayBookingDetail.phone1) == false)
         {
             DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
             contactUs02TextView.setText(R.string.label_hotel_front_phone);
@@ -164,7 +164,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         dialog.dismiss();
                     }
 
-                    startFrontCall(mHotelBookingDetail.phone1);
+                    startFrontCall(mStayBookingDetail.phone1);
                 }
             });
         } else
@@ -173,10 +173,10 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
 
         Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeInMillis(mHotelBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
+        calendar.setTimeInMillis(mStayBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
         int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
 
-        if (Util.isTextEmpty(mHotelBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
+        if (Util.isTextEmpty(mStayBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
         {
             contactUs03Layout.setVisibility(View.VISIBLE);
 
@@ -194,7 +194,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         dialog.dismiss();
                     }
 
-                    startReservationCall(mHotelBookingDetail.phone2);
+                    startReservationCall(mStayBookingDetail.phone2);
                 }
             });
         } else
@@ -302,8 +302,8 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     @Override
     protected void setCurrentDateTime(long currentDateTime, long dailyDateTime)
     {
-        mHotelBookingDetail.currentDateTime = currentDateTime;
-        mHotelBookingDetail.dailyDateTime = dailyDateTime;
+        mStayBookingDetail.currentDateTime = currentDateTime;
+        mStayBookingDetail.dailyDateTime = dailyDateTime;
     }
 
     private void startFAQ()
@@ -459,28 +459,28 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         case 100:
                             JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                            mHotelBookingDetail.setData(jsonObject);
+                            mStayBookingDetail.setData(jsonObject);
 
-                            long checkOutDateTime = DailyCalendar.getTimeGMT9(mHotelBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+                            long checkOutDateTime = DailyCalendar.getTimeGMT9(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
 
-                            if (mHotelBookingDetail.currentDateTime < checkOutDateTime)
+                            if (mStayBookingDetail.currentDateTime < checkOutDateTime)
                             {
-                                mHotelBookingDetail.isVisibleRefundPolicy = true;
+                                mStayBookingDetail.isVisibleRefundPolicy = true;
 
-                                if (mHotelBookingDetail.readyForRefund == true)
+                                if (mStayBookingDetail.readyForRefund == true)
                                 {
                                     // 환불 대기 인 상태에서는 문구가 고정이다.
-                                    loadFragments(getViewPager(), mHotelBookingDetail);
+                                    loadFragments(getViewPager(), mStayBookingDetail);
                                 } else
                                 {
                                     DailyMobileAPI.getInstance(StayBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
-                                        , mHotelBookingDetail.reservationIndex, mHotelBookingDetail.transactionType, mPolicyRefundCallback);
+                                        , mStayBookingDetail.reservationIndex, mStayBookingDetail.transactionType, mPolicyRefundCallback);
                                 }
                             } else
                             {
-                                mHotelBookingDetail.isVisibleRefundPolicy = false;
+                                mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                                loadFragments(getViewPager(), mHotelBookingDetail);
+                                loadFragments(getViewPager(), mStayBookingDetail);
                             }
                             break;
 
@@ -552,29 +552,29 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                             // 환불 킬스위치 ON
                             if (refundManual == true)
                             {
-                                if (HotelBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
+                                if (StayBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
                                 {
-                                    mHotelBookingDetail.refundPolicy = refundPolicy;
-                                    mHotelBookingDetail.mRefundComment = comment;
+                                    mStayBookingDetail.refundPolicy = refundPolicy;
+                                    mStayBookingDetail.mRefundComment = comment;
                                 } else
                                 {
-                                    mHotelBookingDetail.refundPolicy = HotelBookingDetail.STATUS_SURCHARGE_REFUND;
-                                    mHotelBookingDetail.mRefundComment = responseJSONObject.getString("msg");
+                                    mStayBookingDetail.refundPolicy = StayBookingDetail.STATUS_SURCHARGE_REFUND;
+                                    mStayBookingDetail.mRefundComment = responseJSONObject.getString("msg");
                                 }
 
-                                loadFragments(getViewPager(), mHotelBookingDetail);
+                                loadFragments(getViewPager(), mStayBookingDetail);
                             } else
                             {
-                                if (HotelBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
+                                if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
                                 {
-                                    mHotelBookingDetail.isVisibleRefundPolicy = false;
+                                    mStayBookingDetail.isVisibleRefundPolicy = false;
                                 } else
                                 {
-                                    mHotelBookingDetail.mRefundComment = comment;
+                                    mStayBookingDetail.mRefundComment = comment;
                                 }
 
-                                mHotelBookingDetail.refundPolicy = refundPolicy;
-                                loadFragments(getViewPager(), mHotelBookingDetail);
+                                mStayBookingDetail.refundPolicy = refundPolicy;
+                                loadFragments(getViewPager(), mStayBookingDetail);
                             }
 
                             // Analytics
@@ -582,11 +582,11 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                             {
                                 switch (refundPolicy)
                                 {
-                                    case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                                    case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
                                         AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE);
                                         break;
 
-                                    case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
+                                    case StayBookingDetail.STATUS_SURCHARGE_REFUND:
                                         AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE);
                                         break;
 
@@ -602,9 +602,9 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         }
 
                         default:
-                            mHotelBookingDetail.isVisibleRefundPolicy = false;
+                            mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                            loadFragments(getViewPager(), mHotelBookingDetail);
+                            loadFragments(getViewPager(), mStayBookingDetail);
 
                             AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
                             break;

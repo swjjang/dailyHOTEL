@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelBookingDetail;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -114,25 +114,25 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         });
     }
 
-    public void setPlaceBookingDetail(HotelBookingDetail hotelBookingDetail)
+    public void setPlaceBookingDetail(StayBookingDetail stayBookingDetail)
     {
         View dateInformationLayout = mRootView.findViewById(R.id.dateInformationLayout);
 
-        initTimeInformationLayout(mContext, dateInformationLayout, hotelBookingDetail);
+        initTimeInformationLayout(mContext, dateInformationLayout, stayBookingDetail);
 
         // 예약 장소
         TextView hotelNameTextView = (TextView) mRootView.findViewById(R.id.hotelNameTextView);
         TextView roomTypeTextView = (TextView) mRootView.findViewById(R.id.roomTypeTextView);
         TextView addressTextView = (TextView) mRootView.findViewById(R.id.addressTextView);
 
-        hotelNameTextView.setText(hotelBookingDetail.placeName);
-        roomTypeTextView.setText(hotelBookingDetail.roomName);
-        addressTextView.setText(hotelBookingDetail.address);
+        hotelNameTextView.setText(stayBookingDetail.placeName);
+        roomTypeTextView.setText(stayBookingDetail.roomName);
+        addressTextView.setText(stayBookingDetail.address);
 
-        initPaymentInformationLayout(mContext, mRootView, hotelBookingDetail);
+        initPaymentInformationLayout(mContext, mRootView, stayBookingDetail);
     }
 
-    private void initTimeInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    private void initTimeInformationLayout(Context context, View view, StayBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
@@ -184,9 +184,9 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         }
     }
 
-    private void initPaymentInformationLayout(Context context, View view, HotelBookingDetail hotelBookingDetail)
+    private void initPaymentInformationLayout(Context context, View view, StayBookingDetail stayBookingDetail)
     {
-        if (hotelBookingDetail == null)
+        if (stayBookingDetail == null)
         {
             return;
         }
@@ -202,34 +202,34 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
 
         try
         {
-            paymentDateTextView.setText(DailyCalendar.convertDateFormatString(hotelBookingDetail.paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            paymentDateTextView.setText(DailyCalendar.convertDateFormatString(stayBookingDetail.paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(Util.getPriceFormat(context, hotelBookingDetail.price, false));
+        priceTextView.setText(Util.getPriceFormat(context, stayBookingDetail.price, false));
 
 
-        if (hotelBookingDetail.bonus > 0)
+        if (stayBookingDetail.bonus > 0)
         {
             bonusLayout.setVisibility(View.VISIBLE);
-            bonusTextView.setText("- " + Util.getPriceFormat(context, hotelBookingDetail.bonus, false));
+            bonusTextView.setText("- " + Util.getPriceFormat(context, stayBookingDetail.bonus, false));
         } else
         {
             bonusLayout.setVisibility(View.GONE);
         }
 
-        if (hotelBookingDetail.coupon > 0)
+        if (stayBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + Util.getPriceFormat(context, hotelBookingDetail.coupon, false));
+            couponTextView.setText("- " + Util.getPriceFormat(context, stayBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(Util.getPriceFormat(context, hotelBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(Util.getPriceFormat(context, stayBookingDetail.paymentPrice, false));
     }
 
     @Override
