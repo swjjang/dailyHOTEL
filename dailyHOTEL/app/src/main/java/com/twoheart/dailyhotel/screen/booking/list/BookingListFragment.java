@@ -45,7 +45,6 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -553,7 +552,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             baseActivity.onError(t);
         }
 
-        private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws JSONException
+        private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws Exception
         {
             if (jsonArray == null || jsonArray.length() == 0)
             {

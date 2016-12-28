@@ -50,6 +50,9 @@ public class Const implements Constants
 
     public static final int TEST_STAY_INDEX = 981;
     public static final int TEST_STAY_SALE_ROOM_INDEX = 11709705; // stay index dependency
+    public static final String TEST_EASY_CARD_BILLINGKEY = "3df689cd659fc6a81175779fa41d96ffedf57133";
+    public static final int TEST_STAY_RESERVATION_INDEX = 1406222;
+    public static final int TEST_GOURMET_RESERVATION_INDEX = 49941;
 
 
     private static String getBirthDayText(int year, int month, int dayOfMonth)
