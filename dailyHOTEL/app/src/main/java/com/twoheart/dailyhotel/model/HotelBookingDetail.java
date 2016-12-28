@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.model.Stay.Grade;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +32,7 @@ public class HotelBookingDetail extends PlaceBookingDetail
     public boolean isVisibleRefundPolicy; // 하단에 정책을 보여줄지 말지.
     public String mRefundComment; // 환분 불가 내용
 
-    public String visitType; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
+    public String visitType = "NONE"; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
 
     public HotelBookingDetail()
     {
@@ -129,7 +130,38 @@ public class HotelBookingDetail extends PlaceBookingDetail
             reviewStatusType = ReviewStatusType.NONE;
         }
 
-        visitType = "NONE";
+        if (jsonObject.has("guestTransportation") == true || jsonObject.isNull("guestTransportation") == false)
+        {
+            String guestTransportation = jsonObject.getString("guestTransportation");
+
+            if (Util.isTextEmpty(guestTransportation) == true)
+            {
+                visitType = "NONE";
+            } else
+            {
+                switch (guestTransportation)
+                {
+                    case "CAR":
+                        visitType = "CAR";
+                        break;
+
+                    case "NO_PARKING":
+                        visitType = "NO_PARKING";
+                        break;
+
+                    case "WALKING":
+                        visitType = "WALKING";
+                        break;
+
+                    default:
+                        visitType = "NONE";
+                        break;
+                }
+            }
+        } else
+        {
+            visitType = "NONE";
+        }
     }
 
     @Override
