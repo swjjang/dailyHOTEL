@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 public class DailyToolbarLayout
 {
-    private static final int ANIMATION_DEALY = 200;
+    private static final int ANIMATION_DELAY = 200;
 
     private Context mContext;
     private View mToolbar;
@@ -296,7 +296,7 @@ public class DailyToolbarLayout
         }
 
         mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        mAlphaAnimation.setDuration(ANIMATION_DEALY);
+        mAlphaAnimation.setDuration(ANIMATION_DELAY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 
@@ -349,7 +349,7 @@ public class DailyToolbarLayout
         }
 
         mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(ANIMATION_DEALY);
+        mAlphaAnimation.setDuration(ANIMATION_DELAY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 

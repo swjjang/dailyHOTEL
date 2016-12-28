@@ -162,7 +162,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mDontReloadAtOnResume = false;
         } else
         {
-            if (Util.isUsedMutilTransition() == true && mInitializeStatus != STATUS_INITIALIZE_COMPLETE && mIsDeepLink == false)
+            if (Util.isUsedMultiTransition() == true && mInitializeStatus != STATUS_INITIALIZE_COMPLETE && mIsDeepLink == false)
             {
                 lockUI(false);
             } else
@@ -224,7 +224,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     return;
             }
 
-            if (Util.isUsedMutilTransition() == true && mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+            if (Util.isUsedMultiTransition() == true && mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
             {
                 finish();
                 return;

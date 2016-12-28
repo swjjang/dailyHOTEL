@@ -449,7 +449,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             mUserNameTextView.setText(user.getName());
 
             // 연락처
-            mUserPhoneTextView.setText(Util.addHippenMobileNumber(mContext, user.getPhone()));
+            mUserPhoneTextView.setText(Util.addHyphenMobileNumber(mContext, user.getPhone()));
 
             // 이메일
             mUserEmailTextView.setText(user.getEmail());
@@ -474,7 +474,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             } else
             {
                 mGuestNameEditText.setText(guest.name);
-                mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+                mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, guest.phone));
                 mGuestEmailEditText.setText(guest.email);
             }
 
@@ -493,7 +493,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
+        mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, mobileNumber));
     }
 
     public void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation, CreditCard creditCard)

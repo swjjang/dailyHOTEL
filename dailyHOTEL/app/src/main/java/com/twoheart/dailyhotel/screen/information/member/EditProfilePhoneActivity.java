@@ -31,7 +31,7 @@ public class EditProfilePhoneActivity extends BaseActivity
     private EditProfilePhoneNetworkController mNetworkController;
     private String mCountryCode;
     private String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
-    private int mRequestVerficationCount;
+    private int mRequestVerificationCount;
 
     public enum Type
     {
@@ -229,7 +229,7 @@ public class EditProfilePhoneActivity extends BaseActivity
 
             mEditProfilePhoneLayout.showVerificationVisible();
 
-            if (++mRequestVerficationCount == SignupStep2Activity.VERIFY_PHONE_NUMBER_COUNT)
+            if (++mRequestVerificationCount == SignupStep2Activity.VERIFY_PHONE_NUMBER_COUNT)
             {
                 try
                 {

@@ -120,8 +120,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         holder.expireTextView.setText(strExpire + builder.toString());
 
-        holder.useableStayIcon.setImageResource(coupon.availableInHotel == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
-        holder.useableGourmetIcon.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
+        holder.usableStayIcon.setImageResource(coupon.availableInHotel == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
+        holder.usableGourmetIcon.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder
@@ -131,8 +131,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         TextView descriptionTextView;
         TextView expireTextView;
         TextView stateTextView;
-        ImageView useableStayIcon;
-        ImageView useableGourmetIcon;
+        ImageView usableStayIcon;
+        ImageView usableGourmetIcon;
         View lastBottomLine;
 
         public CouponViewHolder(View itemView)
@@ -144,8 +144,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
-            useableStayIcon = (ImageView) itemView.findViewById(R.id.useableStayImageView);
-            useableGourmetIcon = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
+            usableStayIcon = (ImageView) itemView.findViewById(R.id.useableStayImageView);
+            usableGourmetIcon = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
             lastBottomLine = itemView.findViewById(R.id.lastBottomLine);
         }
     }

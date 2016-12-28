@@ -67,7 +67,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
 
         View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_score, this);
 
-        View reviewScoreScrollView = (View) view.findViewById(R.id.reviewScoreScrollView);
+        View reviewScoreScrollView = view.findViewById(R.id.reviewScoreScrollView);
         reviewScoreScrollView.setClickable(true);
         reviewScoreScrollView.setOnTouchListener(this);
 

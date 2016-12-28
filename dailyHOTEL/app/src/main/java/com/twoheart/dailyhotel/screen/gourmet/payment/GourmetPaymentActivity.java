@@ -122,7 +122,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         mGourmetPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
 
-        setAvailabledDefaultPaymentType();
+        setAvailableDefaultPaymentType();
     }
 
     private boolean initIntent(Intent intent)
@@ -256,7 +256,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
         DailyMobileAPI.getInstance(this).requestGourmetPaymentInformation(mNetworkTag, //
             ((GourmetPaymentInformation) paymentInformation).getTicketInformation().index, //
@@ -393,7 +393,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             try
             {
                 String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
-                    + ",tiketIndex:" + ticketInformation.index + ",checkIn:" + date//
+                    + ",ticketIndex:" + ticketInformation.index + ",checkIn:" + date//
                     + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType + ",userIndex:" + userIndex;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
@@ -434,7 +434,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this);
         finalCheckLayout.setMessages(messageResIds);
 
-        final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
+        final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setEnabled(false);
@@ -489,8 +489,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onAnimationEnd(Animation animation)
                     {
-                        agreeSinatureTextView.setAnimation(null);
-                        agreeSinatureTextView.setVisibility(View.GONE);
+                        agreeSignatureTextView.setAnimation(null);
+                        agreeSignatureTextView.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -499,7 +499,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
                 });
 
-                agreeSinatureTextView.startAnimation(animation);
+                agreeSignatureTextView.startAnimation(animation);
 
                 //                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
                 //                transition.startTransition(500);
@@ -852,7 +852,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         setCouponSelected(false);
     }
 
-    private void setAvailabledDefaultPaymentType()
+    private void setAvailableDefaultPaymentType()
     {
         boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled();
         boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled();
@@ -2020,7 +2020,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     int msgCode = responseJSONObject.getInt("msg_code");
 
-                    hidePorgressDialog();
+                    hideProgressDialog();
 
                     if (msgCode == 0)
                     {

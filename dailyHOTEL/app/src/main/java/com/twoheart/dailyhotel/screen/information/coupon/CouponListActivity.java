@@ -397,7 +397,7 @@ public class CouponListActivity extends BaseActivity
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.log("Coupon List::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                    Crashlytics.log("Coupon List::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
                 }
                 ExLog.d(e.toString());
             } catch (Exception e)

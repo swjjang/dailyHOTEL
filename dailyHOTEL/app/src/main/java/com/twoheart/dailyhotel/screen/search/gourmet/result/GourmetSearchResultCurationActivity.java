@@ -146,7 +146,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 
         if (mLastParams != null && Constants.SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
         {
-            onSearchLoacationResult(null);
+            onSearchLocationResult(null);
             return;
         }
 

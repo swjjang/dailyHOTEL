@@ -31,7 +31,7 @@ import java.util.List;
 
 public abstract class PlaceMainLayout extends BaseLayout implements View.OnClickListener
 {
-    private static final int ANIMATION_DEALY = 200;
+    private static final int ANIMATION_DELAY = 200;
 
     private TextView mRegionTextView;
     private TextView mDateTextView;
@@ -529,7 +529,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         if (isAnimation == true)
         {
             mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.setDuration(ANIMATION_DELAY);
             mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override
@@ -611,7 +611,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         if (isAnimation == true)
         {
             mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.setDuration(ANIMATION_DELAY);
             mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override

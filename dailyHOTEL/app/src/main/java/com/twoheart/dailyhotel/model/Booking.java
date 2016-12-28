@@ -19,7 +19,7 @@ public class Booking implements Parcelable
     public String placeName;
     public int payType;
     public String tid;
-    public String ment;
+    public String comment;
     public long checkinTime;
     public long checkoutTime;
 
@@ -51,7 +51,7 @@ public class Booking implements Parcelable
             placeName = jsonObject.getString("hotel_name");
             payType = jsonObject.getInt("pay_type");
 
-            ment = jsonObject.getString("comment");
+            comment = jsonObject.getString("comment");
             tid = jsonObject.getString("tid");
             checkinTime = jsonObject.getLong("checkin_time");
             checkoutTime = jsonObject.getLong("checkout_time");
@@ -76,7 +76,7 @@ public class Booking implements Parcelable
         dest.writeString(placeName);
         dest.writeInt(payType);
         dest.writeString(tid);
-        dest.writeString(ment);
+        dest.writeString(comment);
 
         dest.writeLong(checkinTime);
         dest.writeLong(checkoutTime);
@@ -93,7 +93,7 @@ public class Booking implements Parcelable
         placeName = in.readString();
         payType = in.readInt();
         tid = in.readString();
-        ment = in.readString();
+        comment = in.readString();
 
         checkinTime = in.readLong();
         checkoutTime = in.readLong();

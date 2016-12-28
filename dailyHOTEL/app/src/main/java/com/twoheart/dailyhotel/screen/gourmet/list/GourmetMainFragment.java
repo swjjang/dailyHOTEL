@@ -812,7 +812,7 @@ public class GourmetMainFragment extends PlaceMainFragment
                     Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                         mGourmetCuration.getSaleTime(), province, gourmet, listCount);
 
-                    if (Util.isUsedMutilTransition() == true)
+                    if (Util.isUsedMultiTransition() == true)
                     {
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);

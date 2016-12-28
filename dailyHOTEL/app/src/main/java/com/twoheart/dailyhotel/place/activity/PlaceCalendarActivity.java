@@ -36,7 +36,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
     protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
-    private static final int ANIMATION_DEALY = 200;
+    private static final int ANIMATION_DELAY = 200;
 
     protected View[] mDailyViews;
 
@@ -153,11 +153,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
         int length = maxDayOfMonth - day + 1 + dayOfWeek;
-        final int LENGHT_OF_WEEK = 7;
+        final int LENGTH_OF_WEEK = 7;
 
-        if (length % LENGHT_OF_WEEK != 0)
+        if (length % LENGTH_OF_WEEK != 0)
         {
-            length += (LENGHT_OF_WEEK - (length % LENGHT_OF_WEEK));
+            length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
         }
 
         Day[] days = new Day[length];
@@ -326,7 +326,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             mAnimationLayout.setTranslationY(Util.dpToPx(this, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
-            mObjectAnimator.setDuration(ANIMATION_DEALY);
+            mObjectAnimator.setDuration(ANIMATION_DELAY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -415,7 +415,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             }
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
-            mObjectAnimator.setDuration(ANIMATION_DEALY);
+            mObjectAnimator.setDuration(ANIMATION_DELAY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -487,7 +487,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(ANIMATION_DEALY);
+        mAlphaAnimation.setDuration(ANIMATION_DELAY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 

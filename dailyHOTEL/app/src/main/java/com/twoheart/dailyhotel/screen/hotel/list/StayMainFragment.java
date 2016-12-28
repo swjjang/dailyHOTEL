@@ -911,7 +911,7 @@ public class StayMainFragment extends PlaceMainFragment
                     Intent intent = StayDetailActivity.newInstance(mBaseActivity, //
                         mStayCuration.getCheckInSaleTime(), province, stay, listCount);
 
-                    if (Util.isUsedMutilTransition() == true)
+                    if (Util.isUsedMultiTransition() == true)
                     {
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);

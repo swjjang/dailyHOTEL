@@ -199,10 +199,10 @@ public interface DailyMobileService
 
     @FormUrlEncoded
     @POST("{mobileAPI}")
-    Call<JSONObject> requestDailyUserSignupVerfication(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                       @Field("signup_key") String signupKey,//
-                                                       @Field("phone") String phone,//
-                                                       @Field("force_to_proceed") boolean force);
+    Call<JSONObject> requestDailyUserSignupVerification(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                        @Field("signup_key") String signupKey,//
+                                                        @Field("phone") String phone,//
+                                                        @Field("force_to_proceed") boolean force);
 
     @FormUrlEncoded
     @POST("{mobileAPI}")

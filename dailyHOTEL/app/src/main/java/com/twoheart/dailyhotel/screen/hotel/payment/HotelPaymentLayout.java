@@ -493,7 +493,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mUserNameTextView.setText(user.getName());
 
             // 연락처
-            mUserPhoneTextView.setText(Util.addHippenMobileNumber(mContext, user.getPhone()));
+            mUserPhoneTextView.setText(Util.addHyphenMobileNumber(mContext, user.getPhone()));
 
             // 이메일
             mUserEmailTextView.setText(user.getEmail());
@@ -518,7 +518,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             } else
             {
                 mGuestNameEditText.setText(guest.name);
-                mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+                mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, guest.phone));
                 mGuestEmailEditText.setText(guest.email);
             }
 
@@ -529,13 +529,13 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mGuestEmailEditText.setHint(R.string.label_booking_input_email);
         } else
         {
-            ViewGroup.LayoutParams framelayoutParams = mGuestFrameLayout.getLayoutParams();
-            framelayoutParams.height = Util.dpToPx(mContext, 164) + Util.dpToPx(mContext, 36);
-            mGuestFrameLayout.setLayoutParams(framelayoutParams);
+            ViewGroup.LayoutParams frameLayoutParams = mGuestFrameLayout.getLayoutParams();
+            frameLayoutParams.height = Util.dpToPx(mContext, 164) + Util.dpToPx(mContext, 36);
+            mGuestFrameLayout.setLayoutParams(frameLayoutParams);
 
-            ViewGroup.LayoutParams linearlayoutParams = mGuestLinearLayout.getLayoutParams();
-            linearlayoutParams.height = framelayoutParams.height;
-            mGuestLinearLayout.setLayoutParams(linearlayoutParams);
+            ViewGroup.LayoutParams linearLayoutParams = mGuestLinearLayout.getLayoutParams();
+            linearLayoutParams.height = frameLayoutParams.height;
+            mGuestLinearLayout.setLayoutParams(linearLayoutParams);
 
             mGuestNameHintEditText.setVisibility(View.VISIBLE);
             mGuestNameHintEditText.setText(R.string.message_guide_name_hint);
@@ -551,7 +551,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mGuestNameEditText.setFilters(allowAlphanumericName);
             mGuestNameEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mGuestNameEditText.getInputType());
 
-            mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+            mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, guest.phone));
             mGuestEmailEditText.setText(guest.email);
 
             mGuestNameEditText.addTextChangedListener(new TextWatcher()
@@ -600,7 +600,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             return;
         }
 
-        mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
+        mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, mobileNumber));
     }
 
     public void setVisitTypeInformation(HotelPaymentInformation hotelPaymentInformation)

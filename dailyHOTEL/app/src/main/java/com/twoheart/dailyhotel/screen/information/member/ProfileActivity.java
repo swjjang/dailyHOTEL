@@ -347,7 +347,7 @@ public class ProfileActivity extends BaseActivity
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
-            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
+            mProfileLayout.updateUserInformation(userType, email, name, Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
 
             if (isVerified == true)
             {
@@ -366,7 +366,7 @@ public class ProfileActivity extends BaseActivity
                 }
             }
 
-            mNetworkController.requestUserProfileBenfit();
+            mNetworkController.requestUserProfileBenefit();
         }
 
         @Override

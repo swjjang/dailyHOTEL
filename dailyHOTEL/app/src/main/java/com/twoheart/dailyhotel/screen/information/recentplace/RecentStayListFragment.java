@@ -173,7 +173,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0);
 
-            if (Util.isUsedMutilTransition() == true)
+            if (Util.isUsedMultiTransition() == true)
             {
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);

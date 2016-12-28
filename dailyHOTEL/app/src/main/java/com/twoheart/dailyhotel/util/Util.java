@@ -425,7 +425,7 @@ public class Util implements Constants
      *
      * @return
      */
-    public static boolean isUsedMutilTransition()
+    public static boolean isUsedMultiTransition()
     {
         return isOverAPI21() == true && isOverAPI24() == false;
     }
@@ -656,16 +656,16 @@ public class Util implements Constants
         return countryCodeNumber.hasCountryCode(code);
     }
 
-    public static boolean isValidatePhoneNumber(String phonenumber)
+    public static boolean isValidatePhoneNumber(String phoneNumber)
     {
-        if (Util.isTextEmpty(phonenumber) == true)
+        if (Util.isTextEmpty(phoneNumber) == true)
         {
             return false;
         }
 
-        if (phonenumber.charAt(0) == '+')
+        if (phoneNumber.charAt(0) == '+')
         {
-            String globalPhoneNumber = phonenumber.replaceFirst("\\s", "^");
+            String globalPhoneNumber = phoneNumber.replaceFirst("\\s", "^");
             String[] text = globalPhoneNumber.split("\\^");
 
             // 국제 전화번호 존재 여부 확인
@@ -686,7 +686,7 @@ public class Util implements Constants
                         int length = text[1].length();
                         if (length == 12 || length == 13)
                         {
-                            return (Util.isExistMobileNumber(phonenumber) == false);
+                            return (Util.isExistMobileNumber(phoneNumber) == false);
                         }
                     }
                 }
@@ -737,25 +737,25 @@ public class Util implements Constants
 
         final String PATTERN = "010|011|016|017|018|019{1}";
         final String PATTERN_3 = "111|222|333|444|555|666|777|888|999|000|012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210{1}";
-        final String PATTENR_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210{1}";
+        final String PATTERN_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210{1}";
 
         Pattern pattern01 = Pattern.compile(PATTERN);
-        Pattern pattern02 = mobile02.length() == 3 ? Pattern.compile(PATTERN_3) : Pattern.compile(PATTENR_4);
-        Pattern pattern03 = Pattern.compile(PATTENR_4);
+        Pattern pattern02 = mobile02.length() == 3 ? Pattern.compile(PATTERN_3) : Pattern.compile(PATTERN_4);
+        Pattern pattern03 = Pattern.compile(PATTERN_4);
 
         return pattern01.matcher(mobile01).matches() == false && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
     }
 
-    public static String[] getValidatePhoneNumber(String phonenumber)
+    public static String[] getValidatePhoneNumber(String phoneNumber)
     {
-        if (Util.isTextEmpty(phonenumber) == true)
+        if (Util.isTextEmpty(phoneNumber) == true)
         {
             return null;
         }
 
-        if (phonenumber.charAt(0) == '+')
+        if (phoneNumber.charAt(0) == '+')
         {
-            String globalPhoneNumber = phonenumber.replaceFirst("\\s", "^");
+            String globalPhoneNumber = phoneNumber.replaceFirst("\\s", "^");
             String[] text = globalPhoneNumber.split("\\^");
             String countryCode = getValidateCountry(text[0]);
 
@@ -787,7 +787,7 @@ public class Util implements Constants
             }
         } else
         {
-            String text = phonenumber.replace("-", "").replace(" ", "");
+            String text = phoneNumber.replace("-", "").replace(" ", "");
 
             if (text.startsWith("010") || text.startsWith("011") || text.startsWith("016") //
                 || text.startsWith("017") || text.startsWith("018") || text.startsWith("019"))
@@ -903,7 +903,7 @@ public class Util implements Constants
         return null;
     }
 
-    public static String addHippenMobileNumber(Context context, String mobileNumber)
+    public static String addHyphenMobileNumber(Context context, String mobileNumber)
     {
         if (Util.isTextEmpty(mobileNumber) == true)
         {

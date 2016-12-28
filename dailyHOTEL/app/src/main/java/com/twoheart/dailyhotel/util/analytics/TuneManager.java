@@ -61,13 +61,13 @@ public class TuneManager extends BaseAnalyticsManager
         mTune.checkForDeferredDeeplink(new TuneDeeplinkListener()
         {
             @Override
-            public void didReceiveDeeplink(String deeplink)
+            public void didReceiveDeeplink(String deepLink)
             {
-                if (Util.isTextEmpty(deeplink) == false)
+                if (Util.isTextEmpty(deepLink) == false)
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse(deeplink));
+                    intent.setData(Uri.parse(deepLink));
 
                     mContext.startActivity(intent);
                 }

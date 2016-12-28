@@ -120,16 +120,16 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param context
      * @param saleTime
      * @param nights
-     * @param staytIndex
+     * @param stayIndex
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int staytIndex, int roomIndex, boolean isShowCalendar)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int stayIndex, int roomIndex, boolean isShowCalendar)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, staytIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stayIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
@@ -145,14 +145,14 @@ public class StayDetailActivity extends PlaceDetailActivity
      * 딥링크로 호출
      */
     public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
-        , int staytIndex, int roomIndex, boolean isShowCalendar)
+        , int stayIndex, int roomIndex, boolean isShowCalendar)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, staytIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stayIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
@@ -331,7 +331,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isUsedMutilTransition() == true)
+        if (Util.isUsedMultiTransition() == true)
         {
             TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
@@ -339,13 +339,13 @@ public class StayDetailActivity extends PlaceDetailActivity
             inTextTransition.addTarget(getString(R.string.transition_place_name));
             intransitionSet.addTransition(inTextTransition);
 
-            Transition inBottomAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            inBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            intransitionSet.addTransition(inBottomAlhpaTransition);
+            Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            intransitionSet.addTransition(inBottomAlphaTransition);
 
-            Transition inTopAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            inTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            intransitionSet.addTransition(inTopAlhpaTransition);
+            Transition inTopAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            inTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            intransitionSet.addTransition(inTopAlphaTransition);
 
             getWindow().setSharedElementEnterTransition(intransitionSet);
 
@@ -355,13 +355,13 @@ public class StayDetailActivity extends PlaceDetailActivity
             outTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outTextTransition);
 
-            Transition outBottomAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            outBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            outTransitionSet.addTransition(outBottomAlhpaTransition);
+            Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            outTransitionSet.addTransition(outBottomAlphaTransition);
 
-            Transition outTopAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            outTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            outTransitionSet.addTransition(outTopAlhpaTransition);
+            Transition outTopAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            outTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            outTransitionSet.addTransition(outTopAlphaTransition);
 
             outTransitionSet.setDuration(200);
 
@@ -428,9 +428,9 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isUsedMutilTransition() == true)
+        if (mIsDeepLink == false && Util.isUsedMultiTransition() == true)
         {
-            ininTransLayout(placeName, imageUrl, grade, isFromMap);
+            initTransLayout(placeName, imageUrl, grade, isFromMap);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -444,7 +444,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void ininTransLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
+    private void initTransLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
     {
         if (Util.isTextEmpty(placeName, imageUrl) == true && grade != null)
         {
@@ -1241,7 +1241,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onStaytDetailInformation(JSONObject dataJSONObject)
+        public void onStayDetailInformation(JSONObject dataJSONObject)
         {
             try
             {

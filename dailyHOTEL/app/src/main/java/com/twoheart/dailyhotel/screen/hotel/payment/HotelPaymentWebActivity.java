@@ -213,7 +213,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("guest_email", email);
 
         // 주차/도보
-        builder.add("arrival_transportation",  hotelPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+        builder.add("arrival_transportation", hotelPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
 
         String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
             + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);

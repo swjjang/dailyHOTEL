@@ -169,7 +169,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mTransTotalGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
         mTransPlaceNameTextView = (TextView) transTitleLayout.findViewById(R.id.transNameTextView);
 
-        if (Util.isUsedMutilTransition() == true)
+        if (Util.isUsedMultiTransition() == true)
         {
             setTransImageVisibility(true);
             transTitleLayout.setVisibility(View.VISIBLE);
@@ -202,7 +202,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mDailyLineIndicator.setViewPager(mViewPager);
 
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
-        mDailyLineIndicator.setmOnPageChangeListener(mOnPageChangeListener);
+        mDailyLineIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
         mImageHeight = Util.getLCDWidth(mContext);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();

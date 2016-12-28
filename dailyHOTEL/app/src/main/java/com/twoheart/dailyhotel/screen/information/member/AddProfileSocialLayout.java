@@ -440,7 +440,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailLayout.setVisibility(View.GONE);
     }
 
-    public void showBirthdaylLayout()
+    public void showBirthdayLayout()
     {
         mBirthdayView.setVisibility(View.VISIBLE);
         mBirthdayEditText.setVisibility(View.VISIBLE);

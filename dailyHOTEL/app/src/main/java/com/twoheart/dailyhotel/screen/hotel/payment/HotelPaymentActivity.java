@@ -135,7 +135,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         mHotelPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
 
-        setAvailabledDefaultPaymentType();
+        setAvailableDefaultPaymentType();
     }
 
     private boolean initIntent(Intent intent)
@@ -261,7 +261,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
         RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
 
@@ -475,7 +475,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this);
         finalCheckLayout.setMessages(messageResIds);
 
-        final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
+        final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setEnabled(false);
@@ -530,8 +530,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onAnimationEnd(Animation animation)
                     {
-                        agreeSinatureTextView.setAnimation(null);
-                        agreeSinatureTextView.setVisibility(View.GONE);
+                        agreeSignatureTextView.setAnimation(null);
+                        agreeSignatureTextView.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -540,7 +540,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     }
                 });
 
-                agreeSinatureTextView.startAnimation(animation);
+                agreeSignatureTextView.startAnimation(animation);
 
                 //                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
                 //                transition.startTransition(500);
@@ -966,7 +966,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         setCouponSelected(false);
     }
 
-    private void setAvailabledDefaultPaymentType()
+    private void setAvailableDefaultPaymentType()
     {
         boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled();
         boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled();
@@ -2184,7 +2184,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
-                hidePorgressDialog();
+                hideProgressDialog();
 
                 try
                 {

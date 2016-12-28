@@ -37,7 +37,7 @@ public class ProfileNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserInProfileCallback);
     }
 
-    public void requestUserProfileBenfit()
+    public void requestUserProfileBenefit()
     {
         DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserInProfileBenefitCallback);
     }

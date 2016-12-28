@@ -299,7 +299,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
 
-        final PlaceType startPlactType = placeType;
+        final PlaceType startPlaceType = placeType;
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
@@ -373,7 +373,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
                 int pageOffset = (int) ((float) offset * mViewPager.getWidth() / range);
 
-                switch (startPlactType)
+                switch (startPlaceType)
                 {
                     case HOTEL:
                         mViewPager.setScrollX(pageOffset);

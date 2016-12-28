@@ -257,7 +257,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (coupon.isDownloaded == true)
             {
-                //useable
+                //usable
                 downloadIconView.setVisibility(View.GONE);
                 useIconView.setVisibility(View.VISIBLE);
                 listItemLayout.setBackgroundResource(R.drawable.more_coupon_bg);

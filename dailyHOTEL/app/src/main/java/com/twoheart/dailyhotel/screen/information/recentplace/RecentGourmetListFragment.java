@@ -172,7 +172,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
                 mSaleTime, gourmet, 0);
 
-            if (Util.isUsedMutilTransition() == true)
+            if (Util.isUsedMultiTransition() == true)
             {
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);

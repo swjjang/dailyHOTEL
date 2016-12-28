@@ -117,9 +117,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void requestPlaceList(String params)
     {
-        String stayParms = String.format("dateCheckIn=%s&stays=%d&details=true&%s", mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mNights, params);
+        String stayParams = String.format("dateCheckIn=%s&stays=%d&details=true&%s", mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mNights, params);
 
-        Uri uri = Uri.parse("http://www.daily.com/stay?" + stayParms);
+        Uri uri = Uri.parse("http://www.daily.com/stay?" + stayParams);
 
         HashMap<String, Object> hashMap = new HashMap<>();
         List<String> bedTypeList = null;
@@ -154,7 +154,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
         Intent intent = StayDetailActivity.newInstance(this, mCheckInSaleTime, stay, mStartSaleTime, mEndSaleTime, count);
 
-        if (Util.isUsedMutilTransition() == true)
+        if (Util.isUsedMultiTransition() == true)
         {
             View simpleDraweeView = view.findViewById(R.id.imageView);
             View gradeTextView = view.findViewById(R.id.gradeTextView);

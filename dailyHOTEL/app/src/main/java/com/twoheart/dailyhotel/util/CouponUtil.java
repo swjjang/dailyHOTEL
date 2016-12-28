@@ -391,7 +391,7 @@ public class CouponUtil
         if (gap <= 0)
         {
             // 기간 만료 상품
-            ExLog.d("aready expired");
+            ExLog.d("already expired");
             return dayCount;
         } else
         {

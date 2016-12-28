@@ -421,10 +421,10 @@ public class InformationFragment extends BaseFragment implements Constants
                 startActivity(InviteFriendsActivity.newInstance(baseActivity));
             } else
             {
-                String recommeder = DailyPreference.getInstance(baseActivity).getUserRecommender();
+                String recommender = DailyPreference.getInstance(baseActivity).getUserRecommender();
                 String name = DailyPreference.getInstance(baseActivity).getUserName();
 
-                startActivity(InviteFriendsActivity.newInstance(baseActivity, recommeder, name));
+                startActivity(InviteFriendsActivity.newInstance(baseActivity, recommender, name));
             }
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //

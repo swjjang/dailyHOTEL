@@ -150,13 +150,13 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             }
 
             // 마지막인 경우 underLine을 보여주지 않는다.
-            View unerLineView = pickItemView.findViewById(R.id.underLineView);
+            View underLineView = pickItemView.findViewById(R.id.underLineView);
             if (i >= size - 2)
             {
-                unerLineView.setVisibility(View.GONE);
+                underLineView.setVisibility(View.GONE);
             } else
             {
-                unerLineView.setVisibility(View.VISIBLE);
+                underLineView.setVisibility(View.VISIBLE);
             }
         }
     }

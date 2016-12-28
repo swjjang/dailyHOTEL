@@ -70,7 +70,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     private boolean mCallMakeMarker = false;
 
     private PlaceViewItem mSelectedPlaceViewItem;
-    protected boolean mIsOpenMakrer; // 마커를 선택한 경우.
+    protected boolean mIsOpenMarker; // 마커를 선택한 경우.
 
     private ClusterManager<PlaceClusterItem> mClusterManager;
     private PlaceClusterRenderer mPlaceClusterRenderer;
@@ -428,7 +428,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         if (isRefreshAll == true)
         {
-            mIsOpenMakrer = false;
+            mIsOpenMarker = false;
 
             mOnPlaceMapViewPagerAdapterListener.onCloseClick();
         }
@@ -438,7 +438,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         int count = 0;
         boolean isOpenMarker = false;
 
-        if (mIsOpenMakrer == true && mSelectedPlaceViewItem != null)
+        if (mIsOpenMarker == true && mSelectedPlaceViewItem != null)
         {
             latitude = mSelectedPlaceViewItem.<Place>getItem().latitude;
             longitude = mSelectedPlaceViewItem.<Place>getItem().longitude;
@@ -453,7 +453,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         mPlaceViewItemViewPagerList = null;
-        mPlaceViewItemViewPagerList = searchDuplicateLocateion(mPlaceViewItemList);
+        mPlaceViewItemViewPagerList = searchDuplicateLocation(mPlaceViewItemList);
 
         mClusterManager.clearItems();
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
@@ -466,20 +466,20 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
             count++;
 
-            PlaceClusterItem placelusterItem = new PlaceClusterItem(place);
-            mClusterManager.addItem(placelusterItem);
+            PlaceClusterItem placeClusterItem = new PlaceClusterItem(place);
+            mClusterManager.addItem(placeClusterItem);
 
             LatLng latlng = new LatLng(place.latitude, place.longitude);
             builder.include(latlng);
 
             // 기존의 마커 정보 창을 보여준다.
-            if (mIsOpenMakrer == true)
+            if (mIsOpenMarker == true)
             {
                 if (latitude == place.latitude && longitude == place.longitude)
                 {
                     isOpenMarker = true;
 
-                    mPlaceClusterRenderer.setSelectedClusterItem(placelusterItem);
+                    mPlaceClusterRenderer.setSelectedClusterItem(placeClusterItem);
                     mPlaceClusterRenderer.setSelectedClusterItemListener(new PlaceClusterRenderer.OnSelectedClusterItemListener()
                     {
                         @Override
@@ -501,7 +501,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             }
         }
 
-        mIsOpenMakrer = false;
+        mIsOpenMarker = false;
 
         if (isRefreshAll == true)
         {
@@ -580,7 +580,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mViewPager.setAdapter(mPlaceMapViewPagerAdapter);
         mPlaceMapViewPagerAdapter.notifyDataSetChanged();
 
-        mIsOpenMakrer = true;
+        mIsOpenMarker = true;
 
         int position = -1;
         int size = mPlaceViewItemViewPagerList.size();
@@ -649,7 +649,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mViewPager.setTranslationY(dy);
     }
 
-    public void resetMenuBarLayoutranslation()
+    public void resetMenuBarLayoutTranslation()
     {
         if (isFinishing() == true || mBottomOptionLayout == null || mViewPager == null)
         {
@@ -834,7 +834,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        mIsOpenMakrer = true;
+        mIsOpenMarker = true;
 
         int position = -1;
         int size = mPlaceViewItemViewPagerList.size();
@@ -973,7 +973,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
      * @param hotelArrayList
      * @return
      */
-    private ArrayList<PlaceViewItem> searchDuplicateLocateion(List<PlaceViewItem> hotelArrayList)
+    private ArrayList<PlaceViewItem> searchDuplicateLocation(List<PlaceViewItem> hotelArrayList)
     {
         ArrayList<PlaceViewItem> arrangeList = new ArrayList<>(hotelArrayList);
 
@@ -1284,7 +1284,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 mSelectedMarker.setVisible(false);
             }
 
-            mIsOpenMakrer = false;
+            mIsOpenMarker = false;
             mSelectedPlaceViewItem = null;
 
             if (mViewPager != null)

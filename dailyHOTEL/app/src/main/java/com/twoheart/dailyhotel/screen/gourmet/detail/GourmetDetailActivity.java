@@ -324,23 +324,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isUsedMutilTransition() == true)
+        if (Util.isUsedMultiTransition() == true)
         {
-            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inNameTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
                 , 17, 18, new LinearInterpolator());
             inNameTextTransition.addTarget(getString(R.string.transition_place_name));
-            intransitionSet.addTransition(inNameTextTransition);
+            inTransitionSet.addTransition(inNameTextTransition);
 
-            Transition inBottomAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            inBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            intransitionSet.addTransition(inBottomAlhpaTransition);
+            Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            inTransitionSet.addTransition(inBottomAlphaTransition);
 
-            Transition inTopAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            inTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            intransitionSet.addTransition(inTopAlhpaTransition);
+            Transition inTopAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            inTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            inTransitionSet.addTransition(inTopAlphaTransition);
 
-            getWindow().setSharedElementEnterTransition(intransitionSet);
+            getWindow().setSharedElementEnterTransition(inTransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition outNameTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//
@@ -348,13 +348,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             outNameTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outNameTextTransition);
 
-            Transition outBottomAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            outBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            outTransitionSet.addTransition(outBottomAlhpaTransition);
+            Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            outTransitionSet.addTransition(outBottomAlphaTransition);
 
-            Transition outTopAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            outTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            outTransitionSet.addTransition(outTopAlhpaTransition);
+            Transition outTopAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            outTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            outTransitionSet.addTransition(outTopAlphaTransition);
 
             outTransitionSet.setDuration(200);
 
@@ -421,9 +421,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isUsedMutilTransition() == true)
+        if (mIsDeepLink == false && Util.isUsedMultiTransition() == true)
         {
-            ininTransLayout(placeName, imageUrl, isFromMap);
+            initTransLayout(placeName, imageUrl, isFromMap);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -437,7 +437,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void ininTransLayout(String placeName, String imageUrl, boolean isFromMap)
+    private void initTransLayout(String placeName, String imageUrl, boolean isFromMap)
     {
         if (Util.isTextEmpty(placeName, imageUrl) == true)
         {

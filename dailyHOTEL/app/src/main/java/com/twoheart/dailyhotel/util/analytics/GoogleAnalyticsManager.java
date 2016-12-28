@@ -29,7 +29,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
     interface OnClientIdListener
     {
-        void onResponseClientId(String cliendId);
+        void onResponseClientId(String clientId);
     }
 
     public GoogleAnalyticsManager(Context context, final OnClientIdListener listener)
@@ -401,7 +401,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
-        Product product = getProcuct(params);
+        Product product = getProduct(params);
         product.setBrand("hotel");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
@@ -443,7 +443,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 
-        Product product = getProcuct(params);
+        Product product = getProduct(params);
         product.setBrand("gourmet");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
@@ -511,8 +511,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
     }
 
-
-    private Product getProcuct(Map<String, String> params)
+    private Product getProduct(Map<String, String> params)
     {
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
         String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
@@ -527,7 +526,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         //        String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY);
 
-        //        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
+        //        String credit = params.get(AnalyticsManager.KeyType.USED_BONUS);
 
         String id;
 
@@ -699,7 +698,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
-        Product product = getProcuct(params);
+        Product product = getProduct(params);
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_CHECKOUT).setCheckoutStep(step);
 

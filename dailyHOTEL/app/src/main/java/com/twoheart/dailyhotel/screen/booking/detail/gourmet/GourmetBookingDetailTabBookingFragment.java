@@ -306,7 +306,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         TextView guestEmailTextView = (TextView) view.findViewById(R.id.guestEmailTextView);
 
         guestNameTextView.setText(bookingDetail.guestName);
-        guestPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
+        guestPhoneTextView.setText(Util.addHyphenMobileNumber(getContext(), bookingDetail.guestPhone));
         guestEmailTextView.setText(bookingDetail.guestEmail);
     }
 

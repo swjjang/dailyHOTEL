@@ -57,7 +57,7 @@ public class ReviewActivity extends BaseActivity
     private static final int REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT = 100;
     private static final String INTENT_EXTRA_DATA_REVIEW = "review";
 
-    private static final int REQUEST_NEXT_FOCUSE = 1;
+    private static final int REQUEST_NEXT_FOCUS = 1;
 
     private Review mReview;
     private Dialog mDialog;
@@ -74,7 +74,7 @@ public class ReviewActivity extends BaseActivity
         {
             switch (msg.what)
             {
-                case REQUEST_NEXT_FOCUSE:
+                case REQUEST_NEXT_FOCUS:
                     mReviewLayout.nextFocusReview(msg.arg1);
                     unLockUI();
                     break;
@@ -747,10 +747,10 @@ public class ReviewActivity extends BaseActivity
     {
         private void sendMessageDelayed(int position)
         {
-            mHandler.removeMessages(REQUEST_NEXT_FOCUSE);
+            mHandler.removeMessages(REQUEST_NEXT_FOCUS);
 
             Message message = new Message();
-            message.what = REQUEST_NEXT_FOCUSE;
+            message.what = REQUEST_NEXT_FOCUS;
             message.arg1 = position;
 
             mHandler.sendMessageDelayed(message, 500);

@@ -49,7 +49,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private ViewGroup mAutoCompleteLayout;
     private DailyScrollView mAutoCompleteScrollLayout;
     private View mRecentSearchLayout;
-    private ViewGroup mRcentContentsLayout;
+    private ViewGroup mRecentContentsLayout;
     private View mDeleteAllRecentSearchesView;
 
     private EditText mSearchEditText;
@@ -373,7 +373,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mRecentSearchLayout.setVisibility(View.VISIBLE);
 
         // 목록
-        mRcentContentsLayout = (ViewGroup) view.findViewById(R.id.contentsLayout);
+        mRecentContentsLayout = (ViewGroup) view.findViewById(R.id.contentsLayout);
 
         View.OnClickListener onClickListener = new View.OnClickListener()
         {
@@ -391,16 +391,16 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         for (int i = 0; i < DailyRecentSearches.MAX_KEYWORD; i++)
         {
-            View keywordView = LayoutInflater.from(mContext).inflate(R.layout.list_row_search_recently, mRcentContentsLayout, false);
+            View keywordView = LayoutInflater.from(mContext).inflate(R.layout.list_row_search_recently, mRecentContentsLayout, false);
             keywordView.setOnClickListener(onClickListener);
 
-            mRcentContentsLayout.addView(keywordView);
+            mRecentContentsLayout.addView(keywordView);
         }
     }
 
     public void updateRecentSearchesLayout(List<Keyword> keywordList)
     {
-        updateRecentSearchesLayout(mRcentContentsLayout, keywordList);
+        updateRecentSearchesLayout(mRecentContentsLayout, keywordList);
     }
 
     private void updateRecentSearchesLayout(ViewGroup viewGroup, List<Keyword> keywordList)

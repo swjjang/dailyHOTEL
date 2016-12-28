@@ -85,10 +85,10 @@ public class GourmetCurationOption extends PlaceCurationOption
         return mFilterMap;
     }
 
-    public void setCategoryCoderMap(HashMap<String, Integer> categoryIconrMap)
+    public void setCategoryCoderMap(HashMap<String, Integer> categoryIconMap)
     {
         mCategoryCodeMap.clear();
-        mCategoryCodeMap.putAll(categoryIconrMap);
+        mCategoryCodeMap.putAll(categoryIconMap);
     }
 
     public HashMap<String, Integer> getCategoryCoderMap()
@@ -96,10 +96,10 @@ public class GourmetCurationOption extends PlaceCurationOption
         return mCategoryCodeMap;
     }
 
-    public void setCategorySequenceMap(HashMap<String, Integer> categoryIconrMap)
+    public void setCategorySequenceMap(HashMap<String, Integer> categoryIconMap)
     {
         mCategorySequenceMap.clear();
-        mCategorySequenceMap.putAll(categoryIconrMap);
+        mCategorySequenceMap.putAll(categoryIconMap);
     }
 
     public HashMap<String, Integer> getCategorySequenceMap()

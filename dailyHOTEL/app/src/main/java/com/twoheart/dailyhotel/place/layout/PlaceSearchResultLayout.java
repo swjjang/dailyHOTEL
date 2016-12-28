@@ -30,7 +30,7 @@ import java.util.List;
 
 public abstract class PlaceSearchResultLayout extends BaseLayout implements View.OnClickListener
 {
-    private static final int ANIMATION_DEALY = 200;
+    private static final int ANIMATION_DELAY = 200;
 
     private View mToolbar;
     private TextView mCalendarTextView;
@@ -505,7 +505,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         mResultLayout.setVisibility(View.INVISIBLE);
     }
 
-    public boolean isEmtpyLayout()
+    public boolean isEmptyLayout()
     {
         return mResultLayout.getVisibility() != View.VISIBLE;
     }
@@ -646,7 +646,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         if (isAnimation == true)
         {
             mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.setDuration(ANIMATION_DELAY);
             mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override
@@ -728,7 +728,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         if (isAnimation == true)
         {
             mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.setDuration(ANIMATION_DELAY);
             mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override

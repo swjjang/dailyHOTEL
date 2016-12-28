@@ -67,7 +67,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
-    protected abstract void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+    protected abstract void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
     protected abstract void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
 
@@ -163,7 +163,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         mFinalCheckDialog = null;
 
-        hidePorgressDialog();
+        hideProgressDialog();
 
         super.onDestroy();
     }
@@ -173,7 +173,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     {
         super.onErrorResponse(call, response);
 
-        hidePorgressDialog();
+        hideProgressDialog();
     }
 
     @Override
@@ -324,7 +324,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showProgressDialog()
     {
-        hidePorgressDialog();
+        hideProgressDialog();
 
         try
         {
@@ -339,7 +339,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         }
     }
 
-    protected void hidePorgressDialog()
+    protected void hideProgressDialog()
     {
         if (mProgressDialog != null)
         {
@@ -601,7 +601,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 lockUI();
 
-                requestPlacePaymentInfomation(mPaymentInformation, mCheckInSaleTime);
+                requestPlacePaymentInformation(mPaymentInformation, mCheckInSaleTime);
             }
         }, null, false);
     }

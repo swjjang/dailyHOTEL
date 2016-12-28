@@ -105,19 +105,19 @@ public class PlaceIconGenerator
      *
      * @param resid the identifier of the resource.
      */
-    public void setTextAppearance(Context context, int resid)
+    public void setTextAppearance(Context context, int resId)
     {
         if (mTextView != null)
         {
-            mTextView.setTextAppearance(context, resid);
+            mTextView.setTextAppearance(context, resId);
         }
     }
 
-    public void setTextColor(int resid)
+    public void setTextColor(int resId)
     {
         if (mTextView != null)
         {
-            mTextView.setTextColor(resid);
+            mTextView.setTextColor(resId);
         }
     }
 }

@@ -130,7 +130,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         mWebView.addJavascriptInterface(new KCPPayPinReturn(), "KCPPayPinRet"); // 페이핀
         // 기능
         // 추가
-        mWebView.addJavascriptInterface(new JavaScriptExtention(), "android");
+        mWebView.addJavascriptInterface(new JavaScriptExtension(), "android");
 
         mWebView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
 
@@ -818,9 +818,9 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         }
     }
 
-    private class JavaScriptExtention
+    private class JavaScriptExtension
     {
-        JavaScriptExtention()
+        JavaScriptExtension()
         {
         }
 

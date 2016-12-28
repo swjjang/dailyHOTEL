@@ -154,7 +154,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
         Intent intent = GourmetDetailActivity.newInstance(this, mSaleTime, gourmet, mStartSaleTime, mEndSaleTime, count);
 
-        if (Util.isUsedMutilTransition() == true)
+        if (Util.isUsedMultiTransition() == true)
         {
             View simpleDraweeView = view.findViewById(R.id.imageView);
             View nameTextView = view.findViewById(R.id.nameTextView);

@@ -231,7 +231,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 // 30 분이 지나면 재시작
                 final long DELAY_TIME = 30 * 60 * 1000;
 
-                // return to forground
+                // return to foreground
                 long currentTime = DailyCalendar.getInstance().getTimeInMillis();
                 long backgroundTime = DailyPreference.getInstance(activity).getBackgroundAppTime();
 

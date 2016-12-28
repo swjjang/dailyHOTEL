@@ -119,10 +119,10 @@ public class DailyTextView extends AppCompatTextView
     }
 
     @Override
-    public void setMaxLines(int maxlines)
+    public void setMaxLines(int maxLines)
     {
-        mCurMaxLine = maxlines;
-        super.setMaxLines(maxlines);
+        mCurMaxLine = maxLines;
+        super.setMaxLines(maxLines);
     }
 
     @Override
@@ -208,7 +208,7 @@ public class DailyTextView extends AppCompatTextView
 
             if (drawable instanceof VectorDrawableCompat)
             {
-                ((VectorDrawableCompat) drawable).setTintList(getResources().getColorStateList(id));
+                drawable.setTintList(getResources().getColorStateList(id));
             } else
             {
                 if (Util.isOverAPI21() == true)
@@ -237,7 +237,7 @@ public class DailyTextView extends AppCompatTextView
 
             if (drawable instanceof VectorDrawableCompat)
             {
-                ((VectorDrawableCompat) drawable).setTint(getResources().getColor(id));
+                drawable.setTint(getResources().getColor(id));
             } else
             {
                 if (Util.isOverAPI21() == true)

@@ -72,7 +72,7 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        // 더보기 시 uilock 걸지않음
+        // 더보기 시 unlock 걸지않음
         if (page <= 1)
         {
             lockUI(isShowProgress);

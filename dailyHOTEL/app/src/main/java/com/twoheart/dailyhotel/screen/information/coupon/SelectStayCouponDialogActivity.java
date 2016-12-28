@@ -37,7 +37,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_ROOM_IDX = "roomIdx";
     public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
     public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
-    public static final String INTENT_EXTRA_NIGHTS = "ngihts";
+    public static final String INTENT_EXTRA_NIGHTS = "nights";
     public static final String INTENT_EXTRA_CATEGORY_CODE = "categoryCode";
     public static final String INTENT_EXTRA_HOTEL_NAME = "hotelName";
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
@@ -425,7 +425,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.log("Select Coupon::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                    Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
                 }
                 ExLog.d(e.toString());
             } catch (Exception e)

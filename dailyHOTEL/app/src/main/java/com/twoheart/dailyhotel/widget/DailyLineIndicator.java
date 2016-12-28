@@ -77,7 +77,7 @@ public class DailyLineIndicator extends View
         notifyDataSetChanged();
     }
 
-    public void setmOnPageChangeListener(ViewPager.OnPageChangeListener listener)
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener listener)
     {
         this.mOnPageChangeListener = listener;
     }

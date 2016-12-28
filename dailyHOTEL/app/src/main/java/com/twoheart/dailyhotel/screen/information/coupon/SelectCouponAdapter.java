@@ -130,7 +130,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         {
             if (Constants.DEBUG == false)
             {
-                Crashlytics.log("Select Coupon::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
             }
             ExLog.d(e.getMessage());
             holder.expireTextView.setVisibility(View.GONE);
