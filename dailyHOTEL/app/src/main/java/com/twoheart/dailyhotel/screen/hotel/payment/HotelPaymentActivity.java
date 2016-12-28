@@ -215,7 +215,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             guest.email = customer.getEmail();
         }
 
-        RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
+        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) paymentInformation;
+        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
 
         Map<String, String> params = new HashMap<>();
         params.put("room_idx", String.valueOf(roomInformation.roomIndex));
@@ -240,6 +241,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         params.put("guest_phone", guest.phone.replace("-", ""));
         params.put("guest_email", guest.email);
         params.put("guest_msg", "");
+
+        // 주차/도보
+        params.put("arrival_transportation", hotelPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
 
         if (DEBUG == false)
         {
@@ -2032,6 +2036,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             int availableRooms = dataJSONObject.getInt("available_rooms");
                             boolean isNRD = false;
 
+                            boolean noParking = false;
+                            boolean parking = false;
+                            boolean providerTransportation = false;
+
+                            if (dataJSONObject.has("no_parking") == true && dataJSONObject.has("parking") == true//
+                                && dataJSONObject.has("provider_transportation") == true)
+                            {
+                                noParking = dataJSONObject.getBoolean("no_parking");
+                                parking = dataJSONObject.getBoolean("parking");
+                                providerTransportation = dataJSONObject.getBoolean("provider_transportation");
+                            }
+
                             if (dataJSONObject.has("refund_type") == true && RoomInformation.NRD.equalsIgnoreCase(dataJSONObject.getString("refund_type")) == true)
                             {
                                 isNRD = true;
@@ -2060,7 +2076,22 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
 
-                            hotelPaymentInformation.visitType = "NONE";
+                            if (providerTransportation == true)
+                            {
+                                if (noParking == true)
+                                {
+                                    hotelPaymentInformation.visitType = "NO_PARKING";
+                                } else if (parking == true)
+                                {
+                                    hotelPaymentInformation.visitType = "CAR_WALKING";
+                                } else
+                                {
+                                    hotelPaymentInformation.visitType = "NONE";
+                                }
+                            } else
+                            {
+                                hotelPaymentInformation.visitType = "NONE";
+                            }
 
                             mHotelPaymentLayout.setVisitTypeInformation(hotelPaymentInformation);
 
