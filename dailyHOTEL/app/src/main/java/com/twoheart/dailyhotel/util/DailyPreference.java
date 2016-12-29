@@ -761,7 +761,7 @@ public class DailyPreference
 
     public boolean isViewWishListTooltip()
     {
-        return getValue(mPreferences, KEY_IS_VIEW_WISHLIST_TOOLTIP, false);
+        return getValue(mPreferences, KEY_IS_VIEW_WISHLIST_TOOLTIP, true);
     }
 
     public void setIsViewSearchTooltip(boolean value)
