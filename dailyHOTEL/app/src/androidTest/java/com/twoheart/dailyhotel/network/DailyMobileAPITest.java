@@ -10,8 +10,10 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
+import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -20,6 +22,7 @@ import com.twoheart.dailyhotel.model.User;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -34,10 +37,12 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -73,7 +78,7 @@ public class DailyMobileAPITest
     {
         ExLog.d("setUp");
         // Context Setting!
-        //        mContext = InstrumentationRegistry.getContext();
+        //  mContext = InstrumentationRegistry.getContext();
         mContext = InstrumentationRegistry.getTargetContext(); // 앱 타켓 컨텍스트!
 
         requestDailyUserLoginBySetUp();
@@ -83,7 +88,7 @@ public class DailyMobileAPITest
     @After
     public void tearDown() throws Exception
     {
-        //        DailyAssert.clearData();
+        //  DailyAssert.clearData();
 
         ExLog.d("tearDown");
         requestUserInformationUpdateByTearDown();
@@ -104,6 +109,30 @@ public class DailyMobileAPITest
         }
 
         return null;
+    }
+
+    @Ignore
+    private long getGourmetReservationTime() throws Exception
+    {
+        if (mSaleTime == null)
+        {
+            DailyAssert.fail("mSaleTime is null");
+            return -1;
+        }
+
+        String currentTimeString = mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT);
+        DailyAssert.assertNotNull(currentTimeString);
+
+        String findText = mSaleTime.getDayOfDaysDateFormat("HH:mm");
+        DailyAssert.assertNotNull(findText);
+
+        currentTimeString = currentTimeString.replace(findText, Const.TEST_GOURMET_RESERVATION_TIME);
+        DailyAssert.assertNotNull(currentTimeString);
+
+        Date date = DailyCalendar.convertDate(currentTimeString, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT"));
+        DailyAssert.assertNotNull(date);
+
+        return date.getTime();
     }
 
     @Ignore
@@ -182,7 +211,7 @@ public class DailyMobileAPITest
                                 DailyAssert.assertNotNull(mUser.getUserIdx());
                                 DailyAssert.assertNotNull(mUser.getName());
                                 DailyAssert.assertEquals(Constants.DAILY_USER, mUser.getType());
-                                //                                return;
+                                //  return;
                             }
                         }
                     } catch (Exception e)
@@ -1408,7 +1437,7 @@ public class DailyMobileAPITest
         paramMap.put("stays", Const.TEST_NIGHTS);
         paramMap.put("provinceIdx", Const.TEST_STAY_PROVINCE_INDEX);
         // area skip
-        //        queryMap.put("areaIdx", areaIdx);
+        //  queryMap.put("areaIdx", areaIdx);
 
         paramMap.put("persons", Const.TEST_STAY_PERSONS);
         if (Category.ALL.code.equalsIgnoreCase(Const.TEST_STAY_CATEGORY_CODE) == false)
@@ -1416,15 +1445,15 @@ public class DailyMobileAPITest
             paramMap.put("category", Const.TEST_STAY_CATEGORY_CODE);
         }
 
-        //        if(mBedTypeList != null && mBedTypeList.size() > 0)
-        //        {
-        //            hashMap.put("bedType", mBedTypeList);
-        //        }
+        //  if(mBedTypeList != null && mBedTypeList.size() > 0)
+        //  {
+        //hashMap.put("bedType", mBedTypeList);
+        //  }
         //
-        //        if(mLuxuryList != null && mLuxuryList.size() > 0)
-        //        {
-        //            hashMap.put("luxury", mLuxuryList);
-        //        }
+        //  if(mLuxuryList != null && mLuxuryList.size() > 0)
+        //  {
+        //hashMap.put("luxury", mLuxuryList);
+        //  }
 
         if (Const.TEST_PAGE_INDEX > 0)
         {
@@ -1433,24 +1462,24 @@ public class DailyMobileAPITest
         }
 
         // sort skip
-        //        if (Constants.SortType.DEFAULT != mSort)
-        //        {
-        //            if (Util.isTextEmpty(sortProperty) == false)
-        //            {
-        //                queryMap.put("sortProperty", sortProperty);
-        //            }
+        //  if (Constants.SortType.DEFAULT != mSort)
+        //  {
+        //if (Util.isTextEmpty(sortProperty) == false)
+        //{
+        // queryMap.put("sortProperty", sortProperty);
+        //}
         //
-        //            if (Util.isTextEmpty(sortDirection) == false)
-        //            {
-        //                queryMap.put("sortDirection", sortDirection);
-        //            }
+        //if (Util.isTextEmpty(sortDirection) == false)
+        //{
+        // queryMap.put("sortDirection", sortDirection);
+        //}
         //
-        //            if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
-        //            {
-        //                queryMap.put("latitude", latitude);
-        //                queryMap.put("longitude", longitude);
-        //            }
-        //        }
+        //if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
+        //{
+        // queryMap.put("latitude", latitude);
+        // queryMap.put("longitude", longitude);
+        //}
+        //  }
 
         paramMap.put("details", Const.TEST_IS_SHOW_LIST_DETAIL);
 
@@ -1677,7 +1706,7 @@ public class DailyMobileAPITest
                         // 4	데이터가 없을시
                         // 5	판매 마감시
                         // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
-                        // 7    3시부터 9시까지
+                        // 7 3시부터 9시까지
                         switch (msgCode)
                         {
                             case 6:
@@ -2091,21 +2120,21 @@ public class DailyMobileAPITest
         params.put("billkey", Const.TEST_EASY_CARD_BILLINGKEY);
 
         // 쿠폰 및 적립금 패스
-        //        switch (paymentInformation.discountType)
-        //        {
-        //            case BONUS:
-        //                String bonus = String.valueOf(paymentInformation.bonus);
-        //                params.put("bonus", bonus);
-        //                break;
+        //  switch (paymentInformation.discountType)
+        //  {
+        //case BONUS:
+        // String bonus = String.valueOf(paymentInformation.bonus);
+        // params.put("bonus", bonus);
+        // break;
         //
-        //            case COUPON:
-        //                Coupon coupon = paymentInformation.getCoupon();
-        //                params.put("user_coupon_code", coupon.userCouponCode);
-        //                break;
-        //        }
+        //case COUPON:
+        // Coupon coupon = paymentInformation.getCoupon();
+        // params.put("user_coupon_code", coupon.userCouponCode);
+        // break;
+        //  }
 
         params.put("guest_name", Const.TEST_USER_NAME);
-        params.put("guest_phone", "01012345678");
+        params.put("guest_phone", Const.TEST_USER_PHONE);
         params.put("guest_email", Const.TEST_EMAIL);
         params.put("guest_msg", "");
 
@@ -2151,7 +2180,13 @@ public class DailyMobileAPITest
                                 if (bookingList != null && bookingList.isEmpty() == false)
                                 {
                                     Booking booking = bookingList.get(0);
-                                    requestGourmetAccountInformation(booking);
+                                    if (Constants.PlaceType.FNB.equals(booking.placeType) == true)
+                                    {
+                                        requestGourmetAccountInformation(booking);
+                                    } else if (Constants.PlaceType.HOTEL.equals(booking.placeType) == true)
+                                    {
+                                        requestDepositWaitDetailInformation(booking);
+                                    }
                                 }
                             }
                         } else
@@ -2306,7 +2341,7 @@ public class DailyMobileAPITest
                             String placeAddress = dataJsonObject.getString("restaurantAddress");
                             String sday = dataJsonObject.getString("sday");
                             String valueDate = dataJsonObject.getString("paidAt");
-                            //        String currency = receiptJSONObject.getString("currency");
+                            //  String currency = receiptJSONObject.getString("currency");
                             int paymentAmount = dataJsonObject.getInt("paymentAmount");
                             int tax = dataJsonObject.getInt("tax");
                             int supplyPrice = dataJsonObject.getInt("supplyPrice");
@@ -2814,7 +2849,7 @@ public class DailyMobileAPITest
         hashMap.put("reserveDate", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
         hashMap.put("provinceIdx", Const.TEST_GOURMET_PROVINCE_INDEX);
         // skip Area
-        //        hashMap.put("areaIdx", areaIdx);
+        //  hashMap.put("areaIdx", areaIdx);
         hashMap.put("persons", Const.TEST_STAY_PERSONS);
 
         if (Const.TEST_PAGE_INDEX > 0)
@@ -2824,24 +2859,24 @@ public class DailyMobileAPITest
         }
 
         //skip sort
-        //        if (Constants.SortType.DEFAULT != mSort)
-        //        {
-        //            if (Util.isTextEmpty(sortProperty) == false)
-        //            {
-        //                hashMap.put("sortProperty", sortProperty);
-        //            }
+        //  if (Constants.SortType.DEFAULT != mSort)
+        //  {
+        //if (Util.isTextEmpty(sortProperty) == false)
+        //{
+        // hashMap.put("sortProperty", sortProperty);
+        //}
         //
-        //            if (Util.isTextEmpty(sortDirection) == false)
-        //            {
-        //                hashMap.put("sortDirection", sortDirection);
-        //            }
+        //if (Util.isTextEmpty(sortDirection) == false)
+        //{
+        // hashMap.put("sortDirection", sortDirection);
+        //}
         //
-        //            if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
-        //            {
-        //                hashMap.put("latitude", latitude);
-        //                hashMap.put("longitude", longitude);
-        //            }
-        //    }
+        //if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
+        //{
+        // hashMap.put("latitude", latitude);
+        // hashMap.put("longitude", longitude);
+        //}
+        // }
 
         hashMap.put("details", Const.TEST_IS_SHOW_LIST_DETAIL);
 
@@ -3277,358 +3312,1100 @@ public class DailyMobileAPITest
     @Test
     public void requestGourmetPayment() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(0, msgCode);
+
+                        if (msgCode == 0)
+                        {
+                            // do nothing!
+                        } else
+                        {
+                            if (responseJSONObject.has("msg") == false)
+                            {
+                                DailyAssert.fail();
+                            } else
+                            {
+                                String msg = responseJSONObject.getString("msg");
+                                DailyAssert.assertNotNull(msg);
+
+                                String[] result = msg.split("\\^");
+                                DailyAssert.assertTrue(result != null && result.length > 0);
+
+                                if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
+                                {
+                                    // do nothing!
+                                } else if ("FAIL".equalsIgnoreCase(result[0]) == true)
+                                {
+                                    // do nothing!
+                                } else
+                                {
+                                    DailyAssert.fail(result.toString());
+                                }
+                            }
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("sale_reco_idx", Integer.toString(Const.TEST_GOURMET_TIKET_INDEX));
+        params.put("billkey", Const.TEST_EASY_CARD_BILLINGKEY);
+        params.put("ticket_count", Integer.toString(Const.TEST_GOURMET_TIKET_COUNT));
+
+        // coupon skip
+        //        params.put("user_coupon_code", coupon.userCouponCode);
+
+        params.put("customer_name", Const.TEST_USER_NAME);
+        params.put("customer_phone", Const.TEST_USER_PHONE);
+        params.put("customer_email", Const.TEST_EMAIL);
+        params.put("arrival_time", String.valueOf(getGourmetReservationTime()));
+        params.put("customer_msg", "");
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetPayment(mNetworkTag, params, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
-    public void requestDepositWaitDetailInformation() throws Exception
+    // 호텔 예약 대기 - Booking tid 는 항시 변하는 항목을 requestBookingList에서 테스트
+    @Ignore
+    public void requestDepositWaitDetailInformation(Booking booking) throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        if (booking == null)
+        {
+            DailyAssert.assertNotNull(booking);
+            return;
+        }
+
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            JSONObject reservationJSONObject = dataJSONObject.getJSONObject("reservation");
+                            DailyAssert.assertNotNull(reservationJSONObject);
+
+                            String accountNumber = reservationJSONObject.getString("vactNum");
+                            DailyAssert.assertNotNull(accountNumber);
+
+                            DailyAssert.assertNotNull(reservationJSONObject.getString("bankName"));
+                            DailyAssert.assertNotNull(reservationJSONObject.getString("vactName"));
+
+                            // 입금기한
+                            String validToDate = DailyCalendar.convertDateFormatString(reservationJSONObject.getString("validTo"), DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일 HH시 mm분 까지");
+                            DailyAssert.assertNotNull(validToDate);
+
+                            // 결재 금액 정보
+                            DailyAssert.assertTrue(reservationJSONObject.getInt("price") >= 0);
+                            DailyAssert.assertTrue(reservationJSONObject.getInt("bonus") >= 0);
+                            DailyAssert.assertTrue(reservationJSONObject.getInt("couponAmount") >= 0);
+                            DailyAssert.assertTrue(reservationJSONObject.getInt("amt") >= 0);
+
+                            // 확인 사항
+                            DailyAssert.assertNotNull(dataJSONObject.getString("msg1"));
+
+                        } else
+                        {
+                            DailyAssert.assertNotNull(responseJSONObject.getString("msg"));
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDepositWaitDetailInformation(//
+            mNetworkTag, booking.tid, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestStayBookingDetailInformation() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+                        switch (msgCode)
+                        {
+                            case 100:
+                                JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                                HotelBookingDetail hotelBookingDetail = new HotelBookingDetail();
+                                hotelBookingDetail.setData(jsonObject);
+                                break;
+
+                            // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
+                            case 501:
+                                DailyAssert.assertNotNull(responseJSONObject.getString("msg"));
+                                break;
+
+                            default:
+                                DailyAssert.assertNotNull(responseJSONObject.getString("msg"));
+                                break;
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestStayBookingDetailInformation( //
+            mNetworkTag, Const.TEST_GOURMET_RESERVATION_INDEX, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    // 원래는 테스트 해야 하지만.. 예약 내역을 히든 할 경우 Test reservation index를 바꿔줘야 함으로 skip 함.
+    @Ignore
     public void requestStayHiddenBooking() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        // 해당 화면은 메시지를 넣지 않는다.
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertTrue(msgCode == 0 || msgCode == 100 || msgCode == 200);
+
+                        DailyAssert.assertTrue(responseJSONObject.has("msg"));
+
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        DailyAssert.assertNotNull(dataJSONObject);
+
+                        boolean result = false;
+
+                        if (dataJSONObject != null)
+                        {
+                            if (dataJSONObject.has("isSuccess") == true)
+                            {
+                                result = dataJSONObject.getInt("isSuccess") == 1;
+                            } else if (dataJSONObject.has("is_success") == true)
+                            {
+                                result = dataJSONObject.getBoolean("is_success");
+                            }
+                        }
+
+                        DailyAssert.assertTrue(result);
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).
+            requestStayHiddenBooking(//
+                mNetworkTag, Const.TEST_GOURMET_RESERVATION_INDEX, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test
     public void requestStayReceipt() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    //			msg_code : 0
+                    //			data :
+                    //			- [String] user_name /* 유저 이름 */
+                    //			- [String] user_phone /* 유저 번호 */
+                    //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
+                    //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
+                    //			- [int] nights /* 연박 일수 */
+                    //			- [int] rooms /* 객실수 */
+                    //			- [String] hotel_name /* 호텔 명 */
+                    //			- [String] hotel_address /* 호텔 주소 */
+                    //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
+                    //			- [String] currency /* 화폐 단위 */
+                    //			- [int] discount /* 결제 금액 */
+                    //			- [int] vat /* 부가세 */
+                    //			- [int] supply_value /* 공급가액 */
+                    //			- [String] payment_name /* 결제수단 */
+                    //			---------------------------------
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(0, msgCode);
+
+                        if (msgCode == 0)
+                        {
+                            JSONObject dataJsonObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJsonObject);
+
+                            JSONObject receiptJSONObject = dataJsonObject.getJSONObject("receipt");
+                            DailyAssert.assertNotNull(receiptJSONObject);
+
+                            DailyAssert.assertNotNull(dataJsonObject.getString("reservation_idx"));
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("user_name"));
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("user_phone"));
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("checkin"));
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("checkout"));
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("nights") > 0);
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("rooms") > 0);
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("hotel_name"));
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("hotel_address"));
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("value_date"));
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("discount") >= 0);
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("vat") >= 0);
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("supply_value") >= 0);
+                            DailyAssert.assertNotNull(receiptJSONObject.getString("payment_name"));
+
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("bonus") >= 0);
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("coupon_amount") >= 0);
+                            DailyAssert.assertTrue(receiptJSONObject.getInt("price") >= 0);
+
+                            // **공급자**
+                            JSONObject provider = dataJsonObject.getJSONObject("provider");
+                            DailyAssert.assertNotNull(provider);
+
+                            String memo = provider.getString("memo");
+                            DailyAssert.assertNotNull(memo);
+
+                        } else
+                        {
+                            String msg = responseJSONObject.getString("msg");
+                            DailyAssert.fail(msg);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestStayReceipt(//
+            mNetworkTag, Integer.toString(Const.TEST_STAY_RESERVATION_INDEX), networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test
     public void requestEventList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(0, msgCode);
+
+                        if (msgCode != 0)
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.assertNotNull(message);
+                        } else
+                        {
+                            JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                            DailyAssert.assertNotNull(dataJSONArray);
+
+                            if (dataJSONArray != null)
+                            {
+                                int length = dataJSONArray.length();
+                                if (length == 0)
+                                {
+                                    DailyAssert.fail();
+                                } else
+                                {
+                                    int eventIndex = -1;
+
+                                    for (int i = 0; i < length; i++)
+                                    {
+                                        JSONObject jsonObject = dataJSONArray.getJSONObject(i);
+
+                                        eventIndex = jsonObject.getInt("idx");
+                                        DailyAssert.assertTrue(eventIndex >= 0);
+                                        DailyAssert.assertNotNull(jsonObject.getString("img_url"));
+                                        DailyAssert.assertTrue(jsonObject.getInt("is_event_join") != 0);
+                                        DailyAssert.assertNotNull(jsonObject.getString("name"));
+                                    }
+
+                                    if (eventIndex != -1)
+                                    {
+                                        requestEventPageUrl(eventIndex);
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test
     public void requestEventNCouponNNoticeNewCount() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback mDailyEventCountCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        boolean isExistNewEvent = false;
+                        boolean isExistNewCoupon = false;
+                        boolean isExistNewNotices = false;
+
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            DailyAssert.assertTrue(dataJSONObject.has("isExistNewEvent"));
+                            DailyAssert.assertTrue(dataJSONObject.has("isExistNewCoupon"));
+                            DailyAssert.assertTrue(dataJSONObject.has("isExistNewNotices"));
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        String viewedEventTime = DailyPreference.getInstance(mContext).getViewedEventTime();
+        String viewedCouponTime = DailyPreference.getInstance(mContext).getViewedCouponTime();
+        String viewedNoticeTime = DailyPreference.getInstance(mContext).getViewedNoticeTime();
+
+        if (Util.isTextEmpty(viewedEventTime) == true)
+        {
+            viewedEventTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
+        }
+
+        if (Util.isTextEmpty(viewedCouponTime) == true)
+        {
+            viewedCouponTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
+        }
+
+        if (Util.isTextEmpty(viewedNoticeTime) == true)
+        {
+            viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
+        }
+
+        DailyMobileAPI.getInstance(mContext).requestEventNCouponNNoticeNewCount(//
+            mNetworkTag, viewedEventTime, viewedCouponTime, viewedNoticeTime, mDailyEventCountCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
-    public void requestEventPageUrl() throws Exception
+    // eventIndex 의 경우 고정이 아니기 때문에 requestEventList 이후에 진행하도록 한다.
+    @Ignore
+    public void requestEventPageUrl(int eventIndex) throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        final retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msg_code");
+                        DailyAssert.assertEquals(0, msgCode);
+                        if (msgCode != 0)
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        } else
+                        {
+                            JSONObject eventJsonObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(eventJsonObject);
+
+                            String eventUrl = eventJsonObject.getString("url");
+                            DailyAssert.assertNotNull(eventUrl);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        String store;
+        if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE)
+        {
+            store = "google";
+        } else
+        {
+            store = "skt";
+        }
+
+        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, eventIndex, store, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestEventBannerList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    JSONObject responseJSONObject = response.body();
+                    DailyAssert.assertNotNull(responseJSONObject);
+
+                    try
+                    {
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            String baseUrl = dataJSONObject.getString("imgUrl");
+                            DailyAssert.assertNotNull(baseUrl);
+
+                            JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
+                            DailyAssert.assertNotNull(jsonArray);
+
+                            int length = jsonArray.length();
+                            if (length > 0)
+                            {
+                                for (int i = 0; i < length; i++)
+                                {
+                                    EventBanner eventBanner = new EventBanner(jsonArray.getJSONObject(i), baseUrl);
+                                    DailyAssert.assertNotNull(eventBanner);
+                                }
+                            } else
+                            {
+                                DailyAssert.fail();
+                            }
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        mLock = new CountDownLatch(1);
+        DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "gourmet", networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        mLock = new CountDownLatch(1);
+        DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "hotel", networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Test
     public void requestDailyUserVerification() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null)
+                {
+                    if (response.isSuccessful() == true && response.body() != null)
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        try
+                        {
+                            int msgCode = responseJSONObject.getInt("msgCode");
+                            String message = responseJSONObject.getString("msg");
+
+                            DailyAssert.assertEquals(100, msgCode);
+                            DailyAssert.assertNotNull(message);
+                        } catch (Exception e)
+                        {
+                            DailyAssert.fail(e);
+                        }
+                    } else if (response.isSuccessful() == false && response.errorBody() != null)
+                    {
+                        try
+                        {
+                            JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+                            DailyAssert.assertNotNull(responseJSONObject);
+
+                            int msgCode = responseJSONObject.getInt("msgCode");
+                            String message = responseJSONObject.getString("msg");
+
+                            DailyAssert.assertEquals(422, response.code());
+                            if (response.code() == 422)
+                            {
+                                switch (msgCode)
+                                {
+                                    // 동일한 전화번호로 인증 받은 사용자가 있는 경우
+                                    case 2001:
+                                    {
+                                        JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
+                                        DailyAssert.assertNotNull(dataJONObject);
+
+                                        String phoneNumber = dataJONObject.getString("phone");
+                                        DailyAssert.assertNotNull(phoneNumber);
+
+                                        mLock.countDown();
+                                        return;
+                                    }
+
+                                    // 전화번호가 유효하지 않을 때
+                                    case 2003:
+                                    {
+                                        DailyAssert.fail("invaild phone number");
+                                        mLock.countDown();
+                                        return;
+                                    }
+                                }
+
+                                DailyAssert.fail(message);
+                            } else
+                            {
+                                DailyAssert.fail();
+                            }
+                        } catch (Exception e)
+                        {
+                            DailyAssert.fail(e);
+                        }
+                    } else
+                    {
+                        DailyAssert.fail();
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDailyUserVerification( //
+            mNetworkTag, Const.TEST_USER_PHONE, Const.TEST_IS_FORCE_PHONE_VALIDATION, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestDailyUserUpdatePhoneNumber() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestSignupValidation() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestDailyUserSignupVerfication() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestDailyUserSignup() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestFacebookUserSignup() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestKakaoUserSignup() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestDailyUserSignin() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestFacebookUserSignin() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestKakaoUserSignin() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestCouponList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestCouponList1() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestCouponList2() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestCouponHistoryList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestNoticeAgreement() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestNoticeAgreementResult() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestBenefitMessage() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestDownloadCoupon() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestDownloadEventCoupon() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestHasCoupon() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestHasCoupon1() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestCouponList3() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestCouponList4() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestRegisterKeywordCoupon() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestUpdateBenefitAgreement() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestUserTracking() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestNoticeList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestReceiptByEmail() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestWishListCount() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestWishList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestAddWishList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestRemoveWishList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestPolicyRefund() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestPolicyRefund1() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestRefund() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestBankList() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestStayReviewInformation() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestGourmetReviewInformation() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestStayReviewInformation1() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestGourmetReviewInformation1() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestAddReviewInformation() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Test
+    @Ignore
     public void requestAddReviewDetailInformation() throws Exception
     {
-        //        mLock = new CountDownLatch(1);
-        //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
 }

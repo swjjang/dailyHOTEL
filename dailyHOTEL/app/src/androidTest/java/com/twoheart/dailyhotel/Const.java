@@ -20,12 +20,14 @@ public class Const implements Constants
 
     public static final String TEST_USER_BIRTHDAY = getBirthDayText(1986, 7, 17);
     public static final String TEST_USER_NAME = "Dev Daily";
+    public static final String TEST_USER_PHONE = "01012345678";
 
     public static final String TEST_MODIFY_USER_BIRTHDAY = getBirthDayText(2013, 7, 17);
     public static final String TEST_MODIFY_USER_NAME = "DAILYHOTEL_TEST";
 
     public static final String TEST_CHECK_EMAIL_ADDRESS = "dailyhotel@dailyhotel.com";
 
+    public static final boolean TEST_IS_FORCE_PHONE_VALIDATION = false;
 
     public static final String TEST_FACEBOOK_USER_ID = "MzEkMjIkMzMkMzMkMzgkMjkkNDIkMzAkNDAkNTIkMjYkMzAkMzAkMTUkMjEkMyQ=$NTcE4NEZBMUQ2M0JOCMEQxZNjMdFNW0Y2BHTAQkINJIxODHQJBSMzYzQzcJ=$"; // team
     public static final String TEST_FACEBOOK_USER_GENDER = "MTYkNSQ0NSQzNiQ3JDI1JDE0JDgkMjIkMTckNDgkNTAkMTYkMzMkNDUkNiQ=$OEE1NTA0THYyOEI4OBNRjREAQDzUwNTBhDFRjEzRUUzN0JYRDMTcG2PRDUO=$";
@@ -56,6 +58,7 @@ public class Const implements Constants
     public static final int TEST_GOURMET_TIKET_INDEX = 394348;
     public static final int TEST_GOURMET_TIKET_COUNT = 1;
     public static final int TEST_GOURMET_RESERVATION_INDEX = 49941;
+    public static final String TEST_GOURMET_RESERVATION_TIME = "18:00";
 
 
     private static String getBirthDayText(int year, int month, int dayOfMonth)
