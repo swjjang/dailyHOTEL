@@ -122,6 +122,9 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                             }
 
                             mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        } else
+                        {
+                            mOnNetworkControllerListener.onError(null);
                         }
                     } catch (Exception e)
                     {
