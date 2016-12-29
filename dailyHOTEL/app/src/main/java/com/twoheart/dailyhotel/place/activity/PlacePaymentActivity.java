@@ -395,10 +395,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
         unLockUI();
 
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
-        //        if (mPaymentInformation.isFree == true)
-        //        {
-        //            showAgreeTermDialog();
-        //        } else
+        if (mPaymentInformation.isFree == true)
+        {
+            showAgreeTermDialog();
+        } else
         {
             if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
             {
@@ -421,6 +421,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             mFinalCheckDialog.cancel();
         }
 
+        // 무료 결제인 경우 일반 카드와 동일한 확인 사항을 출력한다.
         mFinalCheckDialog = null;
         mFinalCheckDialog = getPaymentConfirmDialog(PlacePaymentInformation.PaymentType.CARD);
 
