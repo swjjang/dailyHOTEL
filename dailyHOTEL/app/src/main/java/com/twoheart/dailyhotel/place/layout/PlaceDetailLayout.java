@@ -124,7 +124,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void showProductInformationLayout();
 
-        void hideProductInformationLayout();
+        void hideProductInformationLayout(boolean isAnimation);
 
         void showMap();
 
@@ -238,7 +238,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).hideProductInformationLayout();
+                ((OnEventListener) mOnEventListener).hideProductInformationLayout(true);
             }
         });
 
@@ -591,77 +591,62 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setBookingStatus(STATUS_NONE);
 
-        if (Util.isOverAPI12() == true)
+        final float y = mProductTypeLayout.getY();
+
+        if (mObjectAnimator != null)
         {
-            final float y = mProductTypeLayout.getY();
-
-            if (mObjectAnimator != null)
+            if (mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
-                }
-
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
+                mObjectAnimator.removeAllListeners();
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
-            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
-
-            mObjectAnimator.addListener(new AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                    setProductInformationLayoutEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-
-                        hideProductInformationLayout();
-                        showWishButton();
-
-                        setBookingStatus(STATUS_SELECT_PRODUCT);
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-                }
-            });
-
-            mObjectAnimator.start();
-
-            showAnimationFadeIn();
-        } else
-        {
-            setProductInformationLayoutEnabled(false);
-
-            mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-            mAnimationState = Constants.ANIMATION_STATE.END;
-
-            hideProductInformationLayout();
-            showWishButton();
-
-            setBookingStatus(STATUS_SELECT_PRODUCT);
+            mObjectAnimator = null;
         }
+
+        mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
+        mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
+
+        mObjectAnimator.addListener(new AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+
+                setProductInformationLayoutEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+
+                    ((OnEventListener) mOnEventListener).hideProductInformationLayout(false);
+
+                    setBookingStatus(STATUS_SELECT_PRODUCT);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+
+        mObjectAnimator.start();
+
+        showAnimationFadeIn();
     }
 
     /**

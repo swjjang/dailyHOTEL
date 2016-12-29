@@ -577,9 +577,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void hideProductInformationLayout()
+    protected void hideProductInformationLayout(boolean isAnimation)
     {
-        mOnEventListener.hideProductInformationLayout();
+        mOnEventListener.hideProductInformationLayout(isAnimation);
     }
 
     @Override
@@ -1025,7 +1025,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void hideProductInformationLayout()
+        public void hideProductInformationLayout(boolean isAnimation)
         {
             if (isLockUiComponent() == true || isFinishing() == true)
             {
@@ -1036,8 +1036,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.hideAnimationProductInformationLayout();
-                mPlaceDetailLayout.showWishButtonAnimation();
+                if(isAnimation == true)
+                {
+                    mPlaceDetailLayout.hideAnimationProductInformationLayout();
+                    mPlaceDetailLayout.showWishButtonAnimation();
+                } else
+                {
+                    mPlaceDetailLayout.hideProductInformationLayout();
+                    mPlaceDetailLayout.showWishButton();
+                }
             }
 
             if (Util.isOverAPI21() == true)
