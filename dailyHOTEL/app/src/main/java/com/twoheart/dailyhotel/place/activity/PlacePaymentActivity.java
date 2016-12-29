@@ -67,6 +67,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
+    protected abstract void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+
     protected abstract void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
     protected abstract void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
@@ -360,7 +362,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
      */
     protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
     {
-        if (paymentInformation == null || saleTime == null)
+        if (paymentInformation == null || saleTime == null || isFinishing() == true)
         {
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
@@ -369,24 +371,28 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         unLockUI();
 
-        if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
         {
-            if (isFinishing() == true)
-            {
-                return;
-            }
+            mFinalCheckDialog.dismiss();
+        }
 
-            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-            {
-                mFinalCheckDialog.dismiss();
-            }
-
+        // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
+        if(paymentInformation.isFree == true)
+        {
             showProgressDialog();
 
-            requestEasyPayment(paymentInformation, saleTime);
+            requestFreePayment(paymentInformation, saleTime);
         } else
         {
-            showPaymentWeb(paymentInformation, saleTime);
+            if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+            {
+                showProgressDialog();
+
+                requestEasyPayment(paymentInformation, saleTime);
+            } else
+            {
+                showPaymentWeb(paymentInformation, saleTime);
+            }
         }
     }
 

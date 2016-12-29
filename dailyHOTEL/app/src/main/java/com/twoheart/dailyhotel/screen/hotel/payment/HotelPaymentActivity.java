@@ -267,6 +267,79 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
+    protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        if (paymentInformation == null || checkInSaleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        lockUI();
+
+        Guest guest = mHotelPaymentLayout.getGuest();
+        Customer customer = paymentInformation.getCustomer();
+
+        if (guest == null)
+        {
+            guest = new Guest();
+            guest.name = customer.getName();
+            guest.phone = customer.getPhone();
+            guest.email = customer.getEmail();
+        }
+
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) paymentInformation;
+        RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("room_idx", String.valueOf(roomInformation.roomIndex));
+        params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        params.put("nights", String.valueOf(roomInformation.nights));
+        params.put("billkey", mSelectedCreditCard.billingkey);
+
+        switch (paymentInformation.discountType)
+        {
+            case BONUS:
+                String bonus = String.valueOf(paymentInformation.bonus);
+                params.put("bonus", bonus);
+                break;
+
+            case COUPON:
+                Coupon coupon = paymentInformation.getCoupon();
+                params.put("user_coupon_code", coupon.userCouponCode);
+                break;
+        }
+
+        params.put("guest_name", guest.name);
+        params.put("guest_phone", guest.phone.replace("-", ""));
+        params.put("guest_email", guest.email);
+        params.put("guest_msg", "");
+
+        // 주차/도보
+        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            params.put("arrival_transportation", "NO_PARKING");
+        }
+
+        if (DEBUG == false)
+        {
+            if (customer == null)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (Util.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+            }
+        }
+
+//        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+    }
+
+    @Override
     protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
         RoomInformation roomInformation = ((StayPaymentInformation) paymentInformation).getSaleRoomInformation();

@@ -256,6 +256,68 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
+    protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        if (paymentInformation == null || checkInSaleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        lockUI();
+
+        Guest guest = mGourmetPaymentLayout.getGuest();
+        Customer customer = paymentInformation.getCustomer();
+
+        if (guest == null)
+        {
+            guest = new Guest();
+            guest.name = customer.getName();
+            guest.phone = customer.getPhone();
+            guest.email = customer.getEmail();
+        }
+
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
+        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
+        params.put("billkey", mSelectedCreditCard.billingkey);
+        params.put("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
+
+        switch (paymentInformation.discountType)
+        {
+            case BONUS:
+                break;
+
+            case COUPON:
+                Coupon coupon = paymentInformation.getCoupon();
+                params.put("user_coupon_code", coupon.userCouponCode);
+                break;
+        }
+
+        params.put("customer_name", guest.name);
+        params.put("customer_phone", guest.phone.replace("-", ""));
+        params.put("customer_email", guest.email);
+        params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        params.put("customer_msg", "");
+
+        if (DEBUG == false)
+        {
+            if (customer == null)
+            {
+                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (Util.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+            }
+        }
+
+//        DailyMobileAPI.getInstance(this).requestGourmetFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+    }
+
+    @Override
     protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
         DailyMobileAPI.getInstance(this).requestGourmetPaymentInformation(mNetworkTag, //
