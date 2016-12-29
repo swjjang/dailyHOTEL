@@ -4254,6 +4254,8 @@ public class DailyMobileAPITest
 
                                 DailyAssert.assertNotNull(signupKey);
                                 DailyAssert.assertNotNull(serverDate);
+
+                                requestDailyUserSignupVerfication(signupKey, Const.TEST_USER_PHONE, false);
                             } else
                             {
                                 DailyAssert.fail(responseJSONObject.getString("msg"));
@@ -4304,41 +4306,428 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // requestSignupValidation 이후에 진행 되어야 함
     @Ignore
-    public void requestDailyUserSignupVerfication() throws Exception
+    public void requestDailyUserSignupVerfication(String signupKey, String phoneNumber, boolean force) throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null)
+                {
+                    if (response.isSuccessful() == true && response.body() != null)
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        try
+                        {
+                            int msgCode = responseJSONObject.getInt("msgCode");
+                            String message = responseJSONObject.getString("msg");
+
+                            DailyAssert.assertEquals(100, msgCode);
+                            DailyAssert.assertNotNull(message);
+                        } catch (Exception e)
+                        {
+                            DailyAssert.fail(e);
+                        }
+                    } else if (response.isSuccessful() == false && response.errorBody() != null)
+                    {
+                        try
+                        {
+                            JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+                            DailyAssert.assertNotNull(responseJSONObject);
+
+                            int msgCode = responseJSONObject.getInt("msgCode");
+                            String message = responseJSONObject.getString("msg");
+
+                            DailyAssert.assertEquals(402, response.code());
+                            DailyAssert.assertNotNull(message);
+
+                            switch (response.code())
+                            {
+                                case 422:
+                                {
+                                    switch (msgCode)
+                                    {
+                                        // 동일한 전화번호로 인증 받은 사용자가
+                                        case 2001:
+                                        {
+                                            JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
+                                            DailyAssert.assertNotNull(dataJONObject);
+
+                                            String phoneNumber = dataJONObject.getString("phone");
+                                            DailyAssert.assertNotNull(phoneNumber);
+                                            return;
+                                        }
+
+                                        //                                        // 전화번호가 유효하지 않을 때
+                                        //                                        case 2003:
+                                        //                                        {
+                                        //                                            return;
+                                        //                                        }
+                                    }
+                                    break;
+                                }
+                                //
+                                //                                case 400:
+                                //                                {
+                                //                                    switch (msgCode)
+                                //                                    {
+                                //                                        case 2004:
+                                //                                            break;
+                                //                                    }
+                                //                                    break;
+                                //                                }
+                            }
+
+                            DailyAssert.fail();
+                        } catch (Exception e)
+                        {
+                            DailyAssert.fail(e);
+                        }
+                    } else
+                    {
+                        DailyAssert.fail();
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // requestSignupValidation 이후에 진행 되어야 함 - 인증번호 필수
+    @RequiresDevice
     @Ignore
-    public void requestDailyUserSignup() throws Exception
+    public void requestDailyUserSignup(String signupKey, String vaildateCode, String phoneNumber) throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null)
+                {
+                    if (response.isSuccessful() == true && response.body() != null)
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        try
+                        {
+                            int msgCode = responseJSONObject.getInt("msgCode");
+                            String message = responseJSONObject.getString("msg");
+
+                            DailyAssert.assertEquals(0, msgCode);
+                            DailyAssert.assertNotNull(message);
+
+                            if (msgCode == 0)
+                            {
+                                JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                                DailyAssert.assertNotNull(dataJSONObject);
+
+                                boolean isSignup = dataJSONObject.getBoolean("is_signup");
+                                DailyAssert.assertTrue(isSignup);
+
+                                if (isSignup == true)
+                                {
+                                    mLock.countDown();
+                                    return;
+                                }
+                            }
+
+                            DailyAssert.fail();
+
+                        } catch (Exception e)
+                        {
+                            DailyAssert.fail(e);
+                        }
+                    } else if (response.isSuccessful() == false && response.errorBody() != null)
+                    {
+                        try
+                        {
+                            JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+                            DailyAssert.assertNotNull(responseJSONObject);
+
+                            int msgCode = responseJSONObject.getInt("msgCode");
+                            String message = responseJSONObject.getString("msg");
+
+                            DailyAssert.assertEquals(422, msgCode);
+                            DailyAssert.assertNotNull(message);
+
+                            DailyAssert.fail();
+                        } catch (Exception e)
+                        {
+                            DailyAssert.fail(e);
+                        }
+                    } else
+                    {
+                        DailyAssert.fail();
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDailyUserSignup(//
+            mNetworkTag, signupKey, vaildateCode, phoneNumber, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // 해당 기능은... 일단 패스 고려하지 않음
     @Ignore
     public void requestFacebookUserSignup() throws Exception
     {
         //  mLock = new CountDownLatch(1);
+//        retrofit2.Callback mSocialUserSignupCallback = new retrofit2.Callback<JSONObject>()
+//        {
+//            @Override
+//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+//            {
+//                if (response != null && response.isSuccessful() && response.body() != null)
+//                {
+//                    try
+//                    {
+//                        JSONObject responseJSONObject = response.body();
+//
+//                        int msgCode = responseJSONObject.getInt("msg_code");
+//
+//                        if (msgCode == 0)
+//                        {
+//                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+//
+//                            boolean isSignup = jsonObject.getBoolean("is_signup");
+//
+//                            if (isSignup == true)
+//                            {
+//                                // 회원가입에 성공하면 이제 로그인 절차
+//                                mIsSocialSignUp = true;
+//
+//                                DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(false);
+//                                DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
+//                                DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
+//                                DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+//                                AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
+//
+//                                HashMap<String, String> analyticsParams = new HashMap<>();
+//
+//                                if (mStoreParams.containsKey("email") == true)
+//                                {
+//                                    analyticsParams.put("email", mStoreParams.get("email"));
+//                                }
+//
+//                                if (mStoreParams.containsKey("pw") == true)
+//                                {
+//                                    analyticsParams.put("pw", mStoreParams.get("pw"));
+//                                }
+//
+//                                if (mStoreParams.containsKey("social_id") == true)
+//                                {
+//                                    analyticsParams.put("social_id", mStoreParams.get("social_id"));
+//                                }
+//
+//                                mStoreParams.put("new_user", "1");
+//
+//                                if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+//                                {
+//                                    DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+//                                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
+//                                } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+//                                {
+//                                    DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+//                                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
+//                                }
+//
+//                                AnalyticsManager.getInstance(LoginActivity.this).recordScreen(AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM);
+//                                AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
+//                                return;
+//                            }
+//                        }
+//
+//                        unLockUI();
+//                        mStoreParams.clear();
+//                        mIsSocialSignUp = false;
+//
+//                        String msg = responseJSONObject.getString("msg");
+//
+//                        if (Util.isTextEmpty(msg) == true)
+//                        {
+//                            msg = getString(R.string.toast_msg_failed_to_signup);
+//                        }
+//
+//                        DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
+//
+//                    } catch (Exception e)
+//                    {
+//                        unLockUI();
+//                        onError(e);
+//                    }
+//                } else
+//                {
+//                    LoginActivity.this.onErrorResponse(call, response);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSONObject> call, Throwable t)
+//            {
+//                LoginActivity.this.onError(t);
+//            }
+//        };
+//
+//        DailyMobileAPI.getInstance(mContext).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
         //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // 해당 기능은... 일단 패스 고려하지 않음
     @Ignore
     public void requestKakaoUserSignup() throws Exception
     {
         //  mLock = new CountDownLatch(1);
+//        retrofit2.Callback mSocialUserSignupCallback = new retrofit2.Callback<JSONObject>()
+//        {
+//            @Override
+//            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+//            {
+//                if (response != null && response.isSuccessful() && response.body() != null)
+//                {
+//                    try
+//                    {
+//                        JSONObject responseJSONObject = response.body();
+//
+//                        int msgCode = responseJSONObject.getInt("msg_code");
+//
+//                        if (msgCode == 0)
+//                        {
+//                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+//
+//                            boolean isSignup = jsonObject.getBoolean("is_signup");
+//
+//                            if (isSignup == true)
+//                            {
+//                                // 회원가입에 성공하면 이제 로그인 절차
+//                                mIsSocialSignUp = true;
+//
+//                                DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(false);
+//                                DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
+//                                DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
+//                                DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+//                                AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
+//
+//                                HashMap<String, String> analyticsParams = new HashMap<>();
+//
+//                                if (mStoreParams.containsKey("email") == true)
+//                                {
+//                                    analyticsParams.put("email", mStoreParams.get("email"));
+//                                }
+//
+//                                if (mStoreParams.containsKey("pw") == true)
+//                                {
+//                                    analyticsParams.put("pw", mStoreParams.get("pw"));
+//                                }
+//
+//                                if (mStoreParams.containsKey("social_id") == true)
+//                                {
+//                                    analyticsParams.put("social_id", mStoreParams.get("social_id"));
+//                                }
+//
+//                                mStoreParams.put("new_user", "1");
+//
+//                                if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+//                                {
+//                                    DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+//                                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
+//                                } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
+//                                {
+//                                    DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
+//                                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
+//                                }
+//
+//                                AnalyticsManager.getInstance(LoginActivity.this).recordScreen(AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM);
+//                                AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
+//                                return;
+//                            }
+//                        }
+//
+//                        unLockUI();
+//                        mStoreParams.clear();
+//                        mIsSocialSignUp = false;
+//
+//                        String msg = responseJSONObject.getString("msg");
+//
+//                        if (Util.isTextEmpty(msg) == true)
+//                        {
+//                            msg = getString(R.string.toast_msg_failed_to_signup);
+//                        }
+//
+//                        DailyToast.showToast(LoginActivity.this, msg, Toast.LENGTH_LONG);
+//
+//                    } catch (Exception e)
+//                    {
+//                        unLockUI();
+//                        onError(e);
+//                    }
+//                } else
+//                {
+//                    LoginActivity.this.onErrorResponse(call, response);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JSONObject> call, Throwable t)
+//            {
+//                LoginActivity.this.onError(t);
+//            }
+//        };
+//
+//        DailyMobileAPI.getInstance(mContext).requestKakaoUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
         //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    // 해당 기능은 사전 테스트로 인하여 그냥 성공!
+    @Test
     public void requestDailyUserSignin() throws Exception
     {
         //  mLock = new CountDownLatch(1);
         //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // 해당 기능은... 일단 패스 고려하지 않음
+    @RequiresDevice
     @Ignore
     public void requestFacebookUserSignin() throws Exception
     {
@@ -4346,6 +4735,8 @@ public class DailyMobileAPITest
         //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // 해당 기능은... 일단 패스 고려하지 않음
+    @RequiresDevice
     @Ignore
     public void requestKakaoUserSignin() throws Exception
     {
