@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public class DailyEditText extends AppCompatEditText
@@ -133,7 +134,7 @@ public class DailyEditText extends AppCompatEditText
         {
             int action = event.getAction() & MotionEvent.ACTION_MASK;
 
-            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN)
+            if (action == MotionEvent.ACTION_DOWN)
             {
                 Drawable[] drawables = getCompoundDrawables();
 
@@ -144,7 +145,7 @@ public class DailyEditText extends AppCompatEditText
 
                 int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
 
-                if (event.getX() >= (getRight() - withDrawable))
+                if (event.getX() >= (getWidth() - withDrawable))
                 {
                     setText(null);
 
