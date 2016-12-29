@@ -135,7 +135,7 @@ public class StayBookingDetail extends PlaceBookingDetail
             reviewStatusType = ReviewStatusType.NONE;
         }
 
-        if (jsonObject.has("guestTransportation") == true || jsonObject.isNull("guestTransportation") == false)
+        if (jsonObject.has("guestTransportation") == true && jsonObject.isNull("guestTransportation") == false)
         {
             String guestTransportation = jsonObject.getString("guestTransportation");
 
