@@ -297,6 +297,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 mDontReload = true;
 
+                unLockUI();
+
                 onActivityPaymentResult(requestCode, resultCode, intent);
                 break;
             }
@@ -369,15 +371,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
             return;
         }
 
-        unLockUI();
-
         if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
         {
             mFinalCheckDialog.dismiss();
         }
 
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
-        if(paymentInformation.isFree == true)
+        if (paymentInformation.isFree == true)
         {
             showProgressDialog();
 
@@ -391,6 +391,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 requestEasyPayment(paymentInformation, saleTime);
             } else
             {
+                lockUI();
+
                 showPaymentWeb(paymentInformation, saleTime);
             }
         }
@@ -501,20 +503,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
             return;
         }
 
-        mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                releaseUiComponent();
-            }
-        });
-
         mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
             @Override
             public void onCancel(DialogInterface dialog)
             {
+                unLockUI();
+
                 AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
             }

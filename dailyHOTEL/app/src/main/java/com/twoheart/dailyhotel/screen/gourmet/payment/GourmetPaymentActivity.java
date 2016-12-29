@@ -1993,6 +1993,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
                     } else
                     {
+                        unLockUI();
+
                         onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
                         {
                             @Override
@@ -2008,9 +2010,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     onError(e);
                     setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     finish();
-                } finally
-                {
-                    unLockUI();
                 }
             } else
             {
@@ -2023,6 +2022,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            unLockUI();
+
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetPaymentActivity.this.onError(t);
         }

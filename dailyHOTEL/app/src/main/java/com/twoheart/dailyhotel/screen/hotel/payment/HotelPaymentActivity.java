@@ -2364,6 +2364,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                         case 5:
                         {
+                            unLockUI();
+
                             if (responseJSONObject.has("msg") == true)
                             {
                                 String msg = responseJSONObject.getString("msg");
@@ -2387,6 +2389,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         case 4:
                         default:
                         {
+                            unLockUI();
+
                             if (responseJSONObject.has("msg") == true)
                             {
                                 String msg = responseJSONObject.getString("msg");
@@ -2408,9 +2412,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     onError(e);
                     setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     finish();
-                } finally
-                {
-                    unLockUI();
                 }
             } else
             {
