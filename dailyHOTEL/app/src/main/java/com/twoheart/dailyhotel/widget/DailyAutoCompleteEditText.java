@@ -131,7 +131,7 @@ public class DailyAutoCompleteEditText extends AutoCompleteTextView
     {
         if (mHasDeleteButton == true)
         {
-            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
             {
                 Drawable[] drawables = getCompoundDrawables();
 
@@ -142,7 +142,7 @@ public class DailyAutoCompleteEditText extends AutoCompleteTextView
 
                 int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
 
-                if (event.getRawX() >= (getRight() - withDrawable))
+                if (event.getRawX() >= (getWidth() - withDrawable))
                 {
                     setText(null);
 
