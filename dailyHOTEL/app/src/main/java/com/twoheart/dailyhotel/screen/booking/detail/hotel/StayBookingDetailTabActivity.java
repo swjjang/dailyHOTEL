@@ -15,9 +15,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -611,23 +612,41 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     }
                 } catch (Exception e)
                 {
-                    onError(e);
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                    finish();
+                    if (DEBUG == false)
+                    {
+                        Crashlytics.logException(e);
+                    }
+
+                    mStayBookingDetail.isVisibleRefundPolicy = false;
+
+                    loadFragments(getViewPager(), mStayBookingDetail);
                 } finally
                 {
                     unLockUI();
                 }
             } else
             {
-                StayBookingDetailTabActivity.this.onErrorResponse(call, response);
+                mStayBookingDetail.isVisibleRefundPolicy = false;
+
+                loadFragments(getViewPager(), mStayBookingDetail);
+
+                unLockUI();
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            StayBookingDetailTabActivity.this.onError(t);
+            if (DEBUG == false)
+            {
+                Crashlytics.logException(t);
+            }
+
+            mStayBookingDetail.isVisibleRefundPolicy = false;
+
+            loadFragments(getViewPager(), mStayBookingDetail);
+
+            unLockUI();
         }
     };
 }
