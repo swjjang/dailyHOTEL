@@ -1023,7 +1023,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                if(isAnimation == true)
+                if (isAnimation == true)
                 {
                     mPlaceDetailLayout.hideAnimationProductInformationLayout();
                     mPlaceDetailLayout.showWishButtonAnimation();
@@ -1306,56 +1306,62 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonSelected(true);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.ADD);
 
-                Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
-                params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.CATEGORY, ((StayDetail) mPlaceDetail).categoryCode);
+                try
+                {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                    params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
+                    params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
+                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.CATEGORY, ((StayDetail) mPlaceDetail).categoryCode);
 
-                if (mProvince == null)
-                {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                    params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
-                } else
-                {
-                    if (mProvince instanceof Area)
+                    if (mProvince == null)
                     {
-                        Area area = (Area) mProvince;
-                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                        params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                        params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
                     } else
                     {
-                        params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                        if (mProvince instanceof Area)
+                        {
+                            Area area = (Area) mProvince;
+                            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                        } else
+                        {
+                            params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                        }
+
+                        params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                     }
 
-                    params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                    params.put(AnalyticsManager.KeyType.GRADE, ((StayDetail) mPlaceDetail).grade.name());
+                    params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
+                    params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+
+                    String listIndex = mPlaceDetail.entryPosition == -1 //
+                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+
+                    params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+                    params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                    params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+
+                    int nights = ((StayDetail) mPlaceDetail).nights;
+                    SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights);
+
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+                    params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
+
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
+                        AnalyticsManager.Category.NAVIGATION,//
+                        Action.WISHLIST_ON, mPlaceDetail.name, params);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
                 }
-
-                params.put(AnalyticsManager.KeyType.GRADE, ((StayDetail) mPlaceDetail).grade.name());
-                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
-                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
-
-                String listIndex = mPlaceDetail.entryPosition == -1 //
-                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
-
-                params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
-                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
-
-                int nights = ((StayDetail) mPlaceDetail).nights;
-                SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights);
-
-                params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
-
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION,//
-                    Action.WISHLIST_ON, mPlaceDetail.name, params);
             } else
             {
                 mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);

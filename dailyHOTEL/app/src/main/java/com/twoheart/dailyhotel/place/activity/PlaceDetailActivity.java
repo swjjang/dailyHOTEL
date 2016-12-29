@@ -148,7 +148,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mPlaceDetailLayout != null)
         {
-           hideProductInformationLayout(false);
+            hideProductInformationLayout(false);
 
             if (mPlaceDetailLayout.getBookingStatus() != PlaceDetailLayout.STATUS_SOLD_OUT)
             {
