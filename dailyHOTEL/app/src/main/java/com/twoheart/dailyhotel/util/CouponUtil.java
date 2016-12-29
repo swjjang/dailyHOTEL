@@ -84,7 +84,7 @@ public class CouponUtil
         public static final String AVAILABLE_IN_OVERSEAS = "availableInOverseas";
 
         // coupon object type
-        public static final String AVAILABLE_IN_HOTEL = "availableInHotel";
+        public static final String AVAILABLE_IN_STAY = "availableInHotel";
 
         // coupon object type
         public static final String AVAILABLE_IN_GOURMET = "availableInGourmet";
@@ -201,9 +201,9 @@ public class CouponUtil
                 availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
             }
 
-            if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
+            if (jsonObject.has(Type.AVAILABLE_IN_STAY))
             {
-                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
+                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_STAY);
             }
 
             if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))
@@ -308,9 +308,9 @@ public class CouponUtil
                 availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
             }
 
-            if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
+            if (jsonObject.has(Type.AVAILABLE_IN_STAY))
             {
-                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
+                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_STAY);
             }
 
             if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))

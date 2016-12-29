@@ -137,7 +137,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         }
 
         // 스테이, 고메 쿠폰인지
-        if (coupon.availableInHotel == true)
+        if (coupon.availableInStay == true)
         {
             holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_on);
         } else
