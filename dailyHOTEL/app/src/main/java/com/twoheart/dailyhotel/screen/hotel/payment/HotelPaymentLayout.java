@@ -67,6 +67,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private View mHowToVisitLayout;
     private View mVisitWalkView, mVisitCarView, mNoParkingView;
     private TextView mGuideVisitMemoView;
+    private View mGuideVisitMemoLayout;
 
     // 할인 정보
     private ImageView mBonusRadioButton;
@@ -257,6 +258,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mVisitCarView = mHowToVisitLayout.findViewById(R.id.visitCarView);
         mNoParkingView = mHowToVisitLayout.findViewById(R.id.noParkingView);
 
+        mGuideVisitMemoLayout = mHowToVisitLayout.findViewById(R.id.guideVisitMemoLayout);
         mGuideVisitMemoView = (TextView) mHowToVisitLayout.findViewById(R.id.guideVisitMemoView);
 
         mVisitWalkView.setOnClickListener(this);
@@ -1039,6 +1041,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 break;
 
             case R.id.visitWalkView:
+                mGuideVisitMemoLayout.setVisibility(View.GONE);
+
                 mVisitWalkView.setSelected(true);
                 mVisitCarView.setSelected(false);
 
@@ -1046,6 +1050,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 break;
 
             case R.id.visitCarView:
+                mGuideVisitMemoLayout.setVisibility(View.VISIBLE);
+
                 mVisitWalkView.setSelected(false);
                 mVisitCarView.setSelected(true);
 

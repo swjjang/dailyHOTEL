@@ -246,6 +246,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
         {
             params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            params.put("arrival_transportation", "NO_PARKING");
         }
 
         if (DEBUG == false)
@@ -2041,14 +2044,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             boolean noParking = false;
                             boolean parking = false;
-                            boolean providerTransportation = false;
+                            boolean provideTransportation = false;
 
                             if (dataJSONObject.has("no_parking") == true && dataJSONObject.has("parking") == true//
-                                && dataJSONObject.has("provider_transportation") == true)
+                                && dataJSONObject.has("provide_transportation") == true)
                             {
                                 noParking = dataJSONObject.getBoolean("no_parking");
                                 parking = dataJSONObject.getBoolean("parking");
-                                providerTransportation = dataJSONObject.getBoolean("provider_transportation");
+                                provideTransportation = dataJSONObject.getBoolean("provide_transportation");
                             }
 
                             if (dataJSONObject.has("refund_type") == true && RoomInformation.NRD.equalsIgnoreCase(dataJSONObject.getString("refund_type")) == true)
@@ -2079,7 +2082,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
 
-                            if (providerTransportation == true)
+                            if (provideTransportation == true)
                             {
                                 if (noParking == true)
                                 {
