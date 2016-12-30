@@ -6,12 +6,15 @@ import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -68,6 +71,23 @@ public class BonusNetworkController extends BaseNetworkController
                             String content = historyObj.getString("content");
                             String expires = historyObj.getString("expires");
                             int bonus = historyObj.getInt("bonus");
+
+                            String[] dates = expires.split("\\.");
+
+                            try
+                            {
+                                int year = Integer.parseInt(dates[0]);
+                                int month = Integer.parseInt(dates[1]) - 1;
+                                int day = Integer.parseInt(dates[2]);
+
+                                Calendar calendar = DailyCalendar.getInstance();
+                                calendar.set(year, month, day);
+
+                                expires = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.toString());
+                            }
 
                             list.add(new Bonus(content, bonus, expires));
                         }
