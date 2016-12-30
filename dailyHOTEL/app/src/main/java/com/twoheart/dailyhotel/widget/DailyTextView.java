@@ -208,7 +208,7 @@ public class DailyTextView extends AppCompatTextView
 
             if (drawable instanceof VectorDrawableCompat)
             {
-                drawable.setTintList(getResources().getColorStateList(id));
+                ((VectorDrawableCompat)drawable).setTintList(getResources().getColorStateList(id));
             } else
             {
                 if (Util.isOverAPI21() == true)
@@ -237,7 +237,7 @@ public class DailyTextView extends AppCompatTextView
 
             if (drawable instanceof VectorDrawableCompat)
             {
-                drawable.setTint(getResources().getColor(id));
+                ((VectorDrawableCompat)drawable).setTint(getResources().getColor(id));
             } else
             {
                 if (Util.isOverAPI21() == true)
