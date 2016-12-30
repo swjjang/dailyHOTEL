@@ -7,6 +7,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.CouponUtil;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
 
@@ -53,7 +54,13 @@ public class CouponHistoryNetworkController extends BaseNetworkController
                     int msgCode = responseJSONObject.getInt("msgCode");
                     if (msgCode == 100)
                     {
-                        list = CouponUtil.getCouponHistoryList(responseJSONObject);
+                        try
+                        {
+                            list = CouponUtil.getCouponHistoryList(responseJSONObject);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
 
                     } else
                     {

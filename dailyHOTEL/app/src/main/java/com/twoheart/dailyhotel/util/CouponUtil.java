@@ -7,7 +7,6 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CouponHistory;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -90,53 +89,45 @@ public class CouponUtil
         public static final String AVAILABLE_IN_GOURMET = "availableInGourmet";
     }
 
-    public static ArrayList<Coupon> getCouponList(JSONObject response)
+    public static ArrayList<Coupon> getCouponList(JSONObject response) throws Exception
     {
         ArrayList<Coupon> list = new ArrayList<>();
 
-        try
+        boolean hasData = response.has("data");
+        if (hasData == true)
         {
-            boolean hasData = response.has("data");
-            if (hasData == true)
+            JSONObject data = response.getJSONObject("data");
+            if (data != null)
             {
-                JSONObject data = response.getJSONObject("data");
-                if (data != null)
+                String serverDate;
+                if (data.has(Type.SERVER_DATE) == true)
                 {
-                    String serverDate;
-                    if (data.has(Type.SERVER_DATE) == true)
-                    {
-                        serverDate = data.getString(Type.SERVER_DATE);
-                    } else
-                    {
-                        serverDate = "";
-                    }
-
-                    JSONArray couponList = data.getJSONArray(Type.COUPON_LIST);
-
-                    int length = couponList.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        JSONObject jsonObject = couponList.getJSONObject(i);
-
-                        Coupon coupon = getCoupon(jsonObject, serverDate);
-                        list.add(coupon);
-                    }
+                    serverDate = data.getString(Type.SERVER_DATE);
+                } else
+                {
+                    serverDate = "";
                 }
-            } else
-            {
-                ExLog.d("response has not data");
+
+                JSONArray couponList = data.getJSONArray(Type.COUPON_LIST);
+
+                int length = couponList.length();
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = couponList.getJSONObject(i);
+
+                    Coupon coupon = getCoupon(jsonObject, serverDate);
+                    list.add(coupon);
+                }
             }
-
-        } catch (Exception e)
+        } else
         {
-            ExLog.e(e.toString());
-
+            ExLog.d("response has not data");
         }
 
         return list;
     }
 
-    private static Coupon getCoupon(JSONObject jsonObject, String serverDate)
+    private static Coupon getCoupon(JSONObject jsonObject, String serverDate) throws Exception
     {
         Coupon coupon = null;
 
@@ -152,180 +143,156 @@ public class CouponUtil
         //        boolean isRedeemed = false;
         //        boolean isExpired = false;
 
-        try
+        boolean isDownloaded = jsonObject.getBoolean(Type.IS_DOWNLOADED); // 다운로드 여부
+
+        int amount = jsonObject.getInt(Type.AMOUNT); // 쿠폰가격
+        int amountMinimum = jsonObject.getInt(Type.AMOUNT_MINIMUM); // 최소 결제 금액
+
+        String validFrom = jsonObject.getString(Type.VALID_FROM); // 쿠폰 시작 시간
+        String validTo = jsonObject.getString(Type.VALID_TO); // 유효기간, 만료일, 쿠폰 만료시간
+        String title = jsonObject.getString(Type.TITLE); // 쿠폰이름
+        String userCouponCode = jsonObject.getString(Type.USER_COUPON_CODE); // 쿠폰 별칭 코드
+        String availableItem = jsonObject.getString(Type.AVAILABLE_ITEM); // 사용가능처
+
+        // 쿠폰 주의사항용 쿠폰 코드
+        if (jsonObject.has(Type.COUPON_CODE))
         {
-            boolean isDownloaded = jsonObject.getBoolean(Type.IS_DOWNLOADED); // 다운로드 여부
-
-            int amount = jsonObject.getInt(Type.AMOUNT); // 쿠폰가격
-            int amountMinimum = jsonObject.getInt(Type.AMOUNT_MINIMUM); // 최소 결제 금액
-
-            String validFrom = jsonObject.getString(Type.VALID_FROM); // 쿠폰 시작 시간
-            String validTo = jsonObject.getString(Type.VALID_TO); // 유효기간, 만료일, 쿠폰 만료시간
-            String title = jsonObject.getString(Type.TITLE); // 쿠폰이름
-            String userCouponCode = jsonObject.getString(Type.USER_COUPON_CODE); // 쿠폰 별칭 코드
-            String availableItem = jsonObject.getString(Type.AVAILABLE_ITEM); // 사용가능처
-
-            // 쿠폰 주의사항용 쿠폰 코드
-            if (jsonObject.has(Type.COUPON_CODE))
-            {
-                couponCode = jsonObject.getString(Type.COUPON_CODE); // 이벤트 웹뷰, 쿠폰 사용주의사항용 쿠폰코드
-            }
-
-            if (jsonObject.has(Type.STAY_FROM))
-            {
-                stayFrom = jsonObject.getString(Type.STAY_FROM);
-            }
-
-            if (jsonObject.has(Type.STAY_TO))
-            {
-                stayTo = jsonObject.getString(Type.STAY_TO);
-            }
-
-            if (jsonObject.has(Type.DOWNLOADED_AT))
-            {
-                downloadedAt = jsonObject.getString(Type.DOWNLOADED_AT);
-            }
-
-            //            if (jsonObject.has(Type.DISABLE_AT))
-            //            {
-            //                disableAt = jsonObject.getString(Type.DISABLE_AT);
-            //            }
-
-            if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
-            {
-                availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
-            }
-
-            if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
-            {
-                availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
-            }
-
-            if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
-            {
-                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
-            }
-
-            if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))
-            {
-                availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
-            }
-
-            //            if (jsonObject.has(Type.IS_REDEEMED))
-            //            {
-            //                isRedeemed = jsonObject.getBoolean(Type.IS_REDEEMED);
-            //            }
-            //
-            //            if (jsonObject.has(Type.IS_EXPIRED))
-            //            {
-            //                isExpired = jsonObject.getBoolean(Type.IS_EXPIRED);
-            //            }
-
-            coupon = new Coupon(userCouponCode, amount, title, validFrom, //
-                validTo, amountMinimum, isDownloaded, availableItem, //
-                serverDate, couponCode, stayFrom, stayTo, //
-                downloadedAt, availableInDomestic, availableInOverseas, //
-                availableInHotel, availableInGourmet);
-
-        } catch (Exception e)
-        {
-            ExLog.e(e.getMessage());
+            couponCode = jsonObject.getString(Type.COUPON_CODE); // 이벤트 웹뷰, 쿠폰 사용주의사항용 쿠폰코드
         }
+
+        if (jsonObject.has(Type.STAY_FROM))
+        {
+            stayFrom = jsonObject.getString(Type.STAY_FROM);
+        }
+
+        if (jsonObject.has(Type.STAY_TO))
+        {
+            stayTo = jsonObject.getString(Type.STAY_TO);
+        }
+
+        if (jsonObject.has(Type.DOWNLOADED_AT))
+        {
+            downloadedAt = jsonObject.getString(Type.DOWNLOADED_AT);
+        }
+
+        //            if (jsonObject.has(Type.DISABLE_AT))
+        //            {
+        //                disableAt = jsonObject.getString(Type.DISABLE_AT);
+        //            }
+
+        if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
+        {
+            availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
+        }
+
+        if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
+        {
+            availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
+        }
+
+        if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
+        {
+            availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
+        }
+
+        if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))
+        {
+            availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
+        }
+
+        //            if (jsonObject.has(Type.IS_REDEEMED))
+        //            {
+        //                isRedeemed = jsonObject.getBoolean(Type.IS_REDEEMED);
+        //            }
+        //
+        //            if (jsonObject.has(Type.IS_EXPIRED))
+        //            {
+        //                isExpired = jsonObject.getBoolean(Type.IS_EXPIRED);
+        //            }
+
+        coupon = new Coupon(userCouponCode, amount, title, validFrom, //
+            validTo, amountMinimum, isDownloaded, availableItem, //
+            serverDate, couponCode, stayFrom, stayTo, //
+            downloadedAt, availableInDomestic, availableInOverseas, //
+            availableInHotel, availableInGourmet);
 
         return coupon;
     }
 
-    public static ArrayList<CouponHistory> getCouponHistoryList(JSONObject response)
+    public static ArrayList<CouponHistory> getCouponHistoryList(JSONObject response) throws Exception
     {
         ArrayList<CouponHistory> list = new ArrayList<>();
 
-        try
+        boolean hasData = response.has("data");
+        if (hasData == true)
         {
-            boolean hasData = response.has("data");
-            if (hasData == true)
+            JSONObject data = response.getJSONObject("data");
+            if (data != null)
             {
-                JSONObject data = response.getJSONObject("data");
-                if (data != null)
+                JSONArray couponList = data.getJSONArray(Type.COUPON_LIST);
+
+                int length = couponList.length();
+                for (int i = 0; i < length; i++)
                 {
-                    JSONArray couponList = data.getJSONArray(Type.COUPON_LIST);
+                    JSONObject jsonObject = couponList.getJSONObject(i);
 
-                    int length = couponList.length();
-                    for (int i = 0; i < length; i++)
+                    CouponHistory couponHistory = getCouponHistory(jsonObject);
+                    if (couponHistory != null)
                     {
-                        JSONObject jsonObject = couponList.getJSONObject(i);
-
-                        CouponHistory couponHistory = getCouponHistory(jsonObject);
-                        if (couponHistory != null)
-                        {
-                            list.add(couponHistory);
-                        }
+                        list.add(couponHistory);
                     }
                 }
-            } else
-            {
-                ExLog.d("response has not data");
             }
-
-        } catch (JSONException | NullPointerException e)
+        } else
         {
-            ExLog.e(e.getMessage());
-
+            ExLog.d("response has not data");
         }
 
         return list;
     }
 
-    private static CouponHistory getCouponHistory(JSONObject jsonObject)
+    private static CouponHistory getCouponHistory(JSONObject jsonObject) throws Exception
     {
-        CouponHistory couponHistory = null;
-
         boolean availableInDomestic = false;
         boolean availableInOverseas = false;
         boolean availableInHotel = false;
         boolean availableInGourmet = false;
 
-        try
+        boolean isExpired = jsonObject.getBoolean(Type.IS_EXPIRED); // 유효기간 만료 여부
+        boolean isRedeemed = jsonObject.getBoolean(Type.IS_REDEEMED); // 사용 여부
+
+        int amount = jsonObject.getInt(Type.AMOUNT); // 쿠폰가격
+        int amountMinimum = jsonObject.getInt(Type.AMOUNT_MINIMUM); // 최소 결제 금액
+
+        String validFrom = jsonObject.getString(Type.VALID_FROM); // 쿠폰 시작 시간
+        String validTo = jsonObject.getString(Type.VALID_TO); // 유효기간, 만료일, 쿠폰 만료시간
+        String title = jsonObject.getString(Type.TITLE);
+        String disabledAt = jsonObject.getString(Type.DISABLED_AT); // 사용한 날짜 (ISO-8601)
+
+
+        if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
         {
-            boolean isExpired = jsonObject.getBoolean(Type.IS_EXPIRED); // 유효기간 만료 여부
-            boolean isRedeemed = jsonObject.getBoolean(Type.IS_REDEEMED); // 사용 여부
-
-            int amount = jsonObject.getInt(Type.AMOUNT); // 쿠폰가격
-            int amountMinimum = jsonObject.getInt(Type.AMOUNT_MINIMUM); // 최소 결제 금액
-
-            String validFrom = jsonObject.getString(Type.VALID_FROM); // 쿠폰 시작 시간
-            String validTo = jsonObject.getString(Type.VALID_TO); // 유효기간, 만료일, 쿠폰 만료시간
-            String title = jsonObject.getString(Type.TITLE);
-            String disabledAt = jsonObject.getString(Type.DISABLED_AT); // 사용한 날짜 (ISO-8601)
-
-
-            if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
-            {
-                availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
-            }
-
-            if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
-            {
-                availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
-            }
-
-            if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
-            {
-                availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
-            }
-
-            if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))
-            {
-                availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
-            }
-
-            couponHistory = new CouponHistory(amount, title, validFrom, validTo, //
-                amountMinimum, isExpired, isRedeemed, disabledAt, availableInDomestic, //
-                availableInOverseas, availableInHotel, availableInGourmet);
-
-        } catch (Exception e)
-        {
-            ExLog.e(e.getMessage());
+            availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
         }
+
+        if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
+        {
+            availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
+        }
+
+        if (jsonObject.has(Type.AVAILABLE_IN_HOTEL))
+        {
+            availableInHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_HOTEL);
+        }
+
+        if (jsonObject.has(Type.AVAILABLE_IN_GOURMET))
+        {
+            availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
+        }
+
+        CouponHistory couponHistory = new CouponHistory(amount, title, validFrom, validTo, //
+            amountMinimum, isExpired, isRedeemed, disabledAt, availableInDomestic, //
+            availableInOverseas, availableInHotel, availableInGourmet);
 
         return couponHistory;
     }

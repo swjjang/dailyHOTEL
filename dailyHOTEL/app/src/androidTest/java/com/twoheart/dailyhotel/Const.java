@@ -58,7 +58,7 @@ public class Const implements Constants
     public static final int TEST_GOURMET_PROVINCE_INDEX = 5;
     public static final int TEST_GOURMET_INDEX = 50457;
     public static final int TEST_GOURMET_TIKET_INDEX = 394348;
-    public static final int TEST_GOURMET_TIKET_COUNT = 1;
+    public static final int TEST_GOURMET_TICKET_COUNT = 1;
     public static final int TEST_GOURMET_RESERVATION_INDEX = 49941;
     public static final String TEST_GOURMET_RESERVATION_TIME = "18:00";
 
