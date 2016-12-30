@@ -108,6 +108,7 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestGourmetBookingDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestGourmetReceipt(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
@@ -132,6 +133,7 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestGourmetSearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reserveDate") String date, @Query("term") String term);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestGourmetDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateSale") String date);
 
@@ -167,6 +169,7 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestEventList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestEventNCouponNNoticeNewCount(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                         @Query("eventLatestDate") String eventLatestDate,//
@@ -178,6 +181,7 @@ public interface DailyMobileService
                                          @Query("daily_event_idx") int eventIndex, //
                                          @Query("store_type") String store);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestEventBannerList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("type") String place);
 
