@@ -253,6 +253,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private void initVisitType(View view)
     {
         mHowToVisitLayout = view.findViewById(R.id.howToVisitLayout);
+        mHowToVisitLayout.setVisibility(View.GONE);
 
         mVisitWalkView = mHowToVisitLayout.findViewById(R.id.visitWalkView);
         mVisitCarView = mHowToVisitLayout.findViewById(R.id.visitCarView);
