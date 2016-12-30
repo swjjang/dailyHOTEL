@@ -327,7 +327,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            startActivityForResult(intent, REQUEST_ACTIVITY_CALENDAR);
         }
 
         @Override
