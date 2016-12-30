@@ -129,14 +129,14 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         }
     }
 
-    public void setTitle(int resid)
+    public void setTitle(int resId)
     {
         if (mTitleTextView == null)
         {
             return;
         }
 
-        mTitleTextView.setText(resid);
+        mTitleTextView.setText(resId);
     }
 
     public void setData(List<Coupon> list, boolean isSelected)

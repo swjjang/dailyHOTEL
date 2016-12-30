@@ -10,8 +10,8 @@ public class MenuBarLayout implements View.OnClickListener
 {
     private static final int MENU_HOTEL_INDEX = 0;
     private static final int MENU_GOURMET_INDEX = 1;
-    private static final int MENU_BOOKINGL_INDEX = 2;
-    private static final int MENU_INFORMATIONL_INDEX = 3;
+    private static final int MENU_BOOKING_INDEX = 2;
+    private static final int MENU_INFORMATION_INDEX = 3;
 
     private static final int MENU_COUNT = 4;
 
@@ -68,11 +68,11 @@ public class MenuBarLayout implements View.OnClickListener
         mMenuView[MENU_GOURMET_INDEX] = viewGroup.findViewById(R.id.gourmetLayout);
         mMenuView[MENU_GOURMET_INDEX].setOnClickListener(this);
 
-        mMenuView[MENU_BOOKINGL_INDEX] = viewGroup.findViewById(R.id.bookingLayout);
-        mMenuView[MENU_BOOKINGL_INDEX].setOnClickListener(this);
+        mMenuView[MENU_BOOKING_INDEX] = viewGroup.findViewById(R.id.bookingLayout);
+        mMenuView[MENU_BOOKING_INDEX].setOnClickListener(this);
 
-        mMenuView[MENU_INFORMATIONL_INDEX] = viewGroup.findViewById(R.id.informationLayout);
-        mMenuView[MENU_INFORMATIONL_INDEX].setOnClickListener(this);
+        mMenuView[MENU_INFORMATION_INDEX] = viewGroup.findViewById(R.id.informationLayout);
+        mMenuView[MENU_INFORMATION_INDEX].setOnClickListener(this);
     }
 
     @Override
@@ -94,11 +94,11 @@ public class MenuBarLayout implements View.OnClickListener
                 break;
 
             case R.id.bookingLayout:
-                selectedMenu(MENU_BOOKINGL_INDEX);
+                selectedMenu(MENU_BOOKING_INDEX);
                 break;
 
             case R.id.informationLayout:
-                selectedMenu(MENU_INFORMATIONL_INDEX);
+                selectedMenu(MENU_INFORMATION_INDEX);
                 break;
         }
     }
@@ -154,7 +154,7 @@ public class MenuBarLayout implements View.OnClickListener
 
     public void setNewIconVisible(boolean isVisible)
     {
-        mMenuView[MENU_INFORMATIONL_INDEX].findViewById(R.id.newEventIcon).setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        mMenuView[MENU_INFORMATION_INDEX].findViewById(R.id.newEventIcon).setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     public String getName(int position)
@@ -167,10 +167,10 @@ public class MenuBarLayout implements View.OnClickListener
             case MENU_GOURMET_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_gourmet);
 
-            case MENU_BOOKINGL_INDEX:
+            case MENU_BOOKING_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_bookings);
 
-            case MENU_INFORMATIONL_INDEX:
+            case MENU_INFORMATION_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_information);
 
             default:

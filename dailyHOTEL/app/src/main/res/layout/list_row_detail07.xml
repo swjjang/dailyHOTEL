@@ -52,7 +52,7 @@
             dailyFont:style="DemiLight"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/onciergeTimeTextView"
+            android:id="@+id/conciergeTimeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

@@ -324,23 +324,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isUsedMutilTransition() == true)
+        if (Util.isUsedMultiTransition() == true)
         {
-            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inNameTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
                 , 17, 18, new LinearInterpolator());
             inNameTextTransition.addTarget(getString(R.string.transition_place_name));
-            intransitionSet.addTransition(inNameTextTransition);
+            inTransitionSet.addTransition(inNameTextTransition);
 
-            Transition inBottomAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            inBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            intransitionSet.addTransition(inBottomAlhpaTransition);
+            Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            inTransitionSet.addTransition(inBottomAlphaTransition);
 
-            Transition inTopAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            inTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            intransitionSet.addTransition(inTopAlhpaTransition);
+            Transition inTopAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            inTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            inTransitionSet.addTransition(inTopAlphaTransition);
 
-            getWindow().setSharedElementEnterTransition(intransitionSet);
+            getWindow().setSharedElementEnterTransition(inTransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition outNameTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//
@@ -348,13 +348,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             outNameTextTransition.addTarget(getString(R.string.transition_place_name));
             outTransitionSet.addTransition(outNameTextTransition);
 
-            Transition outBottomAlhpaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
-            outBottomAlhpaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            outTransitionSet.addTransition(outBottomAlhpaTransition);
+            Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
+            outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
+            outTransitionSet.addTransition(outBottomAlphaTransition);
 
-            Transition outTopAlhpaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
-            outTopAlhpaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            outTransitionSet.addTransition(outTopAlhpaTransition);
+            Transition outTopAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
+            outTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
+            outTransitionSet.addTransition(outTopAlphaTransition);
 
             outTransitionSet.setDuration(200);
 
@@ -421,9 +421,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isUsedMutilTransition() == true)
+        if (mIsDeepLink == false && Util.isUsedMultiTransition() == true)
         {
-            ininTransLayout(placeName, imageUrl, isFromMap);
+            initTransLayout(placeName, imageUrl, isFromMap);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -437,7 +437,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void ininTransLayout(String placeName, String imageUrl, boolean isFromMap)
+    private void initTransLayout(String placeName, String imageUrl, boolean isFromMap)
     {
         if (Util.isTextEmpty(placeName, imageUrl) == true)
         {
@@ -577,9 +577,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void hideProductInformationLayout()
+    protected void hideProductInformationLayout(boolean isAnimation)
     {
-        mOnEventListener.hideProductInformationLayout();
+        mOnEventListener.hideProductInformationLayout(isAnimation);
     }
 
     @Override
@@ -1025,7 +1025,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void hideProductInformationLayout()
+        public void hideProductInformationLayout(boolean isAnimation)
         {
             if (isLockUiComponent() == true || isFinishing() == true)
             {
@@ -1036,8 +1036,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.hideAnimationProductInformationLayout();
-                mPlaceDetailLayout.showWishButtonAnimation();
+                if (isAnimation == true)
+                {
+                    mPlaceDetailLayout.hideAnimationProductInformationLayout();
+                    mPlaceDetailLayout.showWishButtonAnimation();
+                } else
+                {
+                    mPlaceDetailLayout.hideProductInformationLayout();
+                    mPlaceDetailLayout.showWishButton();
+                }
             }
 
             if (Util.isOverAPI21() == true)
@@ -1252,53 +1259,59 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonSelected(true);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.ADD);
 
-                Map<String, String> params = new HashMap<>();
-                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
-                params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
-                params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
+                try
+                {
+                    Map<String, String> params = new HashMap<>();
+                    params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+                    params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
+                    params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
+                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
 
-                if (mProvince == null)
-                {
-                    params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
-                    params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
-                } else
-                {
-                    if (mProvince instanceof Area)
+                    if (mProvince == null)
                     {
-                        Area area = (Area) mProvince;
-                        params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                        params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                        params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+                        params.put(AnalyticsManager.KeyType.AREA, AnalyticsManager.ValueType.EMPTY);
                     } else
                     {
-                        params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
-                        params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                        if (mProvince instanceof Area)
+                        {
+                            Area area = (Area) mProvince;
+                            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                        } else
+                        {
+                            params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                        }
+
+                        params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                     }
 
-                    params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                    params.put(AnalyticsManager.KeyType.GRADE, ((GourmetDetail) mPlaceDetail).grade.name());
+                    params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
+                    params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+
+                    String listIndex = mPlaceDetail.entryPosition == -1 //
+                        ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
+
+                    params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+                    params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
+                    params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
+                    params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
+
+
+                    AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
+                        AnalyticsManager.Category.NAVIGATION,//
+                        AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, params);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
                 }
-
-                params.put(AnalyticsManager.KeyType.GRADE, ((GourmetDetail) mPlaceDetail).grade.name());
-                params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
-                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
-
-                String listIndex = mPlaceDetail.entryPosition == -1 //
-                    ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
-
-                params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
-                params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
-
-                params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
-                params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
-
-
-                AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION,//
-                    AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, params);
             } else
             {
                 mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);

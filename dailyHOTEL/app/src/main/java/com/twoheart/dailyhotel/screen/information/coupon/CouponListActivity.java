@@ -234,7 +234,7 @@ public class CouponListActivity extends BaseActivity
         {
             for (Coupon coupon : originList)
             {
-                if (SortType.STAY.equals(sortType) == true && coupon.availableInHotel == true)
+                if (SortType.STAY.equals(sortType) == true && coupon.availableInStay == true)
                 {
                     sortList.add(coupon);
                 } else if (SortType.GOURMET.equals(sortType) == true && coupon.availableInGourmet == true)
@@ -389,15 +389,26 @@ public class CouponListActivity extends BaseActivity
                 //                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
                 paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
                 paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "couponbox");
-                paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
+                paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+
+                if (coupon.availableInGourmet == true && coupon.availableInStay == true)
+                {
+                    paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.ALL);
+                } else if (coupon.availableInStay == true)
+                {
+                    paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.STAY);
+                } else if (coupon.availableInGourmet == true)
+                {
+                    paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.GOURMET);
+                }
 
                 AnalyticsManager.getInstance(CouponListActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
-                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "CouponBox-" + coupon.title, paramsMap);
+                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "couponbox-" + coupon.title, paramsMap);
             } catch (ParseException e)
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.log("Coupon List::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                    Crashlytics.log("Coupon List::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
                 }
                 ExLog.d(e.toString());
             } catch (Exception e)

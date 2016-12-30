@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetailTabActivity;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.HotelBookingDetailTabActivity;
+import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayBookingDetailTabActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -366,7 +366,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         switch (placeType)
         {
             case HOTEL:
-                intent = new Intent(baseActivity, HotelBookingDetailTabActivity.class);
+                intent = new Intent(baseActivity, StayBookingDetailTabActivity.class);
                 break;
 
             case FNB:

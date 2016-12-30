@@ -28,8 +28,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.model.StayPaymentInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -67,6 +67,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private View mHowToVisitLayout;
     private View mVisitWalkView, mVisitCarView, mNoParkingView;
     private TextView mGuideVisitMemoView;
+    private View mGuideVisitMemoLayout;
 
     // 할인 정보
     private ImageView mBonusRadioButton;
@@ -257,6 +258,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mVisitCarView = mHowToVisitLayout.findViewById(R.id.visitCarView);
         mNoParkingView = mHowToVisitLayout.findViewById(R.id.noParkingView);
 
+        mGuideVisitMemoLayout = mHowToVisitLayout.findViewById(R.id.guideVisitMemoLayout);
         mGuideVisitMemoView = (TextView) mHowToVisitLayout.findViewById(R.id.guideVisitMemoView);
 
         mVisitWalkView.setOnClickListener(this);
@@ -450,15 +452,15 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setReservationInformation(HotelPaymentInformation hotelPaymentInformation)
+    public void setReservationInformation(StayPaymentInformation stayPaymentInformation)
     {
         // 예약 장소
-        mPlaceNameTextView.setText(hotelPaymentInformation.getSaleRoomInformation().hotelName);
+        mPlaceNameTextView.setText(stayPaymentInformation.getSaleRoomInformation().hotelName);
 
         // 객실 타입
-        mRoomTypeTextView.setText(hotelPaymentInformation.getSaleRoomInformation().roomName);
+        mRoomTypeTextView.setText(stayPaymentInformation.getSaleRoomInformation().roomName);
 
-        String checkInDateFormat = DailyCalendar.format(hotelPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkInDateFormat = DailyCalendar.format(stayPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
         checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkInDateFormat.length() - 3, checkInDateFormat.length(),//
@@ -466,7 +468,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckinDayTextView.setText(checkInSpannableStringBuilder);
 
-        String checkOutDateFormat = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkOutDateFormat = DailyCalendar.format(stayPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
         checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
@@ -474,7 +476,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckoutDayTextView.setText(checkOutSpannableStringBuilder);
 
-        mNightsTextView.setText(mContext.getString(R.string.label_nights, hotelPaymentInformation.nights));
+        mNightsTextView.setText(mContext.getString(R.string.label_nights, stayPaymentInformation.nights));
     }
 
     protected void setUserInformation(Customer user, boolean isOverseas)
@@ -493,7 +495,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mUserNameTextView.setText(user.getName());
 
             // 연락처
-            mUserPhoneTextView.setText(Util.addHippenMobileNumber(mContext, user.getPhone()));
+            mUserPhoneTextView.setText(Util.addHyphenMobileNumber(mContext, user.getPhone()));
 
             // 이메일
             mUserEmailTextView.setText(user.getEmail());
@@ -518,7 +520,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             } else
             {
                 mGuestNameEditText.setText(guest.name);
-                mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+                mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, guest.phone));
                 mGuestEmailEditText.setText(guest.email);
             }
 
@@ -529,13 +531,13 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mGuestEmailEditText.setHint(R.string.label_booking_input_email);
         } else
         {
-            ViewGroup.LayoutParams framelayoutParams = mGuestFrameLayout.getLayoutParams();
-            framelayoutParams.height = Util.dpToPx(mContext, 164) + Util.dpToPx(mContext, 36);
-            mGuestFrameLayout.setLayoutParams(framelayoutParams);
+            ViewGroup.LayoutParams frameLayoutParams = mGuestFrameLayout.getLayoutParams();
+            frameLayoutParams.height = Util.dpToPx(mContext, 164) + Util.dpToPx(mContext, 36);
+            mGuestFrameLayout.setLayoutParams(frameLayoutParams);
 
-            ViewGroup.LayoutParams linearlayoutParams = mGuestLinearLayout.getLayoutParams();
-            linearlayoutParams.height = framelayoutParams.height;
-            mGuestLinearLayout.setLayoutParams(linearlayoutParams);
+            ViewGroup.LayoutParams linearLayoutParams = mGuestLinearLayout.getLayoutParams();
+            linearLayoutParams.height = frameLayoutParams.height;
+            mGuestLinearLayout.setLayoutParams(linearLayoutParams);
 
             mGuestNameHintEditText.setVisibility(View.VISIBLE);
             mGuestNameHintEditText.setText(R.string.message_guide_name_hint);
@@ -551,7 +553,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mGuestNameEditText.setFilters(allowAlphanumericName);
             mGuestNameEditText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | mGuestNameEditText.getInputType());
 
-            mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, guest.phone));
+            mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, guest.phone));
             mGuestEmailEditText.setText(guest.email);
 
             mGuestNameEditText.addTextChangedListener(new TextWatcher()
@@ -600,14 +602,14 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             return;
         }
 
-        mGuestPhoneEditText.setText(Util.addHippenMobileNumber(mContext, mobileNumber));
+        mGuestPhoneEditText.setText(Util.addHyphenMobileNumber(mContext, mobileNumber));
     }
 
-    public void setVisitTypeInformation(HotelPaymentInformation hotelPaymentInformation)
+    public void setVisitTypeInformation(StayPaymentInformation stayPaymentInformation)
     {
-        switch (hotelPaymentInformation.visitType)
+        switch (stayPaymentInformation.visitType)
         {
-            case "CAR_WALKING":
+            case StayPaymentInformation.VISIT_TYPE_PARKING:
                 mHowToVisitLayout.setVisibility(View.VISIBLE);
                 mVisitCarView.setVisibility(View.VISIBLE);
                 mVisitWalkView.setVisibility(View.VISIBLE);
@@ -616,7 +618,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 mGuideVisitMemoView.setText(R.string.message_visit_car_memo);
 
                 // 디폴트로 도보가 기본이다.
-                if (hotelPaymentInformation.isVisitWalking == true)
+                if (stayPaymentInformation.isVisitWalking == true)
                 {
                     mVisitWalkView.performClick();
                 } else
@@ -625,11 +627,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 }
                 break;
 
-            case "NONE":
-                mHowToVisitLayout.setVisibility(View.GONE);
-                break;
-
-            case "NO_PARKING":
+            case StayPaymentInformation.VISIT_TYPE_NO_PARKING:
                 mHowToVisitLayout.setVisibility(View.VISIBLE);
                 mVisitCarView.setVisibility(View.GONE);
                 mVisitWalkView.setVisibility(View.GONE);
@@ -637,12 +635,16 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
                 mGuideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
                 break;
+
+            default:
+                mHowToVisitLayout.setVisibility(View.GONE);
+                break;
         }
     }
 
-    public void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation, CreditCard creditCard)
+    public void setPaymentInformation(StayPaymentInformation stayPaymentInformation, CreditCard creditCard)
     {
-        if (hotelPaymentInformation == null)
+        if (stayPaymentInformation == null)
         {
             return;
         }
@@ -730,11 +732,11 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
 
         // 다음 버전에서 진행.
-        //        if (payPrice == 0)
-        //        {
-        //            paymentTypeInformationLayout.setVisibility(View.GONE);
-        //            mFreePaymentView.setVisibility(View.VISIBLE);
-        //        } else
+        if (payPrice == 0)
+        {
+            paymentTypeInformationLayout.setVisibility(View.GONE);
+            mFreePaymentView.setVisibility(View.VISIBLE);
+        } else
         {
             paymentTypeInformationLayout.setVisibility(View.VISIBLE);
             mFreePaymentView.setVisibility(View.GONE);
@@ -1039,6 +1041,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 break;
 
             case R.id.visitWalkView:
+                mGuideVisitMemoLayout.setVisibility(View.GONE);
+
                 mVisitWalkView.setSelected(true);
                 mVisitCarView.setSelected(false);
 
@@ -1046,6 +1050,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 break;
 
             case R.id.visitCarView:
+                mGuideVisitMemoLayout.setVisibility(View.VISIBLE);
+
                 mVisitWalkView.setSelected(false);
                 mVisitCarView.setSelected(true);
 

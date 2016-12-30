@@ -10,7 +10,6 @@ buildscript {
     }
 }
 
-apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -39,8 +38,8 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1091400
-        versionName "1.9.14"
+        versionCode 1091500
+        versionName "1.9.15"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
@@ -82,7 +81,7 @@ dependencies {
     compile 'com.kakao.sdk:kakaolink:1.1.25'
     compile 'com.kakao.sdk:kakaotalk:1.1.25'
     compile 'com.appboy:android-sdk-ui:1.17.+'
-    compile 'com.adjust.sdk:adjust-android:4.10.2'
+    compile 'com.adjust.sdk:adjust-android:4.11.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }

@@ -65,15 +65,8 @@ public class KakaoLinkManager implements Constants
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
-            //            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
             Date checkInDate = checkInSaleTime.getDayOfDaysDate();
             Date checkOutDate = new Date(checkInSaleTime.getDayOfDaysDate().getTime() + SaleTime.MILLISECOND_IN_A_DAY * nights);
-
-            //            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-            //                , simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate)//
-            //                , nights, nights + 1, address);
 
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
                 , DailyCalendar.format(checkInDate.getTime(), "MM/dd", TimeZone.getTimeZone("GMT"))//
@@ -94,7 +87,7 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareGourmet(String name, String planceName, String address, int index, String imageUrl, SaleTime saleTime)
+    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, SaleTime saleTime)
     {
         try
         {
@@ -108,15 +101,8 @@ public class KakaoLinkManager implements Constants
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-            //            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-            //
             Date checkInDate = saleTime.getDayOfDaysDate();
-            //
-            //            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, planceName//
-            //                , simpleDateFormat.format(checkInDate), address);
-
-            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, planceName//
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
                 , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd", TimeZone.getTimeZone("GMT")), address);
 
             if (Util.isTextEmpty(imageUrl) == false)

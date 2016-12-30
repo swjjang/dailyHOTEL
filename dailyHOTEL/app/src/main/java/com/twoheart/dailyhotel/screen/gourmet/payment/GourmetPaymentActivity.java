@@ -122,7 +122,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         mGourmetPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
 
-        setAvailabledDefaultPaymentType();
+        setAvailableDefaultPaymentType();
     }
 
     private boolean initIntent(Intent intent)
@@ -256,7 +256,69 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        if (paymentInformation == null || checkInSaleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        lockUI();
+
+        Guest guest = mGourmetPaymentLayout.getGuest();
+        Customer customer = paymentInformation.getCustomer();
+
+        if (guest == null)
+        {
+            guest = new Guest();
+            guest.name = customer.getName();
+            guest.phone = customer.getPhone();
+            guest.email = customer.getEmail();
+        }
+
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
+        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
+        params.put("billkey", mSelectedCreditCard.billingkey);
+        params.put("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
+
+        switch (paymentInformation.discountType)
+        {
+            case BONUS:
+                break;
+
+            case COUPON:
+                Coupon coupon = paymentInformation.getCoupon();
+                params.put("user_coupon_code", coupon.userCouponCode);
+                break;
+        }
+
+        params.put("customer_name", guest.name);
+        params.put("customer_phone", guest.phone.replace("-", ""));
+        params.put("customer_email", guest.email);
+        params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        params.put("customer_msg", "");
+
+        if (DEBUG == false)
+        {
+            if (customer == null)
+            {
+                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (Util.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+            }
+        }
+
+//        DailyMobileAPI.getInstance(this).requestGourmetFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+    }
+
+    @Override
+    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
         DailyMobileAPI.getInstance(this).requestGourmetPaymentInformation(mNetworkTag, //
             ((GourmetPaymentInformation) paymentInformation).getTicketInformation().index, //
@@ -393,7 +455,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             try
             {
                 String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
-                    + ",tiketIndex:" + ticketInformation.index + ",checkIn:" + date//
+                    + ",ticketIndex:" + ticketInformation.index + ",checkIn:" + date//
                     + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType + ",userIndex:" + userIndex;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
@@ -434,7 +496,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(this);
         finalCheckLayout.setMessages(messageResIds);
 
-        final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
+        final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setEnabled(false);
@@ -489,8 +551,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onAnimationEnd(Animation animation)
                     {
-                        agreeSinatureTextView.setAnimation(null);
-                        agreeSinatureTextView.setVisibility(View.GONE);
+                        agreeSignatureTextView.setAnimation(null);
+                        agreeSignatureTextView.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -499,7 +561,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     }
                 });
 
-                agreeSinatureTextView.startAnimation(animation);
+                agreeSignatureTextView.startAnimation(animation);
 
                 //                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
                 //                transition.startTransition(500);
@@ -852,7 +914,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         setCouponSelected(false);
     }
 
-    private void setAvailabledDefaultPaymentType()
+    private void setAvailableDefaultPaymentType()
     {
         boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetSimpleCardPaymentEnabled();
         boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigGourmetCardPaymentEnabled();
@@ -1150,13 +1212,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
-        //        if (payPrice == 0)
-        //        {
-        //            gourmetPaymentInformation.isFree = true;
-        //        } else
-        //        {
-        //            gourmetPaymentInformation.isFree = false;
-        //        }
+        if (payPrice == 0)
+        {
+            gourmetPaymentInformation.isFree = true;
+        } else
+        {
+            gourmetPaymentInformation.isFree = false;
+        }
 
         // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
         if (payPrice > 0 && payPrice < 1000)
@@ -1931,6 +1993,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
                     } else
                     {
+                        unLockUI();
+
                         onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
                         {
                             @Override
@@ -1946,9 +2010,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     onError(e);
                     setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     finish();
-                } finally
-                {
-                    unLockUI();
                 }
             } else
             {
@@ -1961,6 +2022,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            unLockUI();
+
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetPaymentActivity.this.onError(t);
         }
@@ -2020,7 +2083,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     int msgCode = responseJSONObject.getInt("msg_code");
 
-                    hidePorgressDialog();
+                    hideProgressDialog();
 
                     if (msgCode == 0)
                     {

@@ -517,14 +517,14 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        TextView onciergeTimeTextView = (TextView) view.findViewById(R.id.onciergeTimeTextView);
+        TextView conciergeTimeTextView = (TextView) view.findViewById(R.id.conciergeTimeTextView);
 
         String[] hour = DailyPreference.getInstance(mContext).getOperationTime().split("\\,");
 
         String startHour = hour[0];
         String endHour = hour[1];
 
-        onciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
+        conciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
 
         View conciergeLayout = view.findViewById(R.id.conciergeLayout);
         conciergeLayout.setOnClickListener(new View.OnClickListener()

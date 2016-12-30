@@ -89,9 +89,9 @@ public class LoadingDialog
         });
     }
 
-    public void setCancelable(boolean falg)
+    public void setCancelable(boolean flag)
     {
-        mDialog.setCancelable(falg);
+        mDialog.setCancelable(flag);
     }
 
     public boolean isVisible()

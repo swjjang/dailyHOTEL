@@ -904,6 +904,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, params.get(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM));
             appboyProperties01.addProperty(AnalyticsManager.KeyType.PRICE_OFF, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OFF)));
             appboyProperties01.addProperty(AnalyticsManager.KeyType.EXPIRATION_DATE, params.get(AnalyticsManager.KeyType.EXPIRATION_DATE));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_CODE, params.get(AnalyticsManager.KeyType.COUPON_CODE));
 
             mAppboy.logCustomEvent(EventName.STAY_COUPON_REDEEMED, appboyProperties01);
 
@@ -929,8 +930,12 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
         appboyProperties.addProperty(AnalyticsManager.KeyType.PURCHASED_DATE, new Date());
 
+        boolean couponRedeem = false;
+
         try
         {
+            couponRedeem = Boolean.parseBoolean(params.get(AnalyticsManager.KeyType.COUPON_REDEEM));
+
             appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_HOUR, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.VISIT_HOUR))));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)));
@@ -948,6 +953,24 @@ public class AppboyManager extends BaseAnalyticsManager
         } catch (NumberFormatException e)
         {
             ExLog.d(e.toString());
+        }
+
+        if (couponRedeem == true)
+        {
+            AppboyProperties appboyProperties01 = new AppboyProperties();
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_NAME, params.get(AnalyticsManager.KeyType.COUPON_NAME));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, params.get(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.PRICE_OFF, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OFF)));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.EXPIRATION_DATE, params.get(AnalyticsManager.KeyType.EXPIRATION_DATE));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_CODE, params.get(AnalyticsManager.KeyType.COUPON_CODE));
+
+            mAppboy.logCustomEvent(EventName.GOURMET_COUPON_REDEEMED, appboyProperties01);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.GOURMET_COUPON_REDEEMED + ", " + appboyProperties01.forJsonPut().toString());
+            }
         }
     }
 
@@ -1043,6 +1066,7 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String GOURMET_SORTFILTER_CLICKED = "gourmet_sortfilter_clicked";
 
         public static final String STAY_COUPON_REDEEMED = "stay_coupon_redeemed";
+        public static final String GOURMET_COUPON_REDEEMED = "gourmet_coupon_redeemed";
         public static final String COUPON_DOWNLOADED = "coupon_downloaded";
 
         public static final String FIRST_NOTIFICATION_POPUP_ON = "first_notification_popup_on";

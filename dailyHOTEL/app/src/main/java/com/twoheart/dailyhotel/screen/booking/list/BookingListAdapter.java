@@ -258,7 +258,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             if (booking.payType == Constants.CODE_PAY_TYPE_ACCOUNT_WAIT)
             {
                 waitAccountTextView.setVisibility(View.VISIBLE);
-                waitAccountTextView.setText(booking.ment);
+                waitAccountTextView.setText(booking.comment);
             } else
             {
                 if (booking.readyForRefund == true)

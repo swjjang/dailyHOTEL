@@ -73,7 +73,7 @@ public class GourmetListLayout extends PlaceListLayout
 
                 if (mPlaceListMapFragment != null)
                 {
-                    mPlaceListMapFragment.resetMenuBarLayoutranslation();
+                    mPlaceListMapFragment.resetMenuBarLayoutTranslation();
                     fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
                     mPlaceListMapFragment = null;

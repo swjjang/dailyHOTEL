@@ -17,7 +17,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
 {
     public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
     {
-        void onStaytDetailInformation(JSONObject dataJSONObject);
+        void onStayDetailInformation(JSONObject dataJSONObject);
 
         void onHasCoupon(boolean hasCoupon);
     }
@@ -69,12 +69,12 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                     switch (msgCode)
                     {
                         case 100:
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStaytDetailInformation(dataJSONObject);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(dataJSONObject);
                             break;
 
                         case 5:
                         {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStaytDetailInformation(dataJSONObject);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(dataJSONObject);
 
                             if (responseJSONObject.has("msg") == true)
                             {

@@ -257,7 +257,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (coupon.isDownloaded == true)
             {
-                //useable
+                //usable
                 downloadIconView.setVisibility(View.GONE);
                 useIconView.setVisibility(View.VISIBLE);
                 listItemLayout.setBackgroundResource(R.drawable.more_coupon_bg);
@@ -271,7 +271,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 noticeTextView.setTextColor(mContext.getResources().getColor(R.color.white_a80));
             }
 
-            useStayIconView.setImageResource(coupon.availableInHotel == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
+            useStayIconView.setImageResource(coupon.availableInStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
             useGourmetIconView.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
 
             CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();

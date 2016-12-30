@@ -155,11 +155,11 @@ public abstract class PlaceWishListLayout extends BaseLayout
         }
     }
 
-    private void setEmptyViewVisibility(int visiblility)
+    private void setEmptyViewVisibility(int visibility)
     {
         if (mEmptyLayout != null)
         {
-            mEmptyLayout.setVisibility(visiblility);
+            mEmptyLayout.setVisibility(visibility);
         }
     }
 

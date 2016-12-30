@@ -22,7 +22,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 {
     private LayoutInflater mInflater;
     private List<RegionViewItem> items;
-    private View.OnClickListener mOnItemclickListener;
+    private View.OnClickListener mOnItemClickListener;
 
     public PlaceRegionAnimatedExpandableListAdapter(Context context)
     {
@@ -36,7 +36,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
     public void setOnChildClickListener(View.OnClickListener listener)
     {
-        mOnItemclickListener = listener;
+        mOnItemClickListener = listener;
     }
 
     public ArrayList<Area[]> getChildren(int groupPosition)
@@ -84,8 +84,8 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         TextView areaTextView1 = (TextView) convertView.findViewById(R.id.areaTextView1);
         TextView areaTextView2 = (TextView) convertView.findViewById(R.id.areaTextView2);
 
-        areaTextView1.setOnClickListener(mOnItemclickListener);
-        areaTextView2.setOnClickListener(mOnItemclickListener);
+        areaTextView1.setOnClickListener(mOnItemClickListener);
+        areaTextView2.setOnClickListener(mOnItemClickListener);
 
         areaTextView1.setTag(area[0]);
         areaTextView1.setTag(areaTextView1.getId(), groupPosition);

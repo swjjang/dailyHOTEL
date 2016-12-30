@@ -130,14 +130,14 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         {
             if (Constants.DEBUG == false)
             {
-                Crashlytics.log("Select Coupon::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
             }
             ExLog.d(e.getMessage());
             holder.expireTextView.setVisibility(View.GONE);
         }
 
         // 스테이, 고메 쿠폰인지
-        if (coupon.availableInHotel == true)
+        if (coupon.availableInStay == true)
         {
             holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_on);
         } else

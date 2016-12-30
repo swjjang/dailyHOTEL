@@ -31,12 +31,12 @@ public class StayDetailListAdapter extends BaseAdapter
 {
     private static final int NUMBER_OF_ROWSLIST = 7;
 
-    private static final int GRID_COLUME_COUNT = 5;
+    private static final int GRID_COLUMN_COUNT = 5;
 
     private StayDetail mStayDetail;
     private SaleTime mCheckInSaleTime;
     private Context mContext;
-    private View[] mDeatilViews;
+    private View[] mDetailViews;
     private int mImageHeight;
     private View mHotelTitleLayout;
 
@@ -50,7 +50,7 @@ public class StayDetailListAdapter extends BaseAdapter
         mContext = context;
         mCheckInSaleTime = saleTime;
         mStayDetail = stayDetail;
-        mDeatilViews = new View[NUMBER_OF_ROWSLIST];
+        mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(mContext);
 
         mOnEventListener = onEventListener;
@@ -102,55 +102,55 @@ public class StayDetailListAdapter extends BaseAdapter
         linearLayout.removeAllViews();
 
         // 빈화면
-        if (mDeatilViews[0] == null)
+        if (mDetailViews[0] == null)
         {
-            mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+            mDetailViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
         }
 
-        getDetail00View(mDeatilViews[0]);
-        linearLayout.addView(mDeatilViews[0]);
+        getDetail00View(mDetailViews[0]);
+        linearLayout.addView(mDetailViews[0]);
 
         // 호텔 등급과 이름.
-        if (mDeatilViews[1] == null)
+        if (mDetailViews[1] == null)
         {
-            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_stay_detail02, parent, false);
+            mDetailViews[1] = layoutInflater.inflate(R.layout.list_row_stay_detail02, parent, false);
         }
 
-        getTitleView(mDeatilViews[1], mStayDetail);
-        linearLayout.addView(mDeatilViews[1]);
+        getTitleView(mDetailViews[1], mStayDetail);
+        linearLayout.addView(mDetailViews[1]);
 
         // 주소 및 맵
-        if (mDeatilViews[2] == null)
+        if (mDetailViews[2] == null)
         {
-            mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+            mDetailViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
         }
 
-        getAddressView(mDeatilViews[2], mStayDetail);
-        linearLayout.addView(mDeatilViews[2]);
+        getAddressView(mDetailViews[2], mStayDetail);
+        linearLayout.addView(mDetailViews[2]);
 
         ArrayList<StayDetail.Pictogram> list = mStayDetail.getPictogramList();
 
         if (list != null && list.size() > 0)
         {
-            if (mDeatilViews[3] == null)
+            if (mDetailViews[3] == null)
             {
-                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+                mDetailViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
             }
 
-            getAmenitiesView(mDeatilViews[3], mStayDetail);
-            linearLayout.addView(mDeatilViews[3]);
+            getAmenitiesView(mDetailViews[3], mStayDetail);
+            linearLayout.addView(mDetailViews[3]);
         }
 
         // D Benefit
         if (Util.isTextEmpty(mStayDetail.benefit) == false)
         {
-            if (mDeatilViews[4] == null)
+            if (mDetailViews[4] == null)
             {
-                mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                mDetailViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getDetailBenefitView(layoutInflater, mDeatilViews[4], mStayDetail);
-            linearLayout.addView(mDeatilViews[4]);
+            getDetailBenefitView(layoutInflater, mDetailViews[4], mStayDetail);
+            linearLayout.addView(mDetailViews[4]);
         } else
         {
             // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
@@ -162,22 +162,22 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         // 정보 화면
-        if (mDeatilViews[5] == null)
+        if (mDetailViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+            mDetailViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
-        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mStayDetail);
-        linearLayout.addView(mDeatilViews[5]);
+        getInformationView(layoutInflater, (ViewGroup) mDetailViews[5], mStayDetail);
+        linearLayout.addView(mDetailViews[5]);
 
         // 카카오톡 문의
-        if (mDeatilViews[6] == null)
+        if (mDetailViews[6] == null)
         {
-            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            mDetailViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getConciergeView(mDeatilViews[6]);
-        linearLayout.addView(mDeatilViews[6]);
+        getConciergeView(mDetailViews[6]);
+        linearLayout.addView(mDetailViews[6]);
 
         return linearLayout;
     }
@@ -376,18 +376,18 @@ public class StayDetailListAdapter extends BaseAdapter
 
         ArrayList<StayDetail.Pictogram> list = stayDetail.getPictogramList();
 
-        boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
+        boolean isSingleLine = list == null || list.size() <= GRID_COLUMN_COUNT ? true : false;
 
         for (StayDetail.Pictogram pictogram : list)
         {
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int columnCount = list.size() % GRID_COLUME_COUNT;
+        int columnCount = list.size() % GRID_COLUMN_COUNT;
 
         if (columnCount != 0)
         {
-            int addEmptyViewCount = GRID_COLUME_COUNT - columnCount;
+            int addEmptyViewCount = GRID_COLUMN_COUNT - columnCount;
             for (int i = 0; i < addEmptyViewCount; i++)
             {
                 gridLayout.addView(getGridLayoutItemView(mContext, StayDetail.Pictogram.none, isSingleLine));
@@ -540,14 +540,14 @@ public class StayDetailListAdapter extends BaseAdapter
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        TextView onciergeTimeTextView = (TextView) view.findViewById(R.id.onciergeTimeTextView);
+        TextView conciergeTimeTextView = (TextView) view.findViewById(R.id.conciergeTimeTextView);
 
         String[] hour = DailyPreference.getInstance(mContext).getOperationTime().split("\\,");
 
         String startHour = hour[0];
         String endHour = hour[1];
 
-        onciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
+        conciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
 
         View conciergeLayout = view.findViewById(R.id.conciergeLayout);
         conciergeLayout.setOnClickListener(new OnClickListener()

@@ -3,8 +3,12 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class HotelPaymentInformation extends PlacePaymentInformation
+public class StayPaymentInformation extends PlacePaymentInformation
 {
+    public static final String VISIT_TYPE_NONE = "NONE";
+    public static final String VISIT_TYPE_PARKING = "PAKRING";
+    public static final String VISIT_TYPE_NO_PARKING = "NO_PARKING";
+
     private RoomInformation mRoomInformation;
     // Thankyou에 넘기기 위한 데이터 저장
     public long checkInDate;
@@ -15,15 +19,15 @@ public class HotelPaymentInformation extends PlacePaymentInformation
     public String checkOutDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
 
     //
-    public String visitType; // 방문 형태로 : "NONE" : 아무것도 표시하지 않음 "CAR_WALKING" : 도보/주차 표시 "NO_PARKING" : 주차 불가능.
+    public String visitType = VISIT_TYPE_NONE; // 방문 형태로 : "NONE" : 아무것도 표시하지 않음, "CAR_WALKING" : 도보/주차 표시, "NO_PARKING" : 주차 불가능.
     public boolean isVisitWalking = true; // 방문 방법 : 기본이 도보(visitType == "NONE", "NO_PARKING" 이면 서버로 아무것도 전송하지 않음)
 
-    public HotelPaymentInformation()
+    public StayPaymentInformation()
     {
         super();
     }
 
-    public HotelPaymentInformation(Parcel in)
+    public StayPaymentInformation(Parcel in)
     {
         readFromParcel(in);
     }
@@ -76,15 +80,15 @@ public class HotelPaymentInformation extends PlacePaymentInformation
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
     {
-        public HotelPaymentInformation createFromParcel(Parcel in)
+        public StayPaymentInformation createFromParcel(Parcel in)
         {
-            return new HotelPaymentInformation(in);
+            return new StayPaymentInformation(in);
         }
 
         @Override
-        public HotelPaymentInformation[] newArray(int size)
+        public StayPaymentInformation[] newArray(int size)
         {
-            return new HotelPaymentInformation[size];
+            return new StayPaymentInformation[size];
         }
     };
 }

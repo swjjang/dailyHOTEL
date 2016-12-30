@@ -147,7 +147,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.booking.detail.hotel.HotelBookingDetailTabActivity"
+            android:name=".screen.booking.detail.hotel.StayBookingDetailTabActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

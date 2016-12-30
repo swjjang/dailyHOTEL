@@ -12,10 +12,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.regex.Pattern;
 
-/**
- * @author hyogij@gmail.com
- * @description : Inputfilter class to constrain the EditText changes
- */
 public class StringFilter
 {
     private static final int ALLOW_ALPHANUMERIC = 0;

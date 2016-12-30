@@ -51,7 +51,7 @@ public class PaymentWaitActivity extends BaseActivity
 {
     private TextView mAccountTextView;
     private TextView mDailyTextView;
-    private TextView mPriceTextView, mBonusTextView, mCouponTextView, mTotlalPriceTextView;
+    private TextView mPriceTextView, mBonusTextView, mCouponTextView, mTotalPriceTextView;
     private TextView mDeadlineTextView;
     private ViewGroup mGuide1Layout;
     private View mBonusLayout, mCouponLayout;
@@ -146,7 +146,7 @@ public class PaymentWaitActivity extends BaseActivity
         mPriceTextView = (TextView) findViewById(R.id.priceTextView);
         mBonusTextView = (TextView) findViewById(R.id.bonusTextView);
         mCouponTextView = (TextView) findViewById(R.id.couponTextView);
-        mTotlalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
+        mTotalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
         mDeadlineTextView = (TextView) findViewById(R.id.tv_payment_wait_deadline);
         mGuide1Layout = (ViewGroup) findViewById(R.id.guide1Layout);
 
@@ -357,9 +357,9 @@ public class PaymentWaitActivity extends BaseActivity
             mCouponLayout.setVisibility(View.GONE);
         }
 
-        int paymetPrice = reservationJSONObject.getInt("amt");
+        int paymentPrice = reservationJSONObject.getInt("amt");
 
-        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
+        mTotalPriceTextView.setText(Util.getPriceFormat(this, paymentPrice, false));
 
         // 확인 사항
         String msg1 = jsonObject.getString("msg1");
@@ -397,8 +397,8 @@ public class PaymentWaitActivity extends BaseActivity
 
         mPriceTextView.setText(Util.getPriceFormat(this, jsonObject.getInt("price"), false));
 
-        int paymetPrice = jsonObject.getInt("amt");
-        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
+        int paymentPrice = jsonObject.getInt("amt");
+        mTotalPriceTextView.setText(Util.getPriceFormat(this, paymentPrice, false));
 
         String msg1 = jsonObject.getString("msg1");
         setGuideText(mGuide1Layout, msg1.split("\\."), false);

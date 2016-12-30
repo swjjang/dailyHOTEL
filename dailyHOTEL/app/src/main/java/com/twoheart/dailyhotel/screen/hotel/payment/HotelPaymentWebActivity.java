@@ -26,9 +26,9 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayPaymentInformation;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -57,7 +57,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     private static String CARD_CD = "";
     private static String QUOTA = "";
     public int m_nStat = PROGRESS_STAT_NOT_START;
-    private HotelPaymentInformation mHotelPaymentInformation;
+    private StayPaymentInformation mStayPaymentInformation;
 
     private WebView mWebView;
     private Handler handler = new Handler();
@@ -77,17 +77,17 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        mHotelPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+        mStayPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
         SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
-        if (mHotelPaymentInformation == null)
+        if (mStayPaymentInformation == null)
         {
             DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
 
-        if (mHotelPaymentInformation.getSaleRoomInformation().roomIndex == 0)
+        if (mStayPaymentInformation.getSaleRoomInformation().roomIndex == 0)
         {
             // 세션이 만료되어 재시작 요청.
             restartExpiredSession();
@@ -149,17 +149,17 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        requestPostPaymentWebView(mWebView, mHotelPaymentInformation, saleTime);
+        requestPostPaymentWebView(mWebView, mStayPaymentInformation, saleTime);
     }
 
-    private void requestPostPaymentWebView(WebView webView, HotelPaymentInformation hotelPaymentInformation, SaleTime saleTime)
+    private void requestPostPaymentWebView(WebView webView, StayPaymentInformation stayPaymentInformation, SaleTime saleTime)
     {
         String name;
         String phone;
         String email;
 
-        boolean isOverseas = hotelPaymentInformation.getSaleRoomInformation().isOverseas;
-        Guest guest = hotelPaymentInformation.getGuest();
+        boolean isOverseas = stayPaymentInformation.getSaleRoomInformation().isOverseas;
+        Guest guest = stayPaymentInformation.getGuest();
 
         if (isOverseas == true)
         {
@@ -170,7 +170,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         {
             if (guest == null)
             {
-                Customer customer = hotelPaymentInformation.getCustomer();
+                Customer customer = stayPaymentInformation.getCustomer();
 
                 name = customer.getName();
                 phone = customer.getPhone();
@@ -189,28 +189,37 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
+        RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
 
         FormBody.Builder builder = new FormBody.Builder();
         builder.add("room_idx", String.valueOf(roomInformation.roomIndex));
-        builder.add("payment_type", hotelPaymentInformation.paymentType.name());
+        builder.add("payment_type", stayPaymentInformation.paymentType.name());
         builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
         builder.add("nights", String.valueOf(roomInformation.nights));
 
-        switch (hotelPaymentInformation.discountType)
+        switch (stayPaymentInformation.discountType)
         {
             case BONUS:
-                builder.add("bonus", Integer.toString(hotelPaymentInformation.bonus));
+                builder.add("bonus", Integer.toString(stayPaymentInformation.bonus));
                 break;
 
             case COUPON:
-                builder.add("user_coupon_code", hotelPaymentInformation.getCoupon().userCouponCode);
+                builder.add("user_coupon_code", stayPaymentInformation.getCoupon().userCouponCode);
                 break;
         }
 
         builder.add("guest_name", name);
         builder.add("guest_phone", phone.replace("-", ""));
         builder.add("guest_email", email);
+
+        // 주차/도보
+        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            builder.add("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            builder.add("arrival_transportation", "NO_PARKING");
+        }
 
         String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
             + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
@@ -510,7 +519,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         }
 
         Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 
         setResult(resultCode, intent);
         finish();
@@ -619,7 +628,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             mWebView.loadUrl("about:blank");
 
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 
             if (Util.isAvailableNetwork(HotelPaymentWebActivity.this) == true)
             {
@@ -676,7 +685,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         public void Result(final String val)
         {
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 
             setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
             finish();
@@ -689,7 +698,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         public void BestClose()
         {
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 
             setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
             finish();
@@ -906,7 +915,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
 
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 
             setResult(resultCode, intent);
             finish();
@@ -919,7 +928,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         {
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 
             setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
             finish();
@@ -976,7 +985,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         protected void onPostExecute(String data)
         {
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mHotelPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 
             if (Util.isTextEmpty(data) == true)
             {

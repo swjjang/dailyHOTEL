@@ -52,9 +52,9 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     }
 
     @Override
-    protected void onConfirm(SaleTime checkInSaleTime, SaleTime chekcOutSaleTime)
+    protected void onConfirm(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (checkInSaleTime == null || chekcOutSaleTime == null)
+        if (checkInSaleTime == null || checkOutSaleTime == null)
         {
             setSaleRoomResult(-1, null);
             return;
@@ -67,7 +67,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         }
 
         mCheckInSaleTime = checkInSaleTime;
-        mCheckOutSaleTime = chekcOutSaleTime;
+        mCheckOutSaleTime = checkOutSaleTime;
 
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -76,7 +76,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         lockUI();
 
-        int nights = chekcOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
 
         // 호텔 정보를 가져온다.
         DailyMobileAPI.getInstance(StayDetailCalendarActivity.this) //

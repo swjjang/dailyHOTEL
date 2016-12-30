@@ -49,7 +49,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
                 if (mPlaceListMapFragment != null)
                 {
-                    mPlaceListMapFragment.resetMenuBarLayoutranslation();
+                    mPlaceListMapFragment.resetMenuBarLayoutTranslation();
                     fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
                     mMapLayout.removeAllViews();
                     mPlaceListMapFragment = null;
@@ -73,7 +73,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                         fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
                     } catch (IllegalStateException e)
                     {
-                        Crashlytics.log("GourmetSearchResuktListLayout");
+                        Crashlytics.log("GourmetSearchResultListLayout");
                         Crashlytics.logException(e);
                     }
                 }

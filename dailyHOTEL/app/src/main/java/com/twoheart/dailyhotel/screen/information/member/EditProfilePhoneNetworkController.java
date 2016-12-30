@@ -42,7 +42,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)
     {
-        DailyMobileAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyserUpdateVerificationPhoneNumberCallback);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyUserUpdateVerificationPhoneNumberCallback);
     }
 
     public void requestUpdateSocialUserInformation(String userIndex, String phoneNumber)
@@ -122,6 +122,9 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                             }
 
                             mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        } else
+                        {
+                            mOnNetworkControllerListener.onError(null);
                         }
                     } catch (Exception e)
                     {
@@ -144,7 +147,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mDailyserUpdateVerificationPhoneNumberCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mDailyUserUpdateVerificationPhoneNumberCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

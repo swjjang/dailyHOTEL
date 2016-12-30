@@ -16,11 +16,11 @@ import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
-import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.User;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.CouponUtil;
@@ -3513,8 +3513,8 @@ public class DailyMobileAPITest
                             case 100:
                                 JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                                HotelBookingDetail hotelBookingDetail = new HotelBookingDetail();
-                                hotelBookingDetail.setData(jsonObject);
+                                StayBookingDetail stayBookingDetail = new StayBookingDetail();
+                                stayBookingDetail.setData(jsonObject);
                                 break;
 
                             // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가

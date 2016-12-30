@@ -389,18 +389,53 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                         //                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
                         paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
                         paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "booking");
-                        paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
+                        paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+
+                        if (coupon.availableInGourmet == true && coupon.availableInStay == true)
+                        {
+                            paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.ALL);
+                        } else if (coupon.availableInStay == true)
+                        {
+                            paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.STAY);
+                        } else if (coupon.availableInGourmet == true)
+                        {
+                            paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.GOURMET);
+                        }
 
                         AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
-                            , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Booking-" + coupon.title, paramsMap);
+                            , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "booking-" + coupon.title, paramsMap);
 
+                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                            , AnalyticsManager.Action.GOURMET_COUPON_DOWNLOADED, coupon.title, null);
                         break;
                     }
 
                     case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
                     {
-                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                            , AnalyticsManager.Action.GOURMET_COUPON_DOWNLOADED, coupon.title, null);
+                        Map<String, String> paramsMap = new HashMap<>();
+                        paramsMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                        paramsMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                        paramsMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+                        //                paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, Util.simpleDateFormat(new Date(), "yyyyMMddHHmm"));
+                        paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_DATE, DailyCalendar.format(new Date(), "yyyyMMddHHmm"));
+                        //                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
+                        paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
+                        paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "booking");
+                        paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+
+                        if (coupon.availableInGourmet == true && coupon.availableInStay == true)
+                        {
+                            paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.ALL);
+                        } else if (coupon.availableInStay == true)
+                        {
+                            paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.STAY);
+                        } else if (coupon.availableInGourmet == true)
+                        {
+                            paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.GOURMET);
+                        }
+
+                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
+                            , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "detail-" + coupon.title, paramsMap);
                         break;
                     }
                 }
@@ -408,7 +443,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.log("Select Coupon::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                    Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
                 }
                 ExLog.d(e.toString());
             } catch (Exception e)

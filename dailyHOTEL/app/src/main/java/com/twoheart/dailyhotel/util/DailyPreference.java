@@ -244,7 +244,7 @@ public class DailyPreference
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
-        boolean isShowTooltop = isViewWishListTooltip();
+        boolean isShowTooltip = isViewWishListTooltip();
         boolean isShowSearchToolTip = isViewSearchTooltip();
 
         String stayRecentPlace = getStayRecentPlaces();
@@ -264,7 +264,7 @@ public class DailyPreference
 
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
-        setIsViewWishListTooltip(isShowTooltop);
+        setIsViewWishListTooltip(isShowTooltip);
         setIsViewSearchTooltip(isShowSearchToolTip);
 
         setStayRecentPlaces(stayRecentPlace);
@@ -751,7 +751,7 @@ public class DailyPreference
 
     public boolean isViewWishListTooltip()
     {
-        return getValue(mPreferences, KEY_IS_VIEW_WISHLIST_TOOLTIP, false);
+        return getValue(mPreferences, KEY_IS_VIEW_WISHLIST_TOOLTIP, true);
     }
 
     public void setIsViewSearchTooltip(boolean value)

@@ -351,7 +351,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyMobileAPI.getInstance(this).requestFacebookUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }
 
-    private void registerKakaokUser(long id)
+    private void registerKakaoUser(long id)
     {
         String index = String.valueOf(id);
 
@@ -648,7 +648,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 public void onSuccess(UserProfile result)
                 {
                     // id값은 특별함. kakao login
-                    registerKakaokUser(result.getId());
+                    registerKakaoUser(result.getId());
                 }
 
                 @Override

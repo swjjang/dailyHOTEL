@@ -122,7 +122,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hideBirthdayLayout();
         } else
         {
-            mAddProfileSocialLayout.showBirthdaylLayout();
+            mAddProfileSocialLayout.showBirthdayLayout();
         }
 
         showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);

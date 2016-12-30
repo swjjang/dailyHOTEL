@@ -23,10 +23,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HotelBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -57,7 +57,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
     private static final String KEY_BUNDLE_ARGUMENTS_BOOKING_DETAIL = "bookingDetail";
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
 
-    private HotelBookingDetail mBookingDetail;
+    private StayBookingDetail mBookingDetail;
     private int mReservationIndex;
 
     private View mRefundPolicyLayout, mButtonBottomMarginView;
@@ -122,7 +122,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         return view;
     }
 
-    private void initPlaceInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    private void initPlaceInformationLayout(Context context, View view, StayBookingDetail bookingDetail)
     {
         if (view == null || bookingDetail == null)
         {
@@ -175,7 +175,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         initReviewButtonLayout(view, bookingDetail);
     }
 
-    private void initReviewButtonLayout(View view, HotelBookingDetail bookingDetail)
+    private void initReviewButtonLayout(View view, StayBookingDetail bookingDetail)
     {
         if (view == null || bookingDetail == null)
         {
@@ -221,7 +221,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
     }
 
-    private void initHotelInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    private void initHotelInformationLayout(Context context, View view, StayBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
@@ -284,7 +284,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         addressTextView.setText(bookingDetail.address);
     }
 
-    private void initTimeInformationLayout(Context context, View view, HotelBookingDetail bookingDetail)
+    private void initTimeInformationLayout(Context context, View view, StayBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
@@ -340,7 +340,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
     }
 
-    private void initGuestInformationLayout(View view, HotelBookingDetail bookingDetail)
+    private void initGuestInformationLayout(View view, StayBookingDetail bookingDetail)
     {
         if (view == null || bookingDetail == null)
         {
@@ -352,7 +352,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         TextView guestEmailTextView = (TextView) view.findViewById(R.id.guestEmailTextView);
 
         guestNameTextView.setText(bookingDetail.guestName);
-        guestPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
+        guestPhoneTextView.setText(Util.addHyphenMobileNumber(getContext(), bookingDetail.guestPhone));
         guestEmailTextView.setText(bookingDetail.guestEmail);
 
         View visitTypeLayout = view.findViewById(R.id.visitTypeLayout);
@@ -364,7 +364,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
         switch (bookingDetail.visitType)
         {
-            case "CAR":
+            case StayBookingDetail.VISIT_TYPE_CAR:
                 visitTypeLayout.setVisibility(View.VISIBLE);
 
                 visitTypeTitleTextView.setText(R.string.label_how_to_visit);
@@ -374,7 +374,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                 guideVisitMemoView.setText(R.string.message_visit_car_memo);
                 break;
 
-            case "NO_PARKING":
+            case StayBookingDetail.VISIT_TYPE_NO_PARKING:
                 visitTypeLayout.setVisibility(View.VISIBLE);
 
                 visitTypeTitleTextView.setText(R.string.label_parking_information);
@@ -384,12 +384,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                 guideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
                 break;
 
-            case "NONE":
-                visitTypeLayout.setVisibility(View.GONE);
-                guideVisitMemoLayout.setVisibility(View.GONE);
-                break;
-
-            case "WALKING":
+            case StayBookingDetail.VISIT_TYPE_WALKING:
                 visitTypeLayout.setVisibility(View.VISIBLE);
 
                 visitTypeTitleTextView.setText(R.string.label_how_to_visit);
@@ -397,10 +392,15 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
                 guideVisitMemoLayout.setVisibility(View.GONE);
                 break;
+
+            default:
+                visitTypeLayout.setVisibility(View.GONE);
+                guideVisitMemoLayout.setVisibility(View.GONE);
+                break;
         }
     }
 
-    private void initPaymentInformationLayout(View view, HotelBookingDetail bookingDetail)
+    private void initPaymentInformationLayout(View view, StayBookingDetail bookingDetail)
     {
         if (view == null || bookingDetail == null)
         {
@@ -472,7 +472,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         });
     }
 
-    private void initRefundPolicyLayout(View view, HotelBookingDetail bookingDetail)
+    private void initRefundPolicyLayout(View view, StayBookingDetail bookingDetail)
     {
         if (view == null || bookingDetail == null)
         {
@@ -486,7 +486,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         updateRefundPolicyLayout(bookingDetail);
     }
 
-    public void updateRefundPolicyLayout(HotelBookingDetail bookingDetail)
+    public void updateRefundPolicyLayout(StayBookingDetail bookingDetail)
     {
         mBookingDetail = bookingDetail;
 
@@ -510,7 +510,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
             switch (getRefundPolicyStatus(bookingDetail))
             {
-                case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
                 {
                     mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
                     mWaitRefundPolicyLayout.setVisibility(View.GONE);
@@ -520,7 +520,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                     break;
                 }
 
-                case HotelBookingDetail.STATUS_WAIT_REFUND:
+                case StayBookingDetail.STATUS_WAIT_REFUND:
                 {
                     mDefaultRefundPolicyLayout.setVisibility(View.GONE);
                     mWaitRefundPolicyLayout.setVisibility(View.VISIBLE);
@@ -533,7 +533,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                     break;
                 }
 
-                case HotelBookingDetail.STATUS_SURCHARGE_REFUND:
+                case StayBookingDetail.STATUS_SURCHARGE_REFUND:
                 {
                     mDefaultRefundPolicyLayout.setVisibility(View.VISIBLE);
                     mWaitRefundPolicyLayout.setVisibility(View.GONE);
@@ -557,12 +557,12 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
     }
 
-    private String getRefundPolicyStatus(HotelBookingDetail bookingDetail)
+    private String getRefundPolicyStatus(StayBookingDetail bookingDetail)
     {
         // 환불 대기 상태
         if (bookingDetail.readyForRefund == true)
         {
-            return HotelBookingDetail.STATUS_WAIT_REFUND;
+            return StayBookingDetail.STATUS_WAIT_REFUND;
         } else
         {
             if (Util.isTextEmpty(bookingDetail.refundPolicy) == false)
@@ -570,7 +570,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                 return bookingDetail.refundPolicy;
             } else
             {
-                return HotelBookingDetail.STATUS_SURCHARGE_REFUND;
+                return StayBookingDetail.STATUS_SURCHARGE_REFUND;
             }
         }
     }
@@ -667,7 +667,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
                 switch (getRefundPolicyStatus(mBookingDetail))
                 {
-                    case HotelBookingDetail.STATUS_NO_CHARGE_REFUND:
+                    case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
                     {
                         Intent intent = StayAutoRefundActivity.newInstance(baseActivity, mBookingDetail);
                         baseActivity.startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);

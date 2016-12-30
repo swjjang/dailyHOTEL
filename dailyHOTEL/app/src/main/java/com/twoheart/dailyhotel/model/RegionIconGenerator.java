@@ -112,21 +112,21 @@ public class RegionIconGenerator
      * Sets the text color, size, style, hint color, and highlight color from
      * the specified <code>TextAppearance</code> resource.
      *
-     * @param resid the identifier of the resource.
+     * @param resId the identifier of the resource.
      */
-    public void setTextAppearance(Context context, int resid)
+    public void setTextAppearance(Context context, int resId)
     {
         if (mTextView != null)
         {
-            mTextView.setTextAppearance(context, resid);
+            mTextView.setTextAppearance(context, resId);
         }
     }
 
-    public void setTextColor(int resid)
+    public void setTextColor(int resId)
     {
         if (mTextView != null)
         {
-            mTextView.setTextColor(resid);
+            mTextView.setTextColor(resId);
         }
     }
 
@@ -142,11 +142,11 @@ public class RegionIconGenerator
      * Sets the text color, size, style, hint color, and highlight color from
      * the specified <code>TextAppearance</code> resource.
      *
-     * @param resid the identifier of the resource.
+     * @param resId the identifier of the resource.
      */
-    public void setTextAppearance(int resid)
+    public void setTextAppearance(int resId)
     {
-        setTextAppearance(mContext, resid);
+        setTextAppearance(mContext, resId);
     }
 
     /**

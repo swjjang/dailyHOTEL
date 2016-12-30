@@ -302,9 +302,9 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    protected void onConfirm(SaleTime checkInSaleTime, SaleTime chekcOutSaleTime)
+    protected void onConfirm(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (checkInSaleTime == null || chekcOutSaleTime == null)
+        if (checkInSaleTime == null || checkOutSaleTime == null)
         {
             return;
         }
@@ -315,12 +315,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         }
 
         String checkInDate = checkInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDate = chekcOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
         Map<String, String> params = new HashMap<>();
         params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(checkInSaleTime.getDayOfDaysDate().getTime()));
-        params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(chekcOutSaleTime.getDayOfDaysDate().getTime()));
-        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(chekcOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay()));
+        params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(checkOutSaleTime.getDayOfDaysDate().getTime()));
+        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay()));
         params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
         //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분", Locale.KOREA);
@@ -332,7 +332,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInSaleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, chekcOutSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutSaleTime);
 
         setResult(RESULT_OK, intent);
         hideAnimation();

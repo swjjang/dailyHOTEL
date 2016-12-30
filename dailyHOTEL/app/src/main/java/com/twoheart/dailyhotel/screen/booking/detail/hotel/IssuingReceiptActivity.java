@@ -126,7 +126,7 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             lockUI();
 
-            DailyMobileAPI.getInstance(this).requestStayReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptCallback);
+            DailyMobileAPI.getInstance(this).requestStayReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservationReceiptCallback);
         }
     }
 
@@ -293,15 +293,15 @@ public class IssuingReceiptActivity extends BaseActivity
             String paymentType = receiptJSONObject.getString("payment_name");
 
             int bonus = receiptJSONObject.getInt("bonus");
-            int counpon = receiptJSONObject.getInt("coupon_amount");
+            int coupon = receiptJSONObject.getInt("coupon_amount");
             int pricePayment = receiptJSONObject.getInt("price");
 
             // **예약 세부 정보**
             View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
             // 예약 번호
-            TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-            registerationTextView.setText(mReservationIndex);
+            TextView reservationNumberTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+            reservationNumberTextView.setText(mReservationIndex);
 
             // 호텔명
             TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
@@ -313,11 +313,11 @@ public class IssuingReceiptActivity extends BaseActivity
 
             // 고객성명/번호
             TextView customerInfoTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView7);
-            customerInfoTextView.setText(userName + " / " + Util.addHippenMobileNumber(IssuingReceiptActivity.this, userPhone));
+            customerInfoTextView.setText(userName + " / " + Util.addHyphenMobileNumber(IssuingReceiptActivity.this, userPhone));
 
             // 체크인/아웃
-            TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
-            chekcinoutTextView.setText(checkin + " - " + checkout);
+            TextView checkInOutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
+            checkInOutTextView.setText(checkin + " - " + checkout);
 
             // 숙박 일수/객실수
             TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
@@ -333,10 +333,10 @@ public class IssuingReceiptActivity extends BaseActivity
             // 결제수단
             View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
 
-            //            if (Util.isTextEmpty(paymentType) == true)
-            //            {
-            //                paymentTypeLayout.setVisibility(View.GONE);
-            //            } else
+            if (Util.isTextEmpty(paymentType) == true)
+            {
+                paymentTypeLayout.setVisibility(View.GONE);
+            } else
             {
                 paymentTypeLayout.setVisibility(View.VISIBLE);
 
@@ -375,17 +375,17 @@ public class IssuingReceiptActivity extends BaseActivity
             // 할인쿠폰 사용
             View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
 
-            if (counpon > 0)
+            if (coupon > 0)
             {
                 couponLayout.setVisibility(View.VISIBLE);
                 TextView couponTextView = (TextView) couponLayout.findViewById(R.id.couponTextView);
-                couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
+                couponTextView.setText("- " + Util.getPriceFormat(this, coupon, true));
             } else
             {
                 couponLayout.setVisibility(View.GONE);
             }
 
-            if (bonus > 0 || counpon > 0)
+            if (bonus > 0 || coupon > 0)
             {
                 saleLayout.setVisibility(View.VISIBLE);
             } else
@@ -483,7 +483,7 @@ public class IssuingReceiptActivity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mReservReceiptCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mReservationReceiptCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

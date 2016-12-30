@@ -55,7 +55,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
 
-        webView.addJavascriptInterface(new JavaScriptExtention(), "android");
+        webView.addJavascriptInterface(new JavaScriptExtension(), "android");
 
         webView.setWebChromeClient(new DailyWebChromeClient());
         webView.setWebViewClient(new DailyWebViewClient());
@@ -227,9 +227,9 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
         }
     }
 
-    private class JavaScriptExtention
+    private class JavaScriptExtension
     {
-        public JavaScriptExtention()
+        public JavaScriptExtension()
         {
         }
 

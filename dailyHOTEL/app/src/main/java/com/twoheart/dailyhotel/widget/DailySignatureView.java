@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class DailySignatureView extends View
 {
-    private static final int CONFIRM_RAIO_PERCENT_OF_SIGNATURE = 5; // 전체 화면의 xx%
+    private static final int CONFIRM_RATIO_PERCENT_OF_SIGNATURE = 5; // 전체 화면의 xx%
     private static final int B_CURVE_COUNT_OF_POINT = 5;
 
     private Path mPath;
@@ -99,10 +99,10 @@ public class DailySignatureView extends View
             return false;
         }
 
-        int bitmapDimenions = mBitmap.getWidth() * mBitmap.getHeight();
+        int bitmapDimensions = mBitmap.getWidth() * mBitmap.getHeight();
         int signatureDimensions = (int) (mRectF.width() * mRectF.height());
 
-        return 100 * signatureDimensions / bitmapDimenions > CONFIRM_RAIO_PERCENT_OF_SIGNATURE;
+        return 100 * signatureDimensions / bitmapDimensions > CONFIRM_RATIO_PERCENT_OF_SIGNATURE;
     }
 
     private void clearCanvas(Canvas canvas)
@@ -264,7 +264,7 @@ public class DailySignatureView extends View
         mCanvas.drawPath(mPath, mPaint);
     }
 
-    private Point getTringleCenter(Point p1, Point p2, Point p3)
+    private Point getTriangleCenter(Point p1, Point p2, Point p3)
     {
         if (p1 == null || p2 == null || p3 == null)
         {
@@ -316,7 +316,7 @@ public class DailySignatureView extends View
                         Point point3 = arrayList.get(3);
                         Point point4 = arrayList.get(4);
 
-                        Point point234Mid = getTringleCenter(point2, point3, point4);
+                        Point point234Mid = getTriangleCenter(point2, point3, point4);
 
                         if (point234Mid != null)
                         {

@@ -971,9 +971,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
                     paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "event");
                     paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, couponCode);
+                    paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.EMPTY);
 
                     AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
-                        , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "Event-NULL", paramsMap);
+                        , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "event-NULL", paramsMap);
                 } catch (ParseException e)
                 {
                     if (Constants.DEBUG == false)

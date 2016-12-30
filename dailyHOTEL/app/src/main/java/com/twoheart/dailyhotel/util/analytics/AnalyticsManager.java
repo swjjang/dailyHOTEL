@@ -1130,6 +1130,7 @@ public class AnalyticsManager
         public static final String FILL_DATE_OF_BIRTH = "fill_date_of_birth";
         public static final String REASON_CANCELLATION = "reason_cancellation";
         public static final String LIST_TOP5_PLACE_INDEXES = "list_top5_place_indexes";
+        public static final String KIND_OF_COUPON = "kind_of_coupon";
     }
 
     public static class ValueType
@@ -1158,5 +1159,6 @@ public class AnalyticsManager
         public static final String AUTO = "auto";
         public static final String RECENT = "recent";
         public static final String DIRECT = "direct";
+        public static final String ALL = "all";
     }
 }

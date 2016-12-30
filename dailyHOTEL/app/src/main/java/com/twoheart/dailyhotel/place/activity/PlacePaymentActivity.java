@@ -67,7 +67,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
-    protected abstract void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+    protected abstract void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+
+    protected abstract void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
     protected abstract void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
 
@@ -163,7 +165,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         mFinalCheckDialog = null;
 
-        hidePorgressDialog();
+        hideProgressDialog();
 
         super.onDestroy();
     }
@@ -173,7 +175,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     {
         super.onErrorResponse(call, response);
 
-        hidePorgressDialog();
+        hideProgressDialog();
     }
 
     @Override
@@ -295,6 +297,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 mDontReload = true;
 
+                unLockUI();
+
                 onActivityPaymentResult(requestCode, resultCode, intent);
                 break;
             }
@@ -324,7 +328,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showProgressDialog()
     {
-        hidePorgressDialog();
+        hideProgressDialog();
 
         try
         {
@@ -339,7 +343,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         }
     }
 
-    protected void hidePorgressDialog()
+    protected void hideProgressDialog()
     {
         if (mProgressDialog != null)
         {
@@ -360,33 +364,37 @@ public abstract class PlacePaymentActivity extends BaseActivity
      */
     protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
     {
-        if (paymentInformation == null || saleTime == null)
+        if (paymentInformation == null || saleTime == null || isFinishing() == true)
         {
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
 
-        unLockUI();
-
-        if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
         {
-            if (isFinishing() == true)
-            {
-                return;
-            }
+            mFinalCheckDialog.dismiss();
+        }
 
-            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-            {
-                mFinalCheckDialog.dismiss();
-            }
-
+        // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
+        if (paymentInformation.isFree == true)
+        {
             showProgressDialog();
 
-            requestEasyPayment(paymentInformation, saleTime);
+            requestFreePayment(paymentInformation, saleTime);
         } else
         {
-            showPaymentWeb(paymentInformation, saleTime);
+            if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+            {
+                showProgressDialog();
+
+                requestEasyPayment(paymentInformation, saleTime);
+            } else
+            {
+                lockUI();
+
+                showPaymentWeb(paymentInformation, saleTime);
+            }
         }
     }
 
@@ -395,10 +403,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
         unLockUI();
 
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
-        //        if (mPaymentInformation.isFree == true)
-        //        {
-        //            showAgreeTermDialog();
-        //        } else
+        if (mPaymentInformation.isFree == true)
+        {
+            showAgreeTermDialog();
+        } else
         {
             if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
             {
@@ -421,6 +429,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             mFinalCheckDialog.cancel();
         }
 
+        // 무료 결제인 경우 일반 카드와 동일한 확인 사항을 출력한다.
         mFinalCheckDialog = null;
         mFinalCheckDialog = getPaymentConfirmDialog(PlacePaymentInformation.PaymentType.CARD);
 
@@ -494,20 +503,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
             return;
         }
 
-        mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                releaseUiComponent();
-            }
-        });
-
         mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
             @Override
             public void onCancel(DialogInterface dialog)
             {
+                unLockUI();
+
                 AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
             }
@@ -601,7 +603,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 lockUI();
 
-                requestPlacePaymentInfomation(mPaymentInformation, mCheckInSaleTime);
+                requestPlacePaymentInformation(mPaymentInformation, mCheckInSaleTime);
             }
         }, null, false);
     }

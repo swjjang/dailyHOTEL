@@ -33,7 +33,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     private View mToolbar, mImageDimView;
     private NestedScrollView mNestedScrollView;
     private ViewGroup mScrollLayout;
-    private SimpleDraweeView mPlaceImaegView;
+    private SimpleDraweeView mPlaceImageView;
     private TextView mPlaceNameTextView, mPeriodTextView;
     private TextView mToolbarTitle, mToolbarSubTitle;
     private TextView mConfirmTextView;
@@ -84,10 +84,10 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         mImageDimView.setAlpha(0.0f);
 
         int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(mContext));
-        mPlaceImaegView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.placeImageView);
-        ViewGroup.LayoutParams layoutParams = mPlaceImaegView.getLayoutParams();
+        mPlaceImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.placeImageView);
+        ViewGroup.LayoutParams layoutParams = mPlaceImageView.getLayoutParams();
         layoutParams.height = imageHeight;
-        mPlaceImaegView.setLayoutParams(layoutParams);
+        mPlaceImageView.setLayoutParams(layoutParams);
 
         mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
         mPeriodTextView = (TextView) view.findViewById(R.id.periodTextView);
@@ -120,12 +120,12 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
     public void setPlaceImageUrl(Context context, String imageUrl)
     {
-        if (mPlaceImaegView == null)
+        if (mPlaceImageView == null)
         {
             return;
         }
 
-        Util.requestImageResize(context, mPlaceImaegView, imageUrl);
+        Util.requestImageResize(context, mPlaceImageView, imageUrl);
     }
 
     public void setPlaceInformation(String placeName, String period)
@@ -497,7 +497,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         if (toolbarHeight >= scrollY)
         {
-            mPlaceImaegView.setTranslationY(-scrollY * 0.5f);
+            mPlaceImageView.setTranslationY(-scrollY * 0.5f);
 
             final int halfToolbarHeight = toolbarHeight / 2;
 
@@ -529,7 +529,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             }
         } else
         {
-            mPlaceImaegView.setTranslationY(-toolbarHeight * 0.5f);
+            mPlaceImageView.setTranslationY(-toolbarHeight * 0.5f);
             mToolbar.setBackgroundColor(0x4d000000);
 
             mPlaceNameTextView.setAlpha(0.0f);

@@ -17,7 +17,7 @@ public class SaleTime implements Parcelable
 
     private Date mCurrentTime;
     private Date mDailyTime;
-    private int mDayOfDays; // 데이즈 날짜. curentTime으로 부터 몇일.
+    private int mDayOfDays; // 데이즈 날짜. currentTime으로 부터 몇일.
 
     public SaleTime()
     {

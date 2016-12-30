@@ -35,9 +35,9 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
     Type getCallResponseType(Type returnType)
     {
-        if (!(returnType instanceof ParameterizedType))
+        if (returnType instanceof ParameterizedType == false)
         {
-            throw new IllegalArgumentException("Call return type must be parameterized as Call<Foo> or Call<? extends Foo>");
+            throw new IllegalArgumentException("returnType instanceof ParameterizedType == false");
         }
         return getParameterUpperBound(0, (ParameterizedType) returnType);
     }

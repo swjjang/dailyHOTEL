@@ -59,7 +59,7 @@ public class StayDetail extends PlaceDetail
             ratingPersons = jsonObject.getInt("ratingPersons");
         }
 
-        // Pictrogram
+        // Pictogram
         if (mPictogramList == null)
         {
             mPictogramList = new ArrayList<>();

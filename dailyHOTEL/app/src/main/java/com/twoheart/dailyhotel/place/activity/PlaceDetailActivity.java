@@ -74,7 +74,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void hideProductInformationLayout();
+    protected abstract void hideProductInformationLayout(boolean isAnimation);
 
     protected abstract void doBooking();
 
@@ -148,8 +148,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mPlaceDetailLayout != null)
         {
-            mPlaceDetailLayout.hideProductInformationLayout();
-            mPlaceDetailLayout.showWishButton();
+            hideProductInformationLayout(false);
 
             if (mPlaceDetailLayout.getBookingStatus() != PlaceDetailLayout.STATUS_SOLD_OUT)
             {
@@ -162,7 +161,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mDontReloadAtOnResume = false;
         } else
         {
-            if (Util.isUsedMutilTransition() == true && mInitializeStatus != STATUS_INITIALIZE_COMPLETE && mIsDeepLink == false)
+            if (Util.isUsedMultiTransition() == true && mInitializeStatus != STATUS_INITIALIZE_COMPLETE && mIsDeepLink == false)
             {
                 lockUI(false);
             } else
@@ -220,11 +219,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 case StayDetailLayout.STATUS_BOOKING:
                 case StayDetailLayout.STATUS_NONE:
-                    hideProductInformationLayout();
+                    hideProductInformationLayout(true);
                     return;
             }
 
-            if (Util.isUsedMutilTransition() == true && mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+            if (Util.isUsedMultiTransition() == true && mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
             {
                 finish();
                 return;

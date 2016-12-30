@@ -28,7 +28,7 @@ public class Coupon implements Parcelable
     public String description; // 쿠폰 설명
     public boolean availableInDomestic; // 국내 업소만 쿠폰 적용 여부
     public boolean availableInOverseas; // 해외 업소만 쿠폰 적용 여부
-    public boolean availableInHotel; // 호텔 쿠폰인지 여부 (아이콘으로 쓰세요)
+    public boolean availableInStay; // 호텔 쿠폰인지 여부 (아이콘으로 쓰세요)
     public boolean availableInGourmet; // 고메 쿠폰인지 여부 (아이콘으로 쓰세요)
     //    public boolean isRedeemed; // 이미 사용한 쿠폰인지 여부
     //    public boolean isExpired; // 만료된 쿠폰인지 여부
@@ -48,9 +48,9 @@ public class Coupon implements Parcelable
                   String validTo, int amountMinimum, boolean isDownloaded, String availableItem, //
                   String serverDate, String couponCode, String stayFrom, String stayTo, //
                   String downloadedAt, boolean availableInDomestic, boolean availableInOverseas, //
-                  boolean availableInHotel, boolean availableInGourmet)
+                  boolean availableInStay, boolean availableInGourmet)
     //                  String downloadedAt, String disableAt, boolean availableInDomestic, boolean availableInOverseas, //
-    //                  boolean availableInHotel, boolean availableInGourmet, boolean isRedeemed, boolean isExpired)
+    //                  boolean availableInStay, boolean availableInGourmet, boolean isRedeemed, boolean isExpired)
     {
         this.userCouponCode = userCouponCode;
         this.amount = amount;
@@ -68,7 +68,7 @@ public class Coupon implements Parcelable
         //        this.disableAt = disableAt;
         this.availableInDomestic = availableInDomestic;
         this.availableInOverseas = availableInOverseas;
-        this.availableInHotel = availableInHotel;
+        this.availableInStay = availableInStay;
         this.availableInGourmet = availableInGourmet;
         //        this.isRedeemed = isRedeemed;
         //        this.isExpired = isExpired;
@@ -93,7 +93,7 @@ public class Coupon implements Parcelable
         //        dest.writeString(disableAt);
         dest.writeInt(availableInDomestic == true ? 1 : 0);
         dest.writeInt(availableInOverseas == true ? 1 : 0);
-        dest.writeInt(availableInHotel == true ? 1 : 0);
+        dest.writeInt(availableInStay == true ? 1 : 0);
         dest.writeInt(availableInGourmet == true ? 1 : 0);
         //        dest.writeInt(isRedeemed == true ? 1 : 0);
         //        dest.writeInt(isExpired == true ? 1 : 0);
@@ -117,7 +117,7 @@ public class Coupon implements Parcelable
         //        disableAt = in.readString();
         availableInDomestic = in.readInt() == 1;
         availableInOverseas = in.readInt() == 1;
-        availableInHotel = in.readInt() == 1;
+        availableInStay = in.readInt() == 1;
         availableInGourmet = in.readInt() == 1;
         //        isRedeemed = in.readInt() == 1;
         //        isExpired = in.readInt() == 1;

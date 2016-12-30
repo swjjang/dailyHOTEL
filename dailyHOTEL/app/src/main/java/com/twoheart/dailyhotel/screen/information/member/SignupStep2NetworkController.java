@@ -46,7 +46,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestVerfication(String signupKey, String phoneNumber, boolean force)
+    public void requestVerification(String signupKey, String phoneNumber, boolean force)
     {
         DailyMobileAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, mVerificationCallback);
     }

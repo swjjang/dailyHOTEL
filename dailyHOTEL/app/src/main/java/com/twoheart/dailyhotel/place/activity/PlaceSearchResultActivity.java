@@ -100,7 +100,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected void finish(int resultCode)
     {
-        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmtpyLayout() == false)
+        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false)
         {
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());

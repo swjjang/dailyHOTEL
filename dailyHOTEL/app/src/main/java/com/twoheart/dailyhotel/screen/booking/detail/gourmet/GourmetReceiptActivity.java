@@ -57,15 +57,15 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         int supplyPrice = jsonObject.getInt("supplyPrice");
         int sellingPrice = jsonObject.getInt("sellingPrice");
         String paymentType = jsonObject.getString("paymentType");
-        int counpon = jsonObject.getInt("couponAmount");
+        int coupon = jsonObject.getInt("couponAmount");
         int bonus = 0;
 
         // **예약 세부 정보**
         View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
         // 예약 번호
-        TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-        registerationTextView.setText(mReservationIndex);
+        TextView reservationNumberTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+        reservationNumberTextView.setText(mReservationIndex);
 
         // 이름
         TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
@@ -80,8 +80,8 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         customerInfoTextView.setText(userName + " / " + userPhone);
 
         // 날짜
-        TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
-        chekcinoutTextView.setText(sday.replaceAll("-", "/"));
+        TextView checkInOutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
+        checkInOutTextView.setText(sday.replaceAll("-", "/"));
 
         // 수량
         TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
@@ -97,10 +97,10 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         // 결제수단
         View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
 
-        //        if (Util.isTextEmpty(paymentType) == true)
-        //        {
-        //            paymentTypeLayout.setVisibility(View.GONE);
-        //        } else
+        if (Util.isTextEmpty(paymentType) == true)
+        {
+            paymentTypeLayout.setVisibility(View.GONE);
+        } else
         {
             paymentTypeLayout.setVisibility(View.VISIBLE);
 
@@ -139,17 +139,17 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         // 할인쿠폰 사용
         View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
 
-        if (counpon > 0)
+        if (coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
             TextView couponTextView = (TextView) couponLayout.findViewById(R.id.couponTextView);
-            couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
+            couponTextView.setText("- " + Util.getPriceFormat(this, coupon, true));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        if (bonus > 0 || counpon > 0)
+        if (bonus > 0 || coupon > 0)
         {
             saleLayout.setVisibility(View.VISIBLE);
         } else
@@ -247,7 +247,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
     protected void requestReceiptDetail(int index)
     {
-        DailyMobileAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservReceiptCallback);
+        DailyMobileAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservationReceiptCallback);
     }
 
     private void showSendEmailDialog()
@@ -369,7 +369,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mReservReceiptCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mReservationReceiptCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

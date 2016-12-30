@@ -39,29 +39,29 @@ public class DeviceResolutionUtil
         int width = hm.get(KEY_WIDTH);
         int height = hm.get(KEY_HEIGHT);
 
-        int resoultion;
+        int resolution;
 
         if (height >= 1920 && width >= 1080)
         {
             ExLog.e("RESOLUTION : XXHDPI");
-            resoultion = RESOLUTION_XXHDPI;
+            resolution = RESOLUTION_XXHDPI;
         } else if (height >= 1280 && width >= 720)
         {
             ExLog.e("RESOLUTION : XHDPI");
-            resoultion = RESOLUTION_XHDPI;
+            resolution = RESOLUTION_XHDPI;
         } else if (height >= 800 && width >= 480)
         {
             ExLog.e("RESOLUTION : HDPI");
-            resoultion = RESOLUTION_HDPI;
+            resolution = RESOLUTION_HDPI;
         } else if (height >= 480 && width >= 320)
         {
             ExLog.e("RESOLUTION : MDPI");
-            resoultion = RESOLUTION_MDPI;
+            resolution = RESOLUTION_MDPI;
         } else
         {
             ExLog.e("RESOLUTION : LDPI");
-            resoultion = RESOLUTION_LDPI;
+            resolution = RESOLUTION_LDPI;
         }
-        return resoultion;
+        return resolution;
     }
 }

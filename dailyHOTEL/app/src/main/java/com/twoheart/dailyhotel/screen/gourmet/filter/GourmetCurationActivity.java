@@ -165,14 +165,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         // 음식 종류
         mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.foodGridLayout);
 
-        final HashMap<String, Integer> categroySequenceMap = gourmetCurationOption.getCategorySequenceMap();
+        final HashMap<String, Integer> categorySequenceMap = gourmetCurationOption.getCategorySequenceMap();
         TreeMap<String, Integer> categoryMap = new TreeMap<>(new Comparator<String>()
         {
             @Override
             public int compare(String o1, String o2)
             {
-                Integer sequence1 = categroySequenceMap.get(o1);
-                Integer sequence2 = categroySequenceMap.get(o2);
+                Integer sequence1 = categorySequenceMap.get(o1);
+                Integer sequence2 = categorySequenceMap.get(o2);
 
                 if (sequence1 < 0)
                 {
@@ -196,17 +196,17 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             }
         });
 
-        categoryMap.putAll(categroySequenceMap);
+        categoryMap.putAll(categorySequenceMap);
 
         List<String> keyList = new ArrayList<>(categoryMap.keySet());
-        HashMap<String, Integer> categroyCodeMap = gourmetCurationOption.getCategoryCoderMap();
+        HashMap<String, Integer> categoryCodeMap = gourmetCurationOption.getCategoryCoderMap();
         HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
 
         boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN;
 
         for (String key : keyList)
         {
-            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categroyCodeMap.get(key)), isSingleLine);
+            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categoryCodeMap.get(key)), isSingleLine);
             categoryView.setOnClickListener(mOnCategoryClickListener);
 
             if (filterMap.containsKey(key) == true)
@@ -469,7 +469,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         if (mLastParams != null && SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
         {
-            onSearchLoacationResult(null);
+            onSearchLocationResult(null);
             return;
         }
 
@@ -776,7 +776,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     }
 
     @Override
-    protected void onSearchLoacationResult(Location location)
+    protected void onSearchLocationResult(Location location)
     {
         mGourmetCuration.setLocation(location);
 

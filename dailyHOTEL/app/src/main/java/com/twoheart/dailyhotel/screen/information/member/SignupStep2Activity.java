@@ -48,7 +48,7 @@ public class SignupStep2Activity extends BaseActivity
     private String mSignupKey, mEmail, mPassword, mRecommender;
     private String mCallByScreen;
     private String mAgreedBenefitDate;
-    private int mRequestVerficationCount;
+    private int mRequestVerificationCount;
 
     private Handler mRetryHandler;
 
@@ -90,7 +90,7 @@ public class SignupStep2Activity extends BaseActivity
         mCountryCode = Util.getCountryNameNCode(this);
         mSignupStep2Layout.setCountryCode(mCountryCode);
 
-        mRequestVerficationCount = 0;
+        mRequestVerificationCount = 0;
     }
 
     private void initUserInformation(Intent intent)
@@ -259,7 +259,7 @@ public class SignupStep2Activity extends BaseActivity
 
             lockUI();
 
-            mNetworkController.requestVerfication(mSignupKey, phoneNumber.replaceAll("-", ""), false);
+            mNetworkController.requestVerification(mSignupKey, phoneNumber.replaceAll("-", ""), false);
         }
 
         @Override
@@ -304,7 +304,7 @@ public class SignupStep2Activity extends BaseActivity
 
             mSignupStep2Layout.showVerificationVisible();
 
-            if (++mRequestVerficationCount == VERIFY_PHONE_NUMBER_COUNT)
+            if (++mRequestVerificationCount == VERIFY_PHONE_NUMBER_COUNT)
             {
                 try
                 {
@@ -381,7 +381,7 @@ public class SignupStep2Activity extends BaseActivity
                     {
                         lockUI();
 
-                        mNetworkController.requestVerfication(mSignupKey, phoneNumber, true);
+                        mNetworkController.requestVerification(mSignupKey, phoneNumber, true);
                     }
                 }, new View.OnClickListener()
                 {

@@ -52,7 +52,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
         TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
         View closeView = view.findViewById(R.id.closeImageVIew);
-        TextView persions = (TextView) view.findViewById(R.id.personsTextView);
+        TextView persons = (TextView) view.findViewById(R.id.personsTextView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
 
@@ -82,11 +82,11 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         // 인원
         if (gourmet.persons > 1)
         {
-            persions.setVisibility(View.VISIBLE);
-            persions.setText(mContext.getString(R.string.label_persions, gourmet.persons));
+            persons.setVisibility(View.VISIBLE);
+            persons.setText(mContext.getString(R.string.label_persions, gourmet.persons));
         } else
         {
-            persions.setVisibility(View.GONE);
+            persons.setVisibility(View.GONE);
         }
 
         if (gourmet.price <= 0)
