@@ -34,10 +34,12 @@ import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
+import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentThankyouActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -1095,7 +1097,25 @@ public class StayMainFragment extends PlaceMainFragment
         @Override
         public void onFilterClick()
         {
-            mOnEventListener.onFilterClick();
+//            mOnEventListener.onFilterClick();
+
+            String discountType = AnalyticsManager.Label.PAYMENTWITH_CREDIT;
+             String imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+              String placeName = "[신규] 천호 YES";
+             String placeType = "준특실 더블";
+             String checkInDate = "2016.11.2 (수) 17시";
+             String checkOutDate = "2016.11.3 (목) 13시"; 
+            int nights = 1;
+             String userName = "dh00_test";
+
+              HashMap<String, String> params = new HashMap<>();
+             params.put(AnalyticsManager.KeyType.TICKET_INDEX, "183856");
+
+             
+            Intent intent = HotelPaymentThankyouActivity.newInstance(//
+                mBaseActivity, imageUrl, placeName, placeType, // 
+                userName, checkInDate, checkOutDate, nights, "CardPay", discountType, params);
+            mBaseActivity.  startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_REFRESH);
         }
 
         @Override
