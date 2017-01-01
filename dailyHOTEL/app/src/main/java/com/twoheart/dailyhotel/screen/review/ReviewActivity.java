@@ -998,7 +998,7 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onError(Throwable e)
         {
-            ReviewActivity.this.onError();
+            ReviewActivity.this.onError(e);
         }
 
         @Override
@@ -1016,7 +1016,7 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            ReviewActivity.this.onError();
+            ReviewActivity.this.onErrorResponse(call, response);
         }
     };
 }

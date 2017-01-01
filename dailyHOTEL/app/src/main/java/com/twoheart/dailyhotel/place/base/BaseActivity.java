@@ -410,8 +410,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         onError();
-
-        finish();
     }
 
     protected void onError()
