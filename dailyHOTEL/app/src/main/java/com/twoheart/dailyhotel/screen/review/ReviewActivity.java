@@ -551,6 +551,11 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
+                if (mDailyEmoticonImageView[1].isAnimationStart() == false)
+                {
+                    mDailyEmoticonImageView[1].startAnimation();
+                }
+
                 mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
@@ -620,6 +625,11 @@ public class ReviewActivity extends BaseActivity
                     // 에러 문구가 필요할까?
                     restartExpiredSession();
                     return;
+                }
+
+                if (mDailyEmoticonImageView[0].isAnimationStart() == false)
+                {
+                    mDailyEmoticonImageView[0].startAnimation();
                 }
 
                 mReviewNetworkController.requestAddReviewInformation(jsonObject);
@@ -994,7 +1004,7 @@ public class ReviewActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            ReviewActivity.this.onErrorPopupMessage(msgCode, message);
+            ReviewActivity.this.onErrorPopupMessage(msgCode, message, null);
         }
 
         @Override

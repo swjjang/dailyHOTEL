@@ -476,6 +476,7 @@
     <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
     <string name="message_edit_phone_social_guide">휴대폰 번호를 입력한 후 [휴대폰 번호 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_name_guide">상품 예약 확인 시 필요한 정보이므로 실명으로 입력한 후 [이름 설정 완료] 버튼을 눌러주세요.</string>
+    <string name="message_edit_birthday_guide">생년월일을 설정하신 후 [생일 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_edit_password_guide">4자 이상 비밀번호를 입력한 후 [비밀번호 설정 완료] 버튼을 눌러주세요.</string>
     <string name="message_add_profile_guide">신속한 예약 확인을 위해 정확한 정보를 등록해주세요.</string>
     <string name="message_wrong_certificationnumber">인증번호 입력이 잘못되었습니다.</string>
