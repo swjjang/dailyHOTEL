@@ -89,7 +89,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         mNameView = findViewById(R.id.nameView);
 
         mNameEditText = (DailyEditText) findViewById(R.id.nameEditText);
-        mNameEditText.setDeleteButtonVisible(true, null);
+        mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 
         if (Util.isTextEmpty(name) == true)

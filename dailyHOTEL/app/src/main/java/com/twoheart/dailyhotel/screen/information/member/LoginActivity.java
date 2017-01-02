@@ -198,7 +198,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
-        mPasswordEditText.setDeleteButtonVisible(true, null);
+        mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
         mPasswordEditText.setOnTouchListener(new View.OnTouchListener()
         {

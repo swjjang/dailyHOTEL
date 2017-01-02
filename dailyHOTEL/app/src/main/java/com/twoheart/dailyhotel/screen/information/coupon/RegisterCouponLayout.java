@@ -43,7 +43,7 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
         mTitleView = view.findViewById(R.id.couponTitleView);
         mCompleteView = view.findViewById(R.id.registerCouponCompleteView);
         mCouponEditText = (DailyEditText) view.findViewById(R.id.couponEditText);
-        mCouponEditText.setDeleteButtonVisible(true, null);
+        mCouponEditText.setDeleteButtonVisible(null);
         mCouponEditText.setOnFocusChangeListener(this);
 
         StringFilter stringFilter = new StringFilter(mContext);

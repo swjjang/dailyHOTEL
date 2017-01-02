@@ -59,7 +59,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         final View sendFeedbackView = findViewById(R.id.sendFeedbackView);
         sendFeedbackView.setOnClickListener(this);
 
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
         mMessageEditText = (DailyEditText) findViewById(R.id.messageEditText);
