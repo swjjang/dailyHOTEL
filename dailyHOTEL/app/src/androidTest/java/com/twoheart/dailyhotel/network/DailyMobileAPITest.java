@@ -5711,6 +5711,7 @@ public class DailyMobileAPITest
                                 DailyAssert.assertNotNull(imageUrl);
 
                                 JSONObject jsonObject;
+                                int testPlaceIndex = -1;
 
                                 int length = gourmetJSONArray.length();
                                 for (int i = 0; i < length; i++)
@@ -5720,6 +5721,8 @@ public class DailyMobileAPITest
 
                                     int index = jsonObject.getInt("restaurantIdx");
                                     DailyAssert.assertTrue(index > 0);
+
+                                    testPlaceIndex = index;
 
                                     String name = null;
                                     if (jsonObject.has("restaurantName") == true)
@@ -5786,7 +5789,11 @@ public class DailyMobileAPITest
                                     {
                                         DailyAssert.assertNotNull(jsonObject.getString("benefit"));
                                     }
+                                }
 
+                                if (testPlaceIndex != -1)
+                                {
+                                    requestRemoveWishList(Constants.PlaceType.FNB, testPlaceIndex);
                                 }
                             }
                         } else
@@ -5858,6 +5865,7 @@ public class DailyMobileAPITest
                                 DailyAssert.assertTrue(nights > 0);
 
                                 JSONObject jsonObject;
+                                int testPlaceIndex = -1;
 
                                 int length = hotelJSONArray.length();
                                 for (int i = 0; i < length; i++)
@@ -5874,7 +5882,9 @@ public class DailyMobileAPITest
                                     DailyAssert.assertNotNull(gradeString);
                                     DailyAssert.assertNotNull(Stay.Grade.valueOf(gradeString));
 
-                                    DailyAssert.assertTrue(jsonObject.getInt("hotelIdx") > 0);
+                                    int index = jsonObject.getInt("hotelIdx");
+                                    DailyAssert.assertTrue(index > 0);
+                                    testPlaceIndex = index;
 
                                     DailyAssert.assertTrue(jsonObject.has("isSoldOut"));
 
@@ -5914,6 +5924,11 @@ public class DailyMobileAPITest
                                         DailyAssert.assertNotNull(jsonObject.getString("benefit"));
                                     }
                                 }
+
+                                if (testPlaceIndex != -1)
+                                {
+                                    requestRemoveWishList(Constants.PlaceType.HOTEL, testPlaceIndex);
+                                }
                             }
 
                         } else
@@ -5945,18 +5960,113 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestAddWishList() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        retrofit2.Callback addWishListCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (responseJSONObject.has("msg") == true)
+                        {
+                            DailyAssert.assertNotNull(responseJSONObject.getString("msg"));
+
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        mLock = new CountDownLatch(1);
+
+        DailyMobileAPI.getInstance(mContext).requestAddWishList(mNetworkTag, "hotel", Const.TEST_STAY_INDEX, addWishListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        mLock = new CountDownLatch(1);
+
+        DailyMobileAPI.getInstance(mContext).requestAddWishList(mNetworkTag, "gourmet", Const.TEST_GOURMET_INDEX, addWishListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Ignore
-    public void requestRemoveWishList() throws Exception
+    public void requestRemoveWishList(Constants.PlaceType placeType, int placeIndex) throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        retrofit2.Callback removeWishListCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (responseJSONObject.has("msg") == true)
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.assertNotNull(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, type, placeIndex, removeWishListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
     @Ignore
