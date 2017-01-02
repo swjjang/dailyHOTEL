@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel.place.activity;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -7,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -141,6 +145,108 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         confirmView.setOnClickListener(this);
+
+        final View confirmImageView = findViewById(R.id.confirmImageView);
+        confirmImageView.setVisibility(View.INVISIBLE);
+        final View receiptLayout = findViewById(R.id.receiptLayout);
+
+        float startY = 0f - Util.getLCDHeight(PlacePaymentThankyouActivity.this);
+        final float endY = 0.0f;
+
+        final float startScaleY = 2.0f;
+        final float endScaleY = 1.0f;
+
+        receiptLayout.setTranslationY(startY);
+
+
+        final ObjectAnimator scaleAnimator = ObjectAnimator.ofPropertyValuesHolder(confirmImageView //
+            , PropertyValuesHolder.ofFloat("scaleX", startScaleY, endScaleY) //
+            , PropertyValuesHolder.ofFloat("scaleY", startScaleY, endScaleY) //
+        );
+
+        scaleAnimator.setDuration(100);
+        scaleAnimator.setInterpolator(new OvershootInterpolator(4.0f));
+        scaleAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                //                confirmImageView.setScaleX(startScaleY);
+                //                confirmImageView.setScaleY(startScaleY);
+
+                confirmImageView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                confirmImageView.setScaleX(endScaleY);
+                confirmImageView.setScaleY(endScaleY);
+
+                confirmImageView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                confirmImageView.setScaleX(endScaleY);
+                confirmImageView.setScaleY(endScaleY);
+
+                confirmImageView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(receiptLayout //
+            , PropertyValuesHolder.ofFloat("translationY", startY, endY) //
+        );
+
+        objectAnimator.setDuration(400);
+        objectAnimator.setStartDelay(500);
+        objectAnimator.setInterpolator(new OvershootInterpolator(0.5f));
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                receiptLayout.setTranslationY(endY);
+                scaleAnimator.start();
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                receiptLayout.setTranslationY(endY);
+                scaleAnimator.start();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
+
+    }
+
+    private static float bounce(float t)
+    {
+        return t * t * 8.0f;
     }
 
     @Override

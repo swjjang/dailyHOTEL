@@ -551,7 +551,7 @@ public class StayMainFragment extends PlaceMainFragment
             Intent intent = HotelPaymentThankyouActivity.newInstance (//
                 mBaseActivity, imageUrl, placeName, placeType,//
                 userName, checkInDate, checkOutDate, nights, "CardPay", discountType, params);
-            mBaseActivity. startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
 
 //            Province province = mStayCuration.getProvince();
 //
