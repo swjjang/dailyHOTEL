@@ -229,14 +229,14 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void startEditPhone()
+        public void startEditPhone(String phoneNumber)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this, mUserIndex, EditProfilePhoneActivity.Type.EDIT_PROFILE);
+            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this, mUserIndex, EditProfilePhoneActivity.Type.EDIT_PROFILE, phoneNumber);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 

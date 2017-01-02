@@ -430,8 +430,24 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         inputMethodManager.showSoftInput(mPhoneEditText, InputMethodManager.SHOW_FORCED);
     }
 
+    public void setPhoneNumber(String phoneNumber)
+    {
+        if (mPhoneEditText == null || Util.isTextEmpty(phoneNumber) == true)
+        {
+            return;
+        }
+
+        mPhoneEditText.setText(phoneNumber);
+        mPhoneEditText.setSelection(mPhoneEditText.length());
+    }
+
     public void resetPhoneNumber()
     {
+        if (mPhoneEditText == null)
+        {
+            return;
+        }
+
         mPhoneEditText.setText(null);
     }
 

@@ -1219,13 +1219,13 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                 {
-                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                 } else
                 {
                     // 기존에 인증이 되었는데 인증이 해지되었다.
                     if (isVerified == true && isPhoneVerified == false)
                     {
-                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                     } else
                     {
                         processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);
@@ -1239,7 +1239,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     moveToAddSocialUserInformation(user, birthday);
                 } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                 {
-                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.getPhone());
                 } else
                 {
                     processBooking(mSaleTime, (StayDetail) mPlaceDetail, mSelectedRoomInformation);

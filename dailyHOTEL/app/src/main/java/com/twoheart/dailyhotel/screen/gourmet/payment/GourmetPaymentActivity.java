@@ -314,7 +314,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             }
         }
 
-//        DailyMobileAPI.getInstance(this).requestGourmetFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+        //        DailyMobileAPI.getInstance(this).requestGourmetFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
     }
 
     @Override

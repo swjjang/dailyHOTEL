@@ -26,6 +26,7 @@ public class EditProfilePhoneActivity extends BaseActivity
 
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_TYPE = "type";
+    private static final String INTENT_EXTRA_DATA_PHONENUMBER = "phoneNumber";
 
     private EditProfilePhoneLayout mEditProfilePhoneLayout;
     private EditProfilePhoneNetworkController mNetworkController;
@@ -46,11 +47,16 @@ public class EditProfilePhoneActivity extends BaseActivity
      * @param type
      * @return
      */
-    public static Intent newInstance(Context context, String userIndex, Type type)
+    public static Intent newInstance(Context context, String userIndex, Type type, String phoneNumber)
     {
         Intent intent = new Intent(context, EditProfilePhoneActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
         intent.putExtra(INTENT_EXTRA_DATA_TYPE, type.name());
+
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_PHONENUMBER, phoneNumber);
+        }
 
         return intent;
     }
@@ -87,7 +93,29 @@ public class EditProfilePhoneActivity extends BaseActivity
             return;
         }
 
-        mCountryCode = Util.getCountryNameNCode(this);
+        String phoneNumber = null;
+
+        if (intent.hasExtra(INTENT_EXTRA_DATA_PHONENUMBER) == true)
+        {
+            phoneNumber = intent.getStringExtra(INTENT_EXTRA_DATA_PHONENUMBER);
+
+            String[] phoneNumbers = Util.getValidatePhoneNumber(phoneNumber.replace("-", ""));
+
+            if (phoneNumbers != null)
+            {
+                mCountryCode = phoneNumbers[0];
+                phoneNumber = phoneNumbers[1];
+            } else
+            {
+                mCountryCode = Util.getCountryNameNCode(this);
+                phoneNumber = null;
+            }
+        } else
+        {
+            mCountryCode = Util.getCountryNameNCode(this);
+            phoneNumber = null;
+        }
+
         mEditProfilePhoneLayout.setCountryCode(mCountryCode);
 
         switch (type)
@@ -138,6 +166,12 @@ public class EditProfilePhoneActivity extends BaseActivity
                     }
                 });
                 break;
+        }
+
+        // showCertificationLayout() 다음으로 호출 순서가 중요함
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            mEditProfilePhoneLayout.setPhoneNumber(phoneNumber.replaceAll("\\(|\\)|-", ""));
         }
     }
 
