@@ -818,6 +818,9 @@ public class DailyPreference
     public void setBaseUrl(String value)
     {
         setValue(mEditor, KEY_BASE_URL, value);
+
+        // 반영이 안되는 경우가 있어서 특별히 추가 하였습니다.
+        mEditor.commit();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
