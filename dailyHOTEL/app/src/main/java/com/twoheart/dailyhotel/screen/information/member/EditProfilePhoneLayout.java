@@ -137,7 +137,13 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-
+                if (mVerificationLayout != null && mVerificationLayout.getVisibility() == View.VISIBLE)
+                {
+                    if (count > 0 || s.length() == 0)
+                    {
+                        hideVerificationVisible();
+                    }
+                }
             }
 
             @Override
@@ -408,6 +414,14 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                 }
             }
         });
+    }
+
+    public void hideVerificationVisible()
+    {
+        mVerificationLayout.setVisibility(View.INVISIBLE);
+
+        mConfirm.setVisibility(View.INVISIBLE);
+        mConfirm.setEnabled(false);
     }
 
     public void showKeyPad()
