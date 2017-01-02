@@ -30,6 +30,8 @@ public class Const implements Constants
     public static final boolean TEST_IS_FORCE_PHONE_VALIDATION = false;
 
     public static final boolean TEST_IS_AGREED_BENEFIT = false;
+    public static final boolean TEST_IS_NOTICE_AGREE = false;
+    public static final boolean TEST_IS_UPDATE_BENEFIT_AGREEMENT = false;
 
     public static final String TEST_FACEBOOK_USER_ID = "MzEkMjIkMzMkMzMkMzgkMjkkNDIkMzAkNDAkNTIkMjYkMzAkMzAkMTUkMjEkMyQ=$NTcE4NEZBMUQ2M0JOCMEQxZNjMdFNW0Y2BHTAQkINJIxODHQJBSMzYzQzcJ=$"; // team
     public static final String TEST_FACEBOOK_USER_GENDER = "MTYkNSQ0NSQzNiQ3JDI1JDE0JDgkMjIkMTckNDgkNTAkMTYkMzMkNDUkNiQ=$OEE1NTA0THYyOEI4OBNRjREAQDzUwNTBhDFRjEzRUUzN0JYRDMTcG2PRDUO=$";
@@ -61,6 +63,8 @@ public class Const implements Constants
     public static final int TEST_GOURMET_TICKET_COUNT = 1;
     public static final int TEST_GOURMET_RESERVATION_INDEX = 49941;
     public static final String TEST_GOURMET_RESERVATION_TIME = "18:00";
+
+    public static final String TEST_KEYWORD_COUPON_CODE = "데일리특별할인";
 
     private static String getBirthDayText(int year, int month, int dayOfMonth)
     {
