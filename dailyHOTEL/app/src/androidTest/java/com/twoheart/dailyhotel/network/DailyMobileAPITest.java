@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
@@ -6016,10 +6017,17 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
+    // 제거할 위시리스트의 인덱스는 계속 변경 됨으로 위시리스트 목록을 가져오는 테스트 이후에 진행하도록 함
     @Ignore
     public void requestRemoveWishList(Constants.PlaceType placeType, int placeIndex) throws Exception
     {
         mLock = new CountDownLatch(1);
+
+        if (placeIndex <= 0)
+        {
+            DailyAssert.fail("placeIndex less than or equal to zero");
+            return;
+        }
 
         String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
 
@@ -6069,74 +6077,708 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestPolicyRefund() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback policyRefundCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+                        switch (msgCode)
+                        {
+                            case 100:
+                            {
+                                JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                                DailyAssert.assertNotNull(dataJSONObject);
+
+                                String comment = dataJSONObject.getString("comment");
+                                String refundPolicy = dataJSONObject.getString("refundPolicy");
+                                DailyAssert.assertNotNull(comment);
+                                DailyAssert.assertNotNull(refundPolicy);
+
+                                //                                if (Util.isTextEmpty(refundPolicy) == false)
+                                //                                {
+                                //                                    switch (refundPolicy)
+                                //                                    {
+                                //                                        case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
+                                //                                            break;
+                                //
+                                //                                        case StayBookingDetail.STATUS_SURCHARGE_REFUND:
+                                //                                            break;
+                                //
+                                //                                        default:
+                                //                                            break;
+                                //                                    }
+                                //                                } else
+                                //                                {
+                                //                                    // empty refundPolicy
+                                //                                    DailyAssert.fail();
+                                //                                }
+                                break;
+                            }
+
+                            default:
+                                // 에러가 발생하더라도 결제는 가능하도록 수정
+                                DailyAssert.fail();
+                                break;
+                        }
+
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestPolicyRefund(mNetworkTag//
+            , Const.TEST_STAY_INDEX, Const.TEST_STAY_SALE_ROOM_INDEX//
+            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mSaleTime.getClone(1).getDayOfDaysDateFormat("yyyy-MM-dd") //
+            , policyRefundCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestPolicyRefund1() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback policyRefundCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertTrue(100 == msgCode || 1015 == msgCode);
+
+                        switch (msgCode)
+                        {
+                            case 100:
+                            case 1015:
+                            {
+                                JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                                DailyAssert.assertNotNull(dataJSONObject);
+
+                                String comment = dataJSONObject.getString("comment");
+                                String refundPolicy = dataJSONObject.getString("refundPolicy");
+                                boolean refundManual = dataJSONObject.getBoolean("refundManual");
+
+                                DailyAssert.assertNotNull(comment);
+                                DailyAssert.assertNotNull(refundPolicy);
+                                DailyAssert.assertTrue(dataJSONObject.has("refundManual"));
+
+                                // 환불 킬스위치 ON
+                                if (refundManual == true)
+                                {
+                                    if (StayBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
+                                    {
+                                        // do nothing!
+                                    } else
+                                    {
+                                        DailyAssert.assertNotNull(responseJSONObject.getString("msg"));
+                                    }
+                                }
+                                break;
+                            }
+
+                            default:
+                                break;
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestPolicyRefund(mNetworkTag//
+            , Const.TEST_STAY_RESERVATION_INDEX, Const.TEST_PAYMENT_TYPE, policyRefundCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestRefund() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback refundCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = null;
+                        boolean readyForRefund = false;
+
+                        // msgCode 1013: 환불 요청 중 실패한 것으로 messageFromPg를 사용자에게 노출함.
+                        // msgCode 1014: 무료 취소 횟수를 초과한 것으로 msg 내용을 사용자에게 노출함.
+                        // msgCode 1015: 환불 수동 스위치 ON일 경우
+                        switch (msgCode)
+                        {
+                            case 1014:
+                                message = responseJSONObject.getString("msg");
+                                DailyAssert.fail(message);
+                                break;
+
+                            case 1013:
+                            case 1015:
+                            default:
+                                if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
+                                {
+                                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                                    message = dataJSONObject.getString("messageFromPg");
+                                    DailyAssert.assertNotNull(message);
+
+                                    readyForRefund = dataJSONObject.getBoolean("readyForRefund");
+                                    DailyAssert.assertTrue(readyForRefund);
+                                }
+
+                                if (Util.isTextEmpty(message) == true)
+                                {
+                                    message = responseJSONObject.getString("msg");
+                                    DailyAssert.assertNotNull(message);
+                                }
+                                break;
+                        }
+
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestRefund(mNetworkTag, Const.TEST_STAY_INDEX, //
+            mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_PAYMENT_TYPE//
+            , Const.TEST_STAY_RESERVATION_INDEX, Const.TEST_AUTO_REFUND_CANCEL_MESSAGE, null, null, null, refundCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestBankList() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback bankListCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                            DailyAssert.assertNotNull(dataJSONArray);
+
+                            int length = dataJSONArray.length();
+                            for (int i = 0; i < length; i++)
+                            {
+                                JSONObject jsonObject = dataJSONArray.getJSONObject(i);
+                                DailyAssert.assertNotNull(jsonObject);
+
+                                DailyAssert.assertNotNull(jsonObject.getString("code"));
+                                DailyAssert.assertNotNull(jsonObject.getString("name"));
+                            }
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.assertNotNull(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestBankList(mNetworkTag, bankListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestStayReviewInformation() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback reviewStayCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        // 리뷰가 존재하지 않는 경우 msgCode : 701
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100 && responseJSONObject.has("data") == true)
+                        {
+                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(jsonObject);
+
+                            Review review = new Review(jsonObject);
+                            DailyAssert.assertNotNull(review);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, reviewStayCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestGourmetReviewInformation() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback reviewGourmetCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        // 리뷰가 존재하지 않는 경우 msgCode : 701
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100 && responseJSONObject.has("data") == true)
+                        {
+                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(jsonObject);
+
+                            Review review = new Review(jsonObject);
+                            DailyAssert.assertNotNull(review);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, reviewGourmetCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestStayReviewInformation1() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback stayReviewInformationCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            Review review = new Review(dataJSONObject);
+                            DailyAssert.assertNotNull(review);
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(//
+            mNetworkTag, Const.TEST_STAY_RESERVATION_INDEX, stayReviewInformationCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestGourmetReviewInformation1() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback gourmetReviewInformationCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            DailyAssert.assertNotNull(dataJSONObject);
+
+                            Review review = new Review(dataJSONObject);
+                            DailyAssert.assertNotNull(review);
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.assertNotNull(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation( //
+            mNetworkTag, Const.TEST_GOURMET_RESERVATION_INDEX, gourmetReviewInformationCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestAddReviewInformation() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+        retrofit2.Callback addReviewCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
+
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            // do nothing!
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.fail(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject stayJsonObject = new JSONObject();
+        stayJsonObject.put("grade", Const.TEST_STAY_ADD_REVIEW_GRADE);
+        stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
+        stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
+        stayJsonObject.put("serviceType", "HOTEL");
+
+        DailyMobileAPI.getInstance(mContext).requestAddReviewInformation(mNetworkTag, stayJsonObject, addReviewCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject gourmetJsonObject = new JSONObject();
+        gourmetJsonObject.put("grade", Const.TEST_GOURMET_ADD_REVIEW_GRADE);
+        gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
+        gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);
+        gourmetJsonObject.put("serviceType", "GOURMET");
+
+        DailyMobileAPI.getInstance(mContext).requestAddReviewInformation(mNetworkTag, gourmetJsonObject, addReviewCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    @Ignore
+    @Test
     public void requestAddReviewDetailInformation() throws Exception
     {
-        //  mLock = new CountDownLatch(1);
-        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    }
+        retrofit2.Callback addReviewDetailCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                DailyAssert.setData(call, response);
 
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+                        DailyAssert.assertNotNull(responseJSONObject);
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        DailyAssert.assertEquals(100, msgCode);
+
+                        if (msgCode == 100)
+                        {
+                            // do nothing!
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            DailyAssert.assertNotNull(message);
+                        }
+                    } catch (Exception e)
+                    {
+                        DailyAssert.fail(e);
+                    }
+                } else
+                {
+                    DailyAssert.fail();
+                }
+
+                mLock.countDown();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                DailyAssert.fail(call, t);
+                mLock.countDown();
+            }
+        };
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject stayJsonObject = new JSONObject();
+        stayJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+
+        stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
+        stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
+
+        // 생략!
+        //            if (scoreJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewScores", scoreJSONArray);
+        //            }
+        //
+        //            if (pickJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewPicks", pickJSONArray);
+        //            }
+
+        stayJsonObject.put("serviceType", "HOTEL");
+        DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, stayJsonObject, addReviewDetailCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject gourmetJsonObject = new JSONObject();
+        gourmetJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+
+        gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
+        gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);
+
+        // 생략!
+        //            if (scoreJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewScores", scoreJSONArray);
+        //            }
+        //
+        //            if (pickJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewPicks", pickJSONArray);
+        //            }
+
+        gourmetJsonObject.put("serviceType", "GOURMET");
+        DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, gourmetJsonObject, addReviewDetailCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
 }

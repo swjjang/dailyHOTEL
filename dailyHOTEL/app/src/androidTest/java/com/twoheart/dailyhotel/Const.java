@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel;
 
 import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -45,8 +46,10 @@ public class Const implements Constants
     public static final int TEST_PAGE_INDEX = 1;
     public static final int TEST_LIMIT_LIST_COUNT = 200;
     public static final String TEST_EASY_CARD_BILLINGKEY = "3df689cd659fc6a81175779fa41d96ffedf57133";
+    public static final String TEST_PAYMENT_TYPE = "CARD";
     public static final boolean TEST_IS_SHOW_LIST_DETAIL = true;
     public static final int TEST_MIN_RATING_PERSONS = 15;
+    public static final String TEST_AUTO_REFUND_CANCEL_MESSAGE = "테스트 자동 환불";
 
     public static final String TEST_STAY_AUTO_SEARCH_TEXT = "신라";
     public static final int TEST_STAY_PROVINCE_INDEX = 5;
@@ -65,6 +68,12 @@ public class Const implements Constants
     public static final String TEST_GOURMET_RESERVATION_TIME = "18:00";
 
     public static final String TEST_KEYWORD_COUPON_CODE = "데일리특별할인";
+
+    public static final String TEST_STAY_ADD_REVIEW_GRADE = Review.GRADE_GOOD;
+    public static final String TEST_GOURMET_ADD_REVIEW_GRADE = Review.GRADE_GOOD;
+    public static final int TEST_STAY_ADD_REVIEW_ITEM_INDEX = 0;
+    public static final int TEST_GOURMET_ADD_REVIEW_ITEM_INDEX = 0;
+    public static final String TEST_ADD_REVIEW_DETAIL_COMMENT = "자동화 테스트 리뷰 코멘트 입니다.\n 무시하세요.";
 
     private static String getBirthDayText(int year, int month, int dayOfMonth)
     {
