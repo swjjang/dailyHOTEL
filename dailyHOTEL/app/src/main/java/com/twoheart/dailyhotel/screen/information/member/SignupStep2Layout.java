@@ -331,6 +331,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     public void hideVerificationVisible()
     {
         mVerificationLayout.setVisibility(View.INVISIBLE);
+        mVerificationEditText.setText(null);
 
         mSignUpView.setVisibility(View.INVISIBLE);
         mSignUpView.setEnabled(false);
