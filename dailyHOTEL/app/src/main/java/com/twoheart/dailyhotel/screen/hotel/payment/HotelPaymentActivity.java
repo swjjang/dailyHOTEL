@@ -336,7 +336,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             }
         }
 
-//        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+        //        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
     }
 
     @Override

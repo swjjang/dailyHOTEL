@@ -74,12 +74,12 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     {
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
-        mPasswordEditText.setDeleteButtonVisible(true, null);
+        mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
         mConfirmPasswordView = findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (DailyEditText) findViewById(R.id.confirmPasswordEditText);
-        mConfirmPasswordEditText.setDeleteButtonVisible(true, null);
+        mConfirmPasswordEditText.setDeleteButtonVisible(null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
         mConfirmPasswordEditText.addTextChangedListener(new TextWatcher()
         {

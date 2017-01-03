@@ -632,7 +632,7 @@ public class Util implements Constants
             {
                 CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
 
-                return countryCodeNumber.getContryNameNCode(countryIsoCode);
+                return countryCodeNumber.getCountryNameNCode(countryIsoCode);
             }
         } catch (Exception e)
         {

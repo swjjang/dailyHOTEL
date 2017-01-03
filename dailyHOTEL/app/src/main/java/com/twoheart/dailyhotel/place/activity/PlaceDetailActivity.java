@@ -390,9 +390,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 
-    protected void moveToUpdateUserPhoneNumber(Customer user, EditProfilePhoneActivity.Type type)
+    protected void moveToUpdateUserPhoneNumber(Customer user, EditProfilePhoneActivity.Type type, String phoneNumber)
     {
-        Intent intent = EditProfilePhoneActivity.newInstance(this, user.getUserIdx(), type);
+        Intent intent = EditProfilePhoneActivity.newInstance(this, user.getUserIdx(), type, phoneNumber);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 

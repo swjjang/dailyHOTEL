@@ -97,7 +97,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
         mPhoneView = view.findViewById(R.id.phoneView);
         mPhoneEditText = (DailyEditText) view.findViewById(R.id.phoneEditText);
-        mPhoneEditText.setDeleteButtonVisible(true, null);
+        mPhoneEditText.setDeleteButtonVisible(null);
         mPhoneEditText.setOnFocusChangeListener(this);
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -137,7 +137,13 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-
+                if (mVerificationLayout != null && mVerificationLayout.getVisibility() == View.VISIBLE)
+                {
+                    if (count > 0 || s.length() == 0)
+                    {
+                        hideVerificationVisible();
+                    }
+                }
             }
 
             @Override
@@ -156,7 +162,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
 
         mVerificationEditText = (DailyEditText) mVerificationLayout.findViewById(R.id.verificationEditText);
-        mVerificationEditText.setDeleteButtonVisible(true, null);
+        mVerificationEditText.setDeleteButtonVisible(null);
         mVerificationEditText.setOnFocusChangeListener(this);
 
         mVerificationEditText.addTextChangedListener(new TextWatcher()
@@ -410,14 +416,39 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         });
     }
 
+    public void hideVerificationVisible()
+    {
+        mVerificationLayout.setVisibility(View.INVISIBLE);
+        mVerificationEditText.setText(null);
+
+        mConfirm.setVisibility(View.INVISIBLE);
+        mConfirm.setEnabled(false);
+    }
+
     public void showKeyPad()
     {
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(mPhoneEditText, InputMethodManager.SHOW_FORCED);
     }
 
+    public void setPhoneNumber(String phoneNumber)
+    {
+        if (mPhoneEditText == null || Util.isTextEmpty(phoneNumber) == true)
+        {
+            return;
+        }
+
+        mPhoneEditText.setText(phoneNumber);
+        mPhoneEditText.setSelection(mPhoneEditText.length());
+    }
+
     public void resetPhoneNumber()
     {
+        if (mPhoneEditText == null)
+        {
+            return;
+        }
+
         mPhoneEditText.setText(null);
     }
 

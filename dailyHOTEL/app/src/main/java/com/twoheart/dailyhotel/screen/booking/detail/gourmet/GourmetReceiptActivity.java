@@ -266,7 +266,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         dialog.setCanceledOnTouchOutside(false);
 
         final DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
-        emailEditTExt.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        emailEditTExt.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
             public void onDelete(DailyEditText dailyEditText)
