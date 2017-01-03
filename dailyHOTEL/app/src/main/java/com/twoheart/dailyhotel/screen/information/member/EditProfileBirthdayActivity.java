@@ -97,7 +97,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         mBirthdayView = findViewById(R.id.birthdayView);
 
         mBirthdayEditText = (DailyEditText) findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
             public void onDelete(DailyEditText dailyEditText)
