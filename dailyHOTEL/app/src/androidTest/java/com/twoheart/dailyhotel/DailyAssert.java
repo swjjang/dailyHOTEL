@@ -449,7 +449,7 @@ public class DailyAssert
 
 
         StringBuilder builder = new StringBuilder("===================== requset start =====================");
-        builder.append("\n").append(url).append("\n").append(body);
+        builder.append("\nurl : ").append(url).append("\nbody : ").append(body);
         builder.append("\n" + "===================== request end =====================");
 
         if (response != null)

@@ -4673,8 +4673,8 @@ public class DailyMobileAPITest
 
         DailyMobileAPI.getInstance(mContext).requestCouponList(//
             mNetworkTag, Const.TEST_STAY_INDEX, Const.TEST_STAY_SALE_ROOM_INDEX,//
-            mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"),//
-            mSaleTime.getClone(Const.TEST_NIGHTS).getDayOfDaysDateFormat("yyyy-MM-dd"), networkCallback);
+            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
+            mSaleTime.getClone(Const.TEST_NIGHTS).getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -5258,7 +5258,9 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestCouponList(//
-            mNetworkTag, Const.TEST_STAY_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, couponListCallback);
+            mNetworkTag, Const.TEST_STAY_INDEX,//
+            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
+            Const.TEST_NIGHTS, couponListCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -5313,7 +5315,8 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestCouponList(//
-            mNetworkTag, Const.TEST_GOURMET_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), couponListCallback);
+            mNetworkTag, Const.TEST_GOURMET_INDEX,//
+            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), couponListCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 

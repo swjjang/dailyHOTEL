@@ -20,7 +20,7 @@ public class Const implements Constants
     public static final String REGEX_EMAIL_FORMAT = "^[_a-zA-Z0-9-\\\\.]+@[\\\\.a-zA-Z0-9-]+\\\\.[a-zA-Z]+$";
 
     public static final String TEST_USER_BIRTHDAY = getBirthDayText(1986, 7, 17);
-    public static final String TEST_USER_NAME = "Dev Daily";
+    public static final String TEST_USER_NAME = "Dev_Daily";
     public static final String TEST_USER_PHONE = "01012345678";
 
     public static final String TEST_MODIFY_USER_BIRTHDAY = getBirthDayText(2013, 7, 17);
@@ -55,14 +55,14 @@ public class Const implements Constants
     public static final int TEST_STAY_PROVINCE_INDEX = 5;
     public static final String TEST_STAY_CATEGORY_CODE = Category.ALL.code;
     public static final int TEST_STAY_INDEX = 981;
-    public static final int TEST_STAY_SALE_ROOM_INDEX = 11709705; // stay index dependency
+    public static final int TEST_STAY_SALE_ROOM_INDEX = 64294; // stay index dependency
     public static final int TEST_STAY_PERSONS = 2;
     public static final int TEST_STAY_RESERVATION_INDEX = 1406222;
 
     public static final String TEST_GOURMET_AUTO_SEARCH_TEXT = "강남";
     public static final int TEST_GOURMET_PROVINCE_INDEX = 5;
     public static final int TEST_GOURMET_INDEX = 50457;
-    public static final int TEST_GOURMET_TIKET_INDEX = 394348;
+    public static final int TEST_GOURMET_TIKET_INDEX = 3075;
     public static final int TEST_GOURMET_TICKET_COUNT = 1;
     public static final int TEST_GOURMET_RESERVATION_INDEX = 49941;
     public static final String TEST_GOURMET_RESERVATION_TIME = "18:00";
