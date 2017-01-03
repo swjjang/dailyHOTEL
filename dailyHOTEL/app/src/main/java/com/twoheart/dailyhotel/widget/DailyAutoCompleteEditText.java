@@ -176,10 +176,12 @@ public class DailyAutoCompleteEditText extends AutoCompleteTextView
         }
     }
 
-    public void setDeleteButtonVisible(boolean visible, OnDeleteTextClickListener listener)
+    public void setDeleteButtonVisible(OnDeleteTextClickListener listener)
     {
-        mHasDeleteButton = visible;
+        mHasDeleteButton = true;
         mOnDeleteTextClickListener = listener;
+
+        setCompoundDrawablePadding(Util.dpToPx(getContext(), 8));
     }
 
     private void setDrawableCompat(Context context, AttributeSet attrs)
