@@ -447,8 +447,14 @@ public class DailyAssert
         String url = call.request().url().toString();
         String body = bodyToString(call.request().body());
 
+        StringBuilder builder = new StringBuilder();
 
-        StringBuilder builder = new StringBuilder("===================== requset start =====================");
+        if (Util.isTextEmpty(message) == false)
+        {
+            builder.append(message);
+        }
+
+        builder.append("\n===================== requset start =====================");
         builder.append("\nurl : ").append(url).append("\nbody : ").append(body);
         builder.append("\n" + "===================== request end =====================");
 
@@ -473,11 +479,7 @@ public class DailyAssert
             builder.append("\n" + "===================== body end =====================");
         }
 
-        if (Util.isTextEmpty(message) == false)
-        {
-            builder.append("\n").append(message);
-        }
-
+        builder.append("\n");
         return builder.toString();
     }
 }
