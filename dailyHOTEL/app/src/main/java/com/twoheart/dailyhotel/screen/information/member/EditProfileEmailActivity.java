@@ -83,7 +83,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
         mEmailView = findViewById(R.id.emailView);
 
         mEmailEditText = (DailyAutoCompleteEditText) findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.addTextChangedListener(new TextWatcher()
         {

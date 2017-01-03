@@ -88,7 +88,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         mEmailView = view.findViewById(R.id.emailView);
         mEmailEditText = (DailyAutoCompleteEditText) view.findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
 
         EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
