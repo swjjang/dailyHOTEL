@@ -1,10 +1,10 @@
 package com.twoheart.dailyhotel;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import junit.framework.Assert;
 
@@ -12,6 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.RequestBody;
 import okio.Buffer;
@@ -26,15 +28,25 @@ public class DailyAssert
 {
     private static Call<JSONObject> mCall;
     private static Response<JSONObject> mResponse;
+    private static CountDownLatch mLock;
 
-//        private static class DailyAssertHolder
-//        {
-//            public static final DailyAssert INSTANCE = new DailyAssert();
-//        }
-//
-//        public final DailyAssert getInstance() {
-//            return DailyAssertHolder.INSTANCE;
-//        }
+    private static final int COUNT_DOWN_DELEY_TIME = 15;
+    private static final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
+
+    //        private static class DailyAssertHolder
+    //        {
+    //            public static final DailyAssert INSTANCE = new DailyAssert();
+    //        }
+    //
+    //        public final DailyAssert getInstance() {
+    //            return DailyAssertHolder.INSTANCE;
+    //        }
+
+    public static void startLock() throws InterruptedException
+    {
+        mLock = new CountDownLatch(1);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
 
     public static void setData(@NonNull Call<JSONObject> call, Response<JSONObject> response)
     {
@@ -59,8 +71,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertTrue(message, condition);
+            try
+            {
+                Assert.assertTrue(message, condition);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -68,8 +86,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertTrue(message, condition);
+            try
+            {
+                Assert.assertTrue(condition);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -77,8 +101,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertFalse(message, condition);
+            try
+            {
+                Assert.assertFalse(message, condition);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -86,8 +116,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertFalse(message, condition);
+            try
+            {
+                Assert.assertFalse(condition);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -95,8 +131,8 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, (e == null) ? null : e.getMessage());
-            Assert.fail(message);
+            String customMessage = getNetworkMessage(mCall, mResponse, e);
+            throw new AssertionError(customMessage);
         }
     }
 
@@ -104,8 +140,8 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(call, mResponse, (e == null) ? null : e.getMessage());
-            Assert.fail(message);
+            String customMessage = getNetworkMessage(call, mResponse, e);
+            throw new AssertionError(customMessage);
         }
     }
 
@@ -113,8 +149,8 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.fail(message);
+            String customMessage = getNetworkMessage(mCall, mResponse, new RuntimeException(message));
+            throw new AssertionError(customMessage);
         }
     }
 
@@ -122,8 +158,8 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.fail(message);
+            String customMessage = getNetworkMessage(mCall, mResponse, null);
+            throw new AssertionError(customMessage);
         }
     }
 
@@ -131,8 +167,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -140,8 +182,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -149,8 +197,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -158,8 +212,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -167,8 +227,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual, delta);
+            try
+            {
+                Assert.assertEquals(message, expected, actual, delta);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -176,8 +242,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual, delta);
+            try
+            {
+                Assert.assertEquals(expected, actual, delta);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -185,8 +257,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual, delta);
+            try
+            {
+                Assert.assertEquals(message, expected, actual, delta);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -194,8 +272,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual, delta);
+            try
+            {
+                Assert.assertEquals(expected, actual, delta);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -203,8 +287,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -212,8 +302,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -221,8 +317,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -230,8 +332,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -239,8 +347,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -248,8 +362,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -257,8 +377,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -266,8 +392,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -275,8 +407,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -284,8 +422,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -293,8 +437,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -302,8 +452,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertEquals(message, expected, actual);
+            try
+            {
+                Assert.assertEquals(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -311,8 +467,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertNotNull(message, object);
+            try
+            {
+                Assert.assertNotNull(object);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -320,8 +482,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertNotNull(message, object);
+            try
+            {
+                Assert.assertNotNull(message, object);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -329,8 +497,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertNull(message, object);
+            try
+            {
+                Assert.assertNull(object);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -338,8 +512,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertNull(message, object);
+            try
+            {
+                Assert.assertNull(message, object);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -347,8 +527,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertSame(message, expected, actual);
+            try
+            {
+                Assert.assertSame(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -356,8 +542,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertSame(message, expected, actual);
+            try
+            {
+                Assert.assertSame(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -365,8 +557,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.assertNotSame(message, expected, actual);
+            try
+            {
+                Assert.assertNotSame(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -374,8 +572,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            String message = getNetworkMessage(mCall, mResponse, null);
-            Assert.assertNotSame(message, expected, actual);
+            try
+            {
+                Assert.assertNotSame(expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -383,8 +587,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.failSame(message);
+            try
+            {
+                Assert.failSame(message);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -392,8 +602,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.failNotSame(message, expected, actual);
+            try
+            {
+                Assert.failNotSame(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -401,8 +617,14 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
-            Assert.failNotEquals(message, expected, actual);
+            try
+            {
+                Assert.failNotEquals(message, expected, actual);
+            } catch (Throwable e)
+            {
+                String customMessage = getNetworkMessage(mCall, mResponse, e);
+                throw new AssertionError(customMessage);
+            }
         }
     }
 
@@ -410,7 +632,7 @@ public class DailyAssert
     {
         if (Constants.DEBUG == true)
         {
-            message = getNetworkMessage(mCall, mResponse, message);
+            message = message + getNetworkMessage(mCall, mResponse, null);
             return Assert.format(message, expected, actual);
         }
 
@@ -438,7 +660,7 @@ public class DailyAssert
         return null;
     }
 
-    private static String getNetworkMessage(@NonNull Call<JSONObject> call, Response<JSONObject> response, String message)
+    private static String getNetworkMessage(@NonNull Call<JSONObject> call, Response<JSONObject> response, Throwable e)
     {
 
         Assert.assertNotNull(call);
@@ -447,11 +669,12 @@ public class DailyAssert
         String url = call.request().url().toString();
         String body = bodyToString(call.request().body());
 
+
         StringBuilder builder = new StringBuilder();
 
-        if (Util.isTextEmpty(message) == false)
+        if (e != null && TextUtils.isEmpty(e.getMessage()) == false)
         {
-            builder.append(message);
+            builder.append(e.getMessage());
         }
 
         builder.append("\n===================== requset start =====================");
@@ -468,9 +691,9 @@ public class DailyAssert
             try
             {
                 bodyString = response.body().toString(1);
-            } catch (JSONException e)
+            } catch (JSONException e1)
             {
-                bodyString = e.getMessage();
+                bodyString = e1.getMessage();
             }
 
             builder.append("\n").append("body : ").append(bodyString);
