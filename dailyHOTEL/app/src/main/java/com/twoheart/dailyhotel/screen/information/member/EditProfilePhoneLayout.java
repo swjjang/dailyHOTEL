@@ -419,6 +419,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     public void hideVerificationVisible()
     {
         mVerificationLayout.setVisibility(View.INVISIBLE);
+        mVerificationEditText.setText(null);
 
         mConfirm.setVisibility(View.INVISIBLE);
         mConfirm.setEnabled(false);
