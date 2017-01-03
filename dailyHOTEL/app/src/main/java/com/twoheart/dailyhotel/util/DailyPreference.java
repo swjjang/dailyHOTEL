@@ -250,6 +250,8 @@ public class DailyPreference
         String stayRecentPlace = getStayRecentPlaces();
         String gourmetRecentPlace = getGourmetRecentPlaces();
 
+        String baseUrl = getBaseUrl();
+
         if (mEditor != null)
         {
             mEditor.clear();
@@ -269,6 +271,8 @@ public class DailyPreference
 
         setStayRecentPlaces(stayRecentPlace);
         setGourmetRecentPlaces(gourmetRecentPlace);
+
+        setBaseUrl(baseUrl);
 
         DailyHotel.AUTHORIZATION = null;
     }

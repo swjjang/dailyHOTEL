@@ -6,13 +6,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 public class LauncherActivity extends Activity
 {
@@ -70,6 +75,7 @@ public class LauncherActivity extends Activity
 
                     if (Util.isTextEmpty(baseURL) == false)
                     {
+                        logOut();
                         DailyPreference.getInstance(this).setBaseUrl(baseURL);
                         DailyDeepLink.getInstance().clear();
                         Util.restartExitApp(this);
@@ -87,5 +93,32 @@ public class LauncherActivity extends Activity
         startActivity(newIntent);
         overridePendingTransition(R.anim.abc_fade_in, R.anim.hold);
         finish();
+    }
+
+    private void logOut()
+    {
+        DailyPreference.getInstance(this).clear();
+
+        try
+        {
+            LoginManager.getInstance().logOut();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        try
+        {
+            UserManagement.requestLogout(null);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        DailyToast.showToast(this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
+
+        // Adjust에서 로그아웃시 기존 정보를 보냄으로 이벤트 발생후 삭제 필요.
+        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE);
+        AnalyticsManager.getInstance(this).setUserInformation(AnalyticsManager.ValueType.EMPTY, AnalyticsManager.ValueType.EMPTY);
     }
 }
