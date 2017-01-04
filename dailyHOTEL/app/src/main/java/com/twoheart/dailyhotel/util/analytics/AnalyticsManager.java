@@ -1030,6 +1030,7 @@ public class AnalyticsManager
         public static final String SWIPE = "Swipe";
         public static final String WALK = "Walk";
         public static final String CAR = "Car";
+        public static final String PARKING_NOT_AVAILABLE = "ParkingNotAvailable";
 
         public static final String DIRECTCALL_FRONT = "DirectCall_Front";
         public static final String DIRECTCALL_RESERVATION = "DirectCall_Reservation";
