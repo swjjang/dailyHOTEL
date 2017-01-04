@@ -237,8 +237,12 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             switch (day.dayOfWeek)
             {
                 // 일요일
-                case 1:
+                case Calendar.SUNDAY:
                     dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                    break;
+
+                case Calendar.SATURDAY:
+                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
                     break;
 
                 default:
