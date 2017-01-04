@@ -519,6 +519,7 @@
             android:layout_height="56dp">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/howToVisitTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
