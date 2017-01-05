@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.twoheart.dailyhotel.Const;
+import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.User;
 import com.twoheart.dailyhotel.util.Constants;
@@ -28,6 +29,7 @@ import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -789,510 +791,431 @@ public class DailyMobileAPITest
         DailyMobileAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
-    //
-    //    @Test
-    //    public void requestUserProfileBenefit() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            DailyAssert.assertTrue(dataJSONObject.has("bonusAmount"));
-    //                            DailyAssert.assertTrue(dataJSONObject.has("couponTotalCount"));
-    //                            DailyAssert.assertTrue(dataJSONObject.has("exceedLimitedBonus"));
-    //
-    //                            DailyAssert.assertTrue(dataJSONObject.getInt("bonusAmount") > 0);
-    //                            DailyAssert.assertTrue(dataJSONObject.getInt("couponTotalCount") > 0);
-    //
-    //                            DailyAssert.assertNotNull(dataJSONObject.has("exceedLimitedBonus"));
-    //                            boolean isExceedBonus = dataJSONObject.getBoolean("exceedLimitedBonus");
-    //                        } else
-    //                        {
-    //                            String msg = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(msg);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestUserCheckEmail() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        String result = responseJSONObject.getString("isSuccess");
-    //                        DailyAssert.assertNotNull(result);
-    //
-    //                        DailyAssert.assertEquals("true", result);
-    //                        if ("true".equalsIgnoreCase(result) == true)
-    //                        {
-    //                            // do nothing
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(message);
-    //                        }
-    //                    } catch (JSONException e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Const.TEST_CHECK_EMAIL_ADDRESS, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestUserChangePassword() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        String result = responseJSONObject.getString("isSuccess");
-    //                        DailyAssert.assertEquals("true", result);
-    //
-    //                        if ("true".equalsIgnoreCase(result) == true)
-    //                        {
-    //                            // do nothing!
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(message);
-    //                        }
-    //                    } catch (JSONException e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserChangePassword(mNetworkTag, Crypto.getUrlDecoderEx(Const.TEST_EMAIL), networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestUserInformationForPayment() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback mUserInformationFinalCheckCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msg_code");
-    //                        DailyAssert.assertEquals(0, msgCode);
-    //
-    //                        if (msgCode == 0)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            String name = dataJSONObject.getString("user_name");
-    //                            String phone = dataJSONObject.getString("user_phone");
-    //                            String email = dataJSONObject.getString("user_email");
-    //                            String userIndex = dataJSONObject.getString("user_idx");
-    //
-    //                            DailyAssert.assertNotNull(name);
-    //                            DailyAssert.assertNotNull(phone);
-    //                            DailyAssert.assertNotNull(email);
-    //                            DailyAssert.assertNotNull(userIndex);
-    //
-    //                            if (mUser != null)
-    //                            {
-    //                                DailyAssert.assertEquals(mUser.getName(), name);
-    //                                DailyAssert.assertEquals(mUser.getPhone(), phone);
-    //                                DailyAssert.assertEquals(mUser.getEmail(), email);
-    //                                DailyAssert.assertEquals(mUser.getUserIdx(), userIndex);
-    //                            }
-    //
-    //                            int bonus = dataJSONObject.getInt("user_bonus");
-    //                            DailyAssert.assertTrue(bonus >= 0);
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestUserUpdateInformationForSocial() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msg_code");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            boolean result = dataJSONObject.getBoolean("is_success");
-    //                            DailyAssert.assertTrue(result);
-    //
-    //                            String serverDate = dataJSONObject.getString("serverDate");
-    //                            DailyAssert.assertNotNull(serverDate);
-    //
-    //                            if (result == true)
-    //                            {
-    //                                // do nothing
-    //                            } else
-    //                            {
-    //                                String message = responseJSONObject.getString("msg");
-    //                                DailyAssert.fail(message);
-    //                            }
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        Map<String, String> params = new HashMap<>();
-    //        params.put("user_idx", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_INDEX));
-    //        params.put("user_email", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_EMAIL));
-    //        params.put("user_name", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_NAME));
-    //        params.put("birthday", Const.TEST_USER_BIRTHDAY);
-    //
-    //        // 전화번호 일단 패스
-    //        String phoneNumber = "";
-    //        if (Util.isTextEmpty(phoneNumber) == false)
-    //        {
-    //            params.put("user_phone", phoneNumber.replaceAll("-", ""));
-    //        }
-    //
-    //        // 추천도 일단 패스
-    //        String recommender = "";
-    //        if (Util.isTextEmpty(recommender) == false)
-    //        {
-    //            params.put("recommendation_code", recommender);
-    //        }
-    //
-    //        // 베내핏도 패스
-    //        boolean isBenefit = true;
-    //        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestUserBillingCardList() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msg_code");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-    //                        DailyAssert.assertNotNull(dataJSONArray);
-    //
-    //                        ArrayList<CreditCard> creditCardArrayList = new ArrayList<>();
-    //
-    //                        int length = dataJSONArray.length();
-    //                        if (length == 0)
-    //                        {
-    //                            // do nothing
-    //                        } else
-    //                        {
-    //                            JSONObject jsonObject;
-    //                            for (int i = 0; i < length; i++)
-    //                            {
-    //                                jsonObject = dataJSONArray.getJSONObject(i);
-    //
-    //                                // 목록에서는 빌링키가 필요없다.
-    //                                CreditCard creditCard = new CreditCard(//
-    //                                    jsonObject.getString("card_name"), //
-    //                                    jsonObject.getString("print_cardno"),//
-    //                                    jsonObject.getString("billkey"), //
-    //                                    jsonObject.getString("cardcd"));
-    //
-    //                                creditCardArrayList.add(creditCard);
-    //
-    //                                DailyAssert.assertFalse("카드 이름", Util.isTextEmpty(creditCard.name));
-    //                                DailyAssert.assertFalse("카드 번호", Util.isTextEmpty(creditCard.number));
-    //                                DailyAssert.assertFalse("카드 키", Util.isTextEmpty(creditCard.billingkey));
-    //                                DailyAssert.assertFalse("카드 사명", Util.isTextEmpty(creditCard.cardcd));
-    //
-    //                                String cardCds = CreditCard.getCardCDName(mContext, creditCard.cardcd);
-    //                                DailyAssert.assertFalse("카드사명 찾기 실패", Util.isTextEmpty(cardCds));
-    //                            }
-    //
-    //                            if (creditCardArrayList.size() > 0)
-    //                            {
-    //                                String checkNum = Crypto.getUrlDecoderEx(Const.TEST_SKIP_DELETE_CREDITCARD_NUMBER);
-    //
-    //                                boolean isNeedCheck = Util.isTextEmpty(checkNum) == false ? true : false;
-    //                                if (isNeedCheck == false)
-    //                                {
-    //                                    CreditCard creditCard = creditCardArrayList.get(creditCardArrayList.size() - 1);
-    //                                    requestUserDeleteBillingCard(creditCard.billingkey);
-    //                                } else
-    //                                {
-    //                                    for (int i = creditCardArrayList.size() - 1; i >= 0; i--)
-    //                                    {
-    //                                        CreditCard creditCard = creditCardArrayList.get(i);
-    //                                        if (checkNum.equalsIgnoreCase(creditCard.number) == false)
-    //                                        {
-    //                                            requestUserDeleteBillingCard(creditCard.billingkey);
-    //                                            break;
-    //                                        }
-    //                                    }
-    //                                }
-    //                            }
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserBillingCardList(mNetworkTag, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Ignore
-    //    public void requestUserDeleteBillingCard(String billingkey) throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msg_code");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                        DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                        boolean result = false;
-    //
-    //                        if (dataJSONObject != null)
-    //                        {
-    //                            result = dataJSONObject.getInt("isSuccess") == 1;
-    //                        }
-    //
-    //                        DailyAssert.assertTrue(result);
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserDeleteBillingCard(mNetworkTag, billingkey, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
+
+    @Test
+    public void requestUserProfileBenefit() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        assertThat(dataJSONObject, allOf(notNullValue(), isA(JSONObject.class)));
+
+                        assertThat(dataJSONObject.getBoolean("exceedLimitedBonus"), allOf(notNullValue(), isA(Boolean.class)));
+                        assertThat(dataJSONObject.getInt("bonusAmount"), moreThan(0));
+                        assertThat(dataJSONObject.getInt("couponTotalCount"), moreThan(0));
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        assertThat(msg, isNotEmpty());
+                        assertThat(msg, msgCode, is(100));
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestUserCheckEmail() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    String result = responseJSONObject.getString("isSuccess");
+
+                    assertThat(responseJSONObject.getString("msg"), allOf(notNullValue(), isA(String.class)));
+                    assertThat(result, is("true"));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Const.TEST_EMAIL, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestUserChangePassword() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    String result = responseJSONObject.getString("isSuccess");
+
+                    assertThat(responseJSONObject.getString("msg"), allOf(notNullValue(), isA(String.class)));
+                    assertThat(result, is("true"));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserChangePassword(mNetworkTag, Crypto.getUrlDecoderEx(Const.TEST_EMAIL), networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestUserInformationForPayment() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback mUserInformationFinalCheckCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    if (msgCode == 0)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        assertThat(dataJSONObject, notNullValue());
+
+                        String name = dataJSONObject.getString("user_name");
+                        String phone = dataJSONObject.getString("user_phone");
+                        String email = dataJSONObject.getString("user_email");
+                        String userIndex = dataJSONObject.getString("user_idx");
+
+                        assertThat(name, isNotEmpty());
+                        assertThat(phone, isNotEmpty());
+                        assertThat(email, isNotEmpty());
+                        assertThat(userIndex, isNotEmpty());
+
+                        if (mUser != null)
+                        {
+                            assertThat(name, equalTo(mUser.getName()));
+                            assertThat(phone, equalTo(mUser.getPhone()));
+                            assertThat(email, equalTo(mUser.getEmail()));
+                            assertThat(userIndex, equalTo(mUser.getUserIdx()));
+                        }
+
+                        int bonus = dataJSONObject.getInt("user_bonus");
+                        assertThat(bonus, moreThan(0));
+                    } else
+                    {
+                        assertThat(responseJSONObject.getString("msg"), isNotEmpty());
+                        assertThat(msgCode, is(0));
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestUserUpdateInformationForSocial() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    assertThat(dataJSONObject.getBoolean("is_success"), allOf(is(true), isA(Boolean.class)));
+
+                    String serverDate = dataJSONObject.getString("serverDate");
+                    assertThat(serverDate, isNotEmpty());
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_idx", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_INDEX));
+        params.put("user_email", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_EMAIL));
+        params.put("user_name", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_NAME));
+        params.put("birthday", Const.TEST_USER_BIRTHDAY);
+
+        // 전화번호 일단 패스
+        String phoneNumber = "";
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            params.put("user_phone", phoneNumber.replaceAll("-", ""));
+        }
+
+        // 추천도 일단 패스
+        String recommender = "";
+        if (Util.isTextEmpty(recommender) == false)
+        {
+            params.put("recommendation_code", recommender);
+        }
+
+        // 베내핏도 패스
+        boolean isBenefit = true;
+        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+
+        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestUserBillingCardList() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    assertThat(msgCode, is(100));
+
+                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                    assertThat(dataJSONArray, notNullValue());
+
+                    ArrayList<CreditCard> creditCardArrayList = new ArrayList<>();
+
+                    int length = dataJSONArray.length();
+                    JSONObject jsonObject;
+                    for (int i = 0; i < length; i++)
+                    {
+                        jsonObject = dataJSONArray.getJSONObject(i);
+
+                        // 목록에서는 빌링키가 필요없다.
+                        CreditCard creditCard = new CreditCard(//
+                            jsonObject.getString("card_name"), //
+                            jsonObject.getString("print_cardno"),//
+                            jsonObject.getString("billkey"), //
+                            jsonObject.getString("cardcd"));
+
+                        creditCardArrayList.add(creditCard);
+
+                        assertThat("카드 이름", creditCard.name, isNotEmpty());
+                        assertThat("카드 번호", creditCard.number, isNotEmpty());
+                        assertThat("카드 키", creditCard.billingkey, isNotEmpty());
+                        assertThat("카드 사명", creditCard.cardcd, isNotEmpty());
+
+                        String cardCds = CreditCard.getCardCDName(mContext, creditCard.cardcd);
+                        assertThat("카드사명 찾기 실패", cardCds, isNotEmpty());
+                    }
+
+                    // requestUserDeleteBillingCard() 용 테스트 코드
+                    if (creditCardArrayList.size() > 0)
+                    {
+                        String checkNum = Crypto.getUrlDecoderEx(Const.TEST_SKIP_DELETE_CREDITCARD_NUMBER);
+
+                        boolean isNeedCheck = Util.isTextEmpty(checkNum) == false ? true : false;
+                        if (isNeedCheck == false)
+                        {
+                            CreditCard creditCard = creditCardArrayList.get(creditCardArrayList.size() - 1);
+                            requestUserDeleteBillingCard(creditCard.billingkey);
+                        } else
+                        {
+                            for (int i = creditCardArrayList.size() - 1; i >= 0; i--)
+                            {
+                                CreditCard creditCard = creditCardArrayList.get(i);
+                                if (checkNum.equalsIgnoreCase(creditCard.number) == false)
+                                {
+                                    requestUserDeleteBillingCard(creditCard.billingkey);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserBillingCardList(mNetworkTag, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Ignore
+    public void requestUserDeleteBillingCard(String billingkey) throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    assertThat(msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    assertThat(dataJSONObject.getInt("isSuccess"), is(1));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserDeleteBillingCard(mNetworkTag, billingkey, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
     //
     //    @Test
     //    public void requestStayList() throws Exception
