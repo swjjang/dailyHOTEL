@@ -75,6 +75,27 @@ public class DailyMatcher
         };
     }
 
+    public static Matcher<Long> moreThan(final long defaultValue)
+    {
+        return new TypeSafeMatcher<Long>()
+        {
+            double longValue;
+
+            @Override
+            protected boolean matchesSafely(Long item)
+            {
+                longValue = item;
+                return item >= defaultValue;
+            }
+
+            @Override
+            public void describeTo(Description description)
+            {
+                description.appendValue(longValue + " is not over " + defaultValue);
+            }
+        };
+    }
+
     public static Matcher<Double> moreThan(final double defaultValue)
     {
         return new TypeSafeMatcher<Double>()
