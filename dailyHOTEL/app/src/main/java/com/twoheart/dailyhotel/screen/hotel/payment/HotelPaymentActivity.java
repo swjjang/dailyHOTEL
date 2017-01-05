@@ -1416,13 +1416,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
-        if (payPrice == 0)
-        {
-            stayPaymentInformation.isFree = true;
-        } else
-        {
-            stayPaymentInformation.isFree = false;
-        }
+        //        if (payPrice == 0)
+        //        {
+        //            stayPaymentInformation.isFree = true;
+        //        } else
+        //        {
+        //            stayPaymentInformation.isFree = false;
+        //        }
 
         mHotelPaymentLayout.setBonusTextView(stayPaymentInformation.bonus);
 
