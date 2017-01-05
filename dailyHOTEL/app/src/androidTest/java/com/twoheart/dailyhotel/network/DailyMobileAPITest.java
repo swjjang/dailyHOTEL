@@ -2671,453 +2671,382 @@ public class DailyMobileAPITest
             , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_GOURMET_AUTO_SEARCH_TEXT, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
-    //
-    //    @Test
-    //    public void requestGourmetDetailInformation() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //
-    //                        JSONObject dataJSONObject = null;
-    //
-    //                        if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
-    //                        {
-    //                            dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                        }
-    //
-    //                        if (msgCode == 100 && dataJSONObject == null)
-    //                        {
-    //                            msgCode = 4;
-    //                        }
-    //
-    //                        // 100	성공
-    //                        // 4	데이터가 없을시
-    //                        // 5	판매 마감시
-    //                        switch (msgCode)
-    //                        {
-    //                            case 100:
-    //                                checkGourmetDetail(dataJSONObject);
-    //                                break;
-    //
-    //                            case 5:
-    //                            {
-    //                                checkGourmetDetail(dataJSONObject);
-    //
-    //                                if (responseJSONObject.has("msg") == true)
-    //                                {
-    //                                    String msg = responseJSONObject.getString("msg");
-    //                                    DailyAssert.fail(msg);
-    //                                } else
-    //                                {
-    //                                    DailyAssert.fail();
-    //                                }
-    //                                break;
-    //                            }
-    //
-    //                            case 4:
-    //                            default:
-    //                            {
-    //                                if (responseJSONObject.has("msg") == true)
-    //                                {
-    //                                    String msg = responseJSONObject.getString("msg");
-    //                                    DailyAssert.fail(msg);
-    //                                } else
-    //                                {
-    //                                    DailyAssert.fail();
-    //                                }
-    //                                break;
-    //                            }
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //
-    //            private void checkGourmetDetail(JSONObject jsonObject) throws Exception
-    //            {
-    //                DailyAssert.assertNotNull(jsonObject.getString("category"));
-    //                DailyAssert.assertNotNull(jsonObject.getString("categorySub"));
-    //                DailyAssert.assertNotNull(jsonObject.getString("name"));
-    //                DailyAssert.assertNotNull(jsonObject.getString("address"));
-    //
-    //                DailyAssert.assertNotNull(jsonObject.getDouble("longitude"));
-    //                DailyAssert.assertNotNull(jsonObject.getDouble("latitude"));
-    //
-    //                boolean ratingShow = jsonObject.getBoolean("ratingShow");
-    //                if (ratingShow == true)
-    //                {
-    //                    DailyAssert.assertTrue(jsonObject.getInt("ratingValue") >= 0);
-    //                    DailyAssert.assertTrue(jsonObject.getInt("ratingPersons") >= 0);
-    //                }
-    //
-    //                // 주차가능
-    //                DailyAssert.assertTrue(jsonObject.has("parking"));
-    //                // 발렛가능
-    //                DailyAssert.assertTrue(jsonObject.has("valet"));
-    //                // 프라이빗룸
-    //                DailyAssert.assertTrue(jsonObject.has("privateRoom"));
-    //                // 단체예약
-    //                DailyAssert.assertTrue(jsonObject.has("groupBooking"));
-    //                // 베이비시트
-    //                DailyAssert.assertTrue(jsonObject.has("babySeat"));
-    //                // 코르키지
-    //                DailyAssert.assertTrue(jsonObject.has("corkage"));
-    //
-    //                // Image Url
-    //                String imageUrl = jsonObject.getString("imgUrl");
-    //                DailyAssert.assertNotNull(imageUrl);
-    //
-    //                JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
-    //                DailyAssert.assertNotNull(pathUrlJSONObject);
-    //
-    //                Iterator<String> iterator = pathUrlJSONObject.keys();
-    //                while (iterator.hasNext())
-    //                {
-    //                    String key = iterator.next();
-    //
-    //                    try
-    //                    {
-    //                        JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
-    //                        DailyAssert.assertNotNull(pathUrlJSONObject);
-    //
-    //                        int length = pathJSONArray.length();
-    //                        for (int i = 0; i < length; i++)
-    //                        {
-    //                            JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
-    //                            DailyAssert.assertNotNull(imageInformationJSONObject);
-    //
-    //                            DailyAssert.assertNotNull(imageInformationJSONObject.getString("description"));
-    //                            DailyAssert.assertNotNull(imageInformationJSONObject.getString("name"));
-    //                        }
-    //                        break;
-    //                    } catch (JSONException e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                }
-    //
-    //                //benefit
-    //                if (jsonObject.has("benefit") == true)
-    //                {
-    //                    String benefit = jsonObject.getString("benefit");
-    //
-    //                    if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
-    //                    {
-    //                        JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
-    //                        DailyAssert.assertNotNull(benefitJSONArray);
-    //
-    //                        int length = benefitJSONArray.length();
-    //                        if (length > 0)
-    //                        {
-    //                            for (int i = 0; i < length; i++)
-    //                            {
-    //                                DailyAssert.assertNotNull(benefitJSONArray.getString(i));
-    //                            }
-    //                        }
-    //                    }
-    //                }
-    //
-    //                // Detail
-    //                JSONArray detailJSONArray = jsonObject.getJSONArray("details");
-    //
-    //                int detailLength = detailJSONArray.length();
-    //                for (int i = 0; i < detailLength; i++)
-    //                {
-    //                    JSONObject detailJSONObject = detailJSONArray.getJSONObject(i);
-    //                    DailyAssert.assertNotNull(detailJSONObject);
-    //
-    //                    Iterator<String> detailIterator = jsonObject.keys();
-    //                    if (detailIterator.hasNext() == true)
-    //                    {
-    //                        String title = detailIterator.next();
-    //                        JSONArray jsonArray = jsonObject.getJSONArray(title);
-    //                        DailyAssert.assertNotNull(jsonArray);
-    //
-    //                        int length = jsonArray.length();
-    //                        for (int j = 0; j < length; j++)
-    //                        {
-    //                            DailyAssert.assertNotNull(jsonArray.getString(i));
-    //                        }
-    //                    }
-    //                }
-    //
-    //                // Ticket Information
-    //                if (jsonObject.has("tickets") == true && jsonObject.isNull("tickets") == false)
-    //                {
-    //                    JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
-    //                    DailyAssert.assertNotNull(ticketInformationJSONArray);
-    //
-    //                    int ticketInformationLength = ticketInformationJSONArray.length();
-    //                    for (int i = 0; i < ticketInformationLength; i++)
-    //                    {
-    //                        JSONObject ticketInfromateionJSONObject = ticketInformationJSONArray.getJSONObject(i);
-    //                        DailyAssert.assertTrue(ticketInfromateionJSONObject.getInt("saleIdx") > 0);
-    //                        DailyAssert.assertNotNull(ticketInfromateionJSONObject.getString("ticketName").trim());
-    //                        DailyAssert.assertNotNull(ticketInfromateionJSONObject.getString("option").trim());
-    //                        DailyAssert.assertNotNull(ticketInfromateionJSONObject.getString("benefit").trim());
-    //                        DailyAssert.assertTrue(ticketInfromateionJSONObject.getInt("price") >= 0);
-    //                        DailyAssert.assertTrue(ticketInfromateionJSONObject.getInt("discount") >= 0);
-    //                    }
-    //                }
-    //
-    //                DailyAssert.assertTrue(jsonObject.has("myWish"));
-    //                DailyAssert.assertTrue(jsonObject.has("wishCount"));
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestGourmetDetailInformation(//
-    //            mNetworkTag, Const.TEST_GOURMET_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestGourmetPaymentInformation() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msg_code");
-    //                        DailyAssert.assertEquals(0, msgCode);
-    //
-    //                        if (msgCode == 0)
-    //                        {
-    //                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(jsonObject);
-    //
-    //                            int discountPrice = jsonObject.getInt("discount");
-    //                            long sday = jsonObject.getLong("sday");
-    //                            int maxCount = jsonObject.getInt("max_sale_count");
-    //                            DailyAssert.assertTrue(discountPrice >= 0);
-    //                            DailyAssert.assertTrue(sday > 0);
-    //                            DailyAssert.assertTrue(maxCount >= 0);
-    //
-    //                            JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
-    //                            DailyAssert.assertNotNull(timeJSONArray);
-    //
-    //                            int length = timeJSONArray.length();
-    //                            for (int i = 0; i < length; i++)
-    //                            {
-    //                                DailyAssert.assertNotNull(timeJSONArray.getLong(i));
-    //                            }
-    //
-    //                            if (length > 0)
-    //                            {
-    //                                requestGourmetCheckTicket(Const.TEST_GOURMET_TIKET_INDEX, timeJSONArray.getLong(0));
-    //                            }
-    //
-    //                        } else
-    //                        {
-    //                            DailyAssert.fail(responseJSONObject.getString("msg"));
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestGourmetPaymentInformation(//
-    //            mNetworkTag, Const.TEST_GOURMET_TIKET_INDEX, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // 해당 티켓은 requestGourmetPaymentInformation 에서 처리 해야 함. GourmetPaymentInformation의 정보가 필요함.
-    //    @Ignore
-    //    public void requestGourmetCheckTicket(int ticketIndex, long ticketTime) throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                        DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                        DailyAssert.assertTrue(dataJSONObject.has("on_sale"));
-    //
-    //                        int msgCode = responseJSONObject.getInt("msg_code");
-    //                        DailyAssert.assertEquals(0, msgCode);
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestGourmetCheckTicket(mNetworkTag//
-    //            , ticketIndex//
-    //            , mSaleTime.getDayOfDaysDateFormat("yyMMdd")//
-    //            , Const.TEST_GOURMET_TICKET_COUNT//
-    //            , Long.toString(ticketTime), networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestGourmetPayment() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msg_code");
-    //                        DailyAssert.assertEquals(0, msgCode);
-    //
-    //                        if (msgCode == 0)
-    //                        {
-    //                            // do nothing!
-    //                        } else
-    //                        {
-    //                            if (responseJSONObject.has("msg") == false)
-    //                            {
-    //                                DailyAssert.fail();
-    //                            } else
-    //                            {
-    //                                String msg = responseJSONObject.getString("msg");
-    //                                DailyAssert.assertNotNull(msg);
-    //
-    //                                String[] result = msg.split("\\^");
-    //                                DailyAssert.assertTrue(result != null && result.length > 0);
-    //
-    //                                if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
-    //                                {
-    //                                    // do nothing!
-    //                                } else if ("FAIL".equalsIgnoreCase(result[0]) == true)
-    //                                {
-    //                                    // do nothing!
-    //                                } else
-    //                                {
-    //                                    DailyAssert.fail(result.toString());
-    //                                }
-    //                            }
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        Map<String, String> params = new HashMap<>();
-    //        params.put("sale_reco_idx", Integer.toString(Const.TEST_GOURMET_TIKET_INDEX));
-    //        params.put("billkey", Const.TEST_EASY_CARD_BILLINGKEY);
-    //        params.put("ticket_count", Integer.toString(Const.TEST_GOURMET_TICKET_COUNT));
-    //
-    //        // coupon skip
-    //        //        params.put("user_coupon_code", coupon.userCouponCode);
-    //
-    //        params.put("customer_name", Const.TEST_USER_NAME);
-    //        params.put("customer_phone", Const.TEST_USER_PHONE);
-    //        params.put("customer_email", Const.TEST_EMAIL);
-    //        params.put("arrival_time", String.valueOf(getGourmetReservationTime()));
-    //        params.put("customer_msg", "");
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestGourmetPayment(mNetworkTag, params, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
+
+    @Test
+    public void requestGourmetDetailInformation() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    // 100	성공
+                    // 4	데이터가 없을시
+                    // 5	판매 마감시
+                    assertThat(message, msgCode, anyOf(is(100), is(5)));
+
+                    assertThat(responseJSONObject.get("data"), allOf(notNullValue(), instanceOf(JSONObject.class)));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    checkGourmetDetail(dataJSONObject);
+
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+
+            private void checkGourmetDetail(JSONObject jsonObject) throws Exception
+            {
+                assertThat(jsonObject.getString("category"), isNotEmpty());
+                assertThat(jsonObject.getString("categorySub"), isNotEmpty());
+                assertThat(jsonObject.getString("name"), isNotEmpty());
+                assertThat(jsonObject.getString("address"), isNotEmpty());
+
+                assertThat(jsonObject.getDouble("longitude"), allOf(notNullValue(), not(0d)));
+                assertThat(jsonObject.getDouble("latitude"), allOf(notNullValue(), not(0d)));
+
+                boolean ratingShow = jsonObject.getBoolean("ratingShow");
+                if (ratingShow == true)
+                {
+                    assertThat(jsonObject.getInt("ratingValue"), moreThan(0));
+                    assertThat(jsonObject.getInt("ratingPersons"), moreThan(0));
+                }
+
+                // 주차가능
+                assertThat(jsonObject.get("parking"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                // 발렛가능
+                assertThat(jsonObject.get("valet"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                // 프라이빗룸
+                assertThat(jsonObject.get("privateRoom"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                // 단체예약
+                assertThat(jsonObject.get("groupBooking"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                // 베이비시트
+                assertThat(jsonObject.get("babySeat"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                // 코르키지
+                assertThat(jsonObject.get("corkage"), allOf(notNullValue(), instanceOf(Boolean.class)));
+
+                // Image Url
+                String imageUrl = jsonObject.getString("imgUrl");
+                assertThat(imageUrl, isNotEmpty());
+
+                JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
+                assertThat(pathUrlJSONObject, notNullValue());
+
+                Iterator<String> iterator = pathUrlJSONObject.keys();
+                while (iterator.hasNext())
+                {
+                    String key = iterator.next();
+
+                    JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
+                    assertThat(pathUrlJSONObject, notNullValue());
+
+                    int length = pathJSONArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
+                        assertThat(imageInformationJSONObject, notNullValue());
+
+                        assertThat(imageInformationJSONObject.getString("description"), isNotEmpty());
+                        assertThat(imageInformationJSONObject.getString("name"), isNotEmpty());
+                    }
+                    break;
+                }
+
+                //benefit
+                if (jsonObject.has("benefit") == true)
+                {
+                    String benefit = jsonObject.getString("benefit");
+                    assertThat(benefit, isNotEmpty());
+                    assertThat(jsonObject.get("benefitContents"), allOf(notNullValue(), instanceOf(JSONArray.class)));
+
+                    JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
+
+                    int length = benefitJSONArray.length();
+                    if (length > 0)
+                    {
+                        for (int i = 0; i < length; i++)
+                        {
+                            assertThat(benefitJSONArray.getString(i), isNotEmpty());
+                        }
+                    }
+                }
+
+                // Detail
+                JSONArray detailJSONArray = jsonObject.getJSONArray("details");
+
+                int detailLength = detailJSONArray.length();
+                for (int i = 0; i < detailLength; i++)
+                {
+                    JSONObject detailJSONObject = detailJSONArray.getJSONObject(i);
+                    assertThat(detailJSONObject, notNullValue());
+
+                    Iterator<String> detailIterator = jsonObject.keys();
+                    if (detailIterator.hasNext() == true)
+                    {
+                        String title = detailIterator.next();
+                        JSONArray jsonArray = jsonObject.getJSONArray(title);
+                        assertThat(jsonArray, notNullValue());
+
+                        int length = jsonArray.length();
+                        for (int j = 0; j < length; j++)
+                        {
+                            assertThat(jsonArray.getString(i), isNotEmpty());
+                        }
+                    }
+                }
+
+                // Ticket Information
+                if (jsonObject.has("tickets") == true && jsonObject.isNull("tickets") == false)
+                {
+                    JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
+                    assertThat(ticketInformationJSONArray, notNullValue());
+
+                    int ticketInformationLength = ticketInformationJSONArray.length();
+                    for (int i = 0; i < ticketInformationLength; i++)
+                    {
+                        JSONObject ticketInfromateionJSONObject = ticketInformationJSONArray.getJSONObject(i);
+                        assertThat(ticketInfromateionJSONObject.getInt("saleIdx"), moreThan(1));
+                        assertThat(ticketInfromateionJSONObject.getString("ticketName"), isNotEmpty());
+                        assertThat(ticketInfromateionJSONObject.getString("option"), isNotEmpty());
+                        assertThat(ticketInfromateionJSONObject.getString("benefit"), isNotEmpty());
+                        assertThat(ticketInfromateionJSONObject.getInt("price"), moreThan(0));
+                        assertThat(ticketInfromateionJSONObject.getInt("discount"), moreThan(0));
+                    }
+                }
+
+                assertThat(jsonObject.get("myWish"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(jsonObject.get("wishCount"), allOf(notNullValue(), instanceOf(Boolean.class)));
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetDetailInformation(//
+            mNetworkTag, Const.TEST_GOURMET_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestGourmetPaymentInformation() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(0));
+
+                    JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+                    assertThat(jsonObject, notNullValue());
+
+                    int discountPrice = jsonObject.getInt("discount");
+                    long sday = jsonObject.getLong("sday");
+                    int maxCount = jsonObject.getInt("max_sale_count");
+                    assertThat(discountPrice, moreThan(0));
+                    assertThat(sday, moreThan(0L));
+                    assertThat(maxCount, moreThan(0));
+
+                    JSONArray timeJSONArray = jsonObject.getJSONArray("eating_time_list");
+                    assertThat(timeJSONArray, notNullValue());
+
+                    int length = timeJSONArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        assertThat(timeJSONArray.getLong(i), moreThan(1L));
+                    }
+
+                    if (length > 0)
+                    {
+                        requestGourmetCheckTicket(Const.TEST_GOURMET_TIKET_INDEX, timeJSONArray.getLong(0));
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetPaymentInformation(//
+            mNetworkTag, Const.TEST_GOURMET_TIKET_INDEX, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // 해당 티켓은 requestGourmetPaymentInformation 에서 처리 해야 함. GourmetPaymentInformation의 정보가 필요함.
+    @Ignore
+    public void requestGourmetCheckTicket(int ticketIndex, long ticketTime) throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+                    assertThat(msgCode, is(0));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    assertThat(dataJSONObject.get("on_sale"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetCheckTicket(mNetworkTag//
+            , ticketIndex//
+            , mSaleTime.getDayOfDaysDateFormat("yyMMdd")//
+            , Const.TEST_GOURMET_TICKET_COUNT//
+            , Long.toString(ticketTime), networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestGourmetPayment() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode == 0)
+                    {
+                        // do nothing!
+                    } else
+                    {
+                        if (responseJSONObject.has("msg") == false)
+                        {
+                            assertThat("message is Null", msgCode, is(0));
+                        } else
+                        {
+                            String msg = responseJSONObject.getString("msg");
+                            assertThat(msg, isNotEmpty());
+
+                            String[] result = msg.split("\\^");
+                            if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
+                            {
+                                // do nothing!
+                            } else if ("FAIL".equalsIgnoreCase(result[0]) == true)
+                            {
+                                // do nothing!
+                            } else
+                            {
+                                assertThat(result.toString(), false);
+                            }
+                        }
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("sale_reco_idx", Integer.toString(Const.TEST_GOURMET_TIKET_INDEX));
+        params.put("billkey", Const.TEST_EASY_CARD_BILLINGKEY);
+        params.put("ticket_count", Integer.toString(Const.TEST_GOURMET_TICKET_COUNT));
+
+        // coupon skip
+        //        params.put("user_coupon_code", coupon.userCouponCode);
+
+        params.put("customer_name", Const.TEST_USER_NAME);
+        params.put("customer_phone", Const.TEST_USER_PHONE);
+        params.put("customer_email", Const.TEST_EMAIL);
+        params.put("arrival_time", String.valueOf(getGourmetReservationTime()));
+        params.put("customer_msg", "");
+
+        DailyMobileAPI.getInstance(mContext).requestGourmetPayment(mNetworkTag, params, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
 
     // 호텔 예약 대기 - Booking tid 는 항시 변하는 항목을 requestBookingList에서 테스트
     @Ignore
