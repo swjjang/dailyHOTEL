@@ -612,7 +612,7 @@ public class StayAutoRefundActivity extends BaseActivity
         mSelectedCancelReason = position;
 
         // 기타로 오는 경우
-        if (position == 6)
+        if (position == 7)
         {
             if (Util.isTextEmpty(message) == true)
             {
@@ -668,7 +668,7 @@ public class StayAutoRefundActivity extends BaseActivity
             String cancelMessage = null;
 
             // 기타인 경우
-            if (mSelectedCancelReason == 6)
+            if (mSelectedCancelReason == 7)
             {
                 if (Util.isTextEmpty(mCancelReasonMessage) == false)
                 {
@@ -739,7 +739,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         {
                             if (mCancelReasonMessage.indexOf('-') >= 0)
                             {
-                                cancelMessage = getString(R.string.label_select_cancel_refund06);
+                                cancelMessage = getString(R.string.label_select_cancel_refund07);
                             } else
                             {
                                 cancelMessage = mCancelReasonMessage;
