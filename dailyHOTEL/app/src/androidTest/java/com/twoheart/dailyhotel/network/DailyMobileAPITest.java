@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.twoheart.dailyhotel.Const;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.User;
@@ -15,10 +16,8 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
@@ -42,12 +42,15 @@ import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static com.twoheart.dailyhotel.DailyMatcher.isNotEmpty;
+import static com.twoheart.dailyhotel.DailyMatcher.moreThan;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -1216,204 +1219,193 @@ public class DailyMobileAPITest
         DailyMobileAPI.getInstance(mContext).requestUserDeleteBillingCard(mNetworkTag, billingkey, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
-    //
-    //    @Test
-    //    public void requestStayList() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            int hotelSaleCount = dataJSONObject.getInt("hotelSalesCount");
-    //                            DailyAssert.assertNotNull(hotelSaleCount);
-    //
-    //                            DailyAssert.assertEquals(Const.TEST_IS_SHOW_LIST_DETAIL, dataJSONObject.has("hotelSales"));
-    //
-    //                            JSONArray hotelJSONArray = null;
-    //
-    //                            if (dataJSONObject.has("hotelSales") == true)
-    //                            {
-    //                                hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
-    //                            }
-    //
-    //                            if (hotelJSONArray != null)
-    //                            {
-    //                                String imageUrl = dataJSONObject.getString("imgUrl");
-    //                                DailyAssert.assertNotNull(imageUrl);
-    //
-    //                                int nights = dataJSONObject.getInt("stays");
-    //                                DailyAssert.assertEquals(Const.TEST_NIGHTS, nights);
-    //
-    //                                int length = hotelJSONArray.length();
-    //                                JSONObject jsonObject;
-    //                                for (int i = 0; i < length; i++)
-    //                                {
-    //                                    jsonObject = hotelJSONArray.getJSONObject(i);
-    //                                    DailyAssert.assertNotNull(jsonObject);
-    //
-    //                                    try
-    //                                    {
-    //                                        String name = jsonObject.getString("name");
-    //                                        int price = jsonObject.getInt("price");
-    //                                        int discountPrice = jsonObject.getInt("discount"); // discountAvg ????
-    //                                        String addressSummary = jsonObject.getString("addrSummary");
-    //
-    //                                        DailyAssert.assertNotNull(name);
-    //                                        DailyAssert.assertNotNull(price);
-    //                                        DailyAssert.assertNotNull(discountPrice);
-    //                                        DailyAssert.assertNotNull(addressSummary);
-    //
-    //                                        try
-    //                                        {
-    //                                            Stay.Grade.valueOf(jsonObject.getString("grade"));
-    //                                        } catch (Exception e)
-    //                                        {
-    //                                            DailyAssert.fail(e);
-    //                                        }
-    //
-    //                                        DailyAssert.assertNotNull(jsonObject.getInt("hotelIdx"));
-    //
-    //                                        if (jsonObject.has("isSoldOut") == true)
-    //                                        {
-    //                                            boolean isSoldOut = jsonObject.getBoolean("isSoldOut");
-    //                                        }
-    //
-    //                                        DailyAssert.assertNotNull(jsonObject.getString("districtName"));
-    //                                        DailyAssert.assertNotNull(jsonObject.getString("category"));
-    //                                        DailyAssert.assertNotNull(jsonObject.getDouble("latitude"));
-    //                                        DailyAssert.assertNotNull(jsonObject.getDouble("longitude"));
-    //                                        DailyAssert.assertTrue(jsonObject.has("isDailyChoice"));
-    //                                        DailyAssert.assertNotNull(jsonObject.getInt("rating")); // ratingValue ??
-    //                                        DailyAssert.assertNotNull(jsonObject.getString("sday"));
-    //                                        DailyAssert.assertNotNull(jsonObject.getDouble("distance"));
-    //
-    //                                        JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
-    //                                        DailyAssert.assertNotNull(imageJSONObject);
-    //
-    //                                        String stayImageUrl = null;
-    //                                        Iterator<String> iterator = imageJSONObject.keys();
-    //                                        while (iterator.hasNext())
-    //                                        {
-    //                                            String key = iterator.next();
-    //
-    //                                            try
-    //                                            {
-    //                                                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
-    //                                                stayImageUrl = imageUrl + key + pathJSONArray.getString(0);
-    //                                                break;
-    //                                            } catch (JSONException e)
-    //                                            {
-    //                                                DailyAssert.fail(e);
-    //                                            }
-    //                                        }
-    //
-    //                                        DailyAssert.assertNotNull(stayImageUrl);
-    //
-    //                                        if (jsonObject.has("benefit") == true) // hotelBenefit ?
-    //                                        {
-    //                                            DailyAssert.assertNotNull(jsonObject.getString("benefit"));
-    //                                        }
-    //                                    } catch (JSONException e)
-    //                                    {
-    //                                        DailyAssert.fail(e);
-    //                                    }
-    //                                }
-    //                            }
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        HashMap<String, Object> paramMap = new HashMap<>();
-    //
-    //        paramMap.put("dateCheckIn", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-    //        paramMap.put("stays", Const.TEST_NIGHTS);
-    //        paramMap.put("provinceIdx", Const.TEST_STAY_PROVINCE_INDEX);
-    //        // area skip
-    //        //  queryMap.put("areaIdx", areaIdx);
-    //
-    //        paramMap.put("persons", Const.TEST_STAY_PERSONS);
-    //        if (Category.ALL.code.equalsIgnoreCase(Const.TEST_STAY_CATEGORY_CODE) == false)
-    //        {
-    //            paramMap.put("category", Const.TEST_STAY_CATEGORY_CODE);
-    //        }
-    //
-    //        //  if(mBedTypeList != null && mBedTypeList.size() > 0)
-    //        //  {
-    //        //hashMap.put("bedType", mBedTypeList);
-    //        //  }
-    //        //
-    //        //  if(mLuxuryList != null && mLuxuryList.size() > 0)
-    //        //  {
-    //        //hashMap.put("luxury", mLuxuryList);
-    //        //  }
-    //
-    //        if (Const.TEST_PAGE_INDEX > 0)
-    //        {
-    //            paramMap.put("page", Const.TEST_PAGE_INDEX);
-    //            paramMap.put("limit", Const.TEST_LIMIT_LIST_COUNT);
-    //        }
-    //
-    //        // sort skip
-    //        //  if (Constants.SortType.DEFAULT != mSort)
-    //        //  {
-    //        //if (Util.isTextEmpty(sortProperty) == false)
-    //        //{
-    //        // queryMap.put("sortProperty", sortProperty);
-    //        //}
-    //        //
-    //        //if (Util.isTextEmpty(sortDirection) == false)
-    //        //{
-    //        // queryMap.put("sortDirection", sortDirection);
-    //        //}
-    //        //
-    //        //if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
-    //        //{
-    //        // queryMap.put("latitude", latitude);
-    //        // queryMap.put("longitude", longitude);
-    //        //}
-    //        //  }
-    //
-    //        paramMap.put("details", Const.TEST_IS_SHOW_LIST_DETAIL);
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, paramMap, null, null, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
+
+    @Test
+    public void requestStayList() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    assertThat(msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    assertThat(dataJSONObject.get("hotelSalesCount"), allOf(notNullValue(), instanceOf(Integer.class)));
+
+                    if (Const.TEST_IS_SHOW_LIST_DETAIL == true)
+                    {
+                        assertThat(dataJSONObject.get("hotelSales"), allOf(notNullValue(), instanceOf(JSONArray.class)));
+                    } else
+                    {
+                        assertThat(dataJSONObject.get("hotelSales"), notNullValue());
+                    }
+
+                    JSONArray hotelJSONArray = null;
+
+                    if (dataJSONObject.has("hotelSales") == true)
+                    {
+                        hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
+                    }
+
+                    if (hotelJSONArray != null)
+                    {
+                        String imageUrl = dataJSONObject.getString("imgUrl");
+                        assertThat(imageUrl, isNotEmpty());
+
+                        int nights = dataJSONObject.getInt("stays");
+                        assertThat(nights, is(Const.TEST_NIGHTS));
+
+                        JSONObject jsonObject;
+
+                        int length = hotelJSONArray.length();
+                        for (int i = 0; i < length; i++)
+                        {
+                            jsonObject = hotelJSONArray.getJSONObject(i);
+                            assertThat(jsonObject, notNullValue());
+
+                            String name = jsonObject.getString("name");
+                            int price = jsonObject.getInt("price");
+                            int discountPrice = jsonObject.getInt("discount"); // discountAvg ????
+                            String addressSummary = jsonObject.getString("addrSummary");
+
+                            assertThat(name, isNotEmpty());
+                            assertThat(price, moreThan(0));
+                            assertThat(discountPrice, moreThan(0));
+                            assertThat(addressSummary, isNotEmpty());
+
+                            assertThat(jsonObject.getString("grade"), isNotEmpty());
+
+                            assertThat(jsonObject.getInt("hotelIdx"), allOf(notNullValue(), not(0)));
+
+                            if (jsonObject.has("isSoldOut") == true)
+                            {
+                                assertThat(jsonObject.get("isSoldOut"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                            }
+
+                            assertThat(jsonObject.getString("districtName"), isNotEmpty());
+                            assertThat(jsonObject.getString("category"), isNotEmpty());
+                            assertThat(jsonObject.getDouble("latitude"), notNullValue());
+                            assertThat(jsonObject.getDouble("longitude"), notNullValue());
+                            assertThat(jsonObject.get("isDailyChoice"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                            assertThat(jsonObject.getInt("rating"), moreThan(0)); // ratingValue ??
+                            assertThat(jsonObject.getString("sday"), isNotEmpty());
+                            assertThat(jsonObject.getDouble("distance"), moreThan(0d));
+
+                            JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
+                            assertThat(imageJSONObject, notNullValue());
+
+                            String stayImageUrl = null;
+                            Iterator<String> iterator = imageJSONObject.keys();
+                            while (iterator.hasNext())
+                            {
+                                String key = iterator.next();
+
+                                try
+                                {
+                                    JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                                    stayImageUrl = imageUrl + key + pathJSONArray.getString(0);
+                                    break;
+                                } catch (JSONException e)
+                                {
+                                    ExLog.d(e.getMessage());
+                                    // 무시
+                                }
+                            }
+
+                            assertThat(stayImageUrl, isNotEmpty());
+
+                            if (jsonObject.has("benefit") == true) // hotelBenefit ?
+                            {
+                                assertThat(jsonObject.getString("benefit"), isNotEmpty());
+                            }
+                        }
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        HashMap<String, Object> paramMap = new HashMap<>();
+
+        paramMap.put("dateCheckIn", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+        paramMap.put("stays", Const.TEST_NIGHTS);
+        paramMap.put("provinceIdx", Const.TEST_STAY_PROVINCE_INDEX);
+        // area skip
+        //  queryMap.put("areaIdx", areaIdx);
+
+        paramMap.put("persons", Const.TEST_STAY_PERSONS);
+        if (Category.ALL.code.equalsIgnoreCase(Const.TEST_STAY_CATEGORY_CODE) == false)
+        {
+            paramMap.put("category", Const.TEST_STAY_CATEGORY_CODE);
+        }
+
+        //  if(mBedTypeList != null && mBedTypeList.size() > 0)
+        //  {
+        //hashMap.put("bedType", mBedTypeList);
+        //  }
+        //
+        //  if(mLuxuryList != null && mLuxuryList.size() > 0)
+        //  {
+        //hashMap.put("luxury", mLuxuryList);
+        //  }
+
+        if (Const.TEST_PAGE_INDEX > 0)
+        {
+            paramMap.put("page", Const.TEST_PAGE_INDEX);
+            paramMap.put("limit", Const.TEST_LIMIT_LIST_COUNT);
+        }
+
+        // sort skip
+        //  if (Constants.SortType.DEFAULT != mSort)
+        //  {
+        //if (Util.isTextEmpty(sortProperty) == false)
+        //{
+        // queryMap.put("sortProperty", sortProperty);
+        //}
+        //
+        //if (Util.isTextEmpty(sortDirection) == false)
+        //{
+        // queryMap.put("sortDirection", sortDirection);
+        //}
+        //
+        //if (Constants.SortType.DISTANCE == mSort && hasLocation() == true)
+        //{
+        // queryMap.put("latitude", latitude);
+        // queryMap.put("longitude", longitude);
+        //}
+        //  }
+
+        paramMap.put("details", Const.TEST_IS_SHOW_LIST_DETAIL);
+
+        DailyMobileAPI.getInstance(mContext).requestStayList(mNetworkTag, paramMap, null, null, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
     //
     //    @Test
     //    public void requestStaySearchAutoCompleteList() throws Exception
@@ -6705,67 +6697,4 @@ public class DailyMobileAPITest
     //        DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, gourmetJsonObject, addReviewDetailCallback);
     //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     //    }
-
-    public static Matcher<String> isEmpty()
-    {
-        return new TypeSafeMatcher<String>()
-        {
-            String stringValue;
-
-            @Override
-            protected boolean matchesSafely(String item)
-            {
-                stringValue = item;
-                return Util.isTextEmpty(item);
-            }
-
-            @Override
-            public void describeTo(Description description)
-            {
-                description.appendValue(stringValue + " is empty");
-            }
-        };
-    }
-
-    public static Matcher<String> isNotEmpty()
-    {
-        return new TypeSafeMatcher<String>()
-        {
-            String stringValue;
-
-            @Override
-            protected boolean matchesSafely(String item)
-            {
-                stringValue = item;
-                return Util.isTextEmpty(item) == false;
-            }
-
-            @Override
-            public void describeTo(Description description)
-            {
-                description.appendValue(stringValue + " is empty");
-            }
-        };
-    }
-
-    public static Matcher<Integer> moreThan(final int defaultValue)
-    {
-        return new TypeSafeMatcher<Integer>()
-        {
-            int intValue;
-
-            @Override
-            protected boolean matchesSafely(Integer item)
-            {
-                intValue = item;
-                return item >= defaultValue;
-            }
-
-            @Override
-            public void describeTo(Description description)
-            {
-                description.appendValue(intValue + " is not over " + defaultValue);
-            }
-        };
-    }
 }

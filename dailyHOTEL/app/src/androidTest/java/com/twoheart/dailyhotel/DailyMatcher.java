@@ -74,4 +74,25 @@ public class DailyMatcher
             }
         };
     }
+
+    public static Matcher<Double> moreThan(final double defaultValue)
+    {
+        return new TypeSafeMatcher<Double>()
+        {
+            double doubleValue;
+
+            @Override
+            protected boolean matchesSafely(Double item)
+            {
+                doubleValue = item;
+                return item >= defaultValue;
+            }
+
+            @Override
+            public void describeTo(Description description)
+            {
+                description.appendValue(doubleValue + " is not over " + defaultValue);
+            }
+        };
+    }
 }
