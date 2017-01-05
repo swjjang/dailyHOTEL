@@ -255,6 +255,7 @@ public class StayAutoRefundActivity extends BaseActivity
         final View cancelRefundView04 = dialogView.findViewById(R.id.cancelRefundView04);
         final View cancelRefundView05 = dialogView.findViewById(R.id.cancelRefundView05);
         final View cancelRefundView06 = dialogView.findViewById(R.id.cancelRefundView06);
+        final View cancelRefundView07 = dialogView.findViewById(R.id.cancelRefundView07);
 
         cancelRefundView01.setTag(1);
         cancelRefundView02.setTag(2);
@@ -262,6 +263,7 @@ public class StayAutoRefundActivity extends BaseActivity
         cancelRefundView04.setTag(4);
         cancelRefundView05.setTag(5);
         cancelRefundView06.setTag(6);
+        cancelRefundView07.setTag(7);
 
         final DailyEditText messageEditText = (DailyEditText) dialogView.findViewById(R.id.messageEditText);
         final TextView messageCountTextView = (TextView) dialogView.findViewById(R.id.messageCountTextView);
@@ -329,6 +331,7 @@ public class StayAutoRefundActivity extends BaseActivity
                     case R.id.cancelRefundView03:
                     case R.id.cancelRefundView04:
                     case R.id.cancelRefundView05:
+                    case R.id.cancelRefundView06:
                     {
                         messageEditText.setText(null);
                         messageClickView.setVisibility(View.VISIBLE);
@@ -343,7 +346,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         break;
                     }
 
-                    case R.id.cancelRefundView06:
+                    case R.id.cancelRefundView07:
                     {
                         messageClickView.setVisibility(View.GONE);
                         messageClickView.setOnClickListener(null);
@@ -360,7 +363,7 @@ public class StayAutoRefundActivity extends BaseActivity
                     }
 
                     case R.id.messageClickView:
-                        cancelRefundView06.performClick();
+                        cancelRefundView07.performClick();
                         break;
                 }
             }
@@ -389,6 +392,7 @@ public class StayAutoRefundActivity extends BaseActivity
         cancelRefundView04.setOnClickListener(onClickListener);
         cancelRefundView05.setOnClickListener(onClickListener);
         cancelRefundView06.setOnClickListener(onClickListener);
+        cancelRefundView07.setOnClickListener(onClickListener);
 
         switch (position)
         {
@@ -409,6 +413,9 @@ public class StayAutoRefundActivity extends BaseActivity
                 break;
             case 6:
                 cancelRefundView06.performClick();
+                break;
+            case 7:
+                cancelRefundView07.performClick();
                 break;
 
             default:

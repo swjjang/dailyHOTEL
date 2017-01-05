@@ -1002,12 +1002,13 @@
     <string name="label_select_bank">은행 선택</string>
     <string name="label_input_account_number">계좌 번호 입력(\'-\' 제외)</string>
     <string name="label_select_cancel_refund">취소 사유 선택</string>
-    <string name="label_select_cancel_refund01">가격 불만족</string>
-    <string name="label_select_cancel_refund02">리뷰/후기 불만족</string>
-    <string name="label_select_cancel_refund03">취소 후 재예약</string>
-    <string name="label_select_cancel_refund04">여행일정 변경</string>
-    <string name="label_select_cancel_refund05">단순 변심</string>
-    <string name="label_select_cancel_refund06">기타</string>
+    <string name="label_select_cancel_refund01">여행일정 변경</string>
+    <string name="label_select_cancel_refund02">결제정보 변경</string>
+    <string name="label_select_cancel_refund03">리뷰/후기 불만족</string>
+    <string name="label_select_cancel_refund04">가격 불만족</string>
+    <string name="label_select_cancel_refund05">중복 결제</string>
+    <string name="label_select_cancel_refund06">단순변심</string>
+    <string name="label_select_cancel_refund07">기타</string>
     <string name="message_enter_contents">내용을 입력해 주세요.</string>
     <string name="message_do_cancel_free">무료 취소를 진행할까요?</string>
 
