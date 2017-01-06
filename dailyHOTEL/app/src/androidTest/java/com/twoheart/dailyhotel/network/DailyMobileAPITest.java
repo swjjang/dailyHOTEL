@@ -5787,170 +5787,148 @@ public class DailyMobileAPITest
             mNetworkTag, Const.TEST_GOURMET_RESERVATION_INDEX, gourmetReviewInformationCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
-    //
-    //    @Test
-    //    public void requestAddReviewInformation() throws Exception
-    //    {
-    //        retrofit2.Callback addReviewCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            // do nothing!
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        JSONObject stayJsonObject = new JSONObject();
-    //        stayJsonObject.put("grade", Const.TEST_STAY_ADD_REVIEW_GRADE);
-    //        stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
-    //        stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
-    //        stayJsonObject.put("serviceType", "HOTEL");
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestAddReviewInformation(mNetworkTag, stayJsonObject, addReviewCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        JSONObject gourmetJsonObject = new JSONObject();
-    //        gourmetJsonObject.put("grade", Const.TEST_GOURMET_ADD_REVIEW_GRADE);
-    //        gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
-    //        gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);
-    //        gourmetJsonObject.put("serviceType", "GOURMET");
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestAddReviewInformation(mNetworkTag, gourmetJsonObject, addReviewCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestAddReviewDetailInformation() throws Exception
-    //    {
-    //        retrofit2.Callback addReviewDetailCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            // do nothing!
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        JSONObject stayJsonObject = new JSONObject();
-    //        stayJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
-    //
-    //        stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
-    //        stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
-    //
-    //        // 생략!
-    //        //            if (scoreJSONArray != null)
-    //        //            {
-    //        //                jsonObject.put("reviewScores", scoreJSONArray);
-    //        //            }
-    //        //
-    //        //            if (pickJSONArray != null)
-    //        //            {
-    //        //                jsonObject.put("reviewPicks", pickJSONArray);
-    //        //            }
-    //
-    //        stayJsonObject.put("serviceType", "HOTEL");
-    //        DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, stayJsonObject, addReviewDetailCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        JSONObject gourmetJsonObject = new JSONObject();
-    //        gourmetJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
-    //
-    //        gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
-    //        gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);
-    //
-    //        // 생략!
-    //        //            if (scoreJSONArray != null)
-    //        //            {
-    //        //                jsonObject.put("reviewScores", scoreJSONArray);
-    //        //            }
-    //        //
-    //        //            if (pickJSONArray != null)
-    //        //            {
-    //        //                jsonObject.put("reviewPicks", pickJSONArray);
-    //        //            }
-    //
-    //        gourmetJsonObject.put("serviceType", "GOURMET");
-    //        DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, gourmetJsonObject, addReviewDetailCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
+
+    @Test
+    public void requestAddReviewInformation() throws Exception
+    {
+        retrofit2.Callback addReviewCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject stayJsonObject = new JSONObject();
+        stayJsonObject.put("grade", Const.TEST_STAY_ADD_REVIEW_GRADE);
+        stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
+        stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
+        stayJsonObject.put("serviceType", "HOTEL");
+
+        DailyMobileAPI.getInstance(mContext).requestAddReviewInformation(mNetworkTag, stayJsonObject, addReviewCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject gourmetJsonObject = new JSONObject();
+        gourmetJsonObject.put("grade", Const.TEST_GOURMET_ADD_REVIEW_GRADE);
+        gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
+        gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);
+        gourmetJsonObject.put("serviceType", "GOURMET");
+
+        DailyMobileAPI.getInstance(mContext).requestAddReviewInformation(mNetworkTag, gourmetJsonObject, addReviewCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestAddReviewDetailInformation() throws Exception
+    {
+        retrofit2.Callback addReviewDetailCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject stayJsonObject = new JSONObject();
+        stayJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+
+        stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
+        stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
+
+        // 생략!
+        //            if (scoreJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewScores", scoreJSONArray);
+        //            }
+        //
+        //            if (pickJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewPicks", pickJSONArray);
+        //            }
+
+        stayJsonObject.put("serviceType", "HOTEL");
+        DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, stayJsonObject, addReviewDetailCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        mLock = new CountDownLatch(1);
+
+        JSONObject gourmetJsonObject = new JSONObject();
+        gourmetJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+
+        gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
+        gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);
+
+        // 생략!
+        //            if (scoreJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewScores", scoreJSONArray);
+        //            }
+        //
+        //            if (pickJSONArray != null)
+        //            {
+        //                jsonObject.put("reviewPicks", pickJSONArray);
+        //            }
+
+        gourmetJsonObject.put("serviceType", "GOURMET");
+        DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, gourmetJsonObject, addReviewDetailCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
 }
