@@ -151,7 +151,7 @@ public class StaySearchResultListFragment extends StayListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             StaySearchResultListFragment.this.onErrorResponse(call, response);
         }

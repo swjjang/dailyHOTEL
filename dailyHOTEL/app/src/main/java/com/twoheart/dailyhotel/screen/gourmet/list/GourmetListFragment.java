@@ -281,7 +281,7 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             GourmetListFragment.this.onErrorResponse(call, response);
         }

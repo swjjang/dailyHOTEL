@@ -760,7 +760,7 @@ public class StayMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             StayMainFragment.this.onErrorResponse(call, response);
         }

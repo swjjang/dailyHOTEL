@@ -927,7 +927,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             GourmetCurationActivity.this.onErrorResponse(call, response);
         }
