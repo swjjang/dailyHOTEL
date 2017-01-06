@@ -3,12 +3,14 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.RequiresDevice;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.twoheart.dailyhotel.Const;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
@@ -20,6 +22,7 @@ import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.User;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.CouponUtil;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -3592,598 +3595,458 @@ public class DailyMobileAPITest
         DailyMobileAPI.getInstance(mContext).requestEventBannerList(mNetworkTag, "hotel", networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
-    //
-    //    @Test
-    //    public void requestDailyUserVerification() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null)
-    //                {
-    //                    if (response.isSuccessful() == true && response.body() != null)
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        try
-    //                        {
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(100, msgCode);
-    //                            DailyAssert.assertNotNull(message);
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else if (response.isSuccessful() == false && response.errorBody() != null)
-    //                    {
-    //                        try
-    //                        {
-    //                            JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
-    //                            DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(422, response.code());
-    //                            if (response.code() == 422)
-    //                            {
-    //                                switch (msgCode)
-    //                                {
-    //                                    // 동일한 전화번호로 인증 받은 사용자가 있는 경우
-    //                                    case 2001:
-    //                                    {
-    //                                        JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
-    //                                        DailyAssert.assertNotNull(dataJONObject);
-    //
-    //                                        String phoneNumber = dataJONObject.getString("phone");
-    //                                        DailyAssert.assertNotNull(phoneNumber);
-    //
-    //                                        mLock.countDown();
-    //                                        return;
-    //                                    }
-    //
-    //                                    // 전화번호가 유효하지 않을 때
-    //                                    case 2003:
-    //                                    {
-    //                                        DailyAssert.fail("invaild phone number");
-    //                                        mLock.countDown();
-    //                                        return;
-    //                                    }
-    //                                }
-    //
-    //                                DailyAssert.fail(message);
-    //                            } else
-    //                            {
-    //                                DailyAssert.fail();
-    //                            }
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else
-    //                    {
-    //                        DailyAssert.fail();
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestDailyUserVerification( //
-    //            mNetworkTag, Const.TEST_USER_PHONE, Const.TEST_IS_FORCE_PHONE_VALIDATION, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // 폰 넘버와 문자를 받아서 할 것이냐.... 자동으로 받아서 할것인지가.... 음.. 모르겠음
-    //    @RequiresDevice
-    //    @Ignore
-    //    public void requestDailyUserUpdatePhoneNumber(String phoneNumber, String code) throws Exception
-    //    {
-    //        if (Util.isTextEmpty(phoneNumber, code) == false)
-    //        {
-    //            DailyAssert.assertTrue("required data is empty! phone : " + phoneNumber + " , code : " + code, false);
-    //            return;
-    //        }
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null)
-    //                {
-    //                    if (response.isSuccessful() == true && response.body() != null)
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        try
-    //                        {
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(100, msgCode);
-    //                            DailyAssert.assertNotNull(message);
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else if (response.isSuccessful() == false && response.errorBody() != null)
-    //                    {
-    //                        try
-    //                        {
-    //                            JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
-    //                            DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(422, msgCode);
-    //                            DailyAssert.assertNotNull(message);
-    //                            //                            if (response.code() == 422)
-    //                            //                            {
-    //                            //                                switch (msgCode)
-    //                            //                                {
-    //                            //                                  // SMS인증키가 잘못된 경우
-    //                            //                                    case 2002:
-    //                            //                                    {
-    //                            //                                        return;
-    //                            //                                    }
-    //                            //
-    //                            //                                    // 전화번호가 유효하지 않을 때
-    //                            //                                    case 2003:
-    //                            //                                    {
-    //                            //                                        return;
-    //                            //                                    }
-    //                            //                                }
-    //                            //                            }
-    //
-    //                            DailyAssert.fail();
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else
-    //                    {
-    //                        DailyAssert.fail();
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestSignupValidation() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.body() != null)
-    //                {
-    //                    JSONObject responseJSONObject = response.body();
-    //                    DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                    try
-    //                    {
-    //                        if (response.isSuccessful() == true)
-    //                        {
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            DailyAssert.assertEquals(100, msgCode);
-    //
-    //                            if (msgCode == 100)
-    //                            {
-    //                                JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                                DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                                String signupKey = dataJSONObject.getString("signup_key");
-    //                                String serverDate = dataJSONObject.getString("serverDate");
-    //
-    //                                DailyAssert.assertNotNull(signupKey);
-    //                                DailyAssert.assertNotNull(serverDate);
-    //
-    //                                requestDailyUserSignupVerfication(signupKey, Const.TEST_USER_PHONE, false);
-    //                            } else
-    //                            {
-    //                                DailyAssert.fail(responseJSONObject.getString("msg"));
-    //                            }
-    //                        } else
-    //                        {
-    //                            DailyAssert.fail(responseJSONObject.getString("msg"));
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        String email = "dh_" + mSaleTime.getDayOfDaysDateFormat("yyyy_MM_dd") + "@dailyhotel.com";
-    //
-    //        HashMap<String, String> signUpParams = new HashMap<>();
-    //
-    //        signUpParams.put("email", email);
-    //        signUpParams.put("pw", Const.TEST_PASSWORD);
-    //        signUpParams.put("name", Const.TEST_USER_NAME);
-    //
-    //        // recommender skip!
-    //        //        if (Util.isTextEmpty(recommender) == false)
-    //        //        {
-    //        //            signUpParams.put("recommender", recommender);
-    //        //        }
-    //
-    //        signUpParams.put("birthday", Const.TEST_USER_BIRTHDAY);
-    //        signUpParams.put("market_type", Const.RELEASE_STORE.getName());
-    //        signUpParams.put("isAgreedBenefit", Boolean.toString(Const.TEST_IS_AGREED_BENEFIT));
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestSignupValidation(mNetworkTag, signUpParams, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // requestSignupValidation 이후에 진행 되어야 함
-    //    @Ignore
-    //    public void requestDailyUserSignupVerfication(String signupKey, String phoneNumber, boolean force) throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null)
-    //                {
-    //                    if (response.isSuccessful() == true && response.body() != null)
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //
-    //                        try
-    //                        {
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(100, msgCode);
-    //                            DailyAssert.assertNotNull(message);
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else if (response.isSuccessful() == false && response.errorBody() != null)
-    //                    {
-    //                        try
-    //                        {
-    //                            JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
-    //                            DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(402, response.code());
-    //                            DailyAssert.assertNotNull(message);
-    //
-    //                            switch (response.code())
-    //                            {
-    //                                case 422:
-    //                                {
-    //                                    switch (msgCode)
-    //                                    {
-    //                                        // 동일한 전화번호로 인증 받은 사용자가
-    //                                        case 2001:
-    //                                        {
-    //                                            JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
-    //                                            DailyAssert.assertNotNull(dataJONObject);
-    //
-    //                                            String phoneNumber = dataJONObject.getString("phone");
-    //                                            DailyAssert.assertNotNull(phoneNumber);
-    //                                            return;
-    //                                        }
-    //
-    //                                        //                                        // 전화번호가 유효하지 않을 때
-    //                                        //                                        case 2003:
-    //                                        //                                        {
-    //                                        //                                            return;
-    //                                        //                                        }
-    //                                    }
-    //                                    break;
-    //                                }
-    //                                //
-    //                                //                                case 400:
-    //                                //                                {
-    //                                //                                    switch (msgCode)
-    //                                //                                    {
-    //                                //                                        case 2004:
-    //                                //                                            break;
-    //                                //                                    }
-    //                                //                                    break;
-    //                                //                                }
-    //                            }
-    //
-    //                            DailyAssert.fail();
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else
-    //                    {
-    //                        DailyAssert.fail();
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // requestSignupValidation 이후에 진행 되어야 함 - 인증번호 필수
-    //    @RequiresDevice
-    //    @Ignore
-    //    public void requestDailyUserSignup(String signupKey, String vaildateCode, String phoneNumber) throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null)
-    //                {
-    //                    if (response.isSuccessful() == true && response.body() != null)
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        try
-    //                        {
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(0, msgCode);
-    //                            DailyAssert.assertNotNull(message);
-    //
-    //                            if (msgCode == 0)
-    //                            {
-    //                                JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                                DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                                boolean isSignup = dataJSONObject.getBoolean("is_signup");
-    //                                DailyAssert.assertTrue(isSignup);
-    //
-    //                                if (isSignup == true)
-    //                                {
-    //                                    mLock.countDown();
-    //                                    return;
-    //                                }
-    //                            }
-    //
-    //                            DailyAssert.fail();
-    //
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else if (response.isSuccessful() == false && response.errorBody() != null)
-    //                    {
-    //                        try
-    //                        {
-    //                            JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
-    //                            DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                            int msgCode = responseJSONObject.getInt("msgCode");
-    //                            String message = responseJSONObject.getString("msg");
-    //
-    //                            DailyAssert.assertEquals(422, msgCode);
-    //                            DailyAssert.assertNotNull(message);
-    //
-    //                            DailyAssert.fail();
-    //                        } catch (Exception e)
-    //                        {
-    //                            DailyAssert.fail(e);
-    //                        }
-    //                    } else
-    //                    {
-    //                        DailyAssert.fail();
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestDailyUserSignup(//
-    //            mNetworkTag, signupKey, vaildateCode, phoneNumber, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // 해당 기능은... 일단 패스 고려하지 않음
-    //    @Ignore
-    //    public void requestFacebookUserSignup() throws Exception
-    //    {
-    //        //  mLock = new CountDownLatch(1);
-    //        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // 해당 기능은... 일단 패스 고려하지 않음
-    //    @Ignore
-    //    public void requestKakaoUserSignup() throws Exception
-    //    {
-    //        //  mLock = new CountDownLatch(1);
-    //        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // 해당 기능은 사전 테스트로 인하여 그냥 성공!
-    //    @Test
-    //    public void requestDailyUserSignin() throws Exception
-    //    {
-    //        //  mLock = new CountDownLatch(1);
-    //        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // 해당 기능은... 일단 패스 고려하지 않음
-    //    @RequiresDevice
-    //    @Ignore
-    //    public void requestFacebookUserSignin() throws Exception
-    //    {
-    //        //  mLock = new CountDownLatch(1);
-    //        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    // 해당 기능은... 일단 패스 고려하지 않음
-    //    @RequiresDevice
-    //    @Ignore
-    //    public void requestKakaoUserSignin() throws Exception
-    //    {
-    //        //  mLock = new CountDownLatch(1);
-    //        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestCouponList() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
-    //                            DailyAssert.assertNotNull(list);
-    //
-    //                            for (Coupon coupon : list)
-    //                            {
-    //                                if (coupon.isDownloaded == false)
-    //                                {
-    //                                    requestDownloadCoupon(coupon.userCouponCode);
-    //                                    break;
-    //                                }
-    //                            }
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestCouponList(mNetworkTag, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
+
+    @Test
+    public void requestDailyUserVerification() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+
+                    if (response.isSuccessful() == true && response.body() != null)
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, msgCode, is(100));
+                    } else if (response.isSuccessful() == false && response.errorBody() != null)
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+                        assertThat(responseJSONObject, notNullValue());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, response.code(), is(422));
+                        assertThat(message, msgCode, is(2001));
+
+                        JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
+                        assertThat(dataJONObject, notNullValue());
+
+                        assertThat(dataJONObject.getString("phone"), isNotEmpty());
+
+                        assertThat(response.isSuccessful(), is(true));
+                    } else
+                    {
+                        assertThat(response.isSuccessful(), is(true));
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDailyUserVerification( //
+            mNetworkTag, Const.TEST_USER_PHONE, Const.TEST_IS_FORCE_PHONE_VALIDATION, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // 폰 넘버와 문자를 받아서 할 것이냐.... 자동으로 받아서 할것인지가.... 음.. 모르겠음
+    @RequiresDevice
+    @Ignore
+    public void requestDailyUserUpdatePhoneNumber(String phoneNumber, String code) throws Exception
+    {
+        if (Util.isTextEmpty(phoneNumber, code) == false)
+        {
+            try
+            {
+                assertThat("required data is empty! phone : " + phoneNumber + " , code : " + code, false);
+            } catch (Throwable t)
+            {
+                addException(null, null, t);
+            }
+            return;
+        }
+
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    //                    assertThat(response.isSuccessful(), is(true));
+                    //                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    if (response.isSuccessful() == true && response.body() != null)
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, msgCode, is(100));
+                    } else if (response.isSuccessful() == false && response.errorBody() != null)
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+                        assertThat(responseJSONObject, notNullValue());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, msgCode, is(422));
+                        assertThat(response.isSuccessful(), is(true));
+                    } else
+                    {
+                        assertThat(response.isSuccessful(), is(true));
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestSignupValidation() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    String signupKey = dataJSONObject.getString("signup_key");
+                    String serverDate = dataJSONObject.getString("serverDate");
+
+                    assertThat(signupKey, isNotEmpty());
+                    assertThat(serverDate, isNotEmpty());
+
+                    requestDailyUserSignupVerfication(signupKey, Const.TEST_USER_PHONE, false);
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        String email = "dh_" + mSaleTime.getDayOfDaysDateFormat("yyyy_MM_dd") + "@dailyhotel.com";
+
+        HashMap<String, String> signUpParams = new HashMap<>();
+
+        signUpParams.put("email", email);
+        signUpParams.put("pw", Const.TEST_PASSWORD);
+        signUpParams.put("name", Const.TEST_USER_NAME);
+
+        // recommender skip!
+        //        if (Util.isTextEmpty(recommender) == false)
+        //        {
+        //            signUpParams.put("recommender", recommender);
+        //        }
+
+        signUpParams.put("birthday", Const.TEST_USER_BIRTHDAY);
+        signUpParams.put("market_type", Const.RELEASE_STORE.getName());
+        signUpParams.put("isAgreedBenefit", Boolean.toString(Const.TEST_IS_AGREED_BENEFIT));
+
+        DailyMobileAPI.getInstance(mContext).requestSignupValidation(mNetworkTag, signUpParams, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // requestSignupValidation 이후에 진행 되어야 함
+    @Ignore
+    public void requestDailyUserSignupVerfication(String signupKey, String phoneNumber, boolean force) throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    //                    assertThat(response.isSuccessful(), is(true));
+                    //                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    if (response.isSuccessful() == true && response.body() != null)
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, msgCode, is(100));
+
+                    } else if (response.isSuccessful() == false && response.errorBody() != null)
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+                        assertThat(responseJSONObject, notNullValue());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, response.code(), is(422));
+                        // 동일한 전화번호로 인증 받은 사용자가
+                        assertThat(message, msgCode, is(2001));
+                        JSONObject dataJONObject = responseJSONObject.getJSONObject("data");
+                        assertThat(dataJONObject, notNullValue());
+
+                        String phoneNumber = dataJONObject.getString("phone");
+                        assertThat(phoneNumber, isNotEmpty());
+
+                        // 강제 실패
+                        assertThat(response.isSuccessful(), is(true));
+                    } else
+                    {
+                        // 강제 실패
+                        assertThat(response.isSuccessful(), is(true));
+                    }
+
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDailyUserSignupVerfication(mNetworkTag, signupKey, phoneNumber, force, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // requestSignupValidation 이후에 진행 되어야 함 - 인증번호 필수
+    @RequiresDevice
+    @Ignore
+    public void requestDailyUserSignup(String signupKey, String vaildateCode, String phoneNumber) throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+
+                    if (response.isSuccessful() == true && response.body() != null)
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, msgCode, is(0));
+
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        assertThat(dataJSONObject, notNullValue());
+
+                        boolean isSignup = dataJSONObject.getBoolean("is_signup");
+                        assertThat(isSignup, is(true));
+
+                    } else if (response.isSuccessful() == false && response.errorBody() != null)
+                    {
+                        JSONObject responseJSONObject = new JSONObject(response.errorBody().string());
+                        assertThat(responseJSONObject, notNullValue());
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+                        String message = responseJSONObject.getString("msg");
+                        assertThat(message, isNotEmpty());
+                        assertThat(message, msgCode, is(422));
+
+                        assertThat(response.isSuccessful(), is(true));
+                    } else
+                    {
+                        assertThat(response.isSuccessful(), is(true));
+                    }
+
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDailyUserSignup(//
+            mNetworkTag, signupKey, vaildateCode, phoneNumber, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // 해당 기능은... 일단 패스 고려하지 않음
+    @Ignore
+    public void requestFacebookUserSignup() throws Exception
+    {
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // 해당 기능은... 일단 패스 고려하지 않음
+    @Ignore
+    public void requestKakaoUserSignup() throws Exception
+    {
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // 해당 기능은 사전 테스트로 인하여 그냥 성공!
+    @Test
+    public void requestDailyUserSignin() throws Exception
+    {
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // 해당 기능은... 일단 패스 고려하지 않음
+    @RequiresDevice
+    @Ignore
+    public void requestFacebookUserSignin() throws Exception
+    {
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    // 해당 기능은... 일단 패스 고려하지 않음
+    @RequiresDevice
+    @Ignore
+    public void requestKakaoUserSignin() throws Exception
+    {
+        //  mLock = new CountDownLatch(1);
+        //  mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestCouponList() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
+                    assertThat(list, notNullValue());
+
+                    for (Coupon coupon : list)
+                    {
+                        if (coupon.isDownloaded == false)
+                        {
+                            requestDownloadCoupon(coupon.userCouponCode);
+                            break;
+                        }
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestCouponList(mNetworkTag, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
     //
     //    @Test
     //    public void requestCouponList1() throws Exception
@@ -4525,67 +4388,55 @@ public class DailyMobileAPITest
     //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     //    }
     //
-    //    // 다운로드 가능상태의 쿠폰이 없을 수도 있음으로 requestCouponList 이후에 진행하도록 함!
-    //    @Ignore
-    //    public void requestDownloadCoupon(String userCouponCode) throws Exception
-    //    {
-    //        if (Util.isTextEmpty(userCouponCode) == true)
-    //        {
-    //            DailyAssert.fail("userCouponCode is null");
-    //            return;
-    //        }
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback downloadCouponCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            // do nothing!
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.assertNotNull(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, userCouponCode, downloadCouponCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
+    // 다운로드 가능상태의 쿠폰이 없을 수도 있음으로 requestCouponList 이후에 진행하도록 함!
+    @Ignore
+    public void requestDownloadCoupon(String userCouponCode) throws Exception
+    {
+        if (Util.isTextEmpty(userCouponCode) == true)
+        {
+            assertThat("userCouponCode is null", false);
+            return;
+        }
+
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback downloadCouponCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, userCouponCode, downloadCouponCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
     //
     //    // 웹페이지 연동이 필요하여 일단 스킵!
     //    @Ignore
