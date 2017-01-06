@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
@@ -55,6 +56,8 @@ import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static com.twoheart.dailyhotel.Const.TEST_EMAIL;
+import static com.twoheart.dailyhotel.Const.TEST_NIGHTS;
 import static com.twoheart.dailyhotel.DailyMatcher.isNotEmpty;
 import static com.twoheart.dailyhotel.DailyMatcher.moreThan;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -224,7 +227,7 @@ public class DailyMobileAPITest
         mLock = new CountDownLatch(1);
 
         HashMap<String, String> params = new HashMap<>();
-        params.put("email", Crypto.getUrlDecoderEx(Const.TEST_EMAIL));
+        params.put("email", Crypto.getUrlDecoderEx(TEST_EMAIL));
         params.put("pw", Crypto.getUrlDecoderEx(Const.TEST_PASSWORD));
         params.put("social_id", "0");
         params.put("user_type", Constants.DAILY_USER);
@@ -902,7 +905,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Crypto.getUrlDecoderEx(Const.TEST_EMAIL), networkCallback);
+        DailyMobileAPI.getInstance(mContext).requestUserCheckEmail(mNetworkTag, Crypto.getUrlDecoderEx(TEST_EMAIL), networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -945,7 +948,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestUserChangePassword(mNetworkTag, Crypto.getUrlDecoderEx(Const.TEST_EMAIL), networkCallback);
+        DailyMobileAPI.getInstance(mContext).requestUserChangePassword(mNetworkTag, Crypto.getUrlDecoderEx(TEST_EMAIL), networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -1281,7 +1284,7 @@ public class DailyMobileAPITest
                         assertThat(imageUrl, isNotEmpty());
 
                         int nights = dataJSONObject.getInt("stays");
-                        assertThat(nights, is(Const.TEST_NIGHTS));
+                        assertThat(nights, is(TEST_NIGHTS));
 
                         JSONObject jsonObject;
 
@@ -1368,7 +1371,7 @@ public class DailyMobileAPITest
         HashMap<String, Object> paramMap = new HashMap<>();
 
         paramMap.put("dateCheckIn", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-        paramMap.put("stays", Const.TEST_NIGHTS);
+        paramMap.put("stays", TEST_NIGHTS);
         paramMap.put("provinceIdx", Const.TEST_STAY_PROVINCE_INDEX);
         // area skip
         //  queryMap.put("areaIdx", areaIdx);
@@ -1469,7 +1472,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
-            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
+            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -1630,7 +1633,7 @@ public class DailyMobileAPITest
         DailyMobileAPI.getInstance(mContext).requestStayPaymentInformation(mNetworkTag//
             , Const.TEST_STAY_SALE_ROOM_INDEX//
             , mSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-            , Const.TEST_NIGHTS, networkCallback);
+            , TEST_NIGHTS, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -1838,7 +1841,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestStayDetailInformation(mNetworkTag, Const.TEST_STAY_INDEX, //
-            mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, networkCallback);
+            mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), TEST_NIGHTS, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -1908,7 +1911,7 @@ public class DailyMobileAPITest
         Map<String, String> params = new HashMap<>();
         params.put("room_idx", String.valueOf(Const.TEST_STAY_SALE_ROOM_INDEX));
         params.put("checkin_date", mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        params.put("nights", String.valueOf(Const.TEST_NIGHTS));
+        params.put("nights", String.valueOf(TEST_NIGHTS));
         params.put("billkey", Const.TEST_EASY_CARD_BILLINGKEY);
 
         // 쿠폰 및 적립금 패스
@@ -1927,7 +1930,7 @@ public class DailyMobileAPITest
 
         params.put("guest_name", Const.TEST_USER_NAME);
         params.put("guest_phone", Const.TEST_USER_PHONE);
-        params.put("guest_email", Const.TEST_EMAIL);
+        params.put("guest_email", TEST_EMAIL);
         params.put("guest_msg", "");
 
         DailyMobileAPI.getInstance(mContext).requestStayPayment(mNetworkTag, params, networkCallback);
@@ -3046,7 +3049,7 @@ public class DailyMobileAPITest
 
         params.put("customer_name", Const.TEST_USER_NAME);
         params.put("customer_phone", Const.TEST_USER_PHONE);
-        params.put("customer_email", Const.TEST_EMAIL);
+        params.put("customer_email", TEST_EMAIL);
         params.put("arrival_time", String.valueOf(getGourmetReservationTime()));
         params.put("customer_msg", "");
 
@@ -4047,347 +4050,307 @@ public class DailyMobileAPITest
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
-    //
-    //    @Test
-    //    public void requestCouponList1() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
-    //                            DailyAssert.assertNotNull(list);
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestCouponList(//
-    //            mNetworkTag, Const.TEST_STAY_INDEX, Const.TEST_STAY_SALE_ROOM_INDEX,//
-    //            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
-    //            mSaleTime.getClone(Const.TEST_NIGHTS).getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestCouponList2() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback couponListCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
-    //                            DailyAssert.assertNotNull(list);
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(message);
-    //                        }
-    //
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestCouponList(//
-    //            mNetworkTag, Const.TEST_GOURMET_INDEX, Const.TEST_GOURMET_TICKET_COUNT, couponListCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestCouponHistoryList() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback couponHistoryCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            ArrayList<CouponHistory> list = CouponUtil.getCouponHistoryList(responseJSONObject);
-    //                            DailyAssert.assertNotNull(list);
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, couponHistoryCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestNoticeAgreement() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback noticeAgreementCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            DailyAssert.assertNotNull(dataJSONObject.getString("description1"));
-    //                            DailyAssert.assertNotNull(dataJSONObject.getString("description2"));
-    //                            DailyAssert.assertTrue(dataJSONObject.has("isFirstTimeBuyer"));
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, noticeAgreementCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestNoticeAgreementResult() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback noticeAgreementResultCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            String agreeAt = dataJSONObject.getString("agreedAt");
-    //                            DailyAssert.assertNotNull(agreeAt);
-    //                            DailyAssert.assertNotNull(dataJSONObject.getString("description1InAgree"));
-    //                            DailyAssert.assertNotNull(dataJSONObject.getString("description2InAgree"));
-    //                            DailyAssert.assertNotNull(dataJSONObject.getString("description1InReject"));
-    //                            DailyAssert.assertNotNull(dataJSONObject.getString("description2InReject"));
-    //
-    //                            agreeAt = DailyCalendar.convertDateFormatString(agreeAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
-    //                            DailyAssert.assertNotNull(agreeAt);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, Const.TEST_IS_NOTICE_AGREE, noticeAgreementResultCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestBenefitMessage() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback benefitMessageCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            String message = dataJSONObject.getString("body");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, benefitMessageCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
+    @Test
+    public void requestCouponList1() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
+                    assertThat(list, notNullValue());
+                    assertThat(list.size(), moreThan(0));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestCouponList(//
+            mNetworkTag, Const.TEST_STAY_INDEX, Const.TEST_STAY_SALE_ROOM_INDEX,//
+            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
+            mSaleTime.getClone(TEST_NIGHTS).getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestCouponList2() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback couponListCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
+                    assertThat(list, notNullValue());
+                    assertThat(list.size(), moreThan(0));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestCouponList(//
+            mNetworkTag, Const.TEST_GOURMET_INDEX, Const.TEST_GOURMET_TICKET_COUNT, couponListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestCouponHistoryList() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback couponHistoryCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    ArrayList<CouponHistory> list = CouponUtil.getCouponHistoryList(responseJSONObject);
+                    assertThat(list, notNullValue());
+                    assertThat(list.size(), moreThan(0));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestCouponHistoryList(mNetworkTag, couponHistoryCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestNoticeAgreement() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback noticeAgreementCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    assertThat(dataJSONObject.getString("description1"), isNotEmpty());
+                    assertThat(dataJSONObject.getString("description2"), isNotEmpty());
+                    assertThat(dataJSONObject.get("isFirstTimeBuyer"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestNoticeAgreement(mNetworkTag, noticeAgreementCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestNoticeAgreementResult() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback noticeAgreementResultCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    String agreeAt = dataJSONObject.getString("agreedAt");
+                    assertThat(agreeAt, isNotEmpty());
+                    assertThat(dataJSONObject.getString("description1InAgree"), isNotEmpty());
+                    assertThat(dataJSONObject.getString("description2InAgree"), isNotEmpty());
+                    assertThat(dataJSONObject.getString("description1InReject"), isNotEmpty());
+                    assertThat(dataJSONObject.getString("description2InReject"), isNotEmpty());
+
+                    agreeAt = DailyCalendar.convertDateFormatString(agreeAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+                    assertThat(agreeAt, isNotEmpty());
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, Const.TEST_IS_NOTICE_AGREE, noticeAgreementResultCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestBenefitMessage() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback benefitMessageCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    String bodyMessage = dataJSONObject.getString("body");
+                    assertThat(bodyMessage, isNotEmpty());
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestBenefitMessage(mNetworkTag, benefitMessageCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
     // 다운로드 가능상태의 쿠폰이 없을 수도 있음으로 requestCouponList 이후에 진행하도록 함!
     @Ignore
     public void requestDownloadCoupon(String userCouponCode) throws Exception
@@ -4437,661 +4400,568 @@ public class DailyMobileAPITest
         DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, userCouponCode, downloadCouponCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
-    //
-    //    // 웹페이지 연동이 필요하여 일단 스킵!
-    //    @Ignore
-    //    public void requestDownloadEventCoupon(String couponCode) throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            String validFrom = dataJSONObject.getString("validFrom");
-    //                            String validTo = dataJSONObject.getString("validTo");
-    //                            DailyAssert.assertNotNull(DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
-    //                            DailyAssert.assertNotNull(DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //
-    //                    } catch (ParseException e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //
-    //                    mLock.countDown();
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestDownloadEventCoupon(mNetworkTag, couponCode, networkCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestHasCoupon() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback hasCouponCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            DailyAssert.assertTrue(dataJSONObject.has("existCoupons"));
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestHasCoupon( //
-    //            mNetworkTag, Const.TEST_STAY_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, hasCouponCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestHasCoupon1() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback hasCouponCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            DailyAssert.assertTrue(dataJSONObject.has("existCoupons"));
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestHasCoupon(//
-    //            mNetworkTag, Const.TEST_GOURMET_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), hasCouponCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestCouponList3() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback couponListCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
-    //                            DailyAssert.assertNotNull(list);
-    //                            DailyAssert.assertFalse(list.isEmpty());
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestCouponList(//
-    //            mNetworkTag, Const.TEST_STAY_INDEX,//
-    //            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
-    //            Const.TEST_NIGHTS, couponListCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestCouponList4() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback couponListCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
-    //                            DailyAssert.assertNotNull(list);
-    //                            DailyAssert.assertFalse(list.isEmpty());
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestCouponList(//
-    //            mNetworkTag, Const.TEST_GOURMET_INDEX,//
-    //            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), couponListCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestRegisterKeywordCoupon() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback registerKeywordCouponCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        String message = responseJSONObject.getString("msg");
-    //                        DailyAssert.assertNotNull(message);
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestRegisterKeywordCoupon(mNetworkTag, Const.TEST_KEYWORD_COUPON_CODE, registerKeywordCouponCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestUpdateBenefitAgreement() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback updateBenefitCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            String serverDate = dataJSONObject.getString("serverDate");
-    //                            DailyAssert.assertNotNull(serverDate);
-    //
-    //                            serverDate = DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
-    //                            DailyAssert.assertNotNull(serverDate);
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //                    } catch (ParseException e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUpdateBenefitAgreement(//
-    //            mNetworkTag, Const.TEST_IS_UPDATE_BENEFIT_AGREEMENT, updateBenefitCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestUserTracking() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback userTrackingCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                        DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                        JSONObject tracking = dataJSONObject.getJSONObject("tracking");
-    //                        DailyAssert.assertNotNull(tracking);
-    //
-    //                        int gourmetPaymentCompletedCount = tracking.getInt("countOfGourmetPaymentCompleted");
-    //                        int hotelPaymentCompletedCount = tracking.getInt("countOfHotelPaymentCompleted");
-    //
-    //                        DailyAssert.assertTrue(gourmetPaymentCompletedCount >= 0);
-    //                        DailyAssert.assertTrue(hotelPaymentCompletedCount >= 0);
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestUserTracking(mNetworkTag, userTrackingCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestNoticeList() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback noticeListCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            JSONArray jsonArray = dataJSONObject.getJSONArray("notices");
-    //                            DailyAssert.assertNotNull(jsonArray);
-    //
-    //                            int length = jsonArray.length();
-    //                            if (length > 0)
-    //                            {
-    //                                for (int i = 0; i < length; i++)
-    //                                {
-    //                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-    //                                    DailyAssert.assertNotNull(jsonObject.getInt("idx"));
-    //                                    DailyAssert.assertNotNull(jsonObject.getString("title"));
-    //                                    DailyAssert.assertNotNull(jsonObject.getString("linkUrl"));
-    //                                    DailyAssert.assertNotNull(jsonObject.getString("createdAt"));
-    //                                }
-    //                            }
-    //                        } else
-    //                        {
-    //                            String msg = responseJSONObject.getString("msg");
-    //                            DailyAssert.fail(msg);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestNoticeList(mNetworkTag, noticeListCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestReceiptByEmail() throws Exception
-    //    {
-    //        retrofit2.Callback receiptByEmailCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        String message = responseJSONObject.getString("msg");
-    //                        DailyAssert.assertNotNull(message);
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestReceiptByEmail( //
-    //            mNetworkTag, "gourmet", Integer.toString(Const.TEST_GOURMET_RESERVATION_INDEX), Const.TEST_EMAIL, receiptByEmailCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //
-    //        mLock = new CountDownLatch(1);
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestReceiptByEmail( //
-    //            mNetworkTag, "stay", Integer.toString(Const.TEST_STAY_RESERVATION_INDEX), Const.TEST_EMAIL, receiptByEmailCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
-    //
-    //    @Test
-    //    public void requestWishListCount() throws Exception
-    //    {
-    //        mLock = new CountDownLatch(1);
-    //
-    //        retrofit2.Callback wishListCountCallback = new retrofit2.Callback<JSONObject>()
-    //        {
-    //            @Override
-    //            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-    //            {
-    //                DailyAssert.setData(call, response);
-    //
-    //                if (response != null && response.isSuccessful() && response.body() != null)
-    //                {
-    //                    try
-    //                    {
-    //                        JSONObject responseJSONObject = response.body();
-    //                        DailyAssert.assertNotNull(responseJSONObject);
-    //
-    //                        int msgCode = responseJSONObject.getInt("msgCode");
-    //                        DailyAssert.assertEquals(100, msgCode);
-    //
-    //                        if (msgCode == 100)
-    //                        {
-    //                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-    //                            DailyAssert.assertNotNull(dataJSONObject);
-    //
-    //                            int userIndex = dataJSONObject.getInt("userIdx");
-    //                            int stayWishCount = dataJSONObject.getInt("wishHotelCount");
-    //                            int gourmetWishCount = dataJSONObject.getInt("wishGourmetCount");
-    //
-    //                            DailyAssert.assertTrue(userIndex > 0);
-    //                            DailyAssert.assertTrue(stayWishCount >= 0);
-    //                            DailyAssert.assertTrue(gourmetWishCount >= 0);
-    //                        } else
-    //                        {
-    //                            String message = responseJSONObject.getString("msg");
-    //                            DailyAssert.assertNotNull(message);
-    //                        }
-    //                    } catch (Exception e)
-    //                    {
-    //                        DailyAssert.fail(e);
-    //                    }
-    //                } else
-    //                {
-    //                    DailyAssert.fail();
-    //                }
-    //
-    //                mLock.countDown();
-    //            }
-    //
-    //            @Override
-    //            public void onFailure(Call<JSONObject> call, Throwable t)
-    //            {
-    //                DailyAssert.fail(call, t);
-    //                mLock.countDown();
-    //            }
-    //        };
-    //
-    //        DailyMobileAPI.getInstance(mContext).requestWishListCount(mNetworkTag, wishListCountCallback);
-    //        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    //    }
+
+    // 웹페이지 연동이 필요하여 일단 스킵!
+    @Ignore
+    public void requestDownloadEventCoupon(String couponCode) throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    String validFrom = dataJSONObject.getString("validFrom");
+                    String validTo = dataJSONObject.getString("validTo");
+                    assertThat(DailyCalendar.convertDateFormatString(validFrom, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"), isNotEmpty());
+                    assertThat(DailyCalendar.convertDateFormatString(validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"), isNotEmpty());
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestDownloadEventCoupon(mNetworkTag, couponCode, networkCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestHasCoupon() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback hasCouponCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    assertThat(dataJSONObject.get("existCoupons"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestHasCoupon( //
+            mNetworkTag, Const.TEST_STAY_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, hasCouponCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestHasCoupon1() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback hasCouponCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+                    assertThat(dataJSONObject.get("existCoupons"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestHasCoupon(//
+            mNetworkTag, Const.TEST_GOURMET_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), hasCouponCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestCouponList3() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback couponListCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
+                    assertThat(list, notNullValue());
+                    assertThat(list.isEmpty(), is(false));
+
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestCouponList(//
+            mNetworkTag, Const.TEST_STAY_INDEX,//
+            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
+            Const.TEST_NIGHTS, couponListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestCouponList4() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback couponListCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
+                    assertThat(list, notNullValue());
+                    assertThat(list.isEmpty(), is(false));
+
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestCouponList(//
+            mNetworkTag, Const.TEST_GOURMET_INDEX,//
+            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), couponListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestRegisterKeywordCoupon() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback registerKeywordCouponCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestRegisterKeywordCoupon(//
+            mNetworkTag, Const.TEST_KEYWORD_COUPON_CODE, registerKeywordCouponCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestUpdateBenefitAgreement() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback updateBenefitCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    String serverDate = dataJSONObject.getString("serverDate");
+                    assertThat(serverDate, isNotEmpty());
+
+                    serverDate = DailyCalendar.convertDateFormatString(serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+                    assertThat(serverDate, isNotEmpty());
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUpdateBenefitAgreement(//
+            mNetworkTag, Const.TEST_IS_UPDATE_BENEFIT_AGREEMENT, updateBenefitCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestUserTracking() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback userTrackingCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    JSONObject tracking = dataJSONObject.getJSONObject("tracking");
+                    assertThat(tracking, notNullValue());
+
+                    int gourmetPaymentCompletedCount = tracking.getInt("countOfGourmetPaymentCompleted");
+                    int hotelPaymentCompletedCount = tracking.getInt("countOfHotelPaymentCompleted");
+
+                    assertThat(gourmetPaymentCompletedCount, moreThan(0));
+                    assertThat(hotelPaymentCompletedCount, moreThan(0));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestUserTracking(mNetworkTag, userTrackingCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestNoticeList() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback noticeListCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    JSONArray jsonArray = dataJSONObject.getJSONArray("notices");
+                    assertThat(jsonArray, notNullValue());
+
+                    int length = jsonArray.length();
+                    for (int i = 0; i < length; i++)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        assertThat(jsonObject.getInt("idx"), moreThan(1));
+                        assertThat(jsonObject.getString("title"), isNotEmpty());
+                        assertThat(jsonObject.getString("linkUrl"), isNotEmpty());
+                        assertThat(jsonObject.getString("createdAt"), isNotEmpty());
+                    }
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestNoticeList(mNetworkTag, noticeListCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestReceiptByEmail() throws Exception
+    {
+        retrofit2.Callback receiptByEmailCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        mLock = new CountDownLatch(1);
+
+        DailyMobileAPI.getInstance(mContext).requestReceiptByEmail( //
+            mNetworkTag, "gourmet", Integer.toString(Const.TEST_GOURMET_RESERVATION_INDEX), Const.TEST_EMAIL, receiptByEmailCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+
+        mLock = new CountDownLatch(1);
+
+        DailyMobileAPI.getInstance(mContext).requestReceiptByEmail( //
+            mNetworkTag, "stay", Integer.toString(Const.TEST_STAY_RESERVATION_INDEX), Const.TEST_EMAIL, receiptByEmailCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
+
+    @Test
+    public void requestWishListCount() throws Exception
+    {
+        mLock = new CountDownLatch(1);
+
+        retrofit2.Callback wishListCountCallback = new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                try
+                {
+                    assertThat(response, notNullValue());
+                    assertThat(response.isSuccessful(), is(true));
+                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+                    assertThat(message, isNotEmpty());
+                    assertThat(message, msgCode, is(100));
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                    assertThat(dataJSONObject, notNullValue());
+
+                    int userIndex = dataJSONObject.getInt("userIdx");
+                    int stayWishCount = dataJSONObject.getInt("wishHotelCount");
+                    int gourmetWishCount = dataJSONObject.getInt("wishGourmetCount");
+
+                    assertThat(userIndex, moreThan(1));
+                    assertThat(stayWishCount, moreThan(0));
+                    assertThat(gourmetWishCount, moreThan(0));
+
+                } catch (Throwable t)
+                {
+                    addException(call, response, t);
+                } finally
+                {
+                    mLock.countDown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                addException(call, null, t);
+                mLock.countDown();
+            }
+        };
+
+        DailyMobileAPI.getInstance(mContext).requestWishListCount(mNetworkTag, wishListCountCallback);
+        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
+    }
     //
     //    @Test
     //    public void requestWishList() throws Exception
