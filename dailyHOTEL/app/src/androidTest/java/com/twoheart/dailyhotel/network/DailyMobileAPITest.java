@@ -179,7 +179,18 @@ public class DailyMobileAPITest
 
             builder.append("\n").append("body : ").append(bodyString);
             builder.append("\n").append("message : ").append(response.message());
-            builder.append("\n").append("errorBody : ").append(response.errorBody());
+
+
+            String errorBodyString;
+            try
+            {
+                errorBodyString = response.errorBody().toString();
+            } catch (Exception e2)
+            {
+                errorBodyString = e2.getMessage();
+            }
+
+            builder.append("\n").append("errorBody : ").append(errorBodyString);
             builder.append("\n" + "===================== body end =====================");
         }
 
@@ -889,7 +900,15 @@ public class DailyMobileAPITest
                     String result = responseJSONObject.getString("isSuccess");
 
                     assertThat(responseJSONObject.getString("msg"), allOf(notNullValue(), isA(String.class)));
-                    assertThat(result, is("true"));
+
+                    if ("false".equalsIgnoreCase(result) == true)
+                    {
+                        assertThat(true, anyOf(is(response.code() == 200), is(responseJSONObject.getString("msg").contains("이미 비밀번호 변경을 요청하였습니다."))));
+                    } else
+                    {
+                        assertThat(result, is("true"));
+                    }
+
                 } catch (Throwable t)
                 {
                     addException(call, response, t);
@@ -1740,7 +1759,7 @@ public class DailyMobileAPITest
                             JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
 
                             String description = imageInformationJSONObject.getString("description");
-                            assertThat(description, isNotEmpty());
+                            assertThat(description, notNullValue());
 
                             String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
                             assertThat(imageFullUrl, isNotEmpty());
@@ -5167,7 +5186,7 @@ public class DailyMobileAPITest
                             assertThat(index, moreThan(1));
                             testPlaceIndex = index;
 
-                            assertThat(jsonObject.get("isSoldOut"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                            assertThat(jsonObject.has("isSoldOut"), is(true));
 
                             assertThat(jsonObject.getString("districtName"), isNotEmpty());
                             assertThat(jsonObject.getString("category"), isNotEmpty());

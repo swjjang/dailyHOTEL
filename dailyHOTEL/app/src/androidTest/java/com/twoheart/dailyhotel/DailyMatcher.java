@@ -28,7 +28,7 @@ public class DailyMatcher
             @Override
             public void describeTo(Description description)
             {
-                description.appendValue(stringValue + " is empty");
+                description.appendValue(stringValue + " is not empty");
             }
         };
     }
@@ -37,19 +37,16 @@ public class DailyMatcher
     {
         return new TypeSafeMatcher<String>()
         {
-            String stringValue;
-
             @Override
             protected boolean matchesSafely(String item)
             {
-                stringValue = item;
                 return Util.isTextEmpty(item) == false;
             }
 
             @Override
             public void describeTo(Description description)
             {
-                description.appendValue(stringValue + " is empty");
+                description.appendValue("input item is empty");
             }
         };
     }
