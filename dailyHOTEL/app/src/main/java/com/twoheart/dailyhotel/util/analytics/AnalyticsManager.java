@@ -862,6 +862,9 @@ public class AnalyticsManager
         public static final String HOTEL_IMAGE_CLICKED = "HotelImageClicked";
         public static final String GOURMET_IMAGE_CLICKED = "GourmetImageClicked";
 
+        public static final String HOTEL_IMAGE_CLOSED = "HotelImageClosed";
+        public static final String GOURMET_IMAGE_CLOSED = "GourmetImageClosed";
+
         //
         public static final String WAYTOVISIT_SELECTED = "WaytovisitSelected";
     }
@@ -1027,6 +1030,7 @@ public class AnalyticsManager
         public static final String SWIPE = "Swipe";
         public static final String WALK = "Walk";
         public static final String CAR = "Car";
+        public static final String PARKING_NOT_AVAILABLE = "ParkingNotAvailable";
 
         public static final String DIRECTCALL_FRONT = "DirectCall_Front";
         public static final String DIRECTCALL_RESERVATION = "DirectCall_Reservation";

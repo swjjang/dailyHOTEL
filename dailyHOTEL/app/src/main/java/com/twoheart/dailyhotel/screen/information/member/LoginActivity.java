@@ -172,7 +172,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (DailyAutoCompleteEditText) findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnTouchListener(new View.OnTouchListener()
         {

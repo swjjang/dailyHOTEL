@@ -66,7 +66,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
     private View mHowToVisitLayout;
     private View mVisitWalkView, mVisitCarView, mNoParkingView;
-    private TextView mGuideVisitMemoView;
+    private TextView mHowToVisitTextView, mGuideVisitMemoView;
     private View mGuideVisitMemoLayout;
 
     // 할인 정보
@@ -255,6 +255,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mHowToVisitLayout = view.findViewById(R.id.howToVisitLayout);
         mHowToVisitLayout.setVisibility(View.GONE);
 
+        mHowToVisitTextView = (TextView) mHowToVisitLayout.findViewById(R.id.howToVisitTextView);
         mVisitWalkView = mHowToVisitLayout.findViewById(R.id.visitWalkView);
         mVisitCarView = mHowToVisitLayout.findViewById(R.id.visitCarView);
         mNoParkingView = mHowToVisitLayout.findViewById(R.id.noParkingView);
@@ -612,6 +613,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         {
             case StayPaymentInformation.VISIT_TYPE_PARKING:
                 mHowToVisitLayout.setVisibility(View.VISIBLE);
+
+                mHowToVisitTextView.setText(R.string.label_how_to_visit);
                 mVisitCarView.setVisibility(View.VISIBLE);
                 mVisitWalkView.setVisibility(View.VISIBLE);
                 mNoParkingView.setVisibility(View.GONE);
@@ -630,6 +633,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             case StayPaymentInformation.VISIT_TYPE_NO_PARKING:
                 mHowToVisitLayout.setVisibility(View.VISIBLE);
+
+                mHowToVisitTextView.setText(R.string.label_parking_information);
                 mVisitCarView.setVisibility(View.GONE);
                 mVisitWalkView.setVisibility(View.GONE);
                 mNoParkingView.setVisibility(View.VISIBLE);
@@ -733,11 +738,11 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
 
         // 다음 버전에서 진행.
-        if (payPrice == 0)
-        {
-            paymentTypeInformationLayout.setVisibility(View.GONE);
-            mFreePaymentView.setVisibility(View.VISIBLE);
-        } else
+        //        if (payPrice == 0)
+        //        {
+        //            paymentTypeInformationLayout.setVisibility(View.GONE);
+        //            mFreePaymentView.setVisibility(View.VISIBLE);
+        //        } else
         {
             paymentTypeInformationLayout.setVisibility(View.VISIBLE);
             mFreePaymentView.setVisibility(View.GONE);

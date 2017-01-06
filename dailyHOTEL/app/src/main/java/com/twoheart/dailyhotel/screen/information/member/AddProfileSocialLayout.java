@@ -119,7 +119,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
         mEmailEditText = (DailyAutoCompleteEditText) mEmailLayout.findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
 
         EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
