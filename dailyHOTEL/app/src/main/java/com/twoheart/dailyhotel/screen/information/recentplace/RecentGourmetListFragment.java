@@ -150,7 +150,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             RecentGourmetListFragment.this.onErrorResponse(call, response);

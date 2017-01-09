@@ -54,46 +54,4 @@ public class EventBanner
     {
         return mIsHotel;
     }
-
-    //    public String getLink()
-    //    {
-    //        if(isDeepLink() == true)
-    //        {
-    //            // dailyhotel://dailyhotel.co.kr?view=hotel&idx=131&date=20151109&nights=1
-    //            StringBuilder targetLink = new StringBuilder();
-    //            targetLink.append("dailyhotel://dailyhotel.co.kr?view=");
-    //
-    //            // view
-    //            if(isHotel() == true)
-    //            {
-    //                targetLink.append("hotel");
-    //            } else
-    //            {
-    //                targetLink.append("gourmet");
-    //            }
-    //
-    //            // index
-    //            targetLink.append("&idx=");
-    //            targetLink.append(mIndex);
-    //
-    //            // date
-    //            targetLink.append("&date=");
-    //
-    //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-    //            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT+9"));
-    //
-    //            targetLink.append(simpleDateFormat.format(new Date(mCheckInTime)));
-    //
-    //            // nights
-    //            targetLink.append("&nights=");
-    //            targetLink.append(mNights);
-    //
-    //            // 딥링크인 경우
-    //            return targetLink.toString();
-    //        } else
-    //        {
-    //            // 웹링크인 경우
-    //            return mLink;
-    //        }
-    //    }
 }

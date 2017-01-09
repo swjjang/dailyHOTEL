@@ -13,5 +13,5 @@ public interface OnBaseNetworkControllerListener
 
     void onErrorToastMessage(String message);
 
-    void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response);
+    void onErrorResponse(Call call, Response response);
 }

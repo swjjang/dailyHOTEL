@@ -834,7 +834,7 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             StayAutoRefundActivity.this.onErrorResponse(call, response);
         }
