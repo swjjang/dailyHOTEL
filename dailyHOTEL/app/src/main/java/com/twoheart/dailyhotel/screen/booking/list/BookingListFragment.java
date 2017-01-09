@@ -201,7 +201,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 {
                     BaseActivity baseActivity = (BaseActivity) getActivity();
 
-                    startBookingDetail(baseActivity, placeType, reservationIndex);
+                    startBookingDetail(baseActivity, placeType, reservationIndex, null);
                 }
             }
 
@@ -293,7 +293,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         {
             // 카드결제 완료 || 가상계좌 완료
 
-            if (startBookingDetail(baseActivity, booking.placeType, booking.reservationIndex) == false)
+            if (startBookingDetail(baseActivity, booking.placeType, booking.reservationIndex, booking.hotelImageUrl) == false)
             {
                 releaseUiComponent();
             }
@@ -359,7 +359,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     }
 
-    private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType, int reservationIndex)
+    private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType, int reservationIndex, String imageUrl)
     {
         Intent intent;
 
@@ -382,6 +382,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
 
         return true;

@@ -239,6 +239,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     }
 
     @Override
+    protected void showShareDialog()
+    {
+
+    }
+
+    @Override
     protected void requestPlaceBookingDetail(int reservationIndex)
     {
         lockUI();

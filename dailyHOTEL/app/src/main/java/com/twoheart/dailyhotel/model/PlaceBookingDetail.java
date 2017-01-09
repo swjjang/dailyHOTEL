@@ -26,6 +26,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     public double latitude;
     public double longitude;
     public String placeName;
+    public String userName;
     public String guestName;
     public String guestPhone;
     public String guestEmail;
@@ -62,6 +63,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeDouble(longitude);
         dest.writeMap(mSpecification);
         dest.writeString(placeName);
+        dest.writeString(userName);
         dest.writeString(guestName);
         dest.writeString(guestPhone);
         dest.writeString(guestEmail);
@@ -89,6 +91,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         longitude = in.readDouble();
         in.readMap(mSpecification, Map.class.getClassLoader());
         placeName = in.readString();
+        userName = in.readString();
         guestName = in.readString();
         guestPhone = in.readString();
         guestEmail = in.readString();

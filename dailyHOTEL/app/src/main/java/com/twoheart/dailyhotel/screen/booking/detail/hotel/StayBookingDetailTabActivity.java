@@ -293,11 +293,134 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     }
 
     @Override
-    protected void requestPlaceBookingDetail(int reservationIndex)
+    protected void showShareDialog()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_booking_layout, null, false);
+
+        final Dialog shareDialog = new Dialog(this);
+        shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        shareDialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+
+        kakaoShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                //                if (mDefaultImageUrl == null)
+                //                {
+                //                    if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
+                //                    {
+                //                        mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
+                //                    }
+                //                }
+                //
+                //                shareKakao(mPlaceDetail, mDefaultImageUrl);
+            }
+        });
+
+        View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+
+        smsShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                try
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.putExtra("sms_body", getString(R.string.message_booking_stay_share_sms, //
+                        mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
+                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"), //
+                        mStayBookingDetail.address));
+
+                    intent.setType("vnd.android-dir/mms-sms");
+                    startActivity(intent);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        });
+
+        try
+        {
+            shareDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, shareDialog);
+
+            shareDialog.show();
+
+            shareDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    protected void requestPlaceBookingDetail(final int reservationIndex)
     {
         lockUI();
 
-        DailyMobileAPI.getInstance(this).requestStayBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+        DailyMobileAPI.getInstance(this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                            mStayBookingDetail.userName = jsonObject.getString("name");
+
+                            DailyMobileAPI.getInstance(StayBookingDetailTabActivity.this).requestStayBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+                        } else
+                        {
+                            String msg = responseJSONObject.getString("msg");
+                            DailyToast.showToast(StayBookingDetailTabActivity.this, msg, Toast.LENGTH_SHORT);
+                            finish();
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                } else
+                {
+                    StayBookingDetailTabActivity.this.onErrorResponse(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                StayBookingDetailTabActivity.this.onError(t);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -518,6 +641,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             StayBookingDetailTabActivity.this.onError(t);
+            finish();
         }
     };
 
