@@ -213,6 +213,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
     String NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST = "isChangeWishList";
     String NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT = "reviewComment";
+    String NAME_INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

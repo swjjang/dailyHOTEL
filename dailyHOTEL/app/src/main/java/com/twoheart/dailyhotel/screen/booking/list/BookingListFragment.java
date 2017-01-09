@@ -181,33 +181,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         super.onStart();
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
-        {
-            if (DailyDeepLink.getInstance().isBookingDetailView() == true)
-            {
-                PlaceType placeType = null;
-
-                if ("stay".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
-                {
-                    placeType = PlaceType.HOTEL;
-                } else if ("gourmet".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
-                {
-                    placeType = PlaceType.FNB;
-                }
-
-                int reservationIndex = DailyDeepLink.getInstance().getReservationIndex();
-
-                if (placeType != null && reservationIndex > 0)
-                {
-                    BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                    startBookingDetail(baseActivity, placeType, reservationIndex);
-                }
-            }
-
-            DailyDeepLink.getInstance().clear();
-        }
-
         if (DailyHotel.isLogin() == false)
         {
             AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST);
@@ -293,7 +266,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         {
             // 카드결제 완료 || 가상계좌 완료
 
-            if (startBookingDetail(baseActivity, booking.placeType, booking.reservationIndex) == false)
+            if (startBookingDetail(baseActivity, booking.placeType, booking.reservationIndex, booking.hotelImageUrl, false) == false)
             {
                 releaseUiComponent();
             }
@@ -359,7 +332,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     }
 
-    private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType, int reservationIndex)
+    private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType,//
+                                       int reservationIndex, String imageUrl, boolean isDeepLink)
     {
         Intent intent;
 
@@ -382,6 +356,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
 
         return true;
@@ -490,6 +466,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     {
                         JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
                         int length = dataJSONArray.length();
+                        ArrayList<Booking> bookingArrayList = null;
 
                         if (length == 0)
                         {
@@ -498,7 +475,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
                         } else
                         {
-                            ArrayList<Booking> bookingArrayList = makeBookingList(dataJSONArray);
+                            bookingArrayList = makeBookingList(dataJSONArray);
 
                             updateLayout(true, bookingArrayList);
 
@@ -506,6 +483,38 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
 
                             AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, analyticsParams);
+                        }
+
+                        if (DailyDeepLink.getInstance().isValidateLink() == true)
+                        {
+                            if (DailyDeepLink.getInstance().isBookingDetailView() == true && length != 0)
+                            {
+                                PlaceType placeType = null;
+
+                                if ("stay".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
+                                {
+                                    placeType = PlaceType.HOTEL;
+                                } else if ("gourmet".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
+                                {
+                                    placeType = PlaceType.FNB;
+                                }
+
+                                final int reservationIndex = DailyDeepLink.getInstance().getReservationIndex();
+
+                                if (placeType != null && reservationIndex > 0)
+                                {
+                                    for (Booking booking : bookingArrayList)
+                                    {
+                                        if (booking.reservationIndex == reservationIndex)
+                                        {
+                                            startBookingDetail(baseActivity, placeType, reservationIndex, booking.hotelImageUrl, true);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            DailyDeepLink.getInstance().clear();
                         }
 
                         // 사용자 정보 요청.

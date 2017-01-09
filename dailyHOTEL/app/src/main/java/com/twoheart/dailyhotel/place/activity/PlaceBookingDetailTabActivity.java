@@ -28,6 +28,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     private ViewPager mViewPager;
     private boolean mDontReload;
     protected int mReservationIndex;
+    protected String mImageUrl;
+    protected boolean mIsDeepLink;
 
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -39,6 +41,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected abstract void showCallDialog();
 
+    protected abstract void showShareDialog();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -49,6 +53,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         if (bundle != null)
         {
             mReservationIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_BOOKINGIDX);
+            mImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_URL);
+            mIsDeepLink = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DEEPLINK, false);
         }
 
         if (mReservationIndex <= 0)
@@ -84,13 +90,22 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, R.drawable.navibar_ic_share_01_black);
         mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                showCallDialog();
+                switch(v.getId())
+                {
+                    case R.id.menu1View:
+                        showCallDialog();
+                        break;
+
+                    case R.id.menu2View:
+                        showShareDialog();
+                        break;
+                }
             }
         });
     }
