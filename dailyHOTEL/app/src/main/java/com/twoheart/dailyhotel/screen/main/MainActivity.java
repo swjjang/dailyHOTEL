@@ -378,10 +378,6 @@ public class MainActivity extends BaseActivity implements Constants
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                         break;
 
-                    case CODE_RESULT_ACTIVITY_GOURMET_LIST:
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
-                        break;
-
                     default:
                         mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
                         break;
@@ -407,7 +403,7 @@ public class MainActivity extends BaseActivity implements Constants
     {
         int lastIndex = mMainFragmentManager.getLastIndexFragment();
 
-        if (lastIndex == MainFragmentManager.INDEX_HOME_FRAGMENT || lastIndex == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
+        if (lastIndex == MainFragmentManager.INDEX_HOME_FRAGMENT)
         {
             if (mBackButtonHandler.onBackPressed())
             {
@@ -723,23 +719,17 @@ public class MainActivity extends BaseActivity implements Constants
                     break;
 
                 case 1:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
-
-                    if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
-                    {
-                        DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
-                        mNetworkController.requestReviewStay();
-                    }
-
-                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
-                    break;
-
-                case 2:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
+                    break;
+
+                case 2:
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, false);
+
+//                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+//                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
                     break;
 
                 case 3:
@@ -899,10 +889,10 @@ public class MainActivity extends BaseActivity implements Constants
                                 placeType = PlaceType.HOTEL;
                                 break;
 
-                            case "gourmet":
-                                mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
-                                placeType = PlaceType.FNB;
-                                break;
+//                            case "gourmet":
+//                                mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
+//                                placeType = PlaceType.FNB;
+//                                break;
                         }
                     }
                 } else if (DailyDeepLink.getInstance().isHotelView() == true)
@@ -911,8 +901,8 @@ public class MainActivity extends BaseActivity implements Constants
                     placeType = PlaceType.HOTEL;
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
-                    placeType = PlaceType.FNB;
+//                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
+//                    placeType = PlaceType.FNB;
                 } else if (DailyDeepLink.getInstance().isBookingView() == true //
                     || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {
@@ -981,19 +971,19 @@ public class MainActivity extends BaseActivity implements Constants
 
                 if (getString(R.string.label_dailygourmet).equalsIgnoreCase(lastMenu) == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
-                    placeType = PlaceType.FNB;
+//                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+//                    placeType = PlaceType.FNB;
                 } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(lastMenu) == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                     placeType = PlaceType.HOTEL;
                 } else
                 {
-                    if (mMainFragmentManager.getLastIndexFragment() == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
-                    {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
-                        placeType = PlaceType.FNB;
-                    } else
+//                    if (mMainFragmentManager.getLastIndexFragment() == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
+//                    {
+//                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+//                        placeType = PlaceType.FNB;
+//                    } else
                     {
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                         placeType = PlaceType.HOTEL;
