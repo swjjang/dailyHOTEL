@@ -106,7 +106,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         if (checkInOffsetDailyDay < mStartSaleTime.getOffsetDailyDay()//
             || checkInOffsetDailyDay >= mEndSaleTime.getOffsetDailyDay()//
-            || checkOutOffsetDailyDay >= mEndSaleTime.getOffsetDailyDay())
+            || checkOutOffsetDailyDay > mEndSaleTime.getOffsetDailyDay())
         {
             saleTime.setOffsetDailyDay(mStartSaleTime.getOffsetDailyDay());
             nights = 1;
