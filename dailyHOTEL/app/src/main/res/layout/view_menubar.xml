@@ -48,33 +48,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/gourmetLayout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:id="@+id/gourmetImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tapbar_ic_02_gourmet"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/gourmetView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/gourmetImageView"
-                    android:layout_marginBottom="3dp"
-                    android:gravity="center"
-                    android:text="@string/menu_item_title_gourmet"
-                    android:textColor="@drawable/selector_menu_textcolor"
-                    android:textSize="9dp"/>
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/bookingLayout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -99,6 +72,44 @@
                     android:text="@string/menu_item_title_bookings"
                     android:textColor="@drawable/selector_menu_textcolor"
                     android:textSize="9dp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/myDailyLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/myDailyImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/tapbar_ic_03_reservation"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/myDailyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/myDailyImageView"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center"
+                    android:text="@string/menu_item_title_mydaily"
+                    android:textColor="@drawable/selector_menu_textcolor"
+                    android:textSize="9dp"/>
+
+                <ImageView
+                    android:id="@+id/myDailyNewIconView"
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="6dp"
+                    android:paddingLeft="28dp"
+                    android:scaleType="centerInside"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/tabbar_ic_n"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -128,15 +139,15 @@
                     android:textSize="9dp"/>
 
                 <ImageView
-                    android:id="@+id/newEventIcon"
+                    android:id="@+id/informationNewIconView"
                     android:layout_width="match_parent"
                     android:layout_height="16dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="6dp"
                     android:paddingLeft="28dp"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tabbar_ic_n"
-                    android:visibility="invisible"/>
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/tabbar_ic_n"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

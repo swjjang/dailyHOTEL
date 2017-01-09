@@ -338,6 +338,7 @@
     <string name="menu_item_title_hotel">데일리호텔</string>
     <string name="menu_item_title_gourmet">데일리고메</string>
     <string name="menu_item_title_bookings">예약내역</string>
+    <string name="menu_item_title_mydaily">마이데일리</string>
     <string name="menu_item_title_information">더보기</string>
 
 

@@ -10,9 +10,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
+import com.twoheart.dailyhotel.screen.mydaily.MyDailyFragment;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -20,9 +20,9 @@ import com.twoheart.dailyhotel.util.Util;
 public class MainFragmentManager
 {
     public static final int INDEX_ERROR_FRAGMENT = 100;
-    public static final int INDEX_HOTEL_FRAGMENT = 0;
-    public static final int INDEX_GOURMET_FRAGMENT = 1;
-    public static final int INDEX_BOOKING_FRAGMENT = 2;
+    public static final int INDEX_HOME_FRAGMENT = 0;
+    public static final int INDEX_BOOKING_FRAGMENT = 1;
+    public static final int INDEX_MYDAILY_FRAGMENT = 2;
     public static final int INDEX_INFORMATION_FRAGMENT = 3;
 
     private FragmentManager mFragmentManager;
@@ -76,34 +76,34 @@ public class MainFragmentManager
     {
         switch (index)
         {
-            case INDEX_HOTEL_FRAGMENT:
+            case INDEX_HOME_FRAGMENT:
             {
                 PlaceMainFragment placeMainFragment = new StayMainFragment();
                 placeMainFragment.setMenuBarListener(mOnMenuBarListener);
-
-                return placeMainFragment;
-            }
-
-            case INDEX_GOURMET_FRAGMENT:
-            {
-                PlaceMainFragment placeMainFragment = new GourmetMainFragment();
-                placeMainFragment.setMenuBarListener(mOnMenuBarListener);
-
                 return placeMainFragment;
             }
 
             case INDEX_BOOKING_FRAGMENT:
+            {
                 mOnMenuBarListener.onMenuBarEnabled(true);
-
                 return new BookingListFragment();
-            case INDEX_INFORMATION_FRAGMENT:
-                mOnMenuBarListener.onMenuBarEnabled(true);
+            }
 
+            case INDEX_MYDAILY_FRAGMENT:
+            {
+                mOnMenuBarListener.onMenuBarEnabled(true);
+                return new MyDailyFragment();
+            }
+
+            case INDEX_INFORMATION_FRAGMENT:
+            {
+                mOnMenuBarListener.onMenuBarEnabled(true);
                 return new InformationFragment();
+            }
+
             case INDEX_ERROR_FRAGMENT:
             {
                 mOnMenuBarListener.onMenuBarEnabled(true);
-
                 ErrorFragment fragment = new ErrorFragment();
                 fragment.setMenuManager(this);
                 return fragment;
@@ -179,21 +179,18 @@ public class MainFragmentManager
                     mIndexLastFragment = INDEX_INFORMATION_FRAGMENT;
                     break;
 
+                case INDEX_MYDAILY_FRAGMENT:
+                    mIndexLastFragment = INDEX_MYDAILY_FRAGMENT;
+                    break;
+
                 case INDEX_BOOKING_FRAGMENT:
                     mIndexLastFragment = INDEX_BOOKING_FRAGMENT;
                     break;
 
-                case INDEX_GOURMET_FRAGMENT:
-                    mIndexLastFragment = INDEX_GOURMET_FRAGMENT;
-                    mIndexMainLastFragment = INDEX_GOURMET_FRAGMENT;
-
-                    DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailygourmet));
-                    break;
-
-                case INDEX_HOTEL_FRAGMENT:
+                case INDEX_HOME_FRAGMENT:
                 default:
-                    mIndexLastFragment = INDEX_HOTEL_FRAGMENT;
-                    mIndexMainLastFragment = INDEX_HOTEL_FRAGMENT;
+                    mIndexLastFragment = INDEX_HOME_FRAGMENT;
+                    mIndexMainLastFragment = INDEX_HOME_FRAGMENT;
 
                     DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailyhotel));
                     break;

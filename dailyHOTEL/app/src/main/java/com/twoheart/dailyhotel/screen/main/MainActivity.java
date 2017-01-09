@@ -40,8 +40,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
@@ -377,7 +375,7 @@ public class MainActivity extends BaseActivity implements Constants
                         break;
 
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                         break;
 
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -409,7 +407,7 @@ public class MainActivity extends BaseActivity implements Constants
     {
         int lastIndex = mMainFragmentManager.getLastIndexFragment();
 
-        if (lastIndex == MainFragmentManager.INDEX_HOTEL_FRAGMENT || lastIndex == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
+        if (lastIndex == MainFragmentManager.INDEX_HOME_FRAGMENT || lastIndex == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
         {
             if (mBackButtonHandler.onBackPressed())
             {
@@ -712,7 +710,7 @@ public class MainActivity extends BaseActivity implements Constants
             switch (index)
             {
                 case 0:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
 
                     if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
                     {
@@ -897,7 +895,7 @@ public class MainActivity extends BaseActivity implements Constants
                         switch (deepLinkPlaceType)
                         {
                             case "stay":
-                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
                                 placeType = PlaceType.HOTEL;
                                 break;
 
@@ -909,7 +907,7 @@ public class MainActivity extends BaseActivity implements Constants
                     }
                 } else if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
                     placeType = PlaceType.HOTEL;
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
@@ -946,12 +944,12 @@ public class MainActivity extends BaseActivity implements Constants
                     } else
                     {
                         DailyDeepLink.getInstance().clear();
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
                         placeType = PlaceType.HOTEL;
                     }
                 } else
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
                     placeType = PlaceType.HOTEL;
                 }
 
@@ -987,7 +985,7 @@ public class MainActivity extends BaseActivity implements Constants
                     placeType = PlaceType.FNB;
                 } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(lastMenu) == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                     placeType = PlaceType.HOTEL;
                 } else
                 {
@@ -997,7 +995,7 @@ public class MainActivity extends BaseActivity implements Constants
                         placeType = PlaceType.FNB;
                     } else
                     {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                         placeType = PlaceType.HOTEL;
                     }
                 }
