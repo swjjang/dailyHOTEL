@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:app="http://schemas.android.com/apk/res-auto">
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
     <!--UI 확인시에만 열어주세요-->
     <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -137,8 +138,9 @@
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
         android:text="@string/label_booking_room_info"
-        android:textColor="@color/default_text_c323232"
-        android:textSize="13dp"/>
+        android:textColor="@color/default_text_c666666"
+        android:textSize="13dp"
+        dailyFont:style="Medium"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -239,8 +241,9 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="15dp"
         android:text="@string/label_booking_user_info"
-        android:textColor="@color/default_text_c323232"
-        android:textSize="13dp"/>
+        android:textColor="@color/default_text_c666666"
+        android:textSize="13dp"
+        dailyFont:style="Medium"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -297,7 +300,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:gravity="center_vertical">
@@ -319,6 +321,59 @@
             android:lineSpacingExtra="-2dp"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/visitTypeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/visitTypeTitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="@string/label_how_to_visit"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/visitTypeTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="right|center_vertical"
+            android:lineSpacingExtra="-2dp"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/guideVisitMemoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_payment_notice"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/guideVisitMemoView"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginLeft="5dp"
+            android:text="@string/message_visit_car_memo"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="11dp"/>
     </LinearLayout>
     <!--</LinearLayout>-->
 </merge>

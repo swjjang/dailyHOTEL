@@ -27,6 +27,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 {
     protected int mPlaceCount;
     protected int mLoadMorePageIndex;
+    protected boolean mIsLoadMoreFlag = true; // 더보기 호출시 마지막 아이템이 성공이고 호텔 SaleList 또는 카운트가 0일때 false, refresh 시 true;
 
     protected ViewType mViewType;
 
@@ -45,6 +46,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     {
         void onEventBannerClick(EventBanner eventBanner);
 
+        // 왜 onActivityCreated 했을까?
+        // http://blog.saltfactory.net/android/implement-layout-using-with-fragment.html
         void onActivityCreated(PlaceListFragment placeListFragment);
 
         void onScrolled(RecyclerView recyclerView, int dx, int dy);
@@ -83,6 +86,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         mBaseActivity = (BaseActivity) getActivity();
         mViewType = ViewType.LIST;
         mLoadMorePageIndex = 1;
+        mIsLoadMoreFlag = true;
 
         mPlaceListLayout = getPlaceListLayout();
         mPlaceListLayout.setBottomOptionLayout(mBottomOptionLayout);
@@ -134,6 +138,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
             return;
         }
 
+        mIsLoadMoreFlag = true;
+
         switch (mViewType)
         {
             case LIST:
@@ -155,7 +161,10 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     public void addList(boolean isShowProgress)
     {
-        refreshList(isShowProgress, mLoadMorePageIndex + 1);
+        if (mIsLoadMoreFlag == true)
+        {
+            refreshList(isShowProgress, mLoadMorePageIndex + 1);
+        }
     }
 
     public void setVisibility(ViewType viewType, boolean isCurrentPage)

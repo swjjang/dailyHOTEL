@@ -1,89 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:background="@color/black_a60"
-              android:gravity="center"
-              android:paddingBottom="72dp"
-              android:paddingTop="48dp">
+             xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:background="@color/black_a60"
+             android:paddingBottom="72dp"
+             android:paddingTop="48dp">
 
     <LinearLayout
         android:id="@+id/dialogLayout"
         android:layout_width="312dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/white"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/titleLayout"
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/titleTextView"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="67dp"
+            android:background="@drawable/shape_fillrect_lr_top_round_bffffff"
             android:gravity="center"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="24dp"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/titleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/label_select_coupon"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="17dp"
-                dailyFont:style="Medium"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="16dp"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/messageTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titleTextView"
-                android:gravity="center"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"/>
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/listLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:visibility="visible">
-
-            <ListView
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null"/>
-        </FrameLayout>
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:text="@string/label_select_coupon"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
 
         <LinearLayout
-            android:layout_width="312dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/coupon_popup_bg"
             android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/coupon_popup_bg">
+
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:paddingTop="5dp"/>
+
+                <View
+                    android:id="@+id/punchMaskLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_ce7e7e7"/>
 
             <LinearLayout
                 android:id="@+id/oneButtonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
                 android:padding="10dp"
                 android:visibility="gone">
 
@@ -99,17 +79,11 @@
                     dailyFont:style="Medium"/>
             </LinearLayout>
 
-
             <RelativeLayout
                 android:id="@+id/twoButtonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:visibility="gone">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/default_line_ce7e7e7"/>
 
                 <View
                     android:id="@+id/buttonVerticalLine"
@@ -144,7 +118,6 @@
                     android:textColor="@drawable/selector_dialog_text_color01"
                     android:textSize="14dp"
                     dailyFont:style="Medium"/>
-
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

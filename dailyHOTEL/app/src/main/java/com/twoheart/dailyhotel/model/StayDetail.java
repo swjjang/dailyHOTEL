@@ -19,7 +19,7 @@ public class StayDetail extends PlaceDetail
     private ArrayList<RoomInformation> mSaleRoomList;
     //
     public String categoryCode;
-    public boolean hasCoupon;
+
 
     private ArrayList<Pictogram> mPictogramList;
 
@@ -59,7 +59,7 @@ public class StayDetail extends PlaceDetail
             ratingPersons = jsonObject.getInt("ratingPersons");
         }
 
-        // Pictrogram
+        // Pictogram
         if (mPictogramList == null)
         {
             mPictogramList = new ArrayList<>();
@@ -152,6 +152,9 @@ public class StayDetail extends PlaceDetail
                     {
                         mBenefitInformation.add(benefitJSONArray.getString(i));
                     }
+                } else
+                {
+                    mBenefitInformation = new ArrayList<>();
                 }
 
                 if (jsonObject.has("benefitWarning") == true && jsonObject.isNull("benefitWarning") == false)
@@ -178,17 +181,35 @@ public class StayDetail extends PlaceDetail
         }
 
         // Room Sale Info
-        JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
-        int saleRoomLength = saleRoomJSONArray.length();
 
-        mSaleRoomList = new ArrayList<>(saleRoomLength);
-
-        for (int i = 0; i < saleRoomLength; i++)
+        if (jsonObject.has("rooms") == true && jsonObject.isNull("rooms") == false)
         {
-            RoomInformation roomInformation = new RoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
-            roomInformation.grade = grade;
-            roomInformation.address = address;
-            mSaleRoomList.add(roomInformation);
+            JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
+
+            int saleRoomLength = saleRoomJSONArray.length();
+
+            mSaleRoomList = new ArrayList<>(saleRoomLength);
+
+            for (int i = 0; i < saleRoomLength; i++)
+            {
+                RoomInformation roomInformation = new RoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
+                roomInformation.grade = grade;
+                roomInformation.address = address;
+                mSaleRoomList.add(roomInformation);
+            }
+        } else
+        {
+            mSaleRoomList = new ArrayList<>();
+        }
+
+        if (jsonObject.has("myWish") == true)
+        {
+            myWish = jsonObject.getBoolean("myWish");
+        }
+
+        if (jsonObject.has("wishCount") == true)
+        {
+            wishCount = jsonObject.getInt("wishCount");
         }
     }
 

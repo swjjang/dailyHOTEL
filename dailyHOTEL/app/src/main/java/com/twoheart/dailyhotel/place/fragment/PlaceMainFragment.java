@@ -115,6 +115,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                     mDontReloadAtOnResume = true;
                 } else
                 {
+                    mDontReloadAtOnResume = false;
                     mIsDeepLink = false;
                 }
 
@@ -187,6 +188,7 @@ public abstract class PlaceMainFragment extends BaseFragment
             case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
+            case CODE_REQUEST_ACTIVITY_COLLECTION:
             {
                 if (mIsDeepLink == false)
                 {

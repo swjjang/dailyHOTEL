@@ -2,13 +2,13 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,8 +17,7 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -174,13 +173,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
         getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mGourmetDetail);
         linearLayout.addView(mDeatilViews[5]);
 
-        // 카카오톡 문의
+        // 문의 하기
         if (mDeatilViews[6] == null)
         {
             mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getKakaoView(mDeatilViews[6]);
+        getConciergeView(mDeatilViews[6]);
         linearLayout.addView(mDeatilViews[6]);
 
         return linearLayout;
@@ -254,8 +253,30 @@ public class GourmetDetailListAdapter extends BaseAdapter
         {
             satisfactionView.setVisibility(View.VISIBLE);
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, //
+            satisfactionView.setText(mContext.getString(R.string.label_gourmet_detail_satisfaction, //
                 gourmetDetail.ratingValue, decimalFormat.format(gourmetDetail.ratingPersons)));
+        }
+
+        // 할인 쿠폰
+        View couponLayout = view.findViewById(R.id.couponLayout);
+
+        if (placeDetail.hasCoupon == true)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+
+            View downloadCouponView = couponLayout.findViewById(R.id.downloadCouponView);
+
+            downloadCouponView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.downloadCoupon();
+                }
+            });
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
         }
 
         // 날짜
@@ -329,32 +350,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             }
         });
 
-        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
-
-        double width = Util.getLCDWidth(mContext);
-        double height = 2.15f * width / 9;
-
-        ViewGroup.LayoutParams layoutParams = mapImageView.getLayoutParams();
-        layoutParams.height = (int) height;
-
-        mapImageView.setLayoutParams(layoutParams);
-        mapImageView.setTranslationX((int) width / 2 - Util.dpToPx(mContext, 45));
-
-        double ratio = height / width;
-
-        if (width >= 720)
-        {
-            width = 720;
-        }
-
-        height = width * ratio;
-
-        String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
-        String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
-        String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
-            , size, iconUrl, mGourmetDetail.latitude, mGourmetDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
-
-        mapImageView.setImageURI(Uri.parse(url));
+        ImageView mapImageView = (ImageView) view.findViewById(R.id.mapImageView);
         mapImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -507,12 +503,12 @@ public class GourmetDetailListAdapter extends BaseAdapter
     }
 
     /**
-     * 카톡 실시간 상담
+     * 문의 상담
      *
      * @param view
      * @return
      */
-    private View getKakaoView(View view)
+    private View getConciergeView(View view)
     {
         if (view == null)
         {
@@ -521,16 +517,24 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        // 카톡 1:1 실시간 상담
-        View consultKakaoView = view.findViewById(R.id.kakaoImageView);
-        consultKakaoView.setOnClickListener(new View.OnClickListener()
+        TextView conciergeTimeTextView = (TextView) view.findViewById(R.id.conciergeTimeTextView);
+
+        String[] hour = DailyPreference.getInstance(mContext).getOperationTime().split("\\,");
+
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        conciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
+
+        View conciergeLayout = view.findViewById(R.id.conciergeLayout);
+        conciergeLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnEventListener != null)
                 {
-                    mOnEventListener.doKakaotalkConsult();
+                    mOnEventListener.onConciergeClick();
                 }
             }
         });
@@ -559,9 +563,16 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
             for (int i = 0; i < size; i++)
             {
+                String contentText = contentsList.get(i);
+
+                if (Util.isTextEmpty(contentText) == true)
+                {
+                    continue;
+                }
+
                 View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-                textView.setText(contentsList.get(i));
+                textView.setText(contentText);
 
                 contentsLayout.addView(textLayout);
             }

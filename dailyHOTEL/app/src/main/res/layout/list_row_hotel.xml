@@ -11,12 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:transitionName="@string/transition_place_image"
         fresco:actualImageScaleType="centerCrop"/>
+
+    <View
+        android:id="@+id/gradientTopView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_gradient_top_view"/>
 
     <View
         android:id="@+id/gradientView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_gradient_bottom_view"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/gradeTextView"
@@ -32,7 +40,8 @@
         android:paddingRight="5.5dp"
         android:paddingTop="2px"
         android:textColor="@color/white"
-        android:textSize="11dp"/>
+        android:textSize="11dp"
+        android:transitionName="@string/transition_place_grade"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -98,6 +107,7 @@
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textSize="17dp"
+        android:transitionName="@string/transition_place_name"
         dailyFont:style="Medium"/>
 
     <LinearLayout
@@ -153,6 +163,7 @@
         android:layout_marginLeft="11dp"
         android:layout_marginRight="11dp"
         android:layout_marginTop="11dp"
+        android:layout_toLeftOf="@+id/deleteView"
         android:orientation="horizontal"
         android:visibility="gone">
 
@@ -160,7 +171,7 @@
             android:id="@+id/dBenefitTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/d_benefit"
+            android:background="@drawable/notice"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
@@ -179,6 +190,17 @@
         android:scaleType="centerInside"
         android:visibility="gone"
         app:srcCompat="@drawable/soldout"/>
+
+    <View
+        android:id="@+id/deleteView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_delete_white_shadow"
+        android:visibility="gone"/>
 
     <View
         android:layout_width="match_parent"

@@ -33,9 +33,34 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, int nights, String screen, boolean isSelected, boolean isAnimation)
     {
+        if (saleTime == null)
+        {
+            return null;
+        }
+
+        SaleTime startSaleTime = saleTime.getClone(0);
+
+        return newInstance(context, saleTime, nights, startSaleTime, null, screen, isSelected, isAnimation);
+    }
+
+    /**
+     * @param context
+     * @param saleTime
+     * @param nights
+     * @param startSaleTime
+     * @param endSaleTime   null인 경우 마지막 날짜로 한다.
+     * @param screen
+     * @param isSelected
+     * @param isAnimation
+     * @return
+     */
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
+    {
         Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
@@ -52,17 +77,44 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         final SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
-        final int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
-        if (saleTime == null)
+        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+
+        if (mEndSaleTime == null)
+        {
+            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX - 1);
+        } else if (mEndSaleTime.getOffsetDailyDay() > ENABLE_DAYCOUNT_OF_MAX)
+        {
+            mEndSaleTime.setOffsetDailyDay(ENABLE_DAYCOUNT_OF_MAX - 1);
+        }
+
+        if (saleTime == null || mStartSaleTime == null)
         {
             Util.restartApp(this);
             return;
         }
 
-        initLayout(R.layout.activity_calendar, saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+        // startSaleTime, endSaleTime 안에 기간을 요청해야 한다
+        // 만일 그렇지 않으면 강제로 start, end time안으로 변경한다.
+
+        int checkInOffsetDailyDay = saleTime.getOffsetDailyDay();
+        int checkOutOffsetDailyDay = checkInOffsetDailyDay + nights;
+
+        if (checkInOffsetDailyDay < mStartSaleTime.getOffsetDailyDay()//
+            || checkInOffsetDailyDay >= mEndSaleTime.getOffsetDailyDay()//
+            || checkOutOffsetDailyDay >= mEndSaleTime.getOffsetDailyDay())
+        {
+            saleTime.setOffsetDailyDay(mStartSaleTime.getOffsetDailyDay());
+            nights = 1;
+        }
+
+        final SaleTime checkOutSaleTime = saleTime.getClone(saleTime.getOffsetDailyDay() + nights);
+
+        initLayout(R.layout.activity_calendar, saleTime.getClone(0), DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_hotel_select_checkin));
 
         if (isAnimation == true)
@@ -73,13 +125,13 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+                    makeCalendar(saleTime.getClone(0), DAYCOUNT_OF_MAX);
 
                     reset();
 
                     if (isSelected == true)
                     {
-                        setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+                        setSelectedRangeDay(saleTime, checkOutSaleTime);
                         checkLastDay();
                     }
 
@@ -90,22 +142,22 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(saleTime.getClone(0), ENABLE_DAYCOUNT_OF_MAX, DAYCOUNT_OF_MAX);
+            makeCalendar(saleTime.getClone(0), DAYCOUNT_OF_MAX);
 
             reset();
 
             if (isSelected == true)
             {
-                setSelectedRangeDay(saleTime, saleTime.getClone(saleTime.getOffsetDailyDay() + nights));
+                setSelectedRangeDay(saleTime, checkOutSaleTime);
                 checkLastDay();
             }
         }
     }
 
     @Override
-    protected void initLayout(int layoutResID, SaleTime dailyTime, int enableDayCountOfMax, int dayCountOfMax)
+    protected void initLayout(int layoutResID, SaleTime dailyTime, int dayCountOfMax)
     {
-        super.initLayout(layoutResID, dailyTime, enableDayCountOfMax, dayCountOfMax);
+        super.initLayout(layoutResID, dailyTime, dayCountOfMax);
 
         mConfirmTextView = (TextView) findViewById(R.id.confirmView);
         mConfirmTextView.setVisibility(View.VISIBLE);
@@ -192,7 +244,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 if (mCheckInDayView != null && mCheckOutDayView != null)
                 {
                     // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
-                    if (mDailyViews[mDailyViews.length - 1] == view)
+                    if (mDailyViews[mEndSaleTime.getOffsetDailyDay()] == view)
                     {
                         DailyToast.showToast(this, getString(R.string.label_message_dont_check_date), Toast.LENGTH_SHORT);
                         releaseUiComponent();
@@ -221,7 +273,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
                     view.setSelected(true);
                     setToolbarText(getString(R.string.label_calendar_hotel_select_checkout));
-                    mDailyViews[mDailyViews.length - 1].setEnabled(true);
+                    mDailyViews[mEndSaleTime.getOffsetDailyDay()].setEnabled(true);
                 } else
                 {
                     mCheckOutDayView = view;
@@ -250,9 +302,9 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    protected void onConfirm(SaleTime checkInSaleTime, SaleTime chekcOutSaleTime)
+    protected void onConfirm(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
     {
-        if (checkInSaleTime == null || chekcOutSaleTime == null)
+        if (checkInSaleTime == null || checkOutSaleTime == null)
         {
             return;
         }
@@ -263,12 +315,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         }
 
         String checkInDate = checkInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDate = chekcOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
 
         Map<String, String> params = new HashMap<>();
         params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(checkInSaleTime.getDayOfDaysDate().getTime()));
-        params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(chekcOutSaleTime.getDayOfDaysDate().getTime()));
-        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(chekcOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay()));
+        params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(checkOutSaleTime.getDayOfDaysDate().getTime()));
+        params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay()));
         params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
         //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분", Locale.KOREA);
@@ -280,7 +332,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInSaleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, chekcOutSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutSaleTime);
 
         setResult(RESULT_OK, intent);
         hideAnimation();
@@ -390,12 +442,12 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        if (mDailyViews[mDailyViews.length - 1] == mCheckOutDayView)
+        if (mDailyViews[mEndSaleTime.getOffsetDailyDay()] == mCheckOutDayView)
         {
             return;
         }
 
-        mDailyViews[mDailyViews.length - 1].setEnabled(false);
+        mDailyViews[mEndSaleTime.getOffsetDailyDay()].setEnabled(false);
     }
 
     private void reset()
@@ -421,9 +473,29 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 continue;
             }
 
+            Object tag = dayView.getTag();
+
             dayView.setActivated(false);
             dayView.setSelected(false);
-            dayView.setEnabled(true);
+
+            if (tag != null && tag instanceof Day)
+            {
+                Day day = (Day) tag;
+
+                int offsetDay = day.dayTime.getOffsetDailyDay();
+
+                if (offsetDay >= mStartSaleTime.getOffsetDailyDay()//
+                    && offsetDay < mEndSaleTime.getOffsetDailyDay())
+                {
+                    dayView.setEnabled(true);
+                } else
+                {
+                    dayView.setEnabled(false);
+                }
+            } else
+            {
+                dayView.setEnabled(false);
+            }
         }
 
         setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));

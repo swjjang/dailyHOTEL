@@ -35,14 +35,16 @@ public class KakaoLinkManager implements Constants
         return new KakaoLinkManager(context);
     }
 
-    public void sendInviteKakaoLink(String text)
+    public void sendInviteKakaoLink(String text, String recommendCode)
     {
+        final String URL = "https://app.adjust.com/lkhiuk?campaign=referral-in_app&adgroup=invite_friend&creative=app_download&deep_link=dailyhotel%3A%2F%2Fdailyhotel.co.kr%3Fvc%3D6%26v%3Dsu%26rc%3D" + recommendCode;
+
         try
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
             messageBuilder.addImage("http://img.dailyhotel.me/app_static/kakao01.jpg", 300, 400);
             messageBuilder.addText(text);
-            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_invited_friend));
+            messageBuilder.addWebButton(mContext.getString(R.string.kakao_btn_invited_friend), URL);
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (KakaoParameterException e)
         {
@@ -63,15 +65,8 @@ public class KakaoLinkManager implements Constants
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd", Locale.KOREA);
-            //            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
             Date checkInDate = checkInSaleTime.getDayOfDaysDate();
             Date checkOutDate = new Date(checkInSaleTime.getDayOfDaysDate().getTime() + SaleTime.MILLISECOND_IN_A_DAY * nights);
-
-            //            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-            //                , simpleDateFormat.format(checkInDate), simpleDateFormat.format(chekcOutDate)//
-            //                , nights, nights + 1, address);
 
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
                 , DailyCalendar.format(checkInDate.getTime(), "MM/dd", TimeZone.getTimeZone("GMT"))//
@@ -92,7 +87,7 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareGourmet(String name, String planceName, String address, int index, String imageUrl, SaleTime saleTime)
+    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, SaleTime saleTime)
     {
         try
         {
@@ -106,15 +101,8 @@ public class KakaoLinkManager implements Constants
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-            //            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-            //
             Date checkInDate = saleTime.getDayOfDaysDate();
-            //
-            //            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, planceName//
-            //                , simpleDateFormat.format(checkInDate), address);
-
-            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, planceName//
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
                 , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd", TimeZone.getTimeZone("GMT")), address);
 
             if (Util.isTextEmpty(imageUrl) == false)

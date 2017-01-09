@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -19,15 +17,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 {
     private int mPlaceIndex;
     private SaleTime mSaleTime;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int placeIndex, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetDetailCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
@@ -70,7 +73,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
         lockUI();
 
-        DailyNetworkAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mGourmetDetailInformationCallback);
     }
 
     private void setSaleTicketResult(int count)
@@ -127,52 +130,60 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mGourmetDetailInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            int saleTicketCount = 0;
-
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
+                int saleTicketCount = 0;
 
-                JSONObject dataJSONObject = null;
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                if (response.has("data") == true && response.isNull("data") == false)
-                {
-                    dataJSONObject = response.getJSONObject("data");
-                }
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                if (msgCode != 100 || dataJSONObject == null)
-                {
-                    saleTicketCount = 0;
-                } else
-                {
-                    JSONArray ticketInfoJSONArray = dataJSONObject.getJSONArray("tickets");
-                    if (ticketInfoJSONArray == null)
+                    JSONObject dataJSONObject = null;
+
+                    if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
+                    {
+                        dataJSONObject = responseJSONObject.getJSONObject("data");
+                    }
+
+                    if (msgCode != 100 || dataJSONObject == null)
                     {
                         saleTicketCount = 0;
                     } else
                     {
-                        saleTicketCount = ticketInfoJSONArray.length();
+                        JSONArray ticketInfoJSONArray = dataJSONObject.getJSONArray("tickets");
+                        if (ticketInfoJSONArray == null)
+                        {
+                            saleTicketCount = 0;
+                        } else
+                        {
+                            saleTicketCount = ticketInfoJSONArray.length();
+                        }
                     }
+                } catch (Exception e)
+                {
+                    saleTicketCount = 0;
+                } finally
+                {
+                    unLockUI();
+                    GourmetDetailCalendarActivity.this.setSaleTicketResult(saleTicketCount);
                 }
-            } catch (Exception e)
+            } else
             {
-                saleTicketCount = 0;
-            } finally
-            {
-                unLockUI();
-                GourmetDetailCalendarActivity.this.setSaleTicketResult(saleTicketCount);
+                GourmetDetailCalendarActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            showEmptyDialog();
+            GourmetDetailCalendarActivity.this.onError(t);
         }
     };
 }

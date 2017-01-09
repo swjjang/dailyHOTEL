@@ -119,10 +119,10 @@ public class DailyTextView extends AppCompatTextView
     }
 
     @Override
-    public void setMaxLines(int maxlines)
+    public void setMaxLines(int maxLines)
     {
-        mCurMaxLine = maxlines;
-        super.setMaxLines(maxlines);
+        mCurMaxLine = maxLines;
+        super.setMaxLines(maxLines);
     }
 
     @Override

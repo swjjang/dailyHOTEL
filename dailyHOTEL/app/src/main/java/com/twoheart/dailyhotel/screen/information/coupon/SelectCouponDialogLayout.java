@@ -1,6 +1,15 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -10,7 +19,7 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 
@@ -19,7 +28,6 @@ import java.util.List;
  */
 public class SelectCouponDialogLayout extends BaseLayout implements View.OnClickListener
 {
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void setResult(Coupon coupon);
@@ -28,9 +36,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     }
 
     private View mDialogLayout;
-    private DailyTextView mMessageTextView;
     private TextView mTitleTextView;
-    private View mListLayout;
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
     private TextView mPositiveTextView, mNegativeTextView, mConfirmTextView;
@@ -52,8 +58,6 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mDialogLayout = view.findViewById(R.id.dialogLayout);
 
         mTitleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        mMessageTextView = (DailyTextView) view.findViewById(R.id.messageTextView);
-        mListLayout = view.findViewById(R.id.listLayout);
         mOneButtonLayout = view.findViewById(R.id.oneButtonLayout);
         mTwoButtonLayout = view.findViewById(R.id.twoButtonLayout);
         mNegativeTextView = (TextView) mTwoButtonLayout.findViewById(R.id.negativeTextView);
@@ -66,12 +70,23 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         mPositiveTextView.setOnClickListener(this);
         mConfirmTextView.setOnClickListener(this);
 
+        View punchMaskLayout = view.findViewById(R.id.punchMaskLayout);
+
+        if (Util.isOverAPI16() == true)
+        {
+            punchMaskLayout.setBackground(new BackgroundDrawable(mContext, punchMaskLayout));
+        } else
+        {
+            punchMaskLayout.setBackgroundDrawable(new BackgroundDrawable(mContext, punchMaskLayout));
+        }
+
+
         setVisibility(false);
     }
 
     private void initListView(View view)
     {
-        mListView = (ListView) view.findViewById(R.id.list);
+        mListView = (ListView) view.findViewById(R.id.listView);
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
@@ -114,41 +129,32 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         }
     }
 
-    public void setTitle(int resid)
+    public void setTitle(int resId)
     {
         if (mTitleTextView == null)
         {
             return;
         }
 
-        mTitleTextView.setText(resid);
-    }
-
-    public void setMessage(int messageResId)
-    {
-        if (mMessageTextView == null)
-        {
-            return;
-        }
-
-        mMessageTextView.setText(messageResId);
+        mTitleTextView.setText(resId);
     }
 
     public void setData(List<Coupon> list, boolean isSelected)
     {
-        boolean isEmpty = isEmpty(list) == true;
-
-        mListLayout.setVisibility((isEmpty == true) ? View.GONE : View.VISIBLE);
+        if (isEmpty(list) == true)
+        {
+            return;
+        }
 
         if (mListAdapter == null)
         {
             mListAdapter = new SelectCouponAdapter(mContext, list, mCouponItemListener);
-            mListAdapter.setSelected(isSelected);
+            mListAdapter.setSelectedMode(isSelected);
             mListView.setAdapter(mListAdapter);
         } else
         {
             mListAdapter.setData(list);
-            mListAdapter.setSelected(isSelected);
+            mListAdapter.setSelectedMode(isSelected);
             mListAdapter.notifyDataSetChanged();
         }
     }
@@ -209,4 +215,49 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
             }
         }
     };
+
+    private class BackgroundDrawable extends Drawable
+    {
+        private View mView;
+        private Paint mPaint;
+        private Bitmap mCircleBitmap;
+
+        public BackgroundDrawable(Context context, View view)
+        {
+            mView = view;
+            mCircleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.circle);
+
+            mPaint = new Paint();
+            mPaint.setAlpha(0x99);
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+        }
+
+        @Override
+        public void draw(Canvas canvas)
+        {
+            float cY = 0;
+            float cX = mView.getX() - mCircleBitmap.getWidth() / 2;
+
+            canvas.drawBitmap(mCircleBitmap, cX, cY, mPaint);
+            canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mPaint);
+        }
+
+        @Override
+        public void setAlpha(int alpha)
+        {
+
+        }
+
+        @Override
+        public void setColorFilter(ColorFilter colorFilter)
+        {
+
+        }
+
+        @Override
+        public int getOpacity()
+        {
+            return PixelFormat.TRANSPARENT;
+        }
+    }
 }

@@ -1,53 +1,71 @@
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
+    private String mReservationIndex;
+
     private void makeLayout(JSONObject jsonObject) throws Exception
     {
-        JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
+        // 영수증
+        mReservationIndex = jsonObject.getString("gourmetReservationIdx");
 
-        // 영숭증
-        String reservationIndex = jsonObject.getString("reservation_idx");
-        String userName = receiptJSONObject.getString("user_name");
-        String userPhone = receiptJSONObject.getString("user_phone");
-        int ticketCount = receiptJSONObject.getInt("ticket_count");
-        String placeName = receiptJSONObject.getString("restaurant_name");
-        String placeAddress = receiptJSONObject.getString("restaurant_address");
-        String sday = receiptJSONObject.getString("sday");
-        String valueDate = receiptJSONObject.getString("value_date");
+        if (Constants.DEBUG == false && Util.isTextEmpty(mReservationIndex) == true)
+        {
+            Crashlytics.logException(new NullPointerException("GourmetReceiptActivity : mReservationIndex == null"));
+        }
+
+        String userName = jsonObject.getString("userName");
+        String userPhone = jsonObject.getString("userPhone");
+        int ticketCount = jsonObject.getInt("ticketCount");
+        String placeName = jsonObject.getString("restaurantName");
+        String placeAddress = jsonObject.getString("restaurantAddress");
+        String sday = jsonObject.getString("sday");
+        String valueDate = jsonObject.getString("paidAt");
         //        String currency = receiptJSONObject.getString("currency");
-        int discount = receiptJSONObject.getInt("discount");
-        int vat = receiptJSONObject.getInt("vat");
-        int supoplyValue = receiptJSONObject.getInt("supply_value");
-        String paymentName = receiptJSONObject.getString("payment_name");
-
+        int paymentAmount = jsonObject.getInt("paymentAmount");
+        int tax = jsonObject.getInt("tax");
+        int supplyPrice = jsonObject.getInt("supplyPrice");
+        int sellingPrice = jsonObject.getInt("sellingPrice");
+        String paymentType = jsonObject.getString("paymentType");
+        int coupon = jsonObject.getInt("couponAmount");
         int bonus = 0;
-        int counpon = 0;
-        int totalPayment = 0;
 
         // **예약 세부 정보**
         View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
         // 예약 번호
-        TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-        registerationTextView.setText(reservationIndex);
+        TextView reservationNumberTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+        reservationNumberTextView.setText(mReservationIndex);
 
         // 이름
         TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
@@ -62,8 +80,8 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         customerInfoTextView.setText(userName + " / " + userPhone);
 
         // 날짜
-        TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
-        chekcinoutTextView.setText(sday);
+        TextView checkInOutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
+        checkInOutTextView.setText(sday.replaceAll("-", "/"));
 
         // 수량
         TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
@@ -74,58 +92,80 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 결제일
         TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
-        paymentDayTextView.setText(valueDate);
+        paymentDayTextView.setText(DailyCalendar.convertDateFormatString(valueDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
 
-        // 지불 방식
-        TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
-        paymentTypeTextView.setText(paymentName);
+        // 결제수단
+        View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
+
+        if (Util.isTextEmpty(paymentType) == true)
+        {
+            paymentTypeLayout.setVisibility(View.GONE);
+        } else
+        {
+            paymentTypeLayout.setVisibility(View.VISIBLE);
+
+            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+            paymentTypeTextView.setText(paymentType);
+        }
 
         // 소계
         TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-        supplyValueTextView.setText(Util.getPriceFormat(this, supoplyValue, true));
+        supplyValueTextView.setText(Util.getPriceFormat(this, supplyPrice, true));
 
         // 세금 및 수수료
         TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
-        vatTextView.setText(Util.getPriceFormat(this, vat, true));
+        vatTextView.setText(Util.getPriceFormat(this, tax, true));
 
         View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
+        saleLayout.setVisibility(View.VISIBLE);
 
-        // 추후 쿠폰 지원을 위해서..
-        if (bonus == 0 && counpon == 0)
+        // 총금액
+        TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+        totalPriceTextView.setText(Util.getPriceFormat(this, sellingPrice, true));
+
+        // 적립금 사용
+        View bonusLayout = paymentInfoLayout.findViewById(R.id.bonusLayout);
+
+        if (bonus > 0)
         {
-            saleLayout.setVisibility(View.GONE);
-
-            // 총 입금 금액
-            TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, discount, true));
+            bonusLayout.setVisibility(View.VISIBLE);
+            TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
+            bonusTextView.setText("- " + Util.getPriceFormat(this, bonus, true));
         } else
         {
-            saleLayout.setVisibility(View.VISIBLE);
-
-            // 총금액
-            TextView discountTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-            discountTextView.setText(Util.getPriceFormat(this, discount, true));
-
-            // 적립금 사용
-            TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
-            bonusTextView.setText(Util.getPriceFormat(this, bonus, true));
-
-            // 할인쿠폰 사용
-            TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
-            couponTextView.setText(Util.getPriceFormat(this, counpon, true));
-
-            // 총 입금 금액
-            TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, totalPayment, true));
+            bonusLayout.setVisibility(View.GONE);
         }
+
+        // 할인쿠폰 사용
+        View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
+
+        if (coupon > 0)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+            TextView couponTextView = (TextView) couponLayout.findViewById(R.id.couponTextView);
+            couponTextView.setText("- " + Util.getPriceFormat(this, coupon, true));
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
+
+        if (bonus > 0 || coupon > 0)
+        {
+            saleLayout.setVisibility(View.VISIBLE);
+        } else
+        {
+            saleLayout.setVisibility(View.GONE);
+        }
+
+        // 총 입금 금액
+        TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
+        totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
 
         // **공급자**
 
-        JSONObject providerJSONObject = jsonObject.getJSONObject("provider");
-
         String phone = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
         String fax = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyFax();
-        String memo = providerJSONObject.getString("memo");
+        String receiptNotice = jsonObject.getString("receiptNotice");
         String address = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyAddress();
         String ceoName = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyCEO();
         String registrationNo = DailyPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
@@ -159,7 +199,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 코멘트
         TextView commentTextView = (TextView) providerInfoLayout.findViewById(R.id.textView49);
-        commentTextView.setText(memo);
+        commentTextView.setText(receiptNotice);
 
         View view = findViewById(R.id.receiptLayout);
         view.setOnClickListener(new View.OnClickListener()
@@ -169,6 +209,23 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             {
                 mIsFullscreen = !mIsFullscreen;
                 updateFullscreenStatus(mIsFullscreen);
+            }
+        });
+
+        mBottomLayout = findViewById(R.id.bottomLayout);
+        View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
+        sendEmailView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (Util.isTextEmpty(mReservationIndex) == true)
+                {
+                    restartExpiredSession();
+                } else
+                {
+                    showSendEmailDialog();
+                }
             }
         });
     }
@@ -190,47 +247,210 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
     protected void requestReceiptDetail(int index)
     {
-        DailyNetworkAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservReceiptJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservationReceiptCallback);
+    }
+
+    private void showSendEmailDialog()
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_email_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        final DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        emailEditTExt.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(dailyEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
+        emailEditTExt.setText(DailyPreference.getInstance(this).getUserEmail());
+        emailEditTExt.setSelection(emailEditTExt.length());
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+        twoButtonLayout.setVisibility(View.VISIBLE);
+
+        TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+        negativeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String email = emailEditTExt.getText().toString();
+
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                {
+                    DailyToast.showToast(GourmetReceiptActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+
+                DailyMobileAPI.getInstance(GourmetReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "gourmet", mReservationIndex, email, mReceiptByEmailCallback);
+            }
+        });
+
+        emailEditTExt.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable == null || editable.length() == 0)
+                {
+                    positiveTextView.setEnabled(false);
+                } else
+                {
+                    positiveTextView.setEnabled(true);
+                }
+            }
+        });
+
+        dialog.setCancelable(true);
+
+        try
+        {
+            dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
+            dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservationReceiptCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                if (msgCode == 0)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        makeLayout(responseJSONObject.getJSONObject("data"));
+                    } else
+                    {
+                        onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
+                    }
+                } catch (Exception e)
                 {
-                    makeLayout(response.getJSONObject("data"));
-                } else
+                    onError(e);
+                } finally
                 {
-                    onErrorPopupMessage(msgCode, response.getString("msg"));
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-            } finally
-            {
-                unLockUI();
+                GourmetReceiptActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            GourmetReceiptActivity.this.onErrorResponse(volleyError);
+            GourmetReceiptActivity.this.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                } catch (Exception e)
+                {
+                    GourmetReceiptActivity.this.onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                GourmetReceiptActivity.this.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            GourmetReceiptActivity.this.onError(t);
         }
     };
 }

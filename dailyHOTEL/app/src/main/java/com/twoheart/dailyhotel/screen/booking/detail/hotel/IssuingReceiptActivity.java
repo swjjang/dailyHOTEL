@@ -6,33 +6,39 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
+    private String mReservationIndex;
     private boolean mIsFullscreen;
     private DailyToolbarLayout mDailyToolbarLayout;
     private View mBottomLayout;
@@ -81,6 +87,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
     private void initLayout()
     {
+        // 영수증 다음 버전으로
         mBottomLayout = findViewById(R.id.bottomLayout);
         View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
         sendEmailView.setOnClickListener(new View.OnClickListener()
@@ -88,7 +95,13 @@ public class IssuingReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                showSendEmailDialog();
+                if (Util.isTextEmpty(mReservationIndex) == true)
+                {
+                    restartExpiredSession();
+                } else
+                {
+                    showSendEmailDialog();
+                }
             }
         });
     }
@@ -113,7 +126,7 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             lockUI();
 
-            DailyNetworkAPI.getInstance(this).requestHotelReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservReceiptJsonResponseListener);
+            DailyMobileAPI.getInstance(this).requestStayReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservationReceiptCallback);
         }
     }
 
@@ -145,8 +158,8 @@ public class IssuingReceiptActivity extends BaseActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
-        emailEditTExt.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        final DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        emailEditTExt.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
             public void onDelete(DailyEditText dailyEditText)
@@ -165,7 +178,7 @@ public class IssuingReceiptActivity extends BaseActivity
         twoButtonLayout.setVisibility(View.VISIBLE);
 
         TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-        TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+        final TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
 
         negativeTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -184,12 +197,52 @@ public class IssuingReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (dialog != null && dialog.isShowing())
-                {
-                    dialog.dismiss();
-                }
+                String email = emailEditTExt.getText().toString();
 
-                // 이메일로 영수증 전송하기
+                if (Util.isTextEmpty(email) == false)
+                {
+                    // 이메일로 영수증 전송하기
+
+                    if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                    {
+                        DailyToast.showToast(IssuingReceiptActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+
+                    DailyMobileAPI.getInstance(IssuingReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "stay", mReservationIndex, email, mReceiptByEmailCallback);
+                }
+            }
+        });
+
+        emailEditTExt.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+                if (editable == null || editable.length() == 0)
+                {
+                    positiveTextView.setEnabled(false);
+                } else
+                {
+                    positiveTextView.setEnabled(true);
+                }
             }
         });
 
@@ -198,7 +251,12 @@ public class IssuingReceiptActivity extends BaseActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -209,10 +267,16 @@ public class IssuingReceiptActivity extends BaseActivity
     {
         try
         {
-            // 영숭증
+            // 영수증
             JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
-            String reservationIndex = jsonObject.getString("reservation_idx");
+            mReservationIndex = jsonObject.getString("reservation_idx");
+
+            if (Constants.DEBUG == false && Util.isTextEmpty(mReservationIndex) == true)
+            {
+                Crashlytics.logException(new NullPointerException("IssuingReceiptActivity : mReservationIndex == null"));
+            }
+
             String userName = receiptJSONObject.getString("user_name");
             String userPhone = receiptJSONObject.getString("user_phone");
             String checkin = receiptJSONObject.getString("checkin");
@@ -225,19 +289,19 @@ public class IssuingReceiptActivity extends BaseActivity
             //            String currency = receiptJSONObject.getString("currency");
             int discount = receiptJSONObject.getInt("discount");
             int vat = receiptJSONObject.getInt("vat");
-            int supoplyValue = receiptJSONObject.getInt("supply_value");
-            String paymentName = receiptJSONObject.getString("payment_name");
+            int supplyValue = receiptJSONObject.getInt("supply_value");
+            String paymentType = receiptJSONObject.getString("payment_name");
 
             int bonus = receiptJSONObject.getInt("bonus");
-            int counpon = receiptJSONObject.getInt("coupon_amount");
+            int coupon = receiptJSONObject.getInt("coupon_amount");
             int pricePayment = receiptJSONObject.getInt("price");
 
             // **예약 세부 정보**
             View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
             // 예약 번호
-            TextView registerationTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
-            registerationTextView.setText(reservationIndex);
+            TextView reservationNumberTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+            reservationNumberTextView.setText(mReservationIndex);
 
             // 호텔명
             TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
@@ -249,11 +313,11 @@ public class IssuingReceiptActivity extends BaseActivity
 
             // 고객성명/번호
             TextView customerInfoTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView7);
-            customerInfoTextView.setText(userName + " / " + Util.addHippenMobileNumber(IssuingReceiptActivity.this, userPhone));
+            customerInfoTextView.setText(userName + " / " + Util.addHyphenMobileNumber(IssuingReceiptActivity.this, userPhone));
 
             // 체크인/아웃
-            TextView chekcinoutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
-            chekcinoutTextView.setText(checkin + " - " + checkout);
+            TextView checkInOutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
+            checkInOutTextView.setText(checkin + " - " + checkout);
 
             // 숙박 일수/객실수
             TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
@@ -266,13 +330,23 @@ public class IssuingReceiptActivity extends BaseActivity
             TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
             paymentDayTextView.setText(valueDate);
 
-            // 지불 방식
-            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
-            paymentTypeTextView.setText(paymentName);
+            // 결제수단
+            View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
+
+            if (Util.isTextEmpty(paymentType) == true)
+            {
+                paymentTypeLayout.setVisibility(View.GONE);
+            } else
+            {
+                paymentTypeLayout.setVisibility(View.VISIBLE);
+
+                TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+                paymentTypeTextView.setText(paymentType);
+            }
 
             // 소계
             TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-            supplyValueTextView.setText(Util.getPriceFormat(this, supoplyValue, true));
+            supplyValueTextView.setText(Util.getPriceFormat(this, supplyValue, true));
 
             // 세금 및 수수료
             TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
@@ -301,17 +375,17 @@ public class IssuingReceiptActivity extends BaseActivity
             // 할인쿠폰 사용
             View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
 
-            if (counpon > 0)
+            if (coupon > 0)
             {
                 couponLayout.setVisibility(View.VISIBLE);
-                TextView couponTextView = (TextView) paymentInfoLayout.findViewById(R.id.couponTextView);
-                couponTextView.setText("- " + Util.getPriceFormat(this, counpon, true));
+                TextView couponTextView = (TextView) couponLayout.findViewById(R.id.couponTextView);
+                couponTextView.setText("- " + Util.getPriceFormat(this, coupon, true));
             } else
             {
                 couponLayout.setVisibility(View.GONE);
             }
 
-            if (bonus > 0 || counpon > 0)
+            if (bonus > 0 || coupon > 0)
             {
                 saleLayout.setVisibility(View.VISIBLE);
             } else
@@ -409,75 +483,123 @@ public class IssuingReceiptActivity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mReservReceiptJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservationReceiptCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                //			msg_code : 0
+                //			data :
+                //			- [String] user_name /* 유저 이름 */
+                //			- [String] user_phone /* 유저 번호 */
+                //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
+                //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
+                //			- [int] nights /* 연박 일수 */
+                //			- [int] rooms /* 객실수 */
+                //			- [String] hotel_name /* 호텔 명 */
+                //			- [String] hotel_address /* 호텔 주소 */
+                //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
+                //			- [String] currency /* 화폐 단위 */
+                //			- [int] discount /* 결제 금액 */
+                //			- [int] vat /* 부가세 */
+                //			- [int] supply_value /* 공급가액 */
+                //			- [String] payment_name /* 결제수단 */
+                //			---------------------------------
+
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode == 0)
+                    {
+                        if (makeLayout(responseJSONObject.getJSONObject("data")) == false)
+                        {
+                            finish();
+                        }
+                    } else
+                    {
+                        if (isFinishing() == true)
+                        {
+                            return;
+                        }
+
+                        String msg = responseJSONObject.getString("msg");
+
+                        showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
+                    }
+                } catch (Exception e)
+                {
+                    IssuingReceiptActivity.this.onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                IssuingReceiptActivity.this.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            IssuingReceiptActivity.this.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            //			msg_code : 0
-            //			data :
-            //			- [String] user_name /* 유저 이름 */
-            //			- [String] user_phone /* 유저 번호 */
-            //			- [String] checkin /* 체크인 날짜(yyyy/mm/dd) */
-            //			- [String] checkout /* 체크아웃 날짜(yyyy/mm/dd) */
-            //			- [int] nights /* 연박 일수 */
-            //			- [int] rooms /* 객실수 */
-            //			- [String] hotel_name /* 호텔 명 */
-            //			- [String] hotel_address /* 호텔 주소 */
-            //			- [String] value_date(yyyy/mm/dd) /* 결제일 */
-            //			- [String] currency /* 화폐 단위 */
-            //			- [int] discount /* 결제 금액 */
-            //			- [int] vat /* 부가세 */
-            //			- [int] supply_value /* 공급가액 */
-            //			- [String] payment_name /* 결제수단 */
-            //			---------------------------------
-
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                try
                 {
-                    if (makeLayout(response.getJSONObject("data")) == false)
-                    {
-                        finish();
-                    }
-                } else
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+
+                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                } catch (Exception e)
                 {
-                    if (isFinishing() == true)
-                    {
-                        return;
-                    }
-
-                    String msg = response.getString("msg");
-
-                    showSimpleDialog(null, msg, getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                    {
-                        @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
-                            finish();
-                        }
-                    });
+                    IssuingReceiptActivity.this.onError(e);
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                // 서버 정보를 파싱하다가 에러가 남.
-            } finally
-            {
-                unLockUI();
+                IssuingReceiptActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            IssuingReceiptActivity.this.onErrorResponse(volleyError);
+            IssuingReceiptActivity.this.onError(t);
         }
     };
 }

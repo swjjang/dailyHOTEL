@@ -46,17 +46,17 @@ public class Province implements Parcelable
             englishName = "";
         }
 
-        if (jsonObject.has("seq") == true)
+        if (jsonObject.has("sequence") == true)
         {
-            sequence = jsonObject.getInt("seq");
+            sequence = jsonObject.getInt("sequence");
         } else
         {
             sequence = 0;
         }
 
-        if (jsonObject.has("isOverseas") == true)
+        if (jsonObject.has("overseas") == true)
         {
-            isOverseas = jsonObject.getInt("isOverseas") == 1;
+            isOverseas = jsonObject.getBoolean("overseas");
         } else
         {
             isOverseas = false;

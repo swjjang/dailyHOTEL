@@ -24,9 +24,11 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class AddProfileSocialLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
@@ -35,7 +37,8 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     private View mPhoneLayout, mEmailLayout, mNameLayout;
     private View mEmailView, mNameView, mBirthdayView, mRecommenderView;
-    private DailyEditText mEmailEditText, mNameEditText, mBirthdayEditText, mRecommenderEditText;
+    private DailyAutoCompleteEditText mEmailEditText;
+    private DailyEditText mNameEditText, mBirthdayEditText, mRecommenderEditText;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
@@ -53,7 +56,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showCountryCodeList();
 
-        void showBirthdayDatePicker();
+        void showBirthdayDatePicker(int year, int month, int day);
 
         void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit);
     }
@@ -108,20 +111,23 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mPhoneView = mPhoneLayout.findViewById(R.id.phoneView);
         mPhoneEditText = (DailyEditText) mPhoneLayout.findViewById(R.id.phoneEditText);
-        mPhoneEditText.setDeleteButtonVisible(true, null);
+        mPhoneEditText.setDeleteButtonVisible(null);
         mPhoneEditText.setOnFocusChangeListener(this);
 
         View confirmView = view.findViewById(R.id.confirmView);
         confirmView.setOnClickListener(this);
 
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
-        mEmailEditText = (DailyEditText) mEmailLayout.findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText = (DailyAutoCompleteEditText) mEmailLayout.findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
+
+        EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
+        mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mNameView = mNameLayout.findViewById(R.id.nameView);
         mNameEditText = (DailyEditText) mNameLayout.findViewById(R.id.nameEditText);
-        mNameEditText.setDeleteButtonVisible(true, null);
+        mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 
         mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -144,14 +150,21 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true, null);
+        mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                dailyEditText.setTag(null);
+            }
+        });
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(true, null);
+        mRecommenderEditText.setDeleteButtonVisible(null);
         mRecommenderEditText.setOnFocusChangeListener(this);
 
         // 회원 가입시 이름 필터 적용.
@@ -340,7 +353,15 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
                 if (hasFocus == true)
                 {
-                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                    Calendar calendar = (Calendar) mBirthdayEditText.getTag();
+
+                    if (calendar == null)
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(-1, -1, -1);
+                    } else
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                    }
                 }
                 break;
 
@@ -419,6 +440,18 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailLayout.setVisibility(View.GONE);
     }
 
+    public void showBirthdayLayout()
+    {
+        mBirthdayView.setVisibility(View.VISIBLE);
+        mBirthdayEditText.setVisibility(View.VISIBLE);
+    }
+
+    public void hideBirthdayLayout()
+    {
+        mBirthdayView.setVisibility(View.GONE);
+        mBirthdayEditText.setVisibility(View.GONE);
+    }
+
     public void showNameLayout()
     {
         mNameLayout.setVisibility(View.VISIBLE);
@@ -429,6 +462,17 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mNameLayout.setVisibility(View.GONE);
     }
 
+    public void setNameText(String name)
+    {
+        mNameEditText.setText(name);
+        mNameEditText.setSelection(mNameEditText.length());
+    }
+
+    public String getName()
+    {
+        return mNameEditText.getText().toString();
+    }
+
     public void setBirthdayText(int year, int month, int dayOfMonth)
     {
         Calendar calendar = DailyCalendar.getInstance();
@@ -436,6 +480,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(calendar);
+    }
+
+    public Calendar getBirthday()
+    {
+        Object object = mBirthdayEditText.getTag();
+        return object != null ? (Calendar) object : null;
     }
 
     private void setFocusLabelView(View labelView, EditText editText, boolean hasFocus)

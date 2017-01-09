@@ -11,10 +11,11 @@ import java.util.TreeMap;
 
 public class DailyCalendar
 {
+    public static final long NINE_HOUR_MILLISECOND = 3600 * 9 * 1000;
     public static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     // 하단에 나오는 포맷이외에는 지원하지 않음. 추가적으로 필요한 포맷은 동일한 포맷터 위치 뒤로 이동한다. 갯수가 많은것 부터 작은것 순서대로 넣는다. (yyyy -> yy, MM -> M)
-    private static final String[] DATE_FORMATS = {"yyyy", "yy", "MM", "M", "dd", "d", "EEE", "HH", "mm", "ss", "ZZZZZ"};
+    private static final String[] DATE_FORMATS = {"yyyy", "yy", "MM", "M", "dd", "d", "EEE", "HH", "H", "mm", "ss", "ZZZZZ"};
 
     public static Calendar getInstance()
     {
@@ -88,6 +89,13 @@ public class DailyCalendar
         }
 
         return simpleDateFormat.parse(dateString);
+    }
+
+    public static long getTimeGMT9(final String dateString, final String format) throws ParseException, NullPointerException
+    {
+        Date date = convertDate(dateString, format);
+
+        return date.getTime() + NINE_HOUR_MILLISECOND;
     }
 
     public static String format(Date date, final String format)
@@ -180,18 +188,23 @@ public class DailyCalendar
                     formatStringBuilder.replace(start, end, String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)));
                     break;
 
-                // mm
+                // H
                 case 8:
+                    formatStringBuilder.replace(start, end, String.format("%d", calendar.get(Calendar.HOUR_OF_DAY)));
+                    break;
+
+                // mm
+                case 9:
                     formatStringBuilder.replace(start, end, String.format("%02d", calendar.get(Calendar.MINUTE)));
                     break;
 
                 // ss
-                case 9:
+                case 10:
                     formatStringBuilder.replace(start, end, String.format("%02d", calendar.get(Calendar.SECOND)));
                     break;
 
                 // ZZZZZ
-                case 10:
+                case 11:
                     formatStringBuilder.replace(start, end, GMT9);
                     break;
             }

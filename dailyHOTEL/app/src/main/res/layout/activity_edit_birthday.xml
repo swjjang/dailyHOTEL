@@ -22,7 +22,7 @@
             android:background="@drawable/bg_comment"
             android:gravity="left|center_vertical"
             android:lineSpacingExtra="-2dp"
-            android:text="@string/message_edit_name_guide"
+            android:text="@string/message_edit_birthday_guide"
             android:textColor="@color/default_text_c323232"
             android:textSize="11dp"/>
 

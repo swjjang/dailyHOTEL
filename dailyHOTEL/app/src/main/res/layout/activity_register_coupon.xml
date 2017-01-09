@@ -33,6 +33,7 @@
         android:inputType="text"
         android:maxLength="50"
         android:maxLines="1"
+        android:singleLine="true"
         android:textColor="@color/default_text_c323232"
         android:textColorHint="@color/search_hint_text"
         android:textSize="16dp"

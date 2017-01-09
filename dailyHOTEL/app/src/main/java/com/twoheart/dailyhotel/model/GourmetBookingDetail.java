@@ -3,8 +3,6 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Util;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -77,31 +75,39 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         reservationTime = jsonObject.getString("arrivalTime");
 
         // phone1은 프론트
-        String phone1 = jsonObject.getString("restaurantPhone1");
+        phone1 = jsonObject.getString("restaurantPhone1");
 
         // phone2는 예약실
-        String phone2 = jsonObject.getString("restaurantPhone2");
+        phone2 = jsonObject.getString("restaurantPhone2");
 
         // phone3은 사용하지 않음
-        String phone3 = jsonObject.getString("restaurantPhone3");
+        phone3 = jsonObject.getString("restaurantPhone3");
 
-        if (Util.isTextEmpty(phone2) == false)
+        if (jsonObject.has("couponAmount") == true)
         {
-            gourmetPhone = phone2;
-        } else if (Util.isTextEmpty(phone1) == false)
-        {
-            gourmetPhone = phone1;
-        } else if (Util.isTextEmpty(phone3) == false)
-        {
-            gourmetPhone = phone3;
+            coupon = jsonObject.getInt("couponAmount");
         }
 
-        paymentPrice = jsonObject.getInt("discountTotal");
+        price = jsonObject.getInt("discountTotal");
+        paymentPrice = jsonObject.getInt("paymentAmount");
         paymentDate = jsonObject.getString("paidAt");
 
         if (jsonObject.has("restaurantIdx") == true)
         {
             placeIndex = jsonObject.getInt("restaurantIdx");
+        }
+
+        if (jsonObject.has("fnbReservationIdx") == true)
+        {
+            reservationIndex = jsonObject.getInt("fnbReservationIdx");
+        }
+
+        if (jsonObject.has("reviewStatusType") == true)
+        {
+            reviewStatusType = jsonObject.getString("reviewStatusType");
+        } else
+        {
+            reviewStatusType = ReviewStatusType.NONE;
         }
     }
 

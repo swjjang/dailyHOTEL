@@ -297,7 +297,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
             android:background="@color/default_line_cdcdcdd"/>
-        
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="55dp">
@@ -309,16 +309,16 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical"
                 android:theme="@style/CheckBoxTheme"/>
-            
+
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:layout_marginRight="15dp"
+                android:layout_toRightOf="@+id/guestCheckBox"
                 android:gravity="center_vertical"
                 android:text="@string/message_stay_check_other_user"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"
-                android:layout_marginRight="15dp"
-                android:layout_toRightOf="@+id/guestCheckBox"/>
+                android:textSize="12dp"/>
         </RelativeLayout>
     </LinearLayout>
 
@@ -499,6 +499,108 @@
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/howToVisitLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/howToVisitTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/label_how_to_visit"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+
+            <FrameLayout
+                android:id="@+id/visitWalkView"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/visitCarView"
+                android:background="@drawable/selector_select_visittype_background">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:duplicateParentState="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_visit_walk"
+                    android:textColor="@drawable/selector_text_color_c323232_c900034"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/payment_ic_walk"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/visitCarView"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/selector_select_visittype_background">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawablePadding="4dp"
+                    android:duplicateParentState="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_visit_car"
+                    android:textColor="@drawable/selector_text_color_c323232_c900034"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/payment_ic_parking"/>
+            </FrameLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/noParkingView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/label_no_parking"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/guideVisitMemoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_payment_notice"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/guideVisitMemoView"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:layout_marginLeft="5dp"
+                android:text="@string/message_visit_car_memo"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="11dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

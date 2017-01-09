@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -70,8 +71,6 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         holder.descriptionTextView.setText(coupon.title);
 
-        holder.upperLine.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
-
         holder.lastBottomLine.setVisibility(position == getItemCount() - 1 ? View.VISIBLE : View.GONE);
 
         int resId;
@@ -120,17 +119,20 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
 
         holder.expireTextView.setText(strExpire + builder.toString());
+
+        holder.usableStayIcon.setImageResource(coupon.availableInStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
+        holder.usableGourmetIcon.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder
     {
-
         View rootView;
         TextView priceTextView;
         TextView descriptionTextView;
         TextView expireTextView;
         TextView stateTextView;
-        View upperLine;
+        ImageView usableStayIcon;
+        ImageView usableGourmetIcon;
         View lastBottomLine;
 
         public CouponViewHolder(View itemView)
@@ -142,7 +144,8 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
             descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
             expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
             stateTextView = (TextView) itemView.findViewById(R.id.stateTextView);
-            upperLine = itemView.findViewById(R.id.upperLineView);
+            usableStayIcon = (ImageView) itemView.findViewById(R.id.useableStayImageView);
+            usableGourmetIcon = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
             lastBottomLine = itemView.findViewById(R.id.lastBottomLine);
         }
     }

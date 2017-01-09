@@ -7,8 +7,10 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.MarkerManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -135,6 +137,16 @@ import java.util.Set;
     }
 
     /**
+     * getValues is called by GeoJsonLayer to retrieve the values stored in the mFeatures
+     * hashmap.
+     *
+     * @return mFeatures.values()   collection of values stored in mFeatures
+     */
+    public Collection<Object> getValues() {
+        return mFeatures.values();
+    }
+
+    /**
      * Checks for each style in the feature and adds a default style if none is applied
      *
      * @param feature feature to apply default styles to
@@ -242,22 +254,22 @@ import java.util.Set;
             return addPointToMap(feature.getPointStyle(), (GeoJsonPoint) geometry);
         } else if (geometryType.equals("LineString")) {
             return addLineStringToMap(feature.getLineStringStyle(),
-                    (GeoJsonLineString) geometry);
+                (GeoJsonLineString) geometry);
         } else if (geometryType.equals("Polygon")) {
             return addPolygonToMap(feature.getPolygonStyle(),
-                    (GeoJsonPolygon) geometry);
+                (GeoJsonPolygon) geometry);
         } else if (geometryType.equals("MultiPoint")) {
             return addMultiPointToMap(feature.getPointStyle(),
-                    (GeoJsonMultiPoint) geometry);
+                (GeoJsonMultiPoint) geometry);
         } else if (geometryType.equals("MultiLineString")) {
             return addMultiLineStringToMap(feature.getLineStringStyle(),
-                    ((GeoJsonMultiLineString) geometry));
+                ((GeoJsonMultiLineString) geometry));
         } else if (geometryType.equals("MultiPolygon")) {
             return addMultiPolygonToMap(feature.getPolygonStyle(),
-                    ((GeoJsonMultiPolygon) geometry));
+                ((GeoJsonMultiPolygon) geometry));
         } else if (geometryType.equals("GeometryCollection")) {
             return addGeometryCollectionToMap(feature,
-                    ((GeoJsonGeometryCollection) geometry).getGeometries());
+                ((GeoJsonGeometryCollection) geometry).getGeometries());
         }
         return null;
     }
@@ -283,7 +295,7 @@ import java.util.Set;
      * @return array of Markers that have been added to the map
      */
     private ArrayList<Marker> addMultiPointToMap(GeoJsonPointStyle pointStyle,
-            GeoJsonMultiPoint multiPoint) {
+                                                 GeoJsonMultiPoint multiPoint) {
         ArrayList<Marker> markers = new ArrayList<Marker>();
         for (GeoJsonPoint geoJsonPoint : multiPoint.getPoints()) {
             markers.add(addPointToMap(pointStyle, geoJsonPoint));
@@ -299,7 +311,7 @@ import java.util.Set;
      * @return Polyline object created from given GeoJsonLineString
      */
     private Polyline addLineStringToMap(GeoJsonLineStringStyle lineStringStyle,
-            GeoJsonLineString lineString) {
+                                        GeoJsonLineString lineString) {
         PolylineOptions polylineOptions = lineStringStyle.toPolylineOptions();
         // Add coordinates
         polylineOptions.addAll(lineString.getCoordinates());
@@ -317,7 +329,7 @@ import java.util.Set;
      * @return array of Polylines that have been added to the map
      */
     private ArrayList<Polyline> addMultiLineStringToMap(GeoJsonLineStringStyle lineStringStyle,
-            GeoJsonMultiLineString multiLineString) {
+                                                        GeoJsonMultiLineString multiLineString) {
         ArrayList<Polyline> polylines = new ArrayList<Polyline>();
         for (GeoJsonLineString geoJsonLineString : multiLineString.getLineStrings()) {
             polylines.add(addLineStringToMap(lineStringStyle, geoJsonLineString));
@@ -338,7 +350,7 @@ import java.util.Set;
         polygonOptions.addAll(polygon.getCoordinates().get(POLYGON_OUTER_COORDINATE_INDEX));
         // Following arrays are holes
         for (int i = POLYGON_INNER_COORDINATE_INDEX; i < polygon.getCoordinates().size();
-                i++) {
+             i++) {
             polygonOptions.addHole(polygon.getCoordinates().get(i));
         }
         Polygon addedPolygon = mMap.addPolygon(polygonOptions);
@@ -354,7 +366,7 @@ import java.util.Set;
      * @return array of Polygons that have been added to the map
      */
     private ArrayList<Polygon> addMultiPolygonToMap(GeoJsonPolygonStyle polygonStyle,
-            GeoJsonMultiPolygon multiPolygon) {
+                                                    GeoJsonMultiPolygon multiPolygon) {
         ArrayList<Polygon> polygons = new ArrayList<Polygon>();
         for (GeoJsonPolygon geoJsonPolygon : multiPolygon.getPolygons()) {
             polygons.add(addPolygonToMap(polygonStyle, geoJsonPolygon));
@@ -372,7 +384,7 @@ import java.util.Set;
      * @return array of Marker, Polyline, Polygons that have been added to the map
      */
     private ArrayList<Object> addGeometryCollectionToMap(GeoJsonFeature feature,
-            List<GeoJsonGeometry> geoJsonGeometries) {
+                                                         List<GeoJsonGeometry> geoJsonGeometries) {
         ArrayList<Object> geometries = new ArrayList<Object>();
         for (GeoJsonGeometry geometry : geoJsonGeometries) {
             geometries.add(addFeatureToMap(feature, geometry));

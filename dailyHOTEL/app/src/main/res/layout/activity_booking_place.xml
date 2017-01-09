@@ -35,9 +35,9 @@
                 <!--android:layout_height="wrap_content"-->
                 <!--android:visibility="gone"/>-->
 
-            <!-- 2. 결제금액 -->
+            <!-- 2. 할인수단 선택 및 결제금액 -->
             <include
-                layout="@layout/layout_booking_gourmet_payment_information"
+                layout="@layout/layout_booking_gourmet_discount_information"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

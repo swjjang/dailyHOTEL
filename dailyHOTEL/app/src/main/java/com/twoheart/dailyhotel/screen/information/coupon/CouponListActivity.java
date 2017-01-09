@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -21,11 +20,17 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by Sam Lee on 2016. 5. 19..
@@ -34,10 +39,25 @@ public class CouponListActivity extends BaseActivity
 {
     private CouponListLayout mCouponListLayout;
     private CouponListNetworkController mCouponListNetworkController;
+    private ArrayList<Coupon> mCouponList;
+    private SortType mSortType;
 
-    public static Intent newInstance(Context context)
+    public enum SortType
+    {
+        ALL,
+        STAY,
+        GOURMET
+    }
+
+    public static Intent newInstance(Context context, SortType sortType)
     {
         Intent intent = new Intent(context, CouponListActivity.class);
+
+        if (sortType != null)
+        {
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, sortType.name());
+        }
+
         return intent;
     }
 
@@ -51,10 +71,28 @@ public class CouponListActivity extends BaseActivity
         mCouponListLayout = new CouponListLayout(this, mOnEventListener);
         mCouponListNetworkController = new CouponListNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
+        Intent intent = getIntent();
+
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE) == true)
+        {
+            try
+            {
+                mSortType = SortType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE));
+            } catch (Exception e)
+            {
+                mSortType = SortType.ALL;
+            }
+        } else
+        {
+            mSortType = SortType.ALL;
+        }
+
         DailyPreference.getInstance(this).setNewCoupon(false);
         DailyPreference.getInstance(this).setViewedCouponTime(DailyPreference.getInstance(this).getLastestCouponTime());
 
         setContentView(mCouponListLayout.onCreateView(R.layout.activity_coupon_list));
+
+        mCouponListLayout.setSelectionSpinner(mSortType);
     }
 
     @Override
@@ -80,7 +118,6 @@ public class CouponListActivity extends BaseActivity
                 showLoginDialog();
             }
         }
-
     }
 
     @Override
@@ -179,12 +216,42 @@ public class CouponListActivity extends BaseActivity
         }
     }
 
+    private ArrayList<Coupon> makeSortCouponList(ArrayList<Coupon> originList, SortType sortType)
+    {
+        if (originList == null || originList.size() == 0)
+        {
+            return new ArrayList<>();
+        }
+
+        ArrayList<Coupon> sortList = new ArrayList<>();
+        if (sortType == null)
+        {
+            // do nothing!
+        } else if (SortType.ALL.equals(sortType) == true)
+        {
+            sortList.addAll(originList);
+        } else
+        {
+            for (Coupon coupon : originList)
+            {
+                if (SortType.STAY.equals(sortType) == true && coupon.availableInStay == true)
+                {
+                    sortList.add(coupon);
+                } else if (SortType.GOURMET.equals(sortType) == true && coupon.availableInGourmet == true)
+                {
+                    sortList.add(coupon);
+                }
+            }
+        }
+
+        return sortList;
+    }
+
     // ////////////////////////////////////////////////////////
     // EventListener
     // ////////////////////////////////////////////////////////
     private CouponListLayout.OnEventListener mOnEventListener = new CouponListLayout.OnEventListener()
     {
-
         @Override
         public void startCouponHistory()
         {
@@ -229,6 +296,29 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
+        public void onItemSelectedSpinner(int position)
+        {
+            CouponListActivity.SortType sortType;
+
+            switch (position)
+            {
+                case 2:
+                    sortType = CouponListActivity.SortType.GOURMET;
+                    break;
+                case 1:
+                    sortType = CouponListActivity.SortType.STAY;
+                    break;
+                case 0:
+                default:
+                    sortType = CouponListActivity.SortType.ALL;
+                    break;
+            }
+
+            mSortType = sortType;
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, sortType), sortType);
+        }
+
+        @Override
         public void finish()
         {
             CouponListActivity.this.finish();
@@ -254,19 +344,16 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void onCouponList(List<Coupon> list)
         {
-            mCouponListLayout.setData(list);
+            mCouponList = new ArrayList<>();
+            mCouponList.addAll(list);
+
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, mSortType), mSortType);
 
             unLockUI();
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            CouponListActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             CouponListActivity.this.onError(e);
         }
@@ -283,6 +370,12 @@ public class CouponListActivity extends BaseActivity
             CouponListActivity.this.onErrorToastMessage(message);
         }
 
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            CouponListActivity.this.onErrorResponse(call, response);
+        }
+
         private void recordAnalytics(Coupon coupon)
         {
             try
@@ -296,15 +389,26 @@ public class CouponListActivity extends BaseActivity
                 //                paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyyMMddHHmm"));
                 paramsMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm"));
                 paramsMap.put(AnalyticsManager.KeyType.DOWNLOAD_FROM, "couponbox");
-                paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
+                paramsMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+
+                if (coupon.availableInGourmet == true && coupon.availableInStay == true)
+                {
+                    paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.ALL);
+                } else if (coupon.availableInStay == true)
+                {
+                    paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.STAY);
+                } else if (coupon.availableInGourmet == true)
+                {
+                    paramsMap.put(AnalyticsManager.KeyType.KIND_OF_COUPON, AnalyticsManager.ValueType.GOURMET);
+                }
 
                 AnalyticsManager.getInstance(CouponListActivity.this).recordEvent(AnalyticsManager.Category.COUPON_BOX//
-                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "CouponBox-" + coupon.title, paramsMap);
+                    , AnalyticsManager.Action.COUPON_DOWNLOAD_CLICKED, "couponbox-" + coupon.title, paramsMap);
             } catch (ParseException e)
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.log("Coupon List::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
+                    Crashlytics.log("Coupon List::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
                 }
                 ExLog.d(e.toString());
             } catch (Exception e)

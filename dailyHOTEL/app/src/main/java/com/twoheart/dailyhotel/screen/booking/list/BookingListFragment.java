@@ -23,19 +23,18 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetailTabActivity;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.HotelBookingDetailTabActivity;
+import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayBookingDetailTabActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -46,12 +45,14 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * 예약한 호텔의 리스트들을 출력.
@@ -139,9 +140,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     mAdapter.setOnUserActionListener(mOnUserActionListener);
                     mListView.setOnItemClickListener(BookingListFragment.this);
                     mListView.setAdapter(mAdapter);
+                } else
+                {
+                    mAdapter.clear();
                 }
 
-                mAdapter.clear();
                 mAdapter.addAll(bookingArrayList);
                 mAdapter.notifyDataSetChanged();
 
@@ -154,7 +157,19 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 {
                     unLockUI();
 
-                    mListView.performItemClick(null, 1, 0);
+                    int size = bookingArrayList.size();
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        Booking booking = bookingArrayList.get(i);
+
+                        if (booking.type == Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
+                        {
+                            mListView.performItemClick(null, i, 0);
+                            break;
+                        }
+                    }
+
                     DailyPreference.getInstance(baseActivity).setVirtualAccountReadyFlag(-1);
                 }
             }
@@ -223,7 +238,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 lockUI();
 
-                DailyNetworkAPI.getInstance(baseActivity).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener);
+                DailyMobileAPI.getInstance(baseActivity).requestCommonDateTime(mNetworkTag, mDateTimeCallBack);
             }
         }
     }
@@ -272,7 +287,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             return;
         }
 
-        Intent intent = null;
+        Intent intent;
 
         if (booking.payType == CODE_PAY_TYPE_CARD_COMPLETE || booking.payType == CODE_PAY_TYPE_ACCOUNT_COMPLETE)
         {
@@ -329,17 +344,29 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
+            {
+                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    mDontReload = false;
+                } else
+                {
+
+                }
+                break;
+            }
         }
     }
 
     private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType, int reservationIndex)
     {
-        Intent intent = null;
+        Intent intent;
 
         switch (placeType)
         {
             case HOTEL:
-                intent = new Intent(baseActivity, HotelBookingDetailTabActivity.class);
+                intent = new Intent(baseActivity, StayBookingDetailTabActivity.class);
                 break;
 
             case FNB:
@@ -399,11 +426,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     switch (booking.placeType)
                     {
                         case HOTEL:
-                            DailyNetworkAPI.getInstance(baseActivity).requestHotelHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener);
+                            DailyMobileAPI.getInstance(baseActivity).requestStayHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenCallback);
                             break;
 
                         case FNB:
-                            DailyNetworkAPI.getInstance(baseActivity).requestGourmetHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenJsonResponseListener);
+                            DailyMobileAPI.getInstance(baseActivity).requestGourmetHiddenBooking(mNetworkTag, booking.reservationIndex, mReservationHiddenCallback);
                             break;
                     }
 
@@ -439,10 +466,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mReservationListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservationListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -451,61 +478,69 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                try
                 {
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    int length = jsonArray.length();
+                    JSONObject responseJSONObject = response.body();
 
-                    if (length == 0)
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode == 0)
                     {
+                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                        int length = dataJSONArray.length();
+
+                        if (length == 0)
+                        {
+                            updateLayout(true, null);
+
+                            AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
+                        } else
+                        {
+                            ArrayList<Booking> bookingArrayList = makeBookingList(dataJSONArray);
+
+                            updateLayout(true, bookingArrayList);
+
+                            Map<String, String> analyticsParams = new HashMap<>();
+                            analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
+
+                            AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, analyticsParams);
+                        }
+
+                        // 사용자 정보 요청.
+                        DailyMobileAPI.getInstance(baseActivity).requestUserProfile(mNetworkTag, mUserProfileCallback);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+
+                        if (Util.isTextEmpty(msg) == false)
+                        {
+                            DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
+                        } else
+                        {
+                            DailyToast.showToast(baseActivity, R.string.act_base_network_connect, Toast.LENGTH_SHORT);
+                        }
+
                         updateLayout(true, null);
-
-                        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
-                    } else
-                    {
-                        ArrayList<Booking> bookingArrayList = makeBookingList(jsonArray);
-
-                        updateLayout(true, bookingArrayList);
-
-                        Map<String, String> analyticsParams = new HashMap<>();
-                        analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
-
-                        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, analyticsParams);
                     }
-
-                    // 사용자 정보 요청.
-                    DailyNetworkAPI.getInstance(baseActivity).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
-                } else
+                } catch (Exception e)
                 {
-                    String msg = response.getString("msg");
-
-                    if (Util.isTextEmpty(msg) == false)
-                    {
-                        DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
-                    } else
-                    {
-                        DailyToast.showToast(baseActivity, R.string.act_base_network_connect, Toast.LENGTH_SHORT);
-                    }
-
                     updateLayout(true, null);
-                }
-            } catch (Exception e)
-            {
-                updateLayout(true, null);
 
-                onError(e);
-            } finally
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
             {
-                unLockUI();
+                baseActivity.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -514,10 +549,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            baseActivity.onErrorResponse(volleyError);
+            baseActivity.onError(t);
         }
 
-        private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws JSONException
+        private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws Exception
         {
             if (jsonArray == null || jsonArray.length() == 0)
             {
@@ -526,7 +561,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
             int length = jsonArray.length();
 
-            // 입금대기, 결제완료, 이용완료
+            // 무료취소대기, 입금대기, 결제완료, 이용완료
+            ArrayList<Booking> waitRefundBookingList = new ArrayList<>();
             ArrayList<Booking> waitBookingList = new ArrayList<>();
             ArrayList<Booking> paymentBookingList = new ArrayList<>();
             ArrayList<Booking> usedBookingList = new ArrayList<>();
@@ -537,28 +573,42 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 Booking booking = new Booking(jsonObject);
 
-                switch (booking.payType)
+                if (booking.readyForRefund == true)
                 {
-                    case CODE_PAY_TYPE_CARD_COMPLETE:
-                    case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-                        booking.isUsed = booking.checkoutTime < mCurrentTime;
+                    waitRefundBookingList.add(booking);
+                } else
+                {
+                    switch (booking.payType)
+                    {
+                        case CODE_PAY_TYPE_CARD_COMPLETE:
+                        case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
+                            booking.isUsed = booking.checkoutTime < mCurrentTime;
 
-                        if (booking.isUsed)
-                        {
-                            usedBookingList.add(booking);
-                        } else
-                        {
-                            paymentBookingList.add(booking);
-                        }
-                        break;
+                            if (booking.isUsed)
+                            {
+                                usedBookingList.add(booking);
+                            } else
+                            {
+                                paymentBookingList.add(booking);
+                            }
+                            break;
 
-                    case CODE_PAY_TYPE_ACCOUNT_WAIT:
-                        waitBookingList.add(booking);
-                        break;
+                        case CODE_PAY_TYPE_ACCOUNT_WAIT:
+                            waitBookingList.add(booking);
+                            break;
+                    }
                 }
             }
 
             ArrayList<Booking> bookingArrayList = new ArrayList<>(length + 3);
+
+            // 무료취소대기가 있는 경우
+            if (waitRefundBookingList.size() > 0)
+            {
+                Booking sectionWaitRefund = new Booking(getString(R.string.frag_booking_wait_refund));
+                bookingArrayList.add(sectionWaitRefund);
+                bookingArrayList.addAll(waitRefundBookingList);
+            }
 
             // 입금 대기가 있는 경우.
             if (waitBookingList.size() > 0)
@@ -588,32 +638,46 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     };
 
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDateTimeCallBack = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            if (baseActivity == null)
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                return;
-            }
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-            try
-            {
-                mCurrentTime = response.getLong("currentDateTime");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
-            } catch (Exception e)
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        mCurrentTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+                    unLockUI();
+                }
+            } else
             {
-                onError(e);
-                unLockUI();
+                baseActivity.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -622,14 +686,14 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            baseActivity.onErrorResponse(volleyError);
+            baseActivity.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mReservationHiddenJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mReservationHiddenCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -638,125 +702,133 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                // 해당 화면은 메시지를 넣지 않는다.
-                int msgCode = response.getInt("msg_code");
-
-                JSONObject jsonObject = response.getJSONObject("data");
-                String message;
-                boolean result = false;
-
-                if (jsonObject != null)
+                try
                 {
-                    if (jsonObject.has("isSuccess") == true)
-                    {
-                        result = jsonObject.getInt("isSuccess") == 1;
-                    } else if (jsonObject.has("is_success") == true)
-                    {
-                        result = jsonObject.getBoolean("is_success");
-                    }
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                // 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다.
-                View.OnClickListener onClickListener;
+                    // 해당 화면은 메시지를 넣지 않는다.
+                    int msgCode = responseJSONObject.getInt("msg_code");
 
-                if (result == true)
-                {
-                    onClickListener = new View.OnClickListener()
+                    JSONObject datJSONObject = responseJSONObject.getJSONObject("data");
+                    String message;
+                    boolean result = false;
+
+                    if (datJSONObject != null)
                     {
-                        @Override
-                        public void onClick(View view)
+                        if (datJSONObject.has("isSuccess") == true)
                         {
-                            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                            if (baseActivity == null)
-                            {
-                                return;
-                            }
-
-                            lockUI();
-                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
-                        }
-                    };
-                } else
-                {
-                    onClickListener = new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
+                            result = datJSONObject.getInt("isSuccess") == 1;
+                        } else if (datJSONObject.has("is_success") == true)
                         {
-                            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                            if (baseActivity == null)
-                            {
-                                return;
-                            }
-
-                            lockUI();
-                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
+                            result = datJSONObject.getBoolean("is_success");
                         }
-                    };
-                }
-
-                switch (msgCode)
-                {
-                    case 0:
-                    {
-                        message = response.getString("msg");
-                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
-
-                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
-                        break;
                     }
 
-                    // Toast
-                    case 100:
-                    {
-                        message = response.getString("msg");
+                    // 성공 실패 여부는 팝업에서 리스너를 다르게 등록한다.
+                    View.OnClickListener onClickListener;
 
-                        if (Util.isTextEmpty(message) == false)
+                    if (result == true)
+                    {
+                        onClickListener = new View.OnClickListener()
                         {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                                if (baseActivity == null)
+                                {
+                                    return;
+                                }
+
+                                lockUI();
+                                DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                            }
+                        };
+                    } else
+                    {
+                        onClickListener = new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View view)
+                            {
+                                BaseActivity baseActivity = (BaseActivity) getActivity();
+
+                                if (baseActivity == null)
+                                {
+                                    return;
+                                }
+
+                                lockUI();
+                                DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                            }
+                        };
+                    }
+
+                    switch (msgCode)
+                    {
+                        case 0:
+                        {
+                            message = responseJSONObject.getString("msg");
                             DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
+
+                            DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                            break;
                         }
 
-                        DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
-                        break;
-                    }
-
-                    // Popup
-                    case 200:
-                    {
-                        message = response.getString("msg");
-
-                        if (Util.isTextEmpty(message) == false)
+                        // Toast
+                        case 100:
                         {
-                            unLockUI();
+                            message = responseJSONObject.getString("msg");
 
-                            if (baseActivity.isFinishing() == true)
+                            if (Util.isTextEmpty(message) == false)
                             {
-                                return;
+                                DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                             }
 
-                            baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
-                        } else
-                        {
-                            DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
+                            DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                            break;
                         }
-                        break;
-                    }
-                }
-            } catch (Exception e)
-            {
-                onError(e);
 
-                // credit card 요청
-                DailyNetworkAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListJsonResponseListener);
+                        // Popup
+                        case 200:
+                        {
+                            message = responseJSONObject.getString("msg");
+
+                            if (Util.isTextEmpty(message) == false)
+                            {
+                                unLockUI();
+
+                                if (baseActivity.isFinishing() == true)
+                                {
+                                    return;
+                                }
+
+                                baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), message, getString(R.string.dialog_btn_text_confirm), onClickListener);
+                            } else
+                            {
+                                DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                            }
+                            break;
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+
+                    // credit card 요청
+                    DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
+                }
+            } else
+            {
+                baseActivity.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -765,54 +837,62 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 return;
             }
 
-            baseActivity.onErrorResponse(volleyError);
+            baseActivity.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
+                return;
+            }
 
-                if (baseActivity == null || baseActivity.isFinishing() == true)
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
                 {
-                    return;
-                }
+                    JSONObject responseJSONObject = response.body();
 
-                int msgCode = response.getInt("msgCode");
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                if (msgCode == 100)
-                {
-                    JSONObject jsonObject = response.getJSONObject("data");
-
-                    boolean isVerified = jsonObject.getBoolean("verified");
-                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
-
-                    // 인증 후 인증이 해지된 경우
-                    if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
+                    if (msgCode == 100)
                     {
-                        baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                        DailyPreference.getInstance(baseActivity).setVerification(false);
+                        boolean isVerified = jsonObject.getBoolean("verified");
+                        boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                        // 인증 후 인증이 해지된 경우
+                        if (isVerified == true && isPhoneVerified == false && DailyPreference.getInstance(baseActivity).isVerification() == true)
+                        {
+                            baseActivity.showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+
+                            DailyPreference.getInstance(baseActivity).setVerification(false);
+                        }
+                    } else
+                    {
+                        // 인증 해지를 위한 부분이라서 에러시 아무 조치를 취하지 않아도 됨.
                     }
-                } else
+                } catch (Exception e)
                 {
-                    // 인증 해지를 위한 부분이라서 에러시 아무 조치를 취하지 않아도 됨.
+                    onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
+                BookingListFragment.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            BookingListFragment.this.onErrorResponse(volleyError);
+            BookingListFragment.this.onError(t);
         }
     };
 }

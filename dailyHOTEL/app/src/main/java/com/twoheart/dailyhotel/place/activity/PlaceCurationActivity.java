@@ -40,7 +40,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
     private static final int HANDLE_MESSAGE_RESULT = 1;
     private static final int HANDLE_MESSAGE_DELAYTIME = 750;
 
-    private static final int ANIMATION_DEALY = 200;
+    private static final int ANIMATION_DELAY = 200;
 
     private TextView mConfirmView;
 
@@ -67,7 +67,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     protected abstract void updateResultMessage();
 
-    protected abstract void onSearchLoacationResult(Location location);
+    protected abstract void onSearchLocationResult(Location location);
 
     protected abstract BaseNetworkController getNetworkController(Context context);
 
@@ -306,7 +306,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
             mAnimationLayout.setTranslationY(Util.dpToPx(this, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
-            mObjectAnimator.setDuration(ANIMATION_DEALY);
+            mObjectAnimator.setDuration(ANIMATION_DELAY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -389,7 +389,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
             }
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
-            mObjectAnimator.setDuration(ANIMATION_DEALY);
+            mObjectAnimator.setDuration(ANIMATION_DELAY);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
             {
@@ -461,7 +461,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(ANIMATION_DEALY);
+        mAlphaAnimation.setDuration(ANIMATION_DELAY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 
@@ -502,7 +502,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
 
         mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        mAlphaAnimation.setDuration(ANIMATION_DEALY);
+        mAlphaAnimation.setDuration(ANIMATION_DELAY);
         mAlphaAnimation.setFillBefore(true);
         mAlphaAnimation.setFillAfter(true);
 
@@ -563,7 +563,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
             if (placeCuration != null)
             {
-                onSearchLoacationResult(placeCuration.getLocation());
+                onSearchLocationResult(placeCuration.getLocation());
             }
         } else
         {
@@ -584,7 +584,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                 public void onFailed()
                 {
                     unLockUI();
-                    onSearchLoacationResult(null);
+                    onSearchLocationResult(null);
                 }
 
                 @Override
@@ -629,7 +629,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                         @Override
                         public void onClick(View v)
                         {
-                            onSearchLoacationResult(null);
+                            onSearchLocationResult(null);
                         }
                     };
 
@@ -638,7 +638,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                         @Override
                         public void onCancel(DialogInterface dialog)
                         {
-                            onSearchLoacationResult(null);
+                            onSearchLocationResult(null);
                         }
                     };
 
@@ -661,7 +661,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
                     DailyLocationFactory.getInstance(PlaceCurationActivity.this).stopLocationMeasure();
 
-                    onSearchLoacationResult(location);
+                    onSearchLocationResult(location);
                 }
             });
         }

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -145,6 +146,35 @@ public class AnalyticsManager
         }
     }
 
+    public void setUserBirthday(String birthday)
+    {
+        try
+        {
+            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+            {
+                analyticsManager.setUserBirthday(birthday);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(TAG + e.toString());
+        }
+    }
+
+    public void setUserName(String name)
+    {
+        // 추후에 이름은 진행하도록 합니다.
+        //        try
+        //        {
+        //            for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        //            {
+        //                analyticsManager.setUserName(name);
+        //            }
+        //        } catch (Exception e)
+        //        {
+        //            ExLog.d(CANCEL_TAG + e.toString());
+        //        }
+    }
+
     public void setExceedBonus(boolean isExceedBonus)
     {
         try
@@ -159,13 +189,17 @@ public class AnalyticsManager
         }
     }
 
-    public void onStart(Activity activity)
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // ActivityLifecycleCallbacks
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void onActivityCreated(Activity activity, Bundle bundle)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onStart(activity);
+                analyticsManager.onActivityCreated(activity, bundle);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -173,13 +207,13 @@ public class AnalyticsManager
         }
     }
 
-    public void onStop(Activity activity)
+    public void onActivityStarted(Activity activity)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onStop(activity);
+                analyticsManager.onActivityStarted(activity);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -187,13 +221,13 @@ public class AnalyticsManager
         }
     }
 
-    public void onResume(Activity activity)
+    public void onActivityStopped(Activity activity)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onResume(activity);
+                analyticsManager.onActivityStopped(activity);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -201,13 +235,55 @@ public class AnalyticsManager
         }
     }
 
-    public void onPause(Activity activity)
+    public void onActivityResumed(Activity activity)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.onPause(activity);
+                analyticsManager.onActivityResumed(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onActivityPaused(Activity activity)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onActivityPaused(activity);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onActivitySaveInstanceState(activity, bundle);
+            } catch (Exception e)
+            {
+                ExLog.d(TAG + e.toString());
+            }
+        }
+    }
+
+    public void onActivityDestroyed(Activity activity)
+    {
+        for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
+        {
+            try
+            {
+                analyticsManager.onActivityDestroyed(activity);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -331,13 +407,14 @@ public class AnalyticsManager
         }
     }
 
-    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
+    public void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, //
+                                String birthday, String userType, String recommender, String callByScreen)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, userType, recommender, callByScreen);
+                analyticsManager.signUpDailyUser(userIndex, email, name, phoneNumber, birthday, userType, recommender, callByScreen);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -557,6 +634,7 @@ public class AnalyticsManager
         public static final String MENU_COUPON_INDIVIDUAL_TERMS_OF_USE = "Menu_CouponIndividualTermsofUse";
         public static final String DAILY_HOTEL_AVAILABLE_COUPON_LIST = "DailyHotel_AvailableCouponList";
         public static final String DAILY_HOTEL_UNAVAILABLE_COUPON_LIST = "DailyHotel_UnavailableCouponList";
+        public static final String DAILY_GOURMET_AVAILABLE_COUPON_LIST = "DailyGourmet_AvailableCouponList";
         public static final String MENU_COUPON_REGISTRATION = "Menu_CouponRegistration";
         //
         public static final String DAILYHOTEL_DEPOSITWAITING = "DailyHotel_DepositWaiting";
@@ -574,6 +652,36 @@ public class AnalyticsManager
         //
         public static final String MENU_NOTICELIST = "Menu_NoticeList";
         public static final String MENU_NOTICEDETAILVIEW = "Menu_NoticeDetailView";
+
+        public static final String MENU_RECENT_VIEW = "Menu_RecentView";
+        public static final String MENU_RECENT_VIEW_EMPTY = "Menu_RecentView_Empty";
+
+        public static final String MENU_WISHLIST = "Menu_WishList";
+        public static final String MENU_WISHLIST_EMPTY = "Menu_WishList_Empty";
+        public static final String MENU_WISHLIST_BEFORELOGIN = "Menu_WishList_BeforeLogin";
+
+        //
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE = "DailyHotel_BookingInitialise_Cancelable";
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE = "DailyHotel_BookingInitialise_CancellationFee";
+        public static final String DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS = "DailyHotel_BookingInitialise_NoRefunds";
+
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE = "BookingDetail_MyBookingInfo_Cancelable";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE = "BookingDetail_MyBookingInfo_CancellationFee";
+        public static final String BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS = "BookingDetail_MyBookingInfo_NoRefunds";
+
+        // Review
+        public static final String DAILYHOTEL_SATISFACTIONEVALUATION = "DailyHotel_SatisfactionEvaluation";
+        public static final String DAILYHOTEL_REVIEWDETAIL = "DailyHotel_ReviewDetail";
+        public static final String DAILYHOTEL_REVIEWWRITE = "DailyHotel_ReviewWrite";
+        public static final String DAILYHOTEL_REVIEWEDIT = "DailyHotel_ReviewEdit";
+        public static final String DAILYGOURMET_SATISFACTIONEVALUATION = "DailyGourmet_SatisfactionEvaluation";
+        public static final String DAILYGOURMET_REVIEWDETAIL = "DailyGourmet_ReviewDetail";
+        public static final String DAILYGOURMET_REVIEWWRITE = "DailyGourmet_ReviewWrite";
+        public static final String DAILYGOURMET_REVIEWEDIT = "DailyGourmet_ReviewEdit";
+
+        // Detail Image List
+        public static final String DAILYHOTEL_HOTELIMAGEVIEW = "DailyHotel_HotelImageView";
+        public static final String DAILYGOURMET_GOURMETIMAGEVIEW = "DailyGourmet_GourmetImageView";
     }
 
     public static class Action
@@ -616,6 +724,7 @@ public class AnalyticsManager
         public static final String GOURMET_DETAIL_ADDRESS_COPY_CLICKED = "GourmetDetailAddressCopyClicked";
         public static final String GOURMET_DETAIL_NAVIGATION_APP_CLICKED = "GourmetDetailNavigationAppClicked";
         public static final String GOURMET_BOOKING_DATE_CLICKED = "GourmetBookingDateClicked";
+        public static final String GOURMET_COUPON_DOWNLOAD = "GourmetCouponDownload";
         //
         public static final String TICKET_TYPE_CLICKED = "TicketTypeClicked";
         public static final String TICKET_TYPE_ITEM_CLICKED = "TicketTypeItemClicked";
@@ -674,6 +783,11 @@ public class AnalyticsManager
         public static final String HOTEL_COUPON_SELECTED = "HotelCouponSelected";
         public static final String HOTEL_USING_COUPON_CANCEL_CLICKED = "HotelUsingCouponCancelClicked";
         public static final String HOTEL_COUPON_NOT_FOUND = "HotelCouponNotFound";
+        public static final String GOURMET_USING_COUPON_CLICKED = "GourmetUsingCouponClicked";
+        public static final String GOURMET_COUPON_SELECTED = "GourmetCouponSelected";
+        public static final String GOURMET_USING_COUPON_CANCEL_CLICKED = "GourmetUsingCouponCancelClicked";
+        public static final String GOURMET_COUPON_NOT_FOUND = "GourmetCouponNotFound";
+        public static final String GOURMET_COUPON_DOWNLOADED = "GourmetCouponDownloaded";
         //
         public static final String FIRST_NOTIFICATION_SETTING_CLICKED = "FirstNotificationSettingClicked";
         //
@@ -718,6 +832,41 @@ public class AnalyticsManager
         public static final String BOOKING_INITIALISE = "BookingInitialise";
         //
         public static final String LOST_PASSWORD_CLICKED = "LostPasswordClicked";
+
+        public static final String RECENT_VIEW_CLICKED = "RecentViewClicked";
+        public static final String RECENT_VIEW_DELETE = "RecentViewDelete";
+        public static final String RECENT_VIEW_TAB_CHANGE = "RecentViewTabChange";
+
+        public static final String WISHLIST_CLICKED = "WishListClicked";
+        public static final String WISHLIST_DELETE = "WishListDelete";
+        public static final String WISHLIST_TAB_CHANGE = "WishListTabChange";
+        public static final String WISHLIST_ON = "WishListOn";
+        public static final String WISHLIST_OFF = "WishListOff";
+        public static final String WISHLIST_LOGIN_CLICKED = "WishListLoginClicked";
+
+        public static final String REFERRAL_CODE = "ReferralCode";
+        //
+        public static final String REFUND_INQUIRY_CLICKED = "RefundInquiryClicked";
+        public static final String REFUND_INQUIRY = "RefundInquiry";
+        public static final String FREE_CANCELLATION_CLICKED = "FreeCancellationClicked";
+        public static final String FREE_CANCELLATION = "FreeCancellation";
+
+        public static final String PROFILE_CLICKED = "ProfileClicked";
+
+        // Review
+        public static final String REVIEW_DETAIL = "ReviewDetail";
+        public static final String REVIEW_POPUP = "ReviewPopup";
+        public static final String REVIEW_WRITE = "ReviewWrite";
+
+        // Detail Image List
+        public static final String HOTEL_IMAGE_CLICKED = "HotelImageClicked";
+        public static final String GOURMET_IMAGE_CLICKED = "GourmetImageClicked";
+
+        public static final String HOTEL_IMAGE_CLOSED = "HotelImageClosed";
+        public static final String GOURMET_IMAGE_CLOSED = "GourmetImageClosed";
+
+        //
+        public static final String WAYTOVISIT_SELECTED = "WaytovisitSelected";
     }
 
     public static class Category
@@ -735,6 +884,11 @@ public class AnalyticsManager
         public static final String AUTO_SEARCH = "AutoSearch";
         public static final String AUTO_SEARCH_NOT_FOUND = "AutoSearchNotFound";
         public static final String CALL_BUTTON_CLICKED = "CallButtonClicked";
+        public static final String SET_MY_BIRTHDAY = "SetMyBirthday";
+
+        // Review
+        public static final String HOTEL_SATISFACTIONEVALUATION = "HotelSatisfactionEvaluation";
+        public static final String GOURMET_SATISFACTIONEVALUATION = "GourmetSatisfactionEvaluation";
     }
 
     public static class Label
@@ -834,6 +988,8 @@ public class AnalyticsManager
         public static final String REFERRAL_CODE_COPIED = "ReferralCodeCopied";
         public static final String HOTEL_USING_COUPON_CLICKED = "HotelUsingCouponClicked";
         public static final String HOTEL_USING_COUPON_CANCEL = "HotelUsingCouponCancel";
+        public static final String GOURMET_USING_COUPON_CLICKED = "GourmetUsingCouponClicked";
+        public static final String GOURMET_USING_COUPON_CANCEL = "GourmetUsingCouponCancel";
         public static final String COUPON_BOX_CLICKED = "CouponBoxClicked";
         //
         public static final String SWITCHING_HOTEL = "SwitchingHotel";
@@ -859,6 +1015,25 @@ public class AnalyticsManager
         public static final String MENU_REGISTER_ACCOUNT = "Menu_RegisterAccount";
         public static final String SIGNUP_ON = "Signup_On";
         public static final String SIGNUP_OFF = "Signup_Off";
+
+        public static final String PROFILE_EDITED = "ProfileEdited";
+        public static final String TRY = "Try";
+        public static final String SUCCESS = "Success";
+
+        public static final String REVIEW_WRITE_CLICKED = "ReviewWriteClicked";
+        public static final String SUBMIT = "Submit";
+        public static final String YES = "Yes";
+        public static final String NO = "No";
+        public static final String BACK = "Back";
+        public static final String CONFIRM = "Confirm";
+        public static final String CLOSE = "Close";
+        public static final String SWIPE = "Swipe";
+        public static final String WALK = "Walk";
+        public static final String CAR = "Car";
+        public static final String PARKING_NOT_AVAILABLE = "ParkingNotAvailable";
+
+        public static final String DIRECTCALL_FRONT = "DirectCall_Front";
+        public static final String DIRECTCALL_RESERVATION = "DirectCall_Reservation";
     }
 
     public static class UserType
@@ -871,6 +1046,7 @@ public class AnalyticsManager
     public static class KeyType
     {
         public static final String NAME = "name";
+        public static final String VALUE = "value";
         public static final String PRICE = "price";
         public static final String QUANTITY = "quantity";
         public static final String TOTAL_PRICE = "totalPrice";
@@ -905,7 +1081,7 @@ public class AnalyticsManager
         public static final String OVERSEAS = "overseas";
         public static final String APP_VERSION = "app_version";
         public static final String CARD_ISSUING_COMPANY = "card_issuing_company";
-        public static final String VIEWD_DATE = "viewed_date";
+        public static final String VIEWED_DATE = "viewed_date";
         public static final String CHECK_IN_DATE = "check_in_date";
         public static final String CHECK_OUT_DATE = "check_out_date";
         public static final String LENGTH_OF_STAY = "length_of_stay";
@@ -955,6 +1131,10 @@ public class AnalyticsManager
         public static final String SEARCH_PATH = "search_path";
         public static final String SEARCH_COUNT = "search_count";
         public static final String SEARCH_RESULT = "search_result";
+        public static final String FILL_DATE_OF_BIRTH = "fill_date_of_birth";
+        public static final String REASON_CANCELLATION = "reason_cancellation";
+        public static final String LIST_TOP5_PLACE_INDEXES = "list_top5_place_indexes";
+        public static final String KIND_OF_COUPON = "kind_of_coupon";
     }
 
     public static class ValueType
@@ -983,5 +1163,6 @@ public class AnalyticsManager
         public static final String AUTO = "auto";
         public static final String RECENT = "recent";
         public static final String DIRECT = "direct";
+        public static final String ALL = "all";
     }
 }

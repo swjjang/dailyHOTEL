@@ -20,9 +20,11 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
@@ -30,7 +32,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
-    private DailyEditText mEmailEditText, mNameEditText, mPasswordEditText;
+    private DailyAutoCompleteEditText mEmailEditText;
+    private DailyEditText mNameEditText, mPasswordEditText;
     private DailyEditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
     private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;
@@ -46,7 +49,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         void showTermOfPrivacy();
 
-        void showBirthdayDatePicker();
+        void showBirthdayDatePicker(int year, int month, int day);
     }
 
     public SignupStep1Layout(Context context, OnEventListener mOnEventListener)
@@ -84,13 +87,16 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
 
         mEmailView = view.findViewById(R.id.emailView);
-        mEmailEditText = (DailyEditText) view.findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText = (DailyAutoCompleteEditText) view.findViewById(R.id.emailEditText);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
+
+        EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
+        mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mNameView = view.findViewById(R.id.nameView);
         mNameEditText = (DailyEditText) view.findViewById(R.id.nameEditText);
-        mNameEditText.setDeleteButtonVisible(true, null);
+        mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 
         mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -113,24 +119,31 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         mPasswordView = view.findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) view.findViewById(R.id.passwordEditText);
-        mPasswordEditText.setDeleteButtonVisible(true, null);
+        mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (DailyEditText) view.findViewById(R.id.confirmPasswordEditText);
-        mConfirmPasswordEditText.setDeleteButtonVisible(true, null);
+        mConfirmPasswordEditText.setDeleteButtonVisible(null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true, null);
+        mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
+        {
+            @Override
+            public void onDelete(DailyEditText dailyEditText)
+            {
+                dailyEditText.setTag(null);
+            }
+        });
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(true, null);
+        mRecommenderEditText.setDeleteButtonVisible(null);
         mRecommenderEditText.setOnFocusChangeListener(this);
 
         // 회원 가입시 이름 필터 적용.
@@ -158,6 +171,14 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
+
+        if (Util.isOverAPI21() == false)
+        {
+            mAllAgreementCheckBox.setBackgroundResource(0);
+            mTermsOfPrivacyCheckBox.setBackgroundResource(0);
+            mTermsOfServiceCheckBox.setBackgroundResource(0);
+            mBenefitCheckBox.setBackgroundResource(0);
+        }
 
         mAllAgreementCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
@@ -324,7 +345,15 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
                 if (hasFocus == true)
                 {
-                    ((OnEventListener) mOnEventListener).showBirthdayDatePicker();
+                    Calendar calendar = (Calendar) mBirthdayEditText.getTag();
+
+                    if (calendar == null)
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(-1, -1, -1);
+                    } else
+                    {
+                        ((OnEventListener) mOnEventListener).showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                    }
                 }
                 break;
 

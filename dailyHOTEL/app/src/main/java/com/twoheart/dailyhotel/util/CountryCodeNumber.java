@@ -287,7 +287,7 @@ public class CountryCodeNumber
         {"HU", "36", "HUNGARY", "헝가리"},//
     };
 
-    public String getContryPhoneNumber(int index)
+    public String getCountryPhoneNumber(int index)
     {
         if (index >= CODE_NUMBER.length)
         {
@@ -297,7 +297,7 @@ public class CountryCodeNumber
         return CODE_NUMBER[index][1];
     }
 
-    public String getKoreanContryName(int index)
+    public String getKoreanCountryName(int index)
     {
         if (index >= CODE_NUMBER.length)
         {
@@ -329,7 +329,7 @@ public class CountryCodeNumber
     /**
      * ISO코드를 이용하여 해당국가의 국제번호를 획득합니다. 존재하지 않는경우 Null 을 반환합니다.
      */
-    public String getContryPhoneNumber(String isoString)
+    public String getCountryPhoneNumber(String isoString)
     {
         String result = "";
 
@@ -345,7 +345,7 @@ public class CountryCodeNumber
         return result;
     }
 
-    public String getContryNameNCode(String isoString)
+    public String getCountryNameNCode(String isoString)
     {
         String result = "";
 
@@ -364,7 +364,7 @@ public class CountryCodeNumber
     /**
      * ISO코드를 이용하여 해당국가명을 한국어로 획득합니다.
      */
-    public String getKoreanContryName(String isoString)
+    public String getKoreanCountryName(String isoString)
     {
         String result = "";
 
@@ -413,7 +413,7 @@ public class CountryCodeNumber
 
         if (!phoneNumber.substring(0, 1).equals("+"))
         {
-            result = "+" + getContryPhoneNumber(isoCode) + (phoneNumber.substring(1));
+            result = "+" + getCountryPhoneNumber(isoCode) + (phoneNumber.substring(1));
         } else
         {
             result = phoneNumber;

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -16,18 +15,24 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class EditProfilePhoneActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
 
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_TYPE = "type";
+    private static final String INTENT_EXTRA_DATA_PHONENUMBER = "phoneNumber";
 
     private EditProfilePhoneLayout mEditProfilePhoneLayout;
     private EditProfilePhoneNetworkController mNetworkController;
     private String mCountryCode;
     private String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
-    private int mRequestVerficationCount;
+    private int mRequestVerificationCount;
 
     public enum Type
     {
@@ -42,11 +47,16 @@ public class EditProfilePhoneActivity extends BaseActivity
      * @param type
      * @return
      */
-    public static Intent newInstance(Context context, String userIndex, Type type)
+    public static Intent newInstance(Context context, String userIndex, Type type, String phoneNumber)
     {
         Intent intent = new Intent(context, EditProfilePhoneActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
         intent.putExtra(INTENT_EXTRA_DATA_TYPE, type.name());
+
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_PHONENUMBER, phoneNumber);
+        }
 
         return intent;
     }
@@ -66,7 +76,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         Intent intent = getIntent();
         mUserIndex = intent.getStringExtra(INTENT_EXTRA_DATA_USERINDEX);
 
-        Type type = null;
+        Type type;
 
         try
         {
@@ -83,7 +93,29 @@ public class EditProfilePhoneActivity extends BaseActivity
             return;
         }
 
-        mCountryCode = Util.getCountryNameNCode(this);
+        String phoneNumber = null;
+
+        if (intent.hasExtra(INTENT_EXTRA_DATA_PHONENUMBER) == true)
+        {
+            phoneNumber = intent.getStringExtra(INTENT_EXTRA_DATA_PHONENUMBER);
+
+            String[] phoneNumbers = Util.getValidatePhoneNumber(phoneNumber.replace("-", ""));
+
+            if (phoneNumbers != null)
+            {
+                mCountryCode = phoneNumbers[0];
+                phoneNumber = phoneNumbers[1];
+            } else
+            {
+                mCountryCode = Util.getCountryNameNCode(this);
+                phoneNumber = null;
+            }
+        } else
+        {
+            mCountryCode = Util.getCountryNameNCode(this);
+            phoneNumber = null;
+        }
+
         mEditProfilePhoneLayout.setCountryCode(mCountryCode);
 
         switch (type)
@@ -99,6 +131,7 @@ public class EditProfilePhoneActivity extends BaseActivity
                 {
                     mEditProfilePhoneLayout.setGuideText(getString(R.string.message_edit_phone_social_guide));
                     mEditProfilePhoneLayout.hideCertificationLayout();
+                    mEditProfilePhoneLayout.showConfirmButton();
 
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 }
@@ -133,6 +166,12 @@ public class EditProfilePhoneActivity extends BaseActivity
                     }
                 });
                 break;
+        }
+
+        // showCertificationLayout() 다음으로 호출 순서가 중요함
+        if (Util.isTextEmpty(phoneNumber) == false)
+        {
+            mEditProfilePhoneLayout.setPhoneNumber(phoneNumber.replaceAll("\\(|\\)|-", ""));
         }
     }
 
@@ -224,7 +263,7 @@ public class EditProfilePhoneActivity extends BaseActivity
 
             mEditProfilePhoneLayout.showVerificationVisible();
 
-            if (++mRequestVerficationCount == SignupStep2Activity.VERIFY_PHONE_NUMBER_COUNT)
+            if (++mRequestVerificationCount == SignupStep2Activity.VERIFY_PHONE_NUMBER_COUNT)
             {
                 try
                 {
@@ -308,13 +347,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            EditProfilePhoneActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             EditProfilePhoneActivity.this.onError(e);
         }
@@ -329,6 +362,12 @@ public class EditProfilePhoneActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             EditProfilePhoneActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            EditProfilePhoneActivity.this.onErrorResponse(call, response);
         }
     };
 }

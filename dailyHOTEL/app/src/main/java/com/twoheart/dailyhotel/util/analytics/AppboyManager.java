@@ -3,17 +3,22 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.appboy.Appboy;
+import com.appboy.AppboyLifecycleCallbackListener;
+import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
-import com.appboy.ui.inappmessage.AppboyInAppMessageManager;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -24,11 +29,13 @@ public class AppboyManager extends BaseAnalyticsManager
 
     private Appboy mAppboy;
     private String mUserIndex;
-    private boolean mRefreshData;
+
+    private AppboyLifecycleCallbackListener mAppboyLifecycleCallbackListener;
 
     public AppboyManager(Context context)
     {
         mAppboy = Appboy.getInstance(context);
+        mAppboyLifecycleCallbackListener = new AppboyLifecycleCallbackListener();
     }
 
     @Override
@@ -86,7 +93,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
             appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
 
             try
             {
@@ -114,7 +121,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
             appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+            appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
 
             try
             {
@@ -176,60 +183,6 @@ public class AppboyManager extends BaseAnalyticsManager
             if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 satisfactionCustomEvent(label);
-            } else if (AnalyticsManager.Action.HOTEL_SATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                mAppboy.logCustomEvent(EventName.STAY_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
-            } else if (AnalyticsManager.Action.GOURMET_SATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                mAppboy.logCustomEvent(EventName.GOURMET_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
-            } else if (AnalyticsManager.Action.HOTEL_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                if (Util.isTextEmpty(label) == true)
-                {
-                    label = AnalyticsManager.ValueType.EMPTY;
-                }
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
-                appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
-
-                mAppboy.logCustomEvent(EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + " : " + EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE + ", " + appboyProperties.forJsonPut().toString());
-                }
-            } else if (AnalyticsManager.Action.GOURMET_DISSATISFACTION_DETAILED_POPPEDUP.equalsIgnoreCase(action) == true)
-            {
-                AppboyProperties appboyProperties = new AppboyProperties();
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                if (Util.isTextEmpty(label) == true)
-                {
-                    label = AnalyticsManager.ValueType.EMPTY;
-                }
-
-                appboyProperties.addProperty(AnalyticsManager.KeyType.SELECTED_RESPONSE_ITEM, label);
-                appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, params.get(AnalyticsManager.KeyType.TICKET_NAME));
-
-                mAppboy.logCustomEvent(EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + " : " + EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE + ", " + appboyProperties.forJsonPut().toString());
-                }
             } else if (AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true)
             {
                 curationCustomEvent(EventName.STAY_SORTFILTER_CLICKED, ValueName.DAILYHOTEL, params);
@@ -281,7 +234,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 AppboyProperties appboyProperties = new AppboyProperties();
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
                 appboyProperties.addProperty(AnalyticsManager.KeyType.SCREEN, params.get(AnalyticsManager.KeyType.SCREEN));
 
                 try
@@ -305,7 +258,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 AppboyProperties appboyProperties = new AppboyProperties();
 
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWD_DATE, new Date());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
                 appboyProperties.addProperty(AnalyticsManager.KeyType.SCREEN, params.get(AnalyticsManager.KeyType.SCREEN));
 
                 try
@@ -321,6 +274,60 @@ public class AppboyManager extends BaseAnalyticsManager
                 } catch (NumberFormatException e)
                 {
                     ExLog.d(e.toString());
+                }
+            } else if (AnalyticsManager.Action.WISHLIST_ON.equalsIgnoreCase(action) == true)
+            {
+
+                String eventName;
+                String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+                if (AnalyticsManager.ValueType.STAY.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.STAY_WISHLIST_ADDED;
+                } else if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.GOURMET_WISHLIST_ADDED;
+                } else
+                {
+                    return;
+                }
+
+                params.remove(AnalyticsManager.KeyType.PLACE_TYPE);
+
+                AppboyProperties appboyProperties = getAppboyProperties(params);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                mAppboy.logCustomEvent(eventName, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
+                }
+            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
+            {
+
+                String eventName;
+                String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+                if (AnalyticsManager.ValueType.STAY.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.STAY_WISHLIST_DELETED;
+                } else if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(placeType) == true)
+                {
+                    eventName = EventName.GOURMET_WISHLIST_DELETED;
+                } else
+                {
+                    return;
+                }
+
+                params.remove(AnalyticsManager.KeyType.PLACE_TYPE);
+
+                AppboyProperties appboyProperties = getAppboyProperties(params);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                mAppboy.logCustomEvent(eventName, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
                 }
             }
         } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true//
@@ -392,6 +399,57 @@ public class AppboyManager extends BaseAnalyticsManager
             if (DEBUG == true)
             {
                 ExLog.d(TAG + " : " + EventName.COUPON_DOWNLOADED + ", " + appboyProperties.forJsonPut().toString());
+            }
+        } else if (AnalyticsManager.Category.BOOKING_STATUS.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.FREE_CANCELLATION.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = getAppboyProperties(params);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                mAppboy.logCustomEvent(EventName.STAY_BOOKING_CANCELED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_BOOKING_CANCELED + ", " + appboyProperties.forJsonPut().toString());
+                }
+            }
+        } else if (AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.REVIEW_DETAIL.equalsIgnoreCase(action) == true//
+                && AnalyticsManager.Label.SUBMIT.equalsIgnoreCase(label) == true)
+            {
+                String grade = params.get("grade");
+
+                AppboyProperties appboyProperties = new AppboyProperties();
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                if (Review.GRADE_GOOD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.STAY_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
+                } else if (Review.GRADE_BAD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.STAY_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
+                }
+            }
+        } else if (AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION.equalsIgnoreCase(category) == true)
+        {
+            if (AnalyticsManager.Action.REVIEW_DETAIL.equalsIgnoreCase(action) == true//
+                && AnalyticsManager.Label.SUBMIT.equalsIgnoreCase(label) == true)
+            {
+                String grade = params.get("grade");
+
+                AppboyProperties appboyProperties = new AppboyProperties();
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+                if (Review.GRADE_GOOD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.GOURMET_SATISFACTION_DETAIL_RESPONSE, appboyProperties);
+                } else if (Review.GRADE_BAD.equalsIgnoreCase(grade) == true)
+                {
+                    mAppboy.logCustomEvent(EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
+                }
             }
         }
     }
@@ -593,41 +651,85 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
+    void setUserBirthday(String birthday)
+    {
+        if (Util.isTextEmpty(birthday) == true)
+        {
+            mAppboy.getCurrentUser().setCustomUserAttribute(AnalyticsManager.KeyType.FILL_DATE_OF_BIRTH, false);
+            return;
+        }
+
+        try
+        {
+            Date birthdayDate = DailyCalendar.convertDate(birthday, DailyCalendar.ISO_8601_FORMAT);
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTime(birthdayDate);
+
+            mAppboy.getCurrentUser().setDateOfBirth(calendar.get(Calendar.YEAR), Month.getMonth(calendar.get(Calendar.MONTH)), calendar.get(Calendar.DAY_OF_MONTH));
+            mAppboy.getCurrentUser().setCustomUserAttribute(AnalyticsManager.KeyType.FILL_DATE_OF_BIRTH, true);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    void setUserName(String name)
+    {
+        if (Util.isTextEmpty(name) == true)
+        {
+            return;
+        }
+
+        mAppboy.getCurrentUser().setFirstName(name);
+    }
+
+    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
         mAppboy.getCurrentUser().setCustomUserAttribute("credit_limit_over", isExceedBonus);
     }
 
     @Override
-    void onStart(Activity activity)
+    void onActivityCreated(Activity activity, Bundle bundle)
     {
-        if (mAppboy.openSession(activity))
-        {
-            mRefreshData = true;
-        }
+        mAppboyLifecycleCallbackListener.onActivityCreated(activity, bundle);
     }
 
     @Override
-    void onStop(Activity activity)
+    void onActivityStarted(Activity activity)
     {
-        mAppboy.closeSession(activity);
+        mAppboyLifecycleCallbackListener.onActivityStarted(activity);
     }
 
     @Override
-    void onResume(Activity activity)
+    void onActivityStopped(Activity activity)
     {
-        AppboyInAppMessageManager.getInstance().registerInAppMessageManager(activity);
-        if (mRefreshData)
-        {
-            mAppboy.requestInAppMessageRefresh();
-            mRefreshData = false;
-        }
+        mAppboyLifecycleCallbackListener.onActivityStopped(activity);
     }
 
     @Override
-    void onPause(Activity activity)
+    void onActivityResumed(Activity activity)
     {
-        AppboyInAppMessageManager.getInstance().unregisterInAppMessageManager(activity);
+        mAppboyLifecycleCallbackListener.onActivityResumed(activity);
+    }
+
+    @Override
+    void onActivityPaused(Activity activity)
+    {
+        mAppboyLifecycleCallbackListener.onActivityPaused(activity);
+    }
+
+    @Override
+    void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+        mAppboyLifecycleCallbackListener.onActivitySaveInstanceState(activity, bundle);
+    }
+
+    @Override
+    void onActivityDestroyed(Activity activity)
+    {
+        mAppboyLifecycleCallbackListener.onActivityDestroyed(activity);
     }
 
     @Override
@@ -675,7 +777,8 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen)
+    void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber,//
+                          String userType, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -709,13 +812,17 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber,//
+                         String birthday, String userType, String recommender, String callByScreen)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
 
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, userIndex);
         appboyProperties.addProperty(AnalyticsManager.KeyType.TYPE_OF_REGISTRATION, AnalyticsManager.UserType.EMAIL);
         appboyProperties.addProperty(AnalyticsManager.KeyType.REGISTRATION_DATE, new Date());
+
+        setUserName(name);
+        setUserBirthday(birthday);
 
         if (Util.isTextEmpty(recommender) == true)
         {
@@ -797,6 +904,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, params.get(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM));
             appboyProperties01.addProperty(AnalyticsManager.KeyType.PRICE_OFF, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OFF)));
             appboyProperties01.addProperty(AnalyticsManager.KeyType.EXPIRATION_DATE, params.get(AnalyticsManager.KeyType.EXPIRATION_DATE));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_CODE, params.get(AnalyticsManager.KeyType.COUPON_CODE));
 
             mAppboy.logCustomEvent(EventName.STAY_COUPON_REDEEMED, appboyProperties01);
 
@@ -822,8 +930,12 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
         appboyProperties.addProperty(AnalyticsManager.KeyType.PURCHASED_DATE, new Date());
 
+        boolean couponRedeem = false;
+
         try
         {
+            couponRedeem = Boolean.parseBoolean(params.get(AnalyticsManager.KeyType.COUPON_REDEEM));
+
             appboyProperties.addProperty(AnalyticsManager.KeyType.VISIT_HOUR, new Date(Long.parseLong(params.get(AnalyticsManager.KeyType.VISIT_HOUR))));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.TOTAL_PRICE)));
@@ -841,6 +953,24 @@ public class AppboyManager extends BaseAnalyticsManager
         } catch (NumberFormatException e)
         {
             ExLog.d(e.toString());
+        }
+
+        if (couponRedeem == true)
+        {
+            AppboyProperties appboyProperties01 = new AppboyProperties();
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_NAME, params.get(AnalyticsManager.KeyType.COUPON_NAME));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, params.get(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.PRICE_OFF, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OFF)));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.EXPIRATION_DATE, params.get(AnalyticsManager.KeyType.EXPIRATION_DATE));
+            appboyProperties01.addProperty(AnalyticsManager.KeyType.COUPON_CODE, params.get(AnalyticsManager.KeyType.COUPON_CODE));
+
+            mAppboy.logCustomEvent(EventName.GOURMET_COUPON_REDEEMED, appboyProperties01);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.GOURMET_COUPON_REDEEMED + ", " + appboyProperties01.forJsonPut().toString());
+            }
         }
     }
 
@@ -936,6 +1066,7 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String GOURMET_SORTFILTER_CLICKED = "gourmet_sortfilter_clicked";
 
         public static final String STAY_COUPON_REDEEMED = "stay_coupon_redeemed";
+        public static final String GOURMET_COUPON_REDEEMED = "gourmet_coupon_redeemed";
         public static final String COUPON_DOWNLOADED = "coupon_downloaded";
 
         public static final String FIRST_NOTIFICATION_POPUP_ON = "first_notification_popup_on";
@@ -946,6 +1077,13 @@ public class AppboyManager extends BaseAnalyticsManager
 
         public static final String DAILYHOTEL_CLICKED = "dailyhotel_clicked";
         public static final String DAILYGOURMET_CLICKED = "dailygourmet_clicked";
+
+        public static final String STAY_BOOKING_CANCELED = "stay_booking_canceled";
+
+        public static final String STAY_WISHLIST_ADDED = "stay_wishlist_added";
+        public static final String STAY_WISHLIST_DELETED = "stay_wishlist_deleted";
+        public static final String GOURMET_WISHLIST_ADDED = "gourmet_wishlist_added";
+        public static final String GOURMET_WISHLIST_DELETED = "gourmet_wishlist_deleted";
     }
 
     private static final class ValueName

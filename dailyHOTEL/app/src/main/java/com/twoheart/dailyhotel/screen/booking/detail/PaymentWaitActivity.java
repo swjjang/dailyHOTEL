@@ -8,31 +8,34 @@
  */
 package com.twoheart.dailyhotel.screen.booking.detail;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -40,13 +43,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class PaymentWaitActivity extends BaseActivity
 {
     private TextView mAccountTextView;
     private TextView mDailyTextView;
-    private TextView mPriceTextView, mBonusTextView, mCouponTextView, mTotlalPriceTextView;
+    private TextView mPriceTextView, mBonusTextView, mCouponTextView, mTotalPriceTextView;
     private TextView mDeadlineTextView;
     private ViewGroup mGuide1Layout;
     private View mBonusLayout, mCouponLayout;
@@ -114,7 +119,7 @@ public class PaymentWaitActivity extends BaseActivity
                 finish();
             }
         });
-        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override
@@ -141,7 +146,7 @@ public class PaymentWaitActivity extends BaseActivity
         mPriceTextView = (TextView) findViewById(R.id.priceTextView);
         mBonusTextView = (TextView) findViewById(R.id.bonusTextView);
         mCouponTextView = (TextView) findViewById(R.id.couponTextView);
-        mTotlalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
+        mTotalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
         mDeadlineTextView = (TextView) findViewById(R.id.tv_payment_wait_deadline);
         mGuide1Layout = (ViewGroup) findViewById(R.id.guide1Layout);
 
@@ -173,13 +178,13 @@ public class PaymentWaitActivity extends BaseActivity
         {
             case HOTEL:
             {
-                DailyNetworkAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationJsonResponseListener);
+                DailyMobileAPI.getInstance(this).requestDepositWaitDetailInformation(mNetworkTag, booking.tid, mHotelReservationCallback);
                 break;
             }
 
             case FNB:
             {
-                DailyNetworkAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationJsonResponseListener);
+                DailyMobileAPI.getInstance(this).requestGourmetAccountInformation(mNetworkTag, booking.tid, mFnBReservationCallback);
                 break;
             }
         }
@@ -187,56 +192,108 @@ public class PaymentWaitActivity extends BaseActivity
 
     private void showCallDialog()
     {
-        if (isFinishing() == true)
+        if (isFinishing())
         {
             return;
         }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CLICK, null);
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_contact_us_layout, null, false);
 
-        View.OnClickListener positiveListener = new View.OnClickListener()
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
+        View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
+        contactUs02Layout.setVisibility(View.GONE);
+
+        DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        contactUs01TextView.setText(R.string.frag_faqs);
+        contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
+
+        contactUs01Layout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                releaseUiComponent();
-
-                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CALL, null);
-
-                if (Util.isTelephonyEnabled(PaymentWaitActivity.this) == true)
+                if (dialog.isShowing() == true)
                 {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
+                    dialog.dismiss();
+                }
+
+                startFAQ();
+            }
+        });
+
+        View kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
+        View callDailyView = dialogView.findViewById(R.id.callDailyView);
+
+        kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
                 {
-                    DailyToast.showToast(PaymentWaitActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    dialog.dismiss();
+                }
+
+                startKakao();
+            }
+        });
+
+        callDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startCall();
+            }
+        });
+
+        View closeView = dialogView.findViewById(R.id.closeView);
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
                 }
             }
-        };
+        });
 
-        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
 
-        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING, AnalyticsManager.Label.CANCEL, null);
-                }
-            }, null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
+        try
+        {
+            dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
+            dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void setGuideText(ViewGroup viewGroups, String[] guides, boolean isImportant)
@@ -300,9 +357,9 @@ public class PaymentWaitActivity extends BaseActivity
             mCouponLayout.setVisibility(View.GONE);
         }
 
-        int paymetPrice = reservationJSONObject.getInt("amt");
+        int paymentPrice = reservationJSONObject.getInt("amt");
 
-        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
+        mTotalPriceTextView.setText(Util.getPriceFormat(this, paymentPrice, false));
 
         // 확인 사항
         String msg1 = jsonObject.getString("msg1");
@@ -320,9 +377,6 @@ public class PaymentWaitActivity extends BaseActivity
 
         mDailyTextView.setText(jsonObject.getString("name"));
 
-        int paymetPrice = jsonObject.getInt("amt");
-        mPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
-
         String[] dateSlice = jsonObject.getString("date").split("/");
         String[] timeSlice = jsonObject.getString("time").split(":");
 
@@ -330,92 +384,193 @@ public class PaymentWaitActivity extends BaseActivity
 
         mDeadlineTextView.setText(String.format("%s %s시 %s분 까지", date, timeSlice[0], timeSlice[1]));
 
+        int coupon = jsonObject.getInt("coupon_amount");
+
+        if (coupon > 0)
+        {
+            mCouponLayout.setVisibility(View.VISIBLE);
+            mCouponTextView.setText("- " + Util.getPriceFormat(this, coupon, false));
+        } else
+        {
+            mCouponLayout.setVisibility(View.GONE);
+        }
+
+        mPriceTextView.setText(Util.getPriceFormat(this, jsonObject.getInt("price"), false));
+
+        int paymentPrice = jsonObject.getInt("amt");
+        mTotalPriceTextView.setText(Util.getPriceFormat(this, paymentPrice, false));
+
         String msg1 = jsonObject.getString("msg1");
         setGuideText(mGuide1Layout, msg1.split("\\."), false);
 
         String msg2 = getString(R.string.message__wait_payment03);
         setGuideText(mGuide1Layout, msg2.split("\\."), true);
+    }
 
-        mTotlalPriceTextView.setText(Util.getPriceFormat(this, paymetPrice, false));
+    private void startFAQ()
+    {
+        startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
+    }
+
+    private void startCall()
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        showDailyCallDialog(new OnCallDialogListener()
+        {
+            @Override
+            public void onShowDialog()
+            {
+                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+                    AnalyticsManager.Label.CLICK, null);
+            }
+
+            @Override
+            public void onPositiveButtonClick(View v)
+            {
+                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+                    AnalyticsManager.Label.CALL, null);
+            }
+
+            @Override
+            public void onNativeButtonClick(View v)
+            {
+                AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+                    AnalyticsManager.Label.CANCEL, null);
+            }
+        });
+    }
+
+    private void startKakao()
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+
+        try
+        {
+            switch (mBooking.placeType)
+            {
+                case HOTEL:
+                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+                    break;
+
+                case FNB:
+                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+                    break;
+            }
+        } catch (ActivityNotFoundException e)
+        {
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            } catch (ActivityNotFoundException e1)
+            {
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                startActivity(marketLaunch);
+            }
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mHotelReservationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mHotelReservationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    setHotelReservationData(dataJSONObject);
-                } else
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        setHotelReservationData(dataJSONObject);
+                    } else
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra("msg", responseJSONObject.getString("msg"));
+                        setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                        finish();
+                    }
+                } catch (Exception e)
                 {
-                    Intent intent = new Intent();
-                    intent.putExtra("msg", response.getString("msg"));
-                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    ExLog.e(e.toString());
                     finish();
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.e(e.toString());
-                finish();
-            } finally
-            {
-                unLockUI();
+                PaymentWaitActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            PaymentWaitActivity.this.onErrorResponse(volleyError);
+            PaymentWaitActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mFnBReservationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mFnBReservationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    setGourmetReservationData(jsonObject);
-                } else
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode == 0)
+                    {
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        setGourmetReservationData(jsonObject);
+                    } else
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra("msg", responseJSONObject.getString("msg"));
+                        setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                        finish();
+                    }
+                } catch (Exception e)
                 {
-                    Intent intent = new Intent();
-                    intent.putExtra("msg", response.getString("msg"));
-                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    onError(e);
                     finish();
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-                finish();
-            } finally
-            {
-                unLockUI();
+                PaymentWaitActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            PaymentWaitActivity.this.onErrorResponse(volleyError);
+            PaymentWaitActivity.this.onError(t);
         }
     };
 }

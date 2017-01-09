@@ -44,7 +44,6 @@ public class Stay extends Place
     {
         super.writeToParcel(dest, flags);
 
-
         dest.writeSerializable(mGrade);
         dest.writeString(dBenefitText);
         dest.writeString(categoryCode);
@@ -134,7 +133,6 @@ public class Stay extends Place
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
-
             return false;
         }
 

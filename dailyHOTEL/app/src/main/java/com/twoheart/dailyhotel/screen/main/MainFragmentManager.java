@@ -120,6 +120,19 @@ public class MainFragmentManager
      */
     public void replaceFragment(Fragment fragment, String tag)
     {
+        if (mBaseActivity.isFinishing() == true)
+        {
+            return;
+        }
+
+        if (Util.isOverAPI17() == true)
+        {
+            if (mBaseActivity.isDestroyed() == true)
+            {
+                return;
+            }
+        }
+
         try
         {
             clearFragmentBackStack();
@@ -129,7 +142,8 @@ public class MainFragmentManager
             mFragmentManager.beginTransaction().replace(mContentLayout.getId(), fragment, tag).commitAllowingStateLoss();
         } catch (IllegalStateException e)
         {
-            if (Constants.DEBUG == false) {
+            if (Constants.DEBUG == false)
+            {
                 Crashlytics.log("StayListLayout");
                 Crashlytics.logException(e);
             }

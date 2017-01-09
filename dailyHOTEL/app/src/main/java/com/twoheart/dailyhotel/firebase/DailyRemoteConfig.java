@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -95,12 +96,13 @@ public class DailyRemoteConfig
                 try
                 {
                     JSONObject versionJSONObject = new JSONObject(androidUpdateVersion);
+                    JSONObject versionCode = versionJSONObject.getJSONObject("versionCode");
 
                     switch (Constants.RELEASE_STORE)
                     {
                         case PLAY_STORE:
                         {
-                            JSONObject jsonObject = versionJSONObject.getJSONObject("play");
+                            JSONObject jsonObject = versionCode.getJSONObject("play");
                             currentVersion = jsonObject.getString("current");
                             forceVersion = jsonObject.getString("force");
                             break;
@@ -108,7 +110,7 @@ public class DailyRemoteConfig
 
                         case T_STORE:
                         {
-                            JSONObject jsonObject = versionJSONObject.getJSONObject("one");
+                            JSONObject jsonObject = versionCode.getJSONObject("one");
                             currentVersion = jsonObject.getString("current");
                             forceVersion = jsonObject.getString("force");
                             break;
@@ -138,7 +140,10 @@ public class DailyRemoteConfig
             {
                 if (Constants.DEBUG == false)
                 {
-                    Crashlytics.logException(e);
+                    if (e instanceof FirebaseRemoteConfigFetchThrottledException == false)
+                    {
+                        Crashlytics.logException(e);
+                    }
                 } else
                 {
                     ExLog.e(e.toString());

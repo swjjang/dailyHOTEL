@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -17,10 +17,10 @@ public class LicenseActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_license);
-        setWebView(DailyHotelRequest.getUrlDecoderEx(URL_WEB_LICNESE));
+        setWebView(Crypto.getUrlDecoderEx(URL_WEB_LICNESE));
 
         initToolbar();
-        initLayout((DailyWebView) webView);
+        initLayout((DailyWebView) mWebView);
     }
 
     private void initToolbar()

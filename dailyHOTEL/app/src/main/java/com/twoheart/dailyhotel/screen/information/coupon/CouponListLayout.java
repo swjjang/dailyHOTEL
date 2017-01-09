@@ -3,7 +3,13 @@ package com.twoheart.dailyhotel.screen.information.coupon;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -19,13 +25,15 @@ import java.util.List;
 /**
  * Created by Sam Lee on 2016. 5. 20..
  */
-public class CouponListLayout extends BaseLayout implements View.OnClickListener
+public class CouponListLayout extends BaseLayout
 {
 
     private DailyTextView mHeaderTextView;
     private RecyclerView mRecyclerView;
-    private View mEmptyView;
+    private View mEmptyView, mCouponLayout;
     private CouponListAdapter mListAdapter;
+    private Spinner mSortSpinner;
+    private SortArrayAdapter mSortArrayAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -38,6 +46,8 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         void showListItemNotice(Coupon coupon);
 
         void onListItemDownLoadClick(Coupon coupon);
+
+        void onItemSelectedSpinner(int position);
     }
 
     public CouponListLayout(Context context, OnBaseEventListener listener)
@@ -51,17 +61,37 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         initToolbar(view);
         initListView(view);
 
-        mHeaderTextView = (DailyTextView) view.findViewById(R.id.couponTextView);
+        mCouponLayout = view.findViewById(R.id.couponLayout);
+        mCouponLayout.setVisibility(View.INVISIBLE);
 
-        View couponHistoryView = view.findViewById(R.id.couponHistoryTextView);
-        couponHistoryView.setOnClickListener(this);
+        mHeaderTextView = (DailyTextView) mCouponLayout.findViewById(R.id.couponTextView);
+        mSortSpinner = (Spinner) view.findViewById(R.id.sortSpinner);
 
-        View registerCouponView = view.findViewById(R.id.registerCouponLayout);
-        registerCouponView.setOnClickListener(this);
+        CharSequence[] strings = mContext.getResources().getTextArray(R.array.coupon_sort_array);
+        mSortArrayAdapter = new SortArrayAdapter(mContext, R.layout.list_row_coupon_spinner, strings);
 
-        updateHeaderTextView(0);
+        mSortArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        mSortSpinner.setAdapter(mSortArrayAdapter);
 
-        //        setData(new ArrayList<Coupon>());
+        mSortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                mSortArrayAdapter.setSelection(position);
+
+                if (mListAdapter != null)
+                {
+                    ((OnEventListener) mOnEventListener).onItemSelectedSpinner(position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
     }
 
     private void initToolbar(View view)
@@ -77,6 +107,16 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
                 mOnEventListener.finish();
             }
         });
+
+        View registerCouponView = view.findViewById(R.id.registerCouponView);
+        registerCouponView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).startRegisterCoupon();
+            }
+        });
     }
 
     private void initListView(View view)
@@ -84,6 +124,27 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         mEmptyView = view.findViewById(R.id.emptyView);
+
+        View couponUseNoticeTextView = mEmptyView.findViewById(R.id.couponUseNoticeTextView);
+        View couponHistoryTextView = mEmptyView.findViewById(R.id.couponHistoryTextView);
+
+        couponUseNoticeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mCouponItemListener.startNotice();
+            }
+        });
+
+        couponHistoryTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mCouponItemListener.startCouponHistory();
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -114,22 +175,35 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         return (list == null || list.size() == 0);
     }
 
-    @Override
-    public void onClick(View v)
+    public void setSelectionSpinner(CouponListActivity.SortType sortType)
     {
-        switch (v.getId())
+        if (mSortSpinner == null || sortType == null)
         {
-            case R.id.couponHistoryTextView:
-                ((OnEventListener) mOnEventListener).startCouponHistory();
+            return;
+        }
+
+        int position;
+
+        switch (sortType)
+        {
+            case STAY:
+                position = 1;
                 break;
 
-            case R.id.registerCouponLayout:
-                ((OnEventListener) mOnEventListener).startRegisterCoupon();
+            case GOURMET:
+                position = 2;
+                break;
+
+            default:
+                position = 0;
                 break;
         }
+
+        mSortArrayAdapter.setSelection(position);
+        mSortSpinner.setSelection(position);
     }
 
-    public void setData(List<Coupon> list)
+    public void setData(List<Coupon> list, CouponListActivity.SortType sortType)
     {
         if (isEmpty(list) == false)
         {
@@ -138,6 +212,17 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         {
             list = new ArrayList<>();
             mEmptyView.setVisibility(View.VISIBLE);
+        }
+
+        int couponCount = list.size();
+
+        if (couponCount == 0 && sortType == CouponListActivity.SortType.ALL)
+        {
+            mCouponLayout.setVisibility(View.GONE);
+            return;
+        } else
+        {
+            mCouponLayout.setVisibility(View.VISIBLE);
         }
 
         updateHeaderTextView(list.size());
@@ -150,6 +235,7 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         {
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
+            mRecyclerView.scrollToPosition(0);
         }
     }
 
@@ -167,6 +253,12 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
         }
 
         @Override
+        public void startCouponHistory()
+        {
+            ((OnEventListener) mOnEventListener).startCouponHistory();
+        }
+
+        @Override
         public void showNotice(View view, int position)
         {
             Coupon coupon = mListAdapter.getItem(position);
@@ -180,4 +272,42 @@ public class CouponListLayout extends BaseLayout implements View.OnClickListener
             ((OnEventListener) mOnEventListener).onListItemDownLoadClick(coupon);
         }
     };
+
+    private class SortArrayAdapter extends ArrayAdapter<CharSequence>
+    {
+        private int mSelectedPosition;
+
+        public SortArrayAdapter(Context context, int resourceId, CharSequence[] list)
+        {
+            super(context, resourceId, list);
+        }
+
+        public void setSelection(int position)
+        {
+            mSelectedPosition = position;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent)
+        {
+            View view = super.getDropDownView(position, convertView, parent);
+
+            if (view != null)
+            {
+                TextView textView = (TextView) view;
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                textView.setSelected(mSelectedPosition == position ? true : false);
+
+                if (mSelectedPosition == position)
+                {
+                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+                } else
+                {
+                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                }
+            }
+
+            return view;
+        }
+    }
 }

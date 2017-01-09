@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -63,11 +64,23 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         return mListAdapter.getTitleLayout();
     }
 
+    public void setTitleText(Stay.Grade grade, String placeName)
+    {
+        mTransTotalGradeTextView.setText(grade.getName(mContext));
+        mTransTotalGradeTextView.setBackgroundResource(grade.getColorResId());
+        mTransTotalGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
+
+        mTransPlaceNameTextView.setText(placeName);
+        mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+    }
+
     public void setDetail(SaleTime saleTime, StayDetail stayDetail, int imagePosition)
     {
         if (stayDetail == null)
         {
             setLineIndicatorVisible(false);
+            setWishButtonSelected(false);
+            setWishButtonCount(0);
             return;
         }
 
@@ -98,6 +111,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         setCurrentImage(imagePosition);
 
         hideProductInformationLayout();
+        showWishButton();
 
         // SOLD OUT 판단 조건.
         ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
@@ -147,6 +161,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mPriceRadioGroup.setOnCheckedChangeListener(null);
         }
 
+        setWishButtonSelected(stayDetail.myWish);
+        setWishButtonCount(stayDetail.wishCount);
+
         mListAdapter.notifyDataSetChanged();
     }
 
@@ -195,18 +212,18 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         // 객실 개수로 높이를 재지정해준다.
         int size = roomInformationList.size();
         int productTitleBarHeight = Util.dpToPx(mContext, 52) + (mSelectedRoomInformation.nights > 1 ? Util.dpToPx(mContext, 40) : 0);
-        int prodcutLayoutHeight = Util.dpToPx(mContext, 122) * size + productTitleBarHeight;
+        int productLayoutHeight = Util.dpToPx(mContext, 122) * size + productTitleBarHeight;
 
         // 화면 높이 - 상단 타이틀 - 하단 버튼
         final int maxHeight = ((View) mProductTypeLayout.getParent()).getHeight() - Util.dpToPx(mContext, 52) - Util.dpToPx(mContext, 64);
         ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
 
-        if (prodcutLayoutHeight > maxHeight)
+        if (productLayoutHeight > maxHeight)
         {
             layoutParams.height = maxHeight - productTitleBarHeight;
         } else
         {
-            layoutParams.height = prodcutLayoutHeight - productTitleBarHeight;
+            layoutParams.height = productLayoutHeight - productTitleBarHeight;
         }
 
         mProductTypeRecyclerView.setLayoutParams(layoutParams);
@@ -230,6 +247,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -237,6 +255,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_room);
                 break;
@@ -246,6 +265,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -255,15 +275,29 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }
     }
 
     @Override
+    public void setSelectProduct(int index)
+    {
+        if (mRoomTypeListAdapter == null)
+        {
+            return;
+        }
+
+        int position = mRoomTypeListAdapter.setSelectIndex(index);
+        mProductTypeRecyclerView.scrollToPosition(position);
+    }
+
+    @Override
     public void hideAnimationProductInformationLayout()
     {
         super.hideAnimationProductInformationLayout();
+        showWishButtonAnimation();
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);

@@ -5,22 +5,21 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
@@ -59,8 +58,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         }
 
         initLayout();
-
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL);
     }
 
     private void initLayout()
@@ -87,7 +84,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             }
         });
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_call, -1);
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
             @Override
@@ -179,30 +176,48 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 
     protected void requestCommonDatetime()
     {
-        DailyNetworkAPI.getInstance(this).requestCommonDatetime(mNetworkTag, new DailyHotelJsonResponseListener()
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<JSONObject>()
         {
             @Override
-            public void onResponse(String url, Map<String, String> params, JSONObject response)
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
             {
-                try
+                if (response != null && response.isSuccessful() && response.body() != null)
                 {
-                    long currentDateTime = response.getLong("currentDateTime");
-                    long dailyDateTime = response.getLong("dailyDateTime");
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
 
-                    setCurrentDateTime(currentDateTime, dailyDateTime);
+                        int msgCode = responseJSONObject.getInt("msgCode");
 
-                    // 호텔 정보를 가져온다.
-                    requestPlaceBookingDetail(mReservationIndex);
-                } catch (Exception e)
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                            long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                            setCurrentDateTime(currentDateTime, dailyDateTime);
+
+                            requestPlaceBookingDetail(mReservationIndex);
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            PlaceBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                } else
                 {
-                    ExLog.d(e.toString());
+                    PlaceBookingDetailTabActivity.this.onErrorResponse(call, response);
                 }
             }
 
             @Override
-            public void onErrorResponse(VolleyError volleyError)
+            public void onFailure(Call<JSONObject> call, Throwable t)
             {
-                PlaceBookingDetailTabActivity.this.onErrorResponse(volleyError);
+                PlaceBookingDetailTabActivity.this.onError(t);
             }
         });
     }

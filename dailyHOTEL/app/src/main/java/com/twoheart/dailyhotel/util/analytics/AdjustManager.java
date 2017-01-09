@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAttribution;
@@ -48,8 +49,11 @@ public class AdjustManager extends BaseAnalyticsManager
 
         AdjustConfig config = new AdjustConfig(context, APPLICATION_TOKEN, ENVIRONMENT);
 
-        // change the log level
-        config.setLogLevel(LogLevel.VERBOSE);
+        if (Constants.DEBUG == true)
+        {
+            // change the log level
+            config.setLogLevel(LogLevel.VERBOSE);
+        }
 
         // set attribution delegate
         config.setOnAttributionChangedListener(new OnAttributionChangedListener()
@@ -281,6 +285,72 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screen + params.toString());
             }
+        } else if (AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screen) == true)
+        {
+            event = new DailyAdjustEvent(EventToken.WISH_LIST);
+
+            String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+            event.addPartnerParameter(Key.SERVICE, placeType);
+
+            String checkIn = null;
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+            } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+            }
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+            {
+                String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+                event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            }
+
+            String placeIndexes = params.get(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES);
+            event.addPartnerParameter(Key.WISH_LIST_PLACE_INDEXES, placeIndexes);
+
+            String listCount = params.get(AnalyticsManager.KeyType.PLACE_COUNT);
+            event.addPartnerParameter(Key.NUMBER_OF_WISH_LISTS, listCount);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true)
+        {
+            event = new DailyAdjustEvent(EventToken.RECENT_VIEW);
+
+            String placeType = params.get(AnalyticsManager.KeyType.PLACE_TYPE);
+            event.addPartnerParameter(Key.SERVICE, placeType);
+
+            String checkIn = null;
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+            } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+            {
+                checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+            }
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+            if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+            {
+                String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+                event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+            }
+
+            String placeIndexes = params.get(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES);
+            event.addPartnerParameter(Key.RECENTVIEW_LIST_PLACE_INDEXES, placeIndexes);
+
+            String listCount = params.get(AnalyticsManager.KeyType.PLACE_COUNT);
+            event.addPartnerParameter(Key.NUMBER_OF_RECENTVIEWS, listCount);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screen + params.toString());
+            }
         }
 
         if (event != null)
@@ -321,6 +391,14 @@ public class AdjustManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
                 }
+            } else if (AnalyticsManager.Action.WISHLIST_ON.equalsIgnoreCase(action) == true)
+            {
+                event = getWishOnOffEvent(EventToken.ADD_TO_WISH_LIST, params);
+
+            } else if (AnalyticsManager.Action.WISHLIST_OFF.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.WISHLIST_DELETE.equalsIgnoreCase(action) == true)
+            {
+                event = getWishOnOffEvent(EventToken.DELETE_TO_WISH_LIST, params);
             }
         } else if (AnalyticsManager.Category.INVITE_FRIEND.equalsIgnoreCase(category) == true)
         {
@@ -485,33 +563,63 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
+    void setUserBirthday(String birthday)
+    {
+
+    }
+
+    @Override
+    void setUserName(String name)
+    {
+
+    }
+
+    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
 
     }
 
     @Override
-    void onStart(Activity activity)
+    void onActivityCreated(Activity activity, Bundle bundle)
     {
 
     }
 
     @Override
-    void onStop(Activity activity)
+    void onActivityStarted(Activity activity)
     {
 
     }
 
     @Override
-    void onResume(Activity activity)
+    void onActivityStopped(Activity activity)
+    {
+
+    }
+
+    @Override
+    void onActivityResumed(Activity activity)
     {
         Adjust.onResume();
     }
 
     @Override
-    void onPause(Activity activity)
+    void onActivityPaused(Activity activity)
     {
         Adjust.onPause();
+    }
+
+    @Override
+    void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+
+    }
+
+    @Override
+    void onActivityDestroyed(Activity activity)
+    {
+
     }
 
     @Override
@@ -542,7 +650,8 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber,//
+                         String birthday, String userType, String recommender, String callByScreen)
     {
         setUserInformation(userIndex, userType);
 
@@ -1015,6 +1124,89 @@ public class AdjustManager extends BaseAnalyticsManager
         return event;
     }
 
+    private DailyAdjustEvent getWishOnOffEvent(String eventToken, Map<String, String> params)
+    {
+        if (params == null)
+        {
+            return null;
+        }
+
+        DailyAdjustEvent event = new DailyAdjustEvent(eventToken);
+
+        String district = params.get(AnalyticsManager.KeyType.DISTRICT); // area ?
+        event.addPartnerParameter(AnalyticsManager.KeyType.AREA, district);
+
+        String category = params.get(AnalyticsManager.KeyType.CATEGORY); // category
+        event.addPartnerParameter(AnalyticsManager.KeyType.CATEGORY, category);
+
+        String grade = params.get(AnalyticsManager.KeyType.GRADE); // grade
+        event.addPartnerParameter(AnalyticsManager.KeyType.GRADE, grade);
+
+        String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX); // vendor_id
+        event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+
+        String placeName = params.get(AnalyticsManager.KeyType.NAME); // vendor_name
+        event.addPartnerParameter(Key.PLACE_NAME, placeName);
+
+        String rating = params.get(AnalyticsManager.KeyType.RATING); // vendor_satisfaction
+        event.addPartnerParameter(Key.RATING, rating);
+
+        String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
+        if (Util.isTextEmpty(isShowOriginalPrice) == false)
+        {
+            isShowOriginalPrice = isShowOriginalPrice.toLowerCase();
+        }
+        event.addPartnerParameter(Key.IS_SHOW_ORIGINAL_PRICE, isShowOriginalPrice);
+
+        String listIndex = params.get(AnalyticsManager.KeyType.LIST_INDEX); // ranking
+        event.addPartnerParameter(Key.LIST_INDEX, listIndex);
+
+        String dailyChoice = params.get(AnalyticsManager.KeyType.DAILYCHOICE); // dailychoice
+        event.addPartnerParameter(AnalyticsManager.KeyType.DAILYCHOICE, dailyChoice);
+
+        String dBenefit = params.get(AnalyticsManager.KeyType.DBENEFIT); // d_benefit
+        dBenefit = getYnType(dBenefit);
+        event.addPartnerParameter(Key.DBENEFIT, dBenefit);
+
+        String checkIn = null;
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_IN) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN); // check_in_date
+        } else if (params.containsKey(AnalyticsManager.KeyType.DATE) == true)
+        {
+            checkIn = params.get(AnalyticsManager.KeyType.DATE); // check_in_date
+        }
+        event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_IN_DATE, checkIn);
+
+        if (params.containsKey(AnalyticsManager.KeyType.CHECK_OUT) == true)
+        {
+            String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
+            event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        String service = params.get(Key.SERVICE);
+        event.addPartnerParameter(Key.SERVICE, service);
+
+        if (AnalyticsManager.ValueType.GOURMET.equalsIgnoreCase(service) == false)
+        {
+            String lengthOfStay = null;
+            if (params.containsKey(AnalyticsManager.KeyType.QUANTITY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.QUANTITY); // length_of_stay
+            } else if (params.containsKey(AnalyticsManager.KeyType.LENGTH_OF_STAY) == true)
+            {
+                lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
+            }
+
+            if (Util.isTextEmpty(lengthOfStay) == false)
+            {
+                event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
+            }
+        }
+
+        return event;
+    }
+
     private String getYnType(String ynString)
     {
         if (Util.isTextEmpty(ynString) == true)
@@ -1113,6 +1305,10 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String VIEW_DETAIL = "8atmoj"; // 업장 디테일화면이 노출될 때
         public static final String VIEW_BOOKING_INITIALISE = "4s8i0m"; // 결제화면이 노출될 때
         public static final String SEARCH_RESULT = "szintj"; // 검색어를 입력하여 검색결과 화면이 노출될 때
+        public static final String WISH_LIST = "tnjqjp"; // 위시리스트
+        public static final String RECENT_VIEW = "kmmxda"; // 최근 본 업장
+        public static final String ADD_TO_WISH_LIST = "7z705c"; // 위시리스트에 추가버튼을 누를 때
+        public static final String DELETE_TO_WISH_LIST = "kkeukz"; // 위시리스트에 삭제버튼을 누를 때
     }
 
     private static final class Key
@@ -1139,6 +1335,10 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String BONUS_PRICE = "point_value"; // 사용한 포인트 금액
         public static final String COUPON_REJECTED = "coupon_rejected"; // 쿠폰정보 및 거절 에러코드
         public static final String VIEW = "view"; // 리스트 인지 맵인지
+        public static final String WISH_LIST_PLACE_INDEXES = "wish_lists"; // 위시리스트내 담은 업장(최근 5개)
+        public static final String RECENTVIEW_LIST_PLACE_INDEXES = "recentview_lists"; // 위시리스트내 담은 업장 개수
+        public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
+        public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
     }
 
     private static final class UserType

@@ -3,11 +3,9 @@ package com.twoheart.dailyhotel.place.activity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -17,38 +15,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
-import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class PlacePaymentActivity extends BaseActivity
 {
@@ -71,7 +67,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
-    protected abstract void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+    protected abstract void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+
+    protected abstract void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
 
     protected abstract void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
 
@@ -167,17 +165,17 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         mFinalCheckDialog = null;
 
-        hidePorgressDialog();
+        hideProgressDialog();
 
         super.onDestroy();
     }
 
     @Override
-    public void onErrorResponse(VolleyError error)
+    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
     {
-        super.onErrorResponse(error);
+        super.onErrorResponse(call, response);
 
-        hidePorgressDialog();
+        hideProgressDialog();
     }
 
     @Override
@@ -255,7 +253,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                             mDontReload = true;
 
                             // 신용카드 등록후에 바로 결제를 할경우.
-                            DailyNetworkAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardJsonResponseListener);
+                            DailyMobileAPI.getInstance(this).requestUserBillingCardList(mNetworkTag, mPaymentAfterRegisterCreditCardCallback);
                         } else
                         {
                             mDontReload = false;
@@ -299,6 +297,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 mDontReload = true;
 
+                unLockUI();
+
                 onActivityPaymentResult(requestCode, resultCode, intent);
                 break;
             }
@@ -311,7 +311,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                 if (resultCode == Activity.RESULT_OK && intent != null)
                 {
-                    Coupon coupon = intent.getParcelableExtra(SelectCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                    Coupon coupon = intent.getParcelableExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
 
                     setCoupon(coupon);
                 } else
@@ -328,7 +328,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showProgressDialog()
     {
-        hidePorgressDialog();
+        hideProgressDialog();
 
         try
         {
@@ -343,7 +343,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         }
     }
 
-    protected void hidePorgressDialog()
+    protected void hideProgressDialog()
     {
         if (mProgressDialog != null)
         {
@@ -364,33 +364,37 @@ public abstract class PlacePaymentActivity extends BaseActivity
      */
     protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
     {
-        if (paymentInformation == null || saleTime == null)
+        if (paymentInformation == null || saleTime == null || isFinishing() == true)
         {
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
             return;
         }
 
-        unLockUI();
-
-        if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+        if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
         {
-            if (isFinishing() == true)
-            {
-                return;
-            }
+            mFinalCheckDialog.dismiss();
+        }
 
-            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
-            {
-                mFinalCheckDialog.dismiss();
-            }
-
+        // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
+        if (paymentInformation.isFree == true)
+        {
             showProgressDialog();
 
-            requestEasyPayment(paymentInformation, saleTime);
+            requestFreePayment(paymentInformation, saleTime);
         } else
         {
-            showPaymentWeb(paymentInformation, saleTime);
+            if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
+            {
+                showProgressDialog();
+
+                requestEasyPayment(paymentInformation, saleTime);
+            } else
+            {
+                lockUI();
+
+                showPaymentWeb(paymentInformation, saleTime);
+            }
         }
     }
 
@@ -398,13 +402,69 @@ public abstract class PlacePaymentActivity extends BaseActivity
     {
         unLockUI();
 
-        if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
+        // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
+        if (mPaymentInformation.isFree == true)
         {
-            Intent intent = new Intent(this, RegisterCreditCardActivity.class);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT);
+            showAgreeTermDialog();
         } else
         {
-            showAgreeTermDialog(mPaymentInformation.paymentType);
+            if (mPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD && mSelectedCreditCard == null)
+            {
+                Intent intent = new Intent(this, RegisterCreditCardActivity.class);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTERCREDITCARD_AND_PAYMENT);
+            } else
+            {
+                showAgreeTermDialog(mPaymentInformation.paymentType);
+            }
+        }
+    }
+
+    /**
+     * 무료 결제인 경우 결제 팝업
+     */
+    protected void showAgreeTermDialog()
+    {
+        if (mFinalCheckDialog != null)
+        {
+            mFinalCheckDialog.cancel();
+        }
+
+        // 무료 결제인 경우 일반 카드와 동일한 확인 사항을 출력한다.
+        mFinalCheckDialog = null;
+        mFinalCheckDialog = getPaymentConfirmDialog(PlacePaymentInformation.PaymentType.CARD);
+
+        if (mFinalCheckDialog == null || isFinishing() == true)
+        {
+            return;
+        }
+
+        mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        });
+
+        mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                    , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
+            }
+        });
+
+        try
+        {
+            mFinalCheckDialog.show();
+
+            recordAnalyticsAgreeTermDialog(mPaymentInformation);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 
@@ -443,20 +503,13 @@ public abstract class PlacePaymentActivity extends BaseActivity
             return;
         }
 
-        mFinalCheckDialog.setOnDismissListener(new OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                releaseUiComponent();
-            }
-        });
-
         mFinalCheckDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
             @Override
             public void onCancel(DialogInterface dialog)
             {
+                unLockUI();
+
                 AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                     , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
             }
@@ -464,7 +517,11 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         try
         {
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mFinalCheckDialog);
+
             mFinalCheckDialog.show();
+
+            mFinalCheckDialog.getWindow().setAttributes(layoutParams);
 
             recordAnalyticsAgreeTermDialog(mPaymentInformation);
         } catch (Exception e)
@@ -475,51 +532,32 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void showCallDialog()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CLICK, null);
-
-        OnClickListener positiveListener = new OnClickListener()
+        showDailyCallDialog(new OnCallDialogListener()
         {
             @Override
-            public void onClick(View v)
+            public void onShowDialog()
             {
-                releaseUiComponent();
-
-                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CALL, null);
-
-                if (Util.isTelephonyEnabled(PlacePaymentActivity.this) == true)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(PlacePaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(PlacePaymentActivity.this, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent( //
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, //
+                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CLICK, null);
             }
-        };
 
-        String operatingTimeMessage = DailyPreference.getInstance(this).getOperationTimeMessage(this);
+            @Override
+            public void onPositiveButtonClick(View v)
+            {
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED, //
+                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CALL, null);
+            }
 
-        showSimpleDialog(getString(R.string.label_call_service), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new OnClickListener()
+            @Override
+            public void onNativeButtonClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL, null);
-                }
-            }, null, new OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
+                AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(//
+                    AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL, null);
+            }
+        });
     }
 
     protected void showChangedTimeDialog()
@@ -565,7 +603,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 lockUI();
 
-                requestPlacePaymentInfomation(mPaymentInformation, mCheckInSaleTime);
+                requestPlacePaymentInformation(mPaymentInformation, mCheckInSaleTime);
             }
         }, null, false);
     }
@@ -656,148 +694,164 @@ public abstract class PlacePaymentActivity extends BaseActivity
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected DailyHotelJsonResponseListener mUserCreditCardListJsonResponseListener = new DailyHotelJsonResponseListener()
+    protected retrofit2.Callback mUserCreditCardListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
-                int msgCode = response.getInt("msg_code");
-
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                if (length == 0)
+                try
                 {
-                    mSelectedCreditCard = null;
-                    setSimpleCardInformation(mPaymentInformation, null);
-                } else
-                {
-                    if (mSelectedCreditCard == null)
+                    JSONObject responseJSONObject = response.body();
+
+                    // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                    int length = dataJSONArray.length();
+
+                    if (length == 0)
                     {
-                        JSONObject jsonObject = null;
-
-                        String selectedSimpleCard = DailyHotelRequest.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
-
-                        if (Util.isTextEmpty(selectedSimpleCard) == true)
+                        mSelectedCreditCard = null;
+                        setSimpleCardInformation(mPaymentInformation, null);
+                    } else
+                    {
+                        if (mSelectedCreditCard == null)
                         {
-                            jsonObject = jsonArray.getJSONObject(0);
+                            JSONObject jsonObject = null;
+
+                            String selectedSimpleCard = Crypto.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
+
+                            if (Util.isTextEmpty(selectedSimpleCard) == true)
+                            {
+                                jsonObject = dataJSONArray.getJSONObject(0);
+                            } else
+                            {
+                                for (int i = 0; i < length; i++)
+                                {
+                                    jsonObject = dataJSONArray.getJSONObject(i);
+
+                                    if (selectedSimpleCard.equalsIgnoreCase(jsonObject.getString("billkey")) == true)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
                         } else
                         {
+                            boolean hasCreditCard = false;
+
                             for (int i = 0; i < length; i++)
                             {
-                                jsonObject = jsonArray.getJSONObject(i);
+                                JSONObject jsonObject = dataJSONArray.getJSONObject(i);
 
-                                if (selectedSimpleCard.equalsIgnoreCase(jsonObject.getString("billkey")) == true)
+                                if (mSelectedCreditCard.billingkey.equals(jsonObject.getString("billkey")) == true)
                                 {
+                                    hasCreditCard = true;
                                     break;
                                 }
                             }
-                        }
 
-                        mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                    } else
-                    {
-                        boolean hasCreditCard = false;
-
-                        for (int i = 0; i < length; i++)
-                        {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                            if (mSelectedCreditCard.billingkey.equals(jsonObject.getString("billkey")) == true)
+                            // 기존에 선택한 카드를 지우고 돌아온 경우.
+                            if (hasCreditCard == false)
                             {
-                                hasCreditCard = true;
-                                break;
+                                JSONObject jsonObject = dataJSONArray.getJSONObject(0);
+
+                                mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
                             }
                         }
 
-                        // 기존에 선택한 카드를 지우고 돌아온 경우.
-                        if (hasCreditCard == false)
-                        {
-                            JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                            mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                        }
+                        setSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
                     }
 
-                    setSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
-                }
+                    // 호텔 가격 정보가 변경되었습니다.
+                    if (isChangedPrice() == true)
+                    {
+                        showChangedPriceDialog();
+                        return;
+                    }
 
-                // 호텔 가격 정보가 변경되었습니다.
-                if (isChangedPrice() == true)
+                    if (hasWarningMessage() == true)
+                    {
+                        showWarningMessageDialog();
+                    }
+
+                    recordAnalyticsPayment(mPaymentInformation);
+                } catch (Exception e)
                 {
-                    showChangedPriceDialog();
-                    return;
-                }
-
-                if (hasWarningMessage() == true)
+                    // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
+                    ExLog.e(e.toString());
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                } finally
                 {
-                    showWarningMessageDialog();
+                    unLockUI();
                 }
-
-                recordAnalyticsPayment(mPaymentInformation);
-            } catch (Exception e)
+            } else
             {
-                // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
-                ExLog.e(e.toString());
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            } finally
-            {
-                unLockUI();
+                PlacePaymentActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            PlacePaymentActivity.this.onErrorResponse(volleyError);
+            PlacePaymentActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mPaymentAfterRegisterCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mPaymentAfterRegisterCreditCardCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                // TODO : 추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
-                int msgCode = response.getInt("msg_code");
-
-                JSONArray jsonArray = response.getJSONArray("data");
-                int length = jsonArray.length();
-
-                if (length == 0)
+                try
                 {
-                    mSelectedCreditCard = null;
-                    setSimpleCardInformation(mPaymentInformation, null);
-                } else
+                    JSONObject responseJSONObject = response.body();
+
+                    // TODO : 추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                    int length = dataJSONArray.length();
+
+                    if (length == 0)
+                    {
+                        mSelectedCreditCard = null;
+                        setSimpleCardInformation(mPaymentInformation, null);
+                    } else
+                    {
+                        JSONObject jsonObject = dataJSONArray.getJSONObject(0);
+
+                        mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
+                        setSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
+
+                        // final check 결제 화면을 보여준다.
+                        showAgreeTermDialog(PlacePaymentInformation.PaymentType.EASY_CARD);
+                    }
+                } catch (Exception e)
                 {
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-
-                    mSelectedCreditCard = new CreditCard(jsonObject.getString("card_name"), jsonObject.getString("print_cardno"), jsonObject.getString("billkey"), jsonObject.getString("cardcd"));
-                    setSimpleCardInformation(mPaymentInformation, mSelectedCreditCard);
-
-                    // final check 결제 화면을 보여준다.
-                    showAgreeTermDialog(PlacePaymentInformation.PaymentType.EASY_CARD);
+                    // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
+                    ExLog.e(e.toString());
+                } finally
+                {
+                    unLockUI();
                 }
-            } catch (Exception e)
+            } else
             {
-                // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
-                ExLog.e(e.toString());
-            } finally
-            {
-                unLockUI();
+                PlacePaymentActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            PlacePaymentActivity.this.onErrorResponse(volleyError);
+            PlacePaymentActivity.this.onError(t);
         }
     };
 }

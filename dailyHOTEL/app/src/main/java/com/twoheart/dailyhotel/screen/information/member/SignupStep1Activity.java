@@ -14,10 +14,8 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
@@ -34,6 +32,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class SignupStep1Activity extends BaseActivity
 {
@@ -236,6 +237,9 @@ public class SignupStep1Activity extends BaseActivity
             if (Util.isTextEmpty(recommender) == false)
             {
                 mSignupParams.put("recommender", recommender);
+
+                AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
+                    , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.TRY, null);
             }
 
             if (Util.isTextEmpty(birthday) == false)
@@ -246,7 +250,7 @@ public class SignupStep1Activity extends BaseActivity
             mSignupParams.put("market_type", RELEASE_STORE.getName());
             mSignupParams.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
-            DailyNetworkAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationListener);
+            DailyMobileAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationCallback);
 
             AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, isBenefit ? AnalyticsManager.Label.SIGNUP_ON : AnalyticsManager.Label.SIGNUP_OFF, null);
@@ -277,7 +281,7 @@ public class SignupStep1Activity extends BaseActivity
         }
 
         @Override
-        public void showBirthdayDatePicker()
+        public void showBirthdayDatePicker(int year, int month, int day)
         {
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
@@ -289,7 +293,14 @@ public class SignupStep1Activity extends BaseActivity
 
             final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
 
-            datePicker.init(2000, 0, 1, new DatePicker.OnDateChangedListener()
+            if (year < 0 || month < 0 || day < 0)
+            {
+                year = 2000;
+                month = 0;
+                day = 1;
+            }
+
+            datePicker.init(year, month, day, new DatePicker.OnDateChangedListener()
             {
                 @Override
                 public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
@@ -353,11 +364,18 @@ public class SignupStep1Activity extends BaseActivity
             try
             {
                 dialog.setContentView(dialogView);
+
+                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(SignupStep1Activity.this, dialog);
+
                 dialog.show();
+
+                dialog.getWindow().setAttributes(layoutParams);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }
+
+            AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY);
         }
 
         @Override
@@ -371,46 +389,53 @@ public class SignupStep1Activity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mSignupValidationListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mSignupValidationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
+                JSONObject responseJSONObject = response.body();
 
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    String signupKey = dataJSONObject.getString("signup_key");
-                    String serverDate = dataJSONObject.getString("serverDate");
+                    if (response.isSuccessful() == true)
+                    {
+                        int msgCode = responseJSONObject.getInt("msgCode");
 
-                    Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
-                        signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), serverDate, //
-                        mSignupParams.get("recommender"), mCallByScreen);
-                    startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
-                } else
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                            String signupKey = dataJSONObject.getString("signup_key");
+                            String serverDate = dataJSONObject.getString("serverDate");
+
+                            Intent intent = SignupStep2Activity.newInstance(SignupStep1Activity.this, //
+                                signupKey, mSignupParams.get("email"), mSignupParams.get("pw"), serverDate, //
+                                mSignupParams.get("recommender"), mCallByScreen);
+                            startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+                        } else
+                        {
+                            SignupStep1Activity.this.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), null);
+                        }
+                    } else
+                    {
+                        SignupStep1Activity.this.onErrorPopupMessage(responseJSONObject.getInt("msgCode"), responseJSONObject.getString("msg"), null);
+                    }
+                } catch (Exception e)
                 {
-                    onErrorPopupMessage(msgCode, response.getString("msg"), null);
+                    SignupStep1Activity.this.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                onError(e);
+                SignupStep1Activity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(new String(volleyError.networkResponse.data));
-                onErrorPopupMessage(jsonObject.getInt("msgCode"), jsonObject.getString("msg"), null);
-            } catch (Exception e)
-            {
-                SignupStep1Activity.this.onErrorResponse(volleyError);
-            }
+            SignupStep1Activity.this.onError(t);
         }
     };
 }

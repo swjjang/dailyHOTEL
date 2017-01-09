@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.information.coupon;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyImageView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.text.ParseException;
 import java.util.List;
@@ -25,14 +25,13 @@ import java.util.List;
  */
 public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 {
-
     private static final int RESOURCE_ID = R.layout.list_row_select_coupon;
 
     private Context mContext;
     private List<Coupon> mList;
     private OnCouponItemListener mListener;
     private int mSelectPosition = -1;
-    private boolean mIsSelected;
+    private boolean mIsSelectedMode;
 
     public interface OnCouponItemListener
     {
@@ -48,7 +47,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         mContext = context;
         mList = list;
         mListener = listener;
-        setSelected(true);
+        setSelectedMode(true);
     }
 
     @Override
@@ -75,15 +74,16 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         View view = LayoutInflater.from(mContext).inflate(RESOURCE_ID, null);
 
         SelectViewHolder holder = new SelectViewHolder();
-        holder.listItemLayout = view.findViewById(R.id.listItemLayout);
-        holder.verticalLine = view.findViewById(R.id.vericalLine);
-        holder.priceTextView = (TextView) view.findViewById(R.id.priceTextView);
-        holder.iconImageView = (DailyImageView) view.findViewById(R.id.iconImageView);
-        holder.downloadTextView = (TextView) view.findViewById(R.id.downloadTextView);
-        holder.descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
-        holder.expireTextView = (TextView) view.findViewById(R.id.expireTextView);
+
+        holder.couponLayout = view;
+        holder.priceTextView = (DailyTextView) view.findViewById(R.id.priceTextView);
+        holder.titleTextView = (TextView) view.findViewById(R.id.titleTextView);
         holder.minPriceTextView = (TextView) view.findViewById(R.id.minPriceTextView);
-        holder.upperDivider = view.findViewById(R.id.upperDivider);
+        holder.expireTextView = (TextView) view.findViewById(R.id.expireTextView);
+        holder.hotelIconView = (DailyImageView) view.findViewById(R.id.hotelIconView);
+        holder.gourmetIconView = (DailyImageView) view.findViewById(R.id.gourmetIconView);
+        holder.downloadCouponView = view.findViewById(R.id.downloadCouponView);
+        holder.underLineView = view.findViewById(R.id.underLineView);
         view.setTag(holder);
 
         return view;
@@ -104,24 +104,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
-        holder.descriptionTextView.setText(coupon.title);
-
-        try
-        {
-            //            String expireText = Util.simpleDateFormatISO8601toFormat(coupon.validTo, "yyyy.MM.dd");
-            String expireText = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-            expireText = String.format("(~%s)", expireText);
-            holder.expireTextView.setText(expireText);
-            holder.expireTextView.setVisibility(View.VISIBLE);
-        } catch (ParseException e)
-        {
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.log("Select Coupon::coupon.vaildTo: " + (coupon != null ? coupon.validTo : ""));
-            }
-            ExLog.d(e.getMessage());
-            holder.expireTextView.setVisibility(View.GONE);
-        }
+        holder.titleTextView.setText(coupon.title);
 
         if (coupon.amountMinimum > 0)
         {
@@ -137,20 +120,46 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             holder.minPriceTextView.setVisibility(View.GONE);
         }
 
-        if (coupon.isDownloaded == true)
+        try
         {
-            setSelectLayout(holder, position);
-        } else
+            String expireText = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            expireText = String.format("- %s", expireText);
+            holder.expireTextView.setText(expireText);
+            holder.expireTextView.setVisibility(View.VISIBLE);
+        } catch (ParseException e)
         {
-            setDownLoadLayout(holder);
+            if (Constants.DEBUG == false)
+            {
+                Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
+            }
+            ExLog.d(e.getMessage());
+            holder.expireTextView.setVisibility(View.GONE);
         }
 
-        holder.upperDivider.setVisibility((position == 0) ? View.VISIBLE : View.GONE);
-        //        holder.bottomDivider.setVisibility((getItemCount() - 1 == position) ? View.GONE : View.VISIBLE);
-
-        if (mIsSelected == true)
+        // 스테이, 고메 쿠폰인지
+        if (coupon.availableInStay == true)
         {
-            holder.listItemLayout.setOnClickListener(new View.OnClickListener()
+            holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_on);
+        } else
+        {
+            holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_off);
+        }
+
+        if (coupon.availableInGourmet == true)
+        {
+            holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_on);
+        } else
+        {
+            holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_off);
+        }
+
+        setDownLoadLayout(holder, coupon.isDownloaded);
+
+        if (mIsSelectedMode == true && coupon.isDownloaded == true)
+        {
+            setSelectedLayout(holder, mSelectPosition == position);
+
+            holder.couponLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -171,7 +180,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             });
         } else
         {
-            holder.listItemLayout.setOnClickListener(new View.OnClickListener()
+            holder.couponLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -193,9 +202,9 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         addAll(list);
     }
 
-    public void setSelected(boolean selected)
+    public void setSelectedMode(boolean selected)
     {
-        mIsSelected = selected;
+        mIsSelectedMode = selected;
     }
 
     public Coupon getCoupon(String userCouponCode)
@@ -221,61 +230,68 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         return mSelectPosition;
     }
 
-    private void setDownLoadLayout(SelectViewHolder holder)
+    private void setSelectedLayout(SelectViewHolder holder, boolean isSelected)
     {
-        holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_dimmed);
-        holder.iconImageView.setVisibility(View.VISIBLE);
-        holder.iconImageView.setVectorImageResource(R.drawable.coupon_ic_download);
-        holder.iconImageView.setSelected(false);
-
-        holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.select_coupon_vertical_line_dimmed));
-
-        holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
-        holder.priceTextView.setGravity(Gravity.START);
-        holder.priceTextView.setPadding(Util.dpToPx(mContext, 7), 0, 0, 0);
-        holder.downloadTextView.setVisibility(View.VISIBLE);
-        holder.descriptionTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
-        holder.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
-        holder.minPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
-    }
-
-    private void setSelectLayout(SelectViewHolder holder, int position)
-    {
-        holder.listItemLayout.setBackgroundResource(R.drawable.coupon_popup_default);
-
-        if (mIsSelected == true)
+        if (isSelected == true)
         {
-            holder.iconImageView.setVisibility(View.VISIBLE);
-            holder.iconImageView.setImageResource(R.drawable.selector_radio_button);
-            holder.iconImageView.setSelected((mSelectPosition == position));
+            holder.couponLayout.setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
 
-            holder.priceTextView.setGravity(Gravity.START);
-            holder.priceTextView.setPadding(Util.dpToPx(mContext, 7), 0, 0, 0);
+            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+            holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_s, 0);
+
+            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
         } else
         {
-            holder.iconImageView.setVisibility(View.GONE);
-            holder.priceTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-            holder.priceTextView.setPadding(0, 0, 0, 0);
-        }
+            holder.couponLayout.setBackgroundResource(0);
 
-        holder.verticalLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cd0d0d0));
-        holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.black));
-        holder.downloadTextView.setVisibility(View.GONE);
-        holder.descriptionTextView.setTextColor(mContext.getResources().getColor(R.color.black));
-        holder.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
-        holder.minPriceTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
+            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+
+            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        }
+    }
+
+    private void setDownLoadLayout(SelectViewHolder holder, boolean isDownload)
+    {
+        holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        holder.couponLayout.setBackgroundResource(0);
+
+        if (isDownload == true)
+        {
+            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            holder.minPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+            holder.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+
+            holder.hotelIconView.setAlpha(1.0f);
+            holder.gourmetIconView.setAlpha(1.0f);
+            holder.downloadCouponView.setVisibility(View.GONE);
+
+        } else
+        {
+            int color = mContext.getResources().getColor(R.color.default_text_cc5c5c5);
+
+            holder.priceTextView.setTextColor(color);
+            holder.titleTextView.setTextColor(color);
+            holder.minPriceTextView.setTextColor(color);
+            holder.expireTextView.setTextColor(color);
+
+            holder.hotelIconView.setAlpha(0.5f);
+            holder.gourmetIconView.setAlpha(0.5f);
+            holder.downloadCouponView.setVisibility(View.VISIBLE);
+        }
     }
 
     protected class SelectViewHolder
     {
-        View listItemLayout;
-        View verticalLine;
-        TextView priceTextView;
-        DailyImageView iconImageView;
-        TextView downloadTextView;
-        TextView descriptionTextView;
-        TextView expireTextView;
+        View couponLayout;
+        DailyTextView priceTextView;
+        TextView titleTextView;
         TextView minPriceTextView;
-        View upperDivider;
+        TextView expireTextView;
+        DailyImageView hotelIconView;
+        DailyImageView gourmetIconView;
+        View downloadCouponView;
+        View underLineView;
     }
 }

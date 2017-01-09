@@ -13,7 +13,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -31,8 +30,13 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
@@ -272,7 +276,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             , R.drawable.ic_detail_facilities_05_pet//
             , R.drawable.ic_detail_facilities_06_bbq};
 
-        final int[] amenitiesflag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
+        final int[] amenitiesFlag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
             , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
@@ -288,11 +292,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             DailyTextView amenitiesView = getGridLayoutItemView(amenities[i], amenitiesResId[i], false);
             amenitiesView.setOnClickListener(onClickListener);
-            amenitiesView.setTag(amenitiesflag[i]);
+            amenitiesView.setTag(amenitiesFlag[i]);
             amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
             amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
 
-            if ((stayCurationOption.flagAmenitiesFilters & amenitiesflag[i]) == amenitiesflag[i])
+            if ((stayCurationOption.flagAmenitiesFilters & amenitiesFlag[i]) == amenitiesFlag[i])
             {
                 amenitiesView.setSelected(true);
             }
@@ -371,7 +375,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             resetLayout(mGridLayout);
         }
 
-        requestUpdateResult();
+        requestUpdateResultDelayed();
     }
 
     @Override
@@ -413,7 +417,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         if (mLastParams != null && Constants.SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
         {
-            onSearchLoacationResult(null);
+            onSearchLocationResult(null);
             return;
         }
 
@@ -691,7 +695,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     }
 
     @Override
-    protected void onSearchLoacationResult(Location location)
+    protected void onSearchLocationResult(Location location)
     {
         mStayCuration.setLocation(location);
 
@@ -791,13 +795,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StayCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             StayCurationActivity.this.onError(e);
         }
@@ -812,6 +810,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         public void onErrorToastMessage(String message)
         {
             StayCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            StayCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

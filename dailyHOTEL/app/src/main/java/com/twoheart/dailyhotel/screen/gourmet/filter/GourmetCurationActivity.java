@@ -12,7 +12,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -30,12 +29,17 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetCurationActivity extends PlaceCurationActivity implements RadioGroup.OnCheckedChangeListener
 {
@@ -161,14 +165,14 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         // 음식 종류
         mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.foodGridLayout);
 
-        final HashMap<String, Integer> categroySequenceMap = gourmetCurationOption.getCategorySequenceMap();
+        final HashMap<String, Integer> categorySequenceMap = gourmetCurationOption.getCategorySequenceMap();
         TreeMap<String, Integer> categoryMap = new TreeMap<>(new Comparator<String>()
         {
             @Override
             public int compare(String o1, String o2)
             {
-                Integer sequence1 = categroySequenceMap.get(o1);
-                Integer sequence2 = categroySequenceMap.get(o2);
+                Integer sequence1 = categorySequenceMap.get(o1);
+                Integer sequence2 = categorySequenceMap.get(o2);
 
                 if (sequence1 < 0)
                 {
@@ -192,17 +196,17 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             }
         });
 
-        categoryMap.putAll(categroySequenceMap);
+        categoryMap.putAll(categorySequenceMap);
 
         List<String> keyList = new ArrayList<>(categoryMap.keySet());
-        HashMap<String, Integer> categroyCodeMap = gourmetCurationOption.getCategoryCoderMap();
+        HashMap<String, Integer> categoryCodeMap = gourmetCurationOption.getCategoryCoderMap();
         HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
 
         boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN;
 
         for (String key : keyList)
         {
-            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categroyCodeMap.get(key)), isSingleLine);
+            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categoryCodeMap.get(key)), isSingleLine);
             categoryView.setOnClickListener(mOnCategoryClickListener);
 
             if (filterMap.containsKey(key) == true)
@@ -423,7 +427,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             resetLayout(mTimeRangeLayout);
         }
 
-        requestUpdateResult();
+        requestUpdateResultDelayed();
     }
 
     @Override
@@ -465,7 +469,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         if (mLastParams != null && SortType.DISTANCE == mLastParams.getSortType() && mLastParams.hasLocation() == false)
         {
-            onSearchLoacationResult(null);
+            onSearchLocationResult(null);
             return;
         }
 
@@ -772,7 +776,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     }
 
     @Override
-    protected void onSearchLoacationResult(Location location)
+    protected void onSearchLocationResult(Location location)
     {
         mGourmetCuration.setLocation(location);
 
@@ -905,13 +909,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            GourmetCurationActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             GourmetCurationActivity.this.onError(e);
         }
@@ -926,6 +924,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         public void onErrorToastMessage(String message)
         {
             GourmetCurationActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            GourmetCurationActivity.this.onErrorResponse(call, response);
         }
     };
 }

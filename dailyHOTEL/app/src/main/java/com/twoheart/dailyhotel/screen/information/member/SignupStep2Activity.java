@@ -10,10 +10,10 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -24,6 +24,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class SignupStep2Activity extends BaseActivity
 {
@@ -43,7 +48,7 @@ public class SignupStep2Activity extends BaseActivity
     private String mSignupKey, mEmail, mPassword, mRecommender;
     private String mCallByScreen;
     private String mAgreedBenefitDate;
-    private int mRequestVerficationCount;
+    private int mRequestVerificationCount;
 
     private Handler mRetryHandler;
 
@@ -85,7 +90,7 @@ public class SignupStep2Activity extends BaseActivity
         mCountryCode = Util.getCountryNameNCode(this);
         mSignupStep2Layout.setCountryCode(mCountryCode);
 
-        mRequestVerficationCount = 0;
+        mRequestVerificationCount = 0;
     }
 
     private void initUserInformation(Intent intent)
@@ -147,7 +152,6 @@ public class SignupStep2Activity extends BaseActivity
         DailyPreference.getInstance(this).setShowBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarmFirstBuyer(false);
         DailyPreference.getInstance(this).setLastestCouponTime("");
-        AnalyticsManager.getInstance(this).setPushEnabled(false, null);
 
         DailyToast.showToast(SignupStep2Activity.this, R.string.toast_msg_success_to_signup, Toast.LENGTH_LONG);
 
@@ -188,7 +192,7 @@ public class SignupStep2Activity extends BaseActivity
         if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
         {
             messageTextView.setVisibility(View.VISIBLE);
-            messageTextView.setText(getString(R.string.message_benefit_alarm_on_confirm_format, updateDate));
+            messageTextView.setText(getString(R.string.message_signup_completed_alarm_on_format, updateDate));
         } else
         {
             messageTextView.setVisibility(View.GONE);
@@ -219,7 +223,12 @@ public class SignupStep2Activity extends BaseActivity
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -250,7 +259,7 @@ public class SignupStep2Activity extends BaseActivity
 
             lockUI();
 
-            mNetworkController.requestVerfication(mSignupKey, phoneNumber.replaceAll("-", ""), false);
+            mNetworkController.requestVerification(mSignupKey, phoneNumber.replaceAll("-", ""), false);
         }
 
         @Override
@@ -295,7 +304,7 @@ public class SignupStep2Activity extends BaseActivity
 
             mSignupStep2Layout.showVerificationVisible();
 
-            if (++mRequestVerficationCount == VERIFY_PHONE_NUMBER_COUNT)
+            if (++mRequestVerificationCount == VERIFY_PHONE_NUMBER_COUNT)
             {
                 try
                 {
@@ -313,31 +322,21 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onSignUp(int notificationUid, String gcmRegisterId)
+        public void onSignUp()
         {
             DailyPreference.getInstance(SignupStep2Activity.this).setVerification(true);
-
-            if (notificationUid > 0)
-            {
-                DailyPreference.getInstance(SignupStep2Activity.this).setNotificationUid(notificationUid);
-            }
-
-            if (Util.isTextEmpty(gcmRegisterId) == false)
-            {
-                DailyPreference.getInstance(SignupStep2Activity.this).setGCMRegistrationId(gcmRegisterId);
-            }
 
             mNetworkController.requestLogin(mEmail, mPassword);
         }
 
         @Override
-        public void onLogin(String authorization, final String userIndex, final String email, //
-                            final String name, String recommender, String userType, final String phoneNumber, boolean isBenefit)
+        public void onLogin(String authorization, final String userIndex, final String email, final String name,//
+                            String birthday, String recommender, String userType, final String phoneNumber, boolean isBenefit)
         {
             unLockUI();
 
             DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
-            DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, recommender);
+            DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, birthday, recommender);
 
             // 혜택 알림 체크
             DailyPreference.getInstance(SignupStep2Activity.this).setUserBenefitAlarm(isBenefit);
@@ -349,10 +348,23 @@ public class SignupStep2Activity extends BaseActivity
 
             // 이미 가입된것이기 때문에 미리 Analytics 넣음
             AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //
-                userIndex, email, name, phoneNumber, Constants.DAILY_USER, mRecommender, mCallByScreen);
-
+                userIndex, email, name, phoneNumber, birthday, Constants.DAILY_USER, mRecommender, mCallByScreen);
 
             showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
+
+            // 내가 추천인 코드를 넣고 회원 가입을 하는 경우
+            if (Util.isTextEmpty(mRecommender) == false)
+            {
+                AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
+                    , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.SUCCESS, null);
+            }
+
+            if (Util.isTextEmpty(birthday) == false)
+            {
+                // 생일을 입력한 경우 체크
+                AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//
+                    , AnalyticsManager.Action.PROFILE_CLICKED, birthday, null);
+            }
         }
 
         @Override
@@ -369,7 +381,7 @@ public class SignupStep2Activity extends BaseActivity
                     {
                         lockUI();
 
-                        mNetworkController.requestVerfication(mSignupKey, phoneNumber, true);
+                        mNetworkController.requestVerification(mSignupKey, phoneNumber, true);
                     }
                 }, new View.OnClickListener()
                 {
@@ -400,32 +412,30 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void onRetryDailyUserSignIn()
         {
+            // 회원 가입후에 바로 로그인을 요청하는 경우 실패가발생하는 경우가 있다. 그래서 재시도..
             if (mRetryHandler != null)
             {
+                // 한번 재시도 후에 또 로그인이 안되면 앱을 다시 재시동 시킨다
                 mRetryHandler = null;
-                ExLog.d("mRetryHandler already run");
-            } else
-            {
-                mRetryHandler = new Handler();
-                mRetryHandler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        mNetworkController.requestLogin(mEmail, mPassword);
-                    }
-                }, 500);
+
+                DailyToast.showToast(SignupStep2Activity.this, R.string.toast_msg_retry_login, Toast.LENGTH_SHORT);
+                Util.restartApp(SignupStep2Activity.this);
+                return;
             }
+
+            mRetryHandler = new Handler();
+            mRetryHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mNetworkController.requestLogin(mEmail, mPassword);
+                }
+            }, 500);
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            SignupStep2Activity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             SignupStep2Activity.this.onError(e);
         }
@@ -440,6 +450,12 @@ public class SignupStep2Activity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             SignupStep2Activity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            SignupStep2Activity.this.onErrorResponse(call, response);
         }
     };
 }

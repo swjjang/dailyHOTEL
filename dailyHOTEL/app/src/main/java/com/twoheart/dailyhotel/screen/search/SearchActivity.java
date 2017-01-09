@@ -1,11 +1,13 @@
 package com.twoheart.dailyhotel.screen.search;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -13,6 +15,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -30,7 +33,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
     private DailyViewPager mViewPager;
-    private View mSearchView;
+    private View mSearchView, mTooltipLayout;
     private PlaceType mPlaceType;
 
     private StaySearchFragment mStaySearchFragment;
@@ -113,6 +116,49 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void initLayout(PlaceType placeType, final String word)
     {
         initToolbar(placeType);
+
+        mTooltipLayout = findViewById(R.id.tooltipLayout);
+
+        switch (placeType)
+        {
+            case HOTEL:
+            {
+                if (DailyPreference.getInstance(this).isViewSearchTooltip() == true)
+                {
+                    mTooltipLayout.setVisibility(View.GONE);
+                } else
+                {
+                    DailyPreference.getInstance(this).setIsViewSearchTooltip(true);
+                    mTooltipLayout.setVisibility(View.VISIBLE);
+                    mTooltipLayout.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            hideAnimationTooltip();
+                        }
+                    });
+
+                    // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
+                    mTooltipLayout.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            if (mTooltipLayout.getVisibility() != View.GONE)
+                            {
+                                hideAnimationTooltip();
+                            }
+                        }
+                    }, 10000);
+                }
+                break;
+            }
+
+            case FNB:
+                mTooltipLayout.setVisibility(View.GONE);
+                break;
+        }
 
         ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
 
@@ -239,8 +285,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     {
         // 가운데 스위치
         DailySwitchCompat switchCompat = (DailySwitchCompat) view.findViewById(R.id.placeSwitch);
-        final ImageView hotelSwitchView = (ImageView) view.findViewById(R.id.hotelSwitch);
-        final ImageView gourmetSwitchView = (ImageView) view.findViewById(R.id.gourmetSwitch);
+        final View hotelTextView = view.findViewById(R.id.hotelTextView);
+        final View gourmetTextView = view.findViewById(R.id.gourmetTextView);
 
         switch (placeType)
         {
@@ -253,7 +299,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 break;
         }
 
-        final PlaceType startPlactType = placeType;
+        final PlaceType startPlaceType = placeType;
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
@@ -322,12 +368,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 float gourmetAlpha = 0.6f * offset / range;
                 float hotelAlpha = 0.6f - gourmetAlpha;
 
-                hotelSwitchView.setAlpha(0.4f + hotelAlpha);
-                gourmetSwitchView.setAlpha(0.4f + gourmetAlpha);
+                hotelTextView.setAlpha(0.4f + hotelAlpha);
+                gourmetTextView.setAlpha(0.4f + gourmetAlpha);
 
                 int pageOffset = (int) ((float) offset * mViewPager.getWidth() / range);
 
-                switch (startPlactType)
+                switch (startPlaceType)
                 {
                     case HOTEL:
                         mViewPager.setScrollX(pageOffset);
@@ -378,6 +424,50 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 }
                 break;
         }
+    }
+
+    private void hideAnimationTooltip()
+    {
+        if (mTooltipLayout.getTag() != null)
+        {
+            return;
+        }
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
+
+        mTooltipLayout.setTag(objectAnimator);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                mTooltipLayout.setTag(null);
+                mTooltipLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
     }
 
     private void analyticsSwitchChanged(PlaceType changedPlaceType)

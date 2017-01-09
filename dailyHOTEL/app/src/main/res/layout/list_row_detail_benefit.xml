@@ -31,6 +31,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="17dp"
             android:gravity="center_horizontal"
+            android:lineSpacingExtra="-2dp"
             android:textColor="@color/dh_theme_color"
             android:textSize="15dp"
             dailyFont:style="Medium"/>

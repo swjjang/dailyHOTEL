@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -18,13 +19,13 @@
             app:srcCompat="@drawable/navibar_ic_x"/>
 
         <RelativeLayout
-            android:layout_width="130dp"
+            android:layout_width="160dp"
             android:layout_height="32dp"
             android:layout_centerInParent="true">
 
             <com.twoheart.dailyhotel.widget.DailySwitchCompat
                 android:id="@+id/placeSwitch"
-                android:layout_width="130dp"
+                android:layout_width="160dp"
                 android:layout_height="32dp"
                 android:background="@null"
                 android:checked="false"
@@ -33,22 +34,30 @@
                 app:showText="false"
                 app:track="@drawable/toggle_btn_ic_01_template"/>
 
-            <ImageView
-                android:id="@+id/hotelSwitch"
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/hotelTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="19dp"
-                app:srcCompat="@drawable/toggle_ic_03_hotel"/>
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_hotel"
+                android:textColor="@color/default_text_c454545"
+                android:textSize="13dp"
+                app:drawableCompatLeft="@drawable/toggle_ic_03_hotel"/>
 
-            <ImageView
-                android:id="@+id/gourmetSwitch"
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/gourmetTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="19dp"
-                app:srcCompat="@drawable/toggle_ic_04_gourmet"/>
+                android:layout_marginRight="17dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_fnb"
+                android:textColor="@color/default_text_c454545"
+                android:textSize="13dp"
+                app:drawableCompatLeft="@drawable/toggle_ic_04_gourmet"/>
         </RelativeLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -75,4 +84,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"/>
+
+    <RelativeLayout
+        android:id="@+id/tooltipLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:paddingLeft="71dp"
+        android:visibility="gone">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/tooltip_top"
+            android:gravity="center"
+            android:text="@string/message_search_tooltip"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
 </RelativeLayout>

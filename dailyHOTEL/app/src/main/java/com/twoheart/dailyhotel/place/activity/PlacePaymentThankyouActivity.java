@@ -1,8 +1,5 @@
 package com.twoheart.dailyhotel.place.activity;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -10,11 +7,9 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
@@ -25,7 +20,12 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import org.json.JSONObject;
+
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class PlacePaymentThankyouActivity extends BaseActivity implements OnClickListener
 {
@@ -85,46 +85,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         initLayout(imageUrl, placeName, placeType, userName);
 
         final ScrollView informationLayout = (ScrollView) findViewById(R.id.informationLayout);
-        informationLayout.setVisibility(View.GONE);
         EdgeEffectColor.setEdgeGlowColor(informationLayout, getResources().getColor(R.color.default_over_scroll_edge));
-
-        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(informationLayout //
-            , PropertyValuesHolder.ofFloat("scaleX", 0.0f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("scaleY", 0.0f, 1.0f) //
-        );
-
-        objectAnimator.setDuration(800);
-        objectAnimator.setStartDelay(250);
-        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-        objectAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                informationLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        objectAnimator.start();
-
 
         recordEvent(AnalyticsManager.Action.END_PAYMENT, mPaymentType);
         recordEvent(AnalyticsManager.Action.PAYMENT_USED, discountType);
@@ -149,7 +110,6 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(this));
-        ExLog.d("height : " + imageHeight);
         com.facebook.drawee.view.SimpleDraweeView simpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
         layoutParams.height = imageHeight;
@@ -242,13 +202,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            // do nothing
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             // do nothing
         }
@@ -261,6 +215,12 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         @Override
         public void onErrorToastMessage(String message)
+        {
+            // do nothing
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             // do nothing
         }

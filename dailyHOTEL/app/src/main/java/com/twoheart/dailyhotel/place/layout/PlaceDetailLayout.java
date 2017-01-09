@@ -2,10 +2,19 @@ package com.twoheart.dailyhotel.place.layout;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -17,12 +26,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -33,10 +45,12 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 
@@ -48,6 +62,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
     public static final int STATUS_SOLD_OUT = 3;
 
     private static final int VIEW_COUNT = 4;
+
+    private static final int BOOKING_TEXT_VIEW_DURATION = 150;
+    private static final int PRODUCT_VIEW_DURATION = 250;
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
@@ -73,7 +90,25 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
+    private AnimatorSet mWishPopupAnimatorSet;
     private int mStatusBarHeight;
+
+    protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
+    protected TextView mTransTotalGradeTextView, mTransPlaceNameTextView;
+    protected View mTransGradientView;
+
+    protected DailyTextView mWishButtonTextView;
+    protected DailyTextView mWishPopupTextView;
+    protected View mWishPopupScrollView;
+
+    protected ValueAnimator mBookingTextViewAnimator;
+
+    public enum WishPopupState
+    {
+        ADD,
+        DELETE,
+        GONE
+    }
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -85,11 +120,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void onSelectedImagePosition(int position);
 
-        void doKakaotalkConsult();
+        void onConciergeClick();
 
         void showProductInformationLayout();
 
-        void hideProductInformationLayout();
+        void hideProductInformationLayout(boolean isAnimation);
 
         void showMap();
 
@@ -104,6 +139,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
         void doBooking();
 
         void downloadCoupon();
+
+        void onWishButtonClick();
+
+        void releaseUiComponent();
     }
 
     protected abstract String getProductTypeTitle();
@@ -111,6 +150,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected abstract View getTitleLayout();
 
     public abstract void setBookingStatus(int status);
+
+    public abstract void setSelectProduct(int index);
 
     public PlaceDetailLayout(Context context, OnBaseEventListener listener)
     {
@@ -120,6 +161,33 @@ public abstract class PlaceDetailLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
+        mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
+        mTransGradientView = view.findViewById(R.id.transGradientView);
+        View transGradientTopView = view.findViewById(R.id.transGradientTopView);
+
+        View transTitleLayout = view.findViewById(R.id.transTitleLayout);
+        mTransTotalGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
+        mTransPlaceNameTextView = (TextView) transTitleLayout.findViewById(R.id.transNameTextView);
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            setTransImageVisibility(true);
+            transTitleLayout.setVisibility(View.VISIBLE);
+
+            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
+
+            mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
+            mTransGradientView.setBackground(makeShaderFactory());
+
+            transGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
+        } else
+        {
+            setTransImageVisibility(false);
+            transTitleLayout.setVisibility(View.GONE);
+        }
+
         mListView = (DailyPlaceDetailListView) view.findViewById(R.id.placeListView);
         mListView.setOnScrollListener(mOnScrollListener);
 
@@ -134,11 +202,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mDailyLineIndicator.setViewPager(mViewPager);
 
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
-        mDailyLineIndicator.setmOnPageChangeListener(mOnPageChangeListener);
+        mDailyLineIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
         mImageHeight = Util.getLCDWidth(mContext);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
         layoutParams.height = mImageHeight;
+        mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = view.findViewById(R.id.moreIconView);
 
@@ -169,15 +238,96 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).hideProductInformationLayout();
+                ((OnEventListener) mOnEventListener).hideProductInformationLayout(true);
             }
         });
 
         mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
         mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
 
+        mWishPopupScrollView = view.findViewById(R.id.wishListPopupScrollView);
+        mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
+        mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListBottonView);
+        mWishButtonTextView.setTag(false);
+        mWishButtonTextView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onWishButtonClick();
+            }
+        });
+
         setBookingStatus(STATUS_NONE);
         hideProductInformationLayout();
+        showWishButton();
+        setUpdateWishPopup(WishPopupState.GONE);
+    }
+
+    private PaintDrawable makeShaderFactory()
+    {
+        // 그라디에이션 만들기.
+        final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
+
+        PaintDrawable paintDrawable = new PaintDrawable();
+        paintDrawable.setShape(new RectShape());
+
+        ShapeDrawable.ShaderFactory sf = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+            }
+        };
+
+        paintDrawable.setShaderFactory(sf);
+
+        return paintDrawable;
+    }
+
+    public void setListScrollTop()
+    {
+        if (mListView == null || mListView.getChildCount() == 0)
+        {
+            return;
+        }
+
+        mListView.smoothScrollBy(0, 0);
+        mListView.setSelection(0);
+    }
+
+    public boolean isListScrollTop()
+    {
+        if (mListView == null || mListView.getChildCount() == 0)
+        {
+            return true;
+        }
+
+        View view = mListView.getChildAt(0);
+        int scrollY = -view.getTop() + mListView.getFirstVisiblePosition() * view.getHeight();
+
+        return scrollY == 0;
+    }
+
+    public void setTransImageVisibility(boolean isVisibility)
+    {
+        mTransSimpleDraweeView.setVisibility(isVisibility == true ? View.VISIBLE : View.INVISIBLE);
+        mTransGradientView.setVisibility(isVisibility == true ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void setTransBottomGradientBackground(int resId)
+    {
+        mTransGradientView.setBackgroundResource(resId);
+    }
+
+    public void setTransImageView(String url)
+    {
+        if (mTransSimpleDraweeView.getVisibility() == View.VISIBLE)
+        {
+            Util.requestImageResize(mContext, mTransSimpleDraweeView, url);
+        }
     }
 
     public void setDefaultImage(String url)
@@ -263,6 +413,42 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mProductTypeBackgroundView.setEnabled(enabled);
     }
 
+    public void showProductInformationLayout(int index)
+    {
+        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        if (mObjectAnimator != null)
+        {
+            if (mObjectAnimator.isRunning() == true)
+            {
+                mObjectAnimator.cancel();
+                mObjectAnimator.removeAllListeners();
+            }
+
+            mObjectAnimator = null;
+        }
+
+        mProductTypeBackgroundView.setAnimation(null);
+        mProductTypeLayout.setAnimation(null);
+
+        mProductTypeBackgroundView.setVisibility(View.VISIBLE);
+
+        mProductTypeLayout.setVisibility(View.VISIBLE);
+
+        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+        mAnimationState = Constants.ANIMATION_STATE.END;
+
+        setProductInformationLayoutEnabled(true);
+
+        setBookingStatus(STATUS_BOOKING);
+
+        setSelectProduct(index);
+    }
+
     public void hideProductInformationLayout()
     {
         if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
@@ -296,6 +482,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
 
         mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+        mAnimationState = Constants.ANIMATION_STATE.END;
     }
 
     public void showAnimationProductInformationLayout()
@@ -327,7 +514,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop() - height);
-            mObjectAnimator.setDuration(300);
+            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
 
             mObjectAnimator.addListener(new AnimatorListener()
             {
@@ -404,75 +591,62 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         setBookingStatus(STATUS_NONE);
 
-        if (Util.isOverAPI12() == true)
+        final float y = mProductTypeLayout.getY();
+
+        if (mObjectAnimator != null)
         {
-            final float y = mProductTypeLayout.getY();
-
-            if (mObjectAnimator != null)
+            if (mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
-                }
-
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
+                mObjectAnimator.removeAllListeners();
             }
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
-            mObjectAnimator.setDuration(300);
-
-            mObjectAnimator.addListener(new AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                    setProductInformationLayoutEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-
-                        hideProductInformationLayout();
-
-                        setBookingStatus(STATUS_SELECT_PRODUCT);
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-                }
-            });
-
-            mObjectAnimator.start();
-
-            showAnimationFadeIn();
-        } else
-        {
-            setProductInformationLayoutEnabled(false);
-
-            mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-            mAnimationState = Constants.ANIMATION_STATE.END;
-
-            hideProductInformationLayout();
-
-            setBookingStatus(STATUS_SELECT_PRODUCT);
+            mObjectAnimator = null;
         }
+
+        mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
+        mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
+
+        mObjectAnimator.addListener(new AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+
+                setProductInformationLayoutEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+
+                    ((OnEventListener) mOnEventListener).hideProductInformationLayout(false);
+
+                    setBookingStatus(STATUS_SELECT_PRODUCT);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+
+        mObjectAnimator.start();
+
+        showAnimationFadeIn();
     }
 
     /**
@@ -583,6 +757,235 @@ public abstract class PlaceDetailLayout extends BaseLayout
     {
         mMoreIconView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
         mDailyLineIndicator.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void setWishButtonSelected(boolean isSelected)
+    {
+        int imageResId = isSelected == true ? R.drawable.ic_heart_fill_s : R.drawable.ic_heart_stroke_s;
+        mWishButtonTextView.setCompoundDrawablesWithIntrinsicBounds(0, imageResId, 0, 0);
+        mWishButtonTextView.setTag(isSelected);
+    }
+
+    public void setWishButtonCount(int count)
+    {
+        String buttonText;
+        if (count <= 0)
+        {
+            buttonText = mContext.getResources().getString(R.string.label_wishlist);
+        } else if (count > 9999)
+        {
+            buttonText = mContext.getResources().getString(R.string.wishlist_count_over_10_thousand);
+        } else
+        {
+            buttonText = mContext.getResources().getString(R.string.wishlist_count_format, count);
+        }
+
+        mWishButtonTextView.setText(buttonText);
+    }
+
+    public void setUpdateWishPopup(final WishPopupState state)
+    {
+        if (WishPopupState.GONE == state)
+        {
+            //            mWishPopupTextView.setVisibility(View.GONE);
+            mWishPopupScrollView.setVisibility(View.GONE);
+
+            if (mWishPopupAnimatorSet != null)
+            {
+                mWishPopupAnimatorSet.cancel();
+                mWishPopupAnimatorSet.removeAllListeners();
+                mWishPopupAnimatorSet = null;
+            }
+        } else
+        {
+            if (mWishPopupAnimatorSet != null && mWishPopupAnimatorSet.isRunning() == true)
+            {
+                ExLog.d("WishPopup is Already running");
+                return;
+            }
+
+            if (WishPopupState.ADD == state)
+            {
+                mWishPopupTextView.setText(R.string.wishlist_detail_add_message);
+                mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
+                mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
+            } else
+            {
+                mWishPopupTextView.setText(R.string.wishlist_detail_delete_message);
+                mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
+                mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
+            }
+
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
+            );
+            objectAnimator1.setInterpolator(new AccelerateInterpolator());
+            objectAnimator1.setDuration(300);
+
+
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
+                , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
+            );
+            objectAnimator2.setDuration(600);
+
+
+            ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+                , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
+                , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
+                , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
+            );
+            objectAnimator3.setDuration(200);
+
+            mWishPopupAnimatorSet = new AnimatorSet();
+            mWishPopupAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+            mWishPopupAnimatorSet.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    mWishPopupScrollView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    mWishPopupScrollView.setVisibility(View.INVISIBLE);
+                    ((OnEventListener) mOnEventListener).releaseUiComponent();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mWishPopupScrollView.setVisibility(View.INVISIBLE);
+                    ((OnEventListener) mOnEventListener).releaseUiComponent();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mWishPopupAnimatorSet.start();
+        }
+    }
+
+    public void showWishButton()
+    {
+        if (mBookingTextViewAnimator != null)
+        {
+            mBookingTextViewAnimator.cancel();
+            mBookingTextViewAnimator.removeAllListeners();
+            mBookingTextViewAnimator = null;
+        }
+
+        if (mBookingTextView == null)
+        {
+            return;
+        }
+
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+        params.leftMargin = end;
+        mBookingTextView.setLayoutParams(params);
+    }
+
+    public void hideWishButton()
+    {
+        if (mBookingTextViewAnimator != null)
+        {
+            mBookingTextViewAnimator.cancel();
+            mBookingTextViewAnimator.removeAllListeners();
+            mBookingTextViewAnimator = null;
+        }
+
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+        params.leftMargin = end;
+        mBookingTextView.setLayoutParams(params);
+    }
+
+    public void showWishButtonAnimation()
+    {
+        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+
+        startWishButtonAnimation(start, end);
+    }
+
+    public void hideWishButtonAnimation()
+    {
+        final int start = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_max_left_margin);
+        final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
+
+        startWishButtonAnimation(start, end);
+    }
+
+    private void startWishButtonAnimation(final int start, final int end)
+    {
+        if (mBookingTextViewAnimator != null)
+        {
+            mBookingTextViewAnimator.cancel();
+            mBookingTextViewAnimator.removeAllListeners();
+            mBookingTextViewAnimator = null;
+        }
+
+        mBookingTextViewAnimator = ValueAnimator.ofInt(start, end);
+        mBookingTextViewAnimator.setInterpolator(new LinearInterpolator());
+        mBookingTextViewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                int value = (int) valueAnimator.getAnimatedValue();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = value;
+                mBookingTextView.setLayoutParams(params);
+            }
+        });
+
+        mBookingTextViewAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = start;
+                mBookingTextView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = end;
+                mBookingTextView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
+                params.leftMargin = end;
+                mBookingTextView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mBookingTextViewAnimator.setDuration(BOOKING_TEXT_VIEW_DURATION);
+        mBookingTextViewAnimator.start();
     }
 
     private OnPageChangeListener mOnPageChangeListener = new OnPageChangeListener()

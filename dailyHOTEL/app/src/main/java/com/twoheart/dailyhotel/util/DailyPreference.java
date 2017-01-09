@@ -6,8 +6,6 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 
 /**
  */
@@ -28,7 +26,7 @@ public class DailyPreference
     //    private static final String KEY_ALLOW_PUSH = "5";
     //    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
 
-    private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
+//    private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
     private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
@@ -38,10 +36,8 @@ public class DailyPreference
     private static final String KEY_NEW_COUPON = "15"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
     private static final String KEY_NEW_NOTICE = "16"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
 
-    private static final String KEY_NOTIFICATION_UID = "20"; // 노티피케이션 UID
-
     private static final String KEY_AGREE_TERMS_OF_LOCATION = "21"; // 위치 약관 동의 여부
-    private static final String KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE = "22"; // 운영시간 문구
+    //    private static final String KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE = "22"; // 운영시간 문구
     private static final String KEY_APP_VERSION = "23";
 
     private static final String KEY_SHOW_BENEFIT_ALARM = "24";
@@ -49,7 +45,12 @@ public class DailyPreference
     private static final String KEY_FIRST_BUYER = "26";
     private static final String KEY_FIRST_APP_VERSION = "27";
 
-    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28";
+    //    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28"; // 삭제! - 30 으로 대체 됨
+    private static final String KEY_INFORMATION_CS_OPERATION_TIME = "29"; // 운영시간 H,H (앞은 시작 뒤는 끝나는 시간)
+    private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
+    private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
+
+    private static final String KEY_IS_REQUEST_REVIEW_ = "32";
 
     private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
@@ -62,8 +63,13 @@ public class DailyPreference
 
     private static final String KEY_SELECTED_SIMPLE_CARD = "204"; // 마지막으로 간편결제된 카드
 
+    private static final String KEY_STAY_RECENT_PLACES = "210";
+    private static final String KEY_GOURMET_RECENT_PLACES = "211";
+
+
     private static final String KEY_AUTHORIZATION = "1000";
     private static final String KEY_VERIFICATION = "1001";
+    private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
 
     private static final String KEY_SETTING_MIGRATION_FLAG = "1003";
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
@@ -165,6 +171,7 @@ public class DailyPreference
     private static final String KEY_USER_RECOMMENDER = "2004";
     private static final String KEY_USER_BENEFIT_ALARM = "2005";
     private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
+    private static final String KEY_USER_BIRTHDAY = "2007";
 
     // Payment
     private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
@@ -204,7 +211,7 @@ public class DailyPreference
         boolean isFirst = false;
 
         String firstAppVersion = getFirstAppVersion();
-        String currentAppVersion = Util.getAppVersion(context);
+        String currentAppVersion = Util.getAppVersionCode(context);
 
         if (Util.isTextEmpty(firstAppVersion) || firstAppVersion.equalsIgnoreCase(currentAppVersion))
         {
@@ -237,6 +244,13 @@ public class DailyPreference
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
+        boolean isShowTooltip = isViewWishListTooltip();
+        boolean isShowSearchToolTip = isViewSearchTooltip();
+
+        String stayRecentPlace = getStayRecentPlaces();
+        String gourmetRecentPlace = getGourmetRecentPlaces();
+
+        String baseUrl = getBaseUrl();
 
         if (mEditor != null)
         {
@@ -252,6 +266,13 @@ public class DailyPreference
 
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
+        setIsViewWishListTooltip(isShowTooltip);
+        setIsViewSearchTooltip(isShowSearchToolTip);
+
+        setStayRecentPlaces(stayRecentPlace);
+        setGourmetRecentPlaces(gourmetRecentPlace);
+
+        setBaseUrl(baseUrl);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -508,16 +529,6 @@ public class DailyPreference
         setValue(mEditor, KEY_NEW_NOTICE, value);
     }
 
-    public int getNotificationUid()
-    {
-        return getValue(mPreferences, KEY_NOTIFICATION_UID, -1);
-    }
-
-    public void setNotificationUid(int value)
-    {
-        setValue(mEditor, KEY_NOTIFICATION_UID, value);
-    }
-
     public String getLastMenu()
     {
         return getValue(mPreferences, KEY_LAST_MENU, null);
@@ -536,16 +547,6 @@ public class DailyPreference
     public void setShowGuide(boolean value)
     {
         setValue(mEditor, KEY_SHOW_GUIDE, value);
-    }
-
-    public String getCollapsekey()
-    {
-        return getValue(mPreferences, KEY_COLLAPSEKEY, null);
-    }
-
-    public void setCollapsekey(String value)
-    {
-        setValue(mEditor, KEY_COLLAPSEKEY, value);
     }
 
     public String getStayLastViewDate()
@@ -599,10 +600,10 @@ public class DailyPreference
     {
         try
         {
-            return DailyHotelRequest.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+            return Crypto.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
         } catch (Exception e)
         {
-            String authorization = DailyHotelRequest.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+            String authorization = Crypto.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
 
             setValue(mEditor, KEY_AUTHORIZATION, authorization);
 
@@ -614,7 +615,7 @@ public class DailyPreference
     {
         DailyHotel.AUTHORIZATION = value;
 
-        setValue(mEditor, KEY_AUTHORIZATION, DailyHotelRequest.urlEncrypt(value));
+        setValue(mEditor, KEY_AUTHORIZATION, Crypto.urlEncrypt(value));
     }
 
     public boolean isVerification()
@@ -657,6 +658,26 @@ public class DailyPreference
         return getValue(mPreferences, KEY_GOURMET_SEARCH_RECENTLY, null);
     }
 
+    public void setStayRecentPlaces(String recentPlaces)
+    {
+        setValue(mEditor, KEY_STAY_RECENT_PLACES, recentPlaces);
+    }
+
+    public String getStayRecentPlaces()
+    {
+        return getValue(mPreferences, KEY_STAY_RECENT_PLACES, null);
+    }
+
+    public void setGourmetRecentPlaces(String recentPlaces)
+    {
+        setValue(mEditor, KEY_GOURMET_RECENT_PLACES, recentPlaces);
+    }
+
+    public String getGourmetRecentPlaces()
+    {
+        return getValue(mPreferences, KEY_GOURMET_RECENT_PLACES, null);
+    }
+
     public void setTermsOfLocation(boolean value)
     {
         setValue(mEditor, KEY_AGREE_TERMS_OF_LOCATION, value);
@@ -667,14 +688,14 @@ public class DailyPreference
         return getValue(mPreferences, KEY_AGREE_TERMS_OF_LOCATION, false);
     }
 
-    public String getOperationTimeMessage(Context context)
+    public String getOperationTime()
     {
-        return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, context.getString(R.string.dialog_msg_call));
+        return getValue(mPreferences, KEY_INFORMATION_CS_OPERATION_TIME, "9,3");
     }
 
-    public void setOperationTimeMessage(String text)
+    public void setOperationTime(String text)
     {
-        setValue(mEditor, KEY_INFORMATION_CS_OPERATION_TIMEMESSAGE, text);
+        setValue(mEditor, KEY_INFORMATION_CS_OPERATION_TIME, text);
     }
 
     public void setAppVersion(String value)
@@ -727,14 +748,34 @@ public class DailyPreference
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
     }
 
-    public void setIsViewRecentPlaceTooltip(boolean value)
+    public void setIsViewWishListTooltip(boolean value)
     {
-        setValue(mEditor, KEY_IS_VIEW_RECENT_PLACE_TOOLTIP, value);
+        setValue(mEditor, KEY_IS_VIEW_WISHLIST_TOOLTIP, value);
     }
 
-    public boolean isViewRecentPlaceTooltip()
+    public boolean isViewWishListTooltip()
     {
-        return getValue(mPreferences, KEY_IS_VIEW_RECENT_PLACE_TOOLTIP, false);
+        return getValue(mPreferences, KEY_IS_VIEW_WISHLIST_TOOLTIP, true);
+    }
+
+    public void setIsViewSearchTooltip(boolean value)
+    {
+        setValue(mEditor, KEY_IS_VIEW_SEARCH_TOOLTIP, value);
+    }
+
+    public boolean isViewSearchTooltip()
+    {
+        return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
+    }
+
+    public void setIsRequestReview(boolean value)
+    {
+        setValue(mEditor, KEY_IS_REQUEST_REVIEW_, value);
+    }
+
+    public boolean isRequestReview()
+    {
+        return getValue(mPreferences, KEY_IS_REQUEST_REVIEW_, false);
     }
 
     public void setStayCategory(String name, String code)
@@ -761,6 +802,19 @@ public class DailyPreference
     public void setBackgroundAppTime(long value)
     {
         setValue(mEditor, KEY_BACKGROUND_APP_TIME, value);
+    }
+
+    public String getBaseUrl()
+    {
+        return getValue(mPreferences, KEY_BASE_URL, Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT));
+    }
+
+    public void setBaseUrl(String value)
+    {
+        setValue(mEditor, KEY_BASE_URL, value);
+
+        // 반영이 안되는 경우가 있어서 특별히 추가 하였습니다.
+        mEditor.commit();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -988,11 +1042,6 @@ public class DailyPreference
         return getValue(mPreferences, KEY_SETTING_GCM_ID, null);
     }
 
-    public void setGCMRegistrationId(String value)
-    {
-        setValue(mEditor, KEY_SETTING_GCM_ID, value);
-    }
-
     public String getLastestEventTime()
     {
         return getValue(mPreferences, KEY_EVENT_LASTEST_EVENT_TIME, null);
@@ -1211,6 +1260,11 @@ public class DailyPreference
         return getValue(mPreferences, KEY_USER_EMAIL, null);
     }
 
+    public String getUserBirthday()
+    {
+        return getValue(mPreferences, KEY_USER_BIRTHDAY, null);
+    }
+
     public String getUserRecommender()
     {
         return getValue(mPreferences, KEY_USER_RECOMMENDER, null);
@@ -1236,13 +1290,14 @@ public class DailyPreference
         setValue(mEditor, KEY_USER_IS_EXCEED_BONUS, value);
     }
 
-    public void setUserInformation(String type, String email, String name, String recommender)
+    public void setUserInformation(String type, String email, String name, String birthday, String recommender)
     {
         if (mEditor != null)
         {
             mEditor.putString(KEY_USER_TYPE, type);
             mEditor.putString(KEY_USER_EMAIL, email);
             mEditor.putString(KEY_USER_NAME, name);
+            mEditor.putString(KEY_USER_BIRTHDAY, birthday);
             mEditor.putString(KEY_USER_RECOMMENDER, recommender);
             mEditor.apply();
         }
@@ -1255,6 +1310,7 @@ public class DailyPreference
             mEditor.remove(KEY_USER_TYPE);
             mEditor.remove(KEY_USER_EMAIL);
             mEditor.remove(KEY_USER_NAME);
+            mEditor.remove(KEY_USER_BIRTHDAY);
             mEditor.remove(KEY_AUTHORIZATION);
 
             DailyHotel.AUTHORIZATION = null;
@@ -1265,7 +1321,7 @@ public class DailyPreference
 
     public String getSkipVersion()
     {
-        return getValue(mPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0");
+        return getValue(mPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "0");
     }
 
     public void setSkipVersion(String value)
@@ -1303,11 +1359,6 @@ public class DailyPreference
         {
             try
             {
-                if (mOldPreferences.contains(KEY_OLD_SETTING_GCM_ID) == true)
-                {
-                    setGCMRegistrationId(getValue(mOldPreferences, KEY_OLD_SETTING_GCM_ID, null));
-                }
-
                 if (mOldPreferences.contains(KEY_OLD_EVENT_LASTEST_EVENT_TIME) == true)
                 {
                     setLastestEventTime(getValue(mOldPreferences, KEY_OLD_EVENT_LASTEST_EVENT_TIME, null));
@@ -1357,9 +1408,11 @@ public class DailyPreference
 
                 if (mOldPreferences.contains(KEY_OLD_USER_TYPE) == true)
                 {
+                    // 새로 API가 변경되면서 생일 정보는 기존의 것에서 받도록 한다.
                     setUserInformation(getValue(mOldPreferences, KEY_OLD_USER_TYPE, null), //
                         getValue(mOldPreferences, KEY_OLD_USER_EMAIL, null), //
                         getValue(mOldPreferences, KEY_OLD_USER_NAME, null), //
+                        getValue(mPreferences, KEY_USER_BIRTHDAY, null), //
                         getValue(mOldPreferences, KEY_OLD_USER_RECOMMENDER, null));
                 }
 

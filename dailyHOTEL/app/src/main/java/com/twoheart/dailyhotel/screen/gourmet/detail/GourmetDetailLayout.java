@@ -52,11 +52,21 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         return mListAdapter.getTitleLayout();
     }
 
+    public void setTitleText(String placeName)
+    {
+        mTransTotalGradeTextView.setVisibility(View.INVISIBLE);
+
+        mTransPlaceNameTextView.setText(placeName);
+        mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+    }
+
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
     {
         if (gourmetDetail == null)
         {
             setLineIndicatorVisible(false);
+            setWishButtonSelected(false);
+            setWishButtonCount(0);
             return;
         }
 
@@ -88,6 +98,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         setCurrentImage(imagePosition);
 
         hideProductInformationLayout();
+        showWishButton();
 
         // SOLD OUT 판단 조건.
         ArrayList<TicketInformation> ticketInformationList = gourmetDetail.getTicketInformation();
@@ -125,6 +136,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
             updateTicketInformationLayout(ticketInformationList);
         }
+
+        setWishButtonSelected(gourmetDetail.myWish);
+        setWishButtonCount(gourmetDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }
@@ -206,6 +220,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
 
@@ -213,6 +228,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_search_ticket);
                 break;
@@ -222,6 +238,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.VISIBLE);
                 mSoldoutTextView.setVisibility(View.GONE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
 
                 mBookingTextView.setText(R.string.act_hotel_booking);
                 break;
@@ -231,15 +248,29 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             {
                 mBookingTextView.setVisibility(View.GONE);
                 mSoldoutTextView.setVisibility(View.VISIBLE);
+                mWishButtonTextView.setVisibility(View.VISIBLE);
                 break;
             }
         }
     }
 
     @Override
+    public void setSelectProduct(int index)
+    {
+        if (mTicketTypeListAdapter == null)
+        {
+            return;
+        }
+
+        int position = mTicketTypeListAdapter.setSelectIndex(index);
+        mProductTypeRecyclerView.scrollToPosition(position);
+    }
+
+    @Override
     public void hideAnimationProductInformationLayout()
     {
         super.hideAnimationProductInformationLayout();
+        showWishButtonAnimation();
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);

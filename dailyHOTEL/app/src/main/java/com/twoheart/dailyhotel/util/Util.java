@@ -27,9 +27,11 @@ import android.os.Build;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +53,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -292,7 +293,16 @@ public class Util implements Constants
             return 0;
         }
 
-        return context.getResources().getDisplayMetrics().widthPixels;
+        try
+        {
+            return context.getResources().getDisplayMetrics().widthPixels;
+        } catch (Exception e)
+        {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.widthPixels;
+        }
     }
 
     public static int getLCDHeight(Context context)
@@ -301,8 +311,16 @@ public class Util implements Constants
         {
             return 0;
         }
-
-        return context.getResources().getDisplayMetrics().heightPixels;
+        try
+        {
+            return context.getResources().getDisplayMetrics().heightPixels;
+        } catch (Exception e)
+        {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.heightPixels;
+        }
     }
 
     /**
@@ -397,6 +415,21 @@ public class Util implements Constants
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
+    public static boolean isOverAPI24()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    }
+
+    /**
+     * 현재 Fresco 라이브러리 버그로 인해서 7.0 이상 단말이에서 사용금지.
+     *
+     * @return
+     */
+    public static boolean isUsedMultiTransition()
+    {
+        return isOverAPI21() == true && isOverAPI24() == false;
+    }
+
     public static boolean isTelephonyEnabled(Context context)
     {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
@@ -420,7 +453,22 @@ public class Util implements Constants
         return false;
     }
 
-    public static String getAppVersion(Context context)
+    public static String getAppVersionCode(Context context)
+    {
+        String version = null;
+        try
+        {
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            version = Integer.toString(packageInfo.versionCode);
+        } catch (NameNotFoundException e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return version;
+    }
+
+    public static String getAppVersionName(Context context)
     {
         String version = null;
         try
@@ -584,7 +632,7 @@ public class Util implements Constants
             {
                 CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
 
-                return countryCodeNumber.getContryNameNCode(countryIsoCode);
+                return countryCodeNumber.getCountryNameNCode(countryIsoCode);
             }
         } catch (Exception e)
         {
@@ -608,16 +656,16 @@ public class Util implements Constants
         return countryCodeNumber.hasCountryCode(code);
     }
 
-    public static boolean isValidatePhoneNumber(String phonenumber)
+    public static boolean isValidatePhoneNumber(String phoneNumber)
     {
-        if (Util.isTextEmpty(phonenumber) == true)
+        if (Util.isTextEmpty(phoneNumber) == true)
         {
             return false;
         }
 
-        if (phonenumber.charAt(0) == '+')
+        if (phoneNumber.charAt(0) == '+')
         {
-            String globalPhoneNumber = phonenumber.replaceFirst("\\s", "^");
+            String globalPhoneNumber = phoneNumber.replaceFirst("\\s", "^");
             String[] text = globalPhoneNumber.split("\\^");
 
             // 국제 전화번호 존재 여부 확인
@@ -638,7 +686,7 @@ public class Util implements Constants
                         int length = text[1].length();
                         if (length == 12 || length == 13)
                         {
-                            return (Util.isExistMobileNumber(phonenumber) == false);
+                            return (Util.isExistMobileNumber(phoneNumber) == false);
                         }
                     }
                 }
@@ -689,25 +737,25 @@ public class Util implements Constants
 
         final String PATTERN = "010|011|016|017|018|019{1}";
         final String PATTERN_3 = "111|222|333|444|555|666|777|888|999|000|012|123|234|345|456|567|678|789|987|876|765|654|543|432|321|210{1}";
-        final String PATTENR_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210{1}";
+        final String PATTERN_4 = "1111|2222|3333|4444|5555|6666|7777|8888|9999|0000|0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210{1}";
 
         Pattern pattern01 = Pattern.compile(PATTERN);
-        Pattern pattern02 = mobile02.length() == 3 ? Pattern.compile(PATTERN_3) : Pattern.compile(PATTENR_4);
-        Pattern pattern03 = Pattern.compile(PATTENR_4);
+        Pattern pattern02 = mobile02.length() == 3 ? Pattern.compile(PATTERN_3) : Pattern.compile(PATTERN_4);
+        Pattern pattern03 = Pattern.compile(PATTERN_4);
 
         return pattern01.matcher(mobile01).matches() == false && pattern02.matcher(mobile02).matches() && pattern03.matcher(mobile03).matches();
     }
 
-    public static String[] getValidatePhoneNumber(String phonenumber)
+    public static String[] getValidatePhoneNumber(String phoneNumber)
     {
-        if (Util.isTextEmpty(phonenumber) == true)
+        if (Util.isTextEmpty(phoneNumber) == true)
         {
             return null;
         }
 
-        if (phonenumber.charAt(0) == '+')
+        if (phoneNumber.charAt(0) == '+')
         {
-            String globalPhoneNumber = phonenumber.replaceFirst("\\s", "^");
+            String globalPhoneNumber = phoneNumber.replaceFirst("\\s", "^");
             String[] text = globalPhoneNumber.split("\\^");
             String countryCode = getValidateCountry(text[0]);
 
@@ -739,7 +787,7 @@ public class Util implements Constants
             }
         } else
         {
-            String text = phonenumber.replace("-", "").replace(" ", "");
+            String text = phoneNumber.replace("-", "").replace(" ", "");
 
             if (text.startsWith("010") || text.startsWith("011") || text.startsWith("016") //
                 || text.startsWith("017") || text.startsWith("018") || text.startsWith("019"))
@@ -840,7 +888,11 @@ public class Util implements Constants
 
         try
         {
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
 
             return dialog;
         } catch (Exception e)
@@ -851,7 +903,7 @@ public class Util implements Constants
         return null;
     }
 
-    public static String addHippenMobileNumber(Context context, String mobileNumber)
+    public static String addHyphenMobileNumber(Context context, String mobileNumber)
     {
         if (Util.isTextEmpty(mobileNumber) == true)
         {
@@ -961,7 +1013,7 @@ public class Util implements Constants
         try
         {
             final String packageName = "com.locnall.KimGiSa";
-            String url = String.format("kakaonavi://navigate?name=%s&coord_type=wgs84&x=%s&y=%s&rpoption=1&key=%s", URLEncoder.encode(name, "UTF-8"), longitude, latitude, DailyHotelRequest.getUrlDecoderEx(Constants.KAKAO_NAVI_KEY));
+            String url = String.format("kakaonavi://navigate?name=%s&coord_type=wgs84&x=%s&y=%s&rpoption=1&key=%s", URLEncoder.encode(name, "UTF-8"), longitude, latitude, Crypto.getUrlDecoderEx(Constants.KAKAO_NAVI_KEY));
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
@@ -990,7 +1042,7 @@ public class Util implements Constants
         {
             final String packageName = "com.google.android.apps.maps";
             //            String url = String.format("http://maps.google.com/maps?q=%s&ll=%s,%s&z=14", placeName, latitude, longitude);
-            String url = String.format("http://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, URLEncoder.encode(placeName, "UTF-8"));
+            String url = String.format("https://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, URLEncoder.encode(placeName, "UTF-8"));
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
@@ -1030,22 +1082,42 @@ public class Util implements Constants
 
             if (DailyHotel.isSuccessTMapAuth() == false)
             {
-                tmapTapi.setSKPMapAuthentication(DailyHotelRequest.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
+                tmapTapi.setSKPMapAuthentication(Crypto.getUrlDecoderEx(Constants.TMAP_NAVI_KEY));
                 tmapTapi.setOnAuthenticationListener(new TMapTapi.OnAuthenticationListenerCallback()
                 {
                     @Override
                     public void SKPMapApikeySucceed()
                     {
                         //                    ExLog.d("TMap : SKPMapApikeySucceed");
-                        DailyHotel.setIsSuccessTMapAuth(true);
-                        openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+                        if (activity != null)
+                        {
+                            activity.runOnUiThread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    DailyHotel.setIsSuccessTMapAuth(true);
+                                    openTMapNavi(activity, tmapTapi, placeName, latitude, longitude);
+                                }
+                            });
+                        }
                     }
 
                     @Override
                     public void SKPMapApikeyFailed(String s)
                     {
-                        DailyHotel.setIsSuccessTMapAuth(false);
-                        showFailedTMapNaviDialog(activity);
+                        if (activity != null)
+                        {
+                            activity.runOnUiThread(new Runnable()
+                            {
+                                @Override
+                                public void run()
+                                {
+                                    DailyHotel.setIsSuccessTMapAuth(false);
+                                    showFailedTMapNaviDialog(activity);
+                                }
+                            });
+                        }
                     }
                 });
             } else
@@ -1173,7 +1245,12 @@ public class Util implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(activity, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1388,7 +1465,12 @@ public class Util implements Constants
         try
         {
             dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+
             dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1643,5 +1725,66 @@ public class Util implements Constants
         }
 
         return realProvinceName;
+    }
+
+
+    public static String trim(String text)
+    {
+        if (Util.isTextEmpty(text) == true)
+        {
+            return text;
+        }
+
+        int length = text.length();
+        int index = 0;
+
+        while ((index < length) && (text.charAt(index) <= ' '))
+        {
+            index++;
+        }
+        while ((index < length) && (text.charAt(length - 1) <= ' '))
+        {
+            length--;
+        }
+
+        return ((index > 0) || (length < text.length())) ? text.substring(index, length) : text;
+    }
+
+    public static boolean isAvailableNetwork(Context context)
+    {
+        boolean result = false;
+
+        AvailableNetwork availableNetwork = AvailableNetwork.getInstance();
+
+        switch (availableNetwork.getNetType(context))
+        {
+            case AvailableNetwork.NET_TYPE_WIFI:
+                // WIFI 연결상태
+                result = true;
+                break;
+            case AvailableNetwork.NET_TYPE_3G:
+                // 3G 혹은 LTE연결 상태
+                result = true;
+                break;
+            case AvailableNetwork.NET_TYPE_NONE:
+                result = false;
+                break;
+        }
+        return result;
+    }
+
+    public static WindowManager.LayoutParams getDialogWidthLayoutParams(Context context, Dialog dialog)
+    {
+        if (dialog == null)
+        {
+            return null;
+        }
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.copyFrom(dialog.getWindow().getAttributes());
+        layoutParams.width = Util.getLCDWidth(context) * 13 / 15;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        return layoutParams;
     }
 }

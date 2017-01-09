@@ -30,7 +30,7 @@ import java.util.List;
 
 public abstract class PlaceSearchResultLayout extends BaseLayout implements View.OnClickListener
 {
-    private static final int ANIMATION_DEALY = 200;
+    private static final int ANIMATION_DELAY = 200;
 
     private View mToolbar;
     private TextView mCalendarTextView;
@@ -505,7 +505,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         mResultLayout.setVisibility(View.INVISIBLE);
     }
 
-    public boolean isEmtpyLayout()
+    public boolean isEmptyLayout()
     {
         return mResultLayout.getVisibility() != View.VISIBLE;
     }
@@ -547,8 +547,14 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void calculationMenuBarLayoutTranslationY(int dy)
     {
-        int height = (Integer) mBottomOptionLayout.getTag();
+        Object tag = mBottomOptionLayout.getTag();
 
+        if (tag == null || tag instanceof Integer == false)
+        {
+            return;
+        }
+
+        int height = (Integer) tag;
         float translationY = dy + mBottomOptionLayout.getTranslationY();
 
         if (translationY >= height)
@@ -581,7 +587,14 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void animationMenuBarLayout()
     {
-        int height = (Integer) mBottomOptionLayout.getTag();
+        Object tag = mBottomOptionLayout.getTag();
+
+        if (tag == null || tag instanceof Integer == false)
+        {
+            return;
+        }
+
+        int height = (Integer) tag;
         float translationY = mBottomOptionLayout.getTranslationY();
 
         if (translationY == 0 || translationY == height)
@@ -633,7 +646,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         if (isAnimation == true)
         {
             mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.setDuration(ANIMATION_DELAY);
             mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override
@@ -715,7 +728,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         if (isAnimation == true)
         {
             mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DEALY);
+            mValueAnimator.setDuration(ANIMATION_DELAY);
             mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override

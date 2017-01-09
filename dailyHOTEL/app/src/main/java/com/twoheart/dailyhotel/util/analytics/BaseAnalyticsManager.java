@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util.analytics;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
@@ -23,15 +24,25 @@ public abstract class BaseAnalyticsManager
 
     abstract void setUserInformation(String index, String userType);
 
+    abstract void setUserBirthday(String birthday);
+
+    abstract void setUserName(String name);
+
     abstract void setExceedBonus(boolean isExceedBonus);
 
-    abstract void onStart(Activity activity);
+    abstract void onActivityCreated(Activity activity, Bundle bundle);
 
-    abstract void onStop(Activity activity);
+    abstract void onActivityStarted(Activity activity);
 
-    abstract void onResume(Activity activity);
+    abstract void onActivityStopped(Activity activity);
 
-    abstract void onPause(Activity activity);
+    abstract void onActivityResumed(Activity activity);
+
+    abstract void onActivityPaused(Activity activity);
+
+    abstract void onActivitySaveInstanceState(Activity activity, Bundle bundle);
+
+    abstract void onActivityDestroyed(Activity activity);
 
     abstract void currentAppVersion(String version);
 
@@ -41,7 +52,7 @@ public abstract class BaseAnalyticsManager
 
     abstract void signUpSocialUser(String userIndex, String email, String name, String gender, String phoneNumber, String userType, String callByScreen);
 
-    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen);
+    abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen);
 
     abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
 

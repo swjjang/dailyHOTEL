@@ -15,8 +15,12 @@ package com.twoheart.dailyhotel.util;
 import android.os.Build;
 import android.util.Base64;
 
+import java.security.InvalidParameterException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -26,6 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class Crypto
 {
     private final static String HEX = "0123456789ABCDEF";
+    private static final int SEED_LENGTH = 16;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // AES암호
@@ -88,6 +93,333 @@ public class Crypto
         return new String(result);
     }
 
+    public static String getUrlEncoder(final String url)
+    {
+        StringBuilder encodeUrl = new StringBuilder();
+        StringBuilder seedLocationNumber = new StringBuilder();
+
+        try
+        {
+            String alphas = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            Random random = new Random(System.currentTimeMillis());
+            StringBuilder seed = new StringBuilder();
+
+            for (int i = 0; i < SEED_LENGTH; i++)
+            {
+                int number = random.nextInt(alphas.length());
+                seed.append(alphas.charAt(number));
+            }
+
+            String firstUrl = Crypto.encrypt(seed.toString(), url);
+            encodeUrl.append(firstUrl);
+
+            for (int i = 0; i < SEED_LENGTH; i++)
+            {
+                int number = random.nextInt(encodeUrl.length());
+
+                encodeUrl.insert(number, seed.charAt(i));
+                seedLocationNumber.append(number).append('$');
+            }
+
+            String base64LocationNumber = Base64.encodeToString(seedLocationNumber.toString().getBytes(), Base64.NO_WRAP);
+            encodeUrl.insert(0, base64LocationNumber + "$");
+            encodeUrl.append('$');
+
+            ExLog.d("encoderUrl : " + encodeUrl.toString());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return encodeUrl.toString();
+    }
+
+    public static String getUrlDecoderEx(String url, Map<String, String> urlParameters)
+    {
+        if (urlParameters == null || urlParameters.size() == 0)
+        {
+            return getUrlDecoderEx(url);
+        } else
+        {
+            StringBuilder decodeUrl = new StringBuilder(getUrlDecoderEx(url));
+            ArrayList<String> keyArrayList = new ArrayList<>(urlParameters.keySet());
+
+            for (String key : keyArrayList)
+            {
+                String value = urlParameters.get(key);
+
+                if (Util.isTextEmpty(key, value) == false)
+                {
+                    int startIndex = decodeUrl.indexOf(key);
+                    if (startIndex >= 0)
+                    {
+                        decodeUrl.replace(startIndex, startIndex + key.length(), value);
+                    } else
+                    {
+                        throw new StringIndexOutOfBoundsException("getUrlDecoderEx - Failed decoding : " //
+                            + decodeUrl + " , key : " + key + ", value : " + value + " , index : " + startIndex);
+                    }
+                } else
+                {
+                    throw new InvalidParameterException("Invalid url parameter : key : " + key + ", value : " + value);
+                }
+            }
+
+            return decodeUrl.toString();
+        }
+    }
+
+    public static String getUrlDecoderEx(String url)
+    {
+        if (Constants.UNENCRYPTED_URL == true)
+        {
+            return url;
+        }
+
+        String param = null;
+        String encoderUrl;
+
+        if (url.contains("/") == true)
+        {
+            int index = url.indexOf('/');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else if (url.contains("?") == true)
+        {
+            int index = url.indexOf('?');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else
+        {
+            encoderUrl = url;
+        }
+
+        StringBuilder decodeUrl = new StringBuilder();
+        String[] seperateUrl = encoderUrl.split("\\$");
+
+        int count = seperateUrl.length / 2;
+
+        // 앞의것 2개는 Url, 뒤의것 2개는 API
+        for (int i = 0; i < count; i++)
+        {
+            String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
+            decodeUrl.append(getUrlDecoder(locatinoNumber + seperateUrl[i * 2 + 1]));
+        }
+
+        if (param != null)
+        {
+            decodeUrl.append(param);
+        }
+
+        return decodeUrl.toString();
+    }
+
+    private static String getUrlDecoder(String url)
+    {
+        String decodeUrl = null;
+        String[] text = url.split("\\$");
+
+        StringBuilder seed = new StringBuilder();
+        StringBuilder base64Url = new StringBuilder(text[SEED_LENGTH]);
+        char[] alpha = new char[1];
+
+        for (int i = SEED_LENGTH - 1; i >= 0; i--)
+        {
+            try
+            {
+                int location = Integer.parseInt(text[i]);
+
+                base64Url.getChars(location, location + 1, alpha, 0);
+                base64Url.delete(location, location + 1);
+
+                seed.insert(0, alpha);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        try
+        {
+            decodeUrl = Crypto.decrypt(seed.toString(), base64Url.toString());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return decodeUrl;
+    }
+
+    public static String urlEncrypt(final String url)
+    {
+        StringBuilder encodeUrl = new StringBuilder();
+        StringBuilder seedLocationNumber = new StringBuilder();
+
+        try
+        {
+            String alphas = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            Random random = new Random(System.currentTimeMillis());
+            StringBuilder seed = new StringBuilder();
+
+            for (int i = 0; i < SEED_LENGTH; i++)
+            {
+                int number = random.nextInt(alphas.length());
+                seed.append(alphas.charAt(number));
+            }
+
+            String firstUrl = Crypto.encrypt(seed.toString(), url);
+            encodeUrl.append(firstUrl);
+
+            for (int i = 0; i < SEED_LENGTH; i++)
+            {
+                int number = random.nextInt(encodeUrl.length());
+
+                encodeUrl.insert(number, seed.charAt(i));
+                seedLocationNumber.append(number).append('$');
+            }
+
+            String base64LocationNumber = Base64.encodeToString(seedLocationNumber.toString().getBytes(), Base64.NO_WRAP);
+            encodeUrl.insert(0, base64LocationNumber + "$");
+            encodeUrl.append('$');
+
+            ExLog.d(url + " : " + encodeUrl.toString());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return encodeUrl.toString();
+    }
+
+    public static String urlDecrypt(String url)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            return null;
+        }
+
+        String param = null;
+        String encoderUrl;
+
+        if (url.contains("/") == true)
+        {
+            int index = url.indexOf('/');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else if (url.contains("?") == true)
+        {
+            int index = url.indexOf('?');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else
+        {
+            encoderUrl = url;
+        }
+
+        StringBuilder decodeUrl = new StringBuilder();
+        String[] seperateUrl = encoderUrl.split("\\$");
+
+        int count = seperateUrl.length / 2;
+
+        // 앞의것 2개는 Url, 뒤의것 2개는 API
+        for (int i = 0; i < count; i++)
+        {
+            String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
+            decodeUrl.append(getUrlDecoder(locatinoNumber + seperateUrl[i * 2 + 1]));
+        }
+
+        if (param != null)
+        {
+            decodeUrl.append(param);
+        }
+
+        return decodeUrl.toString();
+    }
+
+    public static String oldUrlDecrypt(String url)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            return null;
+        }
+
+        String param = null;
+        String encoderUrl;
+
+        if (url.contains("/") == true)
+        {
+            int index = url.indexOf('/');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else if (url.contains("?") == true)
+        {
+            int index = url.indexOf('?');
+            param = url.substring(index);
+            encoderUrl = url.substring(0, index);
+        } else
+        {
+            encoderUrl = url;
+        }
+
+        StringBuilder decodeUrl = new StringBuilder();
+        String[] seperateUrl = encoderUrl.split("\\$");
+
+        int count = seperateUrl.length / 2;
+
+        // 앞의것 2개는 Url, 뒤의것 2개는 API
+        for (int i = 0; i < count; i++)
+        {
+            String locatinoNumber = new String(Base64.decode(seperateUrl[i * 2], Base64.NO_WRAP));
+            decodeUrl.append(getOldUrlDecoder(locatinoNumber + seperateUrl[i * 2 + 1]));
+        }
+
+        if (param != null)
+        {
+            decodeUrl.append(param);
+        }
+
+        return decodeUrl.toString();
+    }
+
+    private static String getOldUrlDecoder(String url)
+    {
+        final int OLD_SEED_LENGTH = 5;
+
+        String decodeUrl = null;
+        String[] text = url.split("\\$");
+
+        StringBuilder seed = new StringBuilder();
+        StringBuilder base64Url = new StringBuilder(text[OLD_SEED_LENGTH]);
+        char[] alpha = new char[1];
+
+        for (int i = OLD_SEED_LENGTH - 1; i >= 0; i--)
+        {
+            try
+            {
+                int location = Integer.parseInt(text[i]);
+
+                base64Url.getChars(location, location + 1, alpha, 0);
+                base64Url.delete(location, location + 1);
+
+                seed.insert(0, alpha);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        try
+        {
+            decodeUrl = Crypto.oldDecrypt(seed.toString(), base64Url.toString());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return decodeUrl;
+    }
 
     private static byte[] encrypt(byte[] key, byte[] value) throws Exception
     {

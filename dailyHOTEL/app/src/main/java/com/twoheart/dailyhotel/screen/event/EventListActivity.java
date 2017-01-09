@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -18,8 +17,13 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EventListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
@@ -174,9 +178,10 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
             if (mEventListAdapter == null)
             {
                 mEventListAdapter = new EventListAdapter(EventListActivity.this, 0, new ArrayList<Event>());
+            } else
+            {
+                mEventListAdapter.clear();
             }
-
-            mEventListAdapter.clear();
 
             if (eventList == null)
             {
@@ -196,14 +201,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            EventListActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             EventListActivity.this.onError(e);
@@ -221,6 +219,13 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         {
             unLockUI();
             EventListActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            unLockUI();
+            EventListActivity.this.onErrorResponse(call, response);
         }
     };
 }

@@ -401,6 +401,65 @@
                 android:layout_height="10dp"/>
 
             <RelativeLayout
+                android:id="@+id/wishListLayout"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/default_line_cf0f0f0"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/actionbar_title_wishList"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/default_line_cdcdcdd"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/recentPlacesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/white">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/frag_recent_places"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/default_line_cf0f0f0"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"/>
+
+            <RelativeLayout
                 android:id="@+id/faqLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
@@ -432,7 +491,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/callLayout"
+                android:id="@+id/contactUsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@color/white">
@@ -443,32 +502,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
-                    android:text="@string/frag_call_res_contact"
-                    android:textColor="@color/information_title"
-                    android:textSize="15dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/default_line_cdcdcdd"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/mailLayout"
-                android:layout_width="match_parent"
-                android:layout_height="41dp"
-                android:background="@color/white">
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/frag_send_mail"
+                    android:text="@string/label_call_service"
                     android:textColor="@color/information_title"
                     android:textSize="15dp"/>
 
@@ -582,15 +616,12 @@
                     android:text="@string/frag_push_alert_subtext"
                     android:textColor="@color/information_push_subtext"
                     android:textSize="10dp"/>
-
-                <View
-                    android:id="@+id/bottomBenefitLineView"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@id/pushBenefitTextView"
-                    android:layout_marginTop="8dp"
-                    android:background="@color/default_line_cf0f0f0"/>
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_line_cf0f0f0"/>
 
             <LinearLayout
                 android:id="@+id/linkAlarmLayout"
@@ -637,7 +668,7 @@
                         android:id="@+id/facebookLinkView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingRight="8dp"
+                        android:paddingRight="6dp"
                         app:srcCompat="@drawable/more_sns_01"/>
 
                     <ImageView
@@ -645,8 +676,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
                         app:srcCompat="@drawable/more_sns_02"/>
 
                     <ImageView
@@ -654,8 +685,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:paddingLeft="8dp"
-                        android:paddingRight="8dp"
+                        android:paddingLeft="6dp"
+                        android:paddingRight="6dp"
                         app:srcCompat="@drawable/more_sns_03"/>
 
                     <ImageView
@@ -663,7 +694,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:paddingLeft="8dp"
+                        android:paddingLeft="6dp"
                         app:srcCompat="@drawable/more_sns_04"/>
                 </LinearLayout>
 

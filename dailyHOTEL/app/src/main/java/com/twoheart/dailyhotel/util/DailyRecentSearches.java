@@ -17,7 +17,7 @@ public class DailyRecentSearches
     {
         mKeywordList = new ArrayList<>();
 
-        paserText(text);
+        parserText(text);
     }
 
     public void addString(Keyword recentKeyword)
@@ -114,7 +114,7 @@ public class DailyRecentSearches
         return false;
     }
 
-    private void paserText(String text)
+    private void parserText(String text)
     {
         if (Util.isTextEmpty(text) == true)
         {

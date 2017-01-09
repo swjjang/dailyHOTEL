@@ -11,7 +11,6 @@
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar">
 
         <LinearLayout
@@ -44,7 +43,7 @@
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyEditText
+            <com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -208,7 +207,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
-                android:text="@string/label_recommender_code"
+                android:text="@string/label_recommender_code_ex"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
@@ -233,7 +232,7 @@
                 android:id="@+id/allAgreementCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="9dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
@@ -251,7 +250,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
                 android:orientation="vertical"
-                android:paddingBottom="10dp"
+                android:paddingBottom="14dp"
                 android:paddingTop="10dp">
 
                 <RelativeLayout

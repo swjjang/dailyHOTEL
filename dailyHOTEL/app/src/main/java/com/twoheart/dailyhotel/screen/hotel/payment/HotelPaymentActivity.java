@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -32,21 +31,21 @@ import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.HotelPaymentInformation;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.twoheart.dailyhotel.model.StayPaymentInformation;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
-import com.twoheart.dailyhotel.screen.information.coupon.SelectCouponDialogActivity;
+import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.information.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.information.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -67,6 +66,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import retrofit2.Call;
+import retrofit2.Response;
+
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public class HotelPaymentActivity extends PlacePaymentActivity
 {
@@ -84,6 +86,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private String mWarningDialogMessage;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
+
+    // GA용 스크린 정의
+    private String mScreenAnalytics;
 
     public static Intent newInstance(Context context, RoomInformation roomInformation//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
@@ -130,27 +135,27 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         mHotelPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
 
-        setAvailabledDefaultPaymentType();
+        setAvailableDefaultPaymentType();
     }
 
     private boolean initIntent(Intent intent)
     {
-        mPaymentInformation = new HotelPaymentInformation();
-        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+        mPaymentInformation = new StayPaymentInformation();
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        hotelPaymentInformation.setSaleRoomInformation((RoomInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
+        stayPaymentInformation.setSaleRoomInformation((RoomInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
         mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
-        hotelPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-        hotelPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
+        stayPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
+        stayPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
-        hotelPaymentInformation.ratingValue = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, -1);
-        hotelPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
-        hotelPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        hotelPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        stayPaymentInformation.ratingValue = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, -1);
+        stayPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
+        stayPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        stayPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
-        if (hotelPaymentInformation.getSaleRoomInformation() == null)
+        if (stayPaymentInformation.getSaleRoomInformation() == null)
         {
             return false;
         } else
@@ -185,7 +190,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void requestUserInformationForPayment()
     {
-        DailyNetworkAPI.getInstance(this).requestUserInformationForPayment(mNetworkTag, mUserInformationJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestUserInformationForPayment(mNetworkTag, mUserInformationCallback);
     }
 
     @Override
@@ -200,18 +205,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         lockUI();
 
         Guest guest = mHotelPaymentLayout.getGuest();
+        Customer customer = paymentInformation.getCustomer();
 
         if (guest == null)
         {
-            Customer customer = paymentInformation.getCustomer();
-
             guest = new Guest();
             guest.name = customer.getName();
             guest.phone = customer.getPhone();
             guest.email = customer.getEmail();
         }
 
-        RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) paymentInformation;
+        RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
 
         Map<String, String> params = new HashMap<>();
         params.put("room_idx", String.valueOf(roomInformation.roomIndex));
@@ -237,30 +242,119 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         params.put("guest_email", guest.email);
         params.put("guest_msg", "");
 
-        //            if (DEBUG == true)
-        //            {
-        //                showSimpleDialog(null, params.toString(), getString(R.string.dialog_btn_text_confirm), null);
-        //            }
+        // 주차/도보
+        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            params.put("arrival_transportation", "NO_PARKING");
+        }
 
-        DailyNetworkAPI.getInstance(this).requestHotelPayment(mNetworkTag, params, mPaymentEasyCreditCardJsonResponseListener);
+        if (DEBUG == false)
+        {
+            if (customer == null)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (Util.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+            }
+        }
+
+        DailyMobileAPI.getInstance(this).requestStayPayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
     }
 
     @Override
-    protected void requestPlacePaymentInfomation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
-        RoomInformation roomInformation = ((HotelPaymentInformation) paymentInformation).getSaleRoomInformation();
+        if (paymentInformation == null || checkInSaleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
+        lockUI();
+
+        Guest guest = mHotelPaymentLayout.getGuest();
+        Customer customer = paymentInformation.getCustomer();
+
+        if (guest == null)
+        {
+            guest = new Guest();
+            guest.name = customer.getName();
+            guest.phone = customer.getPhone();
+            guest.email = customer.getEmail();
+        }
+
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) paymentInformation;
+        RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("room_idx", String.valueOf(roomInformation.roomIndex));
+        params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        params.put("nights", String.valueOf(roomInformation.nights));
+        params.put("billkey", mSelectedCreditCard.billingkey);
+
+        switch (paymentInformation.discountType)
+        {
+            case BONUS:
+                String bonus = String.valueOf(paymentInformation.bonus);
+                params.put("bonus", bonus);
+                break;
+
+            case COUPON:
+                Coupon coupon = paymentInformation.getCoupon();
+                params.put("user_coupon_code", coupon.userCouponCode);
+                break;
+        }
+
+        params.put("guest_name", guest.name);
+        params.put("guest_phone", guest.phone.replace("-", ""));
+        params.put("guest_email", guest.email);
+        params.put("guest_msg", "");
+
+        // 주차/도보
+        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            params.put("arrival_transportation", "NO_PARKING");
+        }
+
+        if (DEBUG == false)
+        {
+            if (customer == null)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+            } else if (Util.isTextEmpty(customer.getName()) == true)
+            {
+                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+            }
+        }
+
+        //        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+    }
+
+    @Override
+    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    {
+        RoomInformation roomInformation = ((StayPaymentInformation) paymentInformation).getSaleRoomInformation();
 
         // 호텔 디테일 정보 재 요청
-        DailyNetworkAPI.getInstance(this).requestHotelPaymentInformation(mNetworkTag//
+        DailyMobileAPI.getInstance(this).requestStayPaymentInformation(mNetworkTag//
             , roomInformation.roomIndex//
             , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-            , roomInformation.nights, mHotelPaymentInformationJsonResponseListener);
+            , roomInformation.nights, mHotelPaymentInformationCallback);
     }
 
     @Override
     protected void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
-        mHotelPaymentLayout.setPaymentInformation((HotelPaymentInformation) paymentInformation, selectedCreditCard);
+        mHotelPaymentLayout.setPaymentInformation((StayPaymentInformation) paymentInformation, selectedCreditCard);
     }
 
     @Override
@@ -277,7 +371,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
             creditCard != null && Util.isTextEmpty(creditCard.billingkey) == false)
         {
-            DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(creditCard.billingkey));
+            DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(creditCard.billingkey));
         }
 
         mOnEventListener.changedPaymentType(paymentType);
@@ -313,7 +407,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         unLockUI();
 
-        setPaymentInformation((HotelPaymentInformation) mPaymentInformation);
+        setBonusSelected(false);
+        setCouponSelected(false);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
 
         showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
         {
@@ -327,7 +423,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         });
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
-            Action.SOLDOUT_CHANGEPRICE, ((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+            Action.SOLDOUT_CHANGEPRICE, ((StayPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
     }
 
     @Override
@@ -336,7 +432,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         showChangedValueDialog(R.string.dialog_msg_stay_stop_onsale, null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
-            Action.SOLDOUT, ((HotelPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+            Action.SOLDOUT, ((StayPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+    }
+
+    @Override
+    protected void showChangedBonusDialog()
+    {
+        unLockUI();
+
+        setBonusSelected(false);
+        setCouponSelected(false);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
+
+        super.showChangedBonusDialog();
     }
 
     @Override
@@ -354,11 +462,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
         {
-            DailyPreference.getInstance(this).setSelectedSimpleCard(DailyHotelRequest.urlEncrypt(mSelectedCreditCard.billingkey));
+            try
+            {
+                DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(mSelectedCreditCard.billingkey));
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
-        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) paymentInformation;
-        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) paymentInformation;
+        RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
 
         String discountType = Label.FULL_PAYMENT;
 
@@ -378,25 +492,37 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         String placeName = roomInformation.hotelName;
         String placeType = roomInformation.roomName;
-        String checkInDate = DailyCalendar.format(hotelPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
-        String checkOutDate = DailyCalendar.format(hotelPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
-        int nights = hotelPaymentInformation.nights;
-        String userName = hotelPaymentInformation.getCustomer() == null ? "" : hotelPaymentInformation.getCustomer().getName();
+        String checkInDate = DailyCalendar.format(stayPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkOutDate = DailyCalendar.format(stayPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        int nights = stayPaymentInformation.nights;
+        String userName = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getName();
+        String userIndex = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getUserIdx();
 
         if (Util.isTextEmpty(userName) == true)
         {
             try
             {
-                String message = "Empty UserName :: placeIndex:" + hotelPaymentInformation.placeIndex //
+                String message = "Empty UserName :: placeIndex:" + stayPaymentInformation.placeIndex //
                     + ",roomIndex:" + roomInformation.roomIndex + ",checkIn:" + checkInDate//
-                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType;
+                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType//
+                    + ",userIndex:" + userIndex;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
             {
             }
         }
 
-        Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
+        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                Action.WAYTOVISIT_SELECTED, stayPaymentInformation.isVisitWalking == true ? Label.WALK : Label.CAR, null);
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                Action.WAYTOVISIT_SELECTED, Label.PARKING_NOT_AVAILABLE, null);
+        }
+
+        Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation);
 
         Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
             userName, checkInDate, checkOutDate, nights, paymentInformation.paymentType.getName(), discountType, params);
@@ -438,7 +564,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(HotelPaymentActivity.this);
         finalCheckLayout.setMessages(messageResIds);
 
-        final TextView agreeSinatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSinatureTextView);
+        final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setEnabled(false);
@@ -493,8 +619,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onAnimationEnd(Animation animation)
                     {
-                        agreeSinatureTextView.setAnimation(null);
-                        agreeSinatureTextView.setVisibility(View.GONE);
+                        agreeSignatureTextView.setAnimation(null);
+                        agreeSignatureTextView.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -503,7 +629,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     }
                 });
 
-                agreeSinatureTextView.startAnimation(animation);
+                agreeSignatureTextView.startAnimation(animation);
 
                 //                TransitionDrawable transition = (TransitionDrawable) confirmTextView.getBackground();
                 //                transition.startTransition(500);
@@ -526,10 +652,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             lockUI();
 
                             // 1. 세션이 살아있는지 검사 시작.
-                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
-
-                            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                                , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+                            DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckCallback);
                         }
                     }
                 });
@@ -626,10 +749,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     lockUI();
 
                     // 1. 세션이 살아있는지 검사 시작.
-                    DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckJsonResponseListener);
-
-                    AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.AGREE, null);
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckCallback);
 
                     AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                         , AnalyticsManager.Action.START_PAYMENT, mPaymentInformation.paymentType.getName(), null);
@@ -651,6 +771,23 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String msg;
         String posTitle = getString(R.string.dialog_btn_text_confirm);
         OnClickListener posListener = null;
+
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION) == true)
+        {
+            Customer customer = mPaymentInformation.getCustomer();
+
+            if (customer == null || Util.isTextEmpty(customer.getName(), customer.getUserIdx()) == true //
+                || ((StayPaymentInformation) mPaymentInformation).checkInDate == 0//
+                || ((StayPaymentInformation) mPaymentInformation).checkOutDate == 0)
+            {
+                if (DEBUG == false)
+                {
+                    Crashlytics.log("HotelPaymentActivity - onActivityPaymentResult : Clear mPaymentInformation");
+                }
+
+                mPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+            }
+        }
 
         switch (resultCode)
         {
@@ -726,7 +863,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE:
-                msg = getString(R.string.act_toast_payment_account_duplicate);
+                msg = getString(R.string.act_toast_payment_account_duplicate_type_hotel);
                 break;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
@@ -861,15 +998,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
     {
         AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
-            , getMapPaymentInformation((HotelPaymentInformation) paymentInformation));
+            , getMapPaymentInformation((StayPaymentInformation) paymentInformation));
     }
 
     @Override
     protected void setCoupon(final Coupon coupon)
     {
-        final HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+        final StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
+        int originalPrice = stayPaymentInformation.getSaleRoomInformation().totalDiscount;
 
         if (coupon.amount > originalPrice)
         {
@@ -880,7 +1017,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 @Override
                 public void onClick(View v)
                 {
-                    hotelPaymentInformation.setCoupon(coupon);
+                    stayPaymentInformation.setCoupon(coupon);
                     setCouponSelected(true);
                 }
             }, new OnClickListener()
@@ -888,7 +1025,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 @Override
                 public void onClick(View v)
                 {
-                    hotelPaymentInformation.setCoupon(null);
+                    stayPaymentInformation.setCoupon(null);
                     setCouponSelected(false);
                 }
             }, new DialogInterface.OnCancelListener()
@@ -897,7 +1034,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 @Override
                 public void onCancel(DialogInterface dialog)
                 {
-                    hotelPaymentInformation.setCoupon(null);
+                    stayPaymentInformation.setCoupon(null);
                     setCouponSelected(false);
                 }
             }, null, true);
@@ -905,7 +1042,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         } else
         {
             // 호텔 결제 정보에 쿠폰 가격 넣고 텍스트 업데이트 필요
-            hotelPaymentInformation.setCoupon(coupon);
+            stayPaymentInformation.setCoupon(coupon);
             setCouponSelected(true);
         }
     }
@@ -918,7 +1055,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         setCouponSelected(false);
     }
 
-    private void setAvailabledDefaultPaymentType()
+    private void setAvailableDefaultPaymentType()
     {
         boolean isSimpleCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStaySimpleCardPaymentEnabled();
         boolean isCardPaymentEnabled = DailyPreference.getInstance(this).isRemoteConfigStayCardPaymentEnabled();
@@ -986,9 +1123,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         super.processAgreeTermDialog();
 
-        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        String label = String.format("%s-%s", hotelPaymentInformation.getSaleRoomInformation().hotelName, hotelPaymentInformation.getSaleRoomInformation().roomName);
+        String label = String.format("%s-%s", stayPaymentInformation.getSaleRoomInformation().hotelName, stayPaymentInformation.getSaleRoomInformation().roomName);
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
     }
@@ -1002,7 +1139,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             String userIndex = paymentInformation.getCustomer().getUserIdx();
             String transId = strDate + '_' + userIndex;
 
-            Map<String, String> params = getMapPaymentInformation((HotelPaymentInformation) paymentInformation);
+            Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
         } catch (Exception e)
@@ -1014,40 +1151,40 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void recordAnalyticsPayment(PlacePaymentInformation paymentInformation)
     {
-        if (paymentInformation == null)
+        if (paymentInformation == null || Util.isTextEmpty(mScreenAnalytics) == true)
         {
             return;
         }
 
-        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
         try
         {
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, hotelPaymentInformation.getSaleRoomInformation().hotelName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().averageDiscount));
-            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().totalDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().nights));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().nights));
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(hotelPaymentInformation.placeIndex));
+            params.put(AnalyticsManager.KeyType.NAME, stayPaymentInformation.getSaleRoomInformation().hotelName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().averageDiscount));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().totalDiscount));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayPaymentInformation.getSaleRoomInformation().nights));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayPaymentInformation.getSaleRoomInformation().nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayPaymentInformation.placeIndex));
 
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + hotelPaymentInformation.getSaleRoomInformation().nights);
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + stayPaymentInformation.getSaleRoomInformation().nights);
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, hotelPaymentInformation.getSaleRoomInformation().roomName);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(hotelPaymentInformation.getSaleRoomInformation().roomIndex));
-            params.put(AnalyticsManager.KeyType.GRADE, hotelPaymentInformation.getSaleRoomInformation().grade.getName(HotelPaymentActivity.this));
-            params.put(AnalyticsManager.KeyType.DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
-            params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
-            params.put(AnalyticsManager.KeyType.CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, stayPaymentInformation.getSaleRoomInformation().roomName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(stayPaymentInformation.getSaleRoomInformation().roomIndex));
+            params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.getSaleRoomInformation().grade.getName(HotelPaymentActivity.this));
+            params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.getSaleRoomInformation().address);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.NRD, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(hotelPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, hotelPaymentInformation.isShowOriginalPrice);
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(hotelPaymentInformation.entryPosition));
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, hotelPaymentInformation.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.NRD, stayPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayPaymentInformation.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayPaymentInformation.isDailyChoice ? "y" : "n");
 
             if (mProvince == null)
             {
@@ -1070,16 +1207,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(Screen.DAILYHOTEL_PAYMENT, params);
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(mScreenAnalytics, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
     }
 
-    private Map<String, String> getMapPaymentInformation(HotelPaymentInformation hotelPaymentInformation)
+    private Map<String, String> getMapPaymentInformation(StayPaymentInformation stayPaymentInformation)
     {
-        if (hotelPaymentInformation == null)
+        if (stayPaymentInformation == null)
         {
             return null;
         }
@@ -1088,36 +1225,36 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         try
         {
-            RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
+            RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
 
             params.put(AnalyticsManager.KeyType.NAME, roomInformation.hotelName);
-            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(hotelPaymentInformation.placeIndex));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(roomInformation.averageDiscount));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(roomInformation.nights));
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(roomInformation.nights));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(roomInformation.totalDiscount));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, roomInformation.roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(roomInformation.roomIndex));
-            params.put(AnalyticsManager.KeyType.GRADE, hotelPaymentInformation.getSaleRoomInformation().grade.getName(this));
-            params.put(AnalyticsManager.KeyType.DBENEFIT, hotelPaymentInformation.isDBenefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.getSaleRoomInformation().grade.getName(this));
+            params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
 
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + hotelPaymentInformation.getSaleRoomInformation().nights);
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + stayPaymentInformation.getSaleRoomInformation().nights);
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
 
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.NRD, hotelPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
-            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(hotelPaymentInformation.ratingValue));
-            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, hotelPaymentInformation.isShowOriginalPrice);
-            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(hotelPaymentInformation.entryPosition));
-            params.put(AnalyticsManager.KeyType.DAILYCHOICE, hotelPaymentInformation.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.NRD, stayPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayPaymentInformation.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, stayPaymentInformation.isShowOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(stayPaymentInformation.entryPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayPaymentInformation.isDailyChoice ? "y" : "n");
 
-            switch (hotelPaymentInformation.discountType)
+            switch (stayPaymentInformation.discountType)
             {
                 case BONUS:
                 {
-                    int payPrice = roomInformation.totalDiscount - hotelPaymentInformation.bonus;
+                    int payPrice = roomInformation.totalDiscount - stayPaymentInformation.bonus;
                     int bonus;
 
                     if (payPrice <= 0)
@@ -1126,7 +1263,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         bonus = roomInformation.totalDiscount;
                     } else
                     {
-                        bonus = hotelPaymentInformation.bonus;
+                        bonus = stayPaymentInformation.bonus;
                     }
 
                     params.put(AnalyticsManager.KeyType.USED_BOUNS, Integer.toString(bonus));
@@ -1139,7 +1276,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 case COUPON:
                 {
-                    Coupon coupon = hotelPaymentInformation.getCoupon();
+                    Coupon coupon = stayPaymentInformation.getCoupon();
                     int payPrice = roomInformation.totalDiscount - coupon.amount;
 
                     if (payPrice < 0)
@@ -1171,10 +1308,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 }
             }
 
-            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, hotelPaymentInformation.paymentType.getName());
-            params.put(AnalyticsManager.KeyType.ADDRESS, hotelPaymentInformation.getSaleRoomInformation().address);
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
-            params.put(AnalyticsManager.KeyType.CATEGORY, hotelPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, stayPaymentInformation.paymentType.getName());
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.getSaleRoomInformation().address);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
 
             if (mProvince == null)
             {
@@ -1207,24 +1344,24 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         return params;
     }
 
-    private void setPaymentInformation(HotelPaymentInformation hotelPaymentInformation)
+    private void setPaymentInformation(StayPaymentInformation stayPaymentInformation)
     {
-        if (hotelPaymentInformation == null)
+        if (stayPaymentInformation == null)
         {
             return;
         }
 
-        int nights = hotelPaymentInformation.getSaleRoomInformation().nights;
-        int originalPrice = hotelPaymentInformation.getSaleRoomInformation().totalDiscount;
+        int nights = stayPaymentInformation.getSaleRoomInformation().nights;
+        int originalPrice = stayPaymentInformation.getSaleRoomInformation().totalDiscount;
         int payPrice = originalPrice;
 
-        switch (hotelPaymentInformation.discountType)
+        switch (stayPaymentInformation.discountType)
         {
             case BONUS:
             {
-                hotelPaymentInformation.setCoupon(null);
+                stayPaymentInformation.setCoupon(null);
 
-                int discountPrice = hotelPaymentInformation.bonus;
+                int discountPrice = stayPaymentInformation.bonus;
 
                 if (discountPrice > 0)
                 {
@@ -1246,7 +1383,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             case COUPON:
             {
-                Coupon coupon = hotelPaymentInformation.getCoupon();
+                Coupon coupon = stayPaymentInformation.getCoupon();
 
                 if (coupon == null)
                 {
@@ -1270,16 +1407,24 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             }
 
             default:
-                if (hotelPaymentInformation.bonus <= 0)
+                if (stayPaymentInformation.bonus <= 0)
                 {
                     setBonusEnabled(false);
                 }
 
-                mHotelPaymentLayout.setPaymentInformation(hotelPaymentInformation.discountType, originalPrice, 0, payPrice, nights);
+                mHotelPaymentLayout.setPaymentInformation(stayPaymentInformation.discountType, originalPrice, 0, payPrice, nights);
                 break;
         }
 
-        mHotelPaymentLayout.setBonusTextView(hotelPaymentInformation.bonus);
+        //        if (payPrice == 0)
+        //        {
+        //            stayPaymentInformation.isFree = true;
+        //        } else
+        //        {
+        //            stayPaymentInformation.isFree = false;
+        //        }
+
+        mHotelPaymentLayout.setBonusTextView(stayPaymentInformation.bonus);
 
         // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
         if (payPrice > 0 && payPrice < 1000)
@@ -1394,7 +1539,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
         }
 
-        setPaymentInformation((HotelPaymentInformation) mPaymentInformation);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
     }
 
     private void setCouponSelected(boolean isSelected)
@@ -1409,23 +1554,23 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         }
 
-        setPaymentInformation((HotelPaymentInformation) mPaymentInformation);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
     }
 
-    private void startCouponPopup(HotelPaymentInformation hotelPaymentInformation)
+    private void startCouponPopup(StayPaymentInformation stayPaymentInformation)
     {
-        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
+        RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
 
-        int hotelIdx = hotelPaymentInformation.placeIndex;
+        int hotelIdx = stayPaymentInformation.placeIndex;
         int roomIdx = roomInformation.roomIndex;
-        String checkInDate = hotelPaymentInformation.checkInDateFormat;
-        String checkOutDate = hotelPaymentInformation.checkOutDateFormat;
+        String checkInDate = stayPaymentInformation.checkInDateFormat;
+        String checkOutDate = stayPaymentInformation.checkOutDateFormat;
 
         String categoryCode = roomInformation.categoryCode;
         String hotelName = roomInformation.hotelName;
         String roomPrice = Integer.toString(roomInformation.averageDiscount);
 
-        Intent intent = SelectCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
+        Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
             roomIdx, checkInDate, checkOutDate, categoryCode, hotelName, roomPrice);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
@@ -1512,13 +1657,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
     private void setReservationInformation(long checkInDate, long checkOutDate, int nights)
     {
-        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        hotelPaymentInformation.checkInDate = checkInDate;
-        hotelPaymentInformation.checkOutDate = checkOutDate;
-        hotelPaymentInformation.nights = nights;
+        stayPaymentInformation.checkInDate = checkInDate;
+        stayPaymentInformation.checkOutDate = checkOutDate;
+        stayPaymentInformation.nights = nights;
 
-        mHotelPaymentLayout.setReservationInformation(hotelPaymentInformation);
+        mHotelPaymentLayout.setReservationInformation(stayPaymentInformation);
 
         // Check In
         Calendar calendarCheckin = DailyCalendar.getInstance();
@@ -1533,8 +1678,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         calendarCheckin.setTimeInMillis(calendarCheckin.getTimeInMillis() - 3600 * 1000 * 9);
         calendarCheckout.setTimeInMillis(calendarCheckout.getTimeInMillis() - 3600 * 1000 * 9);
 
-        hotelPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
-        hotelPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
+        stayPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
+        stayPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1581,7 +1726,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 return;
             }
 
-            HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
+            StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
             Guest guest = mHotelPaymentLayout.getGuest();
 
@@ -1593,7 +1738,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     mHotelPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.NAME);
 
-                    if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
+                    if (stayPaymentInformation.getSaleRoomInformation().isOverseas == true)
                     {
                         DailyToast.showToast(HotelPaymentActivity.this, R.string.toast_msg_please_input_guest_typeoverseas, Toast.LENGTH_SHORT);
                     } else
@@ -1627,18 +1772,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     return;
                 }
 
-                if (hotelPaymentInformation.getSaleRoomInformation().isOverseas == true)
+                if (stayPaymentInformation.getSaleRoomInformation().isOverseas == true)
                 {
                     DailyPreference.getInstance(HotelPaymentActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
                 }
             }
 
-            hotelPaymentInformation.setGuest(guest);
+            stayPaymentInformation.setGuest(guest);
 
             //호텔 가격이 xx 이하인 이벤트 호텔에서는 적립금 사용을 못하게 막음.
-            if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
-                && (hotelPaymentInformation.getSaleRoomInformation().totalDiscount <= DEFAULT_AVAILABLE_RESERVES) //
-                && hotelPaymentInformation.bonus != 0)
+            if (stayPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
+                && (stayPaymentInformation.getSaleRoomInformation().totalDiscount <= DEFAULT_AVAILABLE_RESERVES) //
+                && stayPaymentInformation.bonus != 0)
             {
                 setBonusSelected(false);
 
@@ -1649,53 +1794,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 releaseUiComponent();
             } else
             {
-                if (hotelPaymentInformation.paymentType == PlacePaymentInformation.PaymentType.VBANK//
-                    && DailyPreference.getInstance(HotelPaymentActivity.this).getNotificationUid() < 0)
+                Stay.Grade hotelGrade = stayPaymentInformation.getSaleRoomInformation().grade;
+                if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
                 {
-                    // 가상계좌 결제시 푸쉬를 받지 못하는 경우
-                    String title = getString(R.string.dialog_notice2);
-                    String positive = getString(R.string.dialog_btn_text_confirm);
-                    String msg = getString(R.string.dialog_msg_none_gcmid);
+                    lockUI();
 
-                    showSimpleDialog(title, msg, positive, new OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                            Stay.Grade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                            if (Stay.Grade.pension == hotelGrade || Stay.Grade.fullvilla == hotelGrade)
-                            {
-                                lockUI();
-
-                                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener);
-                            } else
-                            {
-                                processAgreeTermDialog();
-                            }
-
-                        }
-                    }, new DialogInterface.OnCancelListener()
-                    {
-                        @Override
-                        public void onCancel(DialogInterface dialog)
-                        {
-                            unLockUI();
-                        }
-                    });
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeCallback);
                 } else
                 {
-                    Stay.Grade hotelGrade = hotelPaymentInformation.getSaleRoomInformation().grade;
-                    if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
-                    {
-                        lockUI();
-
-                        DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestCommonDatetime(mNetworkTag, mMessageDateTimeJsonResponseListener);
-                    } else
-                    {
-                        processAgreeTermDialog();
-                    }
+                    processAgreeTermDialog();
                 }
             }
         }
@@ -1785,7 +1892,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         {
                             setBonusSelected(false);
                             setCouponSelected(true);
-                            startCouponPopup((HotelPaymentInformation) mPaymentInformation);
+                            startCouponPopup((StayPaymentInformation) mPaymentInformation);
                         }
                     });
                     break;
@@ -1796,7 +1903,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     if (isRadioLayout == true)
                     {
                         setCouponSelected(true);
-                        startCouponPopup((HotelPaymentInformation) mPaymentInformation);
+                        startCouponPopup((StayPaymentInformation) mPaymentInformation);
                     } else
                     {
                         // 쿠폰 삭제
@@ -1817,10 +1924,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     // 아무것도 선택 되지 않은 상태 일때 couponLayout 과 동일한 처리
                     setCouponSelected(true);
-                    startCouponPopup((HotelPaymentInformation) mPaymentInformation);
+                    startCouponPopup((StayPaymentInformation) mPaymentInformation);
                     break;
                 }
             }
+        }
+
+        @Override
+        public void onVisitType(boolean isWalking)
+        {
+            ((StayPaymentInformation) mPaymentInformation).isVisitWalking = isWalking;
         }
 
         @Override
@@ -1835,537 +1948,742 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mUserInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode != 0)
+                    {
+                        if (responseJSONObject.has("msg") == true)
+                        {
+                            String msg = responseJSONObject.getString("msg");
+
+                            DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                            finish();
+                            return;
+                        } else
+                        {
+                            HotelPaymentActivity.this.onError();
+                            return;
+                        }
+                    }
+
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                    String name = dataJSONObject.getString("user_name");
+                    String phone = dataJSONObject.getString("user_phone");
+                    String email = dataJSONObject.getString("user_email");
+                    String userIndex = dataJSONObject.getString("user_idx");
+                    int bonus = dataJSONObject.getInt("user_bonus");
+
+                    if (bonus < 0)
+                    {
+                        bonus = 0;
+                    }
+
+                    StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
+                    stayPaymentInformation.bonus = bonus;
+
+                    setPaymentInformation(stayPaymentInformation);
+
+                    Customer buyer = new Customer();
+                    buyer.setEmail(email);
+                    buyer.setName(name);
+                    buyer.setPhone(phone);
+                    buyer.setUserIdx(userIndex);
+
+                    stayPaymentInformation.setCustomer(buyer);
+
+                    Guest guest = stayPaymentInformation.getGuest();
+
+                    // 해외 호텔인 경우.
+                    boolean isOverseas = stayPaymentInformation.getSaleRoomInformation().isOverseas;
+
+                    if (isOverseas == true)
+                    {
+                        if (guest == null)
+                        {
+                            guest = mHotelPaymentLayout.getGuest();
+                        }
+
+                        if (guest == null)
+                        {
+                            guest = new Guest();
+                        }
+
+                        String overseasName = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
+                        String overseasPhone = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
+                        String overseasEmail = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
+
+                        guest.name = overseasName;
+
+                        if (Util.isTextEmpty(guest.phone) == true)
+                        {
+                            if (Util.isTextEmpty(overseasPhone) == false)
+                            {
+                                guest.phone = overseasPhone;
+                            } else
+                            {
+                                guest.phone = phone;
+                            }
+                        }
+
+                        if (Util.isTextEmpty(guest.email) == true)
+                        {
+                            if (Util.isTextEmpty(overseasEmail) == false)
+                            {
+                                guest.email = overseasEmail;
+                            } else
+                            {
+                                guest.email = email;
+                            }
+                        }
+
+                        if (Util.isNameCharacter(overseasName) == false)
+                        {
+                            guest.name = "";
+                            mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
+                        }
+
+                        stayPaymentInformation.setGuest(guest);
+                    }
+
+                    mHotelPaymentLayout.setUserInformation(buyer, isOverseas);
+                    mHotelPaymentLayout.setGuestInformation(guest, isOverseas);
+
+                    // 2. 화면 정보 얻기
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
+                        , stayPaymentInformation.getSaleRoomInformation().roomIndex//
+                        , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+                        , stayPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationCallback);
+                } catch (Exception e)
+                {
+                    onError(e);
+                }
+            } else
+            {
+                HotelPaymentActivity.this.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            try
-            {
-                int msg_code = response.getInt("msg_code");
-
-                if (msg_code != 0)
-                {
-                    if (response.has("msg") == true)
-                    {
-                        String msg = response.getString("msg");
-
-                        DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                        finish();
-                        return;
-                    } else
-                    {
-                        throw new NullPointerException("response == null");
-                    }
-                }
-
-                JSONObject jsonData = response.getJSONObject("data");
-
-                String name = jsonData.getString("user_name");
-                String phone = jsonData.getString("user_phone");
-                String email = jsonData.getString("user_email");
-                String userIndex = jsonData.getString("user_idx");
-                int bonus = jsonData.getInt("user_bonus");
-
-                if (bonus < 0)
-                {
-                    bonus = 0;
-                }
-
-                HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-                hotelPaymentInformation.bonus = bonus;
-
-                setPaymentInformation(hotelPaymentInformation);
-
-                Customer buyer = new Customer();
-                buyer.setEmail(email);
-                buyer.setName(name);
-                buyer.setPhone(phone);
-                buyer.setUserIdx(userIndex);
-
-                hotelPaymentInformation.setCustomer(buyer);
-
-                Guest guest = hotelPaymentInformation.getGuest();
-
-                // 해외 호텔인 경우.
-                boolean isOverseas = hotelPaymentInformation.getSaleRoomInformation().isOverseas;
-
-                if (isOverseas == true)
-                {
-                    if (guest == null)
-                    {
-                        guest = mHotelPaymentLayout.getGuest();
-                    }
-
-                    if (guest == null)
-                    {
-                        guest = new Guest();
-                    }
-
-                    String overseasName = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
-                    String overseasPhone = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
-                    String overseasEmail = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
-
-                    guest.name = overseasName;
-
-                    if (Util.isTextEmpty(guest.phone) == true)
-                    {
-                        if (Util.isTextEmpty(overseasPhone) == false)
-                        {
-                            guest.phone = overseasPhone;
-                        } else
-                        {
-                            guest.phone = phone;
-                        }
-                    }
-
-                    if (Util.isTextEmpty(guest.email) == true)
-                    {
-                        if (Util.isTextEmpty(overseasEmail) == false)
-                        {
-                            guest.email = overseasEmail;
-                        } else
-                        {
-                            guest.email = email;
-                        }
-                    }
-
-                    if (Util.isNameCharacter(overseasName) == false)
-                    {
-                        guest.name = "";
-                        mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
-                    }
-
-                    hotelPaymentInformation.setGuest(guest);
-                }
-
-                mHotelPaymentLayout.setUserInformation(buyer, isOverseas);
-                mHotelPaymentLayout.setGuestInformation(guest, isOverseas);
-
-                // 2. 화면 정보 얻기
-                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestHotelPaymentInformation(mNetworkTag//
-                    , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
-                    , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                    , hotelPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationJsonResponseListener);
-            } catch (Exception e)
-            {
-                onError(e);
-            }
+            HotelPaymentActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mHotelPaymentInformationJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mHotelPaymentInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                int msgCode = response.getInt("msgCode");
-
-                // 0	성공
-                // 4	데이터가 없을시
-                // 5	판매 마감시
-                // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
-                // 7    3시부터 9시까지
-                switch (msgCode)
+                try
                 {
-                    case 6:
-                    case 7:
-                        if (mWarningDialogMessage == null && response.has("msg") == true)
-                        {
-                            mWarningDialogMessage = response.getString("msg");
-                        }
-                    case 0:
+                    StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
+
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    // 0	성공
+                    // 4	데이터가 없을시
+                    // 5	판매 마감시
+                    // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
+                    // 7    3시부터 9시까지
+                    switch (msgCode)
                     {
-                        JSONObject jsonData = response.getJSONObject("data");
-
-                        long checkInDate = jsonData.getLong("check_in_date");
-                        long checkOutDate = jsonData.getLong("check_out_date");
-                        int discount = jsonData.getInt("discount_total");
-                        boolean isOnSale = jsonData.getBoolean("on_sale");
-                        int availableRooms = jsonData.getInt("available_rooms");
-                        boolean isNRD = false;
-
-                        if (jsonData.has("refund_type") == true && RoomInformation.NRD.equalsIgnoreCase(jsonData.getString("refund_type")) == true)
-                        {
-                            isNRD = true;
-                        }
-
-                        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
-
-                        roomInformation.isNRD = isNRD;
-
-                        // 가격이 변동 되었다.
-                        if (roomInformation.totalDiscount != discount)
-                        {
-                            mIsChangedPrice = true;
-                        }
-
-                        roomInformation.totalDiscount = discount;
-
-                        setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
-
-                        mHotelPaymentLayout.setRefundPolicyVisibility(roomInformation.isNRD);
-
-                        // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
-                        if (isOnSale == false || availableRooms == 0)
-                        {
-                            mWarningDialogMessage = null;
-
-                            if (isFinishing() == true)
+                        case 6:
+                        case 7:
+                            if (mWarningDialogMessage == null && responseJSONObject.has("msg") == true)
                             {
+                                mWarningDialogMessage = responseJSONObject.getString("msg");
+                            }
+                        case 0:
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            long checkInDate = dataJSONObject.getLong("check_in_date");
+                            long checkOutDate = dataJSONObject.getLong("check_out_date");
+                            int discount = dataJSONObject.getInt("discount_total");
+                            boolean isOnSale = dataJSONObject.getBoolean("on_sale");
+                            int availableRooms = dataJSONObject.getInt("available_rooms");
+                            boolean isNRD = false;
+
+                            boolean noParking = false;
+                            boolean parking = false;
+                            boolean provideTransportation = false;
+
+                            if (dataJSONObject.has("no_parking") == true && dataJSONObject.has("parking") == true//
+                                && dataJSONObject.has("provide_transportation") == true)
+                            {
+                                noParking = dataJSONObject.getBoolean("no_parking");
+                                parking = dataJSONObject.getBoolean("parking");
+                                provideTransportation = dataJSONObject.getBoolean("provide_transportation");
+                            }
+
+                            if (dataJSONObject.has("refund_type") == true && RoomInformation.NRD.equalsIgnoreCase(dataJSONObject.getString("refund_type")) == true)
+                            {
+                                isNRD = true;
+                            }
+
+                            RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
+
+                            roomInformation.isNRD = isNRD;
+
+                            // 가격이 변동 되었다.
+                            if (roomInformation.totalDiscount != discount)
+                            {
+                                mIsChangedPrice = true;
+                            }
+
+                            roomInformation.totalDiscount = discount;
+
+                            if (DEBUG == false && (checkInDate == 0 || checkOutDate == 0))
+                            {
+                                Crashlytics.log(responseJSONObject.toString());
+                                Crashlytics.logException(new RuntimeException(call.request().url().toString()));
+
+                                Util.restartExitApp(HotelPaymentActivity.this);
                                 return;
                             }
 
-                            showStopOnSaleDialog();
-                        } else
-                        {
-                            // 3. 간편결제 credit card 요청
-                            DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListJsonResponseListener);
-                        }
-                        break;
-                    }
+                            setReservationInformation(checkInDate, checkOutDate, roomInformation.nights);
 
-                    case 5:
-                    {
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
-
-                            showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                            if (provideTransportation == true)
                             {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
+                                if (noParking == true)
                                 {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
-                                    finish();
+                                    stayPaymentInformation.visitType = StayPaymentInformation.VISIT_TYPE_NO_PARKING;
+                                } else if (parking == true)
+                                {
+                                    stayPaymentInformation.visitType = StayPaymentInformation.VISIT_TYPE_PARKING;
+                                } else
+                                {
+                                    stayPaymentInformation.visitType = StayPaymentInformation.VISIT_TYPE_NONE;
                                 }
-                            });
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
-                    }
-
-                    case 4:
-                    default:
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
-
-                            DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                            setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                            finish();
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
-                }
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-
-                unLockUI();
-                onError(e);
-
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            HotelPaymentActivity.this.onErrorResponse(volleyError);
-        }
-    };
-
-    private DailyHotelJsonResponseListener mPaymentEasyCreditCardJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            hidePorgressDialog();
-
-            try
-            {
-                // 해당 화면은 메시지를 넣지 않는다.
-                int msgCode = response.getInt("msgCode");
-                String message = response.getString("msg");
-
-                Intent intent = new Intent();
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, String.format("%d^%s", msgCode, message));
-
-                onActivityPaymentResult(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-
-                onError(e);
-            } finally
-            {
-                unLockUI();
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            HotelPaymentActivity.this.onErrorResponse(volleyError);
-        }
-    };
-
-    private DailyHotelJsonResponseListener mFinalCheckPayJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-
-        }
-
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-
-                switch (msgCode)
-                {
-                    case 6:
-                    case 7:
-                    case 0:
-                    {
-                        JSONObject jsonData = response.getJSONObject("data");
-
-                        //                        long checkInDate = jsonData.getLong("check_in_date");
-                        //                        long checkOutDate = jsonData.getLong("check_out_date");
-                        int discount = jsonData.getInt("discount_total");
-                        boolean isOnSale = jsonData.getBoolean("on_sale");
-                        int availableRooms = jsonData.getInt("available_rooms");
-
-                        HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                        RoomInformation roomInformation = hotelPaymentInformation.getSaleRoomInformation();
-
-                        // 가격이 변동 되었다.
-                        if (roomInformation.totalDiscount != discount)
-                        {
-                            mIsChangedPrice = true;
-                        }
-
-                        roomInformation.totalDiscount = discount;
-
-                        // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
-                        if (isOnSale == false || availableRooms == 0)
-                        {
-                            showStopOnSaleDialog();
-                        } else if (isChangedPrice() == true)
-                        {
-                            mIsChangedPrice = false;
-
-                            // 현재 있는 팝업을 없애도록 한다.
-                            if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+                            } else
                             {
-                                mFinalCheckDialog.cancel();
-                                mFinalCheckDialog = null;
+                                stayPaymentInformation.visitType = StayPaymentInformation.VISIT_TYPE_NONE;
                             }
 
-                            showChangedPriceDialog();
-                        } else
-                        {
-                            processPayment(hotelPaymentInformation, mCheckInSaleTime);
-                        }
-                        break;
-                    }
+                            mHotelPaymentLayout.setVisitTypeInformation(stayPaymentInformation);
 
-                    case 5:
-                    {
-                        if (response.has("msg") == true)
-                        {
-                            String msg = response.getString("msg");
-
-                            showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                            // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+                            if (isOnSale == false || availableRooms == 0)
                             {
-                                @Override
-                                public void onDismiss(DialogInterface dialog)
-                                {
-                                    setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
-                                    finish();
-                                }
-                            });
-                        } else
-                        {
-                            throw new NullPointerException("response == null");
-                        }
-                        break;
-                    }
+                                mWarningDialogMessage = null;
 
-                    case 4:
-                    default:
-                    {
-                        if (response.has("msg") == true)
+                                if (isFinishing() == true)
+                                {
+                                    return;
+                                }
+
+                                showStopOnSaleDialog();
+                            } else
+                            {
+                                // 취소 및 환불 규정
+                                DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag//
+                                    , stayPaymentInformation.placeIndex, roomInformation.roomIndex//
+                                    , stayPaymentInformation.checkInDateFormat, stayPaymentInformation.checkOutDateFormat//
+                                    , mPolicyRefundCallback);
+                            }
+                            break;
+                        }
+
+                        case 5:
                         {
-                            String msg = response.getString("msg");
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                        finish();
+                                    }
+                                });
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+
+                        case 4:
+                        default:
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                                finish();
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    unLockUI();
+                    onError(e);
+
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                }
+            } else
+            {
+                HotelPaymentActivity.this.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            HotelPaymentActivity.this.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mPaymentEasyCreditCardCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                hideProgressDialog();
+
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    // 해당 화면은 메시지를 넣지 않는다.
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
+
+                    Intent intent = new Intent();
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, String.format("%d^%s", msgCode, message));
+
+                    onActivityPaymentResult(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    onError(e);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                HotelPaymentActivity.this.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            HotelPaymentActivity.this.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mFinalCheckPayCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    switch (msgCode)
+                    {
+                        case 6:
+                        case 7:
+                        case 0:
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            //                        long checkInDate = jsonData.getLong("check_in_date");
+                            //                        long checkOutDate = jsonData.getLong("check_out_date");
+                            int discount = dataJSONObject.getInt("discount_total");
+                            boolean isOnSale = dataJSONObject.getBoolean("on_sale");
+                            int availableRooms = dataJSONObject.getInt("available_rooms");
+
+                            StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
+
+                            RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
+
+                            // 가격이 변동 되었다.
+                            if (roomInformation.totalDiscount != discount)
+                            {
+                                mIsChangedPrice = true;
+                            }
+
+                            roomInformation.totalDiscount = discount;
+
+                            // 판매 중지 상품으로 호텔 리스트로 복귀 시킨다.
+                            if (isOnSale == false || availableRooms == 0)
+                            {
+                                showStopOnSaleDialog();
+                            } else if (isChangedPrice() == true)
+                            {
+                                mIsChangedPrice = false;
+
+                                // 현재 있는 팝업을 없애도록 한다.
+                                if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
+                                {
+                                    mFinalCheckDialog.cancel();
+                                    mFinalCheckDialog = null;
+                                }
+
+                                showChangedPriceDialog();
+                            } else
+                            {
+                                processPayment(stayPaymentInformation, mCheckInSaleTime);
+                            }
+                            break;
+                        }
+
+                        case 5:
+                        {
+                            unLockUI();
+
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null, new OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER);
+                                        finish();
+                                    }
+                                });
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+
+                        case 4:
+                        default:
+                        {
+                            unLockUI();
+
+                            if (responseJSONObject.has("msg") == true)
+                            {
+                                String msg = responseJSONObject.getString("msg");
+
+                                DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
+                                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                                finish();
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
+                            break;
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    onError(e);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                }
+            } else
+            {
+                HotelPaymentActivity.this.onErrorResponse(call, response);
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            setResult(CODE_RESULT_ACTIVITY_REFRESH);
+
+            HotelPaymentActivity.this.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mUserInformationFinalCheckCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode != 0)
+                    {
+                        if (responseJSONObject.has("msg") == true)
+                        {
+                            String msg = responseJSONObject.getString("msg");
 
                             DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
                             setResult(CODE_RESULT_ACTIVITY_REFRESH);
                             finish();
+                            return;
                         } else
                         {
-                            throw new NullPointerException("response == null");
+                            HotelPaymentActivity.this.onError();
+                            return;
                         }
-                        break;
                     }
-                }
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
 
-                onError(e);
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            } finally
-            {
-                unLockUI();
-            }
-        }
-    };
+                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-    private DailyHotelJsonResponseListener mUserInformationFinalCheckJsonResponseListener = new DailyHotelJsonResponseListener()
-    {
-        @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
-        {
-            try
-            {
-                int msgCode = response.getInt("msg_code");
+                    int bonus = dataJSONObject.getInt("user_bonus");
 
-                if (msgCode != 0)
-                {
-                    if (response.has("msg") == true)
+                    if (bonus < 0)
                     {
-                        String msg = response.getString("msg");
+                        bonus = 0;
+                    }
 
-                        DailyToast.showToast(HotelPaymentActivity.this, msg, Toast.LENGTH_SHORT);
-                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                        finish();
+                    StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
+
+                    if (stayPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
+                        && bonus != stayPaymentInformation.bonus)
+                    {
+                        stayPaymentInformation.bonus = bonus;
+                        showChangedBonusDialog();
                         return;
-                    } else
-                    {
-                        throw new NullPointerException("response == null");
                     }
-                }
 
-                JSONObject jsonData = response.getJSONObject("data");
-
-                int bonus = jsonData.getInt("user_bonus");
-
-                if (bonus < 0)
+                    // 2. 마지막 가격 및 기타 이상이 없는지 검사
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
+                        , stayPaymentInformation.getSaleRoomInformation().roomIndex//
+                        , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+                        , stayPaymentInformation.getSaleRoomInformation().nights, mFinalCheckPayCallback);
+                } catch (Exception e)
                 {
-                    bonus = 0;
+                    onError(e);
                 }
-
-                HotelPaymentInformation hotelPaymentInformation = (HotelPaymentInformation) mPaymentInformation;
-
-                if (hotelPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
-                    && bonus != hotelPaymentInformation.bonus)
-                {
-                    hotelPaymentInformation.bonus = bonus;
-                    showChangedBonusDialog();
-                    return;
-                }
-
-                // 2. 마지막 가격 및 기타 이상이 없는지 검사
-                DailyNetworkAPI.getInstance(HotelPaymentActivity.this).requestHotelPaymentInformation(mNetworkTag//
-                    , hotelPaymentInformation.getSaleRoomInformation().roomIndex//
-                    , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                    , hotelPaymentInformation.getSaleRoomInformation().nights, mFinalCheckPayJsonResponseListener);
-            } catch (Exception e)
+            } else
             {
-                onError(e);
+                HotelPaymentActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            HotelPaymentActivity.this.onErrorResponse(volleyError);
+            HotelPaymentActivity.this.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mMessageDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mMessageDateTimeCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int openHour = Integer.parseInt(DailyCalendar.format(response.getLong("openDateTime"), "HH", TimeZone.getTimeZone("GMT")));
-                int closeHour = Integer.parseInt(DailyCalendar.format(response.getLong("closeDateTime"), "HH", TimeZone.getTimeZone("GMT")));
-                int currentHour = Integer.parseInt(DailyCalendar.format(response.getLong("currentDateTime"), "HH", TimeZone.getTimeZone("GMT")));
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                // 당일인지 아닌지
-                if (mCheckInSaleTime.getOffsetDailyDay() == 0)
-                {
-                    if (currentHour >= openHour && currentHour < 18)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
                     {
-                        mPensionPopupMessageType = 1;
-                    } else if (currentHour >= 18 || currentHour < closeHour)
-                    {
-                        mPensionPopupMessageType = 2;
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        int openHour = Integer.parseInt(DailyCalendar.format(openDateTime, "HH", TimeZone.getTimeZone("GMT")));
+                        int closeHour = Integer.parseInt(DailyCalendar.format(closeDateTime, "HH", TimeZone.getTimeZone("GMT")));
+                        int currentHour = Integer.parseInt(DailyCalendar.format(currentDateTime, "HH", TimeZone.getTimeZone("GMT")));
+
+                        // 당일인지 아닌지
+                        if (mCheckInSaleTime.getOffsetDailyDay() == 0)
+                        {
+                            if (currentHour >= openHour && currentHour < 18)
+                            {
+                                mPensionPopupMessageType = 1;
+                            } else if (currentHour >= 18 || currentHour < closeHour)
+                            {
+                                mPensionPopupMessageType = 2;
+                            } else
+                            {
+                                mPensionPopupMessageType = 3;
+                            }
+                        } else
+                        {
+                            if (currentHour >= openHour && currentHour < 22)
+                            {
+                                mPensionPopupMessageType = 10;
+                            } else if (currentHour >= 22)
+                            {
+                                mPensionPopupMessageType = 11;
+                            } else
+                            {
+                                mPensionPopupMessageType = 12;
+                            }
+                        }
+
+                        processAgreeTermDialog();
                     } else
                     {
-                        mPensionPopupMessageType = 3;
+                        String message = responseJSONObject.getString("msg");
+                        onErrorPopupMessage(msgCode, message);
+
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     }
-                } else
+                } catch (Exception e)
                 {
-                    if (currentHour >= openHour && currentHour < 22)
-                    {
-                        mPensionPopupMessageType = 10;
-                    } else if (currentHour >= 22)
-                    {
-                        mPensionPopupMessageType = 11;
-                    } else
-                    {
-                        mPensionPopupMessageType = 12;
-                    }
+                    onError(e);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                } finally
+                {
+                    unLockUI();
                 }
-
-                processAgreeTermDialog();
-            } catch (Exception e)
+            } else
             {
-                onError(e);
-                setResult(CODE_RESULT_ACTIVITY_REFRESH);
-                finish();
-            } finally
-            {
-                unLockUI();
+                HotelPaymentActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            HotelPaymentActivity.this.onErrorResponse(volleyError);
+            HotelPaymentActivity.this.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    switch (msgCode)
+                    {
+                        case 100:
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            String comment = dataJSONObject.getString("comment");
+                            String refundPolicy = dataJSONObject.getString("refundPolicy");
+
+                            if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
+                            {
+                                mHotelPaymentLayout.setRefundPolicyVisible(false);
+                            } else
+                            {
+                                mHotelPaymentLayout.setRefundPolicyText(comment);
+                            }
+
+                            // Analytics
+                            if (Util.isTextEmpty(refundPolicy) == false)
+                            {
+                                switch (refundPolicy)
+                                {
+                                    case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
+                                        mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE;
+                                        break;
+
+                                    case StayBookingDetail.STATUS_SURCHARGE_REFUND:
+                                        mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE;
+                                        break;
+
+                                    default:
+                                        mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
+                                        break;
+                                }
+                            } else
+                            {
+                                mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
+                            }
+                            break;
+                        }
+
+                        default:
+                            // 에러가 발생하더라도 결제는 가능하도록 수정
+                            mHotelPaymentLayout.setRefundPolicyVisible(false);
+
+                            mScreenAnalytics = Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS;
+                            break;
+                    }
+
+                    // 3. 간편결제 credit card 요청
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestUserBillingCardList(mNetworkTag, mUserCreditCardListCallback);
+
+                } catch (Exception e)
+                {
+                    onError(e);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    finish();
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                HotelPaymentActivity.this.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            HotelPaymentActivity.this.onError(t);
         }
     };
 }

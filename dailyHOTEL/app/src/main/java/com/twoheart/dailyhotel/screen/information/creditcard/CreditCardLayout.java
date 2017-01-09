@@ -31,7 +31,7 @@ import java.util.Collection;
  */
 public class CreditCardLayout extends FrameLayout
 {
-    private ViewGroup mLogingLayout, mEmptyCardLayout;
+    private ViewGroup mLoginLayout, mEmptyCardLayout;
     private View mBottomLayout;
     private ListView mListView;
     private CreditCardListAdapter mAdapter;
@@ -83,8 +83,8 @@ public class CreditCardLayout extends FrameLayout
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.layout_creditcard, this, true);
 
-        mLogingLayout = (ViewGroup) view.findViewById(R.id.loginLayout);
-        mEmptyCardLayout = (ViewGroup) mLogingLayout.findViewById(R.id.emptyCardLayout);
+        mLoginLayout = (ViewGroup) view.findViewById(R.id.loginLayout);
+        mEmptyCardLayout = (ViewGroup) mLoginLayout.findViewById(R.id.emptyCardLayout);
         mEmptyCardLayout.setOnClickListener(mAddCreditCardClickListener);
 
         mBottomLayout = view.findViewById(R.id.bottomLayout);
@@ -119,11 +119,11 @@ public class CreditCardLayout extends FrameLayout
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                CreditCard caeditCard = mAdapter.getItem(position);
+                CreditCard creditCard = mAdapter.getItem(position);
 
                 if (mOnUserActionListener != null)
                 {
-                    mOnUserActionListener.onItemClick(caeditCard);
+                    mOnUserActionListener.onItemClick(creditCard);
                 }
             }
         });
@@ -140,6 +140,9 @@ public class CreditCardLayout extends FrameLayout
         {
             mAdapter = new CreditCardListAdapter(getContext(), R.layout.list_row_creditcard, null);
             mListView.setAdapter(mAdapter);
+        } else
+        {
+            mAdapter.clear();
         }
 
         if (arrayList == null || arrayList.size() == 0)
@@ -152,7 +155,6 @@ public class CreditCardLayout extends FrameLayout
             mBottomLayout.setVisibility(View.VISIBLE);
         }
 
-        mAdapter.clear();
         mAdapter.addAll(arrayList);
 
         if (selectedCreditCard != null)
@@ -174,10 +176,10 @@ public class CreditCardLayout extends FrameLayout
     {
         if (isLogin)
         {
-            mLogingLayout.setVisibility(View.VISIBLE);
+            mLoginLayout.setVisibility(View.VISIBLE);
         } else
         {
-            mLogingLayout.setVisibility(View.GONE);
+            mLoginLayout.setVisibility(View.GONE);
         }
     }
 

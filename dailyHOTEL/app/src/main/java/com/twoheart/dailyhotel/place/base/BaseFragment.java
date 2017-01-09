@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.util.Constants;
 
-public abstract class BaseFragment extends Fragment implements Constants, ErrorListener
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+public abstract class BaseFragment extends Fragment implements Constants
 {
     protected String mNetworkTag;
 
@@ -36,12 +39,12 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
             return;
         }
 
-        DailyNetworkAPI.getInstance(baseActivity).cancelAll(mNetworkTag);
+        DailyMobileAPI.getInstance(baseActivity).cancelAll(baseActivity, mNetworkTag);
 
         super.onDestroy();
     }
 
-    public void onError(Exception e)
+    public void onError(Throwable e)
     {
         unLockUI();
 
@@ -55,8 +58,7 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         baseActivity.onError(e);
     }
 
-    @Override
-    public void onErrorResponse(VolleyError error)
+    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
     {
         unLockUI();
 
@@ -67,7 +69,7 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
             return;
         }
 
-        baseActivity.onErrorResponse(error);
+        baseActivity.onErrorResponse(call, response);
     }
 
     protected void onErrorPopupMessage(int msgCode, String message)
@@ -139,6 +141,18 @@ public abstract class BaseFragment extends Fragment implements Constants, ErrorL
         }
 
         baseActivity.unLockUI();
+    }
+
+    public void lockUIImmediately()
+    {
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.lockUIImmediately();
     }
 
     /**

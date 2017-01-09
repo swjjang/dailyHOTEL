@@ -2,10 +2,8 @@ package com.twoheart.dailyhotel.screen.event;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.Event;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -16,7 +14,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class EventListNetworkController extends BaseNetworkController
 {
@@ -34,7 +34,7 @@ public class EventListNetworkController extends BaseNetworkController
 
     public void requestEventList()
     {
-        DailyNetworkAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListCallback);
     }
 
     public void requestEventPageUrl(Event event)
@@ -49,104 +49,120 @@ public class EventListNetworkController extends BaseNetworkController
             store = "skt";
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private DailyHotelJsonResponseListener mDailyEventListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDailyEventListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode != 0)
+                try
                 {
-                    if (response.has("msg") == true)
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode != 0)
                     {
-                        String message = response.getString("msg");
+                        if (responseJSONObject.has("msg") == true)
+                        {
+                            String message = responseJSONObject.getString("msg");
 
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                    }
+                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
-                } else
-                {
-                    JSONArray eventJSONArray = response.getJSONArray("data");
-
-                    if (eventJSONArray == null)
-                    {
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                     } else
                     {
-                        int length = eventJSONArray.length();
+                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
 
-                        if (length == 0)
+                        if (dataJSONArray == null)
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                         } else
                         {
-                            ArrayList<Event> eventList = new ArrayList<>(length);
+                            int length = dataJSONArray.length();
 
-                            for (int i = 0; i < length; i++)
+                            if (length == 0)
                             {
-                                eventList.add(new Event(eventJSONArray.getJSONObject(i)));
-                            }
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
+                            } else
+                            {
+                                ArrayList<Event> eventList = new ArrayList<>(length);
 
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(eventList);
+                                for (int i = 0; i < length; i++)
+                                {
+                                    eventList.add(new Event(dataJSONArray.getJSONObject(i)));
+                                }
+
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(eventList);
+                            }
                         }
                     }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                 }
-            } catch (Exception e)
+            } else
             {
-                ExLog.d(e.toString());
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mDailyEventPageJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mDailyEventPageJsonResponseListener = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                if (msgCode != 0)
-                {
-                    if (response.has("msg") == true)
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode != 0)
                     {
-                        String message = response.getString("msg");
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        if (responseJSONObject.has("msg") == true)
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        }
+                    } else
+                    {
+                        String eventUrl = responseJSONObject.getJSONObject("data").getString("url");
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).processEventPage(eventUrl);
                     }
-                } else
+                } catch (Exception e)
                 {
-                    String eventUrl = response.getJSONObject("data").getString("url");
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).processEventPage(eventUrl);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

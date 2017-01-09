@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,12 +18,13 @@ public class Booking implements Parcelable
     public String placeName;
     public int payType;
     public String tid;
-    public String ment;
+    public String comment;
     public long checkinTime;
     public long checkoutTime;
 
     public String hotelImageUrl;
     public boolean isUsed;
+    public boolean readyForRefund;
     public Constants.PlaceType placeType;
 
     public Booking(String sectionName)
@@ -38,31 +38,27 @@ public class Booking implements Parcelable
         readFromParcel(in);
     }
 
-    public Booking(JSONObject jsonObject)
+    public Booking(JSONObject jsonObject) throws Exception
     {
-        try
+        if (jsonObject.has("reservation_rec_idx") == true)
         {
-            if (jsonObject.has("reservation_rec_idx") == true)
-            {
-                reservationIndex = jsonObject.getInt("reservation_rec_idx");
-            }
+            reservationIndex = jsonObject.getInt("reservation_rec_idx");
+        }
 
-            placeName = jsonObject.getString("hotel_name");
-            payType = jsonObject.getInt("pay_type");
+        placeName = jsonObject.getString("hotel_name");
+        payType = jsonObject.getInt("pay_type");
 
-            ment = jsonObject.getString("comment");
+            comment = jsonObject.getString("comment");
             tid = jsonObject.getString("tid");
             checkinTime = jsonObject.getLong("checkin_time");
             checkoutTime = jsonObject.getLong("checkout_time");
 
-            JSONArray jsonArray = jsonObject.getJSONArray("img");
-            hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
+        JSONArray jsonArray = jsonObject.getJSONArray("img");
+        hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
 
-            placeType = Constants.PlaceType.valueOf(jsonObject.getString("type").toUpperCase());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        readyForRefund = jsonObject.getBoolean("readyForRefund");
+
+        placeType = Constants.PlaceType.valueOf(jsonObject.getString("type").toUpperCase());
     }
 
     @Override
@@ -73,12 +69,13 @@ public class Booking implements Parcelable
         dest.writeString(placeName);
         dest.writeInt(payType);
         dest.writeString(tid);
-        dest.writeString(ment);
+        dest.writeString(comment);
 
         dest.writeLong(checkinTime);
         dest.writeLong(checkoutTime);
         dest.writeString(hotelImageUrl);
         dest.writeInt(isUsed ? 1 : 0);
+        dest.writeInt(readyForRefund ? 1 : 0);
         dest.writeString(placeType.name());
     }
 
@@ -89,12 +86,13 @@ public class Booking implements Parcelable
         placeName = in.readString();
         payType = in.readInt();
         tid = in.readString();
-        ment = in.readString();
+        comment = in.readString();
 
         checkinTime = in.readLong();
         checkoutTime = in.readLong();
         hotelImageUrl = in.readString();
         isUsed = in.readInt() == 1;
+        readyForRefund = in.readInt() == 1;
         placeType = Constants.PlaceType.valueOf(in.readString());
     }
 

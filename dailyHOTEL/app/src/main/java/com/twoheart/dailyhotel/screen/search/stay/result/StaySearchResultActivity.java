@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -38,10 +38,15 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StaySearchResultActivity extends PlaceSearchResultActivity
 {
@@ -239,7 +244,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initIntent(Intent intent)
     {
-        SaleTime saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        SaleTime saleTime;
+
+        try
+        {
+            saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         int nights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
 
         Location location = null;
@@ -474,6 +489,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = StayCalendarActivity.newInstance(StaySearchResultActivity.this, //
                 checkInSaleTime, nights, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+
+            if (intent == null)
+            {
+                Util.restartApp(StaySearchResultActivity.this);
+                return;
+            }
+
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
@@ -586,7 +608,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowCallDialog()
         {
-            showCallDialog();
+            showDailyCallDialog(null);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CALL, null);
@@ -662,14 +684,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            StaySearchResultActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             StaySearchResultActivity.this.onError(e);
@@ -688,12 +703,19 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             unLockUI();
             StaySearchResultActivity.this.onErrorToastMessage(message);
         }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            unLockUI();
+            StaySearchResultActivity.this.onErrorResponse(call, response);
+        }
     };
 
     private StaySearchResultListFragment.OnStaySearchResultListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStaySearchResultListFragmentListener()
     {
         @Override
-        public void onStayClick(PlaceViewItem placeViewItem, int listCount)
+        public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
@@ -704,7 +726,34 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
                 mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View gradeTextView = view.findViewById(R.id.gradeTextView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                Object mapTag = gradientBottomView.getTag();
+
+                if (mapTag != null && "map".equals(mapTag) == true)
+                {
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                }
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(StaySearchResultActivity.this,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            }
         }
 
         @Override

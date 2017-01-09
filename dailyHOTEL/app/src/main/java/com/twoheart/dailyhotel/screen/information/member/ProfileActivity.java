@@ -15,11 +15,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -27,9 +28,15 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
 public class ProfileActivity extends BaseActivity
 {
     private static final int REQUEST_CODE_EDIT_PROFILE = 1;
+    private static final int REQUEST_CODE_EDIT_PROFILE_BIRTHDAY = 2;
 
     private ProfileLayout mProfileLayout;
     private ProfileNetworkController mNetworkController;
@@ -53,10 +60,6 @@ public class ProfileActivity extends BaseActivity
         mNetworkController = new ProfileNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setContentView(mProfileLayout.onCreateView(R.layout.activity_profile));
-
-        lockUI();
-
-        mNetworkController.requestUserProfile();
     }
 
     @Override
@@ -65,6 +68,42 @@ public class ProfileActivity extends BaseActivity
         AnalyticsManager.getInstance(ProfileActivity.this).recordScreen(Screen.PROFILE);
 
         super.onStart();
+
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
+            {
+                if (DailyHotel.isLogin() == true)
+                {
+                    mOnEventListener.startEditBirthday(DailyPreference.getInstance(this).getUserBirthday());
+                } else
+                {
+                    mOnEventListener.startEditBirthday(null);
+                }
+            }
+
+            DailyDeepLink.getInstance().clear();
+        } else
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                lockUI();
+                showLoginDialog();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (DailyHotel.isLogin() == true)
+        {
+            lockUI();
+
+            mNetworkController.requestUserProfile();
+        }
     }
 
     @Override
@@ -74,11 +113,41 @@ public class ProfileActivity extends BaseActivity
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE_EDIT_PROFILE && resultCode == RESULT_OK)
+        switch (requestCode)
         {
-            lockUI();
+            case REQUEST_CODE_EDIT_PROFILE:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    lockUI();
 
-            mNetworkController.requestUserProfile();
+                    mNetworkController.requestUserProfile();
+                }
+                break;
+            }
+
+            case REQUEST_CODE_EDIT_PROFILE_BIRTHDAY:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    lockUI();
+
+                    mNetworkController.requestUserProfile();
+                } else
+                {
+                    finish();
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                if (resultCode != RESULT_OK)
+                {
+                    finish();
+                }
+                break;
+            }
         }
     }
 
@@ -88,6 +157,49 @@ public class ProfileActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    private void showLoginDialog()
+    {
+        // 로그인 필요
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                lockUI();
+                startLogin();
+            }
+        };
+
+        View.OnClickListener negativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ProfileActivity.this.finish();
+            }
+        };
+
+        String title = this.getResources().getString(R.string.dialog_notice2);
+        String message = this.getResources().getString(R.string.dialog_message_profile_login);
+        String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
+        String negative = this.getResources().getString(R.string.dialog_btn_text_no);
+
+        showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                ProfileActivity.this.finish();
+            }
+        }, null, true);
+    }
+
+    private void startLogin()
+    {
+        Intent intent = LoginActivity.newInstance(this);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
     private ProfileLayout.OnEventListener mOnEventListener = new ProfileLayout.OnEventListener()
@@ -117,14 +229,14 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void startEditPhone()
+        public void startEditPhone(String phoneNumber)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this, mUserIndex, EditProfilePhoneActivity.Type.EDIT_PROFILE);
+            Intent intent = EditProfilePhoneActivity.newInstance(ProfileActivity.this, mUserIndex, EditProfilePhoneActivity.Type.EDIT_PROFILE, phoneNumber);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -149,7 +261,7 @@ public class ProfileActivity extends BaseActivity
             }
 
             Intent intent = EditProfileBirthdayActivity.newInstance(ProfileActivity.this, mUserIndex, birthday);
-            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
+            startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE_BIRTHDAY);
         }
 
         @Override
@@ -209,6 +321,17 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
+        public void doCodeCopy(String code)
+        {
+            Util.clipText(ProfileActivity.this, code);
+
+            DailyToast.showToast(ProfileActivity.this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
+
+            AnalyticsManager.getInstance(ProfileActivity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
+                , AnalyticsManager.Action.REFERRAL_CODE_COPIED, AnalyticsManager.Label.PROFILE_EDITED, null);
+        }
+
+        @Override
         public void finish()
         {
             ProfileActivity.this.finish();
@@ -219,12 +342,12 @@ public class ProfileActivity extends BaseActivity
     {
         @Override
         public void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
-            , boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+            , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
             String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
 
-            mProfileLayout.updateUserInformation(userType, email, name, Util.addHippenMobileNumber(ProfileActivity.this, phoneNumber), birthday, isVerified, isPhoneVerified, verifiedDate);
+            mProfileLayout.updateUserInformation(userType, email, name, Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
 
             if (isVerified == true)
             {
@@ -243,7 +366,7 @@ public class ProfileActivity extends BaseActivity
                 }
             }
 
-            mNetworkController.requestUserProfileBenfit();
+            mNetworkController.requestUserProfileBenefit();
         }
 
         @Override
@@ -255,13 +378,7 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            ProfileActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             ProfileActivity.this.onError(e);
         }
@@ -276,6 +393,12 @@ public class ProfileActivity extends BaseActivity
         public void onErrorToastMessage(String message)
         {
             ProfileActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            ProfileActivity.this.onErrorResponse(call, response);
         }
     };
 }

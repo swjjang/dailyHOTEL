@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.tune.Tune;
 import com.tune.TuneDeeplinkListener;
@@ -60,13 +61,13 @@ public class TuneManager extends BaseAnalyticsManager
         mTune.checkForDeferredDeeplink(new TuneDeeplinkListener()
         {
             @Override
-            public void didReceiveDeeplink(String deeplink)
+            public void didReceiveDeeplink(String deepLink)
             {
-                if (Util.isTextEmpty(deeplink) == false)
+                if (Util.isTextEmpty(deepLink) == false)
                 {
                     Intent intent = new Intent(mContext, LauncherActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse(deeplink));
+                    intent.setData(Uri.parse(deepLink));
 
                     mContext.startActivity(intent);
                 }
@@ -364,33 +365,64 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
+    void setUserBirthday(String birthday)
+    {
+
+    }
+
+    @Override
+    void setUserName(String name)
+    {
+
+    }
+
+    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
 
     }
 
     @Override
-    void onStart(Activity activity)
+    void onActivityCreated(Activity activity, Bundle bundle)
     {
 
     }
 
     @Override
-    void onStop(Activity activity)
+    void onActivityStarted(Activity activity)
     {
 
     }
 
     @Override
-    void onResume(Activity activity)
+    void onActivityStopped(Activity activity)
+    {
+
+    }
+
+    @Override
+    void onActivityResumed(Activity activity)
     {
         mTune.setReferralSources(activity);
         mTune.measureSession();
     }
 
     @Override
-    void onPause(Activity activity)
+    void onActivityPaused(Activity activity)
     {
+
+    }
+
+    @Override
+    void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+
+    }
+
+    @Override
+    void onActivityDestroyed(Activity activity)
+    {
+
     }
 
     @Override
@@ -466,7 +498,7 @@ public class TuneManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen)
     {
         // Tune
         mTune.setUserId(userIndex);

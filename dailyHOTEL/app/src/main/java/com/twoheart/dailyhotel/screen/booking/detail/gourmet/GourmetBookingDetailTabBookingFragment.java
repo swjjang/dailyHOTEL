@@ -1,15 +1,16 @@
 /**
  * Copyright (c) 2014 Daily Co., Ltd. All rights reserved.
  * <p>
- * HotelBookingDetailTabBookingFragment (예약한 호텔의 예약 탭)
+ * GourmetBookingDetailTabBookingFragment (예약한 레스토랑의 예약 탭)
  * <p>
  * 예약한 호텔 탭 중 예약 탭 프래그먼트
  */
 package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
-import android.content.ActivityNotFoundException;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,29 +19,34 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.twoheart.dailyhotel.widget.DailyTextView;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetBookingDetailTabBookingFragment extends BaseFragment implements Constants, View.OnClickListener
 {
@@ -49,6 +55,11 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
     private GourmetBookingDetail mBookingDetail;
     private int mReservationIndex;
+
+    private View mInputReviewVerticalLine;
+    private DailyTextView mInputReviewView;
+
+    private GourmetBookingDetailTabBookingNetworkController mNetworkController;
 
     public static GourmetBookingDetailTabBookingFragment newInstance(PlaceBookingDetail bookingDetail, int reservationIndex)
     {
@@ -69,6 +80,8 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
     {
         super.onCreate(savedInstanceState);
 
+        mNetworkController = new GourmetBookingDetailTabBookingNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
+
         Bundle bundle = getArguments();
 
         if (bundle != null)
@@ -88,7 +101,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
             return null;
         }
 
-        View view = inflater.inflate(R.layout.fragment_courmetbooking_tab_booking, container, false);
+        View view = inflater.inflate(R.layout.fragment_gourmet_booking_tab_booking, container, false);
 
         ScrollView scrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
@@ -118,8 +131,10 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
         layoutParams.width = (int) width;
-        layoutParams.height = (int) height + Util.dpToPx(context, 71);
+        layoutParams.height = (int) height;
 
+        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
+        mapImageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, PLACE_INFORMATION_LAYOUT_RATIO));
         mapImageView.setLayoutParams(layoutParams);
 
         if (width >= 720)
@@ -129,23 +144,73 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         height = width * ratio;
 
-        String size = String.format("%dx%d", (int) width, (int) height);
+        String size = String.format("%dx%d", (int) width * 3 / 5, (int) height * 5 / 7);
         String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
-        String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
-            , size, iconUrl, bookingDetail.latitude, bookingDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
+        String url = String.format("https://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
+            , size, iconUrl, bookingDetail.latitude, bookingDetail.longitude, Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
         mapImageView.setImageURI(Uri.parse(url));
+
+        View placeInformationLayout = view.findViewById(R.id.placeInformationLayout);
+        RelativeLayout.LayoutParams placeInformationLayoutParams = (RelativeLayout.LayoutParams) placeInformationLayout.getLayoutParams();
+        placeInformationLayoutParams.topMargin = (int) (PLACE_INFORMATION_LAYOUT_RATIO * layoutParams.height);
 
         TextView placeNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
         placeNameTextView.setText(bookingDetail.placeName);
 
         View viewDetailView = view.findViewById(R.id.viewDetailView);
         View viewMapView = view.findViewById(R.id.viewMapView);
-        //        View callView = view.findViewById(R.id.callView);
 
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
-        //        callView.setOnClickListener(this);
+
+        initReviewButtonLayout(view, bookingDetail);
+    }
+
+    private void initReviewButtonLayout(View view, GourmetBookingDetail bookingDetail)
+    {
+        if (view == null || bookingDetail == null)
+        {
+            return;
+        }
+
+        mInputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
+        mInputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+        mInputReviewView.setOnClickListener(this);
+
+        String reviewStatus = bookingDetail.reviewStatusType;
+        updateReviewButtonLayout(reviewStatus);
+    }
+
+    private void updateReviewButtonLayout(String reviewStatus)
+    {
+        if (Util.isTextEmpty(reviewStatus) == true)
+        {
+            reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
+        }
+
+        mInputReviewView.setTag(reviewStatus);
+
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+        } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545_alpha_20);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_cc5c5c5));
+            mInputReviewView.setText(R.string.label_booking_completed_input_review);
+        } else
+        {
+            mInputReviewVerticalLine.setVisibility(View.GONE);
+            mInputReviewView.setVisibility(View.GONE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(getResources().getColor(R.color.default_text_c323232));
+        }
     }
 
     private void initGourmetInformationLayout(Context context, View view, GourmetBookingDetail bookingDetail)
@@ -192,7 +257,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         }
 
         // 방문일 방문시간
-        initTimeInformatonLayout(context, view, bookingDetail);
+        initTimeInformationLayout(context, view, bookingDetail);
 
         TextView gourmetNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
         TextView ticketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
@@ -205,7 +270,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         addressTextView.setText(bookingDetail.address);
     }
 
-    private void initTimeInformatonLayout(Context context, View view, GourmetBookingDetail bookingDetail)
+    private void initTimeInformationLayout(Context context, View view, GourmetBookingDetail bookingDetail)
     {
         if (context == null || view == null || bookingDetail == null)
         {
@@ -241,7 +306,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
         TextView guestEmailTextView = (TextView) view.findViewById(R.id.guestEmailTextView);
 
         guestNameTextView.setText(bookingDetail.guestName);
-        guestPhoneTextView.setText(Util.addHippenMobileNumber(getContext(), bookingDetail.guestPhone));
+        guestPhoneTextView.setText(Util.addHyphenMobileNumber(getContext(), bookingDetail.guestPhone));
         guestEmailTextView.setText(bookingDetail.guestEmail);
     }
 
@@ -252,6 +317,9 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         View bonusLayout = view.findViewById(R.id.bonusLayout);
         View couponLayout = view.findViewById(R.id.couponLayout);
+        bonusLayout.setVisibility(View.GONE);
+
+        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
         TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
 
         try
@@ -263,13 +331,18 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
             ExLog.d(e.toString());
         }
 
-        String price = Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false);
+        priceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.price, false));
 
-        priceTextView.setText(price);
-        totalPriceTextView.setText(price);
+        if (bookingDetail.coupon > 0)
+        {
+            couponLayout.setVisibility(View.VISIBLE);
+            couponTextView.setText("- " + Util.getPriceFormat(getContext(), bookingDetail.coupon, false));
+        } else
+        {
+            couponLayout.setVisibility(View.GONE);
+        }
 
-        bonusLayout.setVisibility(View.GONE);
-        couponLayout.setVisibility(View.GONE);
+        totalPriceTextView.setText(Util.getPriceFormat(getContext(), bookingDetail.paymentPrice, false));
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);
@@ -331,7 +404,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 saleTime.setCurrentTime(mBookingDetail.currentDateTime);
                 saleTime.setDailyTime(mBookingDetail.dailyDateTime);
 
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, saleTime, mBookingDetail.placeIndex, false);
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, saleTime, mBookingDetail.placeIndex, 0, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
                 break;
             }
@@ -355,75 +428,51 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
                 break;
             }
 
-            case R.id.callDailyView:
+            case R.id.inputReviewView:
             {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (Util.isTelephonyEnabled(baseActivity) == true)
+                if (lockUiComponentAndIsLockUiComponent() == true)
                 {
-                    try
-                    {
-                        String phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
+                    return;
                 }
+
+                if (v.getTag() == null)
+                {
+                    return;
+                }
+
+                if ((v.getTag() instanceof String) == false)
+                {
+                    return;
+                }
+
+                String reviewStatus = (String) v.getTag();
+                if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+                {
+                    lockUI();
+                    mNetworkController.requestReviewInformation(mReservationIndex);
+                }
+
                 break;
             }
+        }
+    }
 
-            case R.id.kakaoDailyView:
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (isFinishing() == true)
+        {
+            return;
+        }
+
+        unLockUI();
+
+        if (requestCode == CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET)
+        {
+            if (resultCode == Activity.RESULT_OK)
             {
-                try
-                {
-                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-                } catch (ActivityNotFoundException e)
-                {
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-                    } catch (ActivityNotFoundException e1)
-                    {
-                        Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                        marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                        startActivity(marketLaunch);
-                    }
-                }
-                break;
-            }
-
-            case R.id.callPlaceView:
-            {
-                BaseActivity baseActivity = (BaseActivity) getActivity();
-
-                if (Util.isTelephonyEnabled(baseActivity) == true)
-                {
-                    String phone = mBookingDetail.gourmetPhone;
-
-                    if (Util.isTextEmpty(mBookingDetail.gourmetPhone) == true)
-                    {
-                        phone = DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber();
-                    }
-
-                    try
-                    {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
-                        DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    String message = getString(R.string.toast_msg_no_gourmet_call, mBookingDetail.gourmetPhone);
-                    DailyToast.showToast(baseActivity, message, Toast.LENGTH_LONG);
-                }
-                break;
+                mBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                updateReviewButtonLayout(mBookingDetail.reviewStatusType);
             }
         }
     }
@@ -441,4 +490,39 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
 
         return calendar.getTimeInMillis();
     }
+
+    private GourmetBookingDetailTabBookingNetworkController.OnNetworkControllerListener //
+        mNetworkControllerListener = new GourmetBookingDetailTabBookingNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onReviewInformation(Review review)
+        {
+            Intent intent = ReviewActivity.newInstance(getContext(), review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+        }
+
+        @Override
+        public void onError(Throwable e)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            GourmetBookingDetailTabBookingFragment.this.onErrorResponse(call, response);
+        }
+    };
 }

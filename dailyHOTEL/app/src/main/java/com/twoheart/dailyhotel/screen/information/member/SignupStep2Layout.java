@@ -88,7 +88,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
         mPhoneView = view.findViewById(R.id.phoneView);
         mPhoneEditText = (DailyEditText) view.findViewById(R.id.phoneEditText);
-        mPhoneEditText.setDeleteButtonVisible(true, null);
+        mPhoneEditText.setDeleteButtonVisible(null);
         mPhoneEditText.setOnFocusChangeListener(this);
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -123,7 +123,13 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count)
             {
-
+                if (mVerificationLayout != null && mVerificationLayout.getVisibility() == View.VISIBLE)
+                {
+                    if (count > 0 || s.length() == 0)
+                    {
+                        hideVerificationVisible();
+                    }
+                }
             }
 
             @Override
@@ -142,7 +148,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
 
         mVerificationEditText = (DailyEditText) mVerificationLayout.findViewById(R.id.verificationEditText);
-        mVerificationEditText.setDeleteButtonVisible(true, null);
+        mVerificationEditText.setDeleteButtonVisible(null);
         mVerificationEditText.setOnFocusChangeListener(this);
 
         mVerificationEditText.addTextChangedListener(new TextWatcher()
@@ -321,6 +327,16 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
             }
         });
     }
+
+    public void hideVerificationVisible()
+    {
+        mVerificationLayout.setVisibility(View.INVISIBLE);
+        mVerificationEditText.setText(null);
+
+        mSignUpView.setVisibility(View.INVISIBLE);
+        mSignUpView.setEnabled(false);
+    }
+
 
     public void resetPhoneNumber()
     {

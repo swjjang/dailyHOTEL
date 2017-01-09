@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.hotel.detail;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,8 +18,7 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -32,12 +31,12 @@ public class StayDetailListAdapter extends BaseAdapter
 {
     private static final int NUMBER_OF_ROWSLIST = 7;
 
-    private static final int GRID_COLUME_COUNT = 5;
+    private static final int GRID_COLUMN_COUNT = 5;
 
     private StayDetail mStayDetail;
     private SaleTime mCheckInSaleTime;
     private Context mContext;
-    private View[] mDeatilViews;
+    private View[] mDetailViews;
     private int mImageHeight;
     private View mHotelTitleLayout;
 
@@ -51,7 +50,7 @@ public class StayDetailListAdapter extends BaseAdapter
         mContext = context;
         mCheckInSaleTime = saleTime;
         mStayDetail = stayDetail;
-        mDeatilViews = new View[NUMBER_OF_ROWSLIST];
+        mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(mContext);
 
         mOnEventListener = onEventListener;
@@ -103,55 +102,55 @@ public class StayDetailListAdapter extends BaseAdapter
         linearLayout.removeAllViews();
 
         // 빈화면
-        if (mDeatilViews[0] == null)
+        if (mDetailViews[0] == null)
         {
-            mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+            mDetailViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
         }
 
-        getDetail00View(mDeatilViews[0]);
-        linearLayout.addView(mDeatilViews[0]);
+        getDetail00View(mDetailViews[0]);
+        linearLayout.addView(mDetailViews[0]);
 
         // 호텔 등급과 이름.
-        if (mDeatilViews[1] == null)
+        if (mDetailViews[1] == null)
         {
-            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_stay_detail02, parent, false);
+            mDetailViews[1] = layoutInflater.inflate(R.layout.list_row_stay_detail02, parent, false);
         }
 
-        getTitleView(mDeatilViews[1], mStayDetail);
-        linearLayout.addView(mDeatilViews[1]);
+        getTitleView(mDetailViews[1], mStayDetail);
+        linearLayout.addView(mDetailViews[1]);
 
         // 주소 및 맵
-        if (mDeatilViews[2] == null)
+        if (mDetailViews[2] == null)
         {
-            mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+            mDetailViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
         }
 
-        getAddressView(mDeatilViews[2], mStayDetail);
-        linearLayout.addView(mDeatilViews[2]);
+        getAddressView(mDetailViews[2], mStayDetail);
+        linearLayout.addView(mDetailViews[2]);
 
         ArrayList<StayDetail.Pictogram> list = mStayDetail.getPictogramList();
 
         if (list != null && list.size() > 0)
         {
-            if (mDeatilViews[3] == null)
+            if (mDetailViews[3] == null)
             {
-                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+                mDetailViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
             }
 
-            getAmenitiesView(mDeatilViews[3], mStayDetail);
-            linearLayout.addView(mDeatilViews[3]);
+            getAmenitiesView(mDetailViews[3], mStayDetail);
+            linearLayout.addView(mDetailViews[3]);
         }
 
         // D Benefit
         if (Util.isTextEmpty(mStayDetail.benefit) == false)
         {
-            if (mDeatilViews[4] == null)
+            if (mDetailViews[4] == null)
             {
-                mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                mDetailViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getDetailBenefitView(layoutInflater, mDeatilViews[4], mStayDetail);
-            linearLayout.addView(mDeatilViews[4]);
+            getDetailBenefitView(layoutInflater, mDetailViews[4], mStayDetail);
+            linearLayout.addView(mDetailViews[4]);
         } else
         {
             // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
@@ -163,22 +162,22 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         // 정보 화면
-        if (mDeatilViews[5] == null)
+        if (mDetailViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+            mDetailViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
-        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mStayDetail);
-        linearLayout.addView(mDeatilViews[5]);
+        getInformationView(layoutInflater, (ViewGroup) mDetailViews[5], mStayDetail);
+        linearLayout.addView(mDetailViews[5]);
 
         // 카카오톡 문의
-        if (mDeatilViews[6] == null)
+        if (mDetailViews[6] == null)
         {
-            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            mDetailViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getKakaoView(mDeatilViews[6]);
-        linearLayout.addView(mDeatilViews[6]);
+        getConciergeView(mDetailViews[6]);
+        linearLayout.addView(mDetailViews[6]);
 
         return linearLayout;
     }
@@ -237,7 +236,7 @@ public class StayDetailListAdapter extends BaseAdapter
         {
             satisfactionView.setVisibility(View.VISIBLE);
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            satisfactionView.setText(mContext.getString(R.string.label_satisfaction, //
+            satisfactionView.setText(mContext.getString(R.string.label_stay_detail_satisfaction, //
                 stayDetail.ratingValue, decimalFormat.format(stayDetail.ratingPersons)));
         }
 
@@ -343,33 +342,7 @@ public class StayDetailListAdapter extends BaseAdapter
             }
         });
 
-        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
-
-        double width = Util.getLCDWidth(mContext);
-        double height = 2.15f * width / 9;
-
-        ViewGroup.LayoutParams layoutParams = mapImageView.getLayoutParams();
-        layoutParams.height = (int) height;
-
-        mapImageView.setLayoutParams(layoutParams);
-        mapImageView.setTranslationX((int) width / 2 - Util.dpToPx(mContext, 45));
-
-        double ratio = height / width;
-
-        if (width >= 720)
-        {
-            width = 720;
-        }
-
-        height = width * ratio;
-
-        String size = String.format("%dx%d", (int) width * 4 / 5, (int) height * 4 / 5);
-        String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
-        String url = String.format("http://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
-            , size, iconUrl, mStayDetail.latitude, mStayDetail.longitude, DailyHotelRequest.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
-
-        mapImageView.setImageURI(Uri.parse(url));
-
+        ImageView mapImageView = (ImageView) view.findViewById(R.id.mapImageView);
         mapImageView.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -403,18 +376,18 @@ public class StayDetailListAdapter extends BaseAdapter
 
         ArrayList<StayDetail.Pictogram> list = stayDetail.getPictogramList();
 
-        boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
+        boolean isSingleLine = list == null || list.size() <= GRID_COLUMN_COUNT ? true : false;
 
         for (StayDetail.Pictogram pictogram : list)
         {
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int columnCount = list.size() % GRID_COLUME_COUNT;
+        int columnCount = list.size() % GRID_COLUMN_COUNT;
 
         if (columnCount != 0)
         {
-            int addEmptyViewCount = GRID_COLUME_COUNT - columnCount;
+            int addEmptyViewCount = GRID_COLUMN_COUNT - columnCount;
             for (int i = 0; i < addEmptyViewCount; i++)
             {
                 gridLayout.addView(getGridLayoutItemView(mContext, StayDetail.Pictogram.none, isSingleLine));
@@ -521,12 +494,30 @@ public class StayDetailListAdapter extends BaseAdapter
         if (arrayList != null)
         {
             viewGroup.removeAllViews();
+            boolean hasRefundPolicy = false;
 
             for (DetailInformation information : arrayList)
             {
                 ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
                 makeInformationLayout(layoutInflater, childGroup, information, hasNRD);
+
+                viewGroup.addView(childGroup);
+
+                if (hasNRD == true && mContext.getString(R.string.label_detail_cancellation_refund_policy).equalsIgnoreCase(information.title) == true)
+                {
+                    hasRefundPolicy = true;
+                }
+            }
+
+            // 서버에서 타이틀이 취소및 환불 규정이 없는 경우가 발생하는 경우가 있어서 관련 내용 처리
+            if (hasNRD == true && hasRefundPolicy == false)
+            {
+                ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
+
+                DetailInformation detailInformation = new DetailInformation(mContext.getString(R.string.label_detail_cancellation_refund_policy), null);
+
+                makeInformationLayout(layoutInflater, childGroup, detailInformation, hasNRD);
 
                 viewGroup.addView(childGroup);
             }
@@ -536,11 +527,11 @@ public class StayDetailListAdapter extends BaseAdapter
     }
 
     /**
-     * 카톡 실시간 상담
+     * 문의하기
      *
      * @return
      */
-    private View getKakaoView(View view)
+    private View getConciergeView(View view)
     {
         if (view == null)
         {
@@ -549,16 +540,24 @@ public class StayDetailListAdapter extends BaseAdapter
 
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
-        // 카톡 1:1 실시간 상담
-        View consultKakaoView = view.findViewById(R.id.kakaoImageView);
-        consultKakaoView.setOnClickListener(new OnClickListener()
+        TextView conciergeTimeTextView = (TextView) view.findViewById(R.id.conciergeTimeTextView);
+
+        String[] hour = DailyPreference.getInstance(mContext).getOperationTime().split("\\,");
+
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        conciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
+
+        View conciergeLayout = view.findViewById(R.id.conciergeLayout);
+        conciergeLayout.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 if (mOnEventListener != null)
                 {
-                    mOnEventListener.doKakaotalkConsult();
+                    mOnEventListener.onConciergeClick();
                 }
             }
         });
@@ -594,23 +593,30 @@ public class StayDetailListAdapter extends BaseAdapter
 
             for (int i = 0; i < size; i++)
             {
+                String contentText = contentsList.get(i);
+
+                if (Util.isTextEmpty(contentText) == true)
+                {
+                    continue;
+                }
+
                 View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
                 TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-                textView.setText(contentsList.get(i));
+                textView.setText(contentText);
 
                 contentsLayout.addView(textLayout);
             }
+        }
 
-            if (isRefundPolicy == true)
-            {
-                View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
-                TextView textView = (TextView) textLayout.findViewById(R.id.textView);
-                textView.setText(R.string.message_stay_detail_nrd);
-                textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-                textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+        if (isRefundPolicy == true)
+        {
+            View textLayout = layoutInflater.inflate(R.layout.list_row_detail_text, null, false);
+            TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+            textView.setText(R.string.message_stay_detail_nrd);
+            textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
 
-                contentsLayout.addView(textLayout);
-            }
+            contentsLayout.addView(textLayout);
         }
     }
 }

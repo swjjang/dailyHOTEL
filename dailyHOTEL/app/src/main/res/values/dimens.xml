@@ -23,4 +23,12 @@
     <dimen name="menubar_height">51dp</dimen>
 
     <dimen name="signature_height">160dp</dimen>
+
+    <dimen name="app_defaultsize_w">1.0dp</dimen>
+    <dimen name="app_defaultsize_h">1.0dp</dimen>
+    <dimen name="app_minimumsize_w">1.0dp</dimen>
+    <dimen name="app_minimumsize_h">1.0dp</dimen>
+
+    <dimen name="detail_button_min_left_margin">10dp</dimen>
+    <dimen name="detail_button_max_left_margin">68dp</dimen>
 </resources>

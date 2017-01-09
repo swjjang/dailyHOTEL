@@ -2,17 +2,16 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.model.GourmetParams;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchResultCurationNetworkController extends BaseNetworkController
 {
@@ -33,41 +32,50 @@ public class GourmetSearchResultCurationNetworkController extends BaseNetworkCon
             return;
         }
 
-        DailyNetworkAPI.getInstance(mContext).requestGourmetSearchList(mNetworkTag, params.toParamsString(), mGourmetListJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestGourmetList(mNetworkTag, params.toParamsMap()//
+            , params.getCategoryList(), params.getTimeList(), params.getLuxuryList(), mGourmetListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private DailyHotelJsonResponseListener mGourmetListJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mGourmetListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetCount(null, -1, -1);
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                int totalCount = 0;
+                int maxCount = 0;
+
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        totalCount = dataJSONObject.getInt("searchCount");
+                        maxCount = dataJSONObject.getInt("searchMaxCount");
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetCount(call.request().url().toString(), totalCount, maxCount);
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
         }
 
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            int totalCount = 0;
-            int maxCount = 0;
-
-            try
-            {
-                int msgCode = response.getInt("msgCode");
-                if (msgCode == 100)
-                {
-                    JSONObject dataJSONObject = response.getJSONObject("data");
-                    totalCount = dataJSONObject.getInt("searchCount");
-                    maxCount = dataJSONObject.getInt("searchMaxCount");
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onGourmetCount(url, totalCount, maxCount);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

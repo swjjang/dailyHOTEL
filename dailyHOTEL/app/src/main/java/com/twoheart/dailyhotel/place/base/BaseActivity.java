@@ -2,13 +2,16 @@ package com.twoheart.dailyhotel.place.base;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,19 +19,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -36,15 +38,43 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-public abstract class BaseActivity extends AppCompatActivity implements Constants, ErrorListener
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
+
+public abstract class BaseActivity extends AppCompatActivity implements Constants
 {
+    private static final int MESSAGE_SHOW_LOADING_PROGRESS = 1;
+
+    protected interface OnCallDialogListener
+    {
+        void onShowDialog();
+
+        void onPositiveButtonClick(View v);
+
+        void onNativeButtonClick(View v);
+    }
+
     private Dialog mDialog;
     private LoadingDialog mLockUI;
-    private Handler handler;
     protected String mNetworkTag;
+
+    private Handler mHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            switch (msg.what)
+            {
+                case MESSAGE_SHOW_LOADING_PROGRESS:
+                    mLockUI.show(msg.arg1 == 1);
+                    break;
+            }
+        }
+    };
 
     /**
      * UI Component의 잠금 상태인지 확인하는 변수..
@@ -58,8 +88,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onCreate(savedInstanceState);
 
         mLockUI = new LoadingDialog(this);
-        handler = new Handler();
         mNetworkTag = getClass().getName();
+
+        if (Util.isOverAPI21() == true && Util.isOverAPI23() == false)
+        {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.statusbar_background));
+        }
     }
 
     @Override
@@ -87,7 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             finish();
         } finally
         {
-            DailyNetworkAPI.getInstance(this).cancelAll();
+            DailyMobileAPI.getInstance(this).cancelAll(this);
         }
     }
 
@@ -95,7 +132,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         onBackPressed();
 
-        if (this instanceof MainActivity == false && isFinishing() == false)
+        if (this instanceof PlaceDetailActivity == true)
+        {
+
+        } else if (this instanceof MainActivity == false && isFinishing() == false)
         {
             finish();
         }
@@ -151,30 +191,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             Util.restartApp(this);
             return;
         }
-
-        AnalyticsManager.getInstance(this).onStart(this);
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-
-        AnalyticsManager.getInstance(this).onStop(this);
-    }
-
-    @Override
-    protected void onPause()
-    {
-        try
-        {
-            super.onPause();
-
-            AnalyticsManager.getInstance(this).onPause(this);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
     }
 
     @Override
@@ -186,8 +202,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         super.onResume();
-
-        AnalyticsManager.getInstance(this).onResume(this);
     }
 
     @Override
@@ -200,15 +214,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * LoadingDialog를 띄워 로딩 중임을 나타내어 사용자가 UI를 사용할 수 없도록 한다.
-     */
-
-    public boolean isVisibleLockUI()
-    {
-        return mLockUI.isVisible();
     }
 
     protected void setLockUICancelable(boolean flag)
@@ -232,14 +237,27 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                 mLockUI = new LoadingDialog(this);
             }
 
-            mLockUI.show(isShowProgress);
+            mHandler.removeMessages(MESSAGE_SHOW_LOADING_PROGRESS);
+
+            Message message = new Message();
+            message.what = MESSAGE_SHOW_LOADING_PROGRESS;
+            message.arg1 = isShowProgress ? 1 : 0;
+
+            mHandler.sendMessageDelayed(message, 1000);
         }
     }
 
-    public void showLockUIProgress()
+    public void lockUIImmediately()
     {
-        if (mLockUI != null)
+        lockUiComponent();
+
+        if (mLockUI != null && isFinishing() == false)
         {
+            if (mLockUI == null)
+            {
+                mLockUI = new LoadingDialog(this);
+            }
+
             mLockUI.showProgress();
         }
     }
@@ -251,6 +269,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     public void unLockUI()
     {
         releaseUiComponent();
+
+        mHandler.removeMessages(MESSAGE_SHOW_LOADING_PROGRESS);
 
         if (isFinishing() == false && mLockUI != null)
         {
@@ -319,7 +339,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 현재 Activity에 등록된 Request를 취소한다.
-        DailyNetworkAPI.getInstance(this).cancelAll(mNetworkTag);
+        DailyMobileAPI.getInstance(this).cancelAll(this, mNetworkTag);
+
         if (mDialog != null && mDialog.isShowing())
         {
             mDialog.dismiss();
@@ -342,17 +363,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onDestroy();
     }
 
-    @Override
-    public void onErrorResponse(VolleyError error)
+    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
     {
         unLockUI();
 
-        if (error.getCause() instanceof java.net.ConnectException)
-        {
-            VolleyHttpClient.getInstance(this).getRequestQueue().getCache().clear();
-        }
-
-        if (error.networkResponse != null && error.networkResponse.statusCode == 401)
+        if (response != null && response.code() == 401)
         {
             DailyPreference.getInstance(this).clear();
 
@@ -376,14 +391,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             return;
         }
 
-        ExLog.e(error.toString());
-
         onError();
     }
 
-    public void onError(Exception e)
+    public void onError(Throwable e)
     {
-        releaseUiComponent();
+        unLockUI();
 
         if (DEBUG == false && e != null)
         {
@@ -397,16 +410,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         onError();
-
-        finish();
     }
 
     protected void onError()
     {
-        releaseUiComponent();
+        unLockUI();
 
         // 혹시나 스레드 상태에서 호출이 될경우를 대비해서
-        handler.post(new Runnable()
+        mHandler.post(new Runnable()
         {
             @Override
             public void run()
@@ -440,14 +451,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         unLockUI();
 
-        handler.post(new Runnable()
+        if (Util.isTextEmpty(message) == true)
         {
-            @Override
-            public void run()
+            onError();
+        } else
+        {
+            mHandler.post(new Runnable()
             {
-                DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
-            }
-        });
+                @Override
+                public void run()
+                {
+                    DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
+                }
+            });
+        }
     }
 
     private void recursiveRecycle(View root)
@@ -759,7 +776,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         try
         {
             mDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -885,10 +907,89 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         try
         {
             mDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+
             mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
+        }
+    }
+
+    public void showDailyCallDialog(final OnCallDialogListener listener)
+    {
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                releaseUiComponent();
+
+                if (listener != null)
+                {
+                    listener.onPositiveButtonClick(v);
+                }
+
+                String remoteConfigPhoneNumber = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
+                String phoneNumber = Util.isTextEmpty(remoteConfigPhoneNumber) == false //
+                    ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
+
+                String noCallMessage = getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
+
+                if (Util.isTelephonyEnabled(BaseActivity.this) == true)
+                {
+                    try
+                    {
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                    } catch (ActivityNotFoundException e)
+                    {
+                        DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    }
+                } else
+                {
+                    DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                }
+            }
+        };
+
+        View.OnClickListener nativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (listener != null)
+                {
+                    listener.onNativeButtonClick(v);
+                }
+            }
+        };
+
+        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                releaseUiComponent();
+            }
+        };
+
+        String[] hour = DailyPreference.getInstance(BaseActivity.this).getOperationTime().split("\\,");
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        String operatingTimeMessage = getString(R.string.dialog_msg_call) //
+            + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour);
+
+        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
+            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
+            , positiveListener, nativeListener, null, dismissListener, true);
+
+        if (listener != null)
+        {
+            listener.onShowDialog();
         }
     }
 

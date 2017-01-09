@@ -1,8 +1,8 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -21,7 +21,12 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StayListFragment extends PlaceListFragment
 {
@@ -29,7 +34,7 @@ public class StayListFragment extends PlaceListFragment
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
-        void onStayClick(PlaceViewItem placeViewItem, int listCount);
+        void onStayClick(View view, PlaceViewItem placeViewItem, int listCount);
     }
 
     @Override
@@ -60,7 +65,14 @@ public class StayListFragment extends PlaceListFragment
     @Override
     protected void refreshList(boolean isShowProgress, int page)
     {
-        // 더보기 시 uilock 걸지않음
+        if (mStayCuration == null)
+        {
+            unLockUI();
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        // 더보기 시 unlock 걸지않음
         if (page <= 1)
         {
             lockUI(isShowProgress);
@@ -115,6 +127,10 @@ public class StayListFragment extends PlaceListFragment
         if (listSize > 0)
         {
             mLoadMorePageIndex = page;
+            mIsLoadMoreFlag = true;
+        } else
+        {
+            mIsLoadMoreFlag = false;
         }
 
         mPlaceCount += listSize;
@@ -176,9 +192,9 @@ public class StayListFragment extends PlaceListFragment
     protected StayListLayout.OnEventListener mEventListener = new StayListLayout.OnEventListener()
     {
         @Override
-        public void onPlaceClick(PlaceViewItem placeViewItem)
+        public void onPlaceClick(View view, PlaceViewItem placeViewItem)
         {
-            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(placeViewItem, getPlaceCount());
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
         }
 
         @Override
@@ -253,13 +269,7 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            StayListFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             if (DEBUG == false && e != null)
             {
@@ -282,6 +292,12 @@ public class StayListFragment extends PlaceListFragment
         {
             MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.onRuntimeError("message : " + message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            StayListFragment.this.onErrorResponse(call, response);
         }
     };
 }

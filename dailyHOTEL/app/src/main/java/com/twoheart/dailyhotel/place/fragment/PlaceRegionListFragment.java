@@ -162,11 +162,16 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
             if (childView != null)
             {
-                Integer childTag = (Integer) childView.getTag();
+                Object tag = childView.getTag();
 
-                if (childTag != null && childTag == groupPosition)
+                if (tag != null && tag instanceof Integer == true)
                 {
-                    return childView;
+                    Integer childTag = (Integer) tag;
+
+                    if (childTag == groupPosition)
+                    {
+                        return childView;
+                    }
                 }
             }
         }
@@ -401,7 +406,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         @Override
         public boolean onGroupClick(ExpandableListView parent, View v, final int groupPosition, long id)
         {
-            if (isLockUiComponent() == true || v.getTag() == null)
+            if (isLockUiComponent() == true)
             {
                 return true;
             }
@@ -411,8 +416,6 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             //
             if (mAdapter.getChildrenCount(groupPosition) == 0)
             {
-                mAdapter.notifyDataSetChanged();
-
                 if (mOnPlaceRegionListFragment != null)
                 {
                     mOnPlaceRegionListFragment.onRegionClick(mAdapter.getGroup(groupPosition));
@@ -420,13 +423,13 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 return true;
             }
 
-            Integer tag = (Integer) mListView.getTag();
+            Object tag = mListView.getTag();
 
             int previousGroupPosition = -1;
 
-            if (tag != null)
+            if (tag != null && tag instanceof Integer == true)
             {
-                previousGroupPosition = tag;
+                previousGroupPosition = (Integer) tag;
 
                 RegionViewItem regionViewItem = mAdapter.getAreaItem(previousGroupPosition);
 
@@ -473,12 +476,19 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         @Override
         public void onClick(View view)
         {
-            Area area = (Area) view.getTag();
+            Object tag = view.getTag();
 
-            if (area == null || mOnPlaceRegionListFragment == null)
+            if (tag == null)
             {
                 return;
             }
+
+            if (tag instanceof Area == false || mOnPlaceRegionListFragment == null)
+            {
+                return;
+            }
+
+            Area area = (Area) tag;
 
             if (area.index == -1)
             {

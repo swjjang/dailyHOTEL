@@ -41,7 +41,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         return view;
     }
 
-    private void makeLayout(View view, final Gourmet gourmet)
+    private void makeLayout(final View view, final Gourmet gourmet)
     {
         //        View gradientView = view.findViewById(R.id.gradientView);
         com.facebook.drawee.view.SimpleDraweeView placeImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
@@ -52,7 +52,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
         TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
         View closeView = view.findViewById(R.id.closeImageVIew);
-        TextView persions = (TextView) view.findViewById(R.id.personsTextView);
+        TextView persons = (TextView) view.findViewById(R.id.personsTextView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
 
@@ -82,11 +82,11 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         // 인원
         if (gourmet.persons > 1)
         {
-            persions.setVisibility(View.VISIBLE);
-            persions.setText(mContext.getString(R.string.label_persions, gourmet.persons));
+            persons.setVisibility(View.VISIBLE);
+            persons.setText(mContext.getString(R.string.label_persions, gourmet.persons));
         } else
         {
-            persions.setVisibility(View.GONE);
+            persons.setVisibility(View.GONE);
         }
 
         if (gourmet.price <= 0)
@@ -106,7 +106,8 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         if (gourmet.satisfaction > 0)
         {
             satisfactionView.setVisibility(View.VISIBLE);
-            satisfactionView.setText(gourmet.satisfaction + "%");
+            satisfactionView.setText(//
+                mContext.getResources().getString(R.string.label_list_satisfaction, gourmet.satisfaction));
         } else
         {
             satisfactionView.setVisibility(View.GONE);
@@ -156,7 +157,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             {
                 if (mOnPlaceMapViewPagerAdapterListener != null)
                 {
-                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(gourmet);
+                    mOnPlaceMapViewPagerAdapterListener.onInformationClick(view, gourmet);
                 }
             }
         });

@@ -67,12 +67,23 @@ public class DailyEditText extends AppCompatEditText
     {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
 
-        if (mHasDeleteButton == true && isFocused() == true && lengthAfter > 0)
+        if (mHasDeleteButton == true)
         {
-            setDeleteDrawable();
-        } else
-        {
-            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            if (isFocused() == true && text != null && text.length() > 0)
+            {
+                setDeleteDrawable();
+            } else
+            {
+                Drawable[] drawables = getCompoundDrawables();
+
+                if (drawables == null)
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                } else
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], null, drawables[DRAWABLE_BOTTOM]);
+                }
+            }
         }
     }
 
@@ -81,9 +92,26 @@ public class DailyEditText extends AppCompatEditText
     {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
 
-        if (focused == false)
+        if (mHasDeleteButton == true)
         {
-            setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            if (focused == false)
+            {
+                Drawable[] drawables = getCompoundDrawables();
+
+                if (drawables == null)
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                } else
+                {
+                    setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], drawables[DRAWABLE_RIGHT], drawables[DRAWABLE_BOTTOM]);
+                }
+            } else
+            {
+                if (getText().length() > 0)
+                {
+                    setDeleteDrawable();
+                }
+            }
         }
     }
 
@@ -103,7 +131,9 @@ public class DailyEditText extends AppCompatEditText
     {
         if (mHasDeleteButton == true)
         {
-            if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_DOWN)
+            int action = event.getAction() & MotionEvent.ACTION_MASK;
+
+            if (action == MotionEvent.ACTION_DOWN)
             {
                 Drawable[] drawables = getCompoundDrawables();
 
@@ -114,7 +144,7 @@ public class DailyEditText extends AppCompatEditText
 
                 int withDrawable = drawables[DRAWABLE_RIGHT].getBounds().width() + getCompoundDrawablePadding();
 
-                if (event.getRawX() >= (getRight() - withDrawable))
+                if (event.getX() >= (getWidth() - withDrawable))
                 {
                     setText(null);
 
@@ -134,16 +164,29 @@ public class DailyEditText extends AppCompatEditText
     {
         Drawable[] drawables = getCompoundDrawables();
 
-        if (drawables == null || drawables[DRAWABLE_RIGHT] == null)
+        if (drawables == null)
         {
             setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+        } else
+        {
+            if (drawables[DRAWABLE_RIGHT] != null)
+            {
+                return;
+            }
+
+            Context context = getContext();
+
+            Drawable rightDrawable = AppCompatDrawableManager.get().getDrawable(context, R.drawable.search_ic_01_delete);
+            setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], rightDrawable, drawables[DRAWABLE_BOTTOM]);
         }
     }
 
-    public void setDeleteButtonVisible(boolean visible, OnDeleteTextClickListener listener)
+    public void setDeleteButtonVisible(OnDeleteTextClickListener listener)
     {
-        mHasDeleteButton = visible;
+        mHasDeleteButton = true;
         mOnDeleteTextClickListener = listener;
+
+        setCompoundDrawablePadding(Util.dpToPx(getContext(), 8));
     }
 
     private void setDrawableCompat(Context context, AttributeSet attrs)

@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.main;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -14,21 +16,22 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
-import com.twoheart.dailyhotel.network.VolleyHttpClient;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
-import com.twoheart.dailyhotel.screen.common.SatisfactionActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -37,10 +40,15 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements Constants
 {
@@ -71,15 +79,11 @@ public class MainActivity extends BaseActivity implements Constants
                 case 0:
                     if (mIsInitialization == true)
                     {
-                        lockUI();
+                        lockUIImmediately();
                     }
                     break;
 
                 case 1:
-                    if (isVisibleLockUI() == true)
-                    {
-                        showLockUIProgress();
-                    }
                     break;
 
                 case 2:
@@ -131,7 +135,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
-        String currentVersion = Util.getAppVersion(this);
+        String currentVersion = Util.getAppVersionCode(this);
         if (currentVersion.equalsIgnoreCase(version) == false)
         {
             DailyPreference.getInstance(this).setAppVersion(currentVersion);
@@ -181,19 +185,19 @@ public class MainActivity extends BaseActivity implements Constants
 
         mTooltipLayout = findViewById(R.id.tooltipLayout);
 
-        if (DailyPreference.getInstance(this).isViewRecentPlaceTooltip() == true)
+        if (DailyPreference.getInstance(this).isViewWishListTooltip() == true)
         {
-            mTooltipLayout.setVisibility(View.GONE);
+            hideAnimationTooltip();
         } else
         {
-            DailyPreference.getInstance(this).setIsViewRecentPlaceTooltip(true);
+            DailyPreference.getInstance(this).setIsViewWishListTooltip(true);
             mTooltipLayout.setVisibility(View.VISIBLE);
             mTooltipLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    view.setVisibility(View.GONE);
+                    hideAnimationTooltip();
                 }
             });
         }
@@ -268,7 +272,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         if (mIsInitialization == true)
         {
-            if (VolleyHttpClient.isAvailableNetwork(this) == false)
+            if (Util.isAvailableNetwork(this) == false)
             {
                 mDelayTimeHandler.removeMessages(0);
 
@@ -296,7 +300,7 @@ public class MainActivity extends BaseActivity implements Constants
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
-                mNetworkController.requestGourmetIsExistRating();
+                mNetworkController.requestReviewGourmet();
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
@@ -309,6 +313,7 @@ public class MainActivity extends BaseActivity implements Constants
             case CODE_REQUEST_ACTIVITY_SEARCH:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
+            case CODE_REQUEST_ACTIVITY_COLLECTION:
             {
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {
@@ -317,6 +322,24 @@ public class MainActivity extends BaseActivity implements Constants
                 }
 
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                } else
+                {
+                    mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
+                if (data == null && (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY))
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
                 } else
@@ -338,6 +361,34 @@ public class MainActivity extends BaseActivity implements Constants
                 mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
                 break;
             }
+
+            case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
+                if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_STAY_LIST:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_GOURMET_LIST:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+                        break;
+
+                    default:
+                        mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                        break;
+                }
+                break;
         }
     }
 
@@ -399,7 +450,51 @@ public class MainActivity extends BaseActivity implements Constants
         }
     }
 
-    public void checkAppVersion(final String currentVersion, final String forceVersion)
+    private void hideAnimationTooltip()
+    {
+        if (mTooltipLayout.getTag() != null)
+        {
+            return;
+        }
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
+
+        mTooltipLayout.setTag(objectAnimator);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                mTooltipLayout.setTag(null);
+                mTooltipLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
+    }
+
+    private void checkAppVersion(final String currentVersion, final String forceVersion)
     {
         if (Util.isTextEmpty(currentVersion, forceVersion) == true)
         {
@@ -407,7 +502,7 @@ public class MainActivity extends BaseActivity implements Constants
             return;
         }
 
-        int appVersion = Integer.parseInt(Util.getAppVersion(MainActivity.this).replace(".", ""));
+        int appVersion = Integer.parseInt(Util.getAppVersionCode(MainActivity.this).replace(".", ""));
         int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
         int forceVersionNumber = Integer.parseInt(forceVersion.replace(".", ""));
         int currentVersionNumber = Integer.parseInt(currentVersion.replace(".", ""));
@@ -542,7 +637,7 @@ public class MainActivity extends BaseActivity implements Constants
             @Override
             public void onClick(View view)
             {
-                if (VolleyHttpClient.isAvailableNetwork(MainActivity.this) == true)
+                if (Util.isAvailableNetwork(MainActivity.this) == true)
                 {
                     lockUI();
                     mNetworkController.requestCheckServer();
@@ -585,7 +680,11 @@ public class MainActivity extends BaseActivity implements Constants
 
         try
         {
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mSettingNetworkDialog);
+
             mSettingNetworkDialog.show();
+
+            mSettingNetworkDialog.getWindow().setAttributes(layoutParams);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -596,7 +695,6 @@ public class MainActivity extends BaseActivity implements Constants
     {
         mDelayTimeHandler.sendEmptyMessageDelayed(2, 2000);
         mDelayTimeHandler.removeMessages(0);
-        mDelayTimeHandler.sendEmptyMessageDelayed(1, 3000);
         mIsInitialization = false;
         mNetworkController.requestCommonDatetime();
     }
@@ -616,12 +714,24 @@ public class MainActivity extends BaseActivity implements Constants
                 case 0:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, false);
 
+                    if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
+                        mNetworkController.requestReviewStay();
+                    }
+
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
                     break;
 
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
+
+                    if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
+                    {
+                        DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
+                        mNetworkController.requestReviewStay();
+                    }
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.DAILY_GOURMET_CLICKED, AnalyticsManager.Label.GOURMET_SCREEN, null);
@@ -676,30 +786,21 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onSatisfactionGourmet(String ticketName, int reservationIndex, long checkInTime)
+        public void onReviewGourmet(Review review)
         {
-            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, ticketName, reservationIndex, checkInTime);
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
         }
 
         @Override
-        public void onSatisfactionHotel(String hotelName, int reservationIndex, long checkInTime, long checkOutTime)
+        public void onReviewStay(Review review)
         {
-            Intent intent = SatisfactionActivity.newInstance(MainActivity.this, hotelName, reservationIndex, checkInTime, checkOutTime);
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            mDelayTimeHandler.removeMessages(0);
-            unLockUI();
-
-            MainActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             mDelayTimeHandler.removeMessages(0);
             unLockUI();
@@ -723,6 +824,15 @@ public class MainActivity extends BaseActivity implements Constants
             unLockUI();
 
             MainActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
+            MainActivity.this.onErrorResponse(call, response);
         }
 
         @Override
@@ -778,7 +888,26 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
-                if (DailyDeepLink.getInstance().isHotelView() == true)
+                if (DailyDeepLink.getInstance().isCollectionView() == true)
+                {
+                    String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
+
+                    if (Util.isTextEmpty(deepLinkPlaceType) == false)
+                    {
+                        switch (deepLinkPlaceType)
+                        {
+                            case "stay":
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
+                                placeType = PlaceType.HOTEL;
+                                break;
+
+                            case "gourmet":
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, true);
+                                placeType = PlaceType.FNB;
+                                break;
+                        }
+                    }
+                } else if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOTEL_FRAGMENT, true);
                     placeType = PlaceType.HOTEL;
@@ -802,8 +931,10 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true//
                     || DailyDeepLink.getInstance().isFAQView() == true//
                     || DailyDeepLink.getInstance().isTermsNPolicyView() == true//
-//                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
-//                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
+                    || DailyDeepLink.getInstance().isProfileView() == true//
+                    || DailyDeepLink.getInstance().isProfileBirthdayView() == true//
+                    || DailyDeepLink.getInstance().isWishlistHotelView() == true//
+                    || DailyDeepLink.getInstance().isWishlistGourmetView() == true//
                     )
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
@@ -828,7 +959,7 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
                     String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
-                    String currentAppVersion = Util.getAppVersion(MainActivity.this);
+                    String currentAppVersion = Util.getAppVersionCode(MainActivity.this);
 
                     if (Util.isTextEmpty(realProvinceName) == true)
                     {
@@ -875,7 +1006,7 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
                     String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
-                    String currentAppVersion = Util.getAppVersion(MainActivity.this);
+                    String currentAppVersion = Util.getAppVersionCode(MainActivity.this);
 
                     if (Util.isTextEmpty(realProvinceName) == true)
                     {
@@ -900,21 +1031,6 @@ public class MainActivity extends BaseActivity implements Constants
                     mNetworkController.requestUserInformation();
                 } else
                 {
-                    // GCM 등록
-                    Util.requestGoogleCloudMessaging(MainActivity.this, new Util.OnGoogleCloudMessagingListener()
-                    {
-                        @Override
-                        public void onResult(String registrationId)
-                        {
-                            if (Util.isTextEmpty(registrationId) == true)
-                            {
-                                return;
-                            }
-
-                            mNetworkController.registerNotificationId(registrationId, null);
-                        }
-                    });
-
                     // 헤택이 Off 되어있는 경우 On으로 수정
                     boolean isUserBenefitAlarm = DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm();
                     if (isUserBenefitAlarm == false//
@@ -939,7 +1055,7 @@ public class MainActivity extends BaseActivity implements Constants
                     {
                         if (mTooltipLayout.getVisibility() != View.GONE)
                         {
-                            mTooltipLayout.setVisibility(View.GONE);
+                            hideAnimationTooltip();
                         }
                     }
                 }, 10000);
@@ -1050,18 +1166,10 @@ public class MainActivity extends BaseActivity implements Constants
             try
             {
                 // 요청하면서 CS운영시간도 같이 받아온다.
-                //                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH", Locale.KOREA);
-                //                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                //
-                //                String text = getString(R.string.dialog_message_cs_operating_time //
-                //                    , Integer.parseInt(simpleDateFormat.format(new Date(openDateTime))) //
-                //                    , Integer.parseInt(simpleDateFormat.format(new Date(closeDateTime))));
+                String startHour = DailyCalendar.format(openDateTime, "H", TimeZone.getTimeZone("GMT"));
+                String endtHour = DailyCalendar.format(closeDateTime, "H", TimeZone.getTimeZone("GMT"));
 
-                String text = getString(R.string.dialog_message_cs_operating_time //
-                    , Integer.parseInt(DailyCalendar.format(openDateTime, "HH", TimeZone.getTimeZone("GMT"))) //
-                    , Integer.parseInt(DailyCalendar.format(closeDateTime, "HH", TimeZone.getTimeZone("GMT"))));
-
-                DailyPreference.getInstance(MainActivity.this).setOperationTimeMessage(text);
+                DailyPreference.getInstance(MainActivity.this).setOperationTime(String.format("%s,%s", startHour, endtHour));
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1100,6 +1208,17 @@ public class MainActivity extends BaseActivity implements Constants
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);
+        }
+
+        @Override
+        public void onUserProfileBenefit(boolean isExceedBonus)
+        {
+            DailyPreference.getInstance(MainActivity.this).setUserExceedBonus(isExceedBonus);
+            AnalyticsManager.getInstance(MainActivity.this).setExceedBonus(isExceedBonus);
+
+            mNetworkController.requestReviewStay();
+
+            DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
         }
     };
 }

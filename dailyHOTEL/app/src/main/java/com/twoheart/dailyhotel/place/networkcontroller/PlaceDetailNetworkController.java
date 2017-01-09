@@ -2,19 +2,17 @@ package com.twoheart.dailyhotel.place.networkcontroller;
 
 import android.content.Context;
 
-import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.network.DailyNetworkAPI;
-import com.twoheart.dailyhotel.network.response.DailyHotelJsonResponseListener;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
 
-import java.util.Map;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public abstract class PlaceDetailNetworkController extends BaseNetworkController
 {
@@ -27,144 +25,215 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
     {
         void onCommonDateTime(long currentDateTime, long dailyDateTime);
 
-        void onUserInformation(Customer user, boolean isDailyUser);
+        //        void onUserInformation(Customer user, String birthday, boolean isDailyUser);
 
-        void onUserProfile(Customer user, boolean isVerified, boolean isPhoneVerified);
+        void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified);
+
+        void onAddWishList(boolean isSuccess, String message);
+
+        void onRemoveWishList(boolean isSuccess, String message);
+
     }
 
     public void requestCommonDatetime()
     {
-        DailyNetworkAPI.getInstance(mContext).requestCommonDatetime(mNetworkTag, mDateTimeJsonResponseListener);
-    }
-
-    public void requestUserInformationEx()
-    {
-        DailyNetworkAPI.getInstance(mContext).requestUserInformationEx(mNetworkTag, mUserInformationExJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeCallback);
     }
 
     public void requestProfile()
     {
-        DailyNetworkAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
     }
 
-    private DailyHotelJsonResponseListener mDateTimeJsonResponseListener = new DailyHotelJsonResponseListener()
+    public void requestAddWishList(Constants.PlaceType placeType, int placeIndex)
+    {
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestAddWishList(mNetworkTag, type, placeIndex, mAddWishListCallback);
+    }
+
+    public void requestRemoveWishList(Constants.PlaceType placeType, int placeIndex)
+    {
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, type, placeIndex, mRemoveWishListCallback);
+    }
+
+    private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                long currentDateTime = response.getLong("currentDateTime");
-                long dailyDateTime = response.getLong("dailyDateTime");
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
-            } catch (Exception e)
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
+                    } else
+                    {
+                        String message = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserInformationExJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msg_code");
-
-                if (msgCode == 0)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    Customer user = new Customer();
-                    user.setEmail(jsonObject.getString("email"));
-                    user.setName(jsonObject.getString("name"));
-                    user.setPhone(jsonObject.getString("phone"));
-                    user.setUserIdx(jsonObject.getString("idx"));
+                    int msgCode = responseJSONObject.getInt("msgCode");
 
-                    // 추천인
-                    //                    int recommender = jsonObject.getInt("recommender_code");
-                    boolean isDailyUser = jsonObject.getBoolean("is_daily_user");
+                    if (msgCode == 100)
+                    {
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(user, isDailyUser);
-                } else
+                        Customer user = new Customer();
+                        user.setEmail(jsonObject.getString("email"));
+                        user.setName(jsonObject.getString("name"));
+                        user.setPhone(jsonObject.getString("phone"));
+                        user.setUserIdx(jsonObject.getString("userIdx"));
+
+                        String birthday = null;
+
+                        if (jsonObject.has("birthday") == true && jsonObject.isNull("birthday") == false)
+                        {
+                            birthday = jsonObject.getString("birthday");
+                        }
+
+                        String userType = jsonObject.getString("userType");
+                        boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(userType);
+
+                        boolean isVerified = jsonObject.getBoolean("verified");
+                        boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(user, birthday, isDailyUser, isVerified, isPhoneVerified);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    }
+                } catch (Exception e)
                 {
-                    String msg = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                if (Constants.DEBUG == false)
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mAddWishListCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
                 {
-                    String logString = url + " | " + DailyHotel.AUTHORIZATION;
-                    if (response == null)
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100 ? true : false;
+
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
                     {
-                        logString += " | empty response";
-                    } else if (response.has("data") == false)
-                    {
-                        logString += " | empty data";
+                        message = responseJSONObject.getString("msg");
                     }
 
-                    Crashlytics.log(logString);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAddWishList(isSuccess, message);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
                 }
-
-                mOnNetworkControllerListener.onError(e);
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 
-    private DailyHotelJsonResponseListener mUserProfileJsonResponseListener = new DailyHotelJsonResponseListener()
+    private retrofit2.Callback mRemoveWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
-        public void onResponse(String url, Map<String, String> params, JSONObject response)
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
         {
-            try
+            if (response != null && response.isSuccessful() && response.body() != null)
             {
-                int msgCode = response.getInt("msgCode");
-
-                if (msgCode == 100)
+                try
                 {
-                    JSONObject jsonObject = response.getJSONObject("data");
+                    JSONObject responseJSONObject = response.body();
 
-                    Customer user = new Customer();
-                    user.setEmail(jsonObject.getString("email"));
-                    user.setName(jsonObject.getString("name"));
-                    user.setPhone(jsonObject.getString("phone"));
-                    user.setUserIdx(jsonObject.getString("userIdx"));
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100 ? true : false;
 
-                    boolean isVerified = jsonObject.getBoolean("verified");
-                    boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
+                    {
+                        message = responseJSONObject.getString("msg");
+                    }
 
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(user, isVerified, isPhoneVerified);
-                } else
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveWishList(isSuccess, message);
+                } catch (Exception e)
                 {
-                    String msg = response.getString("msg");
-                    mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    mOnNetworkControllerListener.onError(e);
                 }
-            } catch (Exception e)
+            } else
             {
-                mOnNetworkControllerListener.onError(e);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
+        public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onErrorResponse(volleyError);
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }

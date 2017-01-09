@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util.analytics;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -28,7 +29,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
     interface OnClientIdListener
     {
-        void onResponseClientId(String cliendId);
+        void onResponseClientId(String clientId);
     }
 
     public GoogleAnalyticsManager(Context context, final OnClientIdListener listener)
@@ -143,7 +144,11 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
         {
             checkoutStep(2, screen, null, params);
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS.equalsIgnoreCase(screen) == true//
+            || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
         {
             checkoutStep(3, screen, null, params);
         } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
@@ -159,6 +164,24 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             recordSearchAnalytics(screen, params);
         } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true //
             || AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        {
+            recordScreen(screen);
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true //
+            || AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screen) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+            screenViewBuilder.setCustomDimension(19, params.get(AnalyticsManager.KeyType.PLACE_HIT_TYPE));
+
+            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screen + " | " + screenViewBuilder.build().toString());
+            }
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY.equalsIgnoreCase(screen) == true)
         {
             recordScreen(screen);
         }
@@ -207,9 +230,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (dailyDeepLink.isHotelDetailView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYHOTEL_DETAIL;
-        } else if (dailyDeepLink.isHotelRegionListView() == true)
-        {
-            screenName = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+            //        } else if (dailyDeepLink.isHotelRegionListView() == true)
+            //        {
+            //            screenName = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
         } else if (dailyDeepLink.isHotelEventBannerWebView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYHOTEL_BANNER_DETAIL;
@@ -219,9 +242,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (dailyDeepLink.isGourmetDetailView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYGOURMET_DETAIL;
-        } else if (dailyDeepLink.isGourmetRegionListView() == true)
-        {
-            screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
+            //        } else if (dailyDeepLink.isGourmetRegionListView() == true)
+            //        {
+            //            screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
         } else if (dailyDeepLink.isGourmetEventBannerWebView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYGOURMET_BANNER_DETAIL;
@@ -285,31 +308,63 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     }
 
     @Override
+    void setUserBirthday(String birthday)
+    {
+
+    }
+
+    @Override
+    void setUserName(String name)
+    {
+
+    }
+
+    @Override
     void setExceedBonus(boolean isExceedBonus)
     {
 
     }
 
     @Override
-    void onStart(Activity activity)
+    void onActivityCreated(Activity activity, Bundle bundle)
     {
 
     }
 
     @Override
-    void onStop(Activity activity)
+    void onActivityStarted(Activity activity)
     {
 
     }
 
     @Override
-    void onResume(Activity activity)
+    void onActivityStopped(Activity activity)
     {
+
     }
 
     @Override
-    void onPause(Activity activity)
+    void onActivityResumed(Activity activity)
     {
+
+    }
+
+    @Override
+    void onActivityPaused(Activity activity)
+    {
+
+    }
+
+    @Override
+    void onActivitySaveInstanceState(Activity activity, Bundle bundle)
+    {
+
+    }
+
+    @Override
+    void onActivityDestroyed(Activity activity)
+    {
+
     }
 
     @Override
@@ -335,7 +390,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     }
 
     @Override
-    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String userType, String recommender, String callByScreen)
+    void signUpDailyUser(String userIndex, String email, String name, String phoneNumber,//
+                         String birthday, String userType, String recommender, String callByScreen)
     {
     }
 
@@ -345,7 +401,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
-        Product product = getProcuct(params);
+        Product product = getProduct(params);
         product.setBrand("hotel");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
@@ -387,7 +443,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
 
-        Product product = getProcuct(params);
+        Product product = getProduct(params);
         product.setBrand("gourmet");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
@@ -455,8 +511,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
     }
 
-
-    private Product getProcuct(Map<String, String> params)
+    private Product getProduct(Map<String, String> params)
     {
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
         String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
@@ -471,7 +526,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         //        String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String quantity = params.get(AnalyticsManager.KeyType.QUANTITY);
 
-        //        String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
+        //        String credit = params.get(AnalyticsManager.KeyType.USED_BONUS);
 
         String id;
 
@@ -643,7 +698,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
 
-        Product product = getProcuct(params);
+        Product product = getProduct(params);
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_CHECKOUT).setCheckoutStep(step);
 

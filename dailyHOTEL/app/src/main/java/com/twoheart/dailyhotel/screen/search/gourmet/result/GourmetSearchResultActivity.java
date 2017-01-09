@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -40,10 +40,15 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 {
@@ -231,7 +236,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initIntent(Intent intent)
     {
-        SaleTime saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        SaleTime saleTime;
+
+        try
+        {
+            saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         Location location = null;
         Keyword keyword = null;
         double radius = DEFAULT_SEARCH_RADIUS;
@@ -446,6 +461,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, //
                 mGourmetSearchCuration.getSaleTime(), AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+
+            if (intent == null)
+            {
+                Util.restartApp(GourmetSearchResultActivity.this);
+                return;
+            }
+
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
@@ -560,7 +582,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowCallDialog()
         {
-            showCallDialog();
+            showDailyCallDialog(null);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CALL, null);
@@ -634,14 +656,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            unLockUI();
-            GourmetSearchResultActivity.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             unLockUI();
             GourmetSearchResultActivity.this.onError(e);
@@ -660,12 +675,19 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             unLockUI();
             GourmetSearchResultActivity.this.onErrorToastMessage(message);
         }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            unLockUI();
+            GourmetSearchResultActivity.this.onErrorResponse(call, response);
+        }
     };
 
     private GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
-        public void onGourmetClick(PlaceViewItem placeViewItem, int listCount)
+        public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
@@ -677,7 +699,31 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
                 mGourmetSearchCuration.getSaleTime(), gourmet, listCount);
 
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            if (Util.isUsedMultiTransition() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                Object mapTag = gradientBottomView.getTag();
+
+                if (mapTag != null && "map".equals(mapTag) == true)
+                {
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                }
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(GourmetSearchResultActivity.this,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+            }
         }
 
         @Override

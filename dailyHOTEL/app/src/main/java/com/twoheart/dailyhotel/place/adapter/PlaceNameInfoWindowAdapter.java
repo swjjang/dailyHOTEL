@@ -11,11 +11,11 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 
 public class PlaceNameInfoWindowAdapter implements InfoWindowAdapter
 {
-    private LayoutInflater mLayoutInflaterinflater = null;
+    private LayoutInflater mLayoutInflater = null;
 
     public PlaceNameInfoWindowAdapter(Context context)
     {
-        mLayoutInflaterinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class PlaceNameInfoWindowAdapter implements InfoWindowAdapter
     @Override
     public View getInfoContents(Marker marker)
     {
-        View view = mLayoutInflaterinflater.inflate(R.layout.fragment_tabmap_popup, null);
+        View view = mLayoutInflater.inflate(R.layout.fragment_tabmap_popup, null);
 
         DailyTextView textView = (DailyTextView) view.findViewById(R.id.titleTextView);
         textView.setText(marker.getTitle());

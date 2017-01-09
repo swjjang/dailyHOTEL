@@ -10,6 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/bottomLayout"
         android:layout_below="@+id/toolbar"
         android:fadingEdge="none">
 
@@ -24,7 +25,6 @@
 
 
             <!-- 결제 정보 -->
-
             <LinearLayout
                 android:id="@+id/paymentInfoLayout"
                 android:layout_width="match_parent"
@@ -36,20 +36,20 @@
                     android:id="@+id/textView21"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginRight="11dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/label_receipt_paymentinfo"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
-                    dailyFont:style="Bold"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginRight="11dp"/>
+                    dailyFont:style="Bold"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:layout_marginLeft="11dp"
-                    android:layout_marginRight="11dp">
+                    android:layout_marginRight="11dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/textView22"
@@ -69,13 +69,13 @@
                         android:textSize="11dp"/>
                 </RelativeLayout>
 
-
                 <RelativeLayout
+                    android:id="@+id/paymentTypeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:layout_marginLeft="11dp"
-                    android:layout_marginRight="11dp">
+                    android:layout_marginRight="11dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/textView32"
@@ -98,9 +98,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:layout_marginLeft="11dp"
-                    android:layout_marginRight="11dp">
+                    android:layout_marginRight="11dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/textView24"
@@ -123,9 +123,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:layout_marginLeft="11dp"
-                    android:layout_marginRight="11dp">
+                    android:layout_marginRight="11dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/textView26"
@@ -184,6 +184,7 @@
                         android:background="@color/default_line_ce6e6e6"/>
 
                     <RelativeLayout
+                        android:id="@+id/bonusLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/issuingreceipt_linespacing">
@@ -206,6 +207,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/couponLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/issuingreceipt_linespacing">
@@ -231,14 +233,14 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:background="@color/default_background_cfafafb"
-                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="11dp"
-                    android:paddingRight="11dp"
                     android:layout_marginBottom="12dp"
                     android:layout_marginLeft="1dp"
-                    android:layout_marginRight="1dp">
+                    android:layout_marginRight="1dp"
+                    android:layout_marginTop="@dimen/issuingreceipt_linespacing"
+                    android:background="@color/default_background_cfafafb"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="11dp"
+                    android:paddingRight="11dp">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:layout_width="wrap_content"
@@ -270,7 +272,7 @@
                 android:minHeight="180dp"
                 android:paddingBottom="15dp"
                 android:paddingLeft="11dp"
-                android:paddingRight="11dp" >
+                android:paddingRight="11dp">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -369,4 +371,29 @@
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/sendEmailView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="@drawable/btn_normal_gradation"
+            android:gravity="center"
+            android:text="@string/label_send_email"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
 </RelativeLayout>

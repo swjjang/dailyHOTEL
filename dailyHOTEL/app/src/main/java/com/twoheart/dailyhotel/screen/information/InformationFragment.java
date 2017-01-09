@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.information;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,9 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -30,7 +29,9 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.information.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
+import com.twoheart.dailyhotel.screen.information.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
+import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -39,7 +40,11 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.twoheart.dailyhotel.widget.DailyToast;
+
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class InformationFragment extends BaseFragment implements Constants
 {
@@ -94,7 +99,25 @@ public class InformationFragment extends BaseFragment implements Constants
                 startSignUp(DailyDeepLink.getInstance().getRecommenderCode());
             } else if (DailyDeepLink.getInstance().isCouponView() == true)
             {
-                mOnEventListener.startCouponList();
+                CouponListActivity.SortType sortType;
+
+                String placeType = DailyDeepLink.getInstance().getPlaceType();
+
+                if (Util.isTextEmpty(placeType) == true)
+                {
+                    sortType = CouponListActivity.SortType.ALL;
+                } else
+                {
+                    try
+                    {
+                        sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
+                    } catch (Exception e)
+                    {
+                        sortType = CouponListActivity.SortType.ALL;
+                    }
+                }
+
+                mOnEventListener.startCouponList(sortType);
             } else if (DailyDeepLink.getInstance().isEventDetailView() == true)
             {
                 mOnEventListener.startEvent();
@@ -107,7 +130,7 @@ public class InformationFragment extends BaseFragment implements Constants
                 mOnEventListener.startInviteFriend();
             } else if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
             {
-                mOnEventListener.startCouponList();
+                mOnEventListener.startCouponList(CouponListActivity.SortType.ALL);
                 return;
             } else if (DailyDeepLink.getInstance().isNoticeDetailView() == true)
             {
@@ -115,24 +138,30 @@ public class InformationFragment extends BaseFragment implements Constants
                 return;
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
-                return;
+                mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
             } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
             {
-                return;
+                mOnEventListener.startRecentPlaces(PlaceType.FNB);
             } else if (DailyDeepLink.getInstance().isFAQView() == true)
             {
                 mOnEventListener.startFAQ();
             } else if (DailyDeepLink.getInstance().isTermsNPolicyView() == true)
             {
                 mOnEventListener.startTermsNPolicy();
+            } else if (DailyDeepLink.getInstance().isProfileView() == true)
+            {
+                mOnEventListener.startEditProfile();
+            } else if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
+            {
+                mOnEventListener.startEditProfile();
+                return;
+            } else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
+            {
+                mOnEventListener.startWishList(PlaceType.HOTEL);
+            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
+            {
+                mOnEventListener.startWishList(PlaceType.FNB);
             }
-//            else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
-//            {
-//                return;
-//            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
-//            {
-//                return;
-//            }
 
             DailyDeepLink.getInstance().clear();
         }
@@ -190,6 +219,12 @@ public class InformationFragment extends BaseFragment implements Constants
 
         switch (requestCode)
         {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                }
+                break;
+
             case CODE_REQEUST_ACTIVITY_SIGNUP:
             {
                 break;
@@ -215,6 +250,7 @@ public class InformationFragment extends BaseFragment implements Constants
             case CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
             case CODE_REQUEST_ACTIVITY_FAQ:
             case CODE_REQUEST_ACTIVITY_FEEDBACK:
+            case CODE_REQUEST_ACTIVITY_CONTACT_US:
                 mDontReload = false;
                 break;
         }
@@ -282,7 +318,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivity(LoginActivity.newInstance(baseActivity));
+            startActivityForResult(LoginActivity.newInstance(baseActivity), CODE_REQUEST_ACTIVITY_LOGIN);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
@@ -315,7 +351,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startCouponList()
+        public void startCouponList(CouponListActivity.SortType sortType)
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -326,7 +362,8 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            startActivity(new Intent(baseActivity, CouponListActivity.class));
+            Intent intent = CouponListActivity.newInstance(baseActivity, sortType);
+            startActivity(intent);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
                 Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
@@ -384,10 +421,10 @@ public class InformationFragment extends BaseFragment implements Constants
                 startActivity(InviteFriendsActivity.newInstance(baseActivity));
             } else
             {
-                String recommeder = DailyPreference.getInstance(baseActivity).getUserRecommender();
+                String recommender = DailyPreference.getInstance(baseActivity).getUserRecommender();
                 String name = DailyPreference.getInstance(baseActivity).getUserName();
 
-                startActivity(InviteFriendsActivity.newInstance(baseActivity, recommeder, name));
+                startActivity(InviteFriendsActivity.newInstance(baseActivity, recommender, name));
             }
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
@@ -429,7 +466,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startCall()
+        public void startContactUs()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -439,9 +476,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            showCallDialog(baseActivity);
-
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CLICK, null);
+            startActivityForResult(new Intent(baseActivity, ContactUsActivity.class), CODE_REQUEST_ACTIVITY_CONTACT_US);
         }
 
         @Override
@@ -458,22 +493,6 @@ public class InformationFragment extends BaseFragment implements Constants
             startActivityForResult(new Intent(baseActivity, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
         }
 
-        @Override
-        public void startEmail()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivityForResult(new Intent(baseActivity, FeedbackMailActivity.class), CODE_REQUEST_ACTIVITY_FEEDBACK);
-
-            //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.MAIL_CS, 0L);
-
-        }
 
         @Override
         public void startAbout()
@@ -490,6 +509,23 @@ public class InformationFragment extends BaseFragment implements Constants
 
             //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
 
+        }
+
+        @Override
+        public void startRecentPlaces(Constants.PlaceType placeType)
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, placeType);
+
+            baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
 
         @Override
@@ -664,58 +700,27 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
+        public void startWishList(Constants.PlaceType placeType)
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = WishListTabActivity.newInstance(baseActivity, placeType);
+
+            baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
+        }
+
+        @Override
         public void finish()
         {
             //do nothing.
         }
     };
-
-    private void showCallDialog(final BaseActivity baseActivity)
-    {
-        View.OnClickListener positiveListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                releaseUiComponent();
-
-                AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CALL, null);
-
-                if (Util.isTelephonyEnabled(baseActivity) == true)
-                {
-                    try
-                    {
-                        baseActivity.startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + PHONE_NUMBER_DAILYHOTEL)));
-                    } catch (ActivityNotFoundException e)
-                    {
-                        DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                    }
-                } else
-                {
-                    DailyToast.showToast(baseActivity, R.string.toast_msg_no_call, Toast.LENGTH_LONG);
-                }
-            }
-        };
-
-        String operatingTimeMessage = DailyPreference.getInstance(baseActivity).getOperationTimeMessage(baseActivity);
-
-        baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage,//
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel), positiveListener, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU, AnalyticsManager.Label.CANCEL, null);
-                }
-            }, null, new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialog)
-                {
-                    releaseUiComponent();
-                }
-            }, true);
-    }
 
     private void registerReceiver()
     {
@@ -770,9 +775,9 @@ public class InformationFragment extends BaseFragment implements Constants
         = new InformationNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onUserProfile(String type, String email, String name, String recommender, boolean isAgreedBenefit)
+        public void onUserProfile(String type, String email, String name, String birthday, String recommender, boolean isAgreedBenefit)
         {
-            DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, recommender);
+            DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, birthday, recommender);
 
             boolean isLogin = DailyHotel.isLogin();
             if (isLogin == true)
@@ -892,13 +897,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void onErrorResponse(VolleyError volleyError)
-        {
-            InformationFragment.this.onErrorResponse(volleyError);
-        }
-
-        @Override
-        public void onError(Exception e)
+        public void onError(Throwable e)
         {
             InformationFragment.this.onError(e);
         }
@@ -913,6 +912,12 @@ public class InformationFragment extends BaseFragment implements Constants
         public void onErrorToastMessage(String message)
         {
             InformationFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            InformationFragment.this.onErrorResponse(call, response);
         }
     };
 }

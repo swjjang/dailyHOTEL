@@ -19,6 +19,8 @@ public abstract class PlacePaymentInformation implements Parcelable
     private Guest mGuest;
     private Coupon mCoupon;
 
+    public boolean isFree; // 무료 결제 인지
+
     public PlacePaymentInformation()
     {
         paymentType = PaymentType.EASY_CARD;
@@ -41,6 +43,7 @@ public abstract class PlacePaymentInformation implements Parcelable
         dest.writeParcelable(mCustomer, flags);
         dest.writeParcelable(mGuest, flags);
         dest.writeParcelable(mCoupon, flags);
+        dest.writeInt(isFree ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -53,6 +56,7 @@ public abstract class PlacePaymentInformation implements Parcelable
         mCustomer = in.readParcelable(Customer.class.getClassLoader());
         mGuest = in.readParcelable(Guest.class.getClassLoader());
         mCoupon = in.readParcelable(Coupon.class.getClassLoader());
+        isFree = in.readInt() == 1;
     }
 
     public Customer getCustomer()

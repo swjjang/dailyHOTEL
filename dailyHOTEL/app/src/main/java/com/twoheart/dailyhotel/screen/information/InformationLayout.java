@@ -13,10 +13,9 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.request.DailyHotelRequest;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.screen.information.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -56,7 +55,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startEditProfile();
 
-        void startCouponList();
+        void startCouponList(CouponListActivity.SortType sortType);
 
         void startBonusList();
 
@@ -68,13 +67,13 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         void startNotice();
 
-        void startCall();
+        void startContactUs();
 
         void startFAQ();
 
-        void startEmail();
-
         void startAbout();
+
+        void startRecentPlaces(Constants.PlaceType placeType);
 
         void onPushClick();
 
@@ -89,6 +88,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         void startTermsNPolicy();
 
         void startSettingAlarm();
+
+        void startWishList(Constants.PlaceType placeType);
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -99,36 +100,36 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     @Override
     protected void initLayout(View view)
     {
-        BaseActivity baseActivity = (BaseActivity) mContext;
-
-        initToolbar(baseActivity, view);
+        initToolbar(mContext, view);
 
         ScrollView scrollView = (ScrollView) view.findViewById(R.id.informationScrollView);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, baseActivity.getResources().getColor(R.color.default_over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mProfileLayout = view.findViewById(R.id.profileLayout);
         mAccountInfoLayout = view.findViewById(R.id.accountInfoLayout);
 
-        initProfileLayout(baseActivity, view);
-        initAccountInfoLayout(baseActivity, view);
+        initProfileLayout(mContext, view);
+        initAccountInfoLayout(mContext, view);
 
         View eventLayout = view.findViewById(R.id.eventLayout);
         View noticeLayout = view.findViewById(R.id.noticeLayout);
         View recommendLayout = view.findViewById(R.id.recommendLayout);
-        View callLayout = view.findViewById(R.id.callLayout);
+        View contactUsLayout = view.findViewById(R.id.contactUsLayout);
         View faqLayout = view.findViewById(R.id.faqLayout);
-        View mailLayout = view.findViewById(R.id.mailLayout);
         View aboutLayout = view.findViewById(R.id.aboutLayout);
+        View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
         View termsNpolicyLayout = view.findViewById(R.id.termsNpolicyLayout);
+        View wishListLayout = view.findViewById(R.id.wishListLayout);
 
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
         recommendLayout.setOnClickListener(this);
-        callLayout.setOnClickListener(this);
+        contactUsLayout.setOnClickListener(this);
         faqLayout.setOnClickListener(this);
-        mailLayout.setOnClickListener(this);
         aboutLayout.setOnClickListener(this);
         termsNpolicyLayout.setOnClickListener(this);
+        recentPlacesLayout.setOnClickListener(this);
+        wishListLayout.setOnClickListener(this);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
@@ -140,17 +141,17 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mPushBenefitTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushBenefitTextView);
 
         initSnsLayout(view);
-        initBusinessLayout(baseActivity, view);
+        initBusinessLayout(mContext, view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
         if (Constants.DEBUG == true)
         {
-            String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION);
-            versionTextView.setText(version + "\n" + DailyHotelRequest.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT));
+            String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
+            versionTextView.setText(version + "\n" + DailyPreference.getInstance(mContext).getBaseUrl());
         } else
         {
-            versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION));
+            versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE));
         }
 
         boolean isLogin = DailyHotel.isLogin();
@@ -233,7 +234,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         youtubeLinkView.setOnClickListener(this);
     }
 
-    private void initBusinessLayout(BaseActivity baseActivity, View view)
+    private void initBusinessLayout(Context context, View view)
     {
         TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
         TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
@@ -242,19 +243,19 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         TextView business5TextView = (TextView) view.findViewById(R.id.business5TextView);
 
         business1TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license01//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyCEO()//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPhoneNumber()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyCEO()//
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyPhoneNumber()));
 
-        business2TextView.setText(DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyAddress());
+        business2TextView.setText(DailyPreference.getInstance(context).getRemoteConfigCompanyAddress());
 
         business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license02//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyBizRegNumber()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyBizRegNumber()));
 
         business4TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyItcRegNumber()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyItcRegNumber()));
 
         business5TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license04//
-            , DailyPreference.getInstance(baseActivity).getRemoteConfigCompanyPrivacyEmail()));
+            , DailyPreference.getInstance(context).getRemoteConfigCompanyPrivacyEmail()));
     }
 
     public void updatePushIcon(boolean onOff)
@@ -501,7 +502,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 break;
 
             case R.id.couponLayout:
-                ((OnEventListener) mOnEventListener).startCouponList();
+                ((OnEventListener) mOnEventListener).startCouponList(CouponListActivity.SortType.ALL);
                 break;
 
             case R.id.bonusLayout:
@@ -520,20 +521,20 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 ((OnEventListener) mOnEventListener).startInviteFriend();
                 break;
 
-            case R.id.callLayout:
-                ((OnEventListener) mOnEventListener).startCall();
+            case R.id.contactUsLayout:
+                ((OnEventListener) mOnEventListener).startContactUs();
                 break;
 
             case R.id.faqLayout:
                 ((OnEventListener) mOnEventListener).startFAQ();
                 break;
 
-            case R.id.mailLayout:
-                ((OnEventListener) mOnEventListener).startEmail();
-                break;
-
             case R.id.aboutLayout:
                 ((OnEventListener) mOnEventListener).startAbout();
+                break;
+
+            case R.id.recentPlacesLayout:
+                ((OnEventListener) mOnEventListener).startRecentPlaces(null);
                 break;
 
             case R.id.pushBenefitLayout:
@@ -562,6 +563,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.linkAlarmTextView:
                 ((OnEventListener) mOnEventListener).startSettingAlarm();
+                break;
+
+            case R.id.wishListLayout:
+                ((OnEventListener) mOnEventListener).startWishList(null);
                 break;
 
             default:
