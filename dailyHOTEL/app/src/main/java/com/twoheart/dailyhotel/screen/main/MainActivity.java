@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyImageView;
 
 import java.io.File;
 import java.util.Calendar;
@@ -226,11 +227,11 @@ public class MainActivity extends BaseActivity implements Constants
     {
         String splashVersion = DailyPreference.getInstance(this).getRemoteConfigIntroImageVersion();
 
-        ImageView imageView = (ImageView) splashLayout.findViewById(R.id.splashImageView);
+        DailyImageView imageView = (DailyImageView) splashLayout.findViewById(R.id.splashImageView);
 
         if (Util.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
-            imageView.setImageResource(R.drawable.img_splash_logo);
+            imageView.setVectorImageResource(R.drawable.img_splash_logo);
         } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
             imageView.setPadding(0, 0, 0, 0);
@@ -244,7 +245,7 @@ public class MainActivity extends BaseActivity implements Constants
             if (file.exists() == false)
             {
                 DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                imageView.setImageResource(R.drawable.img_splash_logo);
+                imageView.setVectorImageResource(R.drawable.img_splash_logo);
             } else
             {
                 try
@@ -257,7 +258,7 @@ public class MainActivity extends BaseActivity implements Constants
                     DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                     imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
                     imageView.setScaleType(ImageView.ScaleType.CENTER);
-                    imageView.setImageResource(R.drawable.img_splash_logo);
+                    imageView.setVectorImageResource(R.drawable.img_splash_logo);
                 }
             }
         }

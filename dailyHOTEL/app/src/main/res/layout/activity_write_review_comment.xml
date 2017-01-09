@@ -31,7 +31,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:text="@string/label_write_review_comment_complete"
-            android:textColor="@color/selector_text_color_dc5c5c5_e900034"
+            android:textColor="@color/selector_text_color_dc5c5c5_eb70038"
             android:textSize="18dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView

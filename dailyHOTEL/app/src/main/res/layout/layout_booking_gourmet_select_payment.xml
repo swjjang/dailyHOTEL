@@ -40,7 +40,7 @@
         android:paddingTop="7dp"
         android:paddingBottom="21dp"
         android:text="@string/message_payment_free_payment"
-        android:textColor="@color/default_text_c900034"
+        android:textColor="@color/default_text_cb70038"
         android:textSize="13dp"
         android:visibility="gone"
         app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
@@ -106,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_easypayment"
-                        android:textColor="@drawable/selector_text_color_c323232_c900034"
+                        android:textColor="@drawable/selector_text_color_c323232_cb70038"
                         android:textSize="13dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
@@ -265,7 +265,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_card"
-                    android:textColor="@drawable/selector_text_color_c323232_c900034"
+                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
                     android:textSize="13dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
@@ -318,7 +318,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_mobile"
-                    android:textColor="@drawable/selector_text_color_c323232_c900034"
+                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
                     android:textSize="13dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
@@ -372,7 +372,7 @@
                     android:layout_height="wrap_content"
                     android:duplicateParentState="true"
                     android:text="@string/act_booking_pay_account"
-                    android:textColor="@drawable/selector_text_color_c323232_c900034"
+                    android:textColor="@drawable/selector_text_color_c323232_cb70038"
                     android:textSize="13dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView

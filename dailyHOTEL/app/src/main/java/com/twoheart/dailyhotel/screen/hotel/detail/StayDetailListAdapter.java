@@ -614,7 +614,7 @@ public class StayDetailListAdapter extends BaseAdapter
             TextView textView = (TextView) textLayout.findViewById(R.id.textView);
             textView.setText(R.string.message_stay_detail_nrd);
             textView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+            textView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
 
             contentsLayout.addView(textLayout);
         }

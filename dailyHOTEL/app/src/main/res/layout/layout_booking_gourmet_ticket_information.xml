@@ -86,7 +86,7 @@
                 android:layout_marginTop="8dp"
                 android:drawablePadding="3dp"
                 android:text="@string/message_booking_selected_time"
-                android:textColor="@color/default_text_c900034"
+                android:textColor="@color/default_text_cb70038"
                 android:textSize="13dp"
                 app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
         </LinearLayout>

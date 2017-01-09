@@ -256,7 +256,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="13dp"
                         android:layout_alignParentRight="true"
-                        android:textColor="@color/default_text_c900034"
+                        android:textColor="@color/default_text_cb70038"
                         android:textSize="11dp"
                         dailyFont:style="Bold"/>
                 </RelativeLayout>
@@ -366,7 +366,7 @@
                     android:layout_marginTop="15dp"
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="3dp"
-                    android:textColor="@color/default_text_c900034"
+                    android:textColor="@color/default_text_cb70038"
                     android:textSize="10dp"/>
             </RelativeLayout>
         </LinearLayout>

@@ -103,17 +103,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         mPushTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushTextView);
         mPushBenefitTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushBenefitTextView);
 
-        TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
-
-        if (Constants.DEBUG == true)
-        {
-            String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
-            versionTextView.setText(version + "\n" + DailyPreference.getInstance(mContext).getBaseUrl());
-        } else
-        {
-            versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE));
-        }
-
         boolean isLogin = DailyHotel.isLogin();
         updateLoginLayout(isLogin, true);
         updateAccountLayout(isLogin, -1, -1);
@@ -132,7 +121,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         spannableStringBuilder.setSpan(new UnderlineSpan(), 52, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c900034)), //
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_cb70038)), //
             59, 69, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         linkAlarmTextView.setText(spannableStringBuilder);
@@ -145,7 +134,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(context, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getResources().getString(R.string.actionbar_title_setting_frag), null, false);
+        dailyToolbarLayout.initToolbar(mContext.getResources().getString(R.string.menu_item_title_mydaily), null, false);
     }
 
     private void initProfileLayout(Context context, View view)

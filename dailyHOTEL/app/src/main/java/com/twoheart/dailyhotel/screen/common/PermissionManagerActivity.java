@@ -477,7 +477,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         int startIndex = text.indexOf(targetText);
         int endIndex = startIndex + targetText.length();
 
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.default_text_c900034)), //
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.default_text_cb70038)), //
             startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //

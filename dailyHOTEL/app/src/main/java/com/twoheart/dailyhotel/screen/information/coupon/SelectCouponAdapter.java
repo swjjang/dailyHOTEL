@@ -236,10 +236,10 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         {
             holder.couponLayout.setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
 
-            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
             holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_s, 0);
 
-            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c900034));
+            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
         } else
         {
             holder.couponLayout.setBackgroundResource(0);

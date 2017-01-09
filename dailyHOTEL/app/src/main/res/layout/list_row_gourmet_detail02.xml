@@ -164,7 +164,7 @@
             android:layout_marginTop="9dp"
             android:drawablePadding="4dp"
             app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"
-            android:textColor="@color/default_text_c900034"
+            android:textColor="@color/default_text_cb70038"
             android:textSize="15dp"/>
     </LinearLayout>
 

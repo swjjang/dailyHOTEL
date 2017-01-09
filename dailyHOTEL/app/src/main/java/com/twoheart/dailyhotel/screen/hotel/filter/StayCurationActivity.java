@@ -294,7 +294,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             amenitiesView.setOnClickListener(onClickListener);
             amenitiesView.setTag(amenitiesFlag[i]);
             amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
-            amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+            amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
             if ((stayCurationOption.flagAmenitiesFilters & amenitiesFlag[i]) == amenitiesFlag[i])
             {

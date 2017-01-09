@@ -247,23 +247,23 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         DailyTextView valetCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.valetCheckView);
         valetCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_VALET);
-        valetCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+        valetCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
         DailyTextView privateRoomCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.privateRoomCheckView);
         privateRoomCheckView.setTag(privateRoomCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PRIVATEROOM);
-        privateRoomCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+        privateRoomCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
         DailyTextView groupBookingCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.groupBookingCheckView);
         groupBookingCheckView.setTag(groupBookingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_GROUP);
-        groupBookingCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+        groupBookingCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
         DailyTextView babySeatCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.babySeatCheckView);
         babySeatCheckView.setTag(babySeatCheckView.getId(), AnalyticsManager.Label.SORTFILTER_BABYSEAT);
-        babySeatCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+        babySeatCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
         DailyTextView corkageCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.corkageCheckView);
         corkageCheckView.setTag(corkageCheckView.getId(), AnalyticsManager.Label.SORTFILTER_CORKAGE);
-        corkageCheckView.setDrawableVectorTintList(R.color.selector_svg_color_d929292_s900034_eeaeaea);
+        corkageCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
         if ((gourmetCurationOption.flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PARKING) == GourmetFilter.Amenities.FLAG_PARKING)
         {

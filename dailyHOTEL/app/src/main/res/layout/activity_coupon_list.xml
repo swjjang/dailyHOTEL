@@ -29,7 +29,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:text="@string/coupon_toolbar_button_text"
-            android:textColor="@color/default_text_c900034"
+            android:textColor="@color/default_text_cb70038"
             android:textSize="18dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView

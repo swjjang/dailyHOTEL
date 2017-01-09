@@ -172,7 +172,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         spannableStringBuilder.setSpan(new UnderlineSpan(), 52, 58, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_c900034)), //
+        spannableStringBuilder.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.default_text_cb70038)), //
             59, 69, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         linkAlarmTextView.setText(spannableStringBuilder);

@@ -122,7 +122,7 @@
             app:tabMinWidth="0dp"
             app:tabMode="scrollable"
             app:tabPadding="0dp"
-            app:tabSelectedTextColor="@color/default_text_c900034"
+            app:tabSelectedTextColor="@color/default_text_cb70038"
             app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
             app:tabTextColor="@color/default_text_c929292"/>
     </FrameLayout>

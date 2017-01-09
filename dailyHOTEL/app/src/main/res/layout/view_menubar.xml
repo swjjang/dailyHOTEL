@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tapbar_ic_01_hotel"/>
+                    app:srcCompat="@drawable/tabbar_ic_01_home_off"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/hotelView"
@@ -42,7 +42,7 @@
                     android:layout_below="@+id/hotelImageView"
                     android:layout_marginBottom="3dp"
                     android:gravity="center"
-                    android:text="@string/menu_item_title_hotel"
+                    android:text="@string/menu_item_title_home"
                     android:textColor="@drawable/selector_menu_textcolor"
                     android:textSize="9dp"/>
             </RelativeLayout>
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tapbar_ic_03_reservation"/>
+                    app:srcCompat="@drawable/tabbar_ic_02_reservation_off"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/bookingView"
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tapbar_ic_03_reservation"/>
+                    app:srcCompat="@drawable/tabbar_ic_03_mydaily_off"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/myDailyView"
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tapbar_ic_04_more"/>
+                    app:srcCompat="@drawable/tabbar_ic_04_more_off"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/informationView"
