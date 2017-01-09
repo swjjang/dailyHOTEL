@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
@@ -26,6 +27,7 @@ import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerA
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -35,6 +37,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -316,15 +320,28 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     shareDialog.dismiss();
                 }
 
-                //                if (mDefaultImageUrl == null)
-                //                {
-                //                    if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
-                //                    {
-                //                        mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
-                //                    }
-                //                }
-                //
-                //                shareKakao(mPlaceDetail, mDefaultImageUrl);
+                try
+                {
+                    String message = getString(R.string.message_booking_stay_share_kakao, //
+                        mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
+                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"), //
+                        mStayBookingDetail.address);
+
+                    String[] checkInDates = mStayBookingDetail.checkInDate.split("T");
+                    String[] checkOutDates = mStayBookingDetail.checkOutDate.split("T");
+
+                    Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+                    Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+
+                    int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                    KakaoLinkManager.newInstance(StayBookingDetailTabActivity.this).shareBookingStay(message, mStayBookingDetail.placeIndex,//
+                        mImageUrl, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         });
 
@@ -433,6 +450,20 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     private void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
+    }
+
+    private long getCompareDate(long timeInMillis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(timeInMillis);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
     }
 
     private void startFrontCall(final String phoneNumber)

@@ -28,6 +28,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
     private ViewPager mViewPager;
     private boolean mDontReload;
     protected int mReservationIndex;
+    protected String mImageUrl;
+    protected boolean mIsDeepLink;
 
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -51,6 +53,8 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
         if (bundle != null)
         {
             mReservationIndex = bundle.getInt(NAME_INTENT_EXTRA_DATA_BOOKINGIDX);
+            mImageUrl = bundle.getString(NAME_INTENT_EXTRA_DATA_URL);
+            mIsDeepLink = bundle.getBoolean(NAME_INTENT_EXTRA_DATA_DEEPLINK, false);
         }
 
         if (mReservationIndex <= 0)
