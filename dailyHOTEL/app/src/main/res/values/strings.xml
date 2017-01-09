@@ -20,8 +20,9 @@
     <string name="label_restaurant">레스토랑</string>
     <string name="label_shortcut_search_stay">호텔 검색하기</string>
     <string name="label_shortcut_search_gourmet">고메 검색하기</string>
-    <string name="label_shortcut_event">이벤트 확인하기</string>
+    <string name="label_shortcut_event_main">이벤트 확인하기</string>
     <string name="label_shortcut_booking_list">예약내역 확인하기</string>
+    <string name="label_shortcut_disable_message">사용 할 수 없는 shortcut 입니다.</string>
     <string name="label_dailygourmet">DAILYGOURMET</string>
     <string name="label_dailyhotel">DAILYHOTEL</string>
     <string name="label_paradise">PARADISE IS WHERE WE ARE</string>

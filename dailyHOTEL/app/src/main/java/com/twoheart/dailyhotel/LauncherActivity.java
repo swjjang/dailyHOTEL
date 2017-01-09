@@ -2,9 +2,6 @@ package com.twoheart.dailyhotel;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
-import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Window;
@@ -21,8 +18,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
-
-import java.util.Arrays;
 
 public class LauncherActivity extends Activity
 {
@@ -47,43 +42,6 @@ public class LauncherActivity extends Activity
         {
             return;
         }
-
-        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
-
-        ShortcutInfo shortcut1 = new ShortcutInfo.Builder(this, getResources().getString(R.string.label_shortcut_search_stay))
-            .setShortLabel(getResources().getString(R.string.label_shortcut_search_stay))
-            .setLongLabel(getResources().getString(R.string.label_shortcut_search_stay))
-            .setIcon(Icon.createWithResource(this, R.drawable.tapbar_ic_01_hotel))
-            .setIntent(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("dailyhotel://dailyhotel.co.kr?vc=8&v=hs")))
-            .build();
-
-        ShortcutInfo shortcut2 = new ShortcutInfo.Builder(this, getResources().getString(R.string.label_shortcut_search_gourmet))
-            .setShortLabel(getResources().getString(R.string.label_shortcut_search_gourmet))
-            .setLongLabel(getResources().getString(R.string.label_shortcut_search_gourmet))
-            .setIcon(Icon.createWithResource(this, R.drawable.tapbar_ic_02_gourmet))
-            .setIntent(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("dailyhotel://dailyhotel.co.kr?vc=8&v=gs")))
-            .build();
-
-        ShortcutInfo shortcut3 = new ShortcutInfo.Builder(this, getResources().getString(R.string.label_shortcut_event))
-            .setShortLabel(getResources().getString(R.string.label_shortcut_event))
-            .setLongLabel(getResources().getString(R.string.label_shortcut_event))
-            .setIcon(Icon.createWithResource(this, R.drawable.tapbar_ic_04_more))
-            .setIntent(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("dailyhotel://dailyhotel.co.kr?vc=8&v=el")))
-            .build();
-
-        ShortcutInfo shortcut4 = new ShortcutInfo.Builder(this, getResources().getString(R.string.label_shortcut_booking_list))
-            .setShortLabel(getResources().getString(R.string.label_shortcut_booking_list))
-            .setLongLabel(getResources().getString(R.string.label_shortcut_booking_list))
-            .setIcon(Icon.createWithResource(this, R.drawable.tapbar_ic_03_reservation))
-            .setIntent(new Intent(Intent.ACTION_VIEW,
-                Uri.parse("dailyhotel://dailyhotel.co.kr?vc=8&v=bl")))
-            .build();
-
-        shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut1, shortcut2, shortcut3, shortcut4));
-
 
         Util.initializeMemory();
 
