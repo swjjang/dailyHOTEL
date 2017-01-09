@@ -827,7 +827,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             mDelayTimeHandler.removeMessages(0);
             unLockUI();

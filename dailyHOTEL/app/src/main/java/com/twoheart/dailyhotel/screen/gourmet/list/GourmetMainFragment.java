@@ -663,7 +663,7 @@ public class GourmetMainFragment extends PlaceMainFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             GourmetMainFragment.this.onErrorResponse(call, response);
         }

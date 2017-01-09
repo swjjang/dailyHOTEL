@@ -915,7 +915,7 @@ public class InformationFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             InformationFragment.this.onErrorResponse(call, response);
         }

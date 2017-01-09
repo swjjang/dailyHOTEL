@@ -6,7 +6,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import java.util.List;
 
 @JsonObject
-public class BaseModel<T>
+public class BaseModelList<E>
 {
     @JsonField
     public int msgCode;
@@ -15,5 +15,5 @@ public class BaseModel<T>
     public String msg;
 
     @JsonField
-    public T data;
+    public List<E> data;
 }

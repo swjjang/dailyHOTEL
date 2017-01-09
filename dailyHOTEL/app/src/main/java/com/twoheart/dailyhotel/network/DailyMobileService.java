@@ -1,7 +1,12 @@
 package com.twoheart.dailyhotel.network;
 
+import com.twoheart.dailyhotel.model.BaseModel;
+import com.twoheart.dailyhotel.model.BaseModelList;
+import com.twoheart.dailyhotel.model.Keyword;
+
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -78,10 +83,10 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<JSONObject> requestStaySearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                       @Query("dateCheckIn") String date, //
-                                                       @Query("stays") int stays, //
-                                                       @Query("term") String term);
+    Call<BaseModelList<Keyword>> requestStaySearchAutoCompleteList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                   @Query("dateCheckIn") String date, //
+                                                                   @Query("stays") int stays, //
+                                                                   @Query("term") String term);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
