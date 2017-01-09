@@ -57,7 +57,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
                     }
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(term, baseModel.data);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(term, baseDtoList.data);
             } else
             {
                 mOnNetworkControllerListener.onErrorResponse(call, response);
