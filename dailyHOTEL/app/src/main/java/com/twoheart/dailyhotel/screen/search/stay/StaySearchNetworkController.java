@@ -2,8 +2,7 @@ package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.model.BaseModel;
-import com.twoheart.dailyhotel.model.BaseModelList;
+import com.twoheart.dailyhotel.network.dto.BaseDtoList;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -11,8 +10,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
 import com.twoheart.dailyhotel.util.Util;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -35,22 +32,22 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), stays, keyword, mHotelSearchAutoCompleteCallback);
     }
 
-    private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<BaseModelList<Keyword>>()
+    private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<BaseDtoList<Keyword>>()
     {
         @Override
-        public void onResponse(Call<BaseModelList<Keyword>> call, Response<BaseModelList<Keyword>> response)
+        public void onResponse(Call<BaseDtoList<Keyword>> call, Response<BaseDtoList<Keyword>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 String term = call.request().url().queryParameter("term");
 
-                BaseModelList<Keyword> baseModel = response.body();
+                BaseDtoList<Keyword> baseDtoList = response.body();
 
-                if (baseModel.msgCode == 100)
+                if (baseDtoList.msgCode == 100)
                 {
-                    if (baseModel.data != null)
+                    if (baseDtoList.data != null)
                     {
-                        for (Keyword keyword : baseModel.data)
+                        for (Keyword keyword : baseDtoList.data)
                         {
                             if (keyword.price > 0)
                             {
@@ -68,7 +65,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
         }
 
         @Override
-        public void onFailure(Call<BaseModelList<Keyword>> call, Throwable t)
+        public void onFailure(Call<BaseDtoList<Keyword>> call, Throwable t)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);
         }
