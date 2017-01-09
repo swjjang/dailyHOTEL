@@ -498,17 +498,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
         DailyPreference.getInstance(this).setUserInformation(userType, email, name, birthday, recommender);
 
-        if (Util.isTextEmpty(userIndex) == true || Util.isTextEmpty(name) == true)
-        {
-            if (Constants.DEBUG == true)
-            {
-                ExLog.w(jsonObject.toString());
-            } else
-            {
-                Crashlytics.logException(new RuntimeException("JSON USER Check : " + jsonObject.toString(1)));
-            }
-        }
-
         AnalyticsManager.getInstance(this).setUserInformation(userIndex, userType);
         return userIndex;
     }
