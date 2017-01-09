@@ -61,7 +61,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
         mMyDailyLayout = new MyDailyLayout(getActivity(), mOnEventListener);
         mNetworkController = new MyDailyNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
 
-        return mMyDailyLayout.onCreateView(R.layout.fragment_information);
+        return mMyDailyLayout.onCreateView(R.layout.fragment_mydaily);
     }
 
     @Override
@@ -75,24 +75,17 @@ public class MyDailyFragment extends BaseFragment implements Constants
     @Override
     public void onStart()
     {
-        //        AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.INFORMATION);
-
         super.onStart();
 
         Context context = getContext();
 
-        boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
         boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
-        boolean hasNewNotice = DailyPreference.getInstance(context).hasNewNotice() == true || Util.hasNoticeNewList(context) == true;
 
-        mMyDailyLayout.updateNewIconView(hasNewEvent, hasNewCoupon, hasNewNotice);
+        mMyDailyLayout.updateNewIconView(hasNewCoupon);
 
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isEventView() == true)
-            {
-                mOnEventListener.startEvent();
-            } else if (DailyDeepLink.getInstance().isBonusView() == true)
+            if (DailyDeepLink.getInstance().isBonusView() == true)
             {
                 mOnEventListener.startBonusList();
             } else if (DailyDeepLink.getInstance().isSingUpView() == true)
@@ -119,13 +112,6 @@ public class MyDailyFragment extends BaseFragment implements Constants
                 }
 
                 mOnEventListener.startCouponList(sortType);
-            } else if (DailyDeepLink.getInstance().isEventDetailView() == true)
-            {
-                mOnEventListener.startEvent();
-                return;
-            } else if (DailyDeepLink.getInstance().isInformationView() == true)
-            {
-
             } else if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
             {
                 mOnEventListener.startInviteFriend();
@@ -133,22 +119,12 @@ public class MyDailyFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startCouponList(CouponListActivity.SortType.ALL);
                 return;
-            } else if (DailyDeepLink.getInstance().isNoticeDetailView() == true)
-            {
-                mOnEventListener.startNotice();
-                return;
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
                 mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
             } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
             {
                 mOnEventListener.startRecentPlaces(PlaceType.FNB);
-            } else if (DailyDeepLink.getInstance().isFAQView() == true)
-            {
-                mOnEventListener.startFAQ();
-            } else if (DailyDeepLink.getInstance().isTermsNPolicyView() == true)
-            {
-                mOnEventListener.startTermsNPolicy();
             } else if (DailyDeepLink.getInstance().isProfileView() == true)
             {
                 mOnEventListener.startEditProfile();
@@ -295,11 +271,9 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
         Context context = getContext();
 
-        boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
         boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
-        boolean hasNewNotice = DailyPreference.getInstance(context).hasNewNotice() == true || Util.hasNoticeNewList(context) == true;
 
-        mMyDailyLayout.updateNewIconView(hasNewEvent, hasNewCoupon, hasNewNotice);
+        mMyDailyLayout.updateNewIconView(hasNewCoupon);
     }
 
     /////////////////////////////////////////////////////////////////
@@ -433,7 +407,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startEvent()
+        public void startWishList(PlaceType placeType)
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -443,73 +417,9 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, EventListActivity.class));
+            Intent intent = WishListTabActivity.newInstance(baseActivity, placeType);
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
-        }
-
-        @Override
-        public void startNotice()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, NoticeListActivity.class));
-
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
-        }
-
-        @Override
-        public void startContactUs()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivityForResult(new Intent(baseActivity, ContactUsActivity.class), CODE_REQUEST_ACTIVITY_CONTACT_US);
-        }
-
-        @Override
-        public void startFAQ()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivityForResult(new Intent(baseActivity, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
-        }
-
-
-        @Override
-        public void startAbout()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, AboutActivity.class));
-
-            //                AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.ABOUT, 0L);
-
+            baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
 
         @Override
@@ -572,148 +482,11 @@ public class MyDailyFragment extends BaseFragment implements Constants
         }
 
         @Override
-        public void startFacebook()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
-            try
-            {
-                intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
-                baseActivity.startActivity(intent);
-            } catch (Exception e)
-            {
-                try
-                {
-                    intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
-                    baseActivity.startActivity(intent);
-                } catch (ActivityNotFoundException e1)
-                {
-                    ExLog.d(e.toString());
-                }
-            }
-        }
-
-        @Override
-        public void startInstagram()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
-            try
-            {
-                intent.setData(Uri.parse("instagram://user?username=dailyhotel_korea"));
-                baseActivity.startActivity(intent);
-            } catch (Exception e)
-            {
-                try
-                {
-                    intent.setData(Uri.parse("http://www.instagram.com/dailyhotel_korea"));
-                    baseActivity.startActivity(intent);
-                } catch (ActivityNotFoundException e1)
-                {
-                }
-            }
-        }
-
-        @Override
-        public void startNaverBlog()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            try
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
-                baseActivity.startActivity(intent);
-            } catch (ActivityNotFoundException e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
-        @Override
-        public void startYouTube()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            try
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://www.youtube.com/channel/UCNJASbBThd0TFo3qLgl1wuw"));
-                baseActivity.startActivity(intent);
-            } catch (ActivityNotFoundException e)
-            {
-
-            }
-        }
-
-        @Override
-        public void startTermsNPolicy()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, TermsNPolicyActivity.class);
-            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
-
-        }
-
-        @Override
         public void startSettingAlarm()
         {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
             startActivityForResult(intent, Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS);
-        }
-
-        @Override
-        public void startWishList(PlaceType placeType)
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = WishListTabActivity.newInstance(baseActivity, placeType);
-
-            baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
 
         @Override
@@ -743,11 +516,9 @@ public class MyDailyFragment extends BaseFragment implements Constants
                     return;
                 }
 
-                boolean hasNewEvent = DailyPreference.getInstance(context).hasNewEvent();
                 boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
-                boolean hasNewNotice = DailyPreference.getInstance(context).hasNewNotice() == true || Util.hasNoticeNewList(context) == true;
 
-                mMyDailyLayout.updateNewIconView(hasNewEvent, hasNewCoupon, hasNewNotice);
+                mMyDailyLayout.updateNewIconView(hasNewCoupon);
             }
         };
 
