@@ -87,6 +87,32 @@ public class KakaoLinkManager implements Constants
         }
     }
 
+    public void shareBookingStay(String message, int stayIndex, String imageUrl, String checkInDate, int nights)
+    {
+        try
+        {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+
+            String schemeParams = String.format("vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
+
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_reservation_stay), //
+                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
+                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+
+            if (Util.isTextEmpty(imageUrl) == false)
+            {
+                messageBuilder.addImage(imageUrl, 300, 200);
+            }
+
+            messageBuilder.addText(message);
+
+            mKakaoLink.sendMessage(messageBuilder, mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, SaleTime saleTime)
     {
         try
@@ -111,6 +137,33 @@ public class KakaoLinkManager implements Constants
             }
 
             messageBuilder.addText(text);
+
+            mKakaoLink.sendMessage(messageBuilder, mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    public void shareBookingGourmet(String message, int index, String imageUrl, String reservationDate)
+    {
+        try
+        {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+
+            String schemeParams = String.format("vc=5&v=gd&i=%d&d=%s", index, reservationDate);
+
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_reservation_gourmet)//
+                , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
+                    .setExecuteParam(schemeParams).build())//
+                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+
+            if (Util.isTextEmpty(imageUrl) == false)
+            {
+                messageBuilder.addImage(imageUrl, 300, 200);
+            }
+
+            messageBuilder.addText(message);
 
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)

@@ -1175,13 +1175,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                 {
-                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                 } else
                 {
                     // 기존에 인증이 되었는데 인증이 해지되었다.
                     if (isVerified == true && isPhoneVerified == false)
                     {
-                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER);
+                        moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                     } else
                     {
                         processBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation);
@@ -1195,7 +1195,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     moveToAddSocialUserInformation(user, birthday);
                 } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
                 {
-                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER);
+                    moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.getPhone());
                 } else
                 {
                     processBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation);
@@ -1446,7 +1446,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             GourmetDetailActivity.this.onErrorResponse(call, response);

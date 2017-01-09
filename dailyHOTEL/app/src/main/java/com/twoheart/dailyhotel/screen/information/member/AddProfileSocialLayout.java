@@ -111,7 +111,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mPhoneView = mPhoneLayout.findViewById(R.id.phoneView);
         mPhoneEditText = (DailyEditText) mPhoneLayout.findViewById(R.id.phoneEditText);
-        mPhoneEditText.setDeleteButtonVisible(true, null);
+        mPhoneEditText.setDeleteButtonVisible(null);
         mPhoneEditText.setOnFocusChangeListener(this);
 
         View confirmView = view.findViewById(R.id.confirmView);
@@ -119,7 +119,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
         mEmailEditText = (DailyAutoCompleteEditText) mEmailLayout.findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
 
         EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
@@ -127,7 +127,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mNameView = mNameLayout.findViewById(R.id.nameView);
         mNameEditText = (DailyEditText) mNameLayout.findViewById(R.id.nameEditText);
-        mNameEditText.setDeleteButtonVisible(true, null);
+        mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 
         mNameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -150,7 +150,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
-        mBirthdayEditText.setDeleteButtonVisible(true, new DailyEditText.OnDeleteTextClickListener()
+        mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
             public void onDelete(DailyEditText dailyEditText)
@@ -164,7 +164,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         mRecommenderView = view.findViewById(R.id.recommenderView);
         mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(true, null);
+        mRecommenderEditText.setDeleteButtonVisible(null);
         mRecommenderEditText.setOnFocusChangeListener(this);
 
         // 회원 가입시 이름 필터 적용.

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- search stay -->
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_action_01_hotel"
+        android:shortcutDisabledMessage="@string/label_shortcut_disable_message"
+        android:shortcutId="search_stay"
+        android:shortcutLongLabel="@string/label_shortcut_search_stay"
+        android:shortcutShortLabel="@string/label_shortcut_search_stay">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="dailyhotel://dailyhotel.co.kr?vc=8&amp;v=hs"
+            android:targetClass="com.twoheart.dailyhotel.LauncherActivity"
+            android:targetPackage="com.twoheart.dailyhotel"
+            />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <!-- search gourmet -->
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_action_02_gourmet"
+        android:shortcutDisabledMessage="@string/label_shortcut_disable_message"
+        android:shortcutId="search_gourmet"
+        android:shortcutLongLabel="@string/label_shortcut_search_gourmet"
+        android:shortcutShortLabel="@string/label_shortcut_search_gourmet">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="dailyhotel://dailyhotel.co.kr?vc=8&amp;v=gs"
+            android:targetClass="com.twoheart.dailyhotel.LauncherActivity"
+            android:targetPackage="com.twoheart.dailyhotel"
+            />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <!-- go event main -->
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_action_03_event"
+        android:shortcutDisabledMessage="@string/label_shortcut_disable_message"
+        android:shortcutId="event_main"
+        android:shortcutLongLabel="@string/label_shortcut_event_main"
+        android:shortcutShortLabel="@string/label_shortcut_event_main">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="dailyhotel://dailyhotel.co.kr?vc=8&amp;v=el"
+            android:targetClass="com.twoheart.dailyhotel.LauncherActivity"
+            android:targetPackage="com.twoheart.dailyhotel"
+            />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+    <!-- go reservation main -->
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_quick_action_04_reservation"
+        android:shortcutDisabledMessage="@string/label_shortcut_disable_message"
+        android:shortcutId="booking_list"
+        android:shortcutLongLabel="@string/label_shortcut_booking_list"
+        android:shortcutShortLabel="@string/label_shortcut_booking_list">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="dailyhotel://dailyhotel.co.kr?vc=8&amp;v=bl"
+            android:targetClass="com.twoheart.dailyhotel.LauncherActivity"
+            android:targetPackage="com.twoheart.dailyhotel"
+            />
+        <categories android:name="android.shortcut.conversation"/>
+    </shortcut>
+</shortcuts>

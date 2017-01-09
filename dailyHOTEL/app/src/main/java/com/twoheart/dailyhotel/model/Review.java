@@ -43,6 +43,7 @@ public class Review implements Parcelable
 
         reviewAllCount = 0;
         reserveIdx = jsonObject.getInt("reserveIdx");
+
         requiredCommentReview = jsonObject.getBoolean("requiredCommentReview");
 
         if (requiredCommentReview == true)

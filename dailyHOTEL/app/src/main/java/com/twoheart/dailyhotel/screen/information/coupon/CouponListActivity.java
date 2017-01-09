@@ -371,7 +371,7 @@ public class CouponListActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             CouponListActivity.this.onErrorResponse(call, response);
         }

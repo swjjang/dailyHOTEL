@@ -75,7 +75,13 @@ public class CouponListNetworkController extends BaseNetworkController
                     int msgCode = responseJSONObject.getInt("msgCode");
                     if (msgCode == 100)
                     {
-                        list = CouponUtil.getCouponList(responseJSONObject);
+                        try
+                        {
+                            list = CouponUtil.getCouponList(responseJSONObject);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
 
                     } else
                     {

@@ -112,7 +112,7 @@ public class RegionIconGenerator
      * Sets the text color, size, style, hint color, and highlight color from
      * the specified <code>TextAppearance</code> resource.
      *
-     * @param resid the identifier of the resource.
+     * @param resId the identifier of the resource.
      */
     public void setTextAppearance(Context context, int resId)
     {
@@ -142,7 +142,7 @@ public class RegionIconGenerator
      * Sets the text color, size, style, hint color, and highlight color from
      * the specified <code>TextAppearance</code> resource.
      *
-     * @param resid the identifier of the resource.
+     * @param resId the identifier of the resource.
      */
     public void setTextAppearance(int resId)
     {

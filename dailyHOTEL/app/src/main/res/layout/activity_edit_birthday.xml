@@ -10,9 +10,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_below="@+id/toolbar"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="vertical">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
@@ -23,8 +24,7 @@
             android:lineSpacingExtra="-2dp"
             android:text="@string/message_edit_birthday_guide"
             android:textColor="@color/default_text_c323232"
-            android:textSize="11dp"
-            android:id="@+id/dailyTextView3"/>
+            android:textSize="11dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/birthdayView"

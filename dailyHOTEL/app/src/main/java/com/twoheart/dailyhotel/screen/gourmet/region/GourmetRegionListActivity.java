@@ -289,7 +289,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             GourmetRegionListActivity.this.onErrorResponse(call, response);

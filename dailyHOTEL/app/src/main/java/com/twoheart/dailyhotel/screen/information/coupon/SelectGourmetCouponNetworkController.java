@@ -85,7 +85,16 @@ public class SelectGourmetCouponNetworkController extends BaseNetworkController
                     int msgCode = responseJSONObject.getInt("msgCode");
                     if (msgCode == 100)
                     {
-                        ArrayList<Coupon> list = CouponUtil.getCouponList(responseJSONObject);
+                        ArrayList<Coupon> list = new ArrayList<>();
+
+                        try
+                        {
+                            list = CouponUtil.getCouponList(responseJSONObject);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);
                     } else
                     {

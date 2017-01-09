@@ -133,7 +133,6 @@ public class Stay extends Place
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
-
             return false;
         }
 

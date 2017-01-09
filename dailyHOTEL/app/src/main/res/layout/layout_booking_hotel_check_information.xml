@@ -519,6 +519,7 @@
             android:layout_height="56dp">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/howToVisitTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -541,7 +542,7 @@
                     android:duplicateParentState="true"
                     android:gravity="center_vertical"
                     android:text="@string/label_visit_walk"
-                    android:textColor="@drawable/selector_text_color_c929292_c900034"
+                    android:textColor="@drawable/selector_text_color_c323232_c900034"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/payment_ic_walk"/>
             </FrameLayout>
@@ -563,7 +564,7 @@
                     android:duplicateParentState="true"
                     android:gravity="center_vertical"
                     android:text="@string/label_visit_car"
-                    android:textColor="@drawable/selector_text_color_c929292_c900034"
+                    android:textColor="@drawable/selector_text_color_c323232_c900034"
                     android:textSize="13dp"
                     app:drawableCompatLeft="@drawable/payment_ic_parking"/>
             </FrameLayout>

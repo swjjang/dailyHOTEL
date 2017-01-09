@@ -336,7 +336,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             }
         }
 
-//        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+        //        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
     }
 
     @Override
@@ -510,6 +510,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             } catch (Exception e)
             {
             }
+        }
+
+        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                Action.WAYTOVISIT_SELECTED, stayPaymentInformation.isVisitWalking == true ? Label.WALK : Label.CAR, null);
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                Action.WAYTOVISIT_SELECTED, Label.PARKING_NOT_AVAILABLE, null);
         }
 
         Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation);
@@ -1406,13 +1416,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
-        if (payPrice == 0)
-        {
-            stayPaymentInformation.isFree = true;
-        } else
-        {
-            stayPaymentInformation.isFree = false;
-        }
+        //        if (payPrice == 0)
+        //        {
+        //            stayPaymentInformation.isFree = true;
+        //        } else
+        //        {
+        //            stayPaymentInformation.isFree = false;
+        //        }
 
         mHotelPaymentLayout.setBonusTextView(stayPaymentInformation.bonus);
 
@@ -1924,9 +1934,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         public void onVisitType(boolean isWalking)
         {
             ((StayPaymentInformation) mPaymentInformation).isVisitWalking = isWalking;
-
-            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-                Action.WAYTOVISIT_SELECTED, isWalking == true ? Label.WALK : Label.CAR, null);
         }
 
         @Override

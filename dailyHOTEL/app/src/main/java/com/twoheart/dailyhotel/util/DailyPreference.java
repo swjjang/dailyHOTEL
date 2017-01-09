@@ -26,7 +26,7 @@ public class DailyPreference
     //    private static final String KEY_ALLOW_PUSH = "5";
     //    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
 
-    private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
+//    private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
     private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
@@ -250,6 +250,8 @@ public class DailyPreference
         String stayRecentPlace = getStayRecentPlaces();
         String gourmetRecentPlace = getGourmetRecentPlaces();
 
+        String baseUrl = getBaseUrl();
+
         if (mEditor != null)
         {
             mEditor.clear();
@@ -269,6 +271,8 @@ public class DailyPreference
 
         setStayRecentPlaces(stayRecentPlace);
         setGourmetRecentPlaces(gourmetRecentPlace);
+
+        setBaseUrl(baseUrl);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -545,16 +549,6 @@ public class DailyPreference
         setValue(mEditor, KEY_SHOW_GUIDE, value);
     }
 
-    public String getCollapsekey()
-    {
-        return getValue(mPreferences, KEY_COLLAPSEKEY, null);
-    }
-
-    public void setCollapsekey(String value)
-    {
-        setValue(mEditor, KEY_COLLAPSEKEY, value);
-    }
-
     public String getStayLastViewDate()
     {
         return getValue(mPreferences, KEY_STAY_LAST_VIEW_DATE, null);
@@ -818,6 +812,9 @@ public class DailyPreference
     public void setBaseUrl(String value)
     {
         setValue(mEditor, KEY_BASE_URL, value);
+
+        // 반영이 안되는 경우가 있어서 특별히 추가 하였습니다.
+        mEditor.commit();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1313,6 +1310,7 @@ public class DailyPreference
             mEditor.remove(KEY_USER_TYPE);
             mEditor.remove(KEY_USER_EMAIL);
             mEditor.remove(KEY_USER_NAME);
+            mEditor.remove(KEY_USER_BIRTHDAY);
             mEditor.remove(KEY_AUTHORIZATION);
 
             DailyHotel.AUTHORIZATION = null;

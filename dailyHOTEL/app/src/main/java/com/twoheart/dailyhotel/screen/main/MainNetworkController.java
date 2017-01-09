@@ -51,8 +51,6 @@ public class MainNetworkController extends BaseNetworkController
     protected void requestCheckServer()
     {
         // 서버 상태 체크
-        //        DailyNetworkAPI.getInstance(mContext).requestStatusServer(mNetworkTag, mStatusHealthCheckJsonResponseListener);
-
         DailyMobileAPI.getInstance(mContext).requestStatusServer(mNetworkTag, mStatusCallback);
     }
 
@@ -115,7 +113,6 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestVersion()
     {
-        //        DailyNetworkAPI.getInstance(mContext).requestCommonVersion(mNetworkTag, mAppVersionJsonResponseListener);
         DailyMobileAPI.getInstance(mContext).requestCommonVersion(mNetworkTag, mCommonVersionCallback);
     }
 

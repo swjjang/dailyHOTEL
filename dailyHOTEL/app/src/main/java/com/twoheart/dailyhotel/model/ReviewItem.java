@@ -36,6 +36,7 @@ public class ReviewItem implements Parcelable
 
         itemIdx = jsonObject.getInt("itemIdx");
         itemName = jsonObject.getString("itemName");
+
         String baseImagePath = jsonObject.getString("baseImagePath");
         JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
 
@@ -72,6 +73,7 @@ public class ReviewItem implements Parcelable
         {
             ExLog.d("serviceType is null");
         }
+
 
         useStartDate = jsonObject.getString("useStartDate");
         useEndDate = jsonObject.getString("useEndDate");

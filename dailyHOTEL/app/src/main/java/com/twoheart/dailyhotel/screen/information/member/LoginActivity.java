@@ -172,7 +172,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         mEmailView = findViewById(R.id.emailView);
         mEmailEditText = (DailyAutoCompleteEditText) findViewById(R.id.emailEditText);
-        mEmailEditText.setDeleteButtonVisible(true, null);
+        mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnTouchListener(new View.OnTouchListener()
         {
@@ -198,7 +198,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mPasswordView = findViewById(R.id.passwordView);
         mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
-        mPasswordEditText.setDeleteButtonVisible(true, null);
+        mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
         mPasswordEditText.setOnTouchListener(new View.OnTouchListener()
         {
@@ -898,7 +898,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                             storeLoginInformation(responseJSONObject);
 
-                            DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                             DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
 
                             AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
@@ -960,7 +959,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         String userIndex = storeLoginInformation(responseJSONObject);
 
-                        DailyPreference.getInstance(LoginActivity.this).setCollapsekey(null);
                         DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
 
                         // 소셜 신규 가입인 경우

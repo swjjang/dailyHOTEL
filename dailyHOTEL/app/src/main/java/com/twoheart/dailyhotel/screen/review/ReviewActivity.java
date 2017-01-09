@@ -698,6 +698,7 @@ public class ReviewActivity extends BaseActivity
                     return;
                 }
 
+                mReviewGrade = Review.GRADE_NONE;
                 mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 switch (reviewItem.placeType)
@@ -712,8 +713,6 @@ public class ReviewActivity extends BaseActivity
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
                         break;
                 }
-
-                finish();
             }
         });
 
@@ -961,6 +960,7 @@ public class ReviewActivity extends BaseActivity
             if (Review.GRADE_NONE.equalsIgnoreCase(grade) == true)
             {
                 DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review, Toast.LENGTH_SHORT);
+                finish();
             } else
             {
                 setResult(RESULT_OK);
@@ -999,24 +999,45 @@ public class ReviewActivity extends BaseActivity
         public void onError(Throwable e)
         {
             ReviewActivity.this.onError(e);
+
+            if (Review.GRADE_NONE.equalsIgnoreCase(mReviewGrade) == true)
+            {
+                finish();
+            }
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            ReviewActivity.this.onErrorPopupMessage(msgCode, message, null);
+            if (Review.GRADE_NONE.equalsIgnoreCase(mReviewGrade) == true)
+            {
+                ReviewActivity.this.onErrorPopupMessage(msgCode, message);
+            } else
+            {
+                ReviewActivity.this.onErrorPopupMessage(msgCode, message, null);
+            }
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
             ReviewActivity.this.onErrorToastMessage(message);
+
+            if (Review.GRADE_NONE.equalsIgnoreCase(mReviewGrade) == true)
+            {
+                finish();
+            }
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             ReviewActivity.this.onErrorResponse(call, response);
+
+            if (Review.GRADE_NONE.equalsIgnoreCase(mReviewGrade) == true)
+            {
+                finish();
+            }
         }
     };
 }

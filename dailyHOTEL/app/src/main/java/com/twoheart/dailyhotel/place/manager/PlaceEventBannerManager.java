@@ -60,17 +60,14 @@ public abstract class PlaceEventBannerManager
         try
         {
             int msgCode = jsonObject.getInt("msgCode");
-
             if (msgCode == 100)
             {
                 JSONObject dataJSONObject = jsonObject.getJSONObject("data");
 
                 String baseUrl = dataJSONObject.getString("imgUrl");
-
                 JSONArray jsonArray = dataJSONObject.getJSONArray("eventBanner");
 
                 int length = jsonArray.length();
-
                 if (length > 0)
                 {
                     eventBannerList = new ArrayList<>();

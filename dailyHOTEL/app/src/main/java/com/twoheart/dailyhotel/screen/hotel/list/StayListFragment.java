@@ -295,7 +295,7 @@ public class StayListFragment extends PlaceListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             StayListFragment.this.onErrorResponse(call, response);
         }

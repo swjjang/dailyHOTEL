@@ -39,7 +39,6 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
 
     public void requestDateTime()
     {
-        //        DailyNetworkAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeJsonResponseListener);
         DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeCallback);
     }
 

@@ -246,7 +246,7 @@ public class RegisterCouponActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             RegisterCouponActivity.this.onErrorResponse(call, response);
         }

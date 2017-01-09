@@ -190,7 +190,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             GourmetWishListFragment.this.onErrorResponse(call, response);

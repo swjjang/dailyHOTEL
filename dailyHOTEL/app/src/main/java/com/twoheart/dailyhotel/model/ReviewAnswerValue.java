@@ -28,6 +28,7 @@ public class ReviewAnswerValue implements Parcelable
         }
 
         code = jsonObject.getString("code");
+
         description = jsonObject.getString("description");
     }
 

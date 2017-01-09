@@ -27,7 +27,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
         void startEditName(String name);
 
-        void startEditPhone();
+        void startEditPhone(String phoneNumber);
 
         void startEditPassword();
 
@@ -278,7 +278,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
                 break;
 
             case R.id.phoneLayout:
-                ((OnEventListener) mOnEventListener).startEditPhone();
+                ((OnEventListener) mOnEventListener).startEditPhone(mPhoneTextView.getText().toString());
                 break;
 
             case R.id.passwordLayout:

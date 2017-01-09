@@ -23,7 +23,9 @@ import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -239,11 +241,141 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     }
 
     @Override
-    protected void requestPlaceBookingDetail(int reservationIndex)
+    protected void showShareDialog()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_booking_layout, null, false);
+
+        final Dialog shareDialog = new Dialog(this);
+        shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        shareDialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+
+        kakaoShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                try
+                {
+                    String message = getString(R.string.message_booking_gourmet_share_kakao, //
+                        mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
+                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)"),//
+                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                        mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
+                        mGourmetBookingDetail.address);
+
+                    KakaoLinkManager.newInstance(GourmetBookingDetailTabActivity.this).shareBookingGourmet(message, mGourmetBookingDetail.placeIndex,//
+                        mImageUrl, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        });
+
+        View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+
+        smsShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                try
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.putExtra("sms_body", getString(R.string.message_booking_gourmet_share_sms, //
+                        mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
+                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)"),//
+                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                        mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
+                        mGourmetBookingDetail.address));
+
+                    intent.setType("vnd.android-dir/mms-sms");
+                    startActivity(intent);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        });
+
+        try
+        {
+            shareDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, shareDialog);
+
+            shareDialog.show();
+
+            shareDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    protected void requestPlaceBookingDetail(final int reservationIndex)
     {
         lockUI();
 
-        DailyMobileAPI.getInstance(this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+        DailyMobileAPI.getInstance(this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                            mGourmetBookingDetail.userName = jsonObject.getString("name");
+
+                            DailyMobileAPI.getInstance(GourmetBookingDetailTabActivity.this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+                        } else
+                        {
+                            String msg = responseJSONObject.getString("msg");
+                            DailyToast.showToast(GourmetBookingDetailTabActivity.this, msg, Toast.LENGTH_SHORT);
+                            finish();
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                } else
+                {
+                    GourmetBookingDetailTabActivity.this.onErrorResponse(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                GourmetBookingDetailTabActivity.this.onError(t);
+                finish();
+            }
+        });
     }
 
     @Override

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
@@ -26,6 +27,7 @@ import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerA
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -35,6 +37,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -293,11 +297,147 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     }
 
     @Override
-    protected void requestPlaceBookingDetail(int reservationIndex)
+    protected void showShareDialog()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_booking_layout, null, false);
+
+        final Dialog shareDialog = new Dialog(this);
+        shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        shareDialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+
+        kakaoShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                try
+                {
+                    String message = getString(R.string.message_booking_stay_share_kakao, //
+                        mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
+                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"), //
+                        mStayBookingDetail.address);
+
+                    String[] checkInDates = mStayBookingDetail.checkInDate.split("T");
+                    String[] checkOutDates = mStayBookingDetail.checkOutDate.split("T");
+
+                    Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+                    Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+
+                    int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
+
+                    KakaoLinkManager.newInstance(StayBookingDetailTabActivity.this).shareBookingStay(message, mStayBookingDetail.placeIndex,//
+                        mImageUrl, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        });
+
+        View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+
+        smsShareLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                try
+                {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.putExtra("sms_body", getString(R.string.message_booking_stay_share_sms, //
+                        mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
+                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"), //
+                        mStayBookingDetail.address));
+
+                    intent.setType("vnd.android-dir/mms-sms");
+                    startActivity(intent);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            }
+        });
+
+        try
+        {
+            shareDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, shareDialog);
+
+            shareDialog.show();
+
+            shareDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    protected void requestPlaceBookingDetail(final int reservationIndex)
     {
         lockUI();
 
-        DailyMobileAPI.getInstance(this).requestStayBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+        DailyMobileAPI.getInstance(this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                            mStayBookingDetail.userName = jsonObject.getString("name");
+
+                            DailyMobileAPI.getInstance(StayBookingDetailTabActivity.this).requestStayBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+                        } else
+                        {
+                            String msg = responseJSONObject.getString("msg");
+                            DailyToast.showToast(StayBookingDetailTabActivity.this, msg, Toast.LENGTH_SHORT);
+                            finish();
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                } else
+                {
+                    StayBookingDetailTabActivity.this.onErrorResponse(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                StayBookingDetailTabActivity.this.onError(t);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -310,6 +450,20 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     private void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
+    }
+
+    private long getCompareDate(long timeInMillis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(timeInMillis);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
     }
 
     private void startFrontCall(final String phoneNumber)
@@ -518,6 +672,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             StayBookingDetailTabActivity.this.onError(t);
+            finish();
         }
     };
 

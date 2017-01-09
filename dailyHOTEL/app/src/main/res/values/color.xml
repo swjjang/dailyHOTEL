@@ -245,6 +245,7 @@
     <color name="default_text_c666666">#666666</color>
     <color name="default_text_c454545">#454545</color>
     <color name="default_text_c66323232">#66323232</color>
+    <color name="default_text_c2284dc">#2284dc</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>

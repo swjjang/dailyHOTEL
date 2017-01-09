@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,33 +38,27 @@ public class Booking implements Parcelable
         readFromParcel(in);
     }
 
-    public Booking(JSONObject jsonObject)
+    public Booking(JSONObject jsonObject) throws Exception
     {
-        try
+        if (jsonObject.has("reservation_rec_idx") == true)
         {
-            if (jsonObject.has("reservation_rec_idx") == true)
-            {
-                reservationIndex = jsonObject.getInt("reservation_rec_idx");
-            }
+            reservationIndex = jsonObject.getInt("reservation_rec_idx");
+        }
 
-            placeName = jsonObject.getString("hotel_name");
-            payType = jsonObject.getInt("pay_type");
+        placeName = jsonObject.getString("hotel_name");
+        payType = jsonObject.getInt("pay_type");
 
             comment = jsonObject.getString("comment");
             tid = jsonObject.getString("tid");
             checkinTime = jsonObject.getLong("checkin_time");
             checkoutTime = jsonObject.getLong("checkout_time");
 
-            JSONArray jsonArray = jsonObject.getJSONArray("img");
-            hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
+        JSONArray jsonArray = jsonObject.getJSONArray("img");
+        hotelImageUrl = jsonArray.getJSONObject(0).getString("path");
 
-            readyForRefund = jsonObject.getBoolean("readyForRefund");
+        readyForRefund = jsonObject.getBoolean("readyForRefund");
 
-            placeType = Constants.PlaceType.valueOf(jsonObject.getString("type").toUpperCase());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        placeType = Constants.PlaceType.valueOf(jsonObject.getString("type").toUpperCase());
     }
 
     @Override

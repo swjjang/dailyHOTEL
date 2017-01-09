@@ -33,7 +33,6 @@ public class ReviewPickQuestion extends ReviewQuestion
         answerCode = jsonObject.getString("answerCode");
 
         JSONArray answerValues = jsonObject.getJSONArray("answerValues");
-
         if (answerValues != null)
         {
             mAnswerValueList = new ArrayList<>();
