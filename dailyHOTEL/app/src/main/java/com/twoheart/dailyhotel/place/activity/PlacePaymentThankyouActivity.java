@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
@@ -23,8 +24,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.FontManager;
-
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -58,7 +57,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
+        overridePendingTransition(R.anim.abc_fade_in, R.anim.hold);
 
         super.onCreate(savedInstanceState);
 
@@ -146,6 +145,11 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         confirmView.setOnClickListener(this);
 
+        startReceiptAnimation();
+    }
+
+    private void startReceiptAnimation()
+    {
         final View confirmImageView = findViewById(R.id.confirmImageView);
         confirmImageView.setVisibility(View.INVISIBLE);
         final View receiptLayout = findViewById(R.id.receiptLayout);
@@ -153,27 +157,33 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         float startY = 0f - Util.getLCDHeight(PlacePaymentThankyouActivity.this);
         final float endY = 0.0f;
 
-        final float startScaleY = 2.0f;
+        final float startScaleY = 2.3f;
         final float endScaleY = 1.0f;
+
+        int animatorSetStartDelay = Util.isOverAPI21() ? 400 : 600;
+        int transAnimatorDuration = Util.isOverAPI21() ? 300 : 400;
+        int scaleAnimatorStartDelay = transAnimatorDuration - 50;
+        int scaleAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
 
         receiptLayout.setTranslationY(startY);
 
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setStartDelay(animatorSetStartDelay);
 
         final ObjectAnimator scaleAnimator = ObjectAnimator.ofPropertyValuesHolder(confirmImageView //
             , PropertyValuesHolder.ofFloat("scaleX", startScaleY, endScaleY) //
             , PropertyValuesHolder.ofFloat("scaleY", startScaleY, endScaleY) //
+            , PropertyValuesHolder.ofFloat("alpha", 0.0f, 1.0f) //
         );
 
-        scaleAnimator.setDuration(100);
-        scaleAnimator.setInterpolator(new OvershootInterpolator(4.0f));
+        scaleAnimator.setDuration(scaleAnimatorDuration);
+        scaleAnimator.setStartDelay(scaleAnimatorStartDelay);
+        scaleAnimator.setInterpolator(new OvershootInterpolator(1.6f));
         scaleAnimator.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
             {
-                //                confirmImageView.setScaleX(startScaleY);
-                //                confirmImageView.setScaleY(startScaleY);
-
                 confirmImageView.setVisibility(View.VISIBLE);
             }
 
@@ -202,15 +212,13 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             }
         });
 
-
-        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(receiptLayout //
+        ObjectAnimator translateAnimator = ObjectAnimator.ofPropertyValuesHolder(receiptLayout //
             , PropertyValuesHolder.ofFloat("translationY", startY, endY) //
         );
 
-        objectAnimator.setDuration(400);
-        objectAnimator.setStartDelay(500);
-        objectAnimator.setInterpolator(new OvershootInterpolator(0.5f));
-        objectAnimator.addListener(new Animator.AnimatorListener()
+        translateAnimator.setDuration(transAnimatorDuration);
+        translateAnimator.setInterpolator(new OvershootInterpolator(0.82f));
+        translateAnimator.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
@@ -222,15 +230,12 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             public void onAnimationEnd(Animator animation)
             {
                 receiptLayout.setTranslationY(endY);
-                scaleAnimator.start();
-
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
                 receiptLayout.setTranslationY(endY);
-                scaleAnimator.start();
             }
 
             @Override
@@ -240,13 +245,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             }
         });
 
-        objectAnimator.start();
-
-    }
-
-    private static float bounce(float t)
-    {
-        return t * t * 8.0f;
+        animatorSet.playTogether(translateAnimator, scaleAnimator);
+        animatorSet.start();
     }
 
     @Override
@@ -256,7 +256,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
+        overridePendingTransition(R.anim.hold, R.anim.abc_fade_out);
     }
 
     @Override

@@ -536,49 +536,32 @@ public class StayMainFragment extends PlaceMainFragment
                 return;
             }
 
-            String discountType = AnalyticsManager.Label.PAYMENTWITH_CREDIT;
-            String imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg (106KB)";
-            String placeName = "[신] 천호 YES";
-            String placeType = "준 특실 더블";
-            String checkInDate = "2016.11.2 (수) 17시";
-            String checkOutDate = "2016.11.3 (목) 13시";
-            int nights = 1;
-            String userName = "dh00_test";
+            Province province = mStayCuration.getProvince();
 
-            HashMap <String, String> params = new HashMap <> ();
-            params.put (AnalyticsManager.KeyType.TICKET_INDEX, "183856");
+            if (province == null)
+            {
+                releaseUiComponent();
+                return;
+            }
 
-            Intent intent = HotelPaymentThankyouActivity.newInstance (//
-                mBaseActivity, imageUrl, placeName, placeType,//
-                userName, checkInDate, checkOutDate, nights, "CardPay", discountType, params);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+            Intent intent = StayCurationActivity.newInstance(mBaseActivity, mViewType, mStayCuration);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
-//            Province province = mStayCuration.getProvince();
-//
-//            if (province == null)
-//            {
-//                releaseUiComponent();
-//                return;
-//            }
-//
-//            Intent intent = StayCurationActivity.newInstance(mBaseActivity, mViewType, mStayCuration);
-//            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
-//
-//            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-//
-//            switch (mViewType)
-//            {
-//                case LIST:
-//                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-//                    break;
-//
-//                case MAP:
-//                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-//                    break;
-//            }
-//
-//            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-//                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
+            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+
+            switch (mViewType)
+            {
+                case LIST:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+                    break;
+
+                case MAP:
+                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+                    break;
+            }
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
 
         @Override

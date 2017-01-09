@@ -67,9 +67,7 @@
             <RelativeLayout
                 android:id="@+id/receiptLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
+                android:layout_height="wrap_content">
 
                 <View
                     android:id="@+id/backgroundImageView"
@@ -84,8 +82,8 @@
                     android:id="@+id/confirmImageView"
                     android:layout_width="62dp"
                     android:layout_height="62dp"
-                    android:layout_marginTop="49dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="49dp"
                     app:srcCompat="@drawable/ic_check_confirm_thinx"/>
 
                 <LinearLayout
