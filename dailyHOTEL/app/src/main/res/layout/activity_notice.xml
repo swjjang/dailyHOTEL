@@ -77,4 +77,14 @@
             android:gravity="center"
             app:srcCompat="@drawable/no_event_ic"/>
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/homeButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/btn_back_to_home"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
 </RelativeLayout>

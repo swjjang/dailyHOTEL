@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class TermsNPolicyActivity extends BaseActivity implements View.OnClickListener
@@ -50,6 +51,17 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
         locationLayout.setOnClickListener(this);
         youthtermsLayout.setOnClickListener(this);
         licenseLayout.setOnClickListener(this);
+
+        View homeButtonView = findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -69,6 +81,25 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                    finish();
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
@@ -83,7 +114,7 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
                 lockUiComponent();
 
                 Intent intent = new Intent(this, TermActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
                 break;
             }
 
@@ -97,7 +128,7 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
                 lockUiComponent();
 
                 Intent intent = new Intent(this, PrivacyActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
                 break;
             }
 
@@ -111,7 +142,7 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
                 lockUiComponent();
 
                 Intent intent = new Intent(this, LocationTermsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
                 break;
             }
 
@@ -125,7 +156,7 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
                 lockUiComponent();
 
                 Intent intent = new Intent(this, ProtectYouthTermsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
                 break;
             }
 
@@ -139,7 +170,7 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
                 lockUiComponent();
 
                 Intent intent = new Intent(this, LicenseActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
                 break;
             }
         }

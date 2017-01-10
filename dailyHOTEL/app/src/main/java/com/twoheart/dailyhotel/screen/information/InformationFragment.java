@@ -128,7 +128,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, AboutActivity.class));
+            baseActivity.startActivityForResult(new Intent(baseActivity, AboutActivity.class), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
         }
 
         @Override
@@ -142,7 +142,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, EventListActivity.class));
+            baseActivity.startActivityForResult(new Intent(baseActivity, EventListActivity.class), Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
@@ -159,7 +159,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, NoticeListActivity.class));
+            baseActivity.startActivityForResult(new Intent(baseActivity, NoticeListActivity.class), Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
@@ -176,7 +176,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, FAQActivity.class));
+            baseActivity.startActivityForResult(new Intent(baseActivity, FAQActivity.class), Constants.CODE_REQUEST_ACTIVITY_FAQ);
         }
 
         @Override
@@ -190,7 +190,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, ContactUsActivity.class));
+            baseActivity.startActivityForResult(new Intent(baseActivity, ContactUsActivity.class), Constants.CODE_REQUEST_ACTIVITY_CONTACTUS);
         }
 
         @Override
@@ -204,8 +204,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(baseActivity, TermsNPolicyActivity.class);
-            startActivity(intent);
+            baseActivity.startActivityForResult(new Intent(baseActivity, TermsNPolicyActivity.class), Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
 
         }
 

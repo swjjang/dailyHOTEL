@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
-import com.twoheart.dailyhotel.network.dto.BaseDtoList;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.network.dto.BaseDtoList;
 
 import org.json.JSONObject;
 

@@ -11,8 +11,6 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
