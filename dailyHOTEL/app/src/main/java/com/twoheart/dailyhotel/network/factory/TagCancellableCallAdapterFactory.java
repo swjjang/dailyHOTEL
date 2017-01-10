@@ -25,8 +25,6 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
     private TagCancellableCallAdapterFactory()
     {
         mQueuedCalls = new HashMap<>();
-
-        HashMap
     }
 
     public static TagCancellableCallAdapterFactory create()
