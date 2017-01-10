@@ -387,7 +387,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             StaySearchFragment.this.onErrorResponse(call, response);

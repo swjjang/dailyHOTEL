@@ -901,7 +901,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             StayBookingDetailTabBookingFragment.this.onErrorResponse(call, response);
         }

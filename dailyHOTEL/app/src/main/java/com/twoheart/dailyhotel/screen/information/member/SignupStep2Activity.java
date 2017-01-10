@@ -453,7 +453,7 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             SignupStep2Activity.this.onErrorResponse(call, response);
         }

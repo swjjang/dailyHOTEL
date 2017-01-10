@@ -1030,7 +1030,7 @@ public class ReviewActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             ReviewActivity.this.onErrorResponse(call, response);
 

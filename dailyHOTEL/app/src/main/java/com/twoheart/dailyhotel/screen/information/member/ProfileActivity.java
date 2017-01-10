@@ -396,7 +396,7 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             ProfileActivity.this.onErrorResponse(call, response);
         }

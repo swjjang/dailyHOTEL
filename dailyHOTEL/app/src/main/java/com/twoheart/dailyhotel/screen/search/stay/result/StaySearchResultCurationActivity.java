@@ -256,7 +256,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             StaySearchResultCurationActivity.this.onErrorResponse(call, response);
         }

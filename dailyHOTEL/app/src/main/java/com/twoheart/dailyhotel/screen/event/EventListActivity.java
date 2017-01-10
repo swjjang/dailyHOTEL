@@ -222,7 +222,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             EventListActivity.this.onErrorResponse(call, response);

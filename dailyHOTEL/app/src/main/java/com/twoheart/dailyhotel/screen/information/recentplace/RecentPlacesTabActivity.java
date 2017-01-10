@@ -375,7 +375,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             RecentPlacesTabActivity.this.onErrorResponse(call, response);
             finish();

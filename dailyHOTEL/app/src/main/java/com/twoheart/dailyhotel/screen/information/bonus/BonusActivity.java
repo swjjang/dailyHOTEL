@@ -228,7 +228,7 @@ public class BonusActivity extends BaseActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             BonusActivity.this.onErrorResponse(call, response);
             finish();

@@ -152,7 +152,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             RecentStayListFragment.this.onErrorResponse(call, response);

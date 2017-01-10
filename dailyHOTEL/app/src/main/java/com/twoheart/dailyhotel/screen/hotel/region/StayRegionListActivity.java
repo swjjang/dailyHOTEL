@@ -537,7 +537,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             StayRegionListActivity.this.onErrorResponse(call, response);

@@ -190,7 +190,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             unLockUI();
             StayWishListFragment.this.onErrorResponse(call, response);

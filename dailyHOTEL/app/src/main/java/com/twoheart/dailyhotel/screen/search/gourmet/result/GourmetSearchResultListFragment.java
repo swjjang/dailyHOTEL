@@ -126,7 +126,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         }
 
         @Override
-        public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onErrorResponse(Call call, Response response)
         {
             GourmetSearchResultListFragment.this.onErrorResponse(call, response);
         }
