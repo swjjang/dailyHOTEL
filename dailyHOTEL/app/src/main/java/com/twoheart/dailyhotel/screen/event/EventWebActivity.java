@@ -188,7 +188,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
         });
 
-        topButtonView.setVisibility(View.INVISIBLE);
+        topButtonView.setVisibility(View.GONE);
 
         dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
         {
@@ -197,11 +197,22 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 if (t == 0)
                 {
-                    topButtonView.setVisibility(View.INVISIBLE);
+                    topButtonView.setVisibility(View.GONE);
                 } else
                 {
                     topButtonView.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        View homeButtonView = findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
             }
         });
     }

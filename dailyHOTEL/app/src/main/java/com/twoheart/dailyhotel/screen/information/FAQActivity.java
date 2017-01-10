@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -65,30 +66,14 @@ public class FAQActivity extends WebViewActivity
 
     private void initLayout(final DailyWebView dailyWebView)
     {
-        final View topButtonView = findViewById(R.id.topButtonView);
-        topButtonView.setOnClickListener(new View.OnClickListener()
+        View homeButtonView = findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                dailyWebView.setScrollY(0);
-            }
-        });
-
-        topButtonView.setVisibility(View.INVISIBLE);
-
-        dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
-        {
-            @Override
-            public void onScroll(int l, int t, int oldl, int oldt)
-            {
-                if (t == 0)
-                {
-                    topButtonView.setVisibility(View.INVISIBLE);
-                } else
-                {
-                    topButtonView.setVisibility(View.VISIBLE);
-                }
+                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
             }
         });
     }

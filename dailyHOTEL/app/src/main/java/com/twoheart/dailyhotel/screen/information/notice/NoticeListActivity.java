@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -70,6 +71,17 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
         mListView.setOnItemClickListener(this);
 
         EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
+
+        View homeButtonView = findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -92,7 +104,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
                 String url = DailyDeepLink.getInstance().getUrl();
 
                 Intent intent = NoticeWebActivity.newInstance(this, title, url);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_NOTICELIST);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_NOTICEWEB);
             }
 
             DailyDeepLink.getInstance().clear();
@@ -141,7 +153,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
         Util.removeNoticeNewList(this, notice.index);
 
         Intent intent = NoticeWebActivity.newInstance(this, notice.title, notice.linkUrl);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_NOTICELIST);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_NOTICEWEB);
     }
 
     @Override
@@ -152,6 +164,17 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
         unLockUI();
 
         mDontReload = true;
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_NOTICEWEB:
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                    finish();
+                }
+                break;
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -9,6 +9,7 @@ import android.widget.ListView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -16,8 +17,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,13 +74,14 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
         mListView.setOnItemClickListener(this);
 
-        View homeButton = findViewById(R.id.homeButtonView);
-        homeButton.setOnClickListener(new View.OnClickListener()
+        View homeButtonView = findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
+                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
             }
         });
     }
@@ -152,6 +152,12 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         {
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
                 mDontReload = true;
+
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                    finish();
+                }
                 break;
         }
     }
