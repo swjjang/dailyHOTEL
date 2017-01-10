@@ -21,6 +21,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 {
     // References to the last Call made for a given tag
     private final HashMap<Call, String> mQueuedCalls;
+    private final static Object mObject = new Object();
 
     private TagCancellableCallAdapterFactory()
     {
@@ -77,9 +78,32 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
         Call call;
 
-        for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
+        synchronized (mObject)
         {
-            if (tag.equalsIgnoreCase(entry.getValue()) == true)
+            for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
+            {
+                if (tag.equalsIgnoreCase(entry.getValue()) == true)
+                {
+                    call = entry.getKey();
+
+                    if (call != null)
+                    {
+                        call.cancel();
+                    }
+
+                    mQueuedCalls.remove(call);
+                }
+            }
+        }
+    }
+
+    public void cancelAll()
+    {
+        Call call;
+
+        synchronized (mObject)
+        {
+            for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
             {
                 call = entry.getKey();
 
@@ -90,23 +114,6 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
                 mQueuedCalls.remove(call);
             }
-        }
-    }
-
-    public void cancelAll()
-    {
-        Call call;
-
-        for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
-        {
-            call = entry.getKey();
-
-            if (call != null)
-            {
-                call.cancel();
-            }
-
-            mQueuedCalls.remove(call);
         }
     }
 
@@ -130,7 +137,11 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         public void setTag(String tag)
         {
             mTag = tag;
-            mQueuedCalls.put(this, tag);
+
+            synchronized (mObject)
+            {
+                mQueuedCalls.put(this, tag);
+            }
         }
 
         @Override
@@ -146,7 +157,10 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                 @Override
                 public void onResponse(Call<T> call, final Response<T> response)
                 {
-                    mQueuedCalls.remove(ExecutorCallbackCall.this);
+                    synchronized (mObject)
+                    {
+                        mQueuedCalls.remove(ExecutorCallbackCall.this);
+                    }
 
                     mCallbackExecutor.execute(new Runnable()
                     {
@@ -164,7 +178,10 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                 @Override
                 public void onFailure(Call<T> call, final Throwable t)
                 {
-                    mQueuedCalls.remove(ExecutorCallbackCall.this);
+                    synchronized (mObject)
+                    {
+                        mQueuedCalls.remove(ExecutorCallbackCall.this);
+                    }
 
                     mCallbackExecutor.execute(new Runnable()
                     {
