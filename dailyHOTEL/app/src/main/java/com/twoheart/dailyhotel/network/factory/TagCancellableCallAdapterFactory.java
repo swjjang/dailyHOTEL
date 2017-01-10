@@ -1,13 +1,12 @@
 package com.twoheart.dailyhotel.network.factory;
 
-import android.support.v4.util.ArrayMap;
-
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -21,11 +20,13 @@ import retrofit2.Retrofit;
 public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 {
     // References to the last Call made for a given tag
-    private final ArrayMap<Call, String> mQueuedCalls;
+    private final HashMap<Call, String> mQueuedCalls;
 
     private TagCancellableCallAdapterFactory()
     {
-        mQueuedCalls = new ArrayMap<>();
+        mQueuedCalls = new HashMap<>();
+
+        HashMap
     }
 
     public static TagCancellableCallAdapterFactory create()
@@ -116,9 +117,9 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         private final Executor mCallbackExecutor;
         private final Call<T> mDelegate;
         private String mTag;
-        private final ArrayMap<Call, String> mQueuedCalls;
+        private final HashMap<Call, String> mQueuedCalls;
 
-        ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate, String tag, ArrayMap<Call, String> queuedCalls)
+        ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate, String tag, HashMap<Call, String> queuedCalls)
         {
             mCallbackExecutor = callbackExecutor;
             mDelegate = delegate;
