@@ -152,11 +152,6 @@ public class MenuBarLayout implements View.OnClickListener
         return mViewGroup.getHeight();
     }
 
-    public void setNewIconVisible(boolean isVisible)
-    {
-        mMenuView[MENU_INFORMATION_INDEX].findViewById(R.id.informationNewIconView).setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-    }
-
     public void setMyDailyNewIconVisible(boolean isVisible)
     {
         mMenuView[MENU_MYDAILY_INDEX].findViewById(R.id.myDailyNewIconView).setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);

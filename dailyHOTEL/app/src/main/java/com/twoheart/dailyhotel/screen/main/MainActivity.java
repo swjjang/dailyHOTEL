@@ -759,12 +759,20 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void updateNewEvent(boolean isNewEvent, boolean isNewCoupon, boolean isNewNotices)
         {
-            if (isNewEvent == false && isNewCoupon == false && isNewNotices == false && Util.hasNoticeNewList(MainActivity.this) == false)
+            if(isNewCoupon == true)
             {
-                mMenuBarLayout.setNewIconVisible(false);
+                mMenuBarLayout.setMyDailyNewIconVisible(true);
             } else
             {
-                mMenuBarLayout.setNewIconVisible(true);
+                mMenuBarLayout.setMyDailyNewIconVisible(false);
+            }
+
+            if (isNewEvent == false && isNewNotices == false && Util.hasNoticeNewList(MainActivity.this) == false)
+            {
+                mMenuBarLayout.setInformationNewIconVisible(false);
+            } else
+            {
+                mMenuBarLayout.setInformationNewIconVisible(true);
             }
 
             DailyPreference.getInstance(MainActivity.this).setNewEvent(isNewEvent);
