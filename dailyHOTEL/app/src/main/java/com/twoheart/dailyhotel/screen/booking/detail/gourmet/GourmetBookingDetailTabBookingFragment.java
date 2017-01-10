@@ -39,8 +39,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
-import org.json.JSONObject;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;

@@ -14,8 +14,8 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.network.dto.BaseDtoList;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.network.dto.BaseDtoList;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;

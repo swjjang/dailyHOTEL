@@ -387,9 +387,12 @@ public class MainActivity extends BaseActivity implements Constants
                 break;
             }
 
+            case Constants.CODE_REQUEST_ACTIVITY_ABOUT:
             case Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST:
             case Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST:
             case Constants.CODE_REQUEST_ACTIVITY_FAQ:
+            case Constants.CODE_REQUEST_ACTIVITY_CONTACTUS:
+            case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
             {
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {

@@ -267,6 +267,8 @@ public interface Constants
 
     int CODE_REQUEST_ACTIVITY_EVENT_LIST = 54;
     int CODE_REQUEST_ACTIVITY_NOTICE_LIST = 55;
+    int CODE_REQUEST_ACTIVITY_CONTACTUS = 56;
+    int CODE_REQUEST_ACTIVITY_ABOUT = 57;
 
     // Android Activity의 Result Code들이다.
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

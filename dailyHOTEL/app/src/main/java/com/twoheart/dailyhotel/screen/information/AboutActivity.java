@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -51,7 +52,7 @@ public class AboutActivity extends WebViewActivity
             }
         });
 
-        topButtonView.setVisibility(View.INVISIBLE);
+        topButtonView.setVisibility(View.GONE);
 
         dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
         {
@@ -60,11 +61,22 @@ public class AboutActivity extends WebViewActivity
             {
                 if (t == 0)
                 {
-                    topButtonView.setVisibility(View.INVISIBLE);
+                    topButtonView.setVisibility(View.GONE);
                 } else
                 {
                     topButtonView.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        View homeButtonView = findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
             }
         });
     }
