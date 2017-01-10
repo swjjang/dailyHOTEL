@@ -5,7 +5,7 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <com.twoheart.dailyhotel.screen.information.creditcard.CreditCardLayout
+    <com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardLayout
         android:id="@+id/creditCardLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

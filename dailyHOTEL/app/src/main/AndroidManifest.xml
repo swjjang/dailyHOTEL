@@ -179,7 +179,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.member.LoginActivity"
+            android:name=".screen.mydaily.member.LoginActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -192,21 +192,21 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.information.member.SignupStep1Activity"
+            android:name=".screen.mydaily.member.SignupStep1Activity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
-            android:name=".screen.information.member.SignupStep2Activity"
+            android:name=".screen.mydaily.member.SignupStep2Activity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateAlwaysVisible|adjustResize"/>
         <activity
-            android:name=".screen.information.ForgotPasswordActivity"
+            android:name=".screen.mydaily.member.ForgotPasswordActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
@@ -290,48 +290,48 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.member.ProfileActivity"
+            android:name=".screen.mydaily.member.ProfileActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.information.member.EditProfileEmailActivity"
+            android:name=".screen.mydaily.member.EditProfileEmailActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
-            android:name=".screen.information.member.EditProfileNameActivity"
+            android:name=".screen.mydaily.member.EditProfileNameActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
-            android:name=".screen.information.member.EditProfilePhoneActivity"
+            android:name=".screen.mydaily.member.EditProfilePhoneActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
-            android:name=".screen.information.member.EditProfilePasswordActivity"
+            android:name=".screen.mydaily.member.EditProfilePasswordActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
         <activity
-            android:name=".screen.information.member.EditProfileBirthdayActivity"
+            android:name=".screen.mydaily.member.EditProfileBirthdayActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
-            android:name=".screen.information.member.AddProfileSocialActivity"
+            android:name=".screen.mydaily.member.AddProfileSocialActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -343,22 +343,22 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.creditcard.RegisterCreditCardActivity"
+            android:name=".screen.mydaily.creditcard.RegisterCreditCardActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.bonus.InviteFriendsActivity"
+            android:name=".screen.mydaily.bonus.InviteFriendsActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.member.CountryCodeListActivity"
+            android:name=".screen.mydaily.member.CountryCodeListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.member.InputMobileNumberDialogActivity"
+            android:name=".screen.mydaily.member.InputMobileNumberDialogActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -384,39 +384,39 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.bonus.BonusActivity"
+            android:name=".screen.mydaily.bonus.BonusActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.coupon.CouponListActivity"
+            android:name=".screen.mydaily.coupon.CouponListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.coupon.CouponHistoryActivity"
+            android:name=".screen.mydaily.coupon.CouponHistoryActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.coupon.SelectStayCouponDialogActivity"
+            android:name=".screen.mydaily.coupon.SelectStayCouponDialogActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.information.coupon.SelectGourmetCouponDialogActivity"
+            android:name=".screen.mydaily.coupon.SelectGourmetCouponDialogActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.information.coupon.CouponTermActivity"
+            android:name=".screen.mydaily.coupon.CouponTermActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.coupon.RegisterCouponActivity"
+            android:name=".screen.mydaily.coupon.RegisterCouponActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -500,13 +500,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.information.recentplace.RecentPlacesTabActivity"
+            android:name=".screen.mydaily.recentplace.RecentPlacesTabActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme"/>
         <activity
-            android:name=".screen.information.wishlist.WishListTabActivity"
+            android:name=".screen.mydaily.wishlist.WishListTabActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
@@ -556,7 +556,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:theme"/>
         <activity
-            android:name=".screen.information.creditcard.CreditCardListActivity"
+            android:name=".screen.mydaily.creditcard.CreditCardListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
