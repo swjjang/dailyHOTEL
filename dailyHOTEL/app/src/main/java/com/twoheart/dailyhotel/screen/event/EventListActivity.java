@@ -74,6 +74,16 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         mListView = (ListView) findViewById(R.id.listView);
         EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
         mListView.setOnItemClickListener(this);
+
+        View homeButton = findViewById(R.id.homeButtonView);
+        homeButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
     }
 
     @Override

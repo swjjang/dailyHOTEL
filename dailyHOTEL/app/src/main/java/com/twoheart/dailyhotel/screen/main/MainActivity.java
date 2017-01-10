@@ -362,6 +362,7 @@ public class MainActivity extends BaseActivity implements Constants
             }
 
             case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
+            {
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {
                     Util.restartApp(this);
@@ -384,6 +385,16 @@ public class MainActivity extends BaseActivity implements Constants
                         break;
                 }
                 break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST:
+            {
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                }
+                break;
+            }
         }
     }
 
@@ -759,7 +770,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void updateNewEvent(boolean isNewEvent, boolean isNewCoupon, boolean isNewNotices)
         {
-            if(isNewCoupon == true)
+            if (isNewCoupon == true)
             {
                 mMenuBarLayout.setMyDailyNewIconVisible(true);
             } else
