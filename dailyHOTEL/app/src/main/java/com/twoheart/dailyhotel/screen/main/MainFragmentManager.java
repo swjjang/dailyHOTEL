@@ -1,16 +1,25 @@
 package com.twoheart.dailyhotel.screen.main;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.fragment.PlaceMainFragment;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainFragment;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
 import com.twoheart.dailyhotel.screen.mydaily.MyDailyFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -32,11 +41,9 @@ public class MainFragmentManager
     private int mIndexMainLastFragment; // 호텔, 고메
 
     private BaseActivity mBaseActivity;
-    private PlaceMainFragment.OnMenuBarListener mOnMenuBarListener;
     private MenuBarLayout.MenuBarLayoutOnPageChangeListener mMenuBarLayoutOnPageChangeListener;
 
-    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, //
-                               PlaceMainFragment.OnMenuBarListener onMenuBarListener, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
+    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
     {
         if (activity == null || viewGroup == null)
         {
@@ -47,7 +54,6 @@ public class MainFragmentManager
         mBaseActivity = activity;
         mFragmentManager = activity.getSupportFragmentManager();
         mContentLayout = viewGroup;
-        mOnMenuBarListener = onMenuBarListener;
         mMenuBarLayoutOnPageChangeListener = listener;
     }
 
@@ -66,6 +72,7 @@ public class MainFragmentManager
         return mFragment;
     }
 
+
     /**
      * 네비게이션 드로워 메뉴에서 선택할 수 있는 Fragment를 반환하는 메서드이다.
      *
@@ -78,32 +85,26 @@ public class MainFragmentManager
         {
             case INDEX_HOME_FRAGMENT:
             {
-                PlaceMainFragment placeMainFragment = new StayMainFragment();
-                placeMainFragment.setMenuBarListener(mOnMenuBarListener);
-                return placeMainFragment;
+                return new HomeFragment();
             }
 
             case INDEX_BOOKING_FRAGMENT:
             {
-                mOnMenuBarListener.onMenuBarEnabled(true);
                 return new BookingListFragment();
             }
 
             case INDEX_MYDAILY_FRAGMENT:
             {
-                mOnMenuBarListener.onMenuBarEnabled(true);
                 return new MyDailyFragment();
             }
 
             case INDEX_INFORMATION_FRAGMENT:
             {
-                mOnMenuBarListener.onMenuBarEnabled(true);
                 return new InformationFragment();
             }
 
             case INDEX_ERROR_FRAGMENT:
             {
-                mOnMenuBarListener.onMenuBarEnabled(true);
                 ErrorFragment fragment = new ErrorFragment();
                 fragment.setMenuManager(this);
                 return fragment;
@@ -203,5 +204,70 @@ public class MainFragmentManager
         {
             mMenuBarLayoutOnPageChangeListener.onPageChangeListener(mIndexLastFragment);
         }
+    }
+}
+
+class HomeFragment extends BaseFragment
+{
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        Context context = getContext();
+
+        LinearLayout linearLayout = new LinearLayout(context);
+
+        TextView stayTextView = new TextView(context);
+        stayTextView.setText("데일리호텔");
+        LinearLayout.LayoutParams layoutParamsStay = new LinearLayout.LayoutParams(0, 200);
+        layoutParamsStay.weight = 1;
+        stayTextView.setLayoutParams(layoutParamsStay);
+        stayTextView.setBackgroundResource(R.color.dh_theme_color);
+        stayTextView.setTextColor(context.getResources().getColor(R.color.white));
+        stayTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Activity activity = getActivity();
+
+                activity.startActivity(StayMainActivity.newInstance(getContext()));
+            }
+        });
+
+        TextView gourmetTextView = new TextView(context);
+        gourmetTextView.setText("데일리고메");
+        LinearLayout.LayoutParams layoutParamsGourmet = new LinearLayout.LayoutParams(0, 200);
+        layoutParamsGourmet.weight = 1;
+        gourmetTextView.setLayoutParams(layoutParamsGourmet);
+        gourmetTextView.setBackgroundResource(R.color.dh_theme_color);
+        gourmetTextView.setTextColor(context.getResources().getColor(R.color.white));
+        gourmetTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Activity activity = getActivity();
+
+                activity.startActivity(GourmetMainActivity.newInstance(getContext()));
+            }
+        });
+
+        linearLayout.addView(stayTextView);
+        linearLayout.addView(gourmetTextView);
+
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        linearLayout.setLayoutParams(layoutParams);
+
+        return linearLayout;
+    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+        baseActivity.unLockUI();
     }
 }

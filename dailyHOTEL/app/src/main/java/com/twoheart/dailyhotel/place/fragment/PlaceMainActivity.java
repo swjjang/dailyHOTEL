@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -20,16 +17,13 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.Util;
 
-public abstract class PlaceMainFragment extends BaseFragment
+public abstract class PlaceMainActivity extends BaseActivity
 {
     protected boolean mDontReloadAtOnResume, mIsDeepLink;
     protected ViewType mViewType = ViewType.LIST;
 
     protected PlaceMainLayout mPlaceMainLayout;
     protected PlaceMainNetworkController mPlaceMainNetworkController;
-
-    protected BaseActivity mBaseActivity;
-    protected PlaceMainFragment.OnMenuBarListener mOnMenuBarListener;
 
     protected abstract PlaceMainLayout getPlaceMainLayout(Context context);
 
@@ -49,22 +43,15 @@ public abstract class PlaceMainFragment extends BaseFragment
 
     protected abstract PlaceCuration getPlaceCuration();
 
-    public interface OnMenuBarListener
-    {
-        void onMenuBarTranslationY(float y);
-
-        void onMenuBarEnabled(boolean enabled);
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
-        mBaseActivity = (BaseActivity) getActivity();
+        super.onCreate(savedInstanceState);
 
-        mPlaceMainLayout = getPlaceMainLayout(mBaseActivity);
-        mPlaceMainNetworkController = getPlaceMainNetworkController(mBaseActivity);
+        mPlaceMainLayout = getPlaceMainLayout(this);
+        mPlaceMainNetworkController = getPlaceMainNetworkController(this);
 
-        return mPlaceMainLayout.onCreateView(R.layout.fragment_place_main, container);
+        setContentView(mPlaceMainLayout.onCreateView(R.layout.activity_place_main));
     }
 
     @Override
@@ -225,7 +212,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         if (mPlaceMainLayout.getPlaceListFragment() == null)
         {
-            Util.restartApp(mBaseActivity);
+            Util.restartApp(this);
             return;
         }
 
@@ -248,11 +235,6 @@ public abstract class PlaceMainFragment extends BaseFragment
         }
     }
 
-    public void setMenuBarListener(PlaceMainFragment.OnMenuBarListener onMenuBarListener)
-    {
-        mOnMenuBarListener = onMenuBarListener;
-    }
-
     protected void searchMyLocation()
     {
         if (isFinishing() || lockUiComponentAndIsLockUiComponent() == true)
@@ -262,7 +244,7 @@ public abstract class PlaceMainFragment extends BaseFragment
 
         lockUI();
 
-        DailyLocationFactory.getInstance(mBaseActivity).startLocationMeasure(mBaseActivity, null, new DailyLocationFactory.LocationListenerEx()
+        DailyLocationFactory.getInstance(this).startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
         {
             @Override
             public void onRequirePermission()
@@ -274,7 +256,7 @@ public abstract class PlaceMainFragment extends BaseFragment
                     return;
                 }
 
-                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                Intent intent = PermissionManagerActivity.newInstance(PlaceMainActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
             }
 
@@ -314,9 +296,9 @@ public abstract class PlaceMainFragment extends BaseFragment
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(PlaceMainActivity.this).stopLocationMeasure();
 
-                mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                showSimpleDialog(getString(R.string.dialog_title_used_gps)//
                     , getString(R.string.dialog_msg_used_gps)//
                     , getString(R.string.dialog_btn_text_dosetting)//
                     , getString(R.string.dialog_btn_text_cancel)//
@@ -348,9 +330,9 @@ public abstract class PlaceMainFragment extends BaseFragment
                     return;
                 }
 
-                DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+                DailyLocationFactory.getInstance(PlaceMainActivity.this).stopLocationMeasure();
 
-                PlaceMainFragment.this.onLocationChanged(location);
+                PlaceMainActivity.this.onLocationChanged(location);
             }
         });
     }

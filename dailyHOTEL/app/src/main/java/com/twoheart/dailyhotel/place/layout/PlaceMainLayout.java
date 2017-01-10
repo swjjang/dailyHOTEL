@@ -1,9 +1,9 @@
 package com.twoheart.dailyhotel.place.layout;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -36,6 +36,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private TextView mRegionTextView;
     private TextView mDateTextView;
 
+    protected View mAppBarLayout, mToolbarLayout;
     protected View mBottomOptionLayout;
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
@@ -68,10 +69,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         void onViewTypeClick();// 리스트, 맵 타입
 
         void onFilterClick();
-
-        void onMenuBarTranslationY(float y);
-
-        void onMenuBarEnabled(boolean enabled);
     }
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
@@ -95,6 +92,20 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     private void initToolbar(View view)
     {
+        mAppBarLayout = view.findViewById(R.id.appBarLayout);
+        mAppBarLayout.setTag(0);
+
+        mToolbarLayout = mAppBarLayout.findViewById(R.id.toolbarLayout);
+        View backImageView = mToolbarLayout.findViewById(R.id.backImageView);
+        backImageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnEventListener.finish();
+            }
+        });
+
         // 검색
         // 지역 이름
         // 날짜
@@ -114,14 +125,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private void initOptionLayout(View view)
     {
         mBottomOptionLayout = view.findViewById(R.id.bottomOptionLayout);
-        mBottomOptionLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop());
-            }
-        });
 
         // 하단 지도 필터
         mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
@@ -403,271 +406,294 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     {
         mViewTypeOptionImageView.setEnabled(enabled);
         mFilterOptionImageView.setEnabled(enabled);
-
-        ((OnEventListener) mOnEventListener).onMenuBarEnabled(enabled);
     }
 
-    private void setMenuBarLayoutTranslationY(float dy)
+    public synchronized void showBottomLayout()
     {
         if (mBottomOptionLayout == null)
         {
             return;
         }
 
-        mBottomOptionLayout.setTranslationY(dy);
-        ((OnEventListener) mOnEventListener).onMenuBarTranslationY(dy);
+        mBottomOptionLayout.setVisibility(View.VISIBLE);
+
+        setMenuBarLayoutEnabled(true);
     }
 
-    public void calculationMenuBarLayoutTranslationY(int dy)
+    public void hideBottomLayout()
     {
-        Object tag = mBottomOptionLayout.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
+        if (mBottomOptionLayout == null)
         {
             return;
         }
 
-        int height = (Integer) tag;
-        float translationY = dy + mBottomOptionLayout.getTranslationY();
+        mBottomOptionLayout.setVisibility(View.GONE);
 
-        if (translationY >= height)
-        {
-            translationY = height;
-        } else if (translationY <= 0)
-        {
-            translationY = 0;
-        }
-
-        if (dy > 0)
-        {
-            mUpScrolling = true;
-        } else if (dy < 0)
-        {
-            mUpScrolling = false;
-        }
-
-        if (mMenuBarLayoutTranslationY == translationY)
-        {
-            return;
-        } else
-        {
-            mMenuBarLayoutTranslationY = translationY;
-        }
-
-        // 움직이는 동안에는 터치가 불가능 하다.
-        if (translationY == 0 || translationY == height)
-        {
-            setMenuBarLayoutEnabled(true);
-        } else
-        {
-            setMenuBarLayoutEnabled(false);
-        }
-
-        setMenuBarLayoutTranslationY(translationY);
+        setMenuBarLayoutEnabled(false);
     }
 
-    public void animationMenuBarLayout()
+    private void setAppBarLayoutTranslationY(float dy)
     {
-        Object tag = mBottomOptionLayout.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
+        if (mAppBarLayout == null)
         {
             return;
         }
 
-        int height = (Integer) tag;
-        float translationY = mBottomOptionLayout.getTranslationY();
-
-        if (translationY == 0 || translationY == height)
-        {
-            return;
-        }
-
-        mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
-
-        int menuBarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.menubar_height);
-
-        if (mUpScrolling == true)
-        {
-            if (translationY >= menuBarHeight / 2)
-            {
-                hideBottomLayout(true);
-            } else
-            {
-                showBottomLayout(true);
-            }
-        } else
-        {
-            if (translationY <= menuBarHeight / 2)
-            {
-                showBottomLayout(true);
-            } else
-            {
-                hideBottomLayout(true);
-            }
-        }
+        mAppBarLayout.setTranslationY(dy);
     }
 
-    public synchronized void showBottomLayout(boolean isAnimation)
+    public void calculationAppBarLayoutTranslationY(int dy)
     {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null)
-        {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
-            }
-
-            mValueAnimator = null;
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
-                    float translationY = prevTranslationY * value / 100;
-
-                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    setMenuBarLayoutEnabled(false);
-
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-
-                    setMenuBarLayoutEnabled(true);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-
-                    setMenuBarLayoutEnabled(true);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            setMenuBarLayoutTranslationY(0);
-
-            setMenuBarLayoutEnabled(true);
-        }
+//        Object tag = mAppBarLayout.getTag();
+//
+//        if (tag == null || tag instanceof Integer == false)
+//        {
+//            return;
+//        }
+//
+//        int height = (Integer) tag;
+//        float translationY = dy + mBottomOptionLayout.getTranslationY();
+//
+//        if (translationY >= height)
+//        {
+//            translationY = height;
+//        } else if (translationY <= 0)
+//        {
+//            translationY = 0;
+//        }
+//
+//        if (dy > 0)
+//        {
+//            mUpScrolling = true;
+//        } else if (dy < 0)
+//        {
+//            mUpScrolling = false;
+//        }
+//
+//        if (mMenuBarLayoutTranslationY == translationY)
+//        {
+//            return;
+//        } else
+//        {
+//            mMenuBarLayoutTranslationY = translationY;
+//        }
+//
+//        // 움직이는 동안에는 터치가 불가능 하다.
+//        if (translationY == 0 || translationY == height)
+//        {
+//            setMenuBarLayoutEnabled(true);
+//        } else
+//        {
+//            setMenuBarLayoutEnabled(false);
+//        }
+//
+//        setAppBarLayoutTranslationY(translationY);
     }
 
-    public void hideBottomLayout(boolean isAnimation)
+    public void animationAppBarLayout()
     {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null)
-        {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
-            }
-
-            mValueAnimator = null;
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
-                    float height = (Integer) mBottomOptionLayout.getTag() - prevTranslationY;
-                    float translationY = height * value / 100;
-
-                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                    setMenuBarLayoutEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
-
-            setMenuBarLayoutEnabled(false);
-        }
+//        Object tag = mBottomOptionLayout.getTag();
+//
+//        if (tag == null || tag instanceof Integer == false)
+//        {
+//            return;
+//        }
+//
+//        int height = (Integer) tag;
+//        float translationY = mBottomOptionLayout.getTranslationY();
+//
+//        if (translationY == 0 || translationY == height)
+//        {
+//            return;
+//        }
+//
+//        mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
+//
+//        int menuBarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.menubar_height);
+//
+//        if (mUpScrolling == true)
+//        {
+//            if (translationY >= menuBarHeight / 2)
+//            {
+//                hideBottomLayout(true);
+//            } else
+//            {
+//                showBottomLayout(true);
+//            }
+//        } else
+//        {
+//            if (translationY <= menuBarHeight / 2)
+//            {
+//                showBottomLayout(true);
+//            } else
+//            {
+//                hideBottomLayout(true);
+//            }
+//        }
     }
+
+//    public synchronized void showAppBarLayout(boolean isAnimation)
+//    {
+//        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+//        {
+//            return;
+//        }
+//
+//        if (mValueAnimator != null)
+//        {
+//            if (mValueAnimator.isRunning() == true)
+//            {
+//                mValueAnimator.cancel();
+//                mValueAnimator.removeAllListeners();
+//            }
+//
+//            mValueAnimator = null;
+//        }
+//
+//        if (isAnimation == true)
+//        {
+//            mValueAnimator = ValueAnimator.ofInt(0, 100);
+//            mValueAnimator.setDuration(ANIMATION_DEALY);
+//            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+//            {
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animation)
+//                {
+//                    int value = (Integer) animation.getAnimatedValue();
+//                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+//                    float translationY = prevTranslationY * value / 100;
+//
+//                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
+//                }
+//            });
+//
+//            mValueAnimator.addListener(new Animator.AnimatorListener()
+//            {
+//                @Override
+//                public void onAnimationStart(Animator animation)
+//                {
+//                    setMenuBarLayoutEnabled(false);
+//
+//                    mAnimationState = Constants.ANIMATION_STATE.START;
+//                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animator animation)
+//                {
+//                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+//                    {
+//                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+//                        mAnimationState = Constants.ANIMATION_STATE.END;
+//                    }
+//
+//                    setMenuBarLayoutEnabled(true);
+//                }
+//
+//                @Override
+//                public void onAnimationCancel(Animator animation)
+//                {
+//                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+//
+//                    setMenuBarLayoutEnabled(true);
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animator animation)
+//                {
+//
+//                }
+//            });
+//
+//            mValueAnimator.start();
+//        } else
+//        {
+//            setMenuBarLayoutTranslationY(0);
+//
+//            setMenuBarLayoutEnabled(true);
+//        }
+//    }
+//
+//    public void hideAppbarLayout(boolean isAnimation)
+//    {
+//        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
+//        {
+//            return;
+//        }
+//
+//        if (mValueAnimator != null)
+//        {
+//            if (mValueAnimator.isRunning() == true)
+//            {
+//                mValueAnimator.cancel();
+//                mValueAnimator.removeAllListeners();
+//            }
+//
+//            mValueAnimator = null;
+//        }
+//
+//        if (isAnimation == true)
+//        {
+//            mValueAnimator = ValueAnimator.ofInt(0, 100);
+//            mValueAnimator.setDuration(ANIMATION_DEALY);
+//            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+//            {
+//                @Override
+//                public void onAnimationUpdate(ValueAnimator animation)
+//                {
+//                    int value = (Integer) animation.getAnimatedValue();
+//                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+//                    float height = (Integer) mBottomOptionLayout.getTag() - prevTranslationY;
+//                    float translationY = height * value / 100;
+//
+//                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
+//                }
+//            });
+//
+//            mValueAnimator.addListener(new Animator.AnimatorListener()
+//            {
+//                @Override
+//                public void onAnimationStart(Animator animation)
+//                {
+//                    mAnimationState = Constants.ANIMATION_STATE.START;
+//                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+//
+//                    setMenuBarLayoutEnabled(false);
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animator animation)
+//                {
+//                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+//                    {
+//                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+//                        mAnimationState = Constants.ANIMATION_STATE.END;
+//                    }
+//                }
+//
+//                @Override
+//                public void onAnimationCancel(Animator animation)
+//                {
+//                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animator animation)
+//                {
+//
+//                }
+//            });
+//
+//            mValueAnimator.start();
+//        } else
+//        {
+//            setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
+//
+//            setMenuBarLayoutEnabled(false);
+//        }
+//    }
+
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
