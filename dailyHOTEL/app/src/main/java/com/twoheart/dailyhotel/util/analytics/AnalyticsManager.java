@@ -20,13 +20,11 @@ public class AnalyticsManager
     // 추후에 작업을 해볼까 생각중
     private static final boolean ENABLED_GOOGLE = true;
     private static final boolean ENABLED_FACEBOOK = true;
-    private static final boolean ENABLED_TUNE = true;
     private static final boolean ENABLED_APPBOY = true;
 
     private static AnalyticsManager mInstance = null;
     private Context mContext;
     private GoogleAnalyticsManager mGoogleAnalyticsManager;
-    private TuneManager mTuneManager;
     private FacebookManager mFacebookManager;
     private AppboyManager mAppboyManager;
     private AdjustManager mAdjustManager;
@@ -56,20 +54,11 @@ public class AnalyticsManager
 
         try
         {
-            mTuneManager = new TuneManager(context);
-        } catch (Exception e)
-        {
-            ExLog.d((e.toString()));
-        }
-
-        try
-        {
             mGoogleAnalyticsManager = new GoogleAnalyticsManager(context, new GoogleAnalyticsManager.OnClientIdListener()
             {
                 @Override
                 public void onResponseClientId(String clientId)
                 {
-                    mTuneManager.setGoogleClientId(clientId);
                 }
             });
         } catch (Exception e)
@@ -104,11 +93,6 @@ public class AnalyticsManager
         if (mGoogleAnalyticsManager != null)
         {
             mAnalyticsManagerList.add(mGoogleAnalyticsManager);
-        }
-
-        if (mTuneManager != null)
-        {
-            mAnalyticsManagerList.add(mTuneManager);
         }
 
         if (mFacebookManager != null)

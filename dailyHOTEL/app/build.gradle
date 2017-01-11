@@ -87,8 +87,6 @@ dependencies {
         transitive = true;
     }
     compile 'com.facebook.android:facebook-android-sdk:4.+'
-    compile 'com.tune:tune-marketing-console-sdk:4.+'
-    compile 'de.greenrobot:eventbus:2.4.0'
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
     compile project(':keyframes')
