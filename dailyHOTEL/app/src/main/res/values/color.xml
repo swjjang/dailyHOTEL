@@ -54,6 +54,7 @@
     <color name="white_a80">#ccffffff</color>
     <color name="white_a70">#B3ffffff</color>
     <color name="white_a55">#8cffffff</color>
+    <color name="white_a60">#99ffffff</color>
     <color name="white_a50">#80ffffff</color>
     <color name="white_a40">#66ffffff</color>
     <color name="white_a30">#4dffffff</color>
@@ -66,6 +67,7 @@
     <color name="black_a75">#bf000000</color>
     <color name="black_a67">#ab000000</color>
     <color name="black_a60">#99000000</color>
+    <color name="black_a50">#80000000</color>
     <color name="black_a46">#75000000</color>
     <color name="black_a40">#66000000</color>
     <color name="black_a30">#4D000000</color>

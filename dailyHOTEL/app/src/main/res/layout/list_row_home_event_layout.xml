@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <com.twoheart.dailyhotel.widget.DailyLoopViewPager
+        android:id="@+id/loopViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="203dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/pagerCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/loopViewPager"
+        android:layout_alignBottom="@+id/loopViewPager"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/white_a50"
+        android:background="@drawable/shape_home_event_count_background"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_line_cdcdcdd"/>
+</RelativeLayout>
