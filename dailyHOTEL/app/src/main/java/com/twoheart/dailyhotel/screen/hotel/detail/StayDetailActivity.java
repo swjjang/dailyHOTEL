@@ -550,8 +550,8 @@ public class StayDetailActivity extends PlaceDetailActivity
             SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + stayDetail.nights);
 
             intent.putExtra("sms_body", getString(R.string.message_detail_stay_share_sms, //
-                name, stayDetail.name, mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd (EEE)"),//
-                checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd (EEE)"), //
+                name, stayDetail.name, mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"),//
+                checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"), //
                 stayDetail.nights, stayDetail.nights + 1, //
                 stayDetail.address));
 

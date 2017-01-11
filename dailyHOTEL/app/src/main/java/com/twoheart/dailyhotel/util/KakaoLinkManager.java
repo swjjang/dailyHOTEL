@@ -69,8 +69,8 @@ public class KakaoLinkManager implements Constants
             Date checkOutDate = new Date(checkInSaleTime.getDayOfDaysDate().getTime() + SaleTime.MILLISECOND_IN_A_DAY * nights);
 
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-                , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"))//
-                , DailyCalendar.format(checkOutDate.getTime(), "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"))//
+                , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd(EEE)", TimeZone.getTimeZone("GMT"))//
+                , DailyCalendar.format(checkOutDate.getTime(), "yyyy.MM.dd(EEE)", TimeZone.getTimeZone("GMT"))//
                 , nights, nights + 1, address);
 
             if (Util.isTextEmpty(imageUrl) == false)
@@ -129,7 +129,7 @@ public class KakaoLinkManager implements Constants
 
             Date checkInDate = saleTime.getDayOfDaysDate();
             String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
-                , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT")), address);
+                , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd(EEE)", TimeZone.getTimeZone("GMT")), address);
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
