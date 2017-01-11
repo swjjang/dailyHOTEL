@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -48,6 +49,12 @@ public class GourmetMainLayout extends PlaceMainLayout
     protected void onAnalyticsCategoryClick(String category)
     {
 
+    }
+
+    @Override
+    protected String getAppBarTitle()
+    {
+        return mContext.getString(R.string.label_daily_gourmet);
     }
 
     protected void setToolbarDateText(SaleTime saleTime)
