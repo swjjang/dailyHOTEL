@@ -110,6 +110,13 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_PHONE_ENABLED = "306";
     private static final String KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED = "307";
 
+    private static final String KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGIN_ENABLED = "310";
+    private static final String KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_ENABLED = "311";
+    private static final String KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_TITLE = "312";
+    private static final String KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_CTA = "313";
+
+    private static final String KEY_REMOTE_CONFIG_HOME_EVENT_DEFAULT_VERSION = "314";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference - 1.9.4 이상의 버전에서 강업 2회 이후 삭제 예정
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1031,6 +1038,57 @@ public class DailyPreference
     public boolean isRemoteConfigGourmetVirtualPaymentEnabled()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_PAYMENT_IS_VIRTUAL_ENABLED, true);
+    }
+
+    public void setRemoteConfigHomeMessageAreaLoginEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGIN_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigHomeMessageAreaLoginEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGIN_ENABLED, true);
+    }
+
+    public void setRemoteConfigHomeMessageAreaLogoutEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigHomeMessageAreaLogoutEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_ENABLED, true);
+    }
+
+    public void setRemoteConfigHomeMessageAreaLogoutTitle(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_TITLE, value);
+    }
+
+    public String getRemoteConfigHomeMessageAreaLogoutTitle()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_TITLE, null);
+    }
+
+    public void setRemoteConfigHomeMessageAreaLogoutCallToAction(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_CTA, value);
+    }
+
+    public String getRemoteConfigHomeMessageAreaLogoutCallToAction()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_CTA, null);
+    }
+
+
+    public void setRemoteConfigHomeEventDefaultVersion(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_DEFAULT_VERSION, value);
+    }
+
+    public String getRemoteConfigHomeEventDefaultVersion()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_DEFAULT_VERSION, Constants.DAILY_HOME_EVENT_DEFAULT_VERSION);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

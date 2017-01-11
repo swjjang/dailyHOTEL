@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.firebase;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -15,38 +16,33 @@ import okhttp3.Response;
 import okio.BufferedSink;
 import okio.Okio;
 
-public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
+public class SplashImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
 {
-    private OnCompletedListener mOnCompletedListener;
-    private String mVersion;
-
-    public interface OnCompletedListener
-    {
-        void onCompleted(boolean result, String version);
-    }
 
     private Context mContext;
 
-    public ImageDownloadAsyncTask(Context context, String version, OnCompletedListener onCompletedListener)
+    public SplashImageDownloadAsyncTask(Context context)
     {
         mContext = context;
-        mVersion = version;
-        mOnCompletedListener = onCompletedListener;
     }
 
     @Override
     protected Boolean doInBackground(String... params)
     {
         String url = params[0];
+        String version = params[1];
 
-        if (Util.isTextEmpty(url, mVersion) == true)
+        if (Util.isTextEmpty(url, version) == true)
         {
             return false;
         }
 
-        String fileName = Util.makeImageFileName(mVersion);
+        String fileName = Util.makeIntroImageFileName(version);
         File downloadedFile = null;
         BufferedSink bufferedSink = null;
+
+        DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(url);
+        DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(version);
 
         try
         {
@@ -91,9 +87,25 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
     @Override
     protected void onPostExecute(Boolean result)
     {
-        if (mOnCompletedListener != null)
+        if (result == true)
         {
-            mOnCompletedListener.onCompleted(result, mVersion);
+            String currentVersion = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageVersion();
+            String newVersion = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageNewVersion();
+
+            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(newVersion);
+            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewUrl(null);
+            DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(null);
+
+            // 파일 삭제
+            if (Util.isTextEmpty(currentVersion) == false)
+            {
+                String fileName = Util.makeIntroImageFileName(currentVersion);
+                File currentFile = new File(mContext.getCacheDir(), fileName);
+                if (currentFile.exists() == true && currentFile.delete() == false)
+                {
+                    currentFile.deleteOnExit();
+                }
+            }
         }
     }
 }

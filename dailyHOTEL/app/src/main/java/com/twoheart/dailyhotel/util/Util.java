@@ -1605,6 +1605,17 @@ public class Util implements Constants
         return versions[0].replaceAll(REMOVE_CHARACTER, "");
     }
 
+    public static String makeImageFileName(String version)
+    {
+        if (Util.isTextEmpty(version) == true)
+        {
+            return "daily_image";
+        }
+
+        String[] versions = version.split("\\+");
+        return "image" + "_" + versions[0].replaceAll(REMOVE_CHARACTER, "");
+    }
+
     public static boolean isSktNetwork(Context context)
     {
         if (context == null)

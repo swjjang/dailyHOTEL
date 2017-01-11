@@ -18,6 +18,8 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 public class DailyRemoteConfig
 {
     private static DailyRemoteConfig mInstance = null;
@@ -73,6 +75,7 @@ public class DailyRemoteConfig
                 String androidSplashImageUrl = mFirebaseRemoteConfig.getString("androidSplashImageLink");
                 String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
+                String androidHomeEventDefaultImageLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultImageLink");
 
                 if (Constants.DEBUG == true)
                 {
@@ -84,6 +87,7 @@ public class DailyRemoteConfig
                         ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
                         ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
+                        ExLog.d("androidHomeEventDefaultImageLink : " + new JSONObject(androidHomeEventDefaultImageLink).toString());
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -126,7 +130,33 @@ public class DailyRemoteConfig
                 writeText(mContext, androidText);
 
                 // 이미지 로딩 관련(추후 진행)
-                processIntroImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
+                processSplashImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
+
+
+                // 홈 이벤트 디폴트 이미지
+                final String clientHomeEventDefaultVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventDefaultVersion();
+                processImage(mContext, clientHomeEventDefaultVersion, androidHomeEventDefaultImageLink, new ImageDownloadAsyncTask.OnCompletedListener()
+                {
+                    @Override
+                    public void onCompleted(boolean result, String version)
+                    {
+                        if (result == true)
+                        {
+                            // 이전 파일 삭제
+                            if (Util.isTextEmpty(clientHomeEventDefaultVersion) == false)
+                            {
+                                String fileName = Util.makeImageFileName(clientHomeEventDefaultVersion);
+                                File currentFile = new File(mContext.getCacheDir(), fileName);
+                                if (currentFile.exists() == true && currentFile.delete() == false)
+                                {
+                                    currentFile.deleteOnExit();
+                                }
+                            }
+
+                            DailyPreference.getInstance(mContext).setRemoteConfigHomeEventDefaultVersion(version);
+                        }
+                    }
+                });
 
                 if (listener != null)
                 {
@@ -154,7 +184,7 @@ public class DailyRemoteConfig
         });
     }
 
-    private void processIntroImage(Context context, String updateTime, String imageUrl)
+    private void processSplashImage(Context context, String updateTime, String imageUrl)
     {
         if (Util.isTextEmpty(updateTime, imageUrl) == true)
         {
@@ -168,7 +198,7 @@ public class DailyRemoteConfig
         if (densityDpi < 240)
         {
             dpi = "hdpi";
-        } else if (densityDpi < 640)
+        } else if (densityDpi <= 480)
         {
             dpi = "xhdpi";
         } else
@@ -198,7 +228,7 @@ public class DailyRemoteConfig
                 // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
                 if (Util.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
                 {
-                    new ImageDownloadAsyncTask(context).execute(url, newVersion);
+                    new SplashImageDownloadAsyncTask(context).execute(url, newVersion);
                 }
             }
         } catch (JSONException e)
@@ -265,18 +295,64 @@ public class DailyRemoteConfig
             if (Util.isTextEmpty(version) == false //
                 && version.equalsIgnoreCase(DailyPreference.getInstance(context).getRemoteConfigTextVersion()) == false)
             {
-                String loginText01 = jsonObject.getString("loginText01");
-                String signupText01 = jsonObject.getString("signupText01");
-                String signupText02 = jsonObject.getString("signupText02");
-
                 DailyPreference.getInstance(context).setRemoteConfigTextVersion(version);
-                DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(loginText01);
-                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(signupText01);
-                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText02(signupText02);
+                DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(jsonObject.getString("loginText01"));
+                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(jsonObject.getString("signupText01"));
+                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText02(jsonObject.getString("signupText02"));
+
+                // 홈 메시지 추가 영역
+                JSONObject homeJSONObject = jsonObject.getJSONObject("home");
+                JSONObject messageAreaJSONObject = homeJSONObject.getJSONObject("messageArea");
+                JSONObject loginJSONObject = messageAreaJSONObject.getJSONObject("login");
+                JSONObject logoutJSONObject = messageAreaJSONObject.getJSONObject("logout");
+
+                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLoginEnabled(loginJSONObject.getBoolean("enabled"));
+
+                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutEnabled(logoutJSONObject.getBoolean("enabled"));
+                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutTitle(logoutJSONObject.getString("title"));
+                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutCallToAction(logoutJSONObject.getString("callToAction"));
             }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    private void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
+    {
+        if (Util.isTextEmpty(jsonObject, clientVersion) == true)
+        {
+            return;
+        }
+
+        // 이미지 로딩 관련
+        int densityDpi = context.getResources().getDisplayMetrics().densityDpi;
+        String dpi;
+
+        if (densityDpi <= 480)
+        {
+            dpi = "xhdpi";
+        } else
+        {
+            dpi = "xxxhdpi";
+        }
+
+        try
+        {
+            JSONObject imageJSONObject = new JSONObject(jsonObject);
+            String version = imageJSONObject.getString("version");
+
+            if (clientVersion.equalsIgnoreCase(version) == true)
+            {
+                return;
+            }
+
+            String url = imageJSONObject.getString(dpi);
+
+            new ImageDownloadAsyncTask(context, version, onCompleteListener).execute(url);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
         }
     }
 }
