@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.ExLog;
 
 import java.util.List;
 
@@ -45,8 +46,6 @@ public class ContentsLayoutBehavior extends ViewOffsetBehavior
             LinearLayout appBarLayout = findAppBarLayout(dependencies);
             if (appBarLayout != null && ViewCompat.isLaidOut(appBarLayout))
             {
-                //                int scrollRange = appBarLayout.getHeight() - appBarLayout.findViewById(R.id.toolbarLayout).getHeight();
-                //                int height = parent.getHeight() - appBarLayout.getMeasuredHeight() + scrollRange;
                 int height = parent.getHeight() - appBarLayout.findViewById(R.id.toolbarLayout).getMeasuredHeight();
                 int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.AT_MOST);
                 parent.onMeasureChild(child, parentWidthMeasureSpec, widthUsed, heightMeasureSpec, heightUsed);
@@ -83,7 +82,7 @@ public class ContentsLayoutBehavior extends ViewOffsetBehavior
 
         for (int z = views.size(); i < z; ++i)
         {
-            View view = (View) views.get(i);
+            View view = views.get(i);
             if (view.getId() == R.id.appBarLayout)
             {
                 return (LinearLayout) view;
