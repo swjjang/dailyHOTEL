@@ -524,6 +524,46 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     @Override
+    protected void shareSMS(PlaceDetail placeDetail)
+    {
+        if (placeDetail == null)
+        {
+            return;
+        }
+
+        StayDetail stayDetail = (StayDetail) placeDetail;
+
+        try
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            String name = DailyPreference.getInstance(StayDetailActivity.this).getUserName();
+
+            if (Util.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + stayDetail.nights);
+
+            intent.putExtra("sms_body", getString(R.string.message_detail_stay_share_sms, //
+                name, stayDetail.name, mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd (EEE)"),//
+                checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd (EEE)"), //
+                stayDetail.nights, stayDetail.nights + 1, //
+                stayDetail.address));
+
+            intent.setType("vnd.android-dir/mms-sms");
+            startActivity(intent);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
     protected void startKakao()
     {
         try

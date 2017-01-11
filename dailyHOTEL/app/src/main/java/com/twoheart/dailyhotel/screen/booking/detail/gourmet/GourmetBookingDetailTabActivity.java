@@ -244,7 +244,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     protected void showShareDialog()
     {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_booking_layout, null, false);
+        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);
 
         final Dialog shareDialog = new Dialog(this);
         shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -252,9 +252,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         shareDialog.setCanceledOnTouchOutside(true);
 
         // 버튼
-        View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+        View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
-        kakaoShareLayout.setOnClickListener(new View.OnClickListener()
+        kakaoShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -268,6 +268,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 {
                     String message = getString(R.string.message_booking_gourmet_share_kakao, //
                         mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
+                        Util.getPriceFormat(GourmetBookingDetailTabActivity.this, mGourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)"),//
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
@@ -282,9 +283,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             }
         });
 
-        View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+        View smsShareView = dialogView.findViewById(R.id.smsShareView);
 
-        smsShareLayout.setOnClickListener(new View.OnClickListener()
+        smsShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -299,6 +300,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.putExtra("sms_body", getString(R.string.message_booking_gourmet_share_sms, //
                         mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
+                        Util.getPriceFormat(GourmetBookingDetailTabActivity.this, mGourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)"),//
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
