@@ -333,6 +333,22 @@ public class Util implements Constants
         return getRatioHeightType16x9(getLCDWidth(context));
     }
 
+
+    /**
+     * 21:9로 표현된 높이
+     *
+     * @return
+     */
+    public static int getRatioHeightType21x9(int width)
+    {
+        if (width < 1)
+        {
+            return 0;
+        }
+
+        return width * 9 / 21;
+    }
+
     /**
      * 16:9로 표현된 높이
      *

@@ -67,7 +67,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             {
                 View view = mInflater.inflate(R.layout.list_row_collection_header, parent, false);
 
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getRatioHeightType21x9(Util.getLCDWidth(mContext)));
                 view.setLayoutParams(layoutParams);
 
                 return new HeaderViewHolder(view);

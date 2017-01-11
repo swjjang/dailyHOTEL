@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -9,12 +10,56 @@
         android:id="@+id/titleImageView"
         android:layout_width="match_parent"
         android:layout_height="202dp"
-        fresco:actualImageScaleType="centerCrop"/>
+        fresco:actualImageScaleType="centerCrop"
+        fresco:overlayImage="@drawable/shape_fillrect_b99000000"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="113dp"
-        android:background="@drawable/img_detail_gradient"/>
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="bottom|center_horizontal"
+        android:maxLines="1"
+        android:minHeight="29dp"
+        android:singleLine="true"
+        android:text="크리스마스 로맨틱 호텔 컬렉션"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        dailyFont:style="Medium"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/subTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_below="@+id/titleTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="선착순 한정판매, 9만원부터 예약 가능!"
+        android:textColor="@color/white"
+        android:textSize="12dp"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/countTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_below="@+id/subTitleTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_fillrect_l99ffffff_b4d000000_r50"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="10개"
+        android:textColor="@color/white"
+        android:textSize="11dp"
+        dailyFont:style="DemiLight"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

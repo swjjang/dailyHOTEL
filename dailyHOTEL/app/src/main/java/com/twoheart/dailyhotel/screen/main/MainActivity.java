@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -898,6 +899,8 @@ public class MainActivity extends BaseActivity implements Constants
                             case "stay":
                                 mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
                                 placeType = PlaceType.HOTEL;
+
+                                startActivity(new Intent(MainActivity.this, StayMainActivity.class));
                                 break;
 
                             case "gourmet":

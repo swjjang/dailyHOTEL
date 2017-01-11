@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -119,12 +120,19 @@ public abstract class CollectionBaseActivity extends BaseActivity
             }
         });
 
+
+        // 21:9 높이
+        int height21x9 = Util.getRatioHeightType21x9(Util.getLCDWidth(this));
+
         // 이미지
         SimpleDraweeView simpleDraweeView = (SimpleDraweeView) findViewById(R.id.titleImageView);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(this));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height21x9);
         simpleDraweeView.setLayoutParams(layoutParams);
 
         Util.requestImageResize(this, simpleDraweeView, titleImageUrl);
+
+        TextView titleTextView = (TextView)findViewById(R.id.titleTextView);
+        titleTextView.setPadding(0, height21x9 * 32 / 100, 0, 0);
 
         // 리스트
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
