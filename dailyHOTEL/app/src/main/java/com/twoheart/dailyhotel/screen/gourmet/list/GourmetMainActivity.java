@@ -968,6 +968,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                                 if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                                 {
+                                    mPlaceMainLayout.showAppBarLayout();
                                     mPlaceMainLayout.showBottomLayout();
                                 }
                             }

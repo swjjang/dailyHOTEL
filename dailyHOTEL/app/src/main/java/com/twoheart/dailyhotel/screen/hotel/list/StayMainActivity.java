@@ -1033,7 +1033,6 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-            mPlaceMainLayout.calculationAppBarLayoutTranslationY(dy);
         }
 
         @Override
@@ -1059,6 +1058,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                                 if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                                 {
+                                    mPlaceMainLayout.showAppBarLayout();
                                     mPlaceMainLayout.showBottomLayout();
                                 }
                             }
