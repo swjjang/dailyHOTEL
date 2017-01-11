@@ -71,6 +71,8 @@
     <string name="label_daily_concierge_to_call">데일리 컨시어지 문의하기</string>
     <string name="label_how_to_visit">방문 방법</string>
     <string name="label_no_parking">주차 불가능</string>
+    <string name="label_daily_gourmet">데일리고메</string>
+    <string name="label_daily_hotel">데일리호텔</string>
 
     <string name="label_count_stay">%1$d개의 숙소</string>
     <string name="label_count_gourmet">%1$d개의 레스토랑</string>

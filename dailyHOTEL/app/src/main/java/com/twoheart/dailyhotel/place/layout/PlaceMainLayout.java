@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.place.layout;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -77,6 +76,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     protected abstract void onAnalyticsCategoryClick(String category);
 
+    protected abstract String getAppBarTitle();
+
     public PlaceMainLayout(Context context, OnEventListener listener)
     {
         super(context, listener);
@@ -105,6 +106,9 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 mOnEventListener.finish();
             }
         });
+
+        TextView titleTextView = (TextView) mToolbarLayout.findViewById(R.id.titleTextView);
+        titleTextView.setText(getAppBarTitle());
 
         // 검색
         // 지역 이름
@@ -444,255 +448,254 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     public void calculationAppBarLayoutTranslationY(int dy)
     {
-//        Object tag = mAppBarLayout.getTag();
-//
-//        if (tag == null || tag instanceof Integer == false)
-//        {
-//            return;
-//        }
-//
-//        int height = (Integer) tag;
-//        float translationY = dy + mBottomOptionLayout.getTranslationY();
-//
-//        if (translationY >= height)
-//        {
-//            translationY = height;
-//        } else if (translationY <= 0)
-//        {
-//            translationY = 0;
-//        }
-//
-//        if (dy > 0)
-//        {
-//            mUpScrolling = true;
-//        } else if (dy < 0)
-//        {
-//            mUpScrolling = false;
-//        }
-//
-//        if (mMenuBarLayoutTranslationY == translationY)
-//        {
-//            return;
-//        } else
-//        {
-//            mMenuBarLayoutTranslationY = translationY;
-//        }
-//
-//        // 움직이는 동안에는 터치가 불가능 하다.
-//        if (translationY == 0 || translationY == height)
-//        {
-//            setMenuBarLayoutEnabled(true);
-//        } else
-//        {
-//            setMenuBarLayoutEnabled(false);
-//        }
-//
-//        setAppBarLayoutTranslationY(translationY);
+        //        Object tag = mAppBarLayout.getTag();
+        //
+        //        if (tag == null || tag instanceof Integer == false)
+        //        {
+        //            return;
+        //        }
+        //
+        //        int height = (Integer) tag;
+        //        float translationY = dy + mBottomOptionLayout.getTranslationY();
+        //
+        //        if (translationY >= height)
+        //        {
+        //            translationY = height;
+        //        } else if (translationY <= 0)
+        //        {
+        //            translationY = 0;
+        //        }
+        //
+        //        if (dy > 0)
+        //        {
+        //            mUpScrolling = true;
+        //        } else if (dy < 0)
+        //        {
+        //            mUpScrolling = false;
+        //        }
+        //
+        //        if (mMenuBarLayoutTranslationY == translationY)
+        //        {
+        //            return;
+        //        } else
+        //        {
+        //            mMenuBarLayoutTranslationY = translationY;
+        //        }
+        //
+        //        // 움직이는 동안에는 터치가 불가능 하다.
+        //        if (translationY == 0 || translationY == height)
+        //        {
+        //            setMenuBarLayoutEnabled(true);
+        //        } else
+        //        {
+        //            setMenuBarLayoutEnabled(false);
+        //        }
+        //
+        //        setAppBarLayoutTranslationY(translationY);
     }
 
     public void animationAppBarLayout()
     {
-//        Object tag = mBottomOptionLayout.getTag();
-//
-//        if (tag == null || tag instanceof Integer == false)
-//        {
-//            return;
-//        }
-//
-//        int height = (Integer) tag;
-//        float translationY = mBottomOptionLayout.getTranslationY();
-//
-//        if (translationY == 0 || translationY == height)
-//        {
-//            return;
-//        }
-//
-//        mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
-//
-//        int menuBarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.menubar_height);
-//
-//        if (mUpScrolling == true)
-//        {
-//            if (translationY >= menuBarHeight / 2)
-//            {
-//                hideBottomLayout(true);
-//            } else
-//            {
-//                showBottomLayout(true);
-//            }
-//        } else
-//        {
-//            if (translationY <= menuBarHeight / 2)
-//            {
-//                showBottomLayout(true);
-//            } else
-//            {
-//                hideBottomLayout(true);
-//            }
-//        }
+        //        Object tag = mBottomOptionLayout.getTag();
+        //
+        //        if (tag == null || tag instanceof Integer == false)
+        //        {
+        //            return;
+        //        }
+        //
+        //        int height = (Integer) tag;
+        //        float translationY = mBottomOptionLayout.getTranslationY();
+        //
+        //        if (translationY == 0 || translationY == height)
+        //        {
+        //            return;
+        //        }
+        //
+        //        mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
+        //
+        //        int menuBarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.menubar_height);
+        //
+        //        if (mUpScrolling == true)
+        //        {
+        //            if (translationY >= menuBarHeight / 2)
+        //            {
+        //                hideBottomLayout(true);
+        //            } else
+        //            {
+        //                showBottomLayout(true);
+        //            }
+        //        } else
+        //        {
+        //            if (translationY <= menuBarHeight / 2)
+        //            {
+        //                showBottomLayout(true);
+        //            } else
+        //            {
+        //                hideBottomLayout(true);
+        //            }
+        //        }
     }
 
-//    public synchronized void showAppBarLayout(boolean isAnimation)
-//    {
-//        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-//        {
-//            return;
-//        }
-//
-//        if (mValueAnimator != null)
-//        {
-//            if (mValueAnimator.isRunning() == true)
-//            {
-//                mValueAnimator.cancel();
-//                mValueAnimator.removeAllListeners();
-//            }
-//
-//            mValueAnimator = null;
-//        }
-//
-//        if (isAnimation == true)
-//        {
-//            mValueAnimator = ValueAnimator.ofInt(0, 100);
-//            mValueAnimator.setDuration(ANIMATION_DEALY);
-//            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-//            {
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator animation)
-//                {
-//                    int value = (Integer) animation.getAnimatedValue();
-//                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
-//                    float translationY = prevTranslationY * value / 100;
-//
-//                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
-//                }
-//            });
-//
-//            mValueAnimator.addListener(new Animator.AnimatorListener()
-//            {
-//                @Override
-//                public void onAnimationStart(Animator animation)
-//                {
-//                    setMenuBarLayoutEnabled(false);
-//
-//                    mAnimationState = Constants.ANIMATION_STATE.START;
-//                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animator animation)
-//                {
-//                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-//                    {
-//                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-//                        mAnimationState = Constants.ANIMATION_STATE.END;
-//                    }
-//
-//                    setMenuBarLayoutEnabled(true);
-//                }
-//
-//                @Override
-//                public void onAnimationCancel(Animator animation)
-//                {
-//                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-//
-//                    setMenuBarLayoutEnabled(true);
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animator animation)
-//                {
-//
-//                }
-//            });
-//
-//            mValueAnimator.start();
-//        } else
-//        {
-//            setMenuBarLayoutTranslationY(0);
-//
-//            setMenuBarLayoutEnabled(true);
-//        }
-//    }
-//
-//    public void hideAppbarLayout(boolean isAnimation)
-//    {
-//        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
-//        {
-//            return;
-//        }
-//
-//        if (mValueAnimator != null)
-//        {
-//            if (mValueAnimator.isRunning() == true)
-//            {
-//                mValueAnimator.cancel();
-//                mValueAnimator.removeAllListeners();
-//            }
-//
-//            mValueAnimator = null;
-//        }
-//
-//        if (isAnimation == true)
-//        {
-//            mValueAnimator = ValueAnimator.ofInt(0, 100);
-//            mValueAnimator.setDuration(ANIMATION_DEALY);
-//            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-//            {
-//                @Override
-//                public void onAnimationUpdate(ValueAnimator animation)
-//                {
-//                    int value = (Integer) animation.getAnimatedValue();
-//                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
-//                    float height = (Integer) mBottomOptionLayout.getTag() - prevTranslationY;
-//                    float translationY = height * value / 100;
-//
-//                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
-//                }
-//            });
-//
-//            mValueAnimator.addListener(new Animator.AnimatorListener()
-//            {
-//                @Override
-//                public void onAnimationStart(Animator animation)
-//                {
-//                    mAnimationState = Constants.ANIMATION_STATE.START;
-//                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-//
-//                    setMenuBarLayoutEnabled(false);
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animator animation)
-//                {
-//                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-//                    {
-//                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-//                        mAnimationState = Constants.ANIMATION_STATE.END;
-//                    }
-//                }
-//
-//                @Override
-//                public void onAnimationCancel(Animator animation)
-//                {
-//                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animator animation)
-//                {
-//
-//                }
-//            });
-//
-//            mValueAnimator.start();
-//        } else
-//        {
-//            setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
-//
-//            setMenuBarLayoutEnabled(false);
-//        }
-//    }
-
+    //    public synchronized void showAppBarLayout(boolean isAnimation)
+    //    {
+    //        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+    //        {
+    //            return;
+    //        }
+    //
+    //        if (mValueAnimator != null)
+    //        {
+    //            if (mValueAnimator.isRunning() == true)
+    //            {
+    //                mValueAnimator.cancel();
+    //                mValueAnimator.removeAllListeners();
+    //            }
+    //
+    //            mValueAnimator = null;
+    //        }
+    //
+    //        if (isAnimation == true)
+    //        {
+    //            mValueAnimator = ValueAnimator.ofInt(0, 100);
+    //            mValueAnimator.setDuration(ANIMATION_DEALY);
+    //            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+    //            {
+    //                @Override
+    //                public void onAnimationUpdate(ValueAnimator animation)
+    //                {
+    //                    int value = (Integer) animation.getAnimatedValue();
+    //                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+    //                    float translationY = prevTranslationY * value / 100;
+    //
+    //                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
+    //                }
+    //            });
+    //
+    //            mValueAnimator.addListener(new Animator.AnimatorListener()
+    //            {
+    //                @Override
+    //                public void onAnimationStart(Animator animation)
+    //                {
+    //                    setMenuBarLayoutEnabled(false);
+    //
+    //                    mAnimationState = Constants.ANIMATION_STATE.START;
+    //                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+    //                }
+    //
+    //                @Override
+    //                public void onAnimationEnd(Animator animation)
+    //                {
+    //                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+    //                    {
+    //                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+    //                        mAnimationState = Constants.ANIMATION_STATE.END;
+    //                    }
+    //
+    //                    setMenuBarLayoutEnabled(true);
+    //                }
+    //
+    //                @Override
+    //                public void onAnimationCancel(Animator animation)
+    //                {
+    //                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+    //
+    //                    setMenuBarLayoutEnabled(true);
+    //                }
+    //
+    //                @Override
+    //                public void onAnimationRepeat(Animator animation)
+    //                {
+    //
+    //                }
+    //            });
+    //
+    //            mValueAnimator.start();
+    //        } else
+    //        {
+    //            setMenuBarLayoutTranslationY(0);
+    //
+    //            setMenuBarLayoutEnabled(true);
+    //        }
+    //    }
+    //
+    //    public void hideAppbarLayout(boolean isAnimation)
+    //    {
+    //        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
+    //        {
+    //            return;
+    //        }
+    //
+    //        if (mValueAnimator != null)
+    //        {
+    //            if (mValueAnimator.isRunning() == true)
+    //            {
+    //                mValueAnimator.cancel();
+    //                mValueAnimator.removeAllListeners();
+    //            }
+    //
+    //            mValueAnimator = null;
+    //        }
+    //
+    //        if (isAnimation == true)
+    //        {
+    //            mValueAnimator = ValueAnimator.ofInt(0, 100);
+    //            mValueAnimator.setDuration(ANIMATION_DEALY);
+    //            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+    //            {
+    //                @Override
+    //                public void onAnimationUpdate(ValueAnimator animation)
+    //                {
+    //                    int value = (Integer) animation.getAnimatedValue();
+    //                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+    //                    float height = (Integer) mBottomOptionLayout.getTag() - prevTranslationY;
+    //                    float translationY = height * value / 100;
+    //
+    //                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
+    //                }
+    //            });
+    //
+    //            mValueAnimator.addListener(new Animator.AnimatorListener()
+    //            {
+    //                @Override
+    //                public void onAnimationStart(Animator animation)
+    //                {
+    //                    mAnimationState = Constants.ANIMATION_STATE.START;
+    //                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+    //
+    //                    setMenuBarLayoutEnabled(false);
+    //                }
+    //
+    //                @Override
+    //                public void onAnimationEnd(Animator animation)
+    //                {
+    //                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+    //                    {
+    //                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+    //                        mAnimationState = Constants.ANIMATION_STATE.END;
+    //                    }
+    //                }
+    //
+    //                @Override
+    //                public void onAnimationCancel(Animator animation)
+    //                {
+    //                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+    //                }
+    //
+    //                @Override
+    //                public void onAnimationRepeat(Animator animation)
+    //                {
+    //
+    //                }
+    //            });
+    //
+    //            mValueAnimator.start();
+    //        } else
+    //        {
+    //            setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
+    //
+    //            setMenuBarLayoutEnabled(false);
+    //        }
+    //    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

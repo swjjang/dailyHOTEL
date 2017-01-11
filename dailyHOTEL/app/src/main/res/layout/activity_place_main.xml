@@ -5,18 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        app:layout_behavior="com.twoheart.dailyhotel.screen.common.AppBarBehavior">
+        app:elevation="0dp">
 
         <RelativeLayout
             android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="52dp">
+            android:layout_height="52dp"
+            app:layout_scrollFlags="scroll|snap|enterAlways">
 
             <ImageView
                 android:id="@+id/backImageView"
@@ -156,14 +157,14 @@
                 app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
                 app:tabTextColor="@color/default_text_c929292"/>
         </FrameLayout>
-    </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/appBarLayout"
-        app:layout_behavior="com.twoheart.dailyhotel.screen.common.ContentsLayoutBehavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <LinearLayout
         android:id="@+id/bottomOptionLayout"
