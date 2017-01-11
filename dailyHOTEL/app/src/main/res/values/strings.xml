@@ -1047,7 +1047,7 @@
     <string name="wishlist_detail_add_message">위시리스트에\n추가했습니다.</string>
     <string name="wishlist_detail_delete_message">위시리스트에서\n삭제했습니다.</string>
     <string name="wishlist_count_over_10_thousand">만명 이상</string>
-`    <string name="wishlist_count_format">%1$d명</string>
+    <string name="wishlist_count_format">%1$d명</string>
 
     <!-- Review  -->
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
@@ -1107,6 +1107,13 @@
     <string name="message_collection_stay_empty_text">선택하신 날짜에\n예약할 수 있는 숙소가 없습니다.</string>
     <string name="message_collection_gourmet_empty_text">선택하신 날짜에\n예약할 수 있는 레스토랑이 없습니다.</string>
     <string name="message_collection_selected_other_date">다른 날짜로 확인해보세요.</string>
+
+    <!-- Home -->
+    <string name="format_home_event_count">%1$d / %2$d</string>
+    <string name="label_home_stay_menu_title">데일리호텔</string>
+    <string name="label_home_stay_menu_description">숙소 예약하기</string>
+    <string name="label_home_gourmet_menu_title">데일리호텔</string>
+    <string name="label_home_gourmet_menu_description">레스토랑 예약하기</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
