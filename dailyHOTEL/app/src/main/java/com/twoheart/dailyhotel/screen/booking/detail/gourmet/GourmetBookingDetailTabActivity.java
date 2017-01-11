@@ -269,7 +269,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     String message = getString(R.string.message_booking_gourmet_share_kakao, //
                         mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
                         Util.getPriceFormat(GourmetBookingDetailTabActivity.this, mGourmetBookingDetail.paymentPrice, false), //
-                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)"),//
+                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
                         mGourmetBookingDetail.address);
@@ -301,7 +301,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     intent.putExtra("sms_body", getString(R.string.message_booking_gourmet_share_sms, //
                         mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
                         Util.getPriceFormat(GourmetBookingDetailTabActivity.this, mGourmetBookingDetail.paymentPrice, false), //
-                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)"),//
+                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
                         mGourmetBookingDetail.address));

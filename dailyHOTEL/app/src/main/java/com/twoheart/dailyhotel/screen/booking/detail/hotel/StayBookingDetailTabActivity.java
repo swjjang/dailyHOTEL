@@ -325,8 +325,8 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     String message = getString(R.string.message_booking_stay_share_kakao, //
                         mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
                         Util.getPriceFormat(StayBookingDetailTabActivity.this, mStayBookingDetail.paymentPrice, false), //
-                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE) HH시"),//
-                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE) HH시"), //
+                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                         mStayBookingDetail.address);
 
                     String[] checkInDates = mStayBookingDetail.checkInDate.split("T");
@@ -364,8 +364,8 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     intent.putExtra("sms_body", getString(R.string.message_booking_stay_share_sms, //
                         mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
                         Util.getPriceFormat(StayBookingDetailTabActivity.this, mStayBookingDetail.paymentPrice, false), //
-                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"),//
-                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"), //
+                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                         mStayBookingDetail.address));
 
                     intent.setType("vnd.android-dir/mms-sms");
