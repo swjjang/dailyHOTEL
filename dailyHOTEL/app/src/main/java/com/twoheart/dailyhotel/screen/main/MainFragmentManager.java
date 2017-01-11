@@ -1,25 +1,15 @@
 package com.twoheart.dailyhotel.screen.main;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.screen.home.HomeFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
-import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
 import com.twoheart.dailyhotel.screen.mydaily.MyDailyFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -204,70 +194,5 @@ public class MainFragmentManager
         {
             mMenuBarLayoutOnPageChangeListener.onPageChangeListener(mIndexLastFragment);
         }
-    }
-}
-
-class HomeFragment extends BaseFragment
-{
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        Context context = getContext();
-
-        LinearLayout linearLayout = new LinearLayout(context);
-
-        TextView stayTextView = new TextView(context);
-        stayTextView.setText("데일리호텔");
-        LinearLayout.LayoutParams layoutParamsStay = new LinearLayout.LayoutParams(0, 200);
-        layoutParamsStay.weight = 1;
-        stayTextView.setLayoutParams(layoutParamsStay);
-        stayTextView.setBackgroundResource(R.color.dh_theme_color);
-        stayTextView.setTextColor(context.getResources().getColor(R.color.white));
-        stayTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Activity activity = getActivity();
-
-                activity.startActivity(StayMainActivity.newInstance(getContext()));
-            }
-        });
-
-        TextView gourmetTextView = new TextView(context);
-        gourmetTextView.setText("데일리고메");
-        LinearLayout.LayoutParams layoutParamsGourmet = new LinearLayout.LayoutParams(0, 200);
-        layoutParamsGourmet.weight = 1;
-        gourmetTextView.setLayoutParams(layoutParamsGourmet);
-        gourmetTextView.setBackgroundResource(R.color.dh_theme_color);
-        gourmetTextView.setTextColor(context.getResources().getColor(R.color.white));
-        gourmetTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                Activity activity = getActivity();
-
-                activity.startActivity(GourmetMainActivity.newInstance(getContext()));
-            }
-        });
-
-        linearLayout.addView(stayTextView);
-        linearLayout.addView(gourmetTextView);
-
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        linearLayout.setLayoutParams(layoutParams);
-
-        return linearLayout;
-    }
-
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-
-        BaseActivity baseActivity = (BaseActivity) getActivity();
-        baseActivity.unLockUI();
     }
 }
