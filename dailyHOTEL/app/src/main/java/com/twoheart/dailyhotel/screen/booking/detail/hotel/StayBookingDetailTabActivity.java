@@ -300,7 +300,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     protected void showShareDialog()
     {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_booking_layout, null, false);
+        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);
 
         final Dialog shareDialog = new Dialog(this);
         shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -308,9 +308,9 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         shareDialog.setCanceledOnTouchOutside(true);
 
         // 버튼
-        View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+        View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
-        kakaoShareLayout.setOnClickListener(new View.OnClickListener()
+        kakaoShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -324,8 +324,9 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 {
                     String message = getString(R.string.message_booking_stay_share_kakao, //
                         mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
-                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"),//
-                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"), //
+                        Util.getPriceFormat(StayBookingDetailTabActivity.this, mStayBookingDetail.paymentPrice, false), //
+                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE) HH시"), //
                         mStayBookingDetail.address);
 
                     String[] checkInDates = mStayBookingDetail.checkInDate.split("T");
@@ -345,9 +346,9 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             }
         });
 
-        View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+        View smsShareView = dialogView.findViewById(R.id.smsShareView);
 
-        smsShareLayout.setOnClickListener(new View.OnClickListener()
+        smsShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -362,6 +363,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.putExtra("sms_body", getString(R.string.message_booking_stay_share_sms, //
                         mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
+                        Util.getPriceFormat(StayBookingDetailTabActivity.this, mStayBookingDetail.paymentPrice, false), //
                         mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"),//
                         DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "MM/dd (EEE) HH시"), //
                         mStayBookingDetail.address));

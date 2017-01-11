@@ -82,6 +82,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void startKakao();
 
+    protected abstract void shareSMS(PlaceDetail placeDetail);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -525,9 +527,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
             shareDialog.setCanceledOnTouchOutside(true);
 
             // 버튼
-            View kakaoShareLayout = dialogView.findViewById(R.id.kakaoShareLayout);
+            View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
-            kakaoShareLayout.setOnClickListener(new View.OnClickListener()
+            kakaoShareView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -546,6 +548,22 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     }
 
                     shareKakao(mPlaceDetail, mDefaultImageUrl);
+                }
+            });
+
+            View smsShareView = dialogView.findViewById(R.id.smsShareView);
+
+            smsShareView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (shareDialog.isShowing() == true)
+                    {
+                        shareDialog.dismiss();
+                    }
+
+                    shareSMS(mPlaceDetail);
                 }
             });
 

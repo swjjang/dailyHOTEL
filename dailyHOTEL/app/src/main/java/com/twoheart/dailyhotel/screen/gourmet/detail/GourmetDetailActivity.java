@@ -511,6 +511,42 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
+    protected void shareSMS(PlaceDetail placeDetail)
+    {
+        if (placeDetail == null)
+        {
+            return;
+        }
+
+        GourmetDetail gourmetDetail = (GourmetDetail) placeDetail;
+
+        try
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+
+            String name = DailyPreference.getInstance(GourmetDetailActivity.this).getUserName();
+
+            if (Util.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            intent.putExtra("sms_body", getString(R.string.message_detail_gourmet_share_sms, //
+                name, gourmetDetail.name, mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd (EEE)"),//
+                gourmetDetail.address));
+
+            intent.setType("vnd.android-dir/mms-sms");
+            startActivity(intent);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
     protected void startKakao()
     {
         try
