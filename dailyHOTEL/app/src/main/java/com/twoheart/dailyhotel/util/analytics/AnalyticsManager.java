@@ -1132,6 +1132,12 @@ public class AnalyticsManager
         public static final String REASON_CANCELLATION = "reason_cancellation";
         public static final String LIST_TOP5_PLACE_INDEXES = "list_top5_place_indexes";
         public static final String KIND_OF_COUPON = "kind_of_coupon";
+        public static final String SHARE_METHOD = "share_method";
+        public static final String USER_TYPE = "user_type";
+        public static final String MEMBER_TYPE = "member_type";
+        public static final String PUSH_NOTIFICATION = "push_notification";
+        public static final String VENDOR_ID = "vendor_id";
+        public static final String VENDOR_NAME = "vendor_name";
     }
 
     public static class ValueType

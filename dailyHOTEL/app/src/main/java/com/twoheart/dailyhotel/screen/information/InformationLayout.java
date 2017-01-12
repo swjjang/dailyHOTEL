@@ -19,18 +19,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
  */
 public class InformationLayout extends BaseLayout implements View.OnClickListener
 {
-
-    private static final float DEFAULT_PROFILE_TEXT_SIZE_DP = 18.0f;
-    private static final float SMALL_PROFILE_TEXT_SIZE_DP = 12.0f;
-
-    private static final float DEFAULT_MESSAGE_TEXT_SIZE_DP = 12.0f;
-    private static final float EMPTY_MIDDLE_MESSAGE_TEXT_SIZE_DP = 13.0f;
-    private static final float EMPTY_SMALL_MESSAGE_TEXT_SIZE_DP = 11.0f;
-
     private View mNewEventIconView, mNewNoticeIconView;
-
-    private TextView mPushTextView;
-    private TextView mPushBenefitTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -144,16 +133,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         business5TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license04//
             , DailyPreference.getInstance(context).getRemoteConfigCompanyPrivacyEmail()));
-    }
-
-    public void updatePushIcon(boolean onOff)
-    {
-        if (mPushTextView == null)
-        {
-            return;
-        }
-
-        mPushTextView.setText(onOff == false ? R.string.label_off : R.string.label_on);
     }
 
     public void updateNewIconView(boolean hasNewEvent, boolean hasNewNotice)
