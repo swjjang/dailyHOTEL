@@ -247,9 +247,9 @@ public class StayDetailListAdapter extends BaseAdapter
         {
             couponLayout.setVisibility(View.VISIBLE);
 
-            View downloadCouponView = couponLayout.findViewById(R.id.downloadCouponView);
+            View downloadCouponLayout = couponLayout.findViewById(R.id.downloadCouponLayout);
 
-            downloadCouponView.setOnClickListener(new OnClickListener()
+            downloadCouponLayout.setOnClickListener(new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
