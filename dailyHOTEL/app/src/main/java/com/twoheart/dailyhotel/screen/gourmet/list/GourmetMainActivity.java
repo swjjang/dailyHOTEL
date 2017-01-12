@@ -825,10 +825,10 @@ public class GourmetMainActivity extends PlaceMainActivity
                             android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                             android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
                     }
 
                     if (mViewType == ViewType.LIST)
@@ -902,7 +902,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
                 //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
                 //
-                //                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                //                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
                 //                    } else
                 //                    {
                 //                        startGourmetDetailByDeepLink(eventBanner.index, saleTime);
@@ -1074,11 +1074,11 @@ public class GourmetMainActivity extends PlaceMainActivity
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
                 Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
 
             mIsDeepLink = true;

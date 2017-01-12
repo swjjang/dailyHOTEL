@@ -752,7 +752,11 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     public void setRefundPolicyText(String text)
     {
         TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
-        refundPolicyTextView.setText(Html.fromHtml(text));
+
+        // 기본 디폴트 색상이 바뀌었음.
+        String comment = text.replaceAll("900034", "B70038");
+
+        refundPolicyTextView.setText(Html.fromHtml(comment));
     }
 
     public void setRefundPolicyVisible(boolean visible)

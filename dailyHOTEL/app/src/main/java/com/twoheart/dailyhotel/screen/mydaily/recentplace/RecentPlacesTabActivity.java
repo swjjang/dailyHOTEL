@@ -259,8 +259,8 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
             {
                 mDontReloadAtOnResume = true;
 

@@ -717,10 +717,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                     android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL, options.toBundle());
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
         }
 

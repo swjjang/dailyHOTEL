@@ -349,7 +349,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 @Override
                 public void onPageScrollStateChanged(int state)
                 {
-                    switch(state)
+                    switch (state)
                     {
                         case ViewPager.SCROLL_STATE_DRAGGING:
                             isScrolling = true;

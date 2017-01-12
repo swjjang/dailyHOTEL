@@ -229,10 +229,10 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                     android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                     android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL, options.toBundle());
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//

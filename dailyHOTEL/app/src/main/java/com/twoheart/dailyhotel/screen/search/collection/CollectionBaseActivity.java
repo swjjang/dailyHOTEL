@@ -131,7 +131,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         Util.requestImageResize(this, simpleDraweeView, titleImageUrl);
 
-        TextView titleTextView = (TextView)findViewById(R.id.titleTextView);
+        TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         titleTextView.setPadding(0, height21x9 * 32 / 100, 0, 0);
 
         // 리스트
@@ -187,8 +187,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
             {
                 switch (resultCode)
                 {

@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.home.HomeFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
+import com.twoheart.dailyhotel.screen.home.HomeFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
 import com.twoheart.dailyhotel.screen.mydaily.MyDailyFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -182,8 +182,6 @@ public class MainFragmentManager
                 default:
                     mIndexLastFragment = INDEX_HOME_FRAGMENT;
                     mIndexMainLastFragment = INDEX_HOME_FRAGMENT;
-
-                    DailyPreference.getInstance(mBaseActivity).setLastMenu(mBaseActivity.getString(R.string.label_dailyhotel));
                     break;
             }
 
