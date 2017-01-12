@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.util.Constants;
 
 /**
  * Created by android_sam on 2017. 1. 11..
@@ -60,7 +61,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivity(StayMainActivity.newInstance(getContext()));
+            mBaseActivity.startActivityForResult(StayMainActivity.newInstance(getContext()), Constants.CODE_REQUEST_ACTIVITY_STAY);
         }
 
         @Override
@@ -70,7 +71,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivity(GourmetMainActivity.newInstance(getContext()));
+            mBaseActivity.startActivityForResult(GourmetMainActivity.newInstance(getContext()), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
         }
 
         @Override
