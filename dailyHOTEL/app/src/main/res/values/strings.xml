@@ -980,8 +980,9 @@
 
     <!-- Detail -->
     <string name="label_detail_change_date">날짜변경</string>
-    <string name="label_detail_special_discount">특별 할인 혜택</string>
-    <string name="label_detail_download_coupon">할인쿠폰 다운받기</string>
+    <string name="label_detail_special_discount">쿠폰 다운받고\n특별 할인 혜택받으세요!</string>
+    <string name="label_detail_download_coupon01">할인쿠폰</string>
+    <string name="label_detail_download_coupon02">다운받기</string>
     <string name="label_detail_amenities">편의시설</string>
     <string name="label_detail_cancellation_refund_policy">취소 및 환불 규정</string>
     <string name="label_detail_view_price_option">가격 보기 옵션</string>

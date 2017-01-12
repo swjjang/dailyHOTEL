@@ -264,9 +264,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
         {
             couponLayout.setVisibility(View.VISIBLE);
 
-            View downloadCouponView = couponLayout.findViewById(R.id.downloadCouponView);
+            View downloadCouponLayout = couponLayout.findViewById(R.id.downloadCouponLayout);
 
-            downloadCouponView.setOnClickListener(new View.OnClickListener()
+            downloadCouponLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
