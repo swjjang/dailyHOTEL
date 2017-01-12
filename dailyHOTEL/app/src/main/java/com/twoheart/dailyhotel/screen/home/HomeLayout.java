@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -35,6 +36,8 @@ public class HomeLayout extends BaseLayout
         void onStayButtonClick();
 
         void onGourmetButtonClick();
+
+        void onRefreshAll(boolean isShowProgress);
     }
 
 
@@ -71,11 +74,30 @@ public class HomeLayout extends BaseLayout
     private void initRefreshLayout(View view)
     {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+
+        if (mSwipeRefreshLayout == null) {
+            ExLog.d("mSwipeRefreshLayout is null !!! it's Test Code !!! please delete this block");
+            return;
+        }
+        mSwipeRefreshLayout.setEnabled(false);
+
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
+            }
+        });
+
+
     }
 
     private void initScrollLayout(View view)
     {
         mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
+        mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
     }
 
     private void initContentLayout(View view)
@@ -95,14 +117,13 @@ public class HomeLayout extends BaseLayout
 
         String defaultImage = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventDefaultVersion();
 
-//        View eventLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_event_layout, null);
-//
-//        mEventViewPager = (DailyLoopViewPager) eventLayout.findViewById(R.id.loopViewPager);
-//        mEventCountTextView = (DailyTextView) eventLayout.findViewById(R.id.pagerCountTextView);
+        //        View eventLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_event_layout, null);
+        //
+        //        mEventViewPager = (DailyLoopViewPager) eventLayout.findViewById(R.id.loopViewPager);
+        //        mEventCountTextView = (DailyTextView) eventLayout.findViewById(R.id.pagerCountTextView);
 
 
-
-//        mContentLayout.addView(eventLayout);
+        //        mContentLayout.addView(eventLayout);
     }
 
     private void initProductLayout(View view)
@@ -115,14 +136,14 @@ public class HomeLayout extends BaseLayout
         View stayButtonLayout = view.findViewById(R.id.stayButtonLayout);
         View gourmetButtonLayout = view.findViewById(R.id.gourmetButtonLayout);
 
-//        View productLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
-//
-//        int height = Util.dpToPx(mContext, 82);
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
-//        productLayout.setLayoutParams(params);
-//
-//        View stayButtonLayout = productLayout.findViewById(R.id.stayButtonLayout);
-//        View gourmetButtonLayout = productLayout.findViewById(R.id.gourmetButtonLayout);
+        //        View productLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
+        //
+        //        int height = Util.dpToPx(mContext, 82);
+        //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        //        productLayout.setLayoutParams(params);
+        //
+        //        View stayButtonLayout = productLayout.findViewById(R.id.stayButtonLayout);
+        //        View gourmetButtonLayout = productLayout.findViewById(R.id.gourmetButtonLayout);
 
         stayButtonLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -142,10 +163,20 @@ public class HomeLayout extends BaseLayout
             }
         });
 
-//        mContentLayout.addView(productLayout);
+        //        mContentLayout.addView(productLayout);
     }
 
-    private void setEventCountView(int pageIndex, int totalCount)
+    public void setRefreshing(boolean isRefreshing)
+    {
+        if (mSwipeRefreshLayout == null)
+        {
+            return;
+        }
+
+        mSwipeRefreshLayout.setRefreshing(isRefreshing);
+    }
+
+    public void setEventCountView(int pageIndex, int totalCount)
     {
         if (mEventCountTextView == null)
         {
