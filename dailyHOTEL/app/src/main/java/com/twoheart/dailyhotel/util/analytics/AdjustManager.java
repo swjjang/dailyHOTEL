@@ -414,20 +414,18 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.SHARE.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.HOTEL_ITEM_SHARED.equalsIgnoreCase(action) == true)
+            if (AnalyticsManager.Action.STAY_ITEM_SHARE.equalsIgnoreCase(action) == true)
             {
                 event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
                 event.addPartnerParameter(params);
 
                 if (DEBUG == true)
                 {
                     ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
                 }
-            } else if (AnalyticsManager.Action.GOURMET_ITEM_SHARED.equalsIgnoreCase(action) == true)
+            } else if (AnalyticsManager.Action.GOURMET_ITEM_SHARE.equalsIgnoreCase(action) == true)
             {
                 event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
                 event.addPartnerParameter(params);
 
                 if (DEBUG == true)

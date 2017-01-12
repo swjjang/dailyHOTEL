@@ -729,7 +729,7 @@ public class StayAutoRefundActivity extends BaseActivity
                         Map<String, String> params = new HashMap<>();
                         params.put(AnalyticsManager.KeyType.NAME, mStayBookingDetail.roomName);
                         params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mStayBookingDetail.price));
-                        params.put(AnalyticsManager.KeyType.COUNTRY, mStayBookingDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                        params.put(AnalyticsManager.KeyType.COUNTRY, mStayBookingDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
 
                         String cancelMessage = null;
 

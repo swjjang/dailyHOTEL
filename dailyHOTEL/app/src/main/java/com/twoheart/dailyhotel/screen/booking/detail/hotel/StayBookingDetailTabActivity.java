@@ -345,7 +345,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 }
 
                 AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                    , AnalyticsManager.Action.HOTEL_BOOKING_SHARED, AnalyticsManager.Label.KAKAO, null);
+                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
             }
         });
 
@@ -379,7 +379,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 }
 
                 AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                    , AnalyticsManager.Action.HOTEL_BOOKING_SHARED, AnalyticsManager.Label.MESSAGE, null);
+                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
 
@@ -398,7 +398,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE//
-            , AnalyticsManager.Action.BOOKING_SHARE_BUTTON_CLICKED, AnalyticsManager.Label._HOTEL, null);
+            , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
     @Override

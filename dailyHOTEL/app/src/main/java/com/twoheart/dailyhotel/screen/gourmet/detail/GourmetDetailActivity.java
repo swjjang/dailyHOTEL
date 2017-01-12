@@ -499,7 +499,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , imageUrl //
             , mSaleTime);
 
-        recordAnalyticsShared(placeDetail, AnalyticsManager.Label.KAKAO, "kakao");
+        recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
     }
 
     @Override
@@ -537,15 +537,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             ExLog.d(e.toString());
         }
 
-        recordAnalyticsShared(placeDetail, AnalyticsManager.Label.MESSAGE, "message");
+        recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.MESSAGE);
     }
 
-    private void recordAnalyticsShared(PlaceDetail placeDetail, String label, String shareType)
+    private void recordAnalyticsShared(PlaceDetail placeDetail, String label)
     {
         try
         {
             HashMap<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.OVERSEAS, placeDetail.isOverseas ? "overseas" : "domestic");
+            params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            params.put(AnalyticsManager.ValueType.OVERSEAS, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
 
             if (mProvince instanceof Area)
             {
@@ -558,7 +559,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (DailyHotel.isLogin() == true)
             {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, "member");
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
 
                 switch (DailyPreference.getInstance(this).getUserType())
                 {
@@ -580,17 +581,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }
             } else
             {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, "guest");
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.GUEST);
                 params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
             }
 
             params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
-            params.put(AnalyticsManager.KeyType.SHARE_METHOD, shareType);
+            params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
             params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(placeDetail.index));
             params.put(AnalyticsManager.KeyType.VENDOR_NAME, placeDetail.name);
 
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                , AnalyticsManager.Action.GOURMET_ITEM_SHARED, label, params);
+                , AnalyticsManager.Action.GOURMET_ITEM_SHARE, label, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -733,7 +734,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     protected void recordAnalyticsShareClicked()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE,//
-            AnalyticsManager.Action.ITEM_SHARE_BUTTON_CLICKED, AnalyticsManager.Label._GOURMET, null);
+            AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.GOURMET, null);
     }
 
     private void updateDetailInformationLayout(GourmetDetail gourmetDetail)
@@ -1359,7 +1360,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
                     params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
                     params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
 
                     if (mProvince == null)
@@ -1448,7 +1449,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
                 params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
                 params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
 
                 if (mProvince == null)

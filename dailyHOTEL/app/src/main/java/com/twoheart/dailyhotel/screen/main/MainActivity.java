@@ -969,7 +969,7 @@ public class MainActivity extends BaseActivity implements Constants
                     }
 
                     boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
-                    String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String overSeas = isOverSeas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
 
                     AnalyticsManager.getInstance(MainActivity.this).onRegionChanged(overSeas, realProvinceName);
                 }
@@ -1016,7 +1016,7 @@ public class MainActivity extends BaseActivity implements Constants
                     }
 
                     boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
-                    String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String overSeas = isOverSeas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
 
                     AnalyticsManager.getInstance(MainActivity.this).onRegionChanged(overSeas, realProvinceName);
                 }

@@ -385,12 +385,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (province instanceof Area)
             {
                 Area area = (Area) province;
-                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
                 params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
             } else if (province != null)
             {
-                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
                 params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
             }
@@ -654,12 +654,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                                 if (province instanceof Area)
                                 {
                                     Area area = (Area) province;
-                                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                                     params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
                                     params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
                                 } else if (province != null)
                                 {
-                                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                                     params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
                                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                                 }
@@ -906,12 +906,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 if (province instanceof Area)
                 {
                     Area area = (Area) province;
-                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
                     params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
                 } else if (province != null)
                 {
-                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }

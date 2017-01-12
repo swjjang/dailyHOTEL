@@ -869,12 +869,12 @@ public class AnalyticsManager
         public static final String WAYTOVISIT_SELECTED = "WaytovisitSelected";
 
         //
-        public static final String ITEM_SHARE_BUTTON_CLICKED = "ItemShareButtonClicked";
-        public static final String HOTEL_ITEM_SHARED = "HotelItemShared";
-        public static final String GOURMET_ITEM_SHARED = "GourmetItemShared";
-        public static final String BOOKING_SHARE_BUTTON_CLICKED = "BookingShareButtonClicked";
-        public static final String HOTEL_BOOKING_SHARED = "HotelBookingShared";
-        public static final String GOURMET_BOOKING_SHARED = "GourmetBookingShared";
+        public static final String ITEM_SHARE = "item_share";
+        public static final String STAY_ITEM_SHARE = "stay_item_share";
+        public static final String GOURMET_ITEM_SHARE = "gourmet_item_share";
+        public static final String BOOKING_SHARE = "booking_share";
+        public static final String STAY_BOOKING_SHARE = "stay_booking_share";
+        public static final String GOURMET_BOOKING_SHARE = "gourmet_booking_share";
     }
 
     public static class Category
@@ -899,17 +899,15 @@ public class AnalyticsManager
         public static final String GOURMET_SATISFACTIONEVALUATION = "GourmetSatisfactionEvaluation";
 
         // Share
-        public static final String SHARE = "Share";
+        public static final String SHARE = "share";
     }
 
     public static class Label
     {
         public static final String HOTEL = "hotel";
+        public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
 
-        public static final String _HOTEL = "Hotel";
-        public static final String _GOURMET = "Gourmet";
-        //
         public static final String HOTEL_SCREEN = "HotelScreen";
         public static final String GOURMET_SCREEN = "GoumetScreen";
         public static final String BOOKINGSTATUS_SCREEN = "BookingStatusScreen";
@@ -1021,7 +1019,6 @@ public class AnalyticsManager
         //
         public static final String CUSTOMER_CENTER_CALL = "CustomerCenterCall";
         public static final String KAKAO = "Kakao";
-        public static final String MESSAGE = "Message";
         public static final String DIRECT_CALL = "DirectCall";
         public static final String CLICK = "Click";
         //
@@ -1090,8 +1087,6 @@ public class AnalyticsManager
         public static final String NUM_OF_SEARCH_RESULTS_RETURNED = "num_of_search_results_returned";
         public static final String USER_IDX = "user_idx";
         public static final String COUNTRY = "country";
-        public static final String DOMESTIC = "domestic";
-        public static final String OVERSEAS = "overseas";
         public static final String APP_VERSION = "app_version";
         public static final String CARD_ISSUING_COMPANY = "card_issuing_company";
         public static final String VIEWED_DATE = "viewed_date";
@@ -1154,6 +1149,7 @@ public class AnalyticsManager
         public static final String PUSH_NOTIFICATION = "push_notification";
         public static final String VENDOR_ID = "vendor_id";
         public static final String VENDOR_NAME = "vendor_name";
+        public static final String SERVICE = "service";
     }
 
     public static class ValueType
@@ -1183,5 +1179,9 @@ public class AnalyticsManager
         public static final String RECENT = "recent";
         public static final String DIRECT = "direct";
         public static final String ALL = "all";
+        public static final String KAKAO = "kakao";
+        public static final String MESSAGE = "message";
+        public static final String OVERSEAS = "overseas";
+        public static final String DOMESTIC = "domestic";
     }
 }
