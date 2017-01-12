@@ -6,15 +6,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -92,12 +90,19 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        View eventLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_event_layout, null);
+        mEventViewPager = (DailyLoopViewPager) view.findViewById(R.id.loopViewPager);
+        mEventCountTextView = (DailyTextView) view.findViewById(R.id.pagerCountTextView);
 
-        mEventViewPager = (DailyLoopViewPager) eventLayout.findViewById(R.id.loopViewPager);
-        mEventCountTextView = (DailyTextView) eventLayout.findViewById(R.id.pagerCountTextView);
+        String defaultImage = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventDefaultVersion();
 
-        mContentLayout.addView(eventLayout);
+//        View eventLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_event_layout, null);
+//
+//        mEventViewPager = (DailyLoopViewPager) eventLayout.findViewById(R.id.loopViewPager);
+//        mEventCountTextView = (DailyTextView) eventLayout.findViewById(R.id.pagerCountTextView);
+
+
+
+//        mContentLayout.addView(eventLayout);
     }
 
     private void initProductLayout(View view)
@@ -107,14 +112,17 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        View productLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
+        View stayButtonLayout = view.findViewById(R.id.stayButtonLayout);
+        View gourmetButtonLayout = view.findViewById(R.id.gourmetButtonLayout);
 
-        int height = Util.dpToPx(mContext, 82);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
-        productLayout.setLayoutParams(params);
-
-        View stayButtonLayout = productLayout.findViewById(R.id.stayButtonLayout);
-        View gourmetButtonLayout = productLayout.findViewById(R.id.gourmetButtonLayout);
+//        View productLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
+//
+//        int height = Util.dpToPx(mContext, 82);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+//        productLayout.setLayoutParams(params);
+//
+//        View stayButtonLayout = productLayout.findViewById(R.id.stayButtonLayout);
+//        View gourmetButtonLayout = productLayout.findViewById(R.id.gourmetButtonLayout);
 
         stayButtonLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -134,7 +142,7 @@ public class HomeLayout extends BaseLayout
             }
         });
 
-        mContentLayout.addView(productLayout);
+//        mContentLayout.addView(productLayout);
     }
 
     private void setEventCountView(int pageIndex, int totalCount)
