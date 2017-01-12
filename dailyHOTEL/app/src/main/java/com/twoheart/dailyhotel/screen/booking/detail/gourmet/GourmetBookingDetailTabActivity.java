@@ -282,7 +282,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 }
 
                 AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARED, AnalyticsManager.Label.KAKAO, null);
+                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
             }
         });
 
@@ -317,7 +317,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 }
 
                 AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARED, AnalyticsManager.Label.MESSAGE, null);
+                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
 
@@ -336,7 +336,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE//
-            , AnalyticsManager.Action.BOOKING_SHARE_BUTTON_CLICKED, AnalyticsManager.Label._GOURMET, null);
+            , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.GOURMET, null);
     }
 
     @Override

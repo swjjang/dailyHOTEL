@@ -646,12 +646,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             if (province instanceof Area)
             {
                 Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
                 eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
             } else
             {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
                 eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
             }
@@ -735,12 +735,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             if (province instanceof Area)
             {
                 Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
                 eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
             } else
             {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
                 eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
             }
@@ -814,12 +814,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             if (province instanceof Area)
             {
                 Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
                 eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
             } else
             {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.KeyType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
                 eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
             }

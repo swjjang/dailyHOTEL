@@ -510,7 +510,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             , mDefaultImageUrl//
             , mSaleTime, stayDetail.nights);
 
-        recordAnalyticsShared(stayDetail, AnalyticsManager.Label.KAKAO, "kakao");
+        recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.KAKAO);
     }
 
     @Override
@@ -552,15 +552,16 @@ public class StayDetailActivity extends PlaceDetailActivity
             ExLog.d(e.toString());
         }
 
-        recordAnalyticsShared(stayDetail, AnalyticsManager.Label.MESSAGE, "message");
+        recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.MESSAGE);
     }
 
-    private void recordAnalyticsShared(PlaceDetail placeDetail, String label, String shareType)
+    private void recordAnalyticsShared(PlaceDetail placeDetail, String label)
     {
         try
         {
             HashMap<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.OVERSEAS, placeDetail.isOverseas ? "overseas" : "domestic");
+            params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.ValueType.OVERSEAS, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
 
             if (mProvince instanceof Area)
             {
@@ -573,7 +574,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (DailyHotel.isLogin() == true)
             {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, "member");
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
 
                 switch (DailyPreference.getInstance(this).getUserType())
                 {
@@ -595,17 +596,17 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }
             } else
             {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, "guest");
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.GUEST);
                 params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
             }
 
             params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
-            params.put(AnalyticsManager.KeyType.SHARE_METHOD, shareType);
+            params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
             params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(placeDetail.index));
             params.put(AnalyticsManager.KeyType.VENDOR_NAME, placeDetail.name);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                , Action.HOTEL_ITEM_SHARED, label, params);
+                , Action.STAY_ITEM_SHARE, label, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -752,7 +753,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     protected void recordAnalyticsShareClicked()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE,//
-            AnalyticsManager.Action.ITEM_SHARE_BUTTON_CLICKED, AnalyticsManager.Label._HOTEL, null);
+            AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
     private void updateDetailInformationLayout(StayDetail stayDetail)
@@ -1408,7 +1409,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
                     params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
                     params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.CATEGORY, ((StayDetail) mPlaceDetail).categoryCode);
 
                     if (mProvince == null)
@@ -1501,7 +1502,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
                 params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
                 params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.CATEGORY, ((StayDetail) mPlaceDetail).categoryCode);
 
                 if (mProvince == null)
