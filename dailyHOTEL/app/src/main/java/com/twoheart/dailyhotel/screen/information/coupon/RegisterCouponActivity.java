@@ -13,8 +13,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 

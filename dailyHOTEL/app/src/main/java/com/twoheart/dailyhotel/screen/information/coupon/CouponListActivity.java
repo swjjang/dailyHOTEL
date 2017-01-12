@@ -20,8 +20,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONObject;
-
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;

@@ -270,46 +270,46 @@ public class TuneManager extends BaseAnalyticsManager
 
         if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
-            {
-                TuneEvent tuneEvent = getTuneEvent(TuneEventId.SOCIAL_SHARE_HOTEL, params, false);
-
-                TuneEventItem tuneEventItem = getTuneEventItem(params);
-
-                List<TuneEventItem> list = new ArrayList<>();
-                list.add(tuneEventItem);
-                tuneEvent.withEventItems(list);
-
-                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
-
-                mTune.measureEvent(tuneEvent);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + params.toString());
-                }
-            }
+            //            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
+            //            {
+            //                TuneEvent tuneEvent = getTuneEvent(TuneEventId.SOCIAL_SHARE_HOTEL, params, false);
+            //
+            //                TuneEventItem tuneEventItem = getTuneEventItem(params);
+            //
+            //                List<TuneEventItem> list = new ArrayList<>();
+            //                list.add(tuneEventItem);
+            //                tuneEvent.withEventItems(list);
+            //
+            //                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
+            //
+            //                mTune.measureEvent(tuneEvent);
+            //
+            //                if (DEBUG == true)
+            //                {
+            //                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + params.toString());
+            //                }
+            //            }
         } else if (AnalyticsManager.Category.GOURMET_BOOKINGS.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
-            {
-                TuneEvent tuneEvent = getTuneEvent(TuneEventId.SOCIAL_SHARE_GOURMET, params, false);
-
-                TuneEventItem tuneEventItem = getTuneEventItem(params);
-
-                List<TuneEventItem> list = new ArrayList<>();
-                list.add(tuneEventItem);
-                tuneEvent.withEventItems(list);
-
-                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
-
-                mTune.measureEvent(tuneEvent);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + params.toString());
-                }
-            }
+            //            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
+            //            {
+            //                TuneEvent tuneEvent = getTuneEvent(TuneEventId.SOCIAL_SHARE_GOURMET, params, false);
+            //
+            //                TuneEventItem tuneEventItem = getTuneEventItem(params);
+            //
+            //                List<TuneEventItem> list = new ArrayList<>();
+            //                list.add(tuneEventItem);
+            //                tuneEvent.withEventItems(list);
+            //
+            //                setUserInformation(mUserIndex, AnalyticsManager.ValueType.EMPTY);
+            //
+            //                mTune.measureEvent(tuneEvent);
+            //
+            //                if (DEBUG == true)
+            //                {
+            //                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + params.toString());
+            //                }
+            //            }
         } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.DAILY_GOURMET_CLICKED.equalsIgnoreCase(action) == true)

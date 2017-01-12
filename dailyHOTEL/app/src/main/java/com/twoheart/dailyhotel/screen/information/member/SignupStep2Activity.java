@@ -25,8 +25,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Response;
 

@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.place.base;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Response;
 

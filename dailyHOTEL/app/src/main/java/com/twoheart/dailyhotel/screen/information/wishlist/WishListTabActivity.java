@@ -22,8 +22,6 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyViewPager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 

@@ -34,20 +34,16 @@ import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
-import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentThankyouActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;

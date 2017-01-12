@@ -53,7 +53,6 @@ import com.twoheart.dailyhotel.widget.TextTransition;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -500,14 +499,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , imageUrl //
             , mSaleTime);
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
-        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
-        params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-        params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
+        //        HashMap<String, String> params = new HashMap<>();
+        //        params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
+        //        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
+        //        params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+        //        params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
 
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-            , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, params);
+        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.GOURMET_ITEM_SHARED, AnalyticsManager.Label.KAKAO, null);
     }
 
     @Override
@@ -544,6 +543,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             ExLog.d(e.toString());
         }
+
+        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.GOURMET_ITEM_SHARED, AnalyticsManager.Label.MESSAGE, null);
     }
 
     @Override
@@ -676,6 +678,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
+    }
+
+    @Override
+    protected void recordAnalyticsShareClicked()
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE,//
+            AnalyticsManager.Action.ITEM_SHARE_BUTTON_CLICKED, AnalyticsManager.Label._GOURMET, null);
     }
 
     private void updateDetailInformationLayout(GourmetDetail gourmetDetail)

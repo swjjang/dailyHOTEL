@@ -84,6 +84,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void shareSMS(PlaceDetail placeDetail);
 
+    protected abstract void recordAnalyticsShareClicked();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -580,6 +582,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 ExLog.d(e.toString());
             }
+
+            recordAnalyticsShareClicked();
         }
     };
 }

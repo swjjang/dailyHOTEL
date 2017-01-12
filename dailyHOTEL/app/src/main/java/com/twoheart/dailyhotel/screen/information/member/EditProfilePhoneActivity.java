@@ -15,8 +15,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Response;
 

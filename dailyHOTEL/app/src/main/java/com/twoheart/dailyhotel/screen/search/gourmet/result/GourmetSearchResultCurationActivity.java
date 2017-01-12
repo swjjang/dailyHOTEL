@@ -17,8 +17,6 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Response;
 

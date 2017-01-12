@@ -21,8 +21,6 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import retrofit2.Call;

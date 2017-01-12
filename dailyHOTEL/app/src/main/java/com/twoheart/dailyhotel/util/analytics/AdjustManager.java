@@ -413,52 +413,52 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
-            {
-                String placeIndex = null;
-                String placeName = null;
-
-                if (params != null)
-                {
-                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-                    placeName = params.get(AnalyticsManager.KeyType.NAME);
-                }
-
-                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
-                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
-                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
-                event.addPartnerParameter(Key.PLACE_NAME, placeName);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
-                }
-            }
+            //            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
+            //            {
+            //                String placeIndex = null;
+            //                String placeName = null;
+            //
+            //                if (params != null)
+            //                {
+            //                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+            //                    placeName = params.get(AnalyticsManager.KeyType.NAME);
+            //                }
+            //
+            //                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
+            //                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+            //                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
+            //                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+            //                event.addPartnerParameter(Key.PLACE_NAME, placeName);
+            //
+            //                if (DEBUG == true)
+            //                {
+            //                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
+            //                }
+            //            }
         } else if (AnalyticsManager.Category.GOURMET_BOOKINGS.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
-            {
-                String placeIndex = null;
-                String placeName = null;
-
-                if (params != null)
-                {
-                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-                    placeName = params.get(AnalyticsManager.KeyType.NAME);
-                }
-
-                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
-                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
-                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
-                event.addPartnerParameter(Key.PLACE_NAME, placeName);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
-                }
-            }
+            //            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
+            //            {
+            //                String placeIndex = null;
+            //                String placeName = null;
+            //
+            //                if (params != null)
+            //                {
+            //                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+            //                    placeName = params.get(AnalyticsManager.KeyType.NAME);
+            //                }
+            //
+            //                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
+            //                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            //                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
+            //                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
+            //                event.addPartnerParameter(Key.PLACE_NAME, placeName);
+            //
+            //                if (DEBUG == true)
+            //                {
+            //                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
+            //                }
+            //            }
         } else if (AnalyticsManager.Category.COUPON_BOX.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.REGISTRATION_REJECTED.equalsIgnoreCase(action) == true)

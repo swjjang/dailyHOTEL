@@ -10,8 +10,6 @@ import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

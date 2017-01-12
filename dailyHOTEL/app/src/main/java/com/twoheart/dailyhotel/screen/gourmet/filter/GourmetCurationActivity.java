@@ -29,8 +29,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;

@@ -22,8 +22,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 

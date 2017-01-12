@@ -15,8 +15,6 @@ import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONObject;
-
 import java.util.List;
 
 import retrofit2.Call;
