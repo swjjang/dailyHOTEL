@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.screen.information.coupon.SelectStayCouponDialogA
 import com.twoheart.dailyhotel.screen.information.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.information.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.information.wishlist.WishListTabActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -509,17 +510,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             , mDefaultImageUrl//
             , mSaleTime, stayDetail.nights);
 
-        //        SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + stayDetail.nights);
-        //
-        //        HashMap<String, String> params = new HashMap<>();
-        //        params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
-        //        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index));
-        //        params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-        //        params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-        //        params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
-
-        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-            , Action.HOTEL_ITEM_SHARED, AnalyticsManager.Label.KAKAO, null);
+        recordAnalyticsShared(stayDetail, AnalyticsManager.Label.KAKAO, "kakao");
     }
 
     @Override
@@ -561,8 +552,64 @@ public class StayDetailActivity extends PlaceDetailActivity
             ExLog.d(e.toString());
         }
 
-        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-            , Action.HOTEL_ITEM_SHARED, AnalyticsManager.Label.MESSAGE, null);
+        recordAnalyticsShared(stayDetail, AnalyticsManager.Label.MESSAGE, "message");
+    }
+
+    private void recordAnalyticsShared(PlaceDetail placeDetail, String label, String shareType)
+    {
+        try
+        {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.OVERSEAS, placeDetail.isOverseas ? "overseas" : "domestic");
+
+            if (mProvince instanceof Area)
+            {
+                Area area = (Area) mProvince;
+                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+            }
+
+            if (DailyHotel.isLogin() == true)
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, "member");
+
+                switch (DailyPreference.getInstance(this).getUserType())
+                {
+                    case Constants.DAILY_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
+                        break;
+
+                    case Constants.KAKAO_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
+                        break;
+
+                    case Constants.FACEBOOK_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
+                        break;
+
+                    default:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+                        break;
+                }
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, "guest");
+                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+            }
+
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.SHARE_METHOD, shareType);
+            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(placeDetail.index));
+            params.put(AnalyticsManager.KeyType.VENDOR_NAME, placeDetail.name);
+
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                , Action.HOTEL_ITEM_SHARED, label, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override

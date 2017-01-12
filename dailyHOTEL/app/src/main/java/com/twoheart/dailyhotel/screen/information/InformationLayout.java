@@ -42,7 +42,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     private View mAccountInfoLayout;
     private View mNewEventIconView, mNewNoticeIconView;
     private View mNewCouponIconView;
-    private View mlinkAlarmLayoutView;
+    private View mLinkAlarmLayoutView;
 
     private TextView mPushTextView;
     private TextView mPushBenefitTextView;
@@ -161,9 +161,9 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
         updatePushIcon(isAllowBenefitAlarm);
 
-        mlinkAlarmLayoutView = view.findViewById(R.id.linkAlarmLayout);
+        mLinkAlarmLayoutView = view.findViewById(R.id.linkAlarmLayout);
 
-        TextView linkAlarmTextView = (TextView) mlinkAlarmLayoutView.findViewById(R.id.linkAlarmTextView);
+        TextView linkAlarmTextView = (TextView) mLinkAlarmLayoutView.findViewById(R.id.linkAlarmTextView);
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(linkAlarmTextView.getText());
 
@@ -467,15 +467,15 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     {
         if (visible == true)
         {
-            if (mlinkAlarmLayoutView.getVisibility() != View.VISIBLE)
+            if (mLinkAlarmLayoutView.getVisibility() != View.VISIBLE)
             {
-                mlinkAlarmLayoutView.setVisibility(View.VISIBLE);
+                mLinkAlarmLayoutView.setVisibility(View.VISIBLE);
             }
         } else
         {
-            if (mlinkAlarmLayoutView.getVisibility() != View.GONE)
+            if (mLinkAlarmLayoutView.getVisibility() != View.GONE)
             {
-                mlinkAlarmLayoutView.setVisibility(View.GONE);
+                mLinkAlarmLayoutView.setVisibility(View.GONE);
             }
         }
     }
