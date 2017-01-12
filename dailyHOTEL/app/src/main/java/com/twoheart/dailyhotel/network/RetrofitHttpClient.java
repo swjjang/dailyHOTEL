@@ -79,7 +79,8 @@ public class RetrofitHttpClient implements Constants
             mRetrofit = new Retrofit.Builder().baseUrl(baseUrl)//
                 .client(mOkHttpClient)//
                 .addConverterFactory(JSONConverterFactory.create())//
-                .addConverterFactory(LoganSquareConverterFactory.create()).addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
+                .addConverterFactory(LoganSquareConverterFactory.create())//
+                .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
         } else
         {
             mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//

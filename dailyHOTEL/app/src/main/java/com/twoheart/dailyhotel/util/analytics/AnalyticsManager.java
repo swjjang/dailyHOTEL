@@ -851,6 +851,14 @@ public class AnalyticsManager
 
         //
         public static final String WAYTOVISIT_SELECTED = "WaytovisitSelected";
+
+        //
+        public static final String ITEM_SHARE_BUTTON_CLICKED = "ItemShareButtonClicked";
+        public static final String HOTEL_ITEM_SHARED = "HotelItemShared";
+        public static final String GOURMET_ITEM_SHARED = "GourmetItemShared";
+        public static final String BOOKING_SHARE_BUTTON_CLICKED = "BookingShareButtonClicked";
+        public static final String HOTEL_BOOKING_SHARED = "HotelBookingShared";
+        public static final String GOURMET_BOOKING_SHARED = "GourmetBookingShared";
     }
 
     public static class Category
@@ -873,12 +881,18 @@ public class AnalyticsManager
         // Review
         public static final String HOTEL_SATISFACTIONEVALUATION = "HotelSatisfactionEvaluation";
         public static final String GOURMET_SATISFACTIONEVALUATION = "GourmetSatisfactionEvaluation";
+
+        // Share
+        public static final String SHARE = "Share";
     }
 
     public static class Label
     {
         public static final String HOTEL = "hotel";
         public static final String GOURMET = "gourmet";
+
+        public static final String _HOTEL = "Hotel";
+        public static final String _GOURMET = "Gourmet";
         //
         public static final String HOTEL_SCREEN = "HotelScreen";
         public static final String GOURMET_SCREEN = "GoumetScreen";
@@ -890,8 +904,6 @@ public class AnalyticsManager
         public static final String AGREE = "Agree";
         public static final String CANCEL = "Cancel";
         public static final String OK = "Okay";
-        public static final String AUTO_LOGIN_ON = "AutoLoginOn";
-        public static final String AUTO_LOGIN_OFF = "AutoLoginOff";
         public static final String FACEBOOK_LOGIN = "FacebookLogin";
         public static final String KAKAO_LOGIN = "KakaoLogin";
         public static final String EMAIL_LOGIN = "EmailLogin";
@@ -993,6 +1005,7 @@ public class AnalyticsManager
         //
         public static final String CUSTOMER_CENTER_CALL = "CustomerCenterCall";
         public static final String KAKAO = "Kakao";
+        public static final String MESSAGE = "Message";
         public static final String DIRECT_CALL = "DirectCall";
         public static final String CLICK = "Click";
         //
