@@ -20,6 +20,8 @@ import java.util.List;
 
 public class HomeEventImageViewPagerAdapter extends PagerAdapter
 {
+    public static final String DEFAULT_EVENT_IMAGE_URL = "defaultImageUrl";
+
     private Context mContext;
     private List<ImageInformation> mImageList;
 
@@ -77,7 +79,15 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
             imageView.setTag(imageView.getId(), position);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            Util.requestImageResize(mContext, imageView, mImageList.get(position).url);
+            String url = mImageList.get(position).url;
+            if (DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(url) == true)
+            {
+                // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
+                imageView.setImageResource(R.drawable.banner);
+            } else
+            {
+                Util.requestImageResize(mContext, imageView, url);
+            }
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
             container.addView(imageView, 0, layoutParams);

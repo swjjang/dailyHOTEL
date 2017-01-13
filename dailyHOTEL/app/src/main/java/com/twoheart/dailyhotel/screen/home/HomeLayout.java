@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
@@ -14,11 +15,17 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import static com.facebook.FacebookSdk.getCacheDir;
 
 /**
  * Created by android_sam on 2017. 1. 11..
@@ -122,10 +129,7 @@ public class HomeLayout extends BaseLayout
         params.height = height;
         mEventViewPager.setLayoutParams(params);
 
-
-//        String defaultImageUrl = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageNewUrl()
-        setDefaultEventImage("");
-
+        setDefaultEventImage();
     }
 
     private void initProductLayout(View view)
@@ -203,14 +207,9 @@ public class HomeLayout extends BaseLayout
         }
     }
 
-    public void setDefaultEventImage(String url)
+    public void setDefaultEventImage()
     {
-        if (Util.isTextEmpty(url) == true)
-        {
-            setEventCountView(0, 0);
-            return;
-        }
-
+        String url = getDefaultImage();
         setEventCountView(1, 1);
 
         if (mEventViewPagerAdapter == null)
@@ -225,44 +224,47 @@ public class HomeLayout extends BaseLayout
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
     }
 
-//    private void loadDefaultEventImage(View eventLayout)
-//    {
-//        String splashVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventDefaultVersion();
-//
-//        DailyImageView imageView = (DailyImageView) eventLayout.findViewById(R.id.splashImageView);
-//
-//        if (Util.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
-//        {
-//            imageView.setVectorImageResource(R.drawable.img_splash_logo);
-//        } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
-//        {
-//            imageView.setPadding(0, 0, 0, 0);
-//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//            imageView.setImageResource(R.drawable.splash);
-//        } else
-//        {
-//            String fileName = Util.makeIntroImageFileName(splashVersion);
-//            File file = new File(getCacheDir(), fileName);
-//
-//            if (file.exists() == false)
-//            {
-//                DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-//                imageView.setVectorImageResource(R.drawable.img_splash_logo);
-//            } else
-//            {
-//                try
-//                {
-//                    imageView.setPadding(0, 0, 0, 0);
-//                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                    imageView.setImageURI(Uri.fromFile(file));
-//                } catch (Exception e)
-//                {
-//                    DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-//                    imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
-//                    imageView.setScaleType(ImageView.ScaleType.CENTER);
-//                    imageView.setVectorImageResource(R.drawable.img_splash_logo);
-//                }
-//            }
-//        }
-//    }
+    // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
+    private String getDefaultImage()
+    {
+        String homeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
+
+        if (Util.isTextEmpty(homeEventCurrentVersion) == true  //
+            || Constants.DAILY_HOME_EVENT_CURRENT_VERSION.equalsIgnoreCase(homeEventCurrentVersion) == true)
+        {
+            return HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL;
+        } else
+        {
+            String fileName = Util.makeIntroImageFileName(homeEventCurrentVersion);
+            File file = new File(getCacheDir(), fileName);
+
+            if (file.exists() == false)
+            {
+                DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(Constants.DAILY_HOME_EVENT_CURRENT_VERSION);
+                return HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL;
+            } else
+            {
+                String urlString = null;
+
+                try
+                {
+                    Uri uri = Uri.fromFile(file);
+                    urlString = uri.toString();
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                if (Util.isTextEmpty(urlString) == true)
+                {
+                    DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(Constants.DAILY_HOME_EVENT_CURRENT_VERSION);
+                    return HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL;
+                } else
+                {
+                    return urlString;
+                }
+            }
+        }
+    }
+
 }
