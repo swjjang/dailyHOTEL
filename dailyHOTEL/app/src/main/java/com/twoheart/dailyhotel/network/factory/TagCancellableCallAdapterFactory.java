@@ -7,6 +7,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -76,12 +77,17 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
             return;
         }
 
-        Call call;
-
         synchronized (mObject)
         {
-            for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
+            Iterator<Map.Entry<Call, String>> iterator = mQueuedCalls.entrySet().iterator();
+
+            Call call;
+            Map.Entry<Call, String> entry;
+
+            while (iterator.hasNext() == true)
             {
+                entry = iterator.next();
+
                 if (tag.equalsIgnoreCase(entry.getValue()) == true)
                 {
                     call = entry.getKey();
@@ -91,28 +97,8 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                         call.cancel();
                     }
 
-                    mQueuedCalls.remove(call);
+                    iterator.remove();
                 }
-            }
-        }
-    }
-
-    public void cancelAll()
-    {
-        Call call;
-
-        synchronized (mObject)
-        {
-            for (Map.Entry<Call, String> entry : mQueuedCalls.entrySet())
-            {
-                call = entry.getKey();
-
-                if (call != null)
-                {
-                    call.cancel();
-                }
-
-                mQueuedCalls.remove(call);
             }
         }
     }
