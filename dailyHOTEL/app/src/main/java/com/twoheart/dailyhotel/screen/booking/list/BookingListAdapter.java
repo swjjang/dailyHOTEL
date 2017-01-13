@@ -208,8 +208,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             case HOTEL:
             {
                 String period = String.format("%s - %s"//
-                    , format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"))//
-                    , format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT")));
+                    , DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"))//
+                    , DailyCalendar.format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT")));
 
                 day.setText(period);
 
@@ -222,7 +222,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
             case FNB:
             {
-                String period = format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"));
+                String period = DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"));
 
                 day.setText(period);
 

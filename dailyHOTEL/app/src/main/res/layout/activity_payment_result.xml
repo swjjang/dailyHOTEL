@@ -40,7 +40,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/btn_normal_gradation"
+            android:background="@drawable/shape_fillrect_bb70038_r2"
             android:gravity="center"
             android:text="@string/label_check_booking_history"
             android:textColor="@color/white"
@@ -52,6 +52,7 @@
         android:id="@+id/informationLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/bottomLayout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:fillViewport="true">

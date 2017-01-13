@@ -852,7 +852,19 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
-                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
+
+                        DailyPreference.getInstance(HotelPaymentActivity.this)//
+                            .setPaymentInformation(PlaceType.HOTEL,//
+                                stayPaymentInformation.getSaleRoomInformation().hotelName,//
+                                stayPaymentInformation.paymentType,//
+                                stayPaymentInformation.checkInDateFormat,//
+                                stayPaymentInformation.checkOutDateFormat);
+
+                        Intent paymentInformationIntent = new Intent();
+                        paymentInformationIntent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
+
+                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, paymentInformationIntent);
                         finish();
                     }
                 };
