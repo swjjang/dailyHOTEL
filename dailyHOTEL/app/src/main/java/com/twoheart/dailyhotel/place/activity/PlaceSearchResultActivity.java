@@ -172,8 +172,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             {
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)

@@ -851,6 +851,14 @@ public class AnalyticsManager
 
         //
         public static final String WAYTOVISIT_SELECTED = "WaytovisitSelected";
+
+        //
+        public static final String ITEM_SHARE = "item_share";
+        public static final String STAY_ITEM_SHARE = "stay_item_share";
+        public static final String GOURMET_ITEM_SHARE = "gourmet_item_share";
+        public static final String BOOKING_SHARE = "booking_share";
+        public static final String STAY_BOOKING_SHARE = "stay_booking_share";
+        public static final String GOURMET_BOOKING_SHARE = "gourmet_booking_share";
     }
 
     public static class Category
@@ -873,13 +881,17 @@ public class AnalyticsManager
         // Review
         public static final String HOTEL_SATISFACTIONEVALUATION = "HotelSatisfactionEvaluation";
         public static final String GOURMET_SATISFACTIONEVALUATION = "GourmetSatisfactionEvaluation";
+
+        // Share
+        public static final String SHARE = "share";
     }
 
     public static class Label
     {
         public static final String HOTEL = "hotel";
+        public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
-        //
+
         public static final String HOTEL_SCREEN = "HotelScreen";
         public static final String GOURMET_SCREEN = "GoumetScreen";
         public static final String BOOKINGSTATUS_SCREEN = "BookingStatusScreen";
@@ -890,8 +902,6 @@ public class AnalyticsManager
         public static final String AGREE = "Agree";
         public static final String CANCEL = "Cancel";
         public static final String OK = "Okay";
-        public static final String AUTO_LOGIN_ON = "AutoLoginOn";
-        public static final String AUTO_LOGIN_OFF = "AutoLoginOff";
         public static final String FACEBOOK_LOGIN = "FacebookLogin";
         public static final String KAKAO_LOGIN = "KakaoLogin";
         public static final String EMAIL_LOGIN = "EmailLogin";
@@ -1061,8 +1071,6 @@ public class AnalyticsManager
         public static final String NUM_OF_SEARCH_RESULTS_RETURNED = "num_of_search_results_returned";
         public static final String USER_IDX = "user_idx";
         public static final String COUNTRY = "country";
-        public static final String DOMESTIC = "domestic";
-        public static final String OVERSEAS = "overseas";
         public static final String APP_VERSION = "app_version";
         public static final String CARD_ISSUING_COMPANY = "card_issuing_company";
         public static final String VIEWED_DATE = "viewed_date";
@@ -1119,6 +1127,13 @@ public class AnalyticsManager
         public static final String REASON_CANCELLATION = "reason_cancellation";
         public static final String LIST_TOP5_PLACE_INDEXES = "list_top5_place_indexes";
         public static final String KIND_OF_COUPON = "kind_of_coupon";
+        public static final String SHARE_METHOD = "share_method";
+        public static final String USER_TYPE = "user_type";
+        public static final String MEMBER_TYPE = "member_type";
+        public static final String PUSH_NOTIFICATION = "push_notification";
+        public static final String VENDOR_ID = "vendor_id";
+        public static final String VENDOR_NAME = "vendor_name";
+        public static final String SERVICE = "service";
     }
 
     public static class ValueType
@@ -1148,5 +1163,9 @@ public class AnalyticsManager
         public static final String RECENT = "recent";
         public static final String DIRECT = "direct";
         public static final String ALL = "all";
+        public static final String KAKAO = "kakao";
+        public static final String MESSAGE = "message";
+        public static final String OVERSEAS = "overseas";
+        public static final String DOMESTIC = "domestic";
     }
 }

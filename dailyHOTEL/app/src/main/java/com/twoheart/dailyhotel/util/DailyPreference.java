@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
 /**
  */
@@ -21,7 +22,7 @@ public class DailyPreference
     /////////////////////////////////////////////////////////////////////////////////////////
 
     private static final String KEY_OPENING_ALARM = "1"; // 알람
-    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
+//    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     //    private static final String KEY_ALLOW_PUSH = "5";
     //    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
@@ -115,7 +116,7 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_TITLE = "312";
     private static final String KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_CTA = "313";
 
-    private static final String KEY_REMOTE_CONFIG_HOME_EVENT_DEFAULT_VERSION = "314";
+    private static final String KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION = "314";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference - 1.9.4 이상의 버전에서 강업 2회 이후 삭제 예정
@@ -184,6 +185,8 @@ public class DailyPreference
     private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
     private static final String KEY_PAYMENT_OVERSEAS_PHONE = "4001";
     private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "4002";
+    private static final String KEY_PAYMENT_INFORMATION = "4003";
+
 
     // payment - Virtual Account
     private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "4100";
@@ -536,15 +539,15 @@ public class DailyPreference
         setValue(mEditor, KEY_NEW_NOTICE, value);
     }
 
-    public String getLastMenu()
-    {
-        return getValue(mPreferences, KEY_LAST_MENU, null);
-    }
+//    public String getLastMenu()
+//    {
+//        return getValue(mPreferences, KEY_LAST_MENU, null);
+//    }
 
-    public void setLastMenu(String value)
-    {
-        setValue(mEditor, KEY_LAST_MENU, value);
-    }
+//    public void setLastMenu(String value)
+//    {
+//        setValue(mEditor, KEY_LAST_MENU, value);
+//    }
 
     public boolean isShowGuide()
     {
@@ -1081,14 +1084,14 @@ public class DailyPreference
     }
 
 
-    public void setRemoteConfigHomeEventDefaultVersion(String value)
+    public void setRemoteConfigHomeEventCurrentVersion(String value)
     {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_DEFAULT_VERSION, value);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION, value);
     }
 
-    public String getRemoteConfigHomeEventDefaultVersion()
+    public String getRemoteConfigHomeEventCurrentVersion()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_DEFAULT_VERSION, Constants.DAILY_HOME_EVENT_DEFAULT_VERSION);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1395,6 +1398,56 @@ public class DailyPreference
     public void setVirtualAccountReadyFlag(int value)
     {
         setValue(mEditor, KEY_PAYMENT_ACCOUNT_READY_FLAG, value);
+    }
+
+    private static final String PAYMENT_SEPARATOR = "±";
+
+    public String[] getPaymentInformation()
+    {
+        String value = getValue(mPreferences, KEY_PAYMENT_INFORMATION, null);
+
+        if(Util.isTextEmpty(value) == true)
+        {
+            return null;
+        } else
+        {
+            return value.split(PAYMENT_SEPARATOR);
+        }
+    }
+
+    public void setPaymentInformation(Constants.PlaceType placeType, String placeName, PlacePaymentInformation.PaymentType paymentType, String dateTime)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(placeName);
+        stringBuilder.append(PAYMENT_SEPARATOR);
+        stringBuilder.append(paymentType.getName());
+        stringBuilder.append(PAYMENT_SEPARATOR);
+        stringBuilder.append(dateTime);
+
+        setValue(mEditor, KEY_PAYMENT_INFORMATION, stringBuilder.toString());
+    }
+
+    public void setPaymentInformation(Constants.PlaceType placeType, String placeName, PlacePaymentInformation.PaymentType paymentType, String checkInDate, String checkOutDate)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(placeType.name());
+        stringBuilder.append(PAYMENT_SEPARATOR);
+        stringBuilder.append(placeName);
+        stringBuilder.append(PAYMENT_SEPARATOR);
+        stringBuilder.append(paymentType.name());
+        stringBuilder.append(PAYMENT_SEPARATOR);
+        stringBuilder.append(checkInDate);
+        stringBuilder.append(PAYMENT_SEPARATOR);
+        stringBuilder.append(checkOutDate);
+
+        setValue(mEditor, KEY_PAYMENT_INFORMATION, stringBuilder.toString());
+    }
+
+    public void clearPaymentInformation()
+    {
+        removeValue(mEditor, KEY_PAYMENT_INFORMATION);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

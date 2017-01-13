@@ -492,7 +492,8 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
 
         if (Util.isTextEmpty(mBookingDetail.mRefundComment) == false)
         {
-            refundPolicyTextView.setText(Html.fromHtml(bookingDetail.mRefundComment));
+            String comment = bookingDetail.mRefundComment.replaceAll("900034", "B70038");
+            refundPolicyTextView.setText(Html.fromHtml(comment));
         }
 
         View buttonLayout = mRefundPolicyLayout.findViewById(R.id.buttonLayout);
@@ -631,7 +632,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
                 saleTime.setDailyTime(mBookingDetail.dailyDateTime);
 
                 Intent intent = StayDetailActivity.newInstance(baseActivity, saleTime, 1, mBookingDetail.placeIndex, 0, false);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
                 break;
             }
 

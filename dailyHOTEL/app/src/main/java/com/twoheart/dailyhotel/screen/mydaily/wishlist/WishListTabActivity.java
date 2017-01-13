@@ -279,8 +279,8 @@ public class WishListTabActivity extends BaseActivity
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
             {
                 mDontReloadAtOnResume = true;
 
@@ -300,7 +300,7 @@ public class WishListTabActivity extends BaseActivity
                     if (isChangeWishList == true)
                     {
                         PlaceType placeType;
-                        if (requestCode == CODE_REQUEST_ACTIVITY_PLACE_DETAIL)
+                        if (requestCode == CODE_REQUEST_ACTIVITY_GOURMET_DETAIL)
                         {
                             placeType = PlaceType.FNB;
                         } else

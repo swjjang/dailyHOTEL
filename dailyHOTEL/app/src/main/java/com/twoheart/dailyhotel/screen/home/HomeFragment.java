@@ -63,7 +63,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivity(StayMainActivity.newInstance(getContext()));
+            mBaseActivity.startActivityForResult(StayMainActivity.newInstance(getContext()), Constants.CODE_REQUEST_ACTIVITY_STAY);
         }
 
         @Override
@@ -74,7 +74,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivity(GourmetMainActivity.newInstance(getContext()));
+            mBaseActivity.startActivityForResult(GourmetMainActivity.newInstance(getContext()), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
         }
 
         @Override

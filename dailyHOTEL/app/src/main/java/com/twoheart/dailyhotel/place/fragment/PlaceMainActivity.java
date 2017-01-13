@@ -171,30 +171,37 @@ public abstract class PlaceMainActivity extends BaseActivity
             }
 
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             case CODE_REQUEST_ACTIVITY_COLLECTION:
             {
-                if (mIsDeepLink == false)
+                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-                    switch (resultCode)
-                    {
-                        case CODE_RESULT_ACTIVITY_REFRESH:
-                        case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-                            mDontReloadAtOnResume = false;
-                            break;
-
-                        default:
-                            mDontReloadAtOnResume = true;
-                            break;
-                    }
+                    setResult(resultCode);
+                    finish();
                 } else
                 {
-                    mIsDeepLink = false;
+                    if (mIsDeepLink == false)
+                    {
+                        switch (resultCode)
+                        {
+                            case CODE_RESULT_ACTIVITY_REFRESH:
+                            case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                                mDontReloadAtOnResume = false;
+                                break;
 
-                    mDontReloadAtOnResume = false;
+                            default:
+                                mDontReloadAtOnResume = true;
+                                break;
+                        }
+                    } else
+                    {
+                        mIsDeepLink = false;
+
+                        mDontReloadAtOnResume = false;
+                    }
                 }
                 break;
             }

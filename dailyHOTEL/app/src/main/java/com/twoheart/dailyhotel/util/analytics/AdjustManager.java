@@ -29,6 +29,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -411,24 +412,21 @@ public class AdjustManager extends BaseAnalyticsManager
                     ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
                 }
             }
-        } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
+        } else if (AnalyticsManager.Category.SHARE.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
+            if (AnalyticsManager.Action.STAY_ITEM_SHARE.equalsIgnoreCase(action) == true)
             {
-                String placeIndex = null;
-                String placeName = null;
-
-                if (params != null)
-                {
-                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-                    placeName = params.get(AnalyticsManager.KeyType.NAME);
-                }
-
                 event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.STAY);
-                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
-                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
-                event.addPartnerParameter(Key.PLACE_NAME, placeName);
+                event.addPartnerParameter(params);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
+                }
+            } else if (AnalyticsManager.Action.GOURMET_ITEM_SHARE.equalsIgnoreCase(action) == true)
+            {
+                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
+                event.addPartnerParameter(params);
 
                 if (DEBUG == true)
                 {
@@ -437,28 +435,6 @@ public class AdjustManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.GOURMET_BOOKINGS.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.SOCIAL_SHARE_CLICKED.equalsIgnoreCase(action) == true)
-            {
-                String placeIndex = null;
-                String placeName = null;
-
-                if (params != null)
-                {
-                    placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-                    placeName = params.get(AnalyticsManager.KeyType.NAME);
-                }
-
-                event = new DailyAdjustEvent(EventToken.SOCIAL_SHARE);
-                event.addPartnerParameter(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
-                event.addPartnerParameter(Key.SHARE_METHOD, AnalyticsManager.Label.KAKAO);
-                event.addPartnerParameter(Key.PLACE_INDEX, placeIndex);
-                event.addPartnerParameter(Key.PLACE_NAME, placeName);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + "Event : " + category + " | " + action + " | " + label + " | " + (params != null ? params.toString() : "null"));
-                }
-            }
         } else if (AnalyticsManager.Category.COUPON_BOX.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.REGISTRATION_REJECTED.equalsIgnoreCase(action) == true)
@@ -1263,6 +1239,22 @@ public class AdjustManager extends BaseAnalyticsManager
 
             super.addPartnerParameter(key, value);
             super.addCallbackParameter(key, value);
+        }
+
+        public void addPartnerParameter(Map<String, String> paramMap)
+        {
+            if (paramMap == null || paramMap.size() == 0)
+            {
+                return;
+            }
+
+            Iterator<Map.Entry<String, String>> iterator = paramMap.entrySet().iterator();
+            if (iterator.hasNext() == true)
+            {
+                Map.Entry<String, String> entry = iterator.next();
+
+                addPartnerParameter(entry.getKey(), entry.getValue());
+            }
         }
 
         @Override

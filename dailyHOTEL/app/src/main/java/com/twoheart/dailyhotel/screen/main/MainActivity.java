@@ -30,6 +30,8 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
+import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -292,9 +294,11 @@ public class MainActivity extends BaseActivity implements Constants
                 mNetworkController.requestNoticeAgreement();
                 break;
 
+            case CODE_REQUEST_ACTIVITY_STAY:
+            case CODE_REQUEST_ACTIVITY_GOURMET:
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
@@ -883,8 +887,6 @@ public class MainActivity extends BaseActivity implements Constants
 
             finishSplash();
 
-            PlaceType placeType = null;
-
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
                 if (DailyDeepLink.getInstance().isCollectionView() == true)
@@ -897,23 +899,24 @@ public class MainActivity extends BaseActivity implements Constants
                         {
                             case "stay":
                                 mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                                placeType = PlaceType.HOTEL;
                                 break;
 
                             case "gourmet":
                                 mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                                placeType = PlaceType.FNB;
                                 break;
                         }
                     }
                 } else if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                    placeType = PlaceType.HOTEL;
+
+                    startActivityForResult(new Intent(MainActivity.this, StayMainActivity.class), Constants.CODE_REQUEST_ACTIVITY_STAY);
+
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                    placeType = PlaceType.FNB;
+
+                    startActivityForResult(new Intent(MainActivity.this, GourmetMainActivity.class), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                 } else if (DailyDeepLink.getInstance().isBookingView() == true //
                     || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {
@@ -940,7 +943,6 @@ public class MainActivity extends BaseActivity implements Constants
                     {
                         DailyDeepLink.getInstance().clear();
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                        placeType = PlaceType.HOTEL;
                     }
                 } else if (DailyDeepLink.getInstance().isEventView() == true//
                     || DailyDeepLink.getInstance().isEventDetailView() == true//
@@ -954,76 +956,12 @@ public class MainActivity extends BaseActivity implements Constants
                 } else
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                    placeType = PlaceType.HOTEL;
-                }
-
-                if (placeType != null)
-                {
-                    String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
-                    String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
-                    String currentAppVersion = Util.getAppVersionCode(MainActivity.this);
-
-                    if (Util.isTextEmpty(realProvinceName) == true)
-                    {
-                        if (Util.isTextEmpty(preferenceVersion) == true //
-                            || (Util.isTextEmpty(currentAppVersion) == false && currentAppVersion.equalsIgnoreCase(preferenceVersion) == true))
-                        {
-                            realProvinceName = "서울";
-                        }
-                    }
-
-                    boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
-                    String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
-
-                    AnalyticsManager.getInstance(MainActivity.this).onRegionChanged(overSeas, realProvinceName);
                 }
 
                 AnalyticsManager.getInstance(MainActivity.this).startApplication();
             } else
             {
-                String lastMenu = DailyPreference.getInstance(MainActivity.this).getLastMenu();
-
-                if (getString(R.string.label_dailygourmet).equalsIgnoreCase(lastMenu) == true)
-                {
-                    //                    mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
-                    //                    placeType = PlaceType.FNB;
-                } else if (getString(R.string.label_dailyhotel).equalsIgnoreCase(lastMenu) == true)
-                {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
-                    placeType = PlaceType.HOTEL;
-                } else
-                {
-                    //                    if (mMainFragmentManager.getLastIndexFragment() == MainFragmentManager.INDEX_GOURMET_FRAGMENT)
-                    //                    {
-                    //                        mMainFragmentManager.select(MainFragmentManager.INDEX_GOURMET_FRAGMENT, false);
-                    //                        placeType = PlaceType.FNB;
-                    //                    } else
-                    {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
-                        placeType = PlaceType.HOTEL;
-                    }
-                }
-
-                if (placeType != null)
-                {
-                    String realProvinceName = DailyPreference.getInstance(MainActivity.this).getSelectedRegionTypeProvince(placeType);
-                    String preferenceVersion = DailyPreference.getInstance(getApplicationContext()).getFirstAppVersion();
-                    String currentAppVersion = Util.getAppVersionCode(MainActivity.this);
-
-                    if (Util.isTextEmpty(realProvinceName) == true)
-                    {
-                        if (Util.isTextEmpty(preferenceVersion) == true //
-                            || (Util.isTextEmpty(currentAppVersion) == false && currentAppVersion.equalsIgnoreCase(preferenceVersion) == true))
-                        {
-                            realProvinceName = "서울";
-                        }
-                    }
-
-                    boolean isOverSeas = DailyPreference.getInstance(MainActivity.this).isSelectedOverseaRegion(placeType);
-                    String overSeas = isOverSeas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
-
-                    AnalyticsManager.getInstance(MainActivity.this).onRegionChanged(overSeas, realProvinceName);
-                }
+                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
 
                 if (DailyHotel.isLogin() == true)
                 {

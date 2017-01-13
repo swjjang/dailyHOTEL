@@ -310,8 +310,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_PLACE_DETAIL:
-            case CODE_REQUEST_ACTIVITY_HOTEL_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             case CODE_REQUEST_ACTIVITY_COLLECTION:
             {
@@ -408,11 +408,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
                 Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             } else
             {
                 Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
 
             if (isShowCalendar == true)
@@ -478,13 +478,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
                     startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
 
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
                     saleTime, gourmetIndex, ticketIndex, isShowCalendar);
 
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
 
             if (isShowCalendar == true)

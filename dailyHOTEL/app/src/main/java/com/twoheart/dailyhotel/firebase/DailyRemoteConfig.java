@@ -134,8 +134,8 @@ public class DailyRemoteConfig
 
 
                 // 홈 이벤트 디폴트 이미지
-                final String clientHomeEventDefaultVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventDefaultVersion();
-                processImage(mContext, clientHomeEventDefaultVersion, androidHomeEventDefaultImageLink, new ImageDownloadAsyncTask.OnCompletedListener()
+                final String clientHomeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
+                processImage(mContext, clientHomeEventCurrentVersion, androidHomeEventDefaultImageLink, new ImageDownloadAsyncTask.OnCompletedListener()
                 {
                     @Override
                     public void onCompleted(boolean result, String version)
@@ -143,9 +143,9 @@ public class DailyRemoteConfig
                         if (result == true)
                         {
                             // 이전 파일 삭제
-                            if (Util.isTextEmpty(clientHomeEventDefaultVersion) == false)
+                            if (Util.isTextEmpty(clientHomeEventCurrentVersion) == false)
                             {
-                                String fileName = Util.makeImageFileName(clientHomeEventDefaultVersion);
+                                String fileName = Util.makeImageFileName(clientHomeEventCurrentVersion);
                                 File currentFile = new File(mContext.getCacheDir(), fileName);
                                 if (currentFile.exists() == true && currentFile.delete() == false)
                                 {
@@ -153,7 +153,7 @@ public class DailyRemoteConfig
                                 }
                             }
 
-                            DailyPreference.getInstance(mContext).setRemoteConfigHomeEventDefaultVersion(version);
+                            DailyPreference.getInstance(mContext).setRemoteConfigHomeEventCurrentVersion(version);
                         }
                     }
                 });

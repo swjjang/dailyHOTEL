@@ -118,7 +118,7 @@ public class StayMainActivity extends PlaceMainActivity
                     DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                     DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
 
-                    String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                     String realProvinceName = Util.getRealProvinceName(province);
                     DailyPreference.getInstance(this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                     AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
@@ -153,7 +153,7 @@ public class StayMainActivity extends PlaceMainActivity
                     DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                     DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
 
-                    String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                    String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                     String realProvinceName = Util.getRealProvinceName(province);
                     DailyPreference.getInstance(this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                     AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
@@ -378,12 +378,12 @@ public class StayMainActivity extends PlaceMainActivity
         if (province instanceof Area)
         {
             Area area = (Area) province;
-            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
             params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
             params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
         } else if (province != null)
         {
-            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
             params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
@@ -699,7 +699,7 @@ public class StayMainActivity extends PlaceMainActivity
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, province.name);
 
-                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                         AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
@@ -714,7 +714,7 @@ public class StayMainActivity extends PlaceMainActivity
             String saveProvinceName = DailyPreference.getInstance(StayMainActivity.this).getSelectedRegionTypeProvince(PlaceType.HOTEL);
             if (selectedProvince.name.equalsIgnoreCase(saveProvinceName) == false)
             {
-                String country = selectedProvince.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                 String realProvinceName = Util.getRealProvinceName(selectedProvince);
                 DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                 AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
@@ -893,7 +893,7 @@ public class StayMainActivity extends PlaceMainActivity
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, province.name);
 
-                        String country = province.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC;
+                        String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                         AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
@@ -924,10 +924,10 @@ public class StayMainActivity extends PlaceMainActivity
                             android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                             android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL, options.toBundle());
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
                     }
 
                     if (mViewType == ViewType.LIST)
@@ -995,7 +995,7 @@ public class StayMainActivity extends PlaceMainActivity
                 //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
                 //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
                 //
-                //                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_DETAIL);
+                //                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
                 //                    }
                 //                } catch (Exception e)
                 //                {
@@ -1180,11 +1180,11 @@ public class StayMainActivity extends PlaceMainActivity
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
                 Intent intent = StayDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             } else
             {
                 Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_HOTEL_DETAIL);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
 
             mIsDeepLink = true;

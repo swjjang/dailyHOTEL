@@ -280,6 +280,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 {
                     ExLog.d(e.toString());
                 }
+
+                AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
             }
         });
 
@@ -312,6 +315,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 {
                     ExLog.d(e.toString());
                 }
+
+                AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
 
@@ -328,6 +334,9 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         {
             ExLog.d(e.toString());
         }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.GOURMET, null);
     }
 
     @Override

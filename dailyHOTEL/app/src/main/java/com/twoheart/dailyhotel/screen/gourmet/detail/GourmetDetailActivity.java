@@ -53,7 +53,6 @@ import com.twoheart.dailyhotel.widget.TextTransition;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -500,14 +499,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , imageUrl //
             , mSaleTime);
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put(AnalyticsManager.KeyType.NAME, placeDetail.name);
-        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeDetail.index));
-        params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-        params.put(AnalyticsManager.KeyType.CURRENT_TIME, DailyCalendar.format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"));
-
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-            , AnalyticsManager.Action.SOCIAL_SHARE_CLICKED, placeDetail.name, params);
+        recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
     }
 
     @Override
@@ -540,6 +532,66 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             intent.setType("vnd.android-dir/mms-sms");
             startActivity(intent);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.MESSAGE);
+    }
+
+    private void recordAnalyticsShared(PlaceDetail placeDetail, String label)
+    {
+        try
+        {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.GOURMET);
+            params.put(AnalyticsManager.ValueType.OVERSEAS, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+
+            if (mProvince instanceof Area)
+            {
+                Area area = (Area) mProvince;
+                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PROVINCE, mProvince.name);
+            }
+
+            if (DailyHotel.isLogin() == true)
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
+
+                switch (DailyPreference.getInstance(this).getUserType())
+                {
+                    case Constants.DAILY_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
+                        break;
+
+                    case Constants.KAKAO_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
+                        break;
+
+                    case Constants.FACEBOOK_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
+                        break;
+
+                    default:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+                        break;
+                }
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.GUEST);
+                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+            }
+
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
+            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(placeDetail.index));
+            params.put(AnalyticsManager.KeyType.VENDOR_NAME, placeDetail.name);
+
+            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                , AnalyticsManager.Action.GOURMET_ITEM_SHARE, label, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -676,6 +728,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
+    }
+
+    @Override
+    protected void recordAnalyticsShareClicked()
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE,//
+            AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.GOURMET, null);
     }
 
     private void updateDetailInformationLayout(GourmetDetail gourmetDetail)
@@ -1301,7 +1360,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
                     params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
                     params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
 
                     if (mProvince == null)
@@ -1390,7 +1449,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
                 params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
                 params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.KeyType.OVERSEAS : AnalyticsManager.KeyType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                 params.put(AnalyticsManager.KeyType.CATEGORY, ((GourmetDetail) mPlaceDetail).category);
 
                 if (mProvince == null)
