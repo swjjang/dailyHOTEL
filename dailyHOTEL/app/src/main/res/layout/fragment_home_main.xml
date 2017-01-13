@@ -46,7 +46,6 @@
             android:layout_below="@+id/appBarLayout"
             android:background="@color/actionbar_underline"
             app:layout_behavior="com.twoheart.dailyhotel.screen.home.HomeScrollViewBehavior">
-            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
             <LinearLayout
                 android:id="@+id/homeContentLayout"
