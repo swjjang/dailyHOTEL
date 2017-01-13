@@ -135,31 +135,28 @@ public class DailyRemoteConfig
 
                 // 홈 이벤트 디폴트 이미지
                 final String clientHomeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
-                if (Util.isTextEmpty(clientHomeEventCurrentVersion) == false)
+                processImage(mContext, clientHomeEventCurrentVersion, androidHomeEventDefaultImageLink, new ImageDownloadAsyncTask.OnCompletedListener()
                 {
-                    processImage(mContext, clientHomeEventCurrentVersion, androidHomeEventDefaultImageLink, new ImageDownloadAsyncTask.OnCompletedListener()
+                    @Override
+                    public void onCompleted(boolean result, String version)
                     {
-                        @Override
-                        public void onCompleted(boolean result, String version)
+                        if (result == true)
                         {
-                            if (result == true)
+                            // 이전 파일 삭제
+                            if (Util.isTextEmpty(clientHomeEventCurrentVersion) == false)
                             {
-                                // 이전 파일 삭제
-                                if (Util.isTextEmpty(clientHomeEventCurrentVersion) == false)
+                                String fileName = Util.makeImageFileName(clientHomeEventCurrentVersion);
+                                File currentFile = new File(mContext.getCacheDir(), fileName);
+                                if (currentFile.exists() == true && currentFile.delete() == false)
                                 {
-                                    String fileName = Util.makeImageFileName(clientHomeEventCurrentVersion);
-                                    File currentFile = new File(mContext.getCacheDir(), fileName);
-                                    if (currentFile.exists() == true && currentFile.delete() == false)
-                                    {
-                                        currentFile.deleteOnExit();
-                                    }
+                                    currentFile.deleteOnExit();
                                 }
-
-                                DailyPreference.getInstance(mContext).setRemoteConfigHomeEventCurrentVersion(version);
                             }
+
+                            DailyPreference.getInstance(mContext).setRemoteConfigHomeEventCurrentVersion(version);
                         }
-                    });
-                }
+                    }
+                });
 
                 if (listener != null)
                 {
