@@ -785,6 +785,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
+                        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+                        DailyPreference.getInstance(GourmetPaymentActivity.this)//
+                            .setPaymentInformation(PlaceType.FNB,//
+                                gourmetPaymentInformation.getTicketInformation().placeName,//
+                                gourmetPaymentInformation.paymentType,//
+                                gourmetPaymentInformation.dateTime);
+
                         setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                         finish();
                     }

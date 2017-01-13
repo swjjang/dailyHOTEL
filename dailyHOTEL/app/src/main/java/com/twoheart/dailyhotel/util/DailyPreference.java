@@ -1419,9 +1419,11 @@ public class DailyPreference
     {
         StringBuilder stringBuilder = new StringBuilder();
 
+        stringBuilder.append(placeType.name());
+        stringBuilder.append(PAYMENT_SEPARATOR);
         stringBuilder.append(placeName);
         stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(paymentType.getName());
+        stringBuilder.append(paymentType.name());
         stringBuilder.append(PAYMENT_SEPARATOR);
         stringBuilder.append(dateTime);
 

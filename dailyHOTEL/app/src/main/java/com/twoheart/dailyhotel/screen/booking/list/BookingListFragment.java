@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -37,6 +38,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -50,6 +52,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -159,18 +162,72 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                     int size = bookingArrayList.size();
 
-                    for (int i = 0; i < size; i++)
-                    {
-                        Booking booking = bookingArrayList.get(i);
+                    String[] paymentInformation = DailyPreference.getInstance(baseActivity).getPaymentInformation();
 
-                        if (booking.type == Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
+                    PlaceType placeType = null;
+                    String placeName = null;
+                    PlacePaymentInformation.PaymentType paymentType = null;
+                    String checkInDate = null;
+                    String checkOutDate = null;
+
+                    if (Util.isTextEmpty(paymentInformation) == false)
+                    {
+                        try
                         {
-                            mListView.performItemClick(null, i, 0);
-                            break;
+                            placeType = PlaceType.valueOf(paymentInformation[0]);
+                            placeName = paymentInformation[1];
+                            paymentType = PlacePaymentInformation.PaymentType.valueOf(paymentInformation[2]);
+
+                            switch (placeType)
+                            {
+                                case HOTEL:
+                                    // "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+                                    checkInDate = DailyCalendar.convertDateFormatString(paymentInformation[3], DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+                                    checkOutDate = DailyCalendar.convertDateFormatString(paymentInformation[4], DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+
+                                    for (int i = 0; i < size; i++)
+                                    {
+                                        Booking booking = bookingArrayList.get(i);
+
+                                        if (booking.type == Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
+                                            && booking.placeName.equalsIgnoreCase(placeName)//
+                                            && booking.placeType == placeType//
+                                            && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkInDate) == true//
+                                            && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkOutDate) == true)
+                                        {
+                                            mListView.performItemClick(null, i, 0);
+                                            break;
+                                        }
+                                    }
+                                    break;
+
+                                case FNB:
+                                    // yyyy.MM.dd (EEE)
+                                    checkInDate = paymentInformation[3].split(" ")[0];
+
+                                    for (int i = 0; i < size; i++)
+                                    {
+                                        Booking booking = bookingArrayList.get(i);
+
+                                        if (booking.type == Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
+                                            && booking.placeName.equalsIgnoreCase(placeName)//
+                                            && booking.placeType == placeType//
+                                            && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkInDate) == true)
+                                        {
+                                            mListView.performItemClick(null, i, 0);
+                                            break;
+                                        }
+                                    }
+                                    break;
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
                         }
                     }
 
                     DailyPreference.getInstance(baseActivity).setVirtualAccountReadyFlag(-1);
+                    DailyPreference.getInstance(baseActivity).clearPaymentInformation();
                 }
             }
         }
