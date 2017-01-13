@@ -122,9 +122,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             ExLog.d(e.toString());
 
             finish();
-        } finally
-        {
-            DailyMobileAPI.getInstance(this).cancelAll(this);
         }
     }
 
