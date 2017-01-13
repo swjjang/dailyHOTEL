@@ -105,6 +105,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void setCancelCoupon();
 
+    protected abstract void recordPaymentInformation();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -233,6 +235,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
             case REQUEST_CODE_PAYMETRESULT_ACTIVITY:
             {
                 mDontReload = true;
+
+                recordPaymentInformation();
 
                 setResult(RESULT_OK);
                 finish();

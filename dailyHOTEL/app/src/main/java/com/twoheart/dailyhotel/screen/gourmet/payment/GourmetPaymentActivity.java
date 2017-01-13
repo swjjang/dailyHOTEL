@@ -785,13 +785,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
-                        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
-
-                        DailyPreference.getInstance(GourmetPaymentActivity.this)//
-                            .setPaymentInformation(PlaceType.FNB,//
-                                gourmetPaymentInformation.getTicketInformation().placeName,//
-                                gourmetPaymentInformation.paymentType,//
-                                gourmetPaymentInformation.dateTime);
+                        recordPaymentInformation();
 
                         setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                         finish();
@@ -920,6 +914,18 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         // 쿠폰 삭제 - 쿠폰 선택 팝업에서 Cancel 시 처리
         mPaymentInformation.setCoupon(null);
         setCouponSelected(false);
+    }
+
+    @Override
+    protected void recordPaymentInformation()
+    {
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+        DailyPreference.getInstance(GourmetPaymentActivity.this)//
+            .setPaymentInformation(PlaceType.FNB,//
+                gourmetPaymentInformation.getTicketInformation().placeName,//
+                gourmetPaymentInformation.paymentType,//
+                gourmetPaymentInformation.dateTime);
     }
 
     private void setAvailableDefaultPaymentType()

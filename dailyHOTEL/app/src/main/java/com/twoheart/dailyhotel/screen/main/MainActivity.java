@@ -132,6 +132,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.HOTEL, false);
         DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.FNB, false);
+        DailyPreference.getInstance(this).clearPaymentInformation();
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
