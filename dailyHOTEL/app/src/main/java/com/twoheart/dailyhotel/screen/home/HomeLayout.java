@@ -7,15 +7,18 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+
+import java.util.ArrayList;
 
 /**
  * Created by android_sam on 2017. 1. 11..
@@ -28,6 +31,7 @@ public class HomeLayout extends BaseLayout
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private NestedScrollView mNestedScrollView;
     private LinearLayout mContentLayout;
+    private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -75,10 +79,7 @@ public class HomeLayout extends BaseLayout
     {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
 
-        if (mSwipeRefreshLayout == null) {
-            ExLog.d("mSwipeRefreshLayout is null !!! it's Test Code !!! please delete this block");
-            return;
-        }
+        // 리프레시 기능 미 구현으로 인한 false 처리
         mSwipeRefreshLayout.setEnabled(false);
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
@@ -107,7 +108,7 @@ public class HomeLayout extends BaseLayout
 
     private void initEventLayout(View view)
     {
-        if (mContentLayout == null)
+        if (mContentLayout == null || mContext == null)
         {
             return;
         }
@@ -115,15 +116,16 @@ public class HomeLayout extends BaseLayout
         mEventViewPager = (DailyLoopViewPager) view.findViewById(R.id.loopViewPager);
         mEventCountTextView = (DailyTextView) view.findViewById(R.id.pagerCountTextView);
 
-        String defaultImage = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventDefaultVersion();
+        int height = Util.getListRowHeight(mContext);
 
-        //        View eventLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_event_layout, null);
-        //
-        //        mEventViewPager = (DailyLoopViewPager) eventLayout.findViewById(R.id.loopViewPager);
-        //        mEventCountTextView = (DailyTextView) eventLayout.findViewById(R.id.pagerCountTextView);
+        ViewGroup.LayoutParams params = mEventViewPager.getLayoutParams();
+        params.height = height;
+        mEventViewPager.setLayoutParams(params);
 
 
-        //        mContentLayout.addView(eventLayout);
+//        String defaultImageUrl = DailyPreference.getInstance(mContext).getRemoteConfigIntroImageNewUrl()
+        setDefaultEventImage("");
+
     }
 
     private void initProductLayout(View view)
@@ -135,15 +137,6 @@ public class HomeLayout extends BaseLayout
 
         View stayButtonLayout = view.findViewById(R.id.stayButtonLayout);
         View gourmetButtonLayout = view.findViewById(R.id.gourmetButtonLayout);
-
-        //        View productLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
-        //
-        //        int height = Util.dpToPx(mContext, 82);
-        //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
-        //        productLayout.setLayoutParams(params);
-        //
-        //        View stayButtonLayout = productLayout.findViewById(R.id.stayButtonLayout);
-        //        View gourmetButtonLayout = productLayout.findViewById(R.id.gourmetButtonLayout);
 
         stayButtonLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -162,8 +155,6 @@ public class HomeLayout extends BaseLayout
                 ((OnEventListener) mOnEventListener).onGourmetButtonClick();
             }
         });
-
-        //        mContentLayout.addView(productLayout);
     }
 
     public void setRefreshing(boolean isRefreshing)
@@ -204,11 +195,74 @@ public class HomeLayout extends BaseLayout
             } else
             {
                 SpannableString spannableString = new SpannableString(countString);
-                spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.dh_theme_color)), //
+                spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.white)), //
                     0, slashIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                 mEventCountTextView.setText(spannableString);
             }
         }
     }
+
+    public void setDefaultEventImage(String url)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            setEventCountView(0, 0);
+            return;
+        }
+
+        setEventCountView(1, 1);
+
+        if (mEventViewPagerAdapter == null)
+        {
+            mEventViewPagerAdapter = new HomeEventImageViewPagerAdapter(mContext);
+        }
+
+        ArrayList<ImageInformation> arrayList = new ArrayList<>();
+        arrayList.add(new ImageInformation(url, null));
+
+        mEventViewPagerAdapter.setData(arrayList);
+        mEventViewPager.setAdapter(mEventViewPagerAdapter);
+    }
+
+//    private void loadDefaultEventImage(View eventLayout)
+//    {
+//        String splashVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventDefaultVersion();
+//
+//        DailyImageView imageView = (DailyImageView) eventLayout.findViewById(R.id.splashImageView);
+//
+//        if (Util.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
+//        {
+//            imageView.setVectorImageResource(R.drawable.img_splash_logo);
+//        } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
+//        {
+//            imageView.setPadding(0, 0, 0, 0);
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            imageView.setImageResource(R.drawable.splash);
+//        } else
+//        {
+//            String fileName = Util.makeIntroImageFileName(splashVersion);
+//            File file = new File(getCacheDir(), fileName);
+//
+//            if (file.exists() == false)
+//            {
+//                DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+//                imageView.setVectorImageResource(R.drawable.img_splash_logo);
+//            } else
+//            {
+//                try
+//                {
+//                    imageView.setPadding(0, 0, 0, 0);
+//                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                    imageView.setImageURI(Uri.fromFile(file));
+//                } catch (Exception e)
+//                {
+//                    DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+//                    imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
+//                    imageView.setScaleType(ImageView.ScaleType.CENTER);
+//                    imageView.setVectorImageResource(R.drawable.img_splash_logo);
+//                }
+//            }
+//        }
+//    }
 }
