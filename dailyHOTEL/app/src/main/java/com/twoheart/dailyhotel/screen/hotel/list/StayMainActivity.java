@@ -763,11 +763,11 @@ public class StayMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkDetail(baseActivity);
-            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkEventBannerWeb(baseActivity);
+//            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
+//            {
+//                unLockUI();
+//
+//                return moveDeepLinkEventBannerWeb(baseActivity);
                 //            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
                 //            {
                 //                unLockUI();
@@ -783,11 +783,11 @@ public class StayMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkSearchResult(baseActivity);
-            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkCollection(baseActivity);
+//            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+//            {
+//                unLockUI();
+//
+//                return moveDeepLinkCollection(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.

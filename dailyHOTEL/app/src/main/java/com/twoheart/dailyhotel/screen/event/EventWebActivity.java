@@ -1097,30 +1097,31 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             {
                                 return;
                             }
-                        } else if (DailyDeepLink.getInstance().isCollectionView() == true)
-                        {
-                            String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
-
-                            if (Util.isTextEmpty(deepLinkPlaceType) == false)
-                            {
-                                switch (deepLinkPlaceType)
-                                {
-                                    case "stay":
-                                        if (moveDeepLinkCollectionStay(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                        {
-                                            return;
-                                        }
-                                        break;
-
-                                    case "gourmet":
-                                        if (moveDeepLinkCollectionGourmet(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-                                        {
-                                            return;
-                                        }
-                                        break;
-                                }
-                            }
                         }
+//                        else if (DailyDeepLink.getInstance().isCollectionView() == true)
+//                        {
+//                            String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
+//
+//                            if (Util.isTextEmpty(deepLinkPlaceType) == false)
+//                            {
+//                                switch (deepLinkPlaceType)
+//                                {
+//                                    case "stay":
+//                                        if (moveDeepLinkCollectionStay(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+//                                        {
+//                                            return;
+//                                        }
+//                                        break;
+//
+//                                    case "gourmet":
+//                                        if (moveDeepLinkCollectionGourmet(EventWebActivity.this, mSaleTime.getClone(0)) == true)
+//                                        {
+//                                            return;
+//                                        }
+//                                        break;
+//                                }
+//                            }
+//                        }
                     }
                     break;
                 }
