@@ -57,7 +57,7 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
     public Object instantiateItem(ViewGroup container, int position)
     {
         final int width = Util.getLCDWidth(mContext);
-        final int height = Util.getRatioHeightType16x9(width) + 100;
+        final int height = Util.getRatioHeightType16x9(width);
 
         final SimpleDraweeView imageView = new SimpleDraweeView(mContext);
 

@@ -1,16 +1,21 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -39,9 +44,14 @@ public class HomeLayout extends BaseLayout
     private NestedScrollView mNestedScrollView;
     private LinearLayout mContentLayout;
     private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
+    private View mMessageLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onMessageTextAreaClick();
+
+        void onMessageCloseClick();
+
         void onSearchImageClick();
 
         void onStayButtonClick();
@@ -49,6 +59,13 @@ public class HomeLayout extends BaseLayout
         void onGourmetButtonClick();
 
         void onRefreshAll(boolean isShowProgress);
+    }
+
+    private enum MessageType
+    {
+        NONE,
+        TEXT,
+        REVIEW
     }
 
 
@@ -67,6 +84,7 @@ public class HomeLayout extends BaseLayout
 
         initEventLayout(view);
         initProductLayout(view);
+        initMessageLayout(view);
     }
 
     private void initToolbarLayout(View view)
@@ -159,6 +177,187 @@ public class HomeLayout extends BaseLayout
                 ((OnEventListener) mOnEventListener).onGourmetButtonClick();
             }
         });
+    }
+
+    private void initMessageLayout(View view)
+    {
+        if (mContentLayout == null || mContext == null)
+        {
+            return;
+        }
+
+        MessageType messageType = MessageType.NONE;
+
+        if (DailyHotel.isLogin() == true)
+        {
+            boolean isLoginAreaEnable = DailyPreference.getInstance(mContext).isRemoteConfigHomeMessageAreaLoginEnabled();
+            if (isLoginAreaEnable == true)
+            {
+                messageType = MessageType.REVIEW;
+            }
+        } else
+        {
+            boolean isLogoutAreaEnable = DailyPreference.getInstance(mContext).isRemoteConfigHomeMessageAreaLogoutEnabled();
+            if (isLogoutAreaEnable == true)
+            {
+                messageType = MessageType.TEXT;
+            }
+        }
+
+        if (MessageType.REVIEW == messageType)
+        {
+            // init review layout
+            initMessageReviewLayout(view);
+        } else if (MessageType.TEXT == messageType)
+        {
+            // init text layout
+            initMessageTextLayout(view);
+        } else
+        {
+            // gone message layout
+            if (mMessageLayout != null)
+            {
+                mMessageLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void initMessageReviewLayout(View view)
+    {
+        if (mContentLayout == null || mContext == null)
+        {
+            return;
+        }
+
+        mMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_review_layout, null);
+
+        // TODO : review layout 생성 및 request 요청하는 부분 생성 필요!
+        mContentLayout.addView(mMessageLayout);
+    }
+
+    private void initMessageTextLayout(View view)
+    {
+        if (mContentLayout == null || mContext == null)
+        {
+            return;
+        }
+
+        mMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
+
+        View homeMessageLayout = mMessageLayout.findViewById(R.id.homeMessageLayout);
+        View closeView = mMessageLayout.findViewById(R.id.closeImageView);
+        DailyTextView titleView = (DailyTextView) mMessageLayout.findViewById(R.id.titleTextView);
+        DailyTextView descriptionView = (DailyTextView) mMessageLayout.findViewById(R.id.descriptionTextView);
+
+        homeMessageLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onMessageTextAreaClick();
+            }
+        });
+
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startMessageLayoutCloseAnimation();
+            }
+        });
+
+        String title = DailyPreference.getInstance(mContext).getRemoteConfigHomeMessageAreaLogoutTitle();
+        titleView.setText(title);
+
+        String description = DailyPreference.getInstance(mContext).getRemoteConfigHomeMessageAreaLogoutCallToAction();
+
+        if (Util.isTextEmpty(description) == true)
+        {
+            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        } else
+        {
+            // 메세지에 '>'가 포함 되었을 경우 제거하고 trim!
+            if (description.endsWith(">") == true)
+            {
+                int lastIndex = description.lastIndexOf(">");
+                if (lastIndex != -1)
+                {
+                    description = description.substring(0, lastIndex);
+                    description = description.trim();
+                }
+            }
+
+            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.payment_ic_right, 0);
+            descriptionView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3d));
+        }
+
+        descriptionView.setText(description);
+
+        mContentLayout.addView(mMessageLayout);
+    }
+
+    private void startMessageLayoutCloseAnimation()
+    {
+        if (mMessageLayout == null)
+        {
+            return;
+        }
+
+        if (mMessageLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        ValueAnimator closeValueAnimator = ValueAnimator.ofInt(mMessageLayout.getHeight(), 0);
+        closeValueAnimator.setDuration(100);
+        closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = mMessageLayout.getLayoutParams();
+                params.height = value;
+                mMessageLayout.setLayoutParams(params);
+            }
+        });
+
+        closeValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mMessageLayout.setVisibility(View.GONE);
+                mMessageLayout.clearAnimation();
+                mContentLayout.removeView(mMessageLayout);
+                mMessageLayout = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mMessageLayout.setVisibility(View.GONE);
+                mMessageLayout.clearAnimation();
+                mContentLayout.removeView(mMessageLayout);
+                mMessageLayout = null;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        closeValueAnimator.start();
     }
 
     public void setRefreshing(boolean isRefreshing)

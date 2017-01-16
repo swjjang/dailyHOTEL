@@ -44,6 +44,17 @@ public class HomeFragment extends BaseFragment
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
     {
+        @Override
+        public void onMessageTextAreaClick()
+        {
+            // TODO : 회원가입으로 이동!
+        }
+
+        @Override
+        public void onMessageCloseClick()
+        {
+            // TODO : 다시 보지 않기 기능 추가 필요???
+        }
 
         @Override
         public void onSearchImageClick()
