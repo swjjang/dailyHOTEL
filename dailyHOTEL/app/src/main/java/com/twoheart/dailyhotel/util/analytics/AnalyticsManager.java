@@ -275,13 +275,13 @@ public class AnalyticsManager
         }
     }
 
-    public void recordScreen(String screen)
+    public void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.recordScreen(screen);
+                analyticsManager.recordScreen(activity, screenName, screenClassOverride);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -289,13 +289,13 @@ public class AnalyticsManager
         }
     }
 
-    public void recordScreen(String screen, Map<String, String> params)
+    public void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.recordScreen(screen, params);
+                analyticsManager.recordScreen(activity, screenName, screenClassOverride, params);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());

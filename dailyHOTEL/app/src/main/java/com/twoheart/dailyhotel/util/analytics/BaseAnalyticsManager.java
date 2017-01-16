@@ -10,9 +10,9 @@ import java.util.Map;
 
 public abstract class BaseAnalyticsManager
 {
-    abstract void recordScreen(String screen);
+    abstract void recordScreen(Activity activity, String screenName, String screenClassOverride);
 
-    abstract void recordScreen(String screen, Map<String, String> params);
+    abstract void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params);
 
     abstract void recordEvent(String category, String action, String label, Map<String, String> params);
 

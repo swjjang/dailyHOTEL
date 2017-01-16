@@ -204,15 +204,9 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             return new IApplicationConfig()
             {
                 @Override
-                public Activity getTopActivity()
-                {
-                    return mCurrentActivity;
-                }
-
-                @Override
                 public Context getApplicationContext()
                 {
-                    return DailyHotel.getGlobalApplicationContext();
+                    return getGlobalApplicationContext();
                 }
             };
         }

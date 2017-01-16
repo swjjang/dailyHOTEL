@@ -39,10 +39,10 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordScreen(String screen)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
         AppboyProperties appboyProperties = new AppboyProperties();
-        appboyProperties.addProperty(screen, AnalyticsManager.ValueType.EMPTY);
+        appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
         mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
@@ -54,18 +54,18 @@ public class AppboyManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
         if (params == null)
         {
             return;
         }
 
-        if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
-            appboyProperties.addProperty(screen, AnalyticsManager.ValueType.EMPTY);
+            appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
             appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
             try
@@ -83,7 +83,7 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 ExLog.d(e.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -111,7 +111,7 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 ExLog.d(e.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -138,10 +138,10 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 ExLog.d(e.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
             firstPurchaseEventHotel(params);
-        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
             firstPurchaseEventGourmet(params);
         } else
@@ -150,7 +150,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
             if (appboyProperties != null)
             {
-                appboyProperties.addProperty(screen, AnalyticsManager.ValueType.EMPTY);
+                appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
                 mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
