@@ -299,7 +299,8 @@ public class CreditCardListActivity extends BaseActivity
 
                     if (length == 0)
                     {
-                        AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST_EMPTY);
+                        AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(CreditCardListActivity.this,//
+                            AnalyticsManager.Screen.CREDITCARD_LIST_EMPTY, null);
 
                         arrayList = new ArrayList<>();
 
@@ -311,7 +312,8 @@ public class CreditCardListActivity extends BaseActivity
                         AnalyticsManager.getInstance(CreditCardListActivity.this).updateCreditCard(null);
                     } else
                     {
-                        AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(AnalyticsManager.Screen.CREDITCARD_LIST);
+                        AnalyticsManager.getInstance(CreditCardListActivity.this).recordScreen(CreditCardListActivity.this,//
+                            AnalyticsManager.Screen.CREDITCARD_LIST, null);
 
                         arrayList = new ArrayList<>(length);
 

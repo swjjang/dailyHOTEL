@@ -934,7 +934,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, gourmetDetail.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
 
-            AnalyticsManager.getInstance(this).recordScreen(screen, params);
+            AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

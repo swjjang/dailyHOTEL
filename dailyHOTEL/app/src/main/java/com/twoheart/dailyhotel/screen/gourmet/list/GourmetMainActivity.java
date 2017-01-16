@@ -324,7 +324,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
         }
 
-        AnalyticsManager.getInstance(this).recordScreen(screen, params);
+        AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

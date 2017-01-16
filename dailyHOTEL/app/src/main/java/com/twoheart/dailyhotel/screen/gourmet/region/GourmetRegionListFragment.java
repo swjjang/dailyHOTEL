@@ -13,7 +13,7 @@ public class GourmetRegionListFragment extends PlaceRegionListFragment
         switch (region)
         {
             case DOMESTIC:
-                AnalyticsManager.getInstance(getContext()).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC);
+                AnalyticsManager.getInstance(getContext()).recordScreen(getActivity(), AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
                 break;
 
             case GLOBAL:

@@ -47,17 +47,19 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onSearchImageClick()
         {
-            if (mBaseActivity == null) {
+            if (mBaseActivity == null)
+            {
                 return;
             }
 
-//            mBaseActivity.startActivity(SearchActivity.newInstance(getContext(), mPlaceType, ));
+            //            mBaseActivity.startActivity(SearchActivity.newInstance(getContext(), mPlaceType, ));
         }
 
         @Override
         public void onStayButtonClick()
         {
-            if (mBaseActivity == null) {
+            if (mBaseActivity == null)
+            {
                 return;
             }
 
@@ -67,7 +69,8 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onGourmetButtonClick()
         {
-            if (mBaseActivity == null) {
+            if (mBaseActivity == null)
+            {
                 return;
             }
 

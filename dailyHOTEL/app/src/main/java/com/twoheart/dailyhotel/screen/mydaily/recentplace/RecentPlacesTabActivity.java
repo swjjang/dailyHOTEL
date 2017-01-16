@@ -203,7 +203,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         {
             if (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true)
             {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
+                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
             }
         }
 
@@ -327,7 +327,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             if (stayCount == 0 && gourmetCount == 0)
             {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY);
+                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
             }
         }
     };

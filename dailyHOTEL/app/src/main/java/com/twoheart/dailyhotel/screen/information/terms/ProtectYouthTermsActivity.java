@@ -83,7 +83,7 @@ public class ProtectYouthTermsActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFJUVENILE);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.TERMSOFJUVENILE, null);
 
         super.onStart();
     }

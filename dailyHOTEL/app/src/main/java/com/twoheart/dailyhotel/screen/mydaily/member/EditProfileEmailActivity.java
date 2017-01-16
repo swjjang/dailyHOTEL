@@ -143,7 +143,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EditProfileEmailActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_EMAILACCOUNT);
+        AnalyticsManager.getInstance(EditProfileEmailActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_SETPROFILE_EMAILACCOUNT, null);
 
         super.onStart();
     }

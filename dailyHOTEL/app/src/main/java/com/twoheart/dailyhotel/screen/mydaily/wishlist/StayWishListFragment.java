@@ -311,7 +311,7 @@ public class StayWishListFragment extends PlaceWishListFragment
             params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
 
-            AnalyticsManager.getInstance(baseActivity).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST, params);
+            AnalyticsManager.getInstance(baseActivity).recordScreen(baseActivity, AnalyticsManager.Screen.MENU_WISHLIST, null, params);
         }
 
         @Override

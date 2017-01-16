@@ -395,7 +395,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
             }
 
-            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(screen, params);
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(StaySearchResultActivity.this, screen, null, params);
         } catch (Exception e)
         {
         }

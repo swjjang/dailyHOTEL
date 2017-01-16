@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
@@ -13,7 +12,6 @@ import com.twoheart.dailyhotel.screen.home.HomeFragment;
 import com.twoheart.dailyhotel.screen.information.InformationFragment;
 import com.twoheart.dailyhotel.screen.mydaily.MyDailyFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 public class MainFragmentManager

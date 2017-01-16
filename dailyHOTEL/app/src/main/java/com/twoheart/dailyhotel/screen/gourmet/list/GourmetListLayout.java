@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -123,7 +124,13 @@ public class GourmetListLayout extends PlaceListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
-                AnalyticsManager.getInstance(mContext).recordScreen(Screen.DAILYGOURMET_LIST_EMPTY);
+                if (mContext instanceof Activity)
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, Screen.DAILYGOURMET_LIST_EMPTY, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen(null, Screen.DAILYGOURMET_LIST_EMPTY, null);
+                }
                 break;
         }
     }

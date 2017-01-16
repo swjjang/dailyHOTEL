@@ -162,7 +162,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EditProfileNameActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_NAME);
+        AnalyticsManager.getInstance(EditProfileNameActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_SETPROFILE_NAME, null);
 
         super.onStart();
     }

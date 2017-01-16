@@ -133,7 +133,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EditProfilePasswordActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SETPROFILE_PASSWORD);
+        AnalyticsManager.getInstance(EditProfilePasswordActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_SETPROFILE_PASSWORD, null);
 
         super.onStart();
     }

@@ -104,11 +104,11 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         switch (mPlaceType)
         {
             case HOTEL:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_HOTELIMAGEVIEW);
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_HOTELIMAGEVIEW, null);
                 break;
 
             case FNB:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_GOURMETIMAGEVIEW);
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_GOURMETIMAGEVIEW, null);
                 break;
         }
     }

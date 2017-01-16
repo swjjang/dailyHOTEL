@@ -287,7 +287,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
                             });
 
                         AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
-                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST);
+                            .recordScreen(SelectStayCouponDialogActivity.this, AnalyticsManager.Screen.DAILY_HOTEL_UNAVAILABLE_COUPON_LIST, null);
                     } else
                     {
                         mLayout.setVisibility(true);
@@ -297,7 +297,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
                         mLayout.setData(list, true);
 
                         AnalyticsManager.getInstance(SelectStayCouponDialogActivity.this) //
-                            .recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST);
+                            .recordScreen(SelectStayCouponDialogActivity.this, AnalyticsManager.Screen.DAILY_HOTEL_AVAILABLE_COUPON_LIST, null);
                     }
                     break;
                 }

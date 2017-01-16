@@ -521,7 +521,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_CURATION);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_CURATION, null);
     }
 
     @Override

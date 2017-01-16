@@ -205,7 +205,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 @Override
                 public Context getApplicationContext()
                 {
-                    return DailyHotel.getGlobalApplicationContext();
+                    return getGlobalApplicationContext();
                 }
             };
         }

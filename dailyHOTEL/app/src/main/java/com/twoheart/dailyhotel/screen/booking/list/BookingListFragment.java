@@ -176,7 +176,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         if (DailyHotel.isLogin() == false)
         {
-            AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST);
+            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST, null);
         }
     }
 
@@ -567,7 +567,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                         {
                             updateLayout(true, null);
 
-                            AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST_EMPTY);
+                            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST_EMPTY, null);
                         } else
                         {
                             bookingArrayList = makeBookingList(dataJSONArray);
@@ -577,7 +577,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             Map<String, String> analyticsParams = new HashMap<>();
                             analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(length));
 
-                            AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_LIST, analyticsParams);
+                            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_LIST, null, analyticsParams);
                         }
 
                         if (DailyDeepLink.getInstance().isValidateLink() == true)

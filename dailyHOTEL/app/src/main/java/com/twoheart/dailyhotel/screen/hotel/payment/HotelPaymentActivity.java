@@ -1008,8 +1008,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
-            , getMapPaymentInformation((StayPaymentInformation) paymentInformation));
+        AnalyticsManager.getInstance(this).recordScreen(this, Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
+            , null, getMapPaymentInformation((StayPaymentInformation) paymentInformation));
     }
 
     @Override
@@ -1233,7 +1233,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(mScreenAnalytics, params);
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(this, mScreenAnalytics, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -55,47 +55,47 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordScreen(String screen)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
-        if (AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM.equalsIgnoreCase(screen) == true//
-            || AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.MENU_REGISTRATION_CONFIRM.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
             screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.MEMBER);
 
-            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-        } else if (AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
             screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.GUEST);
 
-            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         } else
         {
-            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder().build());
         }
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "Screen : " + screen);
+            ExLog.d(TAG + "Screen : " + screenName);
         }
     }
 
     @Override
-    void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
         if (params == null)
         {
             return;
         }
 
-        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true //
-            || AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true //
-            || AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true //
-            || AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
@@ -130,60 +130,63 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
                 screenViewBuilder.setCustomDimension(13, category);
             }
 
-            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "recordScreen : " + screen + " | " + screenViewBuilder.build().toString());
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
 
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screenName) == true)
         {
-            checkoutStep(1, screen, null, params);
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screen) == true)
+            checkoutStep(1, screenName, null, params);
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE.equalsIgnoreCase(screenName) == true)
         {
-            checkoutStep(2, screen, null, params);
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true//
-            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE.equalsIgnoreCase(screen) == true//
-            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE.equalsIgnoreCase(screen) == true//
-            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS.equalsIgnoreCase(screen) == true//
-            || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+            checkoutStep(2, screenName, null, params);
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELLATIONFEE.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_NOREFUNDS.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screenName) == true)
         {
-            checkoutStep(3, screen, null, params);
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screen) == true)
+            checkoutStep(3, screenName, null, params);
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP.equalsIgnoreCase(screenName) == true)
         {
-            checkoutStep(4, screen, null, params);
-        } else if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screen) == true)
+            checkoutStep(4, screenName, null, params);
+        } else if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screenName) == true)
         {
-            recordScreen(screen);
-        } else if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(screen) == true //
-            || AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == true //
-            || AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == true)
+            recordScreen(activity, screenName, screenClassOverride);
+        } else if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screenName) == true)
         {
-            recordSearchAnalytics(screen, params);
-        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true //
-            || AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+            recordSearchAnalytics(screenName, params);
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
-            recordScreen(screen);
-        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true //
-            || AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screen) == true)
+            recordScreen(activity, screenName, screenClassOverride);
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screenName) == true //
+            || AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
             screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
             screenViewBuilder.setCustomDimension(19, params.get(AnalyticsManager.KeyType.PLACE_HIT_TYPE));
 
-            mGoogleAnalyticsTracker.setScreenName(screen);
+            mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "recordScreen : " + screen + " | " + screenViewBuilder.build().toString());
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
-        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY.equalsIgnoreCase(screenName) == true)
         {
-            recordScreen(screen);
+            recordScreen(activity, screenName, screenClassOverride);
         }
     }
 

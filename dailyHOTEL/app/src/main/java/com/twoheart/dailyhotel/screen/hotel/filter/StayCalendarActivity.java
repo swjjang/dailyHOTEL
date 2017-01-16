@@ -175,7 +175,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_CALENDAR);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_CALENDAR, null);
 
         super.onStart();
     }
