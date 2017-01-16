@@ -191,7 +191,7 @@ public class DailyDeepLink
     {
         String view = getView();
 
-        if (mVersionCode >= 9)
+        if (mVersionCode >= 12)
         {
             return MYDAILY_V12.equalsIgnoreCase(view);
         } else
@@ -204,7 +204,7 @@ public class DailyDeepLink
     {
         String view = getView();
 
-        if (mVersionCode >= 9)
+        if (mVersionCode >= 12)
         {
             return HOME_V12_EVENT_DETAIL.equalsIgnoreCase(view);
         } else
@@ -217,7 +217,7 @@ public class DailyDeepLink
     {
         String view = getView();
 
-        if (mVersionCode >= 9)
+        if (mVersionCode >= 12)
         {
             return HOME_V12_FEATURED_DETAIL_LIST.equalsIgnoreCase(view);
         } else
