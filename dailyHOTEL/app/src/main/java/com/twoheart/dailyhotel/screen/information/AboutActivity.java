@@ -84,7 +84,7 @@ public class AboutActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.ABOUT);
+        AnalyticsManager.getInstance(this).recordScreen(this, Screen.ABOUT, null);
 
         super.onStart();
     }

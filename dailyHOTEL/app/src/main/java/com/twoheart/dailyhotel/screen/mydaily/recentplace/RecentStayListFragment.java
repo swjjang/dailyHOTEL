@@ -268,7 +268,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
 
-            AnalyticsManager.getInstance(baseActivity).recordScreen(AnalyticsManager.Screen.MENU_RECENT_VIEW, params);
+            AnalyticsManager.getInstance(baseActivity).recordScreen(baseActivity, AnalyticsManager.Screen.MENU_RECENT_VIEW, null, params);
         }
 
         @Override

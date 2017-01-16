@@ -23,8 +23,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.TimeZone;
 
-import static com.twoheart.dailyhotel.util.DailyCalendar.format;
-
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
 {
     private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";

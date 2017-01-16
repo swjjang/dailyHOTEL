@@ -89,7 +89,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     @Override
     public void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.EVENT_LIST);
+        AnalyticsManager.getInstance(this).recordScreen(this, Screen.EVENT_LIST, null);
 
         super.onStart();
 

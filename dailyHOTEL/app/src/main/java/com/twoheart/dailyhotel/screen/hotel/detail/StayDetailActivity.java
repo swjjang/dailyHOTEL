@@ -963,7 +963,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayDetail.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayDetail.nights));
 
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(screen, params);
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(this, screen, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

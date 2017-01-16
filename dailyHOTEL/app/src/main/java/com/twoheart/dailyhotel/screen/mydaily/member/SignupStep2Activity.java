@@ -113,7 +113,7 @@ public class SignupStep2Activity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_PHONENUMBERVERIFICATION);
+        AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(SignupStep2Activity.this, Screen.MENU_REGISTRATION_PHONENUMBERVERIFICATION, null);
 
         super.onStart();
     }
@@ -341,7 +341,7 @@ public class SignupStep2Activity extends BaseActivity
             AnalyticsManager.getInstance(SignupStep2Activity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
 
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserInformation(userIndex, userType);
-            AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(SignupStep2Activity.this, Screen.MENU_REGISTRATION_CONFIRM, null);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.EMAIL, null);
 
             // 이미 가입된것이기 때문에 미리 Analytics 넣음

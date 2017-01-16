@@ -279,18 +279,18 @@ public class EventWebActivity extends WebViewActivity implements Constants
         switch (mSourceType)
         {
             case HOTEL_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYHOTEL_BANNER_DETAIL);
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYHOTEL_BANNER_DETAIL, params);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYHOTEL_BANNER_DETAIL, null);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYHOTEL_BANNER_DETAIL, null, params);
                 break;
 
             case GOURMET_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYGOURMET_BANNER_DETAIL);
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.DAILYGOURMET_BANNER_DETAIL, params);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYGOURMET_BANNER_DETAIL, null);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYGOURMET_BANNER_DETAIL, null, params);
                 break;
 
             case EVENT:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_DETAIL);
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(Screen.EVENT_DETAIL, params);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null);
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null, params);
                 break;
         }
 

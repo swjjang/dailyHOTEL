@@ -9,6 +9,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class FirebaseManager extends BaseAnalyticsManager
@@ -26,19 +27,27 @@ public class FirebaseManager extends BaseAnalyticsManager
     @Override
     void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
-
+        mFirebaseAnalytics.setCurrentScreen(activity, screenName, screenClassOverride);
     }
 
     @Override
     void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
+        mFirebaseAnalytics.setCurrentScreen(activity, screenName, screenClassOverride);
     }
 
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if(AnalyticsManager.Category.SHARE.equals(category) == true)
+        if (AnalyticsManager.Category.SHARE.equals(category) == true)
         {
+            Bundle bundle = new Bundle();
+            for (Map.Entry<String, String> entry : params.entrySet())
+            {
+                bundle.putString(entry.getKey(), entry.getValue());
+            }
+
+            mFirebaseAnalytics.logEvent(category, bundle);
         }
     }
 

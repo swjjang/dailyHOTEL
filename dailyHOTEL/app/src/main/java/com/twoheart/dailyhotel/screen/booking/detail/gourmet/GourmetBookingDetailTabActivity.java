@@ -49,7 +49,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
         mGourmetBookingDetail = new GourmetBookingDetail();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.BOOKING_DETAIL);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.BOOKING_DETAIL, null);
     }
 
     @Override

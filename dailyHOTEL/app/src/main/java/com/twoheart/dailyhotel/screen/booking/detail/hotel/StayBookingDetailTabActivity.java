@@ -750,20 +750,20 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                                 switch (refundPolicy)
                                 {
                                     case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
-                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE);
+                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null);
                                         break;
 
                                     case StayBookingDetail.STATUS_SURCHARGE_REFUND:
-                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE);
+                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null);
                                         break;
 
                                     default:
-                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
+                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
                                         break;
                                 }
                             } else
                             {
-                                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
+                                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
                             }
                             break;
                         }
@@ -773,7 +773,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                             loadFragments(getViewPager(), mStayBookingDetail);
 
-                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS);
+                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
                             break;
                     }
                 } catch (Exception e)

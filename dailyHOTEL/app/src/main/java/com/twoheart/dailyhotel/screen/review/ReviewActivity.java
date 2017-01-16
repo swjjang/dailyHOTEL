@@ -389,11 +389,11 @@ public class ReviewActivity extends BaseActivity
         switch (reviewItem.placeType)
         {
             case HOTEL:
-                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_REVIEWDETAIL);
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_REVIEWDETAIL, null);
                 break;
 
             case FNB:
-                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_REVIEWDETAIL);
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_REVIEWDETAIL, null);
                 break;
         }
     }
@@ -729,11 +729,11 @@ public class ReviewActivity extends BaseActivity
         switch (reviewItem.placeType)
         {
             case HOTEL:
-                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_SATISFACTIONEVALUATION);
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_SATISFACTIONEVALUATION, null);
                 break;
 
             case FNB:
-                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_SATISFACTIONEVALUATION);
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_SATISFACTIONEVALUATION, null);
                 break;
         }
 

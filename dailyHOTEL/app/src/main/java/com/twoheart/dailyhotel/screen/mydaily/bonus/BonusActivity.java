@@ -55,7 +55,7 @@ public class BonusActivity extends BaseActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(BonusActivity.this).recordScreen(AnalyticsManager.Screen.BONUS);
+        AnalyticsManager.getInstance(BonusActivity.this).recordScreen(this, AnalyticsManager.Screen.BONUS, null);
 
         if (DailyHotel.isLogin() == false)
         {

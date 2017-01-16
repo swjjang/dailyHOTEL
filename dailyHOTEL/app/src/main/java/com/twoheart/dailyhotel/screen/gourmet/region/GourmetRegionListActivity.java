@@ -129,7 +129,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC);
+        AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC, null);
     }
 
     @Override

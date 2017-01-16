@@ -858,8 +858,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
-            , getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
+            , null, getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
     }
 
     @Override
@@ -1071,7 +1071,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, params);
+            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(GourmetPaymentActivity.this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

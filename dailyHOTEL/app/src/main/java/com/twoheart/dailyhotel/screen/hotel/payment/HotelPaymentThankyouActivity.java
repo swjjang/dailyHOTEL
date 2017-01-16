@@ -126,7 +126,7 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_THANKYOU);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_THANKYOU, null);
 
         super.onStart();
     }
@@ -144,7 +144,7 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         {
             recordEvent(AnalyticsManager.Action.FIRST_PURCHASE_SUCCESS, paymentType);
 
-            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS, params);
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS, null, params);
         }
     }
 
