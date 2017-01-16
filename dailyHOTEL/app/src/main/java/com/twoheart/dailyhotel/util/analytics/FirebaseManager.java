@@ -9,7 +9,6 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class FirebaseManager extends BaseAnalyticsManager
@@ -41,13 +40,17 @@ public class FirebaseManager extends BaseAnalyticsManager
     {
         if (AnalyticsManager.Category.SHARE.equals(category) == true)
         {
-            Bundle bundle = new Bundle();
-            for (Map.Entry<String, String> entry : params.entrySet())
+            if (AnalyticsManager.Action.STAY_ITEM_SHARE.equalsIgnoreCase(action) == true//
+                || AnalyticsManager.Action.GOURMET_ITEM_SHARE.equalsIgnoreCase(action) == true)
             {
-                bundle.putString(entry.getKey(), entry.getValue());
-            }
+                Bundle bundle = new Bundle();
+                for (Map.Entry<String, String> entry : params.entrySet())
+                {
+                    bundle.putString(entry.getKey(), entry.getValue());
+                }
 
-            mFirebaseAnalytics.logEvent(category, bundle);
+                mFirebaseAnalytics.logEvent(category, bundle);
+            }
         }
     }
 

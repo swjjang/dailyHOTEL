@@ -28,6 +28,7 @@ public class AnalyticsManager
     private FacebookManager mFacebookManager;
     private AppboyManager mAppboyManager;
     private AdjustManager mAdjustManager;
+    private FirebaseManager mFirebaseManager;
     private List<BaseAnalyticsManager> mAnalyticsManagerList;
 
     public synchronized static AnalyticsManager getInstance(Context context)
@@ -90,6 +91,14 @@ public class AnalyticsManager
             ExLog.d((e.toString()));
         }
 
+        try
+        {
+            mFirebaseManager = new FirebaseManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         if (mGoogleAnalyticsManager != null)
         {
             mAnalyticsManagerList.add(mGoogleAnalyticsManager);
@@ -108,6 +117,11 @@ public class AnalyticsManager
         if (mAdjustManager != null)
         {
             mAnalyticsManagerList.add(mAdjustManager);
+        }
+
+        if (mFirebaseManager != null)
+        {
+            mAnalyticsManagerList.add(mFirebaseManager);
         }
     }
 
