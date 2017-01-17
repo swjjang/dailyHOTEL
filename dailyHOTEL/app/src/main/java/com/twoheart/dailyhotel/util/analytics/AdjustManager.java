@@ -1249,7 +1249,7 @@ public class AdjustManager extends BaseAnalyticsManager
             }
 
             Iterator<Map.Entry<String, String>> iterator = paramMap.entrySet().iterator();
-            if (iterator.hasNext() == true)
+            while (iterator.hasNext() == true)
             {
                 Map.Entry<String, String> entry = iterator.next();
 
