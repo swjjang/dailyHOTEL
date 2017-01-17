@@ -98,12 +98,6 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onScrollTopClick()
-        {
-
-        }
-
-        @Override
         public void finish()
         {
             unLockUI();
