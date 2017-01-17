@@ -321,6 +321,13 @@ public class HomeLayout extends BaseLayout
         mContentLayout.addView(wishListLayout);
     }
 
+    private void initTopButtonLayout(View view) {
+        if (mContentLayout == null || mContext == null) {
+            return;
+        }
+
+    }
+
     private void startMessageLayoutCloseAnimation()
     {
         if (mMessageLayout == null)
