@@ -307,6 +307,12 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         shareDialog.setCanceledOnTouchOutside(true);
 
+        if (Util.isTelephonyEnabled(this) == false)
+        {
+            View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+            smsShareLayout.setVisibility(View.GONE);
+        }
+
         // 버튼
         View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
@@ -363,16 +369,14 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                 try
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.putExtra("sms_body", getString(R.string.message_booking_stay_share_sms, //
+                    String message = getString(R.string.message_booking_stay_share_sms, //
                         mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
                         Util.getPriceFormat(StayBookingDetailTabActivity.this, mStayBookingDetail.paymentPrice, false), //
                         mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
                         DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
-                        mStayBookingDetail.address));
+                        mStayBookingDetail.address);
 
-                    intent.setType("vnd.android-dir/mms-sms");
-                    startActivity(intent);
+                    Util.sendSms(StayBookingDetailTabActivity.this, message);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -380,6 +384,19 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                 AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                     , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
+            }
+        });
+
+        View closeTextView = dialogView.findViewById(R.id.closeTextView);
+        closeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
             }
         });
 

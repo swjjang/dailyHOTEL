@@ -514,8 +514,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         try
         {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
             String name = DailyPreference.getInstance(GourmetDetailActivity.this).getUserName();
 
             if (Util.isTextEmpty(name) == true)
@@ -526,12 +524,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 name += "님이";
             }
 
-            intent.putExtra("sms_body", getString(R.string.message_detail_gourmet_share_sms, //
+            String message = getString(R.string.message_detail_gourmet_share_sms, //
                 name, gourmetDetail.name, mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd (EEE)"),//
-                gourmetDetail.address));
+                gourmetDetail.address);
 
-            intent.setType("vnd.android-dir/mms-sms");
-            startActivity(intent);
+            Util.sendSms(this, message);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

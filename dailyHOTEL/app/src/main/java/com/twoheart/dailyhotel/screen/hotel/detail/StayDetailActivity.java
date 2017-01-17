@@ -525,8 +525,6 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         try
         {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
             String name = DailyPreference.getInstance(StayDetailActivity.this).getUserName();
 
             if (Util.isTextEmpty(name) == true)
@@ -539,14 +537,13 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + stayDetail.nights);
 
-            intent.putExtra("sms_body", getString(R.string.message_detail_stay_share_sms, //
+            String message = getString(R.string.message_detail_stay_share_sms, //
                 name, stayDetail.name, mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"),//
                 checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"), //
                 stayDetail.nights, stayDetail.nights + 1, //
-                stayDetail.address));
+                stayDetail.address);
 
-            intent.setType("vnd.android-dir/mms-sms");
-            startActivity(intent);
+            Util.sendSms(this, message);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

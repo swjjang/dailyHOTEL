@@ -251,6 +251,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         shareDialog.setCanceledOnTouchOutside(true);
 
+        if (Util.isTelephonyEnabled(this) == false)
+        {
+            View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+            smsShareLayout.setVisibility(View.GONE);
+        }
+
         // 버튼
         View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
@@ -300,17 +306,15 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                 try
                 {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.putExtra("sms_body", getString(R.string.message_booking_gourmet_share_sms, //
+                    String message = getString(R.string.message_booking_gourmet_share_sms, //
                         mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
                         Util.getPriceFormat(GourmetBookingDetailTabActivity.this, mGourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
-                        mGourmetBookingDetail.address));
+                        mGourmetBookingDetail.address);
 
-                    intent.setType("vnd.android-dir/mms-sms");
-                    startActivity(intent);
+                    Util.sendSms(GourmetBookingDetailTabActivity.this, message);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -318,6 +322,19 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                 AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                     , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
+            }
+        });
+
+        View closeTextView = dialogView.findViewById(R.id.closeTextView);
+        closeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
             }
         });
 

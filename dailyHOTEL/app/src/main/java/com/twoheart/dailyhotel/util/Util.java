@@ -24,6 +24,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.Telephony;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -1786,5 +1787,31 @@ public class Util implements Constants
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         return layoutParams;
+    }
+
+    public static void sendSms(Activity activity, String message)
+    {
+        if (Util.isOverAPI19() == true)
+        {
+            String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(activity);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, message);
+
+            if (defaultSmsPackageName != null)
+            {
+                intent.setPackage(defaultSmsPackageName);
+            }
+
+            activity.startActivity(intent);
+        } else
+        {
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("sms:"));
+            intent.putExtra("sms_body", message);
+            intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setType("vnd.android-dir/mms-sms");
+            activity.startActivity(intent);
+        }
     }
 }
