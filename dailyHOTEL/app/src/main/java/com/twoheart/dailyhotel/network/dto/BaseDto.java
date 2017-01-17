@@ -1,17 +1,14 @@
 package com.twoheart.dailyhotel.network.dto;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-
-@JsonObject
+//@JsonObject
 public class BaseDto<T>
 {
-    @JsonField
+    //    @JsonField
     public int msgCode;
 
-    @JsonField
+    //    @JsonField
     public String msg;
 
-    @JsonField
+    //    @JsonField
     public T data;
 }

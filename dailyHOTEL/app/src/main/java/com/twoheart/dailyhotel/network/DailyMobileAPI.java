@@ -14,8 +14,6 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.network.dto.BaseDtoList;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -219,7 +217,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStaySearchAutoCompleteList(Crypto.getUrlDecoderEx(URL), date, stays, term);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDtoList<Keyword>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
     @Override
