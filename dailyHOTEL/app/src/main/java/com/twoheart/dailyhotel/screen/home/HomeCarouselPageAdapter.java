@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -71,9 +72,6 @@ public class HomeCarouselPageAdapter extends PagerAdapter
 
         int width = Util.dpToPx(mContext, 239);
         int height = Util.getRatioHeightType16x9(width);
-
-        ViewGroup.LayoutParams containerParams = new ViewGroup.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
-        view.setLayoutParams(containerParams);
 
         if (mPlaceList == null || mPlaceList.size() == 0 || position < 0)
         {
@@ -197,6 +195,20 @@ public class HomeCarouselPageAdapter extends PagerAdapter
         {
             return 1;
         }
+    }
+
+    @Override
+    public float getPageWidth(int position)
+    {
+        // image width + leftMargin + gap
+        float width = Util.dpToPx(mContext, 239 + 15 + 1);
+        float lcdWidth = Util.getLCDWidth(mContext);
+
+        float ratio = width / lcdWidth;
+
+        ExLog.d(width + " , " + lcdWidth + " , " + ratio);
+
+        return ratio;
     }
 
     @Override

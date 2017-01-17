@@ -73,6 +73,7 @@ public class HomeCarouselLayout extends RelativeLayout
         mViewAllTextView = (DailyTextView) view.findViewById(R.id.viewAllTextView);
 
         mViewPager = (DailyViewPager) view.findViewById(R.id.contentViewPager);
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setClipToPadding(false);
         mViewPager.setPageMargin(Util.dpToPx(mContext, 12d));
 
