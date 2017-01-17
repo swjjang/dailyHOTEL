@@ -183,6 +183,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         if (DailyHotel.isLogin() == false)
         {
+            DailyDeepLink.getInstance().clear();
+
             AnalyticsManager.getInstance(getActivity()).recordScreen(Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST);
         }
     }
