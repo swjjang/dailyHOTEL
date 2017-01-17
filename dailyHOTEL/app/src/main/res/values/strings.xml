@@ -19,7 +19,7 @@
     <string name="label_fnb">고메</string>
     <string name="label_restaurant">레스토랑</string>
     <string name="label_shortcut_search_stay">호텔 검색하기</string>
-    <string name="label_shortcut_search_gourmet">고메 검색하기</string>
+    <string name="label_shortcut_search_gourmet">레스토랑 검색하기</string>
     <string name="label_shortcut_event_main">이벤트 확인하기</string>
     <string name="label_shortcut_booking_list">예약내역 확인하기</string>
     <string name="label_shortcut_disable_message">사용 할 수 없는 shortcut 입니다.</string>
