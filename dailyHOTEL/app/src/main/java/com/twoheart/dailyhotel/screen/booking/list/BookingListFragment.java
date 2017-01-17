@@ -174,6 +174,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     {
         super.onStart();
 
+        unLockUI();
+
         if (DailyHotel.isLogin() == false)
         {
             DailyDeepLink.getInstance().clear();
