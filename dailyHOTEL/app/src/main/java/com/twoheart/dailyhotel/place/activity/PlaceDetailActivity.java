@@ -528,6 +528,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
             shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             shareDialog.setCanceledOnTouchOutside(true);
 
+            if (Util.isTelephonyEnabled(PlaceDetailActivity.this) == false)
+            {
+                View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+                smsShareLayout.setVisibility(View.GONE);
+            }
+
             // 버튼
             View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
@@ -566,6 +572,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     }
 
                     shareSMS(mPlaceDetail);
+                }
+            });
+
+            View closeTextView = dialogView.findViewById(R.id.closeTextView);
+            closeTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (shareDialog.isShowing() == true)
+                    {
+                        shareDialog.dismiss();
+                    }
                 }
             });
 
