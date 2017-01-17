@@ -66,7 +66,7 @@ public class HomeCarouselLayout extends RelativeLayout
     }
 
     private void initLayout() {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
         mCountTextView = (DailyTextView) view.findViewById(R.id.countTextView);

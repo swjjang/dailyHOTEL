@@ -7,157 +7,56 @@
     <include layout="@layout/layout_home_toolbar"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/swipeRefreshLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/menubar_height"
-    android:layout_below="@id/toolbar">
-
-    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        android:layout_below="@id/toolbar"
+        android:layout_marginBottom="@dimen/menubar_height">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="com.twoheart.dailyhotel.screen.home.HomeHeaderBehavior"
-            android:orientation="vertical">
-
-            <include
-                layout="@layout/list_row_home_event_layout"
-                app:layout_scrollFlags="scroll"/>
-
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="76dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <include layout="@layout/list_row_home_product_layout"/>
-
-            </android.support.design.widget.CollapsingToolbarLayout>
-        </android.support.design.widget.AppBarLayout>
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/appBarLayout"
-            android:background="@color/actionbar_underline"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_below="@id/toolbar">
 
-            <LinearLayout
-                android:id="@+id/homeContentLayout"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_behavior="com.twoheart.dailyhotel.screen.home.HomeHeaderBehavior">
+
+                <include
+                    layout="@layout/list_row_home_event_layout"
+                    app:layout_scrollFlags="scroll"/>
+
+                <android.support.design.widget.CollapsingToolbarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="76dp"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                    <include layout="@layout/list_row_home_product_layout"/>
+
+                </android.support.design.widget.CollapsingToolbarLayout>
+            </android.support.design.widget.AppBarLayout>
+
+            <android.support.v4.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_below="@+id/appBarLayout"
+                android:background="@color/actionbar_underline"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <LinearLayout
+                    android:id="@+id/homeContentLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="1"/>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="2"/>
+                </LinearLayout>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="3"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="4"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="5"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="6"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="7"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="8"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="9"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="10"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="11"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="12"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="13"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="14"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="15"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="16"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:text="17"/>
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.design.widget.CoordinatorLayout>
+            </android.support.v4.widget.NestedScrollView>
+        </android.support.design.widget.CoordinatorLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

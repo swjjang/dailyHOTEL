@@ -85,6 +85,8 @@ public class HomeLayout extends BaseLayout
         initEventLayout(view);
         initProductLayout(view);
         initMessageLayout(view);
+        initWishListLayout(view);
+        initRecentListLayout(view);
     }
 
     private void initToolbarLayout(View view)
@@ -295,6 +297,28 @@ public class HomeLayout extends BaseLayout
         descriptionView.setText(description);
 
         mContentLayout.addView(mMessageLayout);
+    }
+
+    private void initWishListLayout(View view) {
+        if (mContentLayout == null || mContext == null)
+        {
+            return;
+        }
+
+        View wishListLayout = new HomeCarouselLayout(mContext);
+
+        mContentLayout.addView(wishListLayout);
+    }
+
+    private void initRecentListLayout(View view) {
+        if (mContentLayout == null || mContext == null)
+        {
+            return;
+        }
+
+        View wishListLayout = new HomeCarouselLayout(mContext);
+
+        mContentLayout.addView(wishListLayout);
     }
 
     private void startMessageLayoutCloseAnimation()

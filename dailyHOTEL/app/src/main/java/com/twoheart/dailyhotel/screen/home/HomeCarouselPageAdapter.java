@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -28,7 +29,8 @@ public class HomeCarouselPageAdapter extends PagerAdapter
     private ArrayList<? extends Place> mPlaceList;
     private ItemClickListener mItemClickListener;
 
-    public interface ItemClickListener {
+    public interface ItemClickListener
+    {
         void onItemClick(View view, int position);
     }
 
@@ -48,14 +50,16 @@ public class HomeCarouselPageAdapter extends PagerAdapter
         mPlaceList = list;
     }
 
-    public void setItemClickListener(ItemClickListener listener) {
+    public void setItemClickListener(ItemClickListener listener)
+    {
         mItemClickListener = listener;
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position)
     {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, null);
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.list_row_home_carousel_item_layout, null);
 
         SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.contentImageView);
         DailyTextView titleView = (DailyTextView) view.findViewById(R.id.contentTextView);
@@ -68,13 +72,16 @@ public class HomeCarouselPageAdapter extends PagerAdapter
         int width = Util.dpToPx(mContext, 239);
         int height = Util.getRatioHeightType16x9(width);
 
+        ViewGroup.LayoutParams containerParams = new ViewGroup.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(containerParams);
+
         if (mPlaceList == null || mPlaceList.size() == 0 || position < 0)
         {
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             imageView.setTag(imageView.getId(), position);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
             imageView.setLayoutParams(layoutParams);
 
             container.addView(view, 0);
@@ -91,7 +98,7 @@ public class HomeCarouselPageAdapter extends PagerAdapter
 
             Util.requestImageResize(mContext, imageView, place.imageUrl);
 
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
             imageView.setLayoutParams(layoutParams);
 
             titleView.setText(place.name);
@@ -158,7 +165,8 @@ public class HomeCarouselPageAdapter extends PagerAdapter
             @Override
             public void onClick(View v)
             {
-                if (mItemClickListener != null) {
+                if (mItemClickListener != null)
+                {
                     mItemClickListener.onItemClick(v, position);
                 }
             }
