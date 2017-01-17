@@ -380,7 +380,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
             }
 
-            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(screen, params);
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(GourmetSearchResultActivity.this, screen, null, params);
         } catch (Exception e)
         {
         }

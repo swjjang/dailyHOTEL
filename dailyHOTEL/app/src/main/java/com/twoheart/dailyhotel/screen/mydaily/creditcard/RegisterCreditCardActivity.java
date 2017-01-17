@@ -98,7 +98,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.CREDITCARD_ADD);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.CREDITCARD_ADD, null);
 
         super.onStart();
     }

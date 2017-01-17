@@ -159,7 +159,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordScreen(AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY);
+        AnalyticsManager.getInstance(EditProfileBirthdayActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY, null);
 
         super.onStart();
 

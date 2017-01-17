@@ -118,7 +118,7 @@ public class LauncherActivity extends Activity
         DailyToast.showToast(this, R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
 
         // Adjust에서 로그아웃시 기존 정보를 보냄으로 이벤트 발생후 삭제 필요.
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE, null);
         AnalyticsManager.getInstance(this).setUserInformation(AnalyticsManager.ValueType.EMPTY, AnalyticsManager.ValueType.EMPTY);
     }
 }

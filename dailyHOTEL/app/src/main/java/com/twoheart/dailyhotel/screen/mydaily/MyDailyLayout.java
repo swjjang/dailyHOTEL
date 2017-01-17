@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.mydaily;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -216,7 +217,13 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         {
             if (isInitialize == false)
             {
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNIN);
+                if (mContext instanceof Activity)
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, AnalyticsManager.Screen.INFORMATION_SIGNIN, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen(null, AnalyticsManager.Screen.INFORMATION_SIGNIN, null);
+                }
             }
 
             String userName = DailyPreference.getInstance(mContext).getUserName();
@@ -273,7 +280,13 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         {
             if (isInitialize == false)
             {
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.INFORMATION_SIGNOUT);
+                if (mContext instanceof Activity)
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, AnalyticsManager.Screen.INFORMATION_SIGNOUT, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen(null, AnalyticsManager.Screen.INFORMATION_SIGNOUT, null);
+                }
             }
 
             profileTextView.setText(R.string.frag_need_login);

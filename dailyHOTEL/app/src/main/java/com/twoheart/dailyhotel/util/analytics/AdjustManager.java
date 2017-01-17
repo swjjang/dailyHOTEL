@@ -154,20 +154,20 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordScreen(String screen)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
         DailyAdjustEvent event = null;
 
-        if (AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.MENU_LOGIN_COMPLETE.equalsIgnoreCase(screenName) == true)
         {
             // 해당 경우 유저 타입을 알지 못해 recordEvent에서 처리함 - 보내는 시점은 recordEvent와 같음
-        } else if (AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE.equalsIgnoreCase(screenName) == true)
         {
             event = new DailyAdjustEvent(EventToken.LOGOUT);
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen);
+                ExLog.d(TAG + "Screen : " + screenName);
             }
         }
 
@@ -178,11 +178,11 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
         DailyAdjustEvent event = null;
 
-        if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
@@ -190,9 +190,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
@@ -200,9 +200,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
@@ -211,9 +211,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
@@ -222,9 +222,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
@@ -233,9 +233,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
@@ -244,9 +244,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
@@ -254,9 +254,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
@@ -264,9 +264,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
 
@@ -274,9 +274,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
 
@@ -284,9 +284,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.MENU_WISHLIST.equalsIgnoreCase(screenName) == true)
         {
             event = new DailyAdjustEvent(EventToken.WISH_LIST);
 
@@ -317,9 +317,9 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.MENU_RECENT_VIEW.equalsIgnoreCase(screenName) == true)
         {
             event = new DailyAdjustEvent(EventToken.RECENT_VIEW);
 
@@ -350,7 +350,7 @@ public class AdjustManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + params.toString());
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
         }
 

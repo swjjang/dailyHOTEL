@@ -62,7 +62,7 @@ public class RegisterCouponActivity extends BaseActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(RegisterCouponActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_REGISTRATION);
+        AnalyticsManager.getInstance(RegisterCouponActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_REGISTRATION, null);
 
         if (DailyHotel.isLogin() == false)
         {

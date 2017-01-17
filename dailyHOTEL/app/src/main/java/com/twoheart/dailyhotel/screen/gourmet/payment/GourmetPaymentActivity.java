@@ -785,13 +785,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
-                        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
-
-                        DailyPreference.getInstance(GourmetPaymentActivity.this)//
-                            .setPaymentInformation(PlaceType.FNB,//
-                                gourmetPaymentInformation.getTicketInformation().placeName,//
-                                gourmetPaymentInformation.paymentType,//
-                                gourmetPaymentInformation.dateTime);
+                        recordPaymentInformation();
 
                         setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                         finish();
@@ -864,8 +858,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
-            , getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
+            , null, getMapPaymentInformation((GourmetPaymentInformation) paymentInformation));
     }
 
     @Override
@@ -920,6 +914,18 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         // 쿠폰 삭제 - 쿠폰 선택 팝업에서 Cancel 시 처리
         mPaymentInformation.setCoupon(null);
         setCouponSelected(false);
+    }
+
+    @Override
+    protected void recordPaymentInformation()
+    {
+        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+
+        DailyPreference.getInstance(GourmetPaymentActivity.this)//
+            .setPaymentInformation(PlaceType.FNB,//
+                gourmetPaymentInformation.getTicketInformation().placeName,//
+                gourmetPaymentInformation.paymentType,//
+                gourmetPaymentInformation.dateTime);
     }
 
     private void setAvailableDefaultPaymentType()
@@ -1065,7 +1071,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, params);
+            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(GourmetPaymentActivity.this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -146,10 +146,10 @@ public class CouponTermActivity extends WebViewActivity
 
         if (Util.isTextEmpty(mCouponIdx) == true)
         {
-            AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_GENERAL_TERMS_OF_USE);
+            AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_GENERAL_TERMS_OF_USE, null);
         } else
         {
-            AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_INDIVIDUAL_TERMS_OF_USE);
+            AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_INDIVIDUAL_TERMS_OF_USE, null);
         }
 
     }

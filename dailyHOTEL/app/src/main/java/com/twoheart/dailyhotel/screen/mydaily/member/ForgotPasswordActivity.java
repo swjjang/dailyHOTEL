@@ -86,7 +86,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.FORGOTPASSWORD);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.FORGOTPASSWORD, null);
 
         super.onStart();
     }

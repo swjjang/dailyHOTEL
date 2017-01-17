@@ -46,7 +46,7 @@ public class CouponHistoryActivity extends BaseActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(CouponHistoryActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_HISTORY);
+        AnalyticsManager.getInstance(CouponHistoryActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_HISTORY, null);
     }
 
     @Override

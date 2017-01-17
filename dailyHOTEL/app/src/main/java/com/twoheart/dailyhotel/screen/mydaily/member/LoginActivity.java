@@ -288,7 +288,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.SIGNIN);
+        AnalyticsManager.getInstance(LoginActivity.this).recordScreen(this, Screen.SIGNIN, null);
 
         super.onStart();
     }
@@ -823,7 +823,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                                 AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
                             }
 
-                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_REGISTRATION_CONFIRM);
+                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_REGISTRATION_CONFIRM, null);
                             AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
                             return;
                         }
@@ -887,7 +887,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                             DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
 
-                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
+                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_LOGIN_COMPLETE, null);
                             AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.EMAIL, null);
                             return;
                         }
@@ -955,7 +955,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             mStoreParams.put("user_type", userType);
                         } else
                         {
-                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(Screen.MENU_LOGIN_COMPLETE);
+                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_LOGIN_COMPLETE, null);
 
                             if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
                             {

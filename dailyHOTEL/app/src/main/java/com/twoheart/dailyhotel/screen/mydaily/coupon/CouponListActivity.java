@@ -98,7 +98,7 @@ public class CouponListActivity extends BaseActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(CouponListActivity.this).recordScreen(AnalyticsManager.Screen.MENU_COUPON_BOX);
+        AnalyticsManager.getInstance(CouponListActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_BOX, null);
 
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {

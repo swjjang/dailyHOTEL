@@ -47,11 +47,6 @@ public class DailyMobileAPI implements IDailyNetwork
         mDailyMobileService = RetrofitHttpClient.getInstance(context).getService();
     }
 
-    public void cancelAll(Context context)
-    {
-        RetrofitHttpClient.getInstance(context).cancelAll();
-    }
-
     public void cancelAll(Context context, final String tag)
     {
         if (Util.isTextEmpty(tag) == true)

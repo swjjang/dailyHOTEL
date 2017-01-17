@@ -112,7 +112,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_THANKYOU);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_THANKYOU, null);
 
         super.onStart();
     }
@@ -130,7 +130,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         {
             recordEvent(AnalyticsManager.Action.FIRST_PURCHASE_SUCCESS, paymentType);
 
-            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS, params);
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS, null, params);
         }
     }
 

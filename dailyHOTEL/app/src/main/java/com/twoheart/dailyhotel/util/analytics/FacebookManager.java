@@ -56,9 +56,9 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordScreen(String screen)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
-        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -67,7 +67,7 @@ public class FacebookManager extends BaseAnalyticsManager
 
             appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
 
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -79,14 +79,14 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void recordScreen(String screen, Map<String, String> params)
+    void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
         if (params == null)
         {
             return;
         }
 
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screen) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -104,9 +104,9 @@ public class FacebookManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -122,9 +122,9 @@ public class FacebookManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_PAYMENT.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -142,9 +142,9 @@ public class FacebookManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_PAYMENT.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -160,9 +160,9 @@ public class FacebookManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILY_HOTEL_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -182,9 +182,9 @@ public class FacebookManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
-        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screen) == true)
+        } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
             AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -203,7 +203,7 @@ public class FacebookManager extends BaseAnalyticsManager
 
             if (DEBUG == true)
             {
-                ExLog.d(TAG + "Screen : " + screen + parameters.toString());
+                ExLog.d(TAG + "Screen : " + screenName + parameters.toString());
             }
         }
     }

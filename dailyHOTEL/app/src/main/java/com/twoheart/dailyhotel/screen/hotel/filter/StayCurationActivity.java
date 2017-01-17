@@ -443,7 +443,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_CURATION);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_CURATION, null);
     }
 
     @Override

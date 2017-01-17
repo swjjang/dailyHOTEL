@@ -93,11 +93,11 @@ public class WriteReviewCommentActivity extends BaseActivity
         switch (mPlaceType)
         {
             case HOTEL:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_REVIEWWRITE);
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_REVIEWWRITE, null);
                 break;
 
             case FNB:
-                AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_REVIEWWRITE);
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_REVIEWWRITE, null);
                 break;
         }
     }

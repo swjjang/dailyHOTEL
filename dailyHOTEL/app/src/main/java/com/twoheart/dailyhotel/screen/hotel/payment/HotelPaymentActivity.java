@@ -852,6 +852,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
+                        recordPaymentInformation();
+
                         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
                         DailyPreference.getInstance(HotelPaymentActivity.this)//
@@ -861,10 +863,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 stayPaymentInformation.checkInDateFormat,//
                                 stayPaymentInformation.checkOutDateFormat);
 
-                        Intent paymentInformationIntent = new Intent();
-                        paymentInformationIntent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
-
-                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY, paymentInformationIntent);
+                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                         finish();
                     }
                 };
@@ -1009,8 +1008,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
     {
-        AnalyticsManager.getInstance(this).recordScreen(Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
-            , getMapPaymentInformation((StayPaymentInformation) paymentInformation));
+        AnalyticsManager.getInstance(this).recordScreen(this, Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
+            , null, getMapPaymentInformation((StayPaymentInformation) paymentInformation));
     }
 
     @Override
@@ -1065,6 +1064,21 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         // 쿠폰 삭제 - 쿠폰 선택 팝업에서 Cancel 시 처리
         mPaymentInformation.setCoupon(null);
         setCouponSelected(false);
+    }
+
+    @Override
+    protected void recordPaymentInformation()
+    {
+        DailyPreference.getInstance(this).clearPaymentInformation();
+
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
+
+        DailyPreference.getInstance(this)//
+            .setPaymentInformation(PlaceType.HOTEL,//
+                stayPaymentInformation.getSaleRoomInformation().hotelName,//
+                stayPaymentInformation.paymentType,//
+                stayPaymentInformation.checkInDateFormat,//
+                stayPaymentInformation.checkOutDateFormat);
     }
 
     private void setAvailableDefaultPaymentType()
@@ -1219,7 +1233,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(mScreenAnalytics, params);
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(this, mScreenAnalytics, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

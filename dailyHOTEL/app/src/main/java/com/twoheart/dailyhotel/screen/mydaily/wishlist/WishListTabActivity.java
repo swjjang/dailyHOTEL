@@ -217,7 +217,7 @@ public class WishListTabActivity extends BaseActivity
         {
             if (stayCount == 0 && gourmetCount == 0)
             {
-                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST_EMPTY);
+                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_WISHLIST_EMPTY, null);
             }
         }
 
@@ -257,7 +257,7 @@ public class WishListTabActivity extends BaseActivity
 
         if (View.VISIBLE == visibility)
         {
-            AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST_BEFORELOGIN);
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.MENU_WISHLIST_BEFORELOGIN, null);
         }
     }
 
@@ -395,7 +395,7 @@ public class WishListTabActivity extends BaseActivity
 
             if (totalCount == 0)
             {
-                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(AnalyticsManager.Screen.MENU_WISHLIST_EMPTY);
+                AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(WishListTabActivity.this, AnalyticsManager.Screen.MENU_WISHLIST_EMPTY, null);
             }
         }
     };

@@ -22,7 +22,7 @@ public class DailyPreference
     /////////////////////////////////////////////////////////////////////////////////////////
 
     private static final String KEY_OPENING_ALARM = "1"; // 알람
-//    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
+    //    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     //    private static final String KEY_ALLOW_PUSH = "5";
     //    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
@@ -539,15 +539,15 @@ public class DailyPreference
         setValue(mEditor, KEY_NEW_NOTICE, value);
     }
 
-//    public String getLastMenu()
-//    {
-//        return getValue(mPreferences, KEY_LAST_MENU, null);
-//    }
+    //    public String getLastMenu()
+    //    {
+    //        return getValue(mPreferences, KEY_LAST_MENU, null);
+    //    }
 
-//    public void setLastMenu(String value)
-//    {
-//        setValue(mEditor, KEY_LAST_MENU, value);
-//    }
+    //    public void setLastMenu(String value)
+    //    {
+    //        setValue(mEditor, KEY_LAST_MENU, value);
+    //    }
 
     public boolean isShowGuide()
     {
@@ -1406,7 +1406,7 @@ public class DailyPreference
     {
         String value = getValue(mPreferences, KEY_PAYMENT_INFORMATION, null);
 
-        if(Util.isTextEmpty(value) == true)
+        if (Util.isTextEmpty(value) == true)
         {
             return null;
         } else

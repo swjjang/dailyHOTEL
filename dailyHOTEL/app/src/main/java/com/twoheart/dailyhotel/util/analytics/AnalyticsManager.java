@@ -28,6 +28,7 @@ public class AnalyticsManager
     private FacebookManager mFacebookManager;
     private AppboyManager mAppboyManager;
     private AdjustManager mAdjustManager;
+    private FirebaseManager mFirebaseManager;
     private List<BaseAnalyticsManager> mAnalyticsManagerList;
 
     public synchronized static AnalyticsManager getInstance(Context context)
@@ -90,6 +91,14 @@ public class AnalyticsManager
             ExLog.d((e.toString()));
         }
 
+        try
+        {
+            mFirebaseManager = new FirebaseManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         if (mGoogleAnalyticsManager != null)
         {
             mAnalyticsManagerList.add(mGoogleAnalyticsManager);
@@ -108,6 +117,11 @@ public class AnalyticsManager
         if (mAdjustManager != null)
         {
             mAnalyticsManagerList.add(mAdjustManager);
+        }
+
+        if (mFirebaseManager != null)
+        {
+            mAnalyticsManagerList.add(mFirebaseManager);
         }
     }
 
@@ -275,13 +289,13 @@ public class AnalyticsManager
         }
     }
 
-    public void recordScreen(String screen)
+    public void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.recordScreen(screen);
+                analyticsManager.recordScreen(activity, screenName, screenClassOverride);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());
@@ -289,13 +303,13 @@ public class AnalyticsManager
         }
     }
 
-    public void recordScreen(String screen, Map<String, String> params)
+    public void recordScreen(Activity activity, String screenName, String screenClassOverride, Map<String, String> params)
     {
         for (BaseAnalyticsManager analyticsManager : mAnalyticsManagerList)
         {
             try
             {
-                analyticsManager.recordScreen(screen, params);
+                analyticsManager.recordScreen(activity, screenName, screenClassOverride, params);
             } catch (Exception e)
             {
                 ExLog.d(TAG + e.toString());

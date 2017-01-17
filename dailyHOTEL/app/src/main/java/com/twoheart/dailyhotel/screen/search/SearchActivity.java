@@ -516,7 +516,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeValueType);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeValueType);
 
-            AnalyticsManager.getInstance(SearchActivity.this).recordScreen(AnalyticsManager.Screen.SEARCH_MAIN, params);
+            AnalyticsManager.getInstance(SearchActivity.this).recordScreen(this, AnalyticsManager.Screen.SEARCH_MAIN, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.getMessage());

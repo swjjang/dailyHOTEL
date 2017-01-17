@@ -97,11 +97,11 @@ public class PaymentWaitActivity extends BaseActivity
             switch (mBooking.placeType)
             {
                 case HOTEL:
-                    AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_DEPOSITWAITING);
+                    AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_DEPOSITWAITING, null);
                     break;
 
                 case FNB:
-                    AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.DAILYGOURMET_DEPOSITWAITING);
+                    AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_DEPOSITWAITING, null);
                     break;
             }
         }

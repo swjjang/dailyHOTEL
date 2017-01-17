@@ -29,7 +29,6 @@ import io.fabric.sdk.android.Fabric;
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
     private static volatile DailyHotel mInstance = null;
-    private static volatile Activity mCurrentActivity;
     public static String VERSION_CODE;
     public static String VERSION;
     public static String AUTHORIZATION;
@@ -204,15 +203,9 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             return new IApplicationConfig()
             {
                 @Override
-                public Activity getTopActivity()
-                {
-                    return mCurrentActivity;
-                }
-
-                @Override
                 public Context getApplicationContext()
                 {
-                    return DailyHotel.getGlobalApplicationContext();
+                    return getGlobalApplicationContext();
                 }
             };
         }
@@ -231,8 +224,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         @Override
         public void onActivityStarted(Activity activity)
         {
-            mCurrentActivity = activity;
-
             AnalyticsManager.getInstance(activity).onActivityStarted(activity);
 
             if (++mRunningActivity == 1)

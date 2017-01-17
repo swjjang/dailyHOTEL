@@ -83,7 +83,7 @@ public class PrivacyActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(AnalyticsManager.Screen.TERMSOFPRIVACY);
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.TERMSOFPRIVACY, null);
 
         super.onStart();
     }

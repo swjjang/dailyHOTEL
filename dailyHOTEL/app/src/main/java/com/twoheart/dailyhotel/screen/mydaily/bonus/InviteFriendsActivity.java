@@ -169,10 +169,10 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
         if (DailyHotel.isLogin() == true)
         {
-            AnalyticsManager.getInstance(InviteFriendsActivity.this).recordScreen(AnalyticsManager.Screen.MENU_INVITE_FRIENDS);
+            AnalyticsManager.getInstance(InviteFriendsActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_INVITE_FRIENDS, null);
         } else
         {
-            AnalyticsManager.getInstance(InviteFriendsActivity.this).recordScreen(AnalyticsManager.Screen.MENU_INVITE_FRIENDS_BEFORE_LOGIN);
+            AnalyticsManager.getInstance(InviteFriendsActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_INVITE_FRIENDS_BEFORE_LOGIN, null);
         }
 
     }

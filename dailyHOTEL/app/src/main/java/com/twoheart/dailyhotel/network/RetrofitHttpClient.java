@@ -107,16 +107,6 @@ public class RetrofitHttpClient implements Constants
         mTagCancellableCallAdapterFactory.cancelAll(tag);
     }
 
-    public void cancelAll()
-    {
-        if (mTagCancellableCallAdapterFactory == null)
-        {
-            return;
-        }
-
-        mTagCancellableCallAdapterFactory.cancelAll();
-    }
-
     private TrustManager[] newTrustManager(Context context)
     {
         try

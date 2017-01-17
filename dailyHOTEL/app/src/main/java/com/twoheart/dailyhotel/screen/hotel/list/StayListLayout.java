@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -122,7 +123,13 @@ public class StayListLayout extends PlaceListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
-                AnalyticsManager.getInstance(mContext).recordScreen(AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY);
+                if (mContext instanceof Activity)
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(mContext).recordScreen(null, AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY, null);
+                }
                 break;
         }
     }

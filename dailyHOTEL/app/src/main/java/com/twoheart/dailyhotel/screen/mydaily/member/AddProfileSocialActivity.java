@@ -129,7 +129,7 @@ public class AddProfileSocialActivity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordScreen(AnalyticsManager.Screen.BOOKING_ACCOUNTDETAIL);
+        AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordScreen(this, AnalyticsManager.Screen.BOOKING_ACCOUNTDETAIL, null);
 
         super.onStart();
     }

@@ -116,7 +116,7 @@ public class SignupStep1Activity extends BaseActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(Screen.MENU_REGISTRATION_GETINFO);
+        AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(this, Screen.MENU_REGISTRATION_GETINFO, null);
 
         super.onStart();
     }
@@ -375,7 +375,7 @@ public class SignupStep1Activity extends BaseActivity
                 ExLog.d(e.toString());
             }
 
-            AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY);
+            AnalyticsManager.getInstance(SignupStep1Activity.this).recordScreen(SignupStep1Activity.this, AnalyticsManager.Screen.MENU_SET_MY_BIRTHDAY, null);
         }
 
         @Override

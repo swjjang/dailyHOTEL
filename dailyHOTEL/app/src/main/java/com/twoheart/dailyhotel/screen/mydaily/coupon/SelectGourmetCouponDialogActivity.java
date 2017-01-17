@@ -279,7 +279,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                         mLayout.setData(list, true);
 
                         AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
-                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST);
+                            .recordScreen(SelectGourmetCouponDialogActivity.this, AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST, null);
                     }
                     break;
                 }
