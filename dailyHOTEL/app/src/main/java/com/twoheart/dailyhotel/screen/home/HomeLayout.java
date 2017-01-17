@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.net.Uri;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,6 +42,7 @@ public class HomeLayout extends BaseLayout
     private DailyLoopViewPager mEventViewPager;
     private DailyTextView mEventCountTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private AppBarLayout mAppbarLayout;
     private NestedScrollView mNestedScrollView;
     private LinearLayout mContentLayout;
     private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
@@ -78,6 +80,7 @@ public class HomeLayout extends BaseLayout
     protected void initLayout(View view)
     {
         initToolbarLayout(view);
+        mAppbarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         initRefreshLayout(view);
         initScrollLayout(view);
         initContentLayout(view);
@@ -87,6 +90,8 @@ public class HomeLayout extends BaseLayout
         initMessageLayout(view);
         initWishListLayout(view);
         initRecentListLayout(view);
+
+        initTopButtonLayout(view);
     }
 
     private void initToolbarLayout(View view)
@@ -299,7 +304,8 @@ public class HomeLayout extends BaseLayout
         mContentLayout.addView(mMessageLayout);
     }
 
-    private void initWishListLayout(View view) {
+    private void initWishListLayout(View view)
+    {
         if (mContentLayout == null || mContext == null)
         {
             return;
@@ -310,7 +316,8 @@ public class HomeLayout extends BaseLayout
         mContentLayout.addView(wishListLayout);
     }
 
-    private void initRecentListLayout(View view) {
+    private void initRecentListLayout(View view)
+    {
         if (mContentLayout == null || mContext == null)
         {
             return;
@@ -321,11 +328,24 @@ public class HomeLayout extends BaseLayout
         mContentLayout.addView(wishListLayout);
     }
 
-    private void initTopButtonLayout(View view) {
-        if (mContentLayout == null || mContext == null) {
+    private void initTopButtonLayout(View view)
+    {
+        if (mContentLayout == null || mContext == null)
+        {
             return;
         }
 
+        final View topButtonLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_top_button_layout, null);
+
+        topButtonLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mAppbarLayout.setExpanded(true);
+            }
+        });
+        mContentLayout.addView(topButtonLayout);
     }
 
     private void startMessageLayoutCloseAnimation()
