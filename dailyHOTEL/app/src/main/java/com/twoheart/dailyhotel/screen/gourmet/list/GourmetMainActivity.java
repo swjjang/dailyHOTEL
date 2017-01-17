@@ -590,7 +590,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             boolean mIsProvinceSetting = DailyPreference.getInstance(GourmetMainActivity.this).isSettingRegion(PlaceType.FNB);
             DailyPreference.getInstance(GourmetMainActivity.this).setSettingRegion(PlaceType.FNB, true);
 
-            // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
+            // 마지막으로 지역이 Area로 되어있으면 Province
             if (mIsProvinceSetting == false && selectedProvince instanceof Area)
             {
                 int provinceIndex = selectedProvince.getProvinceIndex();
@@ -599,9 +599,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-                        selectedProvince = province;
                         DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, province.name);
+                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, selectedProvince.name);
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
@@ -613,16 +612,6 @@ public class GourmetMainActivity extends PlaceMainActivity
             }
 
             mGourmetCuration.setProvince(selectedProvince);
-
-            // 기존 저장 Province 가 소지역이 아닐수도 있고, 또한 default 지역인 서울로 하드 코딩 될수 있음으로 한번더 검사
-            String saveProvinceName = DailyPreference.getInstance(GourmetMainActivity.this).getSelectedRegionTypeProvince(PlaceType.FNB);
-            if (selectedProvince.name.equalsIgnoreCase(saveProvinceName) == false)
-            {
-                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                String realProvinceName = Util.getRealProvinceName(selectedProvince);
-                DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
-                AnalyticsManager.getInstance(GourmetMainActivity.this).onRegionChanged(country, realProvinceName);
-            }
 
             if (DailyDeepLink.getInstance().isValidateLink() == true//
                 && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList) == true)

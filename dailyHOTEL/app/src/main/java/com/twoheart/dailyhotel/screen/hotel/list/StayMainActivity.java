@@ -695,9 +695,8 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-                        selectedProvince = province;
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, selectedProvince.name);
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
@@ -709,16 +708,6 @@ public class StayMainActivity extends PlaceMainActivity
             }
 
             mStayCuration.setProvince(selectedProvince);
-
-            // 기존 저장 Province 가 소지역이 아닐수도 있고, 또한 default 지역인 서울로 하드 코딩 될수 있음으로 한번더 검사
-            String saveProvinceName = DailyPreference.getInstance(StayMainActivity.this).getSelectedRegionTypeProvince(PlaceType.HOTEL);
-            if (selectedProvince.name.equalsIgnoreCase(saveProvinceName) == false)
-            {
-                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                String realProvinceName = Util.getRealProvinceName(selectedProvince);
-                DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
-                AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
-            }
 
             if (DailyDeepLink.getInstance().isValidateLink() == true//
                 && processDeepLinkByRegionList(StayMainActivity.this, provinceList, areaList) == true)
