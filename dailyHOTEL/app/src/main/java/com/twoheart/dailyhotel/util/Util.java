@@ -1807,11 +1807,21 @@ public class Util implements Constants
             activity.startActivity(intent);
         } else
         {
-            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("sms:"));
-            intent.putExtra("sms_body", message);
-            intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setType("vnd.android-dir/mms-sms");
-            activity.startActivity(intent);
+            try
+            {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.putExtra("sms_body", message);
+                intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setType("vnd.android-dir/mms-sms");
+                activity.startActivity(intent);
+            } catch (Exception e)
+            {
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.putExtra("sms_body", message);
+                intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setType("vnd.android-dir/mms-sms");
+                activity.startActivity(intent);
+            }
         }
     }
 }
