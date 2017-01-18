@@ -7,12 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by android_sam on 2017. 1. 11..
@@ -23,7 +28,9 @@ public class HomeFragment extends BaseFragment
     private HomeLayout mHomeLayout;
     private BaseActivity mBaseActivity;
     private PlaceType mPlaceType = PlaceType.HOTEL;
-
+    private HomeNetworkController mNetworkController;
+    private SaleTime mSaleTime;
+    private int mNights = 1;
 
     @Nullable
     @Override
@@ -32,6 +39,7 @@ public class HomeFragment extends BaseFragment
         mBaseActivity = (BaseActivity) getActivity();
 
         mHomeLayout = new HomeLayout(mBaseActivity, mOnEventListener);
+        mNetworkController = new HomeNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
         return mHomeLayout.onCreateView(R.layout.fragment_home_main, container);
     }
 
@@ -40,6 +48,15 @@ public class HomeFragment extends BaseFragment
     {
         super.onActivityCreated(savedInstanceState);
         mBaseActivity.unLockUI();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        lockUI();
+        mNetworkController.requestCommonDateTime();
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
@@ -64,7 +81,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            //            mBaseActivity.startActivity(SearchActivity.newInstance(getContext(), mPlaceType, ));
+            mBaseActivity.startActivity(SearchActivity.newInstance(getContext(), mPlaceType, mSaleTime, mNights));
         }
 
         @Override
@@ -104,4 +121,43 @@ public class HomeFragment extends BaseFragment
             mBaseActivity.finish();
         }
     };
+
+    HomeNetworkController.OnNetworkControllerListener mNetworkControllerListener = new HomeNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
+        {
+            unLockUI();
+
+            mSaleTime = new SaleTime();
+            mSaleTime.setCurrentTime(currentDateTime);
+            mSaleTime.setDailyTime(dailyDateTime);
+            mSaleTime.setOffsetDailyDay(0);
+        }
+
+        @Override
+        public void onError(Throwable e)
+        {
+            HomeFragment.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            HomeFragment.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            HomeFragment.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call call, Response response)
+        {
+            HomeFragment.this.onErrorResponse(call, response);
+        }
+    };
+
 }
