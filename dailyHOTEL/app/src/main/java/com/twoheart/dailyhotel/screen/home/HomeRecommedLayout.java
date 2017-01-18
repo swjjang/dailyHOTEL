@@ -175,7 +175,6 @@ public class HomeRecommedLayout extends LinearLayout
         this.addView(view);
     }
 
-
     public int getCount()
     {
         if (mRecommedList == null || mRecommedList.size() == 0)
