@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -274,6 +275,9 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             editProfileView.setVisibility(View.VISIBLE);
 
             profileLayoutBottomLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cdcdcdd));
+            ViewGroup.LayoutParams layoutParams = profileLayoutBottomLine.getLayoutParams();
+            layoutParams.height = 1;
+            profileLayoutBottomLine.setLayoutParams(layoutParams);
 
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_02_login);
         } else
@@ -300,6 +304,9 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             editProfileView.setVisibility(View.GONE);
 
             profileLayoutBottomLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cf0f0f0));
+            ViewGroup.LayoutParams layoutParams = profileLayoutBottomLine.getLayoutParams();
+            layoutParams.height = Util.dpToPx(mContext, 1);
+            profileLayoutBottomLine.setLayoutParams(layoutParams);
 
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_01_logout);
         }

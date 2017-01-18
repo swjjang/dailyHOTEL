@@ -236,9 +236,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             //        } else if (dailyDeepLink.isHotelRegionListView() == true)
             //        {
             //            screenName = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-        } else if (dailyDeepLink.isHotelEventBannerWebView() == true)
-        {
-            screenName = AnalyticsManager.Screen.DAILYHOTEL_BANNER_DETAIL;
+//        } else if (dailyDeepLink.isHotelEventBannerWebView() == true)
+//        {
+//            screenName = AnalyticsManager.Screen.DAILYHOTEL_BANNER_DETAIL;
         } else if (dailyDeepLink.isGourmetListView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST;
@@ -248,9 +248,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             //        } else if (dailyDeepLink.isGourmetRegionListView() == true)
             //        {
             //            screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
-        } else if (dailyDeepLink.isGourmetEventBannerWebView() == true)
-        {
-            screenName = AnalyticsManager.Screen.DAILYGOURMET_BANNER_DETAIL;
+//        } else if (dailyDeepLink.isGourmetEventBannerWebView() == true)
+//        {
+//            screenName = AnalyticsManager.Screen.DAILYGOURMET_BANNER_DETAIL;
         } else if (dailyDeepLink.isBookingView() == true)
         {
             screenName = AnalyticsManager.Screen.BOOKING_LIST;

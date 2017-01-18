@@ -3,17 +3,28 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@JsonObject
 public class Keyword implements Parcelable
 {
+    @JsonIgnore
     public int icon;
+
+    @JsonField(name = "displayText")
     public String name;
+
+    @JsonField(name = "discount")
     public int price;
 
     public Keyword()
     {
+        price = -1;
     }
 
     public Keyword(int icon, String name)
@@ -70,6 +81,7 @@ public class Keyword implements Parcelable
         return 0;
     }
 
+    @JsonIgnore
     public static final Creator CREATOR = new Creator()
     {
         public Keyword createFromParcel(Parcel in)

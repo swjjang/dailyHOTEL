@@ -39,8 +39,8 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1091500
-        versionName "1.9.15"
+        versionCode 1091600
+        versionName "1.9.16"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
@@ -101,9 +101,9 @@ dependencies {
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-config:10.0.1'
 
-//    apt 'com.bluelinelabs:logansquare-compiler:1.3.7'
-//    compile 'com.bluelinelabs:logansquare:1.3.7'
-//    compile "com.github.aurae.retrofit2:converter-logansquare:1.4.1"
+    apt 'com.bluelinelabs:logansquare-compiler:1.3.7'
+    compile 'com.bluelinelabs:logansquare:1.3.7'
+    compile "com.github.aurae.retrofit2:converter-logansquare:1.4.1"
 
     //
 //    debugCompile 'com.facebook.stetho:stetho:1.4.1'
