@@ -864,7 +864,7 @@ public class AnalyticsManager
         public static final String GOURMET_IMAGE_CLOSED = "GourmetImageClosed";
 
         //
-        public static final String WAYTOVISIT_SELECTED = "WaytovisitSelected";
+        public static final String STAY_WAYTOVISIT_SELECT = "stay_waytovisit_select";
 
         //
         public static final String ITEM_SHARE = "item_share";
@@ -898,6 +898,7 @@ public class AnalyticsManager
 
         // Share
         public static final String SHARE = "share";
+        public static final String BOOKING = "booking";
     }
 
     public static class Label
@@ -1036,9 +1037,9 @@ public class AnalyticsManager
         public static final String CONFIRM = "Confirm";
         public static final String CLOSE = "Close";
         public static final String SWIPE = "Swipe";
-        public static final String WALK = "Walk";
-        public static final String CAR = "Car";
-        public static final String PARKING_NOT_AVAILABLE = "ParkingNotAvailable";
+        public static final String WALK = "walk";
+        public static final String CAR = "car";
+        public static final String PARKING_NOT_AVAILABLE = "parking_not_available";
 
         public static final String DIRECTCALL_FRONT = "DirectCall_Front";
         public static final String DIRECTCALL_RESERVATION = "DirectCall_Reservation";

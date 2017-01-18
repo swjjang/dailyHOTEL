@@ -514,12 +514,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
         {
-            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-                Action.WAYTOVISIT_SELECTED, stayPaymentInformation.isVisitWalking == true ? Label.WALK : Label.CAR, null);
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.BOOKING,//
+                Action.STAY_WAYTOVISIT_SELECT, stayPaymentInformation.isVisitWalking == true ? Label.WALK : Label.CAR, null);
         } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
         {
-            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-                Action.WAYTOVISIT_SELECTED, Label.PARKING_NOT_AVAILABLE, null);
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.BOOKING,//
+                Action.STAY_WAYTOVISIT_SELECT, Label.PARKING_NOT_AVAILABLE, null);
         }
 
         Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation);
