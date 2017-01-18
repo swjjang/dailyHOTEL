@@ -1116,6 +1116,7 @@
     <string name="label_home_gourmet_menu_title">데일리호텔</string>
     <string name="label_home_gourmet_menu_description">레스토랑 예약하기</string>
     <string name="label_home_view_all">모두보기</string>
+    <string name="label_home_recommend_title">데일리 추천</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

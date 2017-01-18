@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.HomeRecommed;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -47,6 +48,7 @@ public class HomeLayout extends BaseLayout
     private LinearLayout mContentLayout;
     private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
     private View mMessageLayout;
+    private HomeRecommedLayout mHomeRecommedLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -80,7 +82,9 @@ public class HomeLayout extends BaseLayout
     protected void initLayout(View view)
     {
         initToolbarLayout(view);
+
         mAppbarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+
         initRefreshLayout(view);
         initScrollLayout(view);
         initContentLayout(view);
@@ -90,6 +94,7 @@ public class HomeLayout extends BaseLayout
         initMessageLayout(view);
         initWishListLayout(view);
         initRecentListLayout(view);
+        initRecommendLayout(view);
 
         initTopButtonLayout(view);
     }
@@ -328,6 +333,26 @@ public class HomeLayout extends BaseLayout
         mContentLayout.addView(wishListLayout);
     }
 
+    private void initRecommendLayout(View view)
+    {
+        if (mContentLayout == null || mContext == null)
+        {
+            return;
+        }
+
+        HomeRecommedLayout recommendLayout = new HomeRecommedLayout(mContext);
+        recommendLayout.setListener(new HomeRecommedLayout.HomeRecommendListener()
+        {
+            @Override
+            public void onRecommedClick(HomeRecommed recommed, int position)
+            {
+                // TODO : 추천 상세로 이동!!!
+            }
+        });
+
+        mContentLayout.addView(recommendLayout);
+    }
+
     private void initTopButtonLayout(View view)
     {
         if (mContentLayout == null || mContext == null)
@@ -472,6 +497,11 @@ public class HomeLayout extends BaseLayout
 
         mEventViewPagerAdapter.setData(arrayList);
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
+    }
+
+    public void setRecommedList(ArrayList<HomeRecommed> list)
+    {
+        mHomeRecommedLayout.setData(list, true);
     }
 
     // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
