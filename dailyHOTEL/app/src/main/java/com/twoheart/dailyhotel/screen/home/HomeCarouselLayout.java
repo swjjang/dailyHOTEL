@@ -65,7 +65,8 @@ public class HomeCarouselLayout extends RelativeLayout
         initLayout();
     }
 
-    private void initLayout() {
+    private void initLayout()
+    {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
@@ -86,7 +87,8 @@ public class HomeCarouselLayout extends RelativeLayout
             @Override
             public void onClick(View v)
             {
-                if (mCarouselListenter != null) {
+                if (mCarouselListenter != null)
+                {
                     mCarouselListenter.onViewAllClick();
                 }
             }
@@ -98,11 +100,13 @@ public class HomeCarouselLayout extends RelativeLayout
         mViewPager.setAdapter(mPageAdapter);
     }
 
-    public void setCarouselListener(OnCarouselListener listener) {
+    public void setCarouselListener(OnCarouselListener listener)
+    {
         mCarouselListenter = listener;
     }
 
-    public void setViewPagerData(ArrayList<? extends Place> list) {
+    public void setViewPagerData(ArrayList<? extends Place> list)
+    {
         mPlaceList = list;
     }
 

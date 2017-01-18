@@ -49,6 +49,8 @@ public class HomeLayout extends BaseLayout
     private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
     private View mMessageLayout;
     private HomeRecommedLayout mHomeRecommedLayout;
+    private HomeCarouselLayout mWishListLayout;
+    private HomeCarouselLayout mRecentListLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -316,9 +318,9 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        View wishListLayout = new HomeCarouselLayout(mContext);
+        mWishListLayout = new HomeCarouselLayout(mContext);
 
-        mContentLayout.addView(wishListLayout);
+        mContentLayout.addView(mWishListLayout);
     }
 
     private void initRecentListLayout(View view)
@@ -328,9 +330,9 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        View wishListLayout = new HomeCarouselLayout(mContext);
+        mRecentListLayout = new HomeCarouselLayout(mContext);
 
-        mContentLayout.addView(wishListLayout);
+        mContentLayout.addView(mRecentListLayout);
     }
 
     private void initRecommendLayout(View view)

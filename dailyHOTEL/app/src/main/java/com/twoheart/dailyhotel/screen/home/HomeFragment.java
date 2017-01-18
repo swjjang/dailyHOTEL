@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,9 +14,11 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -31,6 +35,8 @@ public class HomeFragment extends BaseFragment
     private HomeNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private int mNights = 1;
+    private boolean mIsAttach;
+    private boolean mDontReload;
 
     @Nullable
     @Override
@@ -47,7 +53,16 @@ public class HomeFragment extends BaseFragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        mBaseActivity.unLockUI();
+
+        mIsAttach = true;
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+
     }
 
     @Override
@@ -55,8 +70,70 @@ public class HomeFragment extends BaseFragment
     {
         super.onResume();
 
-        lockUI();
-        mNetworkController.requestCommonDateTime();
+        if (mDontReload == true)
+        {
+            mDontReload = true;
+        } else
+        {
+            lockUI();
+
+            // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
+            mNetworkController.requestCommonDateTime();
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+
+        mDontReload = true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                }
+                break;
+
+            case CODE_REQEUST_ACTIVITY_SIGNUP:
+            {
+                break;
+            }
+        }
+    }
+
+    private void startSignUp(String recommenderCode)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        Intent intent;
+
+        if (Util.isTextEmpty(recommenderCode) == true)
+        {
+            intent = SignupStep1Activity.newInstance(baseActivity, null);
+        } else
+        {
+            intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode, null);
+        }
+
+        startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
@@ -64,7 +141,8 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onMessageTextAreaClick()
         {
-            // TODO : 회원가입으로 이동!
+            // 회원가입으로 이동!
+            startSignUp(null);
         }
 
         @Override
@@ -81,7 +159,12 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivity(SearchActivity.newInstance(getContext(), mPlaceType, mSaleTime, mNights));
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            mBaseActivity.startActivity(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights));
         }
 
         @Override
@@ -92,13 +175,23 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivityForResult(StayMainActivity.newInstance(getContext()), Constants.CODE_REQUEST_ACTIVITY_STAY);
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            mBaseActivity.startActivityForResult(StayMainActivity.newInstance(mBaseActivity), Constants.CODE_REQUEST_ACTIVITY_STAY);
         }
 
         @Override
         public void onGourmetButtonClick()
         {
             if (mBaseActivity == null)
+            {
+                return;
+            }
+
+            if (isLockUiComponent() == true || mIsAttach == false)
             {
                 return;
             }
@@ -159,5 +252,4 @@ public class HomeFragment extends BaseFragment
             HomeFragment.this.onErrorResponse(call, response);
         }
     };
-
 }

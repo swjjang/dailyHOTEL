@@ -193,7 +193,7 @@ public class HomeCarouselPageAdapter extends PagerAdapter
             }
         } else
         {
-            return 1;
+            return 4;
         }
     }
 
