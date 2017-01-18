@@ -10,13 +10,14 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_below="@+id/toolbar"
         android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
         app:tabGravity="fill"
         app:tabIndicatorHeight="2dp"
+        app:tabMaxWidth="0dp"
         app:tabSelectedTextColor="@color/default_text_cb70038"
         app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
-        app:tabTextColor="@color/default_text_c929292"
-        android:layout_below="@+id/toolbar"/>
+        app:tabTextColor="@color/default_text_c929292"/>
 
     <com.twoheart.dailyhotel.widget.DailyViewPager
         android:id="@+id/viewPager"
