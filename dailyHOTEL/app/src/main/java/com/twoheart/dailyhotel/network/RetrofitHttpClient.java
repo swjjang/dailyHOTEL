@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.github.aurae.retrofit2.LoganSquareConverterFactory;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.factory.JSONConverterFactory;
@@ -78,13 +79,14 @@ public class RetrofitHttpClient implements Constants
             mRetrofit = new Retrofit.Builder().baseUrl(baseUrl)//
                 .client(mOkHttpClient)//
                 .addConverterFactory(JSONConverterFactory.create())//
-                //                .addConverterFactory(LoganSquareConverterFactory.create())//
+                .addConverterFactory(LoganSquareConverterFactory.create())//
                 .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
         } else
         {
             mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
                 .client(mOkHttpClient)//
                 .addConverterFactory(JSONConverterFactory.create())//
+                .addConverterFactory(LoganSquareConverterFactory.create())//
                 .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
         }
 
