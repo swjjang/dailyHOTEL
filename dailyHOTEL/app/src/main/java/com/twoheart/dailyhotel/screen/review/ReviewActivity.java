@@ -215,14 +215,17 @@ public class ReviewActivity extends BaseActivity
 
                     DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_canceled_review_detail, Toast.LENGTH_SHORT);
 
-                    mHandler.postDelayed(new Runnable()
+                    if (mReviewLayout != null)
                     {
-                        @Override
-                        public void run()
+                        mHandler.postDelayed(new Runnable()
                         {
-                            mReviewLayout.hideReviewDetailAnimation();
-                        }
-                    }, 1000);
+                            @Override
+                            public void run()
+                            {
+                                mReviewLayout.hideReviewDetailAnimation();
+                            }
+                        }, 1000);
+                    }
 
                     try
                     {
