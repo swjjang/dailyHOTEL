@@ -3,13 +3,14 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/white"
+              android:background="@color/default_background"
               android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/contentLayout"
         android:layout_width="match_parent"
         android:layout_height="301dp"
+        android:background="@color/white"
         android:paddingBottom="15dp">
 
         <RelativeLayout
@@ -63,6 +64,13 @@
             android:layout_below="@id/textLayout">
 
         </com.twoheart.dailyhotel.widget.DailyViewPager>
+        
+        <!--<HorizontalScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@id/textLayout">-->
+
+        <!--</HorizontalScrollView>-->
 
     </RelativeLayout>
 
@@ -70,5 +78,6 @@
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="15dp"
         android:background="@color/default_line_cf0f0f0"/>
 </LinearLayout>

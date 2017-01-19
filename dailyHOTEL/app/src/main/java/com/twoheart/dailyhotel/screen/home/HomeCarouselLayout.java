@@ -29,7 +29,8 @@ public class HomeCarouselLayout extends RelativeLayout
     private ArrayList<? extends Place> mPlaceList;
     private HomeCarouselPageAdapter mPageAdapter;
 
-    public interface OnCarouselListener {
+    public interface OnCarouselListener
+    {
         void onViewAllClick();
     }
 
