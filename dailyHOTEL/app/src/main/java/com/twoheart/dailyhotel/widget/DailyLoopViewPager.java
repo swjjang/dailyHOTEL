@@ -17,8 +17,8 @@ public class DailyLoopViewPager extends ViewPager
 {
     private static final boolean DEFAULT_BOUNDARY_CASHING = false;
 
-    private OnPageChangeListener mOuterPageChangeListener;
-    private DailyLoopPagerAdapterWrapper mAdapter;
+    OnPageChangeListener mOuterPageChangeListener;
+    DailyLoopPagerAdapterWrapper mAdapter;
     private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
 
     private DailyScrollerDuration mScroller = null;

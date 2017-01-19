@@ -57,15 +57,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
 {
     private static final String INTENT_EXTRA_DATA_EVENTNAME = "eventName";
 
-    private SourceType mSourceType;
-    private SaleTime mSaleTime;
+    SourceType mSourceType;
+    SaleTime mSaleTime;
     private String mEventName;
 
-    private String mCouponCode;
-    private String mDeepLinkUrl;
-    private String mConfirmText;
+    String mCouponCode;
+    String mDeepLinkUrl;
+    String mConfirmText;
 
-    private JavaScriptExtention mJavaScriptExtention;
+    JavaScriptExtention mJavaScriptExtention;
 
     public enum SourceType
     {
@@ -74,7 +74,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         EVENT
     }
 
-    private Handler mHandler = new Handler();
+    Handler mHandler = new Handler();
 
     public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName)
     {
@@ -347,7 +347,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
     }
 
-    private boolean deepLinkStayDetail(SaleTime saleTime)
+    boolean deepLinkStayDetail(SaleTime saleTime)
     {
         boolean result = true;
 
@@ -432,7 +432,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return result;
     }
 
-    private boolean deepLinkGourmetDetail(SaleTime saleTime)
+    boolean deepLinkGourmetDetail(SaleTime saleTime)
     {
         boolean result = true;
 
@@ -504,7 +504,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return result;
     }
 
-    private boolean moveDeepLinkStaySearchResult(Context context, SaleTime saleTime)
+    boolean moveDeepLinkStaySearchResult(Context context, SaleTime saleTime)
     {
         String word = DailyDeepLink.getInstance().getSearchWord();
         DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
@@ -599,7 +599,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
-    private boolean moveDeepLinkGourmetSearchResult(Context context, SaleTime saleTime)
+    boolean moveDeepLinkGourmetSearchResult(Context context, SaleTime saleTime)
     {
         String word = DailyDeepLink.getInstance().getSearchWord();
         DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
@@ -679,7 +679,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
-    private boolean moveDeepLinkCouponList(Context context)
+    boolean moveDeepLinkCouponList(Context context)
     {
         CouponListActivity.SortType sortType;
 
@@ -707,7 +707,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
-    private boolean moveDeepLinkRegisterCoupon(Context context)
+    boolean moveDeepLinkRegisterCoupon(Context context)
     {
         DailyDeepLink.getInstance().clear();
 
@@ -872,7 +872,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
-    private void startLogin()
+    void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
         {
@@ -885,7 +885,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }, null);
     }
 
-    private void downloadCoupon(final String couponCode, final String deepLink)
+    void downloadCoupon(final String couponCode, final String deepLink)
     {
         if (Util.isTextEmpty(couponCode, deepLink) == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1009,6 +1009,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
      */
     private class JavaScriptExtention
     {
+        JavaScriptExtention()
+        {
+        }
+
         @JavascriptInterface
         public void externalLink(String packageName, String uri)
         {

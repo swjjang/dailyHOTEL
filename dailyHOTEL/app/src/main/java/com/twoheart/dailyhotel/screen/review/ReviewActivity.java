@@ -59,15 +59,15 @@ public class ReviewActivity extends BaseActivity
 
     private static final int REQUEST_NEXT_FOCUS = 1;
 
-    private Review mReview;
+    Review mReview;
     private Dialog mDialog;
-    private String mReviewGrade;
+    String mReviewGrade;
 
-    private DailyEmoticonImageView[] mDailyEmoticonImageView;
-    private ReviewLayout mReviewLayout;
-    private ReviewNetworkController mReviewNetworkController;
+    DailyEmoticonImageView[] mDailyEmoticonImageView;
+    ReviewLayout mReviewLayout;
+    ReviewNetworkController mReviewNetworkController;
 
-    private Handler mHandler = new Handler()
+    Handler mHandler = new Handler()
     {
         @Override
         public void handleMessage(Message msg)
@@ -301,7 +301,7 @@ public class ReviewActivity extends BaseActivity
         }
     }
 
-    private void showReviewDetail()
+    void showReviewDetail()
     {
         stopEmoticonAnimation();
 
@@ -401,7 +401,7 @@ public class ReviewActivity extends BaseActivity
         }
     }
 
-    private void hideReviewDialog()
+    void hideReviewDialog()
     {
         if (mDialog != null && mDialog.isShowing())
         {
@@ -411,7 +411,7 @@ public class ReviewActivity extends BaseActivity
         mDialog = null;
     }
 
-    private void stopEmoticonAnimation()
+    void stopEmoticonAnimation()
     {
         if (mDailyEmoticonImageView != null)
         {
@@ -424,7 +424,7 @@ public class ReviewActivity extends BaseActivity
         mDailyEmoticonImageView = null;
     }
 
-    private void setConfirmTextView()
+    void setConfirmTextView()
     {
         int uncheckedReviewCount = mReviewLayout.getUncheckedReviewCount();
         String text;

@@ -58,32 +58,32 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    private GoogleMap mGoogleMap;
+    GoogleMap mGoogleMap;
     protected List<PlaceViewItem> mPlaceViewItemList; // 선택된 호텔을 위한 리스트
-    private List<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
-    private LoadingDialog mLoadingDialog;
-    private MarkerOptions mMyLocationMarkerOptions;
-    private Marker mMyLocationMarker;
+    List<PlaceViewItem> mPlaceViewItemViewPagerList; // ViewPager을 위한 리스트
+    LoadingDialog mLoadingDialog;
+    MarkerOptions mMyLocationMarkerOptions;
+    Marker mMyLocationMarker;
     private View mBottomOptionLayout;
 
     protected boolean mIsCreateView = false;
     private boolean mCallMakeMarker = false;
 
-    private PlaceViewItem mSelectedPlaceViewItem;
+    PlaceViewItem mSelectedPlaceViewItem;
     protected boolean mIsOpenMarker; // 마커를 선택한 경우.
 
-    private ClusterManager<PlaceClusterItem> mClusterManager;
-    private PlaceClusterRenderer mPlaceClusterRenderer;
-    private Marker mSelectedMarker;
+    ClusterManager<PlaceClusterItem> mClusterManager;
+    PlaceClusterRenderer mPlaceClusterRenderer;
+    Marker mSelectedMarker;
     private View mMyLocationView;
-    private DailyOverScrollViewPager mViewPager;
+    DailyOverScrollViewPager mViewPager;
 
     protected BaseActivity mBaseActivity;
     protected OnPlaceListMapFragmentListener mOnPlaceListMapFragmentListener;
     protected PlaceMapViewPagerAdapter mPlaceMapViewPagerAdapter;
 
-    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
+    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ValueAnimator mValueAnimator;
 
     public interface OnPlaceListMapFragmentListener
@@ -184,7 +184,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mBottomOptionLayout = view;
     }
 
-    private void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
+    void addViewPager(BaseActivity baseActivity, ViewGroup viewGroup)
     {
         // Add Stay Info ViewPager
         if (mViewPager != null)
@@ -352,7 +352,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     /**
      * 추후 UI추가 필요 구글맵 버전이 바뀌면 문제가 될수도 있음.
      */
-    private void relocationZoomControl()
+    void relocationZoomControl()
     {
         if (isFinishing() == true)
         {
@@ -377,7 +377,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     }
 
-    private void relocationMyLocation()
+    void relocationMyLocation()
     {
         if (isFinishing() == true)
         {
@@ -540,7 +540,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     }
 
-    private void onMarkerClick(final LatLng latlng)
+    void onMarkerClick(final LatLng latlng)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -744,7 +744,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mValueAnimator.start();
     }
 
-    private void hidePlaceDetailAnimation()
+    void hidePlaceDetailAnimation()
     {
         if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
         {
@@ -825,7 +825,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mValueAnimator.start();
     }
 
-    private void onMarkerTempClick(final LatLng latlng)
+    void onMarkerTempClick(final LatLng latlng)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -1124,7 +1124,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         });
     }
 
-    private void moveCameraPosition(LatLng latLng)
+    void moveCameraPosition(LatLng latLng)
     {
         if (latLng == null)
         {
@@ -1274,7 +1274,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     };
 
-    private GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener()
+    GoogleMap.OnMapClickListener mOnMapClickListener = new GoogleMap.OnMapClickListener()
     {
         @Override
         public void onMapClick(LatLng arg0)
@@ -1294,7 +1294,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
     };
 
-    private PlaceClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new PlaceClusterRenderer.OnClusterRenderedListener()
+    PlaceClusterRenderer.OnClusterRenderedListener mOnClusterRenderedListener = new PlaceClusterRenderer.OnClusterRenderedListener()
     {
         @Override
         public void onClusterRenderedListener(PlaceClusterRenderer.Renderer renderer)

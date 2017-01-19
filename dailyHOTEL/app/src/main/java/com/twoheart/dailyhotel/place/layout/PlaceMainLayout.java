@@ -42,7 +42,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
 
-    private TabLayout mCategoryTabLayout;
+    TabLayout mCategoryTabLayout;
     private View mToolbarUnderlineView;
     private ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;

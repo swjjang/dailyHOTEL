@@ -46,8 +46,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
-    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
+    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private boolean mUpScrolling;
     private ValueAnimator mValueAnimator;
 
@@ -529,13 +529,13 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
-    private void setMenuBarLayoutEnabled(boolean enabled)
+    void setMenuBarLayoutEnabled(boolean enabled)
     {
         mViewTypeOptionImageView.setEnabled(enabled);
         mFilterOptionImageView.setEnabled(enabled);
     }
 
-    private void setMenuBarLayoutTranslationY(float dy)
+    void setMenuBarLayoutTranslationY(float dy)
     {
         mBottomOptionLayout.setTranslationY(dy);
     }

@@ -38,7 +38,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private int mImageHeight;
     protected View mGourmetTitleLayout;
 
-    private GourmetDetailLayout.OnEventListener mOnEventListener;
+    GourmetDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
     public GourmetDetailListAdapter(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, //

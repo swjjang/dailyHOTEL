@@ -52,7 +52,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
     private static final int ANIMATION_DURATION = 300;
 
     private AnimatedExpandableListAdapter adapter;
-    private static OnAnimationListener mOnAnimationListener;
+    static OnAnimationListener mOnAnimationListener;
 
     public DailyAnimatedExpandableListView(Context context)
     {
@@ -204,7 +204,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
         return isGroupExpanded(groupPos);
     }
 
-    private int getAnimationDuration()
+    int getAnimationDuration()
     {
         return ANIMATION_DURATION;
     }
@@ -225,6 +225,10 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
          * height of the dummy view and not from the full expanded height.
          */
         int dummyHeight = -1;
+
+        GroupInfo()
+        {
+        }
     }
 
     /**
@@ -239,7 +243,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
         private SparseArray<GroupInfo> groupInfo = new SparseArray<>();
         private DailyAnimatedExpandableListView parent;
 
-        private void setParent(DailyAnimatedExpandableListView parent)
+        void setParent(DailyAnimatedExpandableListView parent)
         {
             this.parent = parent;
         }
@@ -275,7 +279,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
             info.dummyHeight = -1;
         }
 
-        private void startExpandAnimation(int groupPosition, int firstChildPosition)
+        void startExpandAnimation(int groupPosition, int firstChildPosition)
         {
             GroupInfo info = getGroupInfo(groupPosition);
             info.animating = true;
@@ -283,7 +287,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
             info.expanding = true;
         }
 
-        private void startCollapseAnimation(int groupPosition, int firstChildPosition)
+        void startCollapseAnimation(int groupPosition, int firstChildPosition)
         {
             GroupInfo info = getGroupInfo(groupPosition);
             info.animating = true;
@@ -291,7 +295,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
             info.expanding = false;
         }
 
-        private void stopAnimation(int groupPosition)
+        void stopAnimation(int groupPosition)
         {
             GroupInfo info = getGroupInfo(groupPosition);
             info.animating = false;
@@ -622,7 +626,7 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
         private View view;
         private GroupInfo groupInfo;
 
-        private ExpandAnimation(View v, int startHeight, int endHeight, GroupInfo info)
+        ExpandAnimation(View v, int startHeight, int endHeight, GroupInfo info)
         {
             baseHeight = startHeight;
             delta = endHeight - startHeight;

@@ -25,10 +25,10 @@ public class BonusActivity extends BaseActivity
     private static final int REQUEST_ACTIVITY_INVITEFRIENDS = 10000;
     private static final int REQUEST_ACTIVITY_TERMS = 10001;
 
-    private String mRecommendCode;
-    private String mName;
+    String mRecommendCode;
+    String mName;
 
-    private BonusLayout mBonusLayout;
+    BonusLayout mBonusLayout;
     private BonusNetworkController mNetworkController;
 
     public static Intent newInstance(Context context)
@@ -98,7 +98,7 @@ public class BonusActivity extends BaseActivity
         }
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);

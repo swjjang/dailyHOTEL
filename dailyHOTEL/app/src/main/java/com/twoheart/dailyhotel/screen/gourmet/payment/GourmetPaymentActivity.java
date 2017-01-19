@@ -66,15 +66,15 @@ import retrofit2.Response;
 @SuppressLint({"NewApi", "ResourceAsColor"})
 public class GourmetPaymentActivity extends PlacePaymentActivity
 {
-    private GourmetPaymentLayout mGourmetPaymentLayout;
+    GourmetPaymentLayout mGourmetPaymentLayout;
     //
-    private boolean mIsChangedTime;
-    private boolean mIsChangedPrice; // 가격이 변경된 경우.
-    private String mPlaceImageUrl;
+    boolean mIsChangedTime;
+    boolean mIsChangedPrice; // 가격이 변경된 경우.
+    String mPlaceImageUrl;
     private boolean mIsUnderPrice;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
-    private Dialog mTimeDialog;
+    Dialog mTimeDialog;
 
     public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime//
         , String imageUrl, String category, int gourmetIndex, boolean isDBenefit//
@@ -991,7 +991,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     }
 
-    private void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime saleTime)
+    void requestValidateTicketPayment(GourmetPaymentInformation gourmetPaymentInformation, SaleTime saleTime)
     {
         if (gourmetPaymentInformation == null || saleTime == null)
         {
@@ -1006,7 +1006,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketJsonResponseListener);
     }
 
-    private void recordAnalyticsPaymentComplete(GourmetPaymentInformation gourmetPaymentInformation)
+    void recordAnalyticsPaymentComplete(GourmetPaymentInformation gourmetPaymentInformation)
     {
         try
         {
@@ -1181,7 +1181,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         return params;
     }
 
-    private void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    void setPaymentInformation(GourmetPaymentInformation gourmetPaymentInformation)
     {
         if (gourmetPaymentInformation == null)
         {
@@ -1309,7 +1309,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     }
 
-    private void setCouponSelected(boolean isSelected)
+    void setCouponSelected(boolean isSelected)
     {
         mGourmetPaymentLayout.setCouponSelected(isSelected);
 
@@ -1324,7 +1324,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         setPaymentInformation((GourmetPaymentInformation) mPaymentInformation);
     }
 
-    private void startCouponPopup(GourmetPaymentInformation gourmetPaymentInformation)
+    void startCouponPopup(GourmetPaymentInformation gourmetPaymentInformation)
     {
         TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
 
@@ -1344,7 +1344,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             AnalyticsManager.Action.GOURMET_USING_COUPON_CLICKED, AnalyticsManager.Label.GOURMET_USING_COUPON_CLICKED, null);
     }
 
-    private void startCancelCouponPopup(View.OnClickListener positiveListener)
+    void startCancelCouponPopup(View.OnClickListener positiveListener)
     {
         showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
             getString(R.string.dialog_btn_text_no), positiveListener, null);
@@ -1742,7 +1742,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mGourmetPaymentInformationCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mGourmetPaymentInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -1905,7 +1905,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mFinalCheckPayCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mFinalCheckPayCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

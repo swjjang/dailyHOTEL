@@ -47,13 +47,13 @@ public class StayAutoRefundActivity extends BaseActivity
 
     protected StayAutoRefundLayout mStayAutoRefundLayout;
     protected StayAutoRefundNetworkController mStayAutoRefundNetworkController;
-    private StayBookingDetail mStayBookingDetail;
-    private Dialog mDialog;
+    StayBookingDetail mStayBookingDetail;
+    Dialog mDialog;
 
-    private int mSelectedCancelReason;
-    private String mCancelReasonMessage;
-    private Bank mSelectedBank;
-    private List<Bank> mBankList;
+    int mSelectedCancelReason;
+    String mCancelReasonMessage;
+    Bank mSelectedBank;
+    List<Bank> mBankList;
 
     public static Intent newInstance(Context context, StayBookingDetail stayBookingDetail)
     {
@@ -219,7 +219,7 @@ public class StayAutoRefundActivity extends BaseActivity
         }
     }
 
-    private void showSelectCancelDialog(int position, String message)
+    void showSelectCancelDialog(int position, String message)
     {
         if (isFinishing())
         {
@@ -506,7 +506,7 @@ public class StayAutoRefundActivity extends BaseActivity
         });
     }
 
-    private void showSelectBankListDialog(Bank bank, List<Bank> bankList)
+    void showSelectBankListDialog(Bank bank, List<Bank> bankList)
     {
         if (isFinishing())
         {
@@ -605,7 +605,7 @@ public class StayAutoRefundActivity extends BaseActivity
         }
     }
 
-    private void setCancelReasonResult(int position, String reason, String message)
+    void setCancelReasonResult(int position, String reason, String message)
     {
         mSelectedCancelReason = position;
 
@@ -628,7 +628,7 @@ public class StayAutoRefundActivity extends BaseActivity
         mStayAutoRefundLayout.setRefundButtonEnabled(isEnabledRefund());
     }
 
-    private void setSelectedBankResult(Bank bank)
+    void setSelectedBankResult(Bank bank)
     {
         mSelectedBank = bank;
 
@@ -636,7 +636,7 @@ public class StayAutoRefundActivity extends BaseActivity
         mStayAutoRefundLayout.setRefundButtonEnabled(isEnabledRefund());
     }
 
-    private boolean isEnabledRefund()
+    boolean isEnabledRefund()
     {
         // 취소 사유 입력
         if (mSelectedCancelReason < 0)

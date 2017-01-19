@@ -31,9 +31,9 @@ public class CouponListLayout extends BaseLayout
     private DailyTextView mHeaderTextView;
     private RecyclerView mRecyclerView;
     private View mEmptyView, mCouponLayout;
-    private CouponListAdapter mListAdapter;
+    CouponListAdapter mListAdapter;
     private Spinner mSortSpinner;
-    private SortArrayAdapter mSortArrayAdapter;
+    SortArrayAdapter mSortArrayAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -244,7 +244,7 @@ public class CouponListLayout extends BaseLayout
         return mListAdapter.getCoupon(userCouponCode);
     }
 
-    private CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
+    CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()
     {
         @Override
         public void startNotice()

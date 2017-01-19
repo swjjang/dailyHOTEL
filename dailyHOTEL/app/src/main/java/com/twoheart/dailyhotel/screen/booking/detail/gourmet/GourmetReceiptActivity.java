@@ -32,9 +32,9 @@ import retrofit2.Response;
 
 public class GourmetReceiptActivity extends PlaceReceiptActivity
 {
-    private String mReservationIndex;
+    String mReservationIndex;
 
-    private void makeLayout(JSONObject jsonObject) throws Exception
+    void makeLayout(JSONObject jsonObject) throws Exception
     {
         // 영수증
         mReservationIndex = jsonObject.getString("gourmetReservationIdx");
@@ -250,7 +250,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         DailyMobileAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservationReceiptCallback);
     }
 
-    private void showSendEmailDialog()
+    void showSendEmailDialog()
     {
         if (isFinishing())
         {
@@ -414,7 +414,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         }
     };
 
-    private retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

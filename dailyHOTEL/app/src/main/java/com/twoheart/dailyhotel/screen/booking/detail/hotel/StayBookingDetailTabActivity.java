@@ -475,12 +475,12 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         mStayBookingDetail.dailyDateTime = dailyDateTime;
     }
 
-    private void startFAQ()
+    void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private long getCompareDate(long timeInMillis)
+    long getCompareDate(long timeInMillis)
     {
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -494,7 +494,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         return calendar.getTimeInMillis();
     }
 
-    private void startFrontCall(final String phoneNumber)
+    void startFrontCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -546,7 +546,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    private void startReservationCall(final String phoneNumber)
+    void startReservationCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -598,7 +598,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    private void startKakao()
+    void startKakao()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
@@ -624,7 +624,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -704,7 +704,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
     };
 
-    private retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

@@ -29,8 +29,8 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
     private Context mContext;
     private List<Coupon> mList;
-    private OnCouponItemListener mListener;
-    private int mSelectPosition = -1;
+    OnCouponItemListener mListener;
+    int mSelectPosition = -1;
     private boolean mIsSelectedMode;
 
     public interface OnCouponItemListener

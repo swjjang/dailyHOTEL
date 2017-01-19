@@ -86,12 +86,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected View mProductTypeLayout;
     private View mBottomLayout;
     protected View mProductTypeBackgroundView;
-    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
+    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
     private AnimatorSet mWishPopupAnimatorSet;
-    private int mStatusBarHeight;
+    int mStatusBarHeight;
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
     protected TextView mTransTotalGradeTextView, mTransPlaceNameTextView;
@@ -406,7 +406,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return 0;
     }
 
-    private void setProductInformationLayoutEnabled(boolean enabled)
+    void setProductInformationLayoutEnabled(boolean enabled)
     {
         mProductTypeLayout.setEnabled(enabled);
         mProductTypeRecyclerView.setEnabled(enabled);

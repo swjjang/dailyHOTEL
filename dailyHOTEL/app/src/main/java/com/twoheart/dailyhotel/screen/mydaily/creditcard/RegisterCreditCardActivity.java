@@ -135,6 +135,10 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
     {
         boolean isActionBarProgressBarShowing = false;
 
+        DailyWebChromeClient()
+        {
+        }
+
         @Override
         public void onProgressChanged(WebView view, int newProgress)
         {
@@ -164,6 +168,10 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
     private class DailyWebViewClient extends WebViewClient
     {
+
+        DailyWebViewClient()
+        {
+        }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url)

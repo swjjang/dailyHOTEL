@@ -21,7 +21,7 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
     private Context mContext;
     private LayoutInflater mInflater;
     private List<TicketInformation> mTicketInformationList;
-    private View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
 
 

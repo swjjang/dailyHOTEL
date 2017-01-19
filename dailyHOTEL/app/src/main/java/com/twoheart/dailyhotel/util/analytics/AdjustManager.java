@@ -42,7 +42,7 @@ public class AdjustManager extends BaseAnalyticsManager
     private static final String APPLICATION_TOKEN = "jkf7ii0lj9xc";
     private static final String ENVIRONMENT = DEBUG == true ? AdjustConfig.ENVIRONMENT_SANDBOX : AdjustConfig.ENVIRONMENT_PRODUCTION;
 
-    private Context mContext;
+    Context mContext;
 
     public AdjustManager(Context context)
     {

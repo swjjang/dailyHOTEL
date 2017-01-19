@@ -76,7 +76,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
         DailyMobileAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mGourmetDetailInformationCallback);
     }
 
-    private void setSaleTicketResult(int count)
+    void setSaleTicketResult(int count)
     {
         if (count < 1)
         {

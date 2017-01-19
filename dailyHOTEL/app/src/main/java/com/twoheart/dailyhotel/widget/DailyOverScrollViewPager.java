@@ -33,21 +33,25 @@ public class DailyOverScrollViewPager extends ViewPager
 
     private final OverScrollEffect mOverScrollEffect = new OverScrollEffect();
 
-    private OnPageChangeListener mScrollListener;
+    OnPageChangeListener mScrollListener;
     private float mLastMotionX;
     private int mActivePointerId;
-    private int mScrollPosition;
-    private float mScrollPositionOffset;
+    int mScrollPosition;
+    float mScrollPositionOffset;
     private final int mTouchSlop; // Touch Event 가 Scroll Event로 인정받기위한 최소간격!
 
     private int mOverScrollTranslation;
-    private int mOverScrollAnimationDuration;
+    int mOverScrollAnimationDuration;
     private Rect mTempRect = new Rect();
 
     private class OverScrollEffect
     {
-        private float mOverScroll;
+        float mOverScroll;
         private Animator mAnimator;
+
+        OverScrollEffect()
+        {
+        }
 
         /**
          * @param distance [0..1] 1 보다 크면 OverScroll
@@ -58,7 +62,7 @@ public class DailyOverScrollViewPager extends ViewPager
             invalidateVisibleChildren();
         }
 
-        private void onRelease()
+        void onRelease()
         {
             if (mAnimator != null && mAnimator.isRunning())
             {
@@ -93,7 +97,7 @@ public class DailyOverScrollViewPager extends ViewPager
             }
         }
 
-        private void startAnimation(final float target)
+        void startAnimation(final float target)
         {
             mAnimator = ObjectAnimator.ofFloat(this, "Pull", mOverScroll, target);
             mAnimator.setInterpolator(new DecelerateInterpolator());
@@ -103,7 +107,7 @@ public class DailyOverScrollViewPager extends ViewPager
             mAnimator.start();
         }
 
-        private boolean isOverScrolling()
+        boolean isOverScrolling()
         {
             if (isFirst() && mOverScroll < 0)
             {
@@ -153,7 +157,7 @@ public class DailyOverScrollViewPager extends ViewPager
         mScrollListener = listener;
     }
 
-    private void invalidateVisibleChildren()
+    void invalidateVisibleChildren()
     {
         for (int i = 0; i < getChildCount(); i++)
         {
@@ -172,6 +176,10 @@ public class DailyOverScrollViewPager extends ViewPager
 
     private class ViewPageChangeListener implements OnPageChangeListener
     {
+        ViewPageChangeListener()
+        {
+        }
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
         {
@@ -383,12 +391,12 @@ public class DailyOverScrollViewPager extends ViewPager
         return false;
     }
 
-    private boolean isFirst()
+    boolean isFirst()
     {
         return mScrollPosition == 0;
     }
 
-    private boolean isLast()
+    boolean isLast()
     {
         int count = getAdapter().getCount();
         return mScrollPosition == count - 1;

@@ -32,13 +32,13 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 {
     private static final int VERIFICATION_NUMBER_LENGTH = 4;
 
-    private View mCertificationLayout;
-    private View mVerificationLayout, mConfirm, mCertificationNumberView;
+    View mCertificationLayout;
+    View mVerificationLayout, mConfirm, mCertificationNumberView;
     private View mPhoneView, mVerificationView;
-    private DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
+    DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextView mGuideTextView;
     private TextWatcher mTextWatcher;
-    private ScrollView mScrollView;
+    ScrollView mScrollView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -472,7 +472,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         return phoneNumber;
     }
 
-    private void provenCertificationButton(String phoneNumber)
+    void provenCertificationButton(String phoneNumber)
     {
         String tag = (String) mCountryEditText.getTag();
 

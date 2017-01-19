@@ -43,13 +43,13 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
     private static final int STAY_TAB_COUNT = 2;
 
-    private DailyViewPager mViewPager;
-    private PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
+    DailyViewPager mViewPager;
+    PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
     private StayRegionListNetworkController mNetworkController;
-    private SaleTime mSaleTime;
-    private int mNights;
-    private Province mSelectedProvince;
+    SaleTime mSaleTime;
+    int mNights;
+    Province mSelectedProvince;
     private TabLayout mTabLayout;
 
     public static Intent newInstance(Context context, Province province, SaleTime saleTime, int nights)
@@ -215,7 +215,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
     private PlaceRegionListFragment.OnPlaceRegionListFragment mOnPlaceRegionListFragment = new PlaceRegionListFragment.OnPlaceRegionListFragment()
     {
-        private void recordEvent(Province province)
+        void recordEvent(Province province)
         {
             String label;
 
@@ -407,7 +407,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         }
     };
 
-    private void removeGlobalRegion()
+    void removeGlobalRegion()
     {
         mTabLayout.setVisibility(View.GONE);
         mTabLayout.removeTabAt(1);
@@ -444,7 +444,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         return (PlaceRegionListFragment) mFragmentPagerAdapter.getItem(position);
     }
 
-    private void showTabLayout()
+    void showTabLayout()
     {
         mTabLayout.setVisibility(View.VISIBLE);
     }

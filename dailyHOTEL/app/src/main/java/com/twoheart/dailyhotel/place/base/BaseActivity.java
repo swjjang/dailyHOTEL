@@ -58,8 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         void onNativeButtonClick(View v);
     }
 
-    private Dialog mDialog;
-    private LoadingDialog mLockUI;
+    Dialog mDialog;
+    LoadingDialog mLockUI;
     protected String mNetworkTag;
 
     private Handler mHandler = new Handler()

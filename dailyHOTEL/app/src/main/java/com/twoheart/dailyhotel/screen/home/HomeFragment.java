@@ -20,7 +20,7 @@ import com.twoheart.dailyhotel.util.Constants;
 public class HomeFragment extends BaseFragment
 {
     private HomeLayout mHomeLayout;
-    private BaseActivity mBaseActivity;
+    BaseActivity mBaseActivity;
     private PlaceType mPlaceType = PlaceType.HOTEL;
 
 

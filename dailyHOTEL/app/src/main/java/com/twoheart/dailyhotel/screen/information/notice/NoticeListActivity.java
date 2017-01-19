@@ -28,9 +28,9 @@ import retrofit2.Response;
 
 public class NoticeListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
-    private View mEmptyView;
-    private ListView mListView;
-    private NoticeListAdapter mNoticeListAdapter;
+    View mEmptyView;
+    ListView mListView;
+    NoticeListAdapter mNoticeListAdapter;
 
     private boolean mDontReload;
 

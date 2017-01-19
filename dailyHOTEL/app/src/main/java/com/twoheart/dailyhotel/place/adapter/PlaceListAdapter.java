@@ -37,8 +37,8 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected boolean mShowDistanceIgnoreSort;
     protected View.OnClickListener mOnEventBannerClickListener;
 
-    private Handler mEventBannerHandler;
-    private int mLastEventBannerPosition;
+    Handler mEventBannerHandler;
+    int mLastEventBannerPosition;
     private Constants.SortType mSortType;
 
     public PlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
@@ -218,7 +218,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         nextEventBannerPosition(holder, mLastEventBannerPosition);
     }
 
-    private void nextEventBannerPosition(EventBannerViewHolder eventViewHolder, int position)
+    void nextEventBannerPosition(EventBannerViewHolder eventViewHolder, int position)
     {
         mEventBannerHandler.removeMessages(0);
 

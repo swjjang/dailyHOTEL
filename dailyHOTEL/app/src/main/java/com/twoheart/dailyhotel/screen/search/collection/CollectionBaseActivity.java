@@ -40,9 +40,9 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
     protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
-    private DailyToolbarLayout mDailyToolbarLayout;
-    private RecyclerView mRecyclerView;
-    private PlaceListAdapter mPlaceListAdapter;
+    DailyToolbarLayout mDailyToolbarLayout;
+    RecyclerView mRecyclerView;
+    PlaceListAdapter mPlaceListAdapter;
     private String[] mPlaceIndexs;
     private String mQueryType;
     private String mParams;

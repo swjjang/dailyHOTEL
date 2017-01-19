@@ -45,8 +45,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     protected static final String INTENT_EXTRA_DATA_DISCOUNT_TYPE = "discountType";
     protected static final String INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM = "mapPaymentInform";
 
-    private String mPaymentType;
-    private Map<String, String> mParams;
+    String mPaymentType;
+    Map<String, String> mParams;
 
     protected abstract void recordEvent(String action, String label);
 

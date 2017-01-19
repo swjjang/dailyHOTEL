@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public abstract class RecentPlacesListLayout extends BaseLayout
 {
-    private RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     private View mEmptyLayout;
     private DailyImageView mEmptyImageView;
     private DailyTextView mEmptyTextView;

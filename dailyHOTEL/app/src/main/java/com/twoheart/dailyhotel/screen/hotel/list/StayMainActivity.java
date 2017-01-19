@@ -55,7 +55,7 @@ import retrofit2.Response;
 
 public class StayMainActivity extends PlaceMainActivity
 {
-    private StayCuration mStayCuration;
+    StayCuration mStayCuration;
 
     public static Intent newInstance(Context context)
     {
@@ -297,7 +297,7 @@ public class StayMainActivity extends PlaceMainActivity
         }
     }
 
-    private void startCalendar(String callByScreen)
+    void startCalendar(String callByScreen)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -340,7 +340,7 @@ public class StayMainActivity extends PlaceMainActivity
         return mStayCuration;
     }
 
-    private void recordAnalyticsStayList(String screen)
+    void recordAnalyticsStayList(String screen)
     {
         if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == false)
@@ -858,7 +858,7 @@ public class StayMainActivity extends PlaceMainActivity
         }
     };
 
-    private StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
+    StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
         @Override
         public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
@@ -1111,7 +1111,7 @@ public class StayMainActivity extends PlaceMainActivity
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private boolean moveDeepLinkDetail(BaseActivity baseActivity)
+    boolean moveDeepLinkDetail(BaseActivity baseActivity)
     {
         try
         {
@@ -1294,7 +1294,7 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearch(BaseActivity baseActivity)
+    boolean moveDeepLinkSearch(BaseActivity baseActivity)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -1364,7 +1364,7 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
+    boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
     {
         String word = DailyDeepLink.getInstance().getSearchWord();
         DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
@@ -1462,7 +1462,7 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkStayList(List<Province> provinceList, List<Area> areaList)
+    boolean moveDeepLinkStayList(List<Province> provinceList, List<Area> areaList)
     {
         String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
         String date = DailyDeepLink.getInstance().getDate();

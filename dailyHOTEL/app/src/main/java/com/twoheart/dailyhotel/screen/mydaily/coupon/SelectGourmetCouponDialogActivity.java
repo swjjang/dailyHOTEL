@@ -35,18 +35,18 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_TICKET_PRICE = "ticketPrice";
     public static final String INTENT_EXTRA_TICKET_COUNT = "ticketCount";
 
-    private SelectCouponDialogLayout mLayout;
-    private SelectGourmetCouponNetworkController mNetworkController;
+    SelectCouponDialogLayout mLayout;
+    SelectGourmetCouponNetworkController mNetworkController;
 
-    private boolean mIsSetOk = false;
+    boolean mIsSetOk = false;
 
-    private int mGourmetIdx;
-    private int mTicketIdx;
+    int mGourmetIdx;
+    int mTicketIdx;
 
-    private int mTicketCount;
-    private String mDate;
+    int mTicketCount;
+    String mDate;
     private String mGourmetName;
-    private String mCallByScreen;
+    String mCallByScreen;
 
     public static Intent newInstance(Context context, int gourmetIdx, int ticketIdx, String date, //
                                      String gourmetName, int ticketCount)

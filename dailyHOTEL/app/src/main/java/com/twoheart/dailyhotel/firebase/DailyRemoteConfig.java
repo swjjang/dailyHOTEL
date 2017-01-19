@@ -24,8 +24,8 @@ public class DailyRemoteConfig
 {
     private static DailyRemoteConfig mInstance = null;
 
-    private Context mContext;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    Context mContext;
+    FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     public interface OnCompleteListener
     {
@@ -184,7 +184,7 @@ public class DailyRemoteConfig
         });
     }
 
-    private void processSplashImage(Context context, String updateTime, String imageUrl)
+    void processSplashImage(Context context, String updateTime, String imageUrl)
     {
         if (Util.isTextEmpty(updateTime, imageUrl) == true)
         {
@@ -237,7 +237,7 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writeCompanyInformation(Context context, String companyInfo)
+    void writeCompanyInformation(Context context, String companyInfo)
     {
         try
         {
@@ -260,7 +260,7 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writePaymentType(Context context, String androidPaymentType)
+    void writePaymentType(Context context, String androidPaymentType)
     {
         try
         {
@@ -284,7 +284,7 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writeText(Context context, String textInfo)
+    void writeText(Context context, String textInfo)
     {
         try
         {
@@ -318,7 +318,7 @@ public class DailyRemoteConfig
         }
     }
 
-    private void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
+    void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
     {
         if (Util.isTextEmpty(jsonObject, clientVersion) == true)
         {

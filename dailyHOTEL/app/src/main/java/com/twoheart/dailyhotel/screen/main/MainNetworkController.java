@@ -426,7 +426,7 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mUserProfileBenefitCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserProfileBenefitCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

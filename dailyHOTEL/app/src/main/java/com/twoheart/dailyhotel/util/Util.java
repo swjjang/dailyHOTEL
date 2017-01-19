@@ -1167,7 +1167,7 @@ public class Util implements Constants
         }
     }
 
-    private static void openTMapNavi(final Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
+    static void openTMapNavi(final Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
     {
         if (tmapTapi.isTmapApplicationInstalled() == true)
         {
@@ -1217,7 +1217,7 @@ public class Util implements Constants
         }
     }
 
-    private static void showFailedTMapNaviDialog(final Activity activity)
+    static void showFailedTMapNaviDialog(final Activity activity)
     {
         if (activity == null)
         {

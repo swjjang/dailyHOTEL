@@ -84,7 +84,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
                 nights, mStayDetailInformationCallback);
     }
 
-    private void setSaleRoomResult(int count, String message)
+    void setSaleRoomResult(int count, String message)
     {
         if (count < 1)
         {

@@ -134,6 +134,10 @@ public class RetrofitHttpClient implements Constants
 
     private class HeaderInterceptor implements Interceptor
     {
+        HeaderInterceptor()
+        {
+        }
+
         @Override
         public Response intercept(Chain chain) throws IOException
         {

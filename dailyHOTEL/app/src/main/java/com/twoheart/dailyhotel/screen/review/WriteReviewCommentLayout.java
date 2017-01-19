@@ -31,18 +31,18 @@ import com.twoheart.dailyhotel.widget.DailyScrollView;
 public class WriteReviewCommentLayout extends BaseLayout
 {
     private View mCompleteView;
-    private TextView mToolbarTitleView;
-    private View mBodyTitleLayout;
-    private DailyEditText mEditTextView;
+    TextView mToolbarTitleView;
+    View mBodyTitleLayout;
+    DailyEditText mEditTextView;
     private TextView mBottomTextCountView;
     private View mBottomLayout;
     private DailyScrollView mScrollView;
 
-    private boolean mIsShowAnimationStart;
-    private boolean mIsHideAnimationStart;
+    boolean mIsShowAnimationStart;
+    boolean mIsHideAnimationStart;
     private AlphaAnimation mAlphaAnimation;
 
-    private int mBodyTitleBottom = 0;
+    int mBodyTitleBottom = 0;
 
     private static final int DEFAULT_TEXT_COUNT = 10;
     private static final int TOOLBAR_TITLE_ANIMATION_DURATION = 200;
@@ -128,7 +128,7 @@ public class WriteReviewCommentLayout extends BaseLayout
         }
     }
 
-    private void updateCompleteLayout(String text)
+    void updateCompleteLayout(String text)
     {
         if (Util.isTextEmpty(text) == true)
         {
@@ -150,7 +150,7 @@ public class WriteReviewCommentLayout extends BaseLayout
         } : null);
     }
 
-    private void updateTextCountLayout(String text)
+    void updateTextCountLayout(String text)
     {
         if (Util.isTextEmpty(text) == true)
         {

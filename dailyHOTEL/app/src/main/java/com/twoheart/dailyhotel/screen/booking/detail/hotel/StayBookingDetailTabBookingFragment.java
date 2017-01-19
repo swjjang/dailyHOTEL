@@ -56,7 +56,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
 
     private StayBookingDetail mBookingDetail;
-    private int mReservationIndex;
+    int mReservationIndex;
 
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
@@ -852,7 +852,7 @@ public class StayBookingDetailTabBookingFragment extends BaseFragment implements
         }
     }
 
-    private void startKakao()
+    void startKakao()
     {
         try
         {

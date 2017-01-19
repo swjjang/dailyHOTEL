@@ -27,10 +27,10 @@ import java.util.List;
 
 public abstract class PlaceRegionListFragment extends BaseFragment
 {
-    private OnPlaceRegionListFragment mOnPlaceRegionListFragment;
+    OnPlaceRegionListFragment mOnPlaceRegionListFragment;
 
-    private DailyAnimatedExpandableListView mListView;
-    private PlaceRegionAnimatedExpandableListAdapter mAdapter;
+    DailyAnimatedExpandableListView mListView;
+    PlaceRegionAnimatedExpandableListAdapter mAdapter;
     private Province mSelectedProvince;
 
     private PlaceRegionListActivity.Region mRegion;
@@ -152,7 +152,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         return mRegion;
     }
 
-    private View getGroupView(int groupPosition)
+    View getGroupView(int groupPosition)
     {
         int count = mListView.getChildCount();
 
@@ -179,7 +179,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         return null;
     }
 
-    private void expandGroupWidthAnimation(int groupPosition, final RegionViewItem regionViewItem)
+    void expandGroupWidthAnimation(int groupPosition, final RegionViewItem regionViewItem)
     {
         mListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
         {
@@ -202,7 +202,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         }
     }
 
-    private void postExpandGroupWithAnimation(final int groupPosition)
+    void postExpandGroupWithAnimation(final int groupPosition)
     {
         mListView.postDelayed(new Runnable()
         {

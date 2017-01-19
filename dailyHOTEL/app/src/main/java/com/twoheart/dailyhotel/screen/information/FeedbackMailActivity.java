@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class FeedbackMailActivity extends BaseActivity implements Constants, OnClickListener
 {
-    private DailyEditText mEmailEditText, mMessageEditText;
+    DailyEditText mEmailEditText, mMessageEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

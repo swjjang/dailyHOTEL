@@ -56,15 +56,15 @@ public class MainActivity extends BaseActivity implements Constants
 
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
-    private MainNetworkController mNetworkController;
-    private MainFragmentManager mMainFragmentManager;
-    private MenuBarLayout mMenuBarLayout;
+    MainNetworkController mNetworkController;
+    MainFragmentManager mMainFragmentManager;
+    MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
-    private View mSplashLayout, mTooltipLayout;
+    View mSplashLayout, mTooltipLayout;
 
-    private boolean mIsInitialization;
-    private boolean mIsBenefitAlarm;
-    private Handler mDelayTimeHandler = new Handler()
+    boolean mIsInitialization;
+    boolean mIsBenefitAlarm;
+    Handler mDelayTimeHandler = new Handler()
     {
         @Override
         public void handleMessage(Message msg)
@@ -452,7 +452,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
     }
 
-    private void hideAnimationTooltip()
+    void hideAnimationTooltip()
     {
         if (mTooltipLayout.getTag() != null)
         {
@@ -496,7 +496,7 @@ public class MainActivity extends BaseActivity implements Constants
         objectAnimator.start();
     }
 
-    private void checkAppVersion(final String currentVersion, final String forceVersion)
+    void checkAppVersion(final String currentVersion, final String forceVersion)
     {
         if (Util.isTextEmpty(currentVersion, forceVersion) == true)
         {
@@ -614,7 +614,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
     }
 
-    private void showDisabledNetworkPopup()
+    void showDisabledNetworkPopup()
     {
         if (isFinishing() == true)
         {
@@ -693,7 +693,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
     }
 
-    private void finishSplash()
+    void finishSplash()
     {
         mDelayTimeHandler.sendEmptyMessageDelayed(2, 2000);
         mDelayTimeHandler.removeMessages(0);
@@ -761,7 +761,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
     };
 
-    private MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
+    MainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new MainNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void updateNewEvent(boolean isNewEvent, boolean isNewCoupon, boolean isNewNotices)

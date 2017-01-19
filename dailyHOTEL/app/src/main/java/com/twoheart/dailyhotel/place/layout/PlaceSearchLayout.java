@@ -46,16 +46,16 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private static final int HANDLER_MESSAGE_HIDE_AUTOCOMPLETE = 1;
 
     private View mTermsOfLocationView;
-    private ViewGroup mAutoCompleteLayout;
+    ViewGroup mAutoCompleteLayout;
     private DailyScrollView mAutoCompleteScrollLayout;
     private View mRecentSearchLayout;
     private ViewGroup mRecentContentsLayout;
     private View mDeleteAllRecentSearchesView;
 
-    private EditText mSearchEditText;
+    EditText mSearchEditText;
     private TextView mDateTextView;
 
-    private Handler mHandler;
+    Handler mHandler;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -326,7 +326,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         recentSearchesScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
         {
             private int mDistance;
-            private boolean mIsHide;
+            boolean mIsHide;
 
             @Override
             public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
@@ -475,7 +475,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mAutoCompleteScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
         {
             private int mDistance;
-            private boolean mIsHide;
+            boolean mIsHide;
 
             @Override
             public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
@@ -544,7 +544,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }
     }
 
-    private void updateAutoCompleteLayout(ViewGroup viewGroup, String text, List<Keyword> keywordList)
+    void updateAutoCompleteLayout(ViewGroup viewGroup, String text, List<Keyword> keywordList)
     {
         if (viewGroup == null)
         {
@@ -645,7 +645,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         }
     }
 
-    private void showRecentSearchesView()
+    void showRecentSearchesView()
     {
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
         mRecentSearchLayout.setVisibility(View.VISIBLE);
@@ -657,14 +657,14 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         mRecentSearchLayout.setVisibility(View.GONE);
     }
 
-    private void hideAutoCompleteView()
+    void hideAutoCompleteView()
     {
         mAutoCompleteScrollLayout.setVisibility(View.GONE);
 
         resetAutoCompleteLayout(mAutoCompleteLayout);
     }
 
-    private void validateKeyword(String keyword)
+    void validateKeyword(String keyword)
     {
         String text = keyword.trim();
 
@@ -676,7 +676,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         ((OnEventListener) mOnEventListener).onSearch(text);
     }
 
-    private void validateKeyword(Keyword keyword)
+    void validateKeyword(Keyword keyword)
     {
         if (mOnEventListener == null)
         {

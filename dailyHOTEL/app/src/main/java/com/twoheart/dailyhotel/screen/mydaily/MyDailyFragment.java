@@ -41,10 +41,10 @@ import retrofit2.Response;
 
 public class MyDailyFragment extends BaseFragment implements Constants
 {
-    private MyDailyLayout mMyDailyLayout;
-    private MyDailyNetworkController mNetworkController;
+    MyDailyLayout mMyDailyLayout;
+    MyDailyNetworkController mNetworkController;
     private BroadcastReceiver mNewEventBroadcastReceiver;
-    private boolean mIsAttach;
+    boolean mIsAttach;
     private boolean mDontReload;
 
     @Override
@@ -228,7 +228,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
         }
     }
 
-    private void startSignUp(String recommenderCode)
+    void startSignUp(String recommenderCode)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {

@@ -36,12 +36,12 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ZoomMapActivity extends BaseActivity
 {
-    private GoogleMap mGoogleMap;
+    GoogleMap mGoogleMap;
     private View mMyLocationView;
-    private MarkerOptions mMyLocationMarkerOptions;
-    private Marker mMyLocationMarker, mPlaceLocationMarker;
+    MarkerOptions mMyLocationMarkerOptions;
+    Marker mMyLocationMarker, mPlaceLocationMarker;
     private Handler mHandler = new Handler();
-    private SourceType mSourceType;
+    SourceType mSourceType;
 
     public enum SourceType
     {
@@ -280,7 +280,7 @@ public class ZoomMapActivity extends BaseActivity
         }
     }
 
-    private void relocationMyLocation()
+    void relocationMyLocation()
     {
         mMyLocationView = findViewById(0x2);
 
@@ -291,7 +291,7 @@ public class ZoomMapActivity extends BaseActivity
         }
     }
 
-    private void relocationZoomControl()
+    void relocationZoomControl()
     {
         View zoomControl = findViewById(0x1);
 
@@ -309,7 +309,7 @@ public class ZoomMapActivity extends BaseActivity
         }
     }
 
-    private void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
+    void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
     {
         if (googleMap != null)
         {

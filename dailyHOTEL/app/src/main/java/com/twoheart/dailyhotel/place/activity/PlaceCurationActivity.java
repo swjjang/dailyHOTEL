@@ -48,10 +48,10 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     protected View mAnimationLayout; // 애니메이션 되는 뷰
     private View mDisableLayout; // 전체 화면을 덮는 뷰
-    private View mBackgroundView; // 뒷배경
+    View mBackgroundView; // 뒷배경
 
-    private ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
-    private ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
+    ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
+    ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
 

@@ -40,7 +40,7 @@ public class StayDetailListAdapter extends BaseAdapter
     private int mImageHeight;
     private View mHotelTitleLayout;
 
-    private StayDetailLayout.OnEventListener mOnEventListener;
+    StayDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
     public StayDetailListAdapter(Context context, SaleTime saleTime, StayDetail stayDetail,//

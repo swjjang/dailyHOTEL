@@ -64,24 +64,24 @@ import retrofit2.Response;
 public class LoginActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     public CallbackManager mCallbackManager;
-    private ScrollView mScrollView;
+    ScrollView mScrollView;
     private DailyAutoCompleteEditText mEmailEditText;
     private DailyEditText mPasswordEditText;
-    private TextView mLoginView, mFindPasswordView;
-    private View mEmailView, mPasswordView, mSnsLoginLayout;
-    private com.facebook.login.widget.LoginButton mFacebookLoginView;
+    TextView mLoginView, mFindPasswordView;
+    View mEmailView, mPasswordView, mSnsLoginLayout;
+    com.facebook.login.widget.LoginButton mFacebookLoginView;
 
-    private Map<String, String> mStoreParams;
+    Map<String, String> mStoreParams;
 
     // 카카오톡
-    private com.kakao.usermgmt.LoginButton mKakaoLoginView;
+    com.kakao.usermgmt.LoginButton mKakaoLoginView;
     private SessionCallback mKakaoSessionCallback;
-    private boolean mIsSocialSignUp;
-    private boolean mCertifyingTermination;
+    boolean mIsSocialSignUp;
+    boolean mCertifyingTermination;
 
     //
-    private boolean mIsKeypadOpend;
-    private boolean mScrollToEmailView;
+    boolean mIsKeypadOpend;
+    boolean mScrollToEmailView;
 
     private String mCallByScreen;
 
@@ -309,7 +309,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     }
 
-    private void registerFacebookUser(String id, String name, String email, String gender)
+    void registerFacebookUser(String id, String name, String email, String gender)
     {
         if (mStoreParams == null)
         {
@@ -349,7 +349,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         DailyMobileAPI.getInstance(this).requestFacebookUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }
 
-    private void registerKakaoUser(long id)
+    void registerKakaoUser(long id)
     {
         String index = String.valueOf(id);
 
@@ -563,7 +563,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-    private void loginAndFinish()
+    void loginAndFinish()
     {
         unLockUI();
 
@@ -624,6 +624,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private class SessionCallback implements ISessionCallback
     {
+        SessionCallback()
+        {
+        }
+
         @Override
         public void onSessionOpened()
         {
@@ -764,7 +768,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private retrofit2.Callback mSocialUserSignupCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mSocialUserSignupCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -922,7 +926,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private retrofit2.Callback mSocialUserLoginCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mSocialUserLoginCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -996,7 +1000,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         }
     };
 
-    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

@@ -57,7 +57,7 @@ import retrofit2.Response;
 
 public class GourmetMainActivity extends PlaceMainActivity
 {
-    private GourmetCuration mGourmetCuration;
+    GourmetCuration mGourmetCuration;
 
     public static Intent newInstance(Context context)
     {
@@ -238,7 +238,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     }
 
-    private void startCalendar(String callByScreen)
+    void startCalendar(String callByScreen)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -278,7 +278,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return mGourmetCuration;
     }
 
-    private void recordAnalyticsGourmetList(String screen)
+    void recordAnalyticsGourmetList(String screen)
     {
         if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == false)
@@ -331,7 +331,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     // EventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private PlaceMainLayout.OnEventListener mOnEventListener = new PlaceMainLayout.OnEventListener()
+    PlaceMainLayout.OnEventListener mOnEventListener = new PlaceMainLayout.OnEventListener()
     {
         @Override
         public void onCategoryTabSelected(TabLayout.Tab tab)
@@ -761,7 +761,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     };
 
-    private GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
+    GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
         public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
@@ -1021,7 +1021,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private boolean moveDeepLinkDetail(BaseActivity baseActivity)
+    boolean moveDeepLinkDetail(BaseActivity baseActivity)
     {
         try
         {
@@ -1182,7 +1182,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearch(BaseActivity baseActivity)
+    boolean moveDeepLinkSearch(BaseActivity baseActivity)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -1236,7 +1236,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
+    boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
     {
         String word = DailyDeepLink.getInstance().getSearchWord();
         DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
@@ -1319,7 +1319,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList)
+    boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();

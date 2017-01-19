@@ -29,9 +29,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 
 public class InformationFragment extends BaseFragment implements Constants
 {
-    private InformationLayout mInformationLayout;
+    InformationLayout mInformationLayout;
     private BroadcastReceiver mNewEventBroadcastReceiver;
-    private boolean mIsAttach;
+    boolean mIsAttach;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

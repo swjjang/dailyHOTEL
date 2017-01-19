@@ -18,7 +18,7 @@ import retrofit2.Response;
 
 public class GourmetSearchResultListFragment extends GourmetListFragment
 {
-    private boolean mIsDeepLink;
+    boolean mIsDeepLink;
     private SearchType mSearchType;
 
     @Override

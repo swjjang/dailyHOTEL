@@ -32,12 +32,12 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private static final String INTENT_EXTRA_DATA_WORD = "word";
 
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
-    private DailyViewPager mViewPager;
-    private View mSearchView, mTooltipLayout;
-    private PlaceType mPlaceType;
+    DailyViewPager mViewPager;
+    View mSearchView, mTooltipLayout;
+    PlaceType mPlaceType;
 
-    private StaySearchFragment mStaySearchFragment;
-    private GourmetSearchFragment mGourmetSearchFragment;
+    StaySearchFragment mStaySearchFragment;
+    GourmetSearchFragment mGourmetSearchFragment;
 
     private SaleTime mSaleTime;
     private int mNights;
@@ -426,7 +426,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private void hideAnimationTooltip()
+    void hideAnimationTooltip()
     {
         if (mTooltipLayout.getTag() != null)
         {
@@ -470,7 +470,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         objectAnimator.start();
     }
 
-    private void analyticsSwitchChanged(PlaceType changedPlaceType)
+    void analyticsSwitchChanged(PlaceType changedPlaceType)
     {
         String category = AnalyticsManager.Category.SEARCH;
         String label = AnalyticsManager.ValueType.EMPTY;

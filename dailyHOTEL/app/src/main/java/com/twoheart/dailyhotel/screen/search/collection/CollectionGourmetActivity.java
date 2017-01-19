@@ -31,7 +31,7 @@ import retrofit2.Response;
 
 public class CollectionGourmetActivity extends CollectionBaseActivity
 {
-    private SaleTime mSaleTime;
+    SaleTime mSaleTime;
 
     public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime, String title, String titleImageUrl, String queryType, String query)
     {

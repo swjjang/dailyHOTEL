@@ -34,8 +34,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int FOOTER_COUNT = 1;
 
     private List<Coupon> mList;
-    private Context mContext;
-    private OnCouponItemListener mListener;
+    Context mContext;
+    OnCouponItemListener mListener;
 
     public interface OnCouponItemListener
     {
@@ -297,7 +297,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         }
 
-        private void setMinPriceText(int position, int viewWidth, String lastLineText)
+        void setMinPriceText(int position, int viewWidth, String lastLineText)
         {
             if (Util.isTextEmpty(lastLineText) == true)
             {

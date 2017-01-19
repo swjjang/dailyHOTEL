@@ -11,7 +11,6 @@ buildscript {
 }
 
 apply plugin: 'io.fabric'
-apply plugin: 'com.neenbedankt.android-apt'
 
 repositories {
     jcenter()
@@ -27,7 +26,7 @@ repositories {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     lintOptions {
         checkReleaseBuilds false
@@ -48,7 +47,20 @@ android {
 //        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+//        jackOptions {
+//            enabled true
+//            additionalParameters("jack.dex.output.policy" : "multidex")
+//            additionalParameters("jack.preprocessor.file" : "legacyMultidexInstallation.jpp")
+//            additionalParameters("jack.preprocessor" : "true")
+//            additionalParameters("jack.dex.output.multidex.legacy": "true")
+//        }
     }
+
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
     buildTypes {
         release {
@@ -91,7 +103,6 @@ dependencies {
     compile project(':androidnumberpicker')
     compile project(':keyframes')
     compile files('libs/com.skp.Tmap_1.0.44.jar')
-    compile files('libs/GoogleConversionTrackingSdk-2.2.4.jar')
     compile 'com.google.android.gms:play-services-base:10.0.1'
     compile 'com.google.android.gms:play-services-maps:10.0.1'
     compile 'com.google.android.gms:play-services-location:10.0.1'
@@ -101,8 +112,8 @@ dependencies {
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-config:10.0.1'
 
-    apt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     compile 'com.bluelinelabs:logansquare:1.3.7'
+    annotationProcessor 'com.bluelinelabs:logansquare-compiler:1.3.7'
     compile "com.github.aurae.retrofit2:converter-logansquare:1.4.1"
 
     //

@@ -34,12 +34,12 @@ import retrofit2.Response;
 
 public class WishListTabActivity extends BaseActivity
 {
-    private ArrayList<PlaceWishListFragment> mFragmentList;
+    ArrayList<PlaceWishListFragment> mFragmentList;
     private WishListFragmentPageAdapter mPageAdapter;
 
-    private WishListTabNetworkController mNetworkController;
+    WishListTabNetworkController mNetworkController;
 
-    private DailyViewPager mViewPager;
+    DailyViewPager mViewPager;
     private TabLayout mTabLayout;
     private View mLoginView;
     private View mLoginButtonView;
@@ -185,7 +185,7 @@ public class WishListTabActivity extends BaseActivity
         FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
     }
 
-    private void setTabLayout(int stayCount, int gourmetCount)
+    void setTabLayout(int stayCount, int gourmetCount)
     {
         int position = 0;
 
@@ -325,7 +325,7 @@ public class WishListTabActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this, null);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);

@@ -36,8 +36,8 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
 
     private static final int GOURMET_TAB_COUNT = 1;
 
-    private ViewPager mViewPager;
-    private PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
+    ViewPager mViewPager;
+    PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
     private GourmetRegionListNetworkController mNetworkController;
     private SaleTime mSaleTime;
     private Province mSelectedProvince;

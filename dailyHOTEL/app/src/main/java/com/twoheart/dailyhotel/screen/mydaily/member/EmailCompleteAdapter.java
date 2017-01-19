@@ -22,7 +22,7 @@ public class EmailCompleteAdapter extends ArrayAdapter<String>
 {
     private Context mContext;
 
-    private List<String> mFilterEmailPostfixList;
+    List<String> mFilterEmailPostfixList;
     private List<String> mEmailPostfixList;
 
     public EmailCompleteAdapter(Context context, List<String> emailList)

@@ -40,15 +40,15 @@ public class SignupStep2Activity extends BaseActivity
 
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
 
-    private SignupStep2Layout mSignupStep2Layout;
-    private SignupStep2NetworkController mNetworkController;
-    private String mCountryCode;
-    private String mSignupKey, mEmail, mPassword, mRecommender;
-    private String mCallByScreen;
-    private String mAgreedBenefitDate;
-    private int mRequestVerificationCount;
+    SignupStep2Layout mSignupStep2Layout;
+    SignupStep2NetworkController mNetworkController;
+    String mCountryCode;
+    String mSignupKey, mEmail, mPassword, mRecommender;
+    String mCallByScreen;
+    String mAgreedBenefitDate;
+    int mRequestVerificationCount;
 
-    private Handler mRetryHandler;
+    Handler mRetryHandler;
 
     public static Intent newInstance(Context context, String singupKey, String email, String password,//
                                      String agreedBenefitDate, String recommmender, String callByScreen)
@@ -144,7 +144,7 @@ public class SignupStep2Activity extends BaseActivity
         }
     }
 
-    private void signupAndFinish()
+    void signupAndFinish()
     {
         DailyPreference.getInstance(this).setUserBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarm(false);
@@ -157,7 +157,7 @@ public class SignupStep2Activity extends BaseActivity
         finish();
     }
 
-    private void showCompletedSignupDialog(boolean isBenefit, String updateDate)
+    void showCompletedSignupDialog(boolean isBenefit, String updateDate)
     {
         if (isFinishing())
         {

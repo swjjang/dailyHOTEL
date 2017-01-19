@@ -26,10 +26,10 @@ import retrofit2.Response;
 
 public class EventListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
-    private View mEmptyView;
-    private ListView mListView;
-    private Event mSelectedEvent;
-    private EventListAdapter mEventListAdapter;
+    View mEmptyView;
+    ListView mListView;
+    Event mSelectedEvent;
+    EventListAdapter mEventListAdapter;
     private EventListNetworkController mEventListNetworkController;
     private boolean mDontReload;
 
@@ -162,7 +162,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
     }
 
-    private void startEventWeb(String url, String eventName)
+    void startEventWeb(String url, String eventName)
     {
         if (Util.isTextEmpty(url) == true)
         {

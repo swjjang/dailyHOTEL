@@ -20,12 +20,12 @@ public class DailyLineIndicator extends View
     private final PageListener mPageListener = new PageListener();
     public ViewPager.OnPageChangeListener mOnPageChangeListener;
 
-    private ViewPager mViewpager;
+    ViewPager mViewpager;
 
     private int mTabCount;
 
-    private int mCurrentPosition = 0;
-    private float mCurrentPositionOffset = 0f;
+    int mCurrentPosition = 0;
+    float mCurrentPositionOffset = 0f;
 
     private Paint mRectPaint;
 
@@ -187,6 +187,10 @@ public class DailyLineIndicator extends View
 
     private class PageListener implements ViewPager.OnPageChangeListener
     {
+        PageListener()
+        {
+        }
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
         {
@@ -281,7 +285,7 @@ public class DailyLineIndicator extends View
             super(superState);
         }
 
-        private SavedState(Parcel in)
+        SavedState(Parcel in)
         {
             super(in);
             currentPosition = in.readInt();

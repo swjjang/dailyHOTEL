@@ -31,9 +31,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     public static final int VIEW_TOTAL_PRICE = 1;
 
     private StayDetailListAdapter mListAdapter;
-    private RoomInformation mSelectedRoomInformation;
+    RoomInformation mSelectedRoomInformation;
 
-    private StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
+    StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {

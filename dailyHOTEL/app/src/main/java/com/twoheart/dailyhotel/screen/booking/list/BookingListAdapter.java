@@ -29,7 +29,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
     private long mCurrentTime;
     private ArrayList<Booking> mBookingList;
     private Context mContext;
-    private BookingListFragment.OnUserActionListener mOnUserActionListener;
+    BookingListFragment.OnUserActionListener mOnUserActionListener;
 
     public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items, long currentTime)
     {
