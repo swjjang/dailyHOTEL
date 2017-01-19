@@ -344,7 +344,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         mOnPlaceListMapFragmentListener = listener;
     }
 
-    public boolean isShowInformation()
+    public boolean isShowPlaceInformation()
     {
         return mViewPager != null && mViewPager.getVisibility() == View.VISIBLE;
     }
@@ -660,6 +660,16 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         mViewPager.setVisibility(View.INVISIBLE);
         mViewPager.setTranslationY(0);
+    }
+
+    public void clickMap()
+    {
+        if (mOnMapClickListener == null)
+        {
+            return;
+        }
+
+        mOnMapClickListener.onMapClick(null);
     }
 
     private void showPlaceDetailAnimation()
