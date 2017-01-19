@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public abstract class PlaceMainActivity extends BaseActivity
@@ -95,15 +96,15 @@ public abstract class PlaceMainActivity extends BaseActivity
                 if (mPlaceMainLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
                 {
                     mPlaceMainLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().clickMap();
+                    return;
                 }
             } catch (Exception e)
             {
-                super.onBackPressed();
+                ExLog.d(e.toString());
             }
-        } else
-        {
-            super.onBackPressed();
         }
+
+        super.onBackPressed();
     }
 
     @Override
