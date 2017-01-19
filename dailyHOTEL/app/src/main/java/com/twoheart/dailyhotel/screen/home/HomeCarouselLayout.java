@@ -1,6 +1,13 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.drawable.PaintDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -12,6 +19,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -128,7 +136,59 @@ public class HomeCarouselLayout extends RelativeLayout
 
         setData(placeList);
         // 임시 테스트 데이터 끝!
+
+        mRecyclerView.setVisibility(GONE);
+
+        mDefaultCenterX = 0;
+
+        final View coverView = view.findViewById(R.id.coverView);
+
+        // 아래 방법으로 일단 비스무리 성공
+        mShaderFactory = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                LinearGradient linearGradient = new LinearGradient(0 - (coverView.getWidth() * 0.5f), 0, coverView.getWidth() * 1.5f, 0, new int[]{Color.GRAY, Color.GRAY, Color.BLACK, Color.GRAY, Color.GRAY}, //substitute the correct colors for these
+                    new float[]{0f, mDefaultCenterX - 0.2f, mDefaultCenterX, mDefaultCenterX + 0.2f, 1f}, Shader.TileMode.REPEAT);
+                return linearGradient;
+            }
+        };
+
+        mPaintDrawable = new PaintDrawable();
+        mRactShape = new RectShape();
+        mPaintDrawable.setShape(mRactShape);
+        mPaintDrawable.setShaderFactory(mShaderFactory);
+
+        if (Util.isOverAPI16() == true)
+        {
+            coverView.setBackground(mPaintDrawable);
+        } else
+        {
+            coverView.setBackgroundDrawable(mPaintDrawable);
+        }
+
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        animator.setDuration(2000);
+        animator.setRepeatCount(10);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                mDefaultCenterX = (float) animation.getAnimatedValue();
+                mPaintDrawable.setShape(mRactShape); // this makes the shader recreate the lineargradient
+            }
+        });
+
+        animator.start();
     }
+
+    private PaintDrawable mPaintDrawable;
+    private RectShape mRactShape;
+    private ShapeDrawable.ShaderFactory mShaderFactory;
+
+    private float mDefaultCenterX = 0;
 
     public void setCarouselListener(OnCarouselListener listener)
     {
