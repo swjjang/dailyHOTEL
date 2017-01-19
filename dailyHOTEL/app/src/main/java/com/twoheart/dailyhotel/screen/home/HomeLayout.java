@@ -369,6 +369,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
+                mNestedScrollView.fullScroll(0);
                 mAppbarLayout.setExpanded(true);
             }
         });
