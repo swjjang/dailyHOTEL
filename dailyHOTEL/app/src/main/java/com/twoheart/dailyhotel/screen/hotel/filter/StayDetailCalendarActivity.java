@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.screen.hotel.filter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -10,6 +12,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,7 +30,12 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     private SaleTime mCheckInSaleTime;
     private SaleTime mCheckOutSaleTime;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, SaleTime startSaleTime, SaleTime endSaleTime, int hotelIndex, String screen, boolean isSelected, boolean isAnimation)
+    private boolean mIsSingleDay;
+
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, //
+                                     SaleTime startSaleTime, SaleTime endSaleTime, //
+                                     int hotelIndex, String screen, boolean isSelected, //
+                                     boolean isAnimation, boolean isSingleDay)
     {
         Intent intent = new Intent(context, StayDetailCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
@@ -38,6 +46,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+        intent.putExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, isSingleDay);
 
         return intent;
     }
@@ -49,6 +58,45 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         Intent intent = getIntent();
         mHotelIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
+        mIsSingleDay = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSINGLE_DAY, false);
+
+        if (mIsSingleDay == true)
+        {
+            DailyToast.showToast(this, getString(R.string.message_calendar_select_single_day), Toast.LENGTH_SHORT);
+        }
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.exitView:
+            case R.id.closeView:
+            case R.id.confirmView:
+            {
+                super.onClick(view);
+                break;
+            }
+
+            default:
+            {
+                super.onClick(view);
+
+                if (mIsSingleDay == true)
+                {
+                    for (int i = 0; i < mDailyViews.length; i++)
+                    {
+                        if (view == mDailyViews[i] && i < mDailyViews.length - 1)
+                        {
+                            super.onClick(mDailyViews[i + 1]);
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
     }
 
     @Override

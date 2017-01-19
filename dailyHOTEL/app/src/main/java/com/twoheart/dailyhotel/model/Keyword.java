@@ -24,7 +24,6 @@ public class Keyword implements Parcelable
 
     public Keyword()
     {
-        price = -1;
     }
 
     public Keyword(int icon, String name)

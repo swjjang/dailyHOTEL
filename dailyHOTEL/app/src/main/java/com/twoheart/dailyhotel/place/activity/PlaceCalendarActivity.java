@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -35,6 +36,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
     protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
     protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+    protected static final String INTENT_EXTRA_DATA_ISSINGLE_DAY = "isSingleDay"; // 연박 불가
 
     private static final int ANIMATION_DELAY = 200;
 
@@ -56,6 +58,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
 
+    private String[] mHolidays;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -66,6 +70,13 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.black_a67));
+        }
+
+        String holidays = DailyPreference.getInstance(this).getCalendarHolidays();
+
+        if (Util.isTextEmpty(holidays) == false)
+        {
+            mHolidays = holidays.split("\\,");
         }
     }
 
@@ -242,11 +253,23 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                     break;
 
                 case Calendar.SATURDAY:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
+                    if (isHoliday(day) == true)
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                    } else
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
+                    }
                     break;
 
                 default:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
+                    if (isHoliday(day) == true)
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                    } else
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
+                    }
                     break;
             }
 
@@ -257,6 +280,26 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         relativeLayout.setOnClickListener(this);
 
         return relativeLayout;
+    }
+
+    private boolean isHoliday(Day day)
+    {
+        if (day == null)
+        {
+            return false;
+        }
+
+        String calendarDay = day.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
+
+        for (String holiday : mHolidays)
+        {
+            if (calendarDay.equalsIgnoreCase(holiday) == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private int getMonthInterval(final Calendar calendar, int interval)

@@ -6,7 +6,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import java.util.List;
 
 @JsonObject
-public class BaseDtoList<E>
+public class BaseListDto<E>
 {
     @JsonField
     public int msgCode;

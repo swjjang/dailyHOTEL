@@ -15,7 +15,7 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.network.dto.BaseDtoList;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -219,7 +219,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStaySearchAutoCompleteList(Crypto.getUrlDecoderEx(URL), date, stays, term);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDtoList<Keyword>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Keyword>>) listener);
     }
 
     @Override
@@ -1027,5 +1027,16 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddReviewDetailInformation(Crypto.getUrlDecoderEx(URL), jsonObject);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    @Override
+    public void requestHoliday(String tag, String startDay, String endDay, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v1/holiday"//
+            : "";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHoliday(Crypto.getUrlDecoderEx(URL), startDay, endDay);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<String>>) listener);
     }
 }

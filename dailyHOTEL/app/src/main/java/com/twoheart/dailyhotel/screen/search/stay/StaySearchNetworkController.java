@@ -5,7 +5,7 @@ import android.content.Context;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDtoList;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
@@ -32,22 +32,22 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
             , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), stays, keyword, mHotelSearchAutoCompleteCallback);
     }
 
-    private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<BaseDtoList<Keyword>>()
+    private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<BaseListDto<Keyword>>()
     {
         @Override
-        public void onResponse(Call<BaseDtoList<Keyword>> call, Response<BaseDtoList<Keyword>> response)
+        public void onResponse(Call<BaseListDto<Keyword>> call, Response<BaseListDto<Keyword>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 String term = call.request().url().queryParameter("term");
 
-                BaseDtoList<Keyword> baseDtoList = response.body();
+                BaseListDto<Keyword> baseListDto = response.body();
 
-                if (baseDtoList.msgCode == 100)
+                if (baseListDto.msgCode == 100)
                 {
-                    if (baseDtoList.data != null)
+                    if (baseListDto.data != null)
                     {
-                        for (Keyword keyword : baseDtoList.data)
+                        for (Keyword keyword : baseListDto.data)
                         {
                             if (keyword.price > 0)
                             {
@@ -57,7 +57,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
                     }
                 }
 
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(term, baseDtoList.data);
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(term, baseListDto.data);
             } else
             {
                 mOnNetworkControllerListener.onErrorResponse(call, response);
@@ -65,7 +65,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
         }
 
         @Override
-        public void onFailure(Call<BaseDtoList<Keyword>> call, Throwable t)
+        public void onFailure(Call<BaseListDto<Keyword>> call, Throwable t)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);
         }

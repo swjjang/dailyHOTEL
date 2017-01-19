@@ -19,7 +19,7 @@ public class StayDetail extends PlaceDetail
     private ArrayList<RoomInformation> mSaleRoomList;
     //
     public String categoryCode;
-
+    public boolean isSingleStay; // 연박 불가인지 아닌지
 
     private ArrayList<Pictogram> mPictogramList;
 
@@ -57,6 +57,14 @@ public class StayDetail extends PlaceDetail
         {
             ratingValue = jsonObject.getInt("ratingValue");
             ratingPersons = jsonObject.getInt("ratingPersons");
+        }
+
+        if (jsonObject.has("is_single_stay") == true)
+        {
+            isSingleStay = jsonObject.getBoolean("is_single_stay");
+        } else
+        {
+            isSingleStay = false;
         }
 
         // Pictogram

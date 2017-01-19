@@ -130,9 +130,10 @@ public class MainActivity extends BaseActivity implements Constants
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
 
-        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.HOTEL, false);
-        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.FNB, false);
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
         DailyPreference.getInstance(this).clearPaymentInformation();
+        DailyPreference.getInstance(this).setCheckCalendarHolidays(false);
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
@@ -1108,7 +1109,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
+        public void onCommonDateTime(long currentDateTime, long dailyDateTime, long openDateTime, long closeDateTime)
         {
             try
             {
@@ -1152,6 +1153,22 @@ public class MainActivity extends BaseActivity implements Constants
             if (Util.isTextEmpty(viewedNoticeTime) == true)
             {
                 viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
+            }
+
+            if (DailyPreference.getInstance(MainActivity.this).isCheckCalendarHolidays() == false)
+            {
+                DailyPreference.getInstance(MainActivity.this).setCheckCalendarHolidays(true);
+
+                Calendar dailyCalendar = DailyCalendar.getInstance();
+                dailyCalendar.setTimeInMillis(dailyDateTime - 3600 * 1000 * 9);
+
+                String startDay = DailyCalendar.format(dailyCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+                // 90일을 미리 얻어온다.
+                dailyCalendar.add(Calendar.DAY_OF_MONTH, 90);
+                String endDay = DailyCalendar.format(dailyCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+                mNetworkController.requestHoliday(startDay, endDay);
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);

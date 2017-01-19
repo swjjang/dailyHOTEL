@@ -5,10 +5,12 @@ import android.content.Context;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -38,7 +40,7 @@ public class MainNetworkController extends BaseNetworkController
 
         void onNoticeAgreementResult(String agreeMessage, String cancelMessage);
 
-        void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime);
+        void onCommonDateTime(long currentDateTime, long dailyDateTime, long openDateTime, long closeDateTime);
 
         void onUserProfileBenefit(boolean isExceedBonus);
     }
@@ -57,6 +59,11 @@ public class MainNetworkController extends BaseNetworkController
     public void requestUserInformation()
     {
         DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
+    }
+
+    public void requestHoliday(String startDay, String endDay)
+    {
+        DailyMobileAPI.getInstance(mContext).requestHoliday(mNetworkTag, startDay, endDay, mHolidayCallback);
     }
 
     /**
@@ -82,10 +89,11 @@ public class MainNetworkController extends BaseNetworkController
                             JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
                             long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                            long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
                             long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
                             long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
 
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, openDateTime, closeDateTime);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime, openDateTime, closeDateTime);
                         }
                     } catch (Exception e)
                     {
@@ -554,6 +562,44 @@ public class MainNetworkController extends BaseNetworkController
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mHolidayCallback = new retrofit2.Callback<BaseListDto<String>>()
+    {
+        @Override
+        public void onResponse(Call<BaseListDto<String>> call, Response<BaseListDto<String>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseListDto<String> baseListDto = response.body();
+
+                    if (baseListDto.msgCode == 100)
+                    {
+                        StringBuilder stringBuilder = new StringBuilder();
+
+                        for (String holiday : baseListDto.data)
+                        {
+                            stringBuilder.append(DailyCalendar.convertDateFormatString(holiday, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+                            stringBuilder.append(",");
+                        }
+
+                        DailyPreference.getInstance(mContext).setCalendarHolidays(stringBuilder.toString());
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+            } else
+            {
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseListDto<String>> call, Throwable t)
+        {
         }
     };
 }
