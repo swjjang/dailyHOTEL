@@ -72,6 +72,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             window.setStatusBarColor(getResources().getColor(R.color.black_a67));
         }
 
+        // 휴일 정보를 얻어온다.
         String holidays = DailyPreference.getInstance(this).getCalendarHolidays();
 
         if (Util.isTextEmpty(holidays) == false)
