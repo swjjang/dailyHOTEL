@@ -1,98 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-              xmlns:fresco="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/shape_home_viewpager_content_gradient"
-              android:orientation="vertical">
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/contentImageView"
-        android:layout_width="match_parent"
-        android:layout_height="135dp"
-        android:adjustViewBounds="true"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/contentTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="@color/default_text_c323232"
-        android:textSize="14dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="3dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/contentDiscountPriceView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/contentOriginPriceView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:textColor="@color/default_text_cc5c5c5"
-            android:textSize="11dp"
-            dailyFont:style="DemiLight"/>
-    </LinearLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/default_line_ce8e8e9"/>
+        android:id="@+id/leftLayout"
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/rightLayout"
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/contentLayout"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:orientation="horizontal">
+        android:id="@+id/contentLayout"
+        android:layout_width="239dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_home_viewpager_content_gradient"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/leftLayout"
+        android:layout_toEndOf="@+id/leftLayout">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/contentImageView"
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            android:adjustViewBounds="true"
+            fresco:actualImageScaleType="centerCrop"
+            fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/contentProvinceView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"
-            dailyFont:style="DemiLight"/>
+            android:id="@+id/contentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="14dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyImageView
-            android:id="@+id/contentDotImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="4dp"
-            app:srcCompat="@drawable/info_ic_text_dot_grey"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="19dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/contentGradeView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"
-            dailyFont:style="DemiLight"/>
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/contentDiscountPriceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/contentOriginPriceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="11dp"
+                dailyFont:style="DemiLight"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/default_line_ce8e8e9"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/contentProvinceView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"
+                dailyFont:style="DemiLight"/>
+
+            <com.twoheart.dailyhotel.widget.DailyImageView
+                android:id="@+id/contentDotImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/info_ic_text_dot_grey"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/contentGradeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"
+                dailyFont:style="DemiLight"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

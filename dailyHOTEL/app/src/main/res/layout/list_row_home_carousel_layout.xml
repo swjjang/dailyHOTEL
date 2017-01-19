@@ -57,20 +57,13 @@
 
         </RelativeLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyViewPager
-            android:id="@+id/contentViewPager"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/horizontalRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/textLayout">
 
-        </com.twoheart.dailyhotel.widget.DailyViewPager>
-        
-        <!--<HorizontalScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_below="@id/textLayout">-->
-
-        <!--</HorizontalScrollView>-->
+        </android.support.v7.widget.RecyclerView>
 
     </RelativeLayout>
 

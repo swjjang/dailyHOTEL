@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +10,12 @@ import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyViewPager;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by android_sam on 2017. 1. 16..
@@ -24,10 +27,10 @@ public class HomeCarouselLayout extends RelativeLayout
     private DailyTextView mTitleTextView;
     private DailyTextView mCountTextView;
     private DailyTextView mViewAllTextView;
-    private DailyViewPager mViewPager;
     private OnCarouselListener mCarouselListenter;
     private ArrayList<? extends Place> mPlaceList;
-    private HomeCarouselPageAdapter mPageAdapter;
+    private RecyclerView mRecyclerView;
+    private HomeCarouselAdapter mRecyclerAdapter;
 
     public interface OnCarouselListener
     {
@@ -74,15 +77,6 @@ public class HomeCarouselLayout extends RelativeLayout
         mCountTextView = (DailyTextView) view.findViewById(R.id.countTextView);
         mViewAllTextView = (DailyTextView) view.findViewById(R.id.viewAllTextView);
 
-        mViewPager = (DailyViewPager) view.findViewById(R.id.contentViewPager);
-        mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setClipToPadding(false);
-        mViewPager.setPageMargin(Util.dpToPx(mContext, 12d));
-
-        int paddingLeftRight = Util.dpToPx(mContext, 15d);
-        int paddingTopBottom = 0;
-        mViewPager.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
-
         mViewAllTextView.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -95,10 +89,42 @@ public class HomeCarouselLayout extends RelativeLayout
             }
         });
 
-        mPageAdapter = new HomeCarouselPageAdapter(mContext, mItemClickListener);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        mViewPager.clearOnPageChangeListeners();
-        mViewPager.setAdapter(mPageAdapter);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.horizontalRecyclerView);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+        // 임시 테스트 데이터
+        ArrayList<Stay> placeList = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 6; i++)
+        {
+            Stay stay = new Stay();
+
+            stay.price = Math.abs(100000 * random.nextInt());
+            stay.name = "Stay " + i;
+            stay.discountPrice = Math.abs(stay.price - (1000 * random.nextInt()));
+            stay.districtName = "서울";
+            if (i % 3 == 0)
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+            } else if (i % 3 == 1)
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+            } else
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+            }
+            placeList.add(stay);
+
+            stay.setGrade(Stay.Grade.special2);
+        }
+
+        setData(placeList);
+        // 임시 테스트 데이터 끝!
     }
 
     public void setCarouselListener(OnCarouselListener listener)
@@ -106,17 +132,30 @@ public class HomeCarouselLayout extends RelativeLayout
         mCarouselListenter = listener;
     }
 
-    public void setViewPagerData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<? extends Place> list)
     {
-        mPlaceList = list;
+        if (list == null || list.size() == 0)
+        {
+            list = new ArrayList<>();
+        }
+
+        if (mRecyclerAdapter == null)
+        {
+            mRecyclerAdapter = new HomeCarouselAdapter(mContext, list, mRecyclerItemClcikListner);
+            mRecyclerView.setAdapter(mRecyclerAdapter);
+        } else
+        {
+            mRecyclerAdapter.setData(list);
+            mRecyclerAdapter.notifyDataSetChanged();
+        }
     }
 
-    private HomeCarouselPageAdapter.ItemClickListener mItemClickListener = new HomeCarouselPageAdapter.ItemClickListener()
+    private HomeCarouselAdapter.ItemClickListener mRecyclerItemClcikListner = new HomeCarouselAdapter.ItemClickListener()
     {
         @Override
         public void onItemClick(View view, int position)
         {
-            // TODO : 해당 업장 상세로 이동하는 부분 필요!
+            // TODO : 아이템 클릭 시 이동하는 부분 생성
         }
     };
 }
