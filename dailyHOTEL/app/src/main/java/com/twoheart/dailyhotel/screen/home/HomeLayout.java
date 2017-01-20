@@ -10,24 +10,32 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HomeRecommed;
 import com.twoheart.dailyhotel.model.ImageInformation;
+import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +48,8 @@ import static com.facebook.FacebookSdk.getCacheDir;
 
 public class HomeLayout extends BaseLayout
 {
+    private static final int MESSAGE_ANIMATION_DURATION = 200;
+
     private DailyLoopViewPager mEventViewPager;
     private DailyTextView mEventCountTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -51,6 +61,7 @@ public class HomeLayout extends BaseLayout
     private HomeRecommedLayout mHomeRecommedLayout;
     private HomeCarouselLayout mWishListLayout;
     private HomeCarouselLayout mRecentListLayout;
+    private DailyEmoticonImageView[] mDailyEmoticonImageView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -65,6 +76,8 @@ public class HomeLayout extends BaseLayout
         void onGourmetButtonClick();
 
         void onRefreshAll(boolean isShowProgress);
+
+        void onRequestReview();
     }
 
     private enum MessageType
@@ -84,9 +97,7 @@ public class HomeLayout extends BaseLayout
     protected void initLayout(View view)
     {
         initToolbarLayout(view);
-
-        mAppbarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
-
+        initAppbarLayout(view);
         initRefreshLayout(view);
         initScrollLayout(view);
         initContentLayout(view);
@@ -114,6 +125,11 @@ public class HomeLayout extends BaseLayout
         });
     }
 
+    private void initAppbarLayout(View view)
+    {
+        mAppbarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+    }
+
     private void initRefreshLayout(View view)
     {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
@@ -130,8 +146,6 @@ public class HomeLayout extends BaseLayout
                 ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
             }
         });
-
-
     }
 
     private void initScrollLayout(View view)
@@ -225,7 +239,7 @@ public class HomeLayout extends BaseLayout
         } else if (MessageType.TEXT == messageType)
         {
             // init text layout
-            initMessageTextLayout(view);
+            initNSetMessageTextLayout(view);
         } else
         {
             // gone message layout
@@ -244,12 +258,13 @@ public class HomeLayout extends BaseLayout
         }
 
         mMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_review_layout, null);
-
-        // TODO : review layout 생성 및 request 요청하는 부분 생성 필요!
+        mMessageLayout.setVisibility(View.GONE);
         mContentLayout.addView(mMessageLayout);
+
+        ((OnEventListener) mOnEventListener).onRequestReview();
     }
 
-    private void initMessageTextLayout(View view)
+    private void initNSetMessageTextLayout(View view)
     {
         if (mContentLayout == null || mContext == null)
         {
@@ -278,6 +293,8 @@ public class HomeLayout extends BaseLayout
             public void onClick(View v)
             {
                 startMessageLayoutCloseAnimation();
+
+                ((OnEventListener) mOnEventListener).onMessageCloseClick();
             }
         });
 
@@ -308,7 +325,17 @@ public class HomeLayout extends BaseLayout
 
         descriptionView.setText(description);
 
+        mMessageLayout.setVisibility(View.INVISIBLE);
         mContentLayout.addView(mMessageLayout);
+
+        mMessageLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                startMessageLayoutShowAnimation();
+            }
+        });
     }
 
     private void initWishListLayout(View view)
@@ -374,69 +401,6 @@ public class HomeLayout extends BaseLayout
             }
         });
         mContentLayout.addView(topButtonLayout);
-    }
-
-    private void startMessageLayoutCloseAnimation()
-    {
-        if (mMessageLayout == null)
-        {
-            return;
-        }
-
-        if (mMessageLayout.getVisibility() == View.GONE)
-        {
-            return;
-        }
-
-        ValueAnimator closeValueAnimator = ValueAnimator.ofInt(mMessageLayout.getHeight(), 0);
-        closeValueAnimator.setDuration(100);
-        closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (int) animation.getAnimatedValue();
-                ViewGroup.LayoutParams params = mMessageLayout.getLayoutParams();
-                params.height = value;
-                mMessageLayout.setLayoutParams(params);
-            }
-        });
-
-        closeValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mMessageLayout.setVisibility(View.GONE);
-                mMessageLayout.clearAnimation();
-                mContentLayout.removeView(mMessageLayout);
-                mMessageLayout = null;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-                mMessageLayout.setVisibility(View.GONE);
-                mMessageLayout.clearAnimation();
-                mContentLayout.removeView(mMessageLayout);
-                mMessageLayout = null;
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        closeValueAnimator.start();
     }
 
     public void setRefreshing(boolean isRefreshing)
@@ -550,4 +514,313 @@ public class HomeLayout extends BaseLayout
         }
     }
 
+    public void setReviewMessage(Review review)
+    {
+        if (mMessageLayout == null)
+        {
+            return;
+        }
+
+        if (review == null)
+        {
+            mMessageLayout.setVisibility(View.GONE);
+            mMessageLayout.clearAnimation();
+
+            if (mContentLayout != null)
+            {
+                mContentLayout.removeView(mMessageLayout);
+            }
+
+            mMessageLayout = null;
+            return;
+        }
+
+        View closeView = mMessageLayout.findViewById(R.id.closeImageView);
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startMessageLayoutCloseAnimation();
+            }
+        });
+
+        TextView titleTextView = (TextView) mMessageLayout.findViewById(R.id.titleTextView);
+        TextView periodTextView = (TextView) mMessageLayout.findViewById(R.id.descriptionTextView);
+        View goodEmoticonView = mMessageLayout.findViewById(R.id.goodEmoticonView);
+        View badEmoticonView = mMessageLayout.findViewById(R.id.badEmoticonView);
+
+        final ReviewItem reviewItem = review.getReviewItem();
+        if (reviewItem == null)
+        {
+            mMessageLayout.setVisibility(View.GONE);
+            mMessageLayout.clearAnimation();
+
+            if (mContentLayout != null)
+            {
+                mContentLayout.removeView(mMessageLayout);
+            }
+
+            mMessageLayout = null;
+
+            throw new NullPointerException("reviewItem == null");
+        }
+
+        // 타이틀
+        String title = mContext.getResources().getString(R.string.message_review_title, reviewItem.itemName);
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title);
+        spannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getRegularTypeface()),//
+            title.lastIndexOf('\'') + 1, title.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        titleTextView.setText(spannableStringBuilder);
+
+        try
+        {
+            // 시간
+            switch (reviewItem.placeType)
+            {
+                case HOTEL:
+                {
+                    String periodDate = String.format("%s - %s"//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
+                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
+                    break;
+                }
+
+                case FNB:
+                {
+                    String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
+
+                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
+                    break;
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        mDailyEmoticonImageView = null;
+        mDailyEmoticonImageView = new DailyEmoticonImageView[2];
+
+        // 이미지
+        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) mMessageLayout.findViewById(R.id.badEmoticonImageView);
+        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) mMessageLayout.findViewById(R.id.goodEmoticonImageView);
+
+        mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-737-A_not_satisfied.kf.json");
+        mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-573-B_satfisfied.kf.json");
+
+        mDailyEmoticonImageView[0].startAnimation();
+        mDailyEmoticonImageView[1].startAnimation();
+
+        // 딤이미지
+        final View badEmoticonDimView = mMessageLayout.findViewById(R.id.badEmoticonDimView);
+        final View goodEmoticonDimView = mMessageLayout.findViewById(R.id.goodEmoticonDimView);
+
+        // 텍스트
+        final TextView badEmoticonTextView = (TextView) mMessageLayout.findViewById(R.id.badEmoticonTextView);
+        final TextView goodEmoticonTextView = (TextView) mMessageLayout.findViewById(R.id.goodEmoticonTextView);
+
+        goodEmoticonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // TODO : 클릭 이벤트 적용 필요!
+            }
+        });
+
+        badEmoticonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // TODO : 클릭 이벤트 적용 필요!
+            }
+        });
+
+        mMessageLayout.setVisibility(View.INVISIBLE);
+
+        mMessageLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                startMessageLayoutShowAnimation();
+            }
+        });
+    }
+
+    private void startMessageLayoutShowAnimation()
+    {
+        if (mMessageLayout == null)
+        {
+            return;
+        }
+
+        if (mMessageLayout.getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, mMessageLayout.getHeight());
+        valueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
+        valueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = mMessageLayout.getLayoutParams();
+                params.height = value;
+                mMessageLayout.setLayoutParams(params);
+            }
+        });
+
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mMessageLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mMessageLayout.setVisibility(View.VISIBLE);
+                mMessageLayout.clearAnimation();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mMessageLayout.setVisibility(View.VISIBLE);
+                mMessageLayout.clearAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.start();
+    }
+
+    private void startMessageLayoutCloseAnimation()
+    {
+        if (mMessageLayout == null)
+        {
+            return;
+        }
+
+        if (mMessageLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        ValueAnimator closeValueAnimator = ValueAnimator.ofInt(mMessageLayout.getHeight(), 0);
+        closeValueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
+        closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = mMessageLayout.getLayoutParams();
+                params.height = value;
+                mMessageLayout.setLayoutParams(params);
+            }
+        });
+
+        closeValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mMessageLayout.setVisibility(View.GONE);
+                mMessageLayout.clearAnimation();
+
+                if (mContentLayout != null)
+                {
+                    mContentLayout.removeView(mMessageLayout);
+                }
+
+                mMessageLayout = null;
+
+                onDestroyReviewAnimation();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mMessageLayout.setVisibility(View.GONE);
+                mMessageLayout.clearAnimation();
+
+                if (mContentLayout != null)
+                {
+                    mContentLayout.removeView(mMessageLayout);
+                }
+
+                mMessageLayout = null;
+
+                onDestroyReviewAnimation();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        closeValueAnimator.start();
+    }
+
+    public void onResumeReviewAnimation()
+    {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.startAnimation();
+            }
+        }
+    }
+
+    public void onPauseReviewAnimation()
+    {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+        }
+    }
+
+    public void onDestroyReviewAnimation()
+    {
+        if (mDailyEmoticonImageView != null)
+        {
+            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            {
+                dailyEmoticonImageView.stopAnimation();
+            }
+        }
+
+        mDailyEmoticonImageView = null;
+    }
 }

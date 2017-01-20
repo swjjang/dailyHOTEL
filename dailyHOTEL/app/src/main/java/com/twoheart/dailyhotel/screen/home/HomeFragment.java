@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -80,6 +81,10 @@ public class HomeFragment extends BaseFragment
             // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
             mNetworkController.requestCommonDateTime();
         }
+
+        if (mHomeLayout != null) {
+            mHomeLayout.onResumeReviewAnimation();
+        }
     }
 
     @Override
@@ -88,6 +93,20 @@ public class HomeFragment extends BaseFragment
         super.onPause();
 
         mDontReload = true;
+
+        if (mHomeLayout != null) {
+            mHomeLayout.onPauseReviewAnimation();
+        }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mHomeLayout != null) {
+            mHomeLayout.onDestroyReviewAnimation();
+        }
     }
 
     @Override
@@ -208,6 +227,14 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
+        public void onRequestReview()
+        {
+            // TODO : 리뷰 요청하는 부분 작업 필요!
+//            Test Code
+            mNetworkController.requestReviewInformation();
+        }
+
+        @Override
         public void finish()
         {
             unLockUI();
@@ -226,6 +253,12 @@ public class HomeFragment extends BaseFragment
             mSaleTime.setCurrentTime(currentDateTime);
             mSaleTime.setDailyTime(dailyDateTime);
             mSaleTime.setOffsetDailyDay(0);
+        }
+
+        @Override
+        public void onReviewInformation(Review review)
+        {
+            mHomeLayout.setReviewMessage(review);
         }
 
         @Override

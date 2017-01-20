@@ -149,8 +149,9 @@ public class HomeCarouselLayout extends RelativeLayout
             @Override
             public Shader resize(int width, int height)
             {
-                LinearGradient linearGradient = new LinearGradient(0 - (coverView.getWidth() * 0.5f), 0, coverView.getWidth() * 1.5f, 0, new int[]{Color.GRAY, Color.GRAY, Color.BLACK, Color.GRAY, Color.GRAY}, //substitute the correct colors for these
-                    new float[]{0f, mDefaultCenterX - 0.2f, mDefaultCenterX, mDefaultCenterX + 0.2f, 1f}, Shader.TileMode.REPEAT);
+                LinearGradient linearGradient = new LinearGradient(0 - (coverView.getWidth() * 0.5f), 0, coverView.getWidth() * 1.5f, 0,//
+                    new int[]{Color.GRAY, Color.GRAY, Color.BLACK, Color.GRAY, Color.GRAY}, //substitute the correct colors for these
+                    new float[]{0f, mDefaultCenterX - 0.2f, mDefaultCenterX, mDefaultCenterX + 0.2f, 1f}, Shader.TileMode.CLAMP);
                 return linearGradient;
             }
         };
