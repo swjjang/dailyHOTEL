@@ -129,7 +129,7 @@ public class DailyEmoticonImageView extends ImageView
 
         if (Util.isOverAPI16() == true)
         {
-            setImageAlpha(0.0d);
+            setImageAlpha(0);
         }
     }
 
