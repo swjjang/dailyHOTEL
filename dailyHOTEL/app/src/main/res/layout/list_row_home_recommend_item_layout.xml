@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/contentImageView"
+        android:layout_width="match_parent"
+        android:layout_height="142dp"
+        android:adjustViewBounds="true"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:overlayImage="@drawable/shape_home_recommend_image_overlay"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/contentCountView"
+        android:layout_width="36dp"
+        android:layout_height="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_home_recommend_count_background"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="10dp"
+        dailyFont:style="DemiLight"/>
+
+    <LinearLayout
+        android:id="@+id/contentTextLayout"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_alignLeft="@id/contentImageView"
+        android:layout_alignRight="@id/contentImageView"
+        android:layout_below="@id/contentImageView"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginTop="-24dp"
+        android:background="@drawable/home_pick_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/contentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/default_text_c5a5a5a"
+            android:textSize="18dp"
+            dailyFont:style="Medium"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/contentDescriptionView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="12dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/contentTextLayout"/>
+</RelativeLayout>

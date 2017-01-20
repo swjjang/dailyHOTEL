@@ -48,14 +48,49 @@
             dailyFont:style="Medium"/>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/label_completed_payment"
+            android:textColor="@color/white"
+            android:textSize="18dp"/>
+
+        <ImageView
+            android:id="@+id/closeView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/navibar_ic_x_white"/>
+
+    </RelativeLayout>
+
     <ScrollView
         android:id="@+id/informationLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomLayout"
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:fillViewport="true">
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -340,39 +375,4 @@
 
         </RelativeLayout>
     </ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbar_height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/transparent">
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="@string/label_completed_payment"
-            android:textColor="@color/white"
-            android:textSize="18dp"/>
-
-        <ImageView
-            android:id="@+id/closeView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:paddingLeft="10dp"
-            android:paddingRight="15dp"
-            app:srcCompat="@drawable/navibar_ic_x_white"/>
-
-    </RelativeLayout>
 </RelativeLayout>

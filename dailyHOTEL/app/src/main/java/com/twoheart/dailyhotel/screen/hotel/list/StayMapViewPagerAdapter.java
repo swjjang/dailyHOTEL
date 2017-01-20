@@ -51,7 +51,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         TextView discountTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
         TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
         TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
-        View closeView = view.findViewById(R.id.closeImageVIew);
+        View closeView = view.findViewById(R.id.closeImageView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
 

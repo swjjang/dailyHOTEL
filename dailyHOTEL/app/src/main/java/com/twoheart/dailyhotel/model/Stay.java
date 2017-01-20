@@ -65,6 +65,15 @@ public class Stay extends Place
         return mGrade;
     }
 
+    public void setGrade(Grade grade) {
+        if (grade == null) {
+            mGrade = Grade.etc;
+        } else
+        {
+            mGrade = grade;
+        }
+    }
+
     public boolean setStay(JSONObject jsonObject, String imageUrl, int nights)
     {
         this.nights = nights;

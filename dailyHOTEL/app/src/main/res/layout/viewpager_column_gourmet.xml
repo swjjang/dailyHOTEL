@@ -142,7 +142,7 @@
         android:layout_height="19dp"
         android:layout_marginLeft="11dp"
         android:layout_marginTop="8dp"
-        android:layout_toLeftOf="@+id/closeImageVIew"
+        android:layout_toLeftOf="@+id/closeImageView"
         android:orientation="horizontal"
         android:visibility="visible">
 
@@ -162,7 +162,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/closeImageVIew"
+        android:id="@+id/closeImageView"
         android:layout_width="39dp"
         android:layout_height="39dp"
         android:layout_alignParentRight="true"

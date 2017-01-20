@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/default_background"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="301dp"
+        android:background="@color/white"
+        android:paddingBottom="15dp">
+
+        <RelativeLayout
+            android:id="@+id/textLayout"
+            android:layout_width="match_parent"
+            android:layout_height="51dp">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="14dp"
+                app:style="Medium"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/countTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_toLeftOf="@id/titleTextView"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/viewAllTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:drawablePadding="6dp"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/label_home_view_all"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"
+                app:drawableCompatRight="@drawable/payment_ic_right"/>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/horizontalRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textLayout">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <View
+            android:id="@+id/coverView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textLayout"/>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/default_line_cf0f0f0"/>
+</LinearLayout>

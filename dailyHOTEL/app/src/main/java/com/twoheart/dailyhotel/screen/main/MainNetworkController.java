@@ -352,15 +352,15 @@ public class MainNetworkController extends BaseNetworkController
                     // 리뷰가 존재하지 않는 경우 msgCode : 701
                     int msgCode = responseJSONObject.getInt("msgCode");
 
-                    if (msgCode == 100 && responseJSONObject.has("data") == true)
-                    {
-                        Review review = new Review(responseJSONObject.getJSONObject("data"));
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(review);
-                    } else
-                    {
+//                    if (msgCode == 100 && responseJSONObject.has("data") == true)
+//                    {
+//                        Review review = new Review(responseJSONObject.getJSONObject("data"));
+//
+//                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(review);
+//                    } else
+//                    {
                         requestReviewGourmet();
-                    }
+//                    }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
