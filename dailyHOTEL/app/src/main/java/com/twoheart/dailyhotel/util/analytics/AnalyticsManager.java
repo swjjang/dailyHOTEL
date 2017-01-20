@@ -676,6 +676,7 @@ public class AnalyticsManager
 
         public static final String HOME_EVENT_DETAIL = "home_event_detail";
         public static final String RECOMMEND_LIST = "recommend_list";
+        public static final String MYDAILY = "mydaily";
     }
 
     public static class Action
@@ -877,6 +878,8 @@ public class AnalyticsManager
         public static final String GOURMET_ITEM_CLICK = "gourmet_item_click";
         public static final String WISHLIST_BACK_BUTTON_CLICK = "wishlist_back_button_click";
         public static final String WISHLIST_ITEM_DELETE = "wishlist_item_delete";
+        public static final String RECENTVIEW_BACK_BUTTON_CLICK = "recentview_back_button_click";
+        public static final String RECENTVIEW_ITEM_DELETE = "recentview_item_delete";
     }
 
     public static class Category

@@ -45,7 +45,6 @@ public class WishListTabActivity extends BaseActivity
     private View mLoginButtonView;
 
     private SourceType mSourceType;
-    ;
     private PlaceType mPlaceType;
 
     private boolean mDontReloadAtOnResume;
@@ -53,7 +52,7 @@ public class WishListTabActivity extends BaseActivity
     public enum SourceType
     {
         HOME,
-        MYDAILY,
+        MYDAILY
     }
 
     public static Intent newInstance(Context context, SourceType sourceType, PlaceType placeType)

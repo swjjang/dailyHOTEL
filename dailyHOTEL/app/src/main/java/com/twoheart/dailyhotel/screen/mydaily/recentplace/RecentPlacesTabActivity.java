@@ -49,18 +49,32 @@ public class RecentPlacesTabActivity extends BaseActivity
     private TabLayout mTabLayout;
     private View mEmptyView;
 
+    private SourceType mSourceType;
     private PlaceType mPlaceType;
 
     private boolean mDontReloadAtOnResume; // TODO : 타 기능 구현 완료 후 처리 예정
 
-    public static Intent newInstance(Context context, PlaceType placeType)
+    public enum SourceType
     {
+        HOME,
+        MYDAILY
+    }
+
+    public static Intent newInstance(Context context, SourceType sourceType, PlaceType placeType)
+    {
+        if (sourceType == null)
+        {
+            return null;
+        }
+
         Intent intent = new Intent(context, RecentPlacesTabActivity.class);
 
         if (placeType != null)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
         return intent;
     }
 
@@ -102,6 +116,25 @@ public class RecentPlacesTabActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        switch (mSourceType)
+        {
+            case HOME:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.RECENTVIEW_BACK_BUTTON_CLICK, AnalyticsManager.Label.HOME, null);
+                break;
+
+            case MYDAILY:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.RECENTVIEW_BACK_BUTTON_CLICK, AnalyticsManager.Label.MYDAILY, null);
+                break;
+        }
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -127,6 +160,15 @@ public class RecentPlacesTabActivity extends BaseActivity
             {
                 ExLog.d(e.getMessage());
             }
+        }
+
+        try
+        {
+            mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
         }
     }
 

@@ -87,6 +87,20 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
             mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+        } else if (AnalyticsManager.Screen.MYDAILY.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            if (DailyHotel.isLogin() == true)
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.MEMBER);
+            } else
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.GUEST);
+            }
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         } else
         {
             mGoogleAnalyticsTracker.setScreenName(screenName);

@@ -75,6 +75,8 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
         mMyDailyLayout.updateNewIconView(hasNewCoupon);
 
+        AnalyticsManager.getInstance(context).recordScreen(getActivity(), AnalyticsManager.Screen.MYDAILY, null);
+
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
             if (DailyDeepLink.getInstance().isMyDailyView() == true)
@@ -429,7 +431,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, placeType);
+            Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, RecentPlacesTabActivity.SourceType.MYDAILY, placeType);
 
             baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }

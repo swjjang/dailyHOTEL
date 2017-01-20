@@ -220,6 +220,9 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_DELETE, //
                 place.name, null);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(place.index), null);
         }
 
         @Override
