@@ -675,6 +675,9 @@ public class AnalyticsManager
         // Detail Image List
         public static final String DAILYHOTEL_HOTELIMAGEVIEW = "DailyHotel_HotelImageView";
         public static final String DAILYGOURMET_GOURMETIMAGEVIEW = "DailyGourmet_GourmetImageView";
+
+        public static final String HOME_EVENT_DETAIL = "home_event_detail";
+        public static final String RECOMMEND_LIST = "recommend_list";
     }
 
     public static class Action

@@ -71,7 +71,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         HOTEL_BANNER,
         GOURMET_BANNER,
-        EVENT
+        EVENT,
+        HOME_EVENT,
     }
 
     Handler mHandler = new Handler();
@@ -291,6 +292,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
             case EVENT:
                 AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null);
                 AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null, params);
+                break;
+
+            case HOME_EVENT:
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.HOME_EVENT_DETAIL, null);
                 break;
         }
 

@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.net.URLEncoder;
@@ -103,6 +104,14 @@ public abstract class CollectionBaseActivity extends BaseActivity
         lockUI();
 
         requestPlaceList(mParams);
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.RECOMMEND_LIST, null);
     }
 
     private void initLayout(String title, String titleImageUrl)
