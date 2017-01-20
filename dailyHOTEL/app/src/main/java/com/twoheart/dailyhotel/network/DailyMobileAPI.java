@@ -17,6 +17,7 @@ import android.content.Context;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
+import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -1029,14 +1030,21 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
+    /**
+     *
+     * @param tag
+     * @param startDay yyyy-MM-dd
+     * @param endDay yyyy-MM-dd
+     * @param listener
+     */
     @Override
     public void requestHoliday(String tag, String startDay, String endDay, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v1/holiday"//
-            : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/calendar"//
+            : "MzYkMzYkMiQyMSQzMSQzNSQ0NyQzMSQzNSQyOCQyJDMkMjUkMzMkMzgkNTgk$NzAQZAyMjQ3RTkxRTI4NjE2DMIzdERTWIKzQADUjFIDONDAzAWREQ5QSTET=$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHoliday(Crypto.getUrlDecoderEx(URL), startDay, endDay);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHoliday(Crypto.getUrlDecoderEx(URL), startDay, endDay, true);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<String>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Holiday>>) listener);
     }
 }

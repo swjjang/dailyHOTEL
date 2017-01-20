@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -565,24 +566,25 @@ public class MainNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mHolidayCallback = new retrofit2.Callback<BaseListDto<String>>()
+    private retrofit2.Callback mHolidayCallback = new retrofit2.Callback<BaseListDto<Holiday>>()
     {
         @Override
-        public void onResponse(Call<BaseListDto<String>> call, Response<BaseListDto<String>> response)
+        public void onResponse(Call<BaseListDto<Holiday>> call, Response<BaseListDto<Holiday>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    BaseListDto<String> baseListDto = response.body();
+                    BaseListDto<Holiday> baseListDto = response.body();
 
                     if (baseListDto.msgCode == 100)
                     {
                         StringBuilder stringBuilder = new StringBuilder();
 
-                        for (String holiday : baseListDto.data)
+                        for (Holiday holiday : baseListDto.data)
                         {
-                            stringBuilder.append(DailyCalendar.convertDateFormatString(holiday, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+                            stringBuilder.append(holiday.date.replaceAll("\\-", ""));
+                            //                            stringBuilder.append(DailyCalendar.convertDateFormatString(holiday.date, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
                             stringBuilder.append(",");
                         }
 
@@ -598,7 +600,7 @@ public class MainNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onFailure(Call<BaseListDto<String>> call, Throwable t)
+        public void onFailure(Call<BaseListDto<Holiday>> call, Throwable t)
         {
         }
     };

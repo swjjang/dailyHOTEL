@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -58,7 +59,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
 
-    private String[] mHolidays;
+    private int[] mHolidays;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -73,11 +74,23 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
 
         // 휴일 정보를 얻어온다.
-        String holidays = DailyPreference.getInstance(this).getCalendarHolidays();
+        String calendarHolidays = DailyPreference.getInstance(this).getCalendarHolidays();
 
-        if (Util.isTextEmpty(holidays) == false)
+        if (Util.isTextEmpty(calendarHolidays) == false)
         {
-            mHolidays = holidays.split("\\,");
+            String[] holidays = calendarHolidays.split("\\,");
+            mHolidays = new int[holidays.length];
+
+            for (int i = 0; i < holidays.length; i++)
+            {
+                try
+                {
+                    mHolidays[i] = Integer.parseInt(holidays[i]);
+                } catch (NumberFormatException e)
+                {
+                    ExLog.e(e.toString());
+                }
+            }
         }
     }
 
@@ -285,19 +298,25 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private boolean isHoliday(Day day)
     {
-        if (day == null)
+        if (day == null || mHolidays == null || mHolidays.length == 0)
         {
             return false;
         }
 
-        String calendarDay = day.dayTime.getDayOfDaysDateFormat("yyyyMMdd");
-
-        for (String holiday : mHolidays)
+        try
         {
-            if (calendarDay.equalsIgnoreCase(holiday) == true)
+            int calendarDay = Integer.parseInt(day.dayTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            for (int holiday : mHolidays)
             {
-                return true;
+                if (holiday == calendarDay)
+                {
+                    return true;
+                }
             }
+        } catch (NumberFormatException e)
+        {
+            ExLog.d(e.toString());
         }
 
         return false;

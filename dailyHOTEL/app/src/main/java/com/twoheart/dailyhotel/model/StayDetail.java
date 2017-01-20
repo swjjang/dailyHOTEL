@@ -59,9 +59,9 @@ public class StayDetail extends PlaceDetail
             ratingPersons = jsonObject.getInt("ratingPersons");
         }
 
-        if (jsonObject.has("is_single_stay") == true)
+        if (jsonObject.has("singleStay") == true)
         {
-            isSingleStay = jsonObject.getBoolean("is_single_stay");
+            isSingleStay = jsonObject.getBoolean("singleStay");
         } else
         {
             isSingleStay = false;

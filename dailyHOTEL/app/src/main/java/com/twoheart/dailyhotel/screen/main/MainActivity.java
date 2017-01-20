@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -1165,11 +1166,11 @@ public class MainActivity extends BaseActivity implements Constants
                 Calendar dailyCalendar = DailyCalendar.getInstance();
                 dailyCalendar.setTimeInMillis(dailyDateTime - 3600 * 1000 * 9);
 
-                String startDay = DailyCalendar.format(dailyCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+                String startDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
 
                 // 90일을 미리 얻어온다.
                 dailyCalendar.add(Calendar.DAY_OF_MONTH, 90);
-                String endDay = DailyCalendar.format(dailyCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+                String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
 
                 mNetworkController.requestHoliday(startDay, endDay);
             }
