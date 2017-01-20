@@ -412,7 +412,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = WishListTabActivity.newInstance(baseActivity, placeType);
+            Intent intent = WishListTabActivity.newInstance(baseActivity, WishListTabActivity.SourceType.MYDAILY, placeType);
 
             baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }

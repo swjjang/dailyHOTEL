@@ -875,6 +875,8 @@ public class AnalyticsManager
 
         public static final String GOURMET_BACK_BUTTON_CLICK = "gourmet_back_button_click";
         public static final String GOURMET_ITEM_CLICK = "gourmet_item_click";
+        public static final String WISHLIST_BACK_BUTTON_CLICK = "wishlist_back_button_click";
+        public static final String WISHLIST_ITEM_DELETE = "wishlist_item_delete";
     }
 
     public static class Category
