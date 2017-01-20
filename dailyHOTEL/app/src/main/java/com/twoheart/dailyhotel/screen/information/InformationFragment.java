@@ -206,6 +206,7 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, TermsNPolicyActivity.class), Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
 
+            AnalyticsManager.getInstance(baseActivity).recordScreen(baseActivity, AnalyticsManager.Screen.TERMS_AND_CONDITION, null);
         }
 
         @Override

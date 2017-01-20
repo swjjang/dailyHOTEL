@@ -578,12 +578,8 @@ public class AnalyticsManager
         public static final String BOOKING_BEFORE_LOGIN_BOOKING_LIST = "Booking_BeforeLoginBookingList";
         //
         public static final String BOOKING_DETAIL = "BookingDetail_MyBookingInfo";
-        public static final String BOOKING_DETAIL_INFORMATION = "BookingDetail_PlaceInfo";
         public static final String BOOKING_DETAIL_MAP = "BookingDetail_MapView";
         public static final String BOOKING_DETAIL_RECEIPT = "BookingDetail_Receipt";
-        //
-        public static final String INFORMATION_SIGNIN = "Menu_AfterLogin";
-        public static final String INFORMATION_SIGNOUT = "Menu_BeforeLogin";
         //
         public static final String SIGNIN = "Menu_Login";
         public static final String MENU_REGISTRATION = "Menu_Registration";
@@ -603,7 +599,6 @@ public class AnalyticsManager
         public static final String CREDITCARD_ADD = "Menu_AddingPaymentCard";
         //
         public static final String BONUS = "Menu_CreditManagement";
-        public static final String BONUS_LIST = "Menu_CreditHistoryList";
         public static final String BONUS_BEFORE_LOGIN = "Menu_BeforeLoginCreditManagement";
         public static final String EVENT_LIST = "Menu_EventList";
         public static final String EVENT_DETAIL = "Menu_EventDetailView";
@@ -677,6 +672,7 @@ public class AnalyticsManager
         public static final String HOME_EVENT_DETAIL = "home_event_detail";
         public static final String RECOMMEND_LIST = "recommend_list";
         public static final String MYDAILY = "mydaily";
+        public static final String TERMS_AND_CONDITION = "terms_and_condition";
     }
 
     public static class Action
@@ -693,7 +689,6 @@ public class AnalyticsManager
         public static final String HOTEL_COUPON_DOWNLOAD = "HotelCouponDownload";
         //
         public static final String SOCIAL_SHARE_CLICKED = "SocialShareClicked";
-        public static final String KAKAO_INQUIRY_CLICKED = "KakaoInquiryClicked";
         public static final String ROOM_TYPE_CLICKED = "RoomTypeClicked";
         public static final String ROOM_TYPE_ITEM_CLICKED = "RoomTypeItemClicked";
         public static final String ROOM_TYPE_CANCEL_CLICKED = "RoomTypeCancelClicked";
@@ -931,7 +926,6 @@ public class AnalyticsManager
         public static final String EMAIL_LOGIN = "EmailLogin";
         public static final String REGISTER_ACCOUNT = "RegisterAccount";
         public static final String AGREE_AND_REGISTER = "AgreeAndRegister";
-        public static final String ADDING_CARD_ICON_CLICKED = "AddingCardIconClicked";
         public static final String ADDING_CARD_BUTTON_CLICKED = "AddingCardButtonClicked";
         //
         public static final String HOTEL_SATISFACTION = "HotelSatisfaction";

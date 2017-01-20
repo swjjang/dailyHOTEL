@@ -297,13 +297,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             screenName = AnalyticsManager.Screen.MENU_REGISTRATION;
         } else if (dailyDeepLink.isInformationView() == true)
         {
-            if (DailyHotel.isLogin() == true)
-            {
-                screenName = AnalyticsManager.Screen.INFORMATION_SIGNIN;
-            } else
-            {
-                screenName = AnalyticsManager.Screen.INFORMATION_SIGNOUT;
-            }
+
         } else if (dailyDeepLink.isCouponView() == true)
         {
             screenName = AnalyticsManager.Screen.MENU_COUPON_BOX;
