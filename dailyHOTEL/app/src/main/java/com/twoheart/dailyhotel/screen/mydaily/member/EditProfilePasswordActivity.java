@@ -34,8 +34,8 @@ import retrofit2.Response;
 public class EditProfilePasswordActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private View mPasswordView, mConfirmPasswordView;
-    private DailyEditText mPasswordEditText, mConfirmPasswordEditText;
-    private View mConfirmView;
+    DailyEditText mPasswordEditText, mConfirmPasswordEditText;
+    View mConfirmView;
 
     public static Intent newInstance(Context context)
     {

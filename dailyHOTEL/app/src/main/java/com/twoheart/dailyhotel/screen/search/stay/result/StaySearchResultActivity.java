@@ -50,13 +50,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 {
     private static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
-    private int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
+    int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
 
-    private String mInputText;
-    private String mAddress;
+    String mInputText;
+    String mAddress;
 
-    private SearchType mSearchType;
-    private StaySearchCuration mStaySearchCuration;
+    SearchType mSearchType;
+    StaySearchCuration mStaySearchCuration;
 
     private PlaceSearchResultNetworkController mNetworkController;
 
@@ -362,7 +362,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         super.onResume();
     }
 
-    private void recordScreenSearchResult(String screen)
+    void recordScreenSearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
@@ -401,7 +401,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
     }
 
-    private void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
+    void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
     {
         if (Util.isTextEmpty(address))
         {
@@ -710,7 +710,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
     };
 
-    private StaySearchResultListFragment.OnStaySearchResultListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStaySearchResultListFragmentListener()
+    StaySearchResultListFragment.OnStaySearchResultListFragmentListener mOnStayListFragmentListener = new StaySearchResultListFragment.OnStaySearchResultListFragmentListener()
     {
         @Override
         public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)

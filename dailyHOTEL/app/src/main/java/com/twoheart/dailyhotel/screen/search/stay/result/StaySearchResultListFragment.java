@@ -19,8 +19,8 @@ import retrofit2.Response;
 
 public class StaySearchResultListFragment extends StayListFragment
 {
-    private boolean mIsOptimizeCategory;
-    private boolean mIsDeepLink;
+    boolean mIsOptimizeCategory;
+    boolean mIsDeepLink;
     private SearchType mSearchType;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener

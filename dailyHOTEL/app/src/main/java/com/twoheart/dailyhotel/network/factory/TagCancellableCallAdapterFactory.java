@@ -21,8 +21,8 @@ import retrofit2.Retrofit;
 public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 {
     // References to the last Call made for a given tag
-    private final HashMap<Call, String> mQueuedCalls;
-    private final static Object mObject = new Object();
+    final HashMap<Call, String> mQueuedCalls;
+    final static Object mObject = new Object();
 
     private TagCancellableCallAdapterFactory()
     {
@@ -105,10 +105,10 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
     public static final class ExecutorCallbackCall<T> implements Call<T>
     {
-        private final Executor mCallbackExecutor;
+        final Executor mCallbackExecutor;
         private final Call<T> mDelegate;
         private String mTag;
-        private final HashMap<Call, String> mQueuedCalls;
+        final HashMap<Call, String> mQueuedCalls;
 
         ExecutorCallbackCall(Executor callbackExecutor, Call<T> delegate, String tag, HashMap<Call, String> queuedCalls)
         {

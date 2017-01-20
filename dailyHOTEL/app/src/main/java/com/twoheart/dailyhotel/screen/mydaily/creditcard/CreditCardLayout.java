@@ -34,9 +34,9 @@ public class CreditCardLayout extends FrameLayout
     private ViewGroup mLoginLayout, mEmptyCardLayout;
     private View mBottomLayout;
     private ListView mListView;
-    private CreditCardListAdapter mAdapter;
+    CreditCardListAdapter mAdapter;
 
-    private CreditCardListActivity.OnUserActionListener mOnUserActionListener;
+    CreditCardListActivity.OnUserActionListener mOnUserActionListener;
     private View.OnClickListener mAddCreditCardClickListener = new View.OnClickListener()
     {
         @Override
@@ -203,7 +203,7 @@ public class CreditCardLayout extends FrameLayout
 
         private Context mContext;
         private boolean mIsPickMode;
-        private CreditCard mSelectedCreditCard;
+        CreditCard mSelectedCreditCard;
 
         public CreditCardListAdapter(Context context, int textViewResourceId, ArrayList<CreditCard> arrayList)
         {

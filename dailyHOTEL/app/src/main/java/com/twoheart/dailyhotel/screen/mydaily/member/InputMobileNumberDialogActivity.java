@@ -32,8 +32,8 @@ public class InputMobileNumberDialogActivity extends BaseActivity
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
 
     private Dialog mMobileDialog;
-    private String mCountryCode;
-    private String mMobileNumber;
+    String mCountryCode;
+    String mMobileNumber;
 
     public static Intent newInstance(Context context, String mobileNumber)
     {

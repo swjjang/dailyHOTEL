@@ -35,10 +35,10 @@ import retrofit2.Response;
  */
 public class CouponListActivity extends BaseActivity
 {
-    private CouponListLayout mCouponListLayout;
-    private CouponListNetworkController mCouponListNetworkController;
-    private ArrayList<Coupon> mCouponList;
-    private SortType mSortType;
+    CouponListLayout mCouponListLayout;
+    CouponListNetworkController mCouponListNetworkController;
+    ArrayList<Coupon> mCouponList;
+    SortType mSortType;
 
     public enum SortType
     {
@@ -175,13 +175,13 @@ public class CouponListActivity extends BaseActivity
         }, null, true);
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
-    private void startRegisterCoupon()
+    void startRegisterCoupon()
     {
         Intent intent = RegisterCouponActivity.newInstance(CouponListActivity.this, AnalyticsManager.Screen.MENU_COUPON_BOX);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
@@ -214,7 +214,7 @@ public class CouponListActivity extends BaseActivity
         }
     }
 
-    private ArrayList<Coupon> makeSortCouponList(ArrayList<Coupon> originList, SortType sortType)
+    ArrayList<Coupon> makeSortCouponList(ArrayList<Coupon> originList, SortType sortType)
     {
         if (originList == null || originList.size() == 0)
         {

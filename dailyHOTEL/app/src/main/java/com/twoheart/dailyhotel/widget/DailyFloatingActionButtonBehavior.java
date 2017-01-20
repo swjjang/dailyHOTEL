@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.util.Util;
 public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavior
 {
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
-    private boolean mIsAnimatingOut = false;
+    boolean mIsAnimatingOut = false;
 
     public DailyFloatingActionButtonBehavior(Context context, AttributeSet attrs)
     {

@@ -31,7 +31,7 @@ import retrofit2.Response;
 public class HomeFragment extends BaseFragment
 {
     private HomeLayout mHomeLayout;
-    private BaseActivity mBaseActivity;
+    BaseActivity mBaseActivity;
     private PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
     private SaleTime mSaleTime;

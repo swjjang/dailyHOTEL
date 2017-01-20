@@ -86,7 +86,7 @@ public class StringFilter
     }
 
     // Returns the string result which is filtered by the given mode
-    private CharSequence filteredString(CharSequence source, int start, int end, int mode)
+    CharSequence filteredString(CharSequence source, int start, int end, int mode)
     {
         Pattern pattern;
         switch (mode)

@@ -40,7 +40,7 @@ import retrofit2.Response;
 
 public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
-    private GourmetBookingDetail mGourmetBookingDetail;
+    GourmetBookingDetail mGourmetBookingDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -413,12 +413,12 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         mGourmetBookingDetail.dailyDateTime = dailyDateTime;
     }
 
-    private void startFAQ()
+    void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private void startGourmetCall(final String phoneNumber)
+    void startGourmetCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -470,7 +470,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    private void startKakao()
+    void startKakao()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
@@ -496,7 +496,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

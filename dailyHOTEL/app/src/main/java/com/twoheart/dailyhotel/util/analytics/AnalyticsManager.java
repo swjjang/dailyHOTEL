@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 
@@ -45,8 +44,6 @@ public class AnalyticsManager
         mAnalyticsManagerList = new ArrayList<>();
 
         initAnalytics(context);
-
-        AdWordsConversionReporter.reportWithConversionId(context, "972698918", "swVfCLnEnWYQpurozwM", "0.00", false);
     }
 
     private void initAnalytics(Context context)
@@ -436,7 +433,6 @@ public class AnalyticsManager
             }
 
             String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
-            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "2uFUCJrApWYQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -459,7 +455,6 @@ public class AnalyticsManager
             }
 
             String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
-            AdWordsConversionReporter.reportWithConversionId(mContext, "972698918", "KVTICNS-pWYQpurozwM", price, true);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -873,6 +868,9 @@ public class AnalyticsManager
         public static final String BOOKING_SHARE = "booking_share";
         public static final String STAY_BOOKING_SHARE = "stay_booking_share";
         public static final String GOURMET_BOOKING_SHARE = "gourmet_booking_share";
+
+        public static final String WAYTOVISIT_OPEN = "waytovisit_open";
+        public static final String WAYTOVISIT_CLOSE = "waytovisit_close";
     }
 
     public static class Category
@@ -898,6 +896,7 @@ public class AnalyticsManager
 
         // Share
         public static final String SHARE = "share";
+        public static final String BOOKING = "booking";
     }
 
     public static class Label

@@ -33,7 +33,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
     private DailyAutoCompleteEditText mEmailEditText;
-    private DailyEditText mNameEditText, mPasswordEditText;
+    DailyEditText mNameEditText, mPasswordEditText;
     private DailyEditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
     private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;

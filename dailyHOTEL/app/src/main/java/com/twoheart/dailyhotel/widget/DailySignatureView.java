@@ -28,16 +28,16 @@ public class DailySignatureView extends View
     private static final int B_CURVE_COUNT_OF_POINT = 5;
 
     private Path mPath;
-    private Paint mPaint;
+    Paint mPaint;
     private Bitmap mBitmap;
-    private Canvas mCanvas;
+    Canvas mCanvas;
     private ArrayList<Point> mArrayList;
     private RectF mRectF;
     private Rect mDstRect;
-    private OnUserActionListener mOnUserActionListener;
+    OnUserActionListener mOnUserActionListener;
 
-    private int mTouchAction;
-    private boolean mIsSignatureChecked;
+    int mTouchAction;
+    boolean mIsSignatureChecked;
 
     public DailySignatureView(Context context)
     {
@@ -92,7 +92,7 @@ public class DailySignatureView extends View
         mOnUserActionListener = listener;
     }
 
-    private boolean isSignatureChecked()
+    boolean isSignatureChecked()
     {
         if (mBitmap == null)
         {
@@ -241,7 +241,7 @@ public class DailySignatureView extends View
         return true;
     }
 
-    private void drawBCurve(Point p1, Point p2, Point p3, Point p4)
+    void drawBCurve(Point p1, Point p2, Point p3, Point p4)
     {
         if (p1 == null || p2 == null || p3 == null || p4 == null)
         {
@@ -255,7 +255,7 @@ public class DailySignatureView extends View
         mCanvas.drawPath(mPath, mPaint);
     }
 
-    private void drawBCurve(Point p1, Point p2, Point p3)
+    void drawBCurve(Point p1, Point p2, Point p3)
     {
         mPath.reset();
         mPath.moveTo(p1.x, p1.y);
@@ -264,7 +264,7 @@ public class DailySignatureView extends View
         mCanvas.drawPath(mPath, mPaint);
     }
 
-    private Point getTriangleCenter(Point p1, Point p2, Point p3)
+    Point getTriangleCenter(Point p1, Point p2, Point p3)
     {
         if (p1 == null || p2 == null || p3 == null)
         {

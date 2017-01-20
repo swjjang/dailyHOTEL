@@ -41,10 +41,10 @@ import retrofit2.Response;
 
 public class MyDailyFragment extends BaseFragment implements Constants
 {
-    private MyDailyLayout mMyDailyLayout;
-    private MyDailyNetworkController mNetworkController;
+    MyDailyLayout mMyDailyLayout;
+    MyDailyNetworkController mNetworkController;
     private BroadcastReceiver mNewEventBroadcastReceiver;
-    private boolean mIsAttach;
+    boolean mIsAttach;
     private boolean mDontReload;
 
     @Override
@@ -77,7 +77,10 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isBonusView() == true)
+            if (DailyDeepLink.getInstance().isMyDailyView() == true)
+            {
+
+            } else if (DailyDeepLink.getInstance().isBonusView() == true)
             {
                 mOnEventListener.startBonusList();
             } else if (DailyDeepLink.getInstance().isSingUpView() == true)
@@ -124,10 +127,10 @@ public class MyDailyFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startEditProfile();
                 return;
-            } else if (DailyDeepLink.getInstance().isWishlistHotelView() == true)
+            } else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
             {
                 mOnEventListener.startWishList(PlaceType.HOTEL);
-            } else if (DailyDeepLink.getInstance().isWishlistGourmetView() == true)
+            } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
             {
                 mOnEventListener.startWishList(PlaceType.FNB);
             }
@@ -225,7 +228,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
         }
     }
 
-    private void startSignUp(String recommenderCode)
+    void startSignUp(String recommenderCode)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {

@@ -558,7 +558,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     /**
      * 카드가 화면에 보이는 경우에 애니메이션을 시작한다.
      */
-    private void animationInVisible()
+    void animationInVisible()
     {
         int scrollY = mNestedScrollView.getScrollY();
         int height = scrollY + mNestedScrollView.getHeight();

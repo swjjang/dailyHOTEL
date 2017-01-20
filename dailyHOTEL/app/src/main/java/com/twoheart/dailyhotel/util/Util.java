@@ -1167,7 +1167,7 @@ public class Util implements Constants
         }
     }
 
-    private static void openTMapNavi(final Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
+    static void openTMapNavi(final Activity activity, TMapTapi tmapTapi, String placeName, float latitude, float longitude)
     {
         if (tmapTapi.isTmapApplicationInstalled() == true)
         {
@@ -1217,7 +1217,7 @@ public class Util implements Constants
         }
     }
 
-    private static void showFailedTMapNaviDialog(final Activity activity)
+    static void showFailedTMapNaviDialog(final Activity activity)
     {
         if (activity == null)
         {
@@ -1846,7 +1846,7 @@ public class Util implements Constants
                 intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setType("vnd.android-dir/mms-sms");
                 activity.startActivity(intent);
-            } catch (Exception e)
+            } catch (ActivityNotFoundException e)
             {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.putExtra("sms_body", message);

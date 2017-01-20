@@ -506,7 +506,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
     }
 
-    private void startFAQ()
+    void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
@@ -515,7 +515,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     // UserActionListener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private View.OnClickListener mToolbarOptionsItemSelectedListener = new View.OnClickListener()
+    View.OnClickListener mToolbarOptionsItemSelectedListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)

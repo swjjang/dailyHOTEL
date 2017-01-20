@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public abstract class PlaceMainActivity extends BaseActivity
@@ -80,6 +81,30 @@ public abstract class PlaceMainActivity extends BaseActivity
         super.onPause();
 
         mDontReloadAtOnResume = true;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // 맵인 경우에 하단에 정보를 보고 있으면 백키를 누를 경우 정보를 사라지게 해준다.(편의성 제공)
+        if (mViewType == ViewType.MAP)
+        {
+            try
+            {
+                PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+                if (mPlaceMainLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                {
+                    mPlaceMainLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().clickMap();
+                    return;
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        super.onBackPressed();
     }
 
     @Override

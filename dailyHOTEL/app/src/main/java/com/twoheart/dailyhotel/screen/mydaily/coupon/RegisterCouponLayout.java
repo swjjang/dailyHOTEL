@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 public class RegisterCouponLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener
 {
     private View mTitleView;
-    private View mCompleteView;
+    View mCompleteView;
     private DailyEditText mCouponEditText;
 
     public interface OnEventListener extends OnBaseEventListener

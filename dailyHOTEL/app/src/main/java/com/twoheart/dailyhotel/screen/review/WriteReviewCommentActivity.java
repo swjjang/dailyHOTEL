@@ -19,9 +19,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class WriteReviewCommentActivity extends BaseActivity
 {
-    private WriteReviewCommentLayout mLayout;
+    WriteReviewCommentLayout mLayout;
     private String mOriginText; // 리뷰 페이지로 부터 전달 받은 메세지 - 처음 진입 인지 수정 상태인지 판단 용도!
-    private PlaceType mPlaceType;
+    PlaceType mPlaceType;
 
     public static Intent newInstance(Context context, PlaceType placeType, String text) throws IllegalArgumentException
     {

@@ -26,8 +26,8 @@ import static com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity.I
  */
 public class RegisterCouponActivity extends BaseActivity
 {
-    private RegisterCouponLayout mRegisterCouponLayout;
-    private RegisterCouponNetworkController mNetworkController;
+    RegisterCouponLayout mRegisterCouponLayout;
+    RegisterCouponNetworkController mNetworkController;
 
     private String mCallByScreen;
 
@@ -139,7 +139,7 @@ public class RegisterCouponActivity extends BaseActivity
         }, null, true);
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);

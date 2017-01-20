@@ -62,7 +62,7 @@ import retrofit2.Response;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
-    private TicketInformation mSelectedTicketInformation;
+    TicketInformation mSelectedTicketInformation;
     private boolean mCheckPrice;
 
     /**
@@ -543,7 +543,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.GOURMET);
-            params.put(AnalyticsManager.ValueType.OVERSEAS, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.COUNTRY, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
 
             if (mProvince instanceof Area)
             {
@@ -734,7 +734,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.GOURMET, null);
     }
 
-    private void updateDetailInformationLayout(GourmetDetail gourmetDetail)
+    void updateDetailInformationLayout(GourmetDetail gourmetDetail)
     {
         switch (mInitializeStatus)
         {
@@ -842,7 +842,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void startCalendar(SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
+    void startCalendar(SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -988,7 +988,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private GourmetDetailLayout.OnEventListener mOnEventListener = new GourmetDetailLayout.OnEventListener()
+    GourmetDetailLayout.OnEventListener mOnEventListener = new GourmetDetailLayout.OnEventListener()
     {
         @Override
         public void doBooking(TicketInformation ticketInformation)

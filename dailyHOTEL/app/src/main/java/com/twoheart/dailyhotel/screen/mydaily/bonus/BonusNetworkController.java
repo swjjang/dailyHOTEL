@@ -45,7 +45,7 @@ public class BonusNetworkController extends BaseNetworkController
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mUserBonusListCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserBonusListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -111,7 +111,7 @@ public class BonusNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

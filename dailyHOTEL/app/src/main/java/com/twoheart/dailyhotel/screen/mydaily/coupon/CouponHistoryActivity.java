@@ -19,7 +19,7 @@ import retrofit2.Response;
  */
 public class CouponHistoryActivity extends BaseActivity
 {
-    private CouponHistoryLayout mCouponHistoryLayout;
+    CouponHistoryLayout mCouponHistoryLayout;
     private CouponHistoryNetworkController mCouponHistoryNetworkController;
 
     public static Intent newInstance(Context context)

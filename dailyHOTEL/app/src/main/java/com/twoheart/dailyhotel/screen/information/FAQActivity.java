@@ -92,7 +92,7 @@ public class FAQActivity extends WebViewActivity
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-    private void showCallDialog()
+    void showCallDialog()
     {
         if (isFinishing())
         {
@@ -182,7 +182,7 @@ public class FAQActivity extends WebViewActivity
         }
     }
 
-    private void startKakao()
+    void startKakao()
     {
         try
         {

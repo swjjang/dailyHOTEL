@@ -295,7 +295,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
     }
 
-    private void setSelectedDay(SaleTime saleTime)
+    void setSelectedDay(SaleTime saleTime)
     {
         if (saleTime == null)
         {
@@ -319,7 +319,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    private void reset()
+    void reset()
     {
         mIsChanged = true;
 

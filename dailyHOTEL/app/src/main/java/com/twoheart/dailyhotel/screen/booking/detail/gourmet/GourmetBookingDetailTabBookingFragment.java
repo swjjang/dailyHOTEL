@@ -52,7 +52,7 @@ public class GourmetBookingDetailTabBookingFragment extends BaseFragment impleme
     private static final String KEY_BUNDLE_ARGUMENTS_RESERVATION_INDEX = "reservationIndex";
 
     private GourmetBookingDetail mBookingDetail;
-    private int mReservationIndex;
+    int mReservationIndex;
 
     private View mInputReviewVerticalLine;
     private DailyTextView mInputReviewView;

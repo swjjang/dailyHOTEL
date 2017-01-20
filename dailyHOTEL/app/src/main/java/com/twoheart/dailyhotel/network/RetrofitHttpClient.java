@@ -86,6 +86,7 @@ public class RetrofitHttpClient implements Constants
             mRetrofit = new Retrofit.Builder().baseUrl(Crypto.getUrlDecoderEx(URL_DAILYHOTEL_SERVER_DEFAULT))//
                 .client(mOkHttpClient)//
                 .addConverterFactory(JSONConverterFactory.create())//
+                .addConverterFactory(LoganSquareConverterFactory.create())//
                 .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
         }
 
@@ -133,6 +134,10 @@ public class RetrofitHttpClient implements Constants
 
     private class HeaderInterceptor implements Interceptor
     {
+        HeaderInterceptor()
+        {
+        }
+
         @Override
         public Response intercept(Chain chain) throws IOException
         {

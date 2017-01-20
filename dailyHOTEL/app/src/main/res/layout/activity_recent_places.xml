@@ -21,6 +21,7 @@
             android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
             app:tabGravity="fill"
             app:tabIndicatorHeight="2dp"
+            app:tabMaxWidth="0dp"
             app:tabSelectedTextColor="@color/default_text_cb70038"
             app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
             app:tabTextColor="@color/default_text_c929292"/>

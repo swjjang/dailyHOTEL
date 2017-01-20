@@ -20,7 +20,7 @@ public class StayRegionListNetworkController extends PlaceRegionListNetworkContr
 {
     private BaseActivity mBaseActivity;
 
-    private OnNetworkControllerListener mOnNetworkControllerListener;
+    OnNetworkControllerListener mOnNetworkControllerListener;
 
     public StayRegionListNetworkController(BaseActivity baseActivity, OnNetworkControllerListener listener)
     {

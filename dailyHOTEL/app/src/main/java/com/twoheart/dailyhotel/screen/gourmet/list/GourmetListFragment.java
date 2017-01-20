@@ -29,6 +29,7 @@ import retrofit2.Response;
 public class GourmetListFragment extends PlaceListFragment
 {
     protected GourmetCuration mGourmetCuration;
+    private GourmetListLayout mGourmetListLayout;
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -46,7 +47,12 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     protected PlaceListLayout getPlaceListLayout()
     {
-        return new GourmetListLayout(mBaseActivity, mEventListener);
+        if (mGourmetListLayout == null)
+        {
+            mGourmetListLayout = new GourmetListLayout(mBaseActivity, mEventListener);
+        }
+
+        return mGourmetListLayout;
     }
 
     @Override

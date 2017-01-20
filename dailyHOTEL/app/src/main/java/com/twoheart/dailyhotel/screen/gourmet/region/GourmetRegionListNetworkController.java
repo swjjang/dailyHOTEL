@@ -20,7 +20,7 @@ public class GourmetRegionListNetworkController extends PlaceRegionListNetworkCo
 {
     private BaseActivity mBaseActivity;
 
-    private OnNetworkControllerListener mOnNetworkControllerListener;
+    OnNetworkControllerListener mOnNetworkControllerListener;
 
     public GourmetRegionListNetworkController(BaseActivity baseActivity, OnNetworkControllerListener listener)
     {

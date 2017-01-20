@@ -16,7 +16,7 @@ public class BankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 {
     private List<Bank> mList;
     private Context mContext;
-    private Bank mSelectedBank;
+    Bank mSelectedBank;
     private View.OnClickListener mOnClickListener;
 
     public BankListAdapter(Context context, List<Bank> list)

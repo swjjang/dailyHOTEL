@@ -21,9 +21,9 @@ import java.util.ArrayList;
 public class GourmetDetailLayout extends PlaceDetailLayout
 {
     private GourmetDetailListAdapter mListAdapter;
-    private TicketInformation mSelectedTicketInformation;
+    TicketInformation mSelectedTicketInformation;
 
-    private GourmetDetailTicketTypeListAdapter mTicketTypeListAdapter;
+    GourmetDetailTicketTypeListAdapter mTicketTypeListAdapter;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {

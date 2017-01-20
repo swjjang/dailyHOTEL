@@ -36,9 +36,9 @@ public class ProfileActivity extends BaseActivity
     private static final int REQUEST_CODE_EDIT_PROFILE = 1;
     private static final int REQUEST_CODE_EDIT_PROFILE_BIRTHDAY = 2;
 
-    private ProfileLayout mProfileLayout;
-    private ProfileNetworkController mNetworkController;
-    private String mUserIndex;
+    ProfileLayout mProfileLayout;
+    ProfileNetworkController mNetworkController;
+    String mUserIndex;
 
     public static Intent newInstance(Context context)
     {
@@ -194,7 +194,7 @@ public class ProfileActivity extends BaseActivity
         }, null, true);
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);

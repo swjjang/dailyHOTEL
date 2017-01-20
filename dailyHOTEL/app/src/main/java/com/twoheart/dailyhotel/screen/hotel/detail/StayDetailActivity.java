@@ -64,7 +64,7 @@ import retrofit2.Response;
 
 public class StayDetailActivity extends PlaceDetailActivity
 {
-    private RoomInformation mSelectedRoomInformation;
+    RoomInformation mSelectedRoomInformation;
     private boolean mCheckPrice;
 
     /**
@@ -558,7 +558,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.ValueType.OVERSEAS, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.COUNTRY, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
 
             if (mProvince instanceof Area)
             {
@@ -630,7 +630,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void processBooking(SaleTime saleTime, StayDetail stayDetail, RoomInformation roomInformation)
+    void processBooking(SaleTime saleTime, StayDetail stayDetail, RoomInformation roomInformation)
     {
         if (saleTime == null || stayDetail == null || roomInformation == null)
         {
@@ -753,7 +753,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
-    private void updateDetailInformationLayout(StayDetail stayDetail)
+    void updateDetailInformationLayout(StayDetail stayDetail)
     {
         switch (mInitializeStatus)
         {
@@ -864,7 +864,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void startCalendar(SaleTime saleTime, int nights, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
+    void startCalendar(SaleTime saleTime, int nights, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -879,7 +879,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             , Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
-    private void recordAnalyticsStayDetail(String screen, SaleTime saleTime, StayDetail stayDetail)
+    void recordAnalyticsStayDetail(String screen, SaleTime saleTime, StayDetail stayDetail)
     {
         if (stayDetail == null)
         {
@@ -967,7 +967,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private Map<String, String> recordAnalyticsBooking(SaleTime saleTime, StayDetail stayDetail, RoomInformation roomInformation)
+    Map<String, String> recordAnalyticsBooking(SaleTime saleTime, StayDetail stayDetail, RoomInformation roomInformation)
     {
         if (saleTime == null || stayDetail == null || roomInformation == null)
         {
@@ -1019,7 +1019,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private StayDetailLayout.OnEventListener mOnEventListener = new StayDetailLayout.OnEventListener()
+    StayDetailLayout.OnEventListener mOnEventListener = new StayDetailLayout.OnEventListener()
     {
         @Override
         public void showActionBar(boolean isAnimation)

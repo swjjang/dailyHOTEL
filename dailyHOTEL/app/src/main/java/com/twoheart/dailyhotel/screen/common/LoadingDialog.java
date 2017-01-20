@@ -32,8 +32,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 public class LoadingDialog
 {
     private ProgressBar mProgressBar;
-    private BaseActivity mActivity;
-    private Dialog mDialog;
+    BaseActivity mActivity;
+    Dialog mDialog;
     private Handler mHandler = new Handler()
     {
         @Override

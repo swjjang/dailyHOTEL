@@ -25,7 +25,7 @@ public class FacebookManager extends BaseAnalyticsManager
     private static final boolean DEBUG = Constants.DEBUG;
     private static final String TAG = "[FacebookManager]";
 
-    private Context mContext;
+    Context mContext;
 
     public FacebookManager(Context context)
     {

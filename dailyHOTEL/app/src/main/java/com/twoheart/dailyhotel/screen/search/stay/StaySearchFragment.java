@@ -25,8 +25,8 @@ import retrofit2.Response;
 
 public class StaySearchFragment extends PlaceSearchFragment
 {
-    private SaleTime mCheckInSaleTime;
-    private SaleTime mCheckOutSaleTime;
+    SaleTime mCheckInSaleTime;
+    SaleTime mCheckOutSaleTime;
 
     @Override
     protected void initContents()

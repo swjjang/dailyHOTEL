@@ -40,8 +40,8 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_NAME = "name";
 
-    private DailyEditText mNameEditText;
-    private View mConfirmView, mNameView;
+    DailyEditText mNameEditText;
+    View mConfirmView, mNameView;
     private String mUserIndex;
 
     public static Intent newInstance(Context context, String userIndex, String name)

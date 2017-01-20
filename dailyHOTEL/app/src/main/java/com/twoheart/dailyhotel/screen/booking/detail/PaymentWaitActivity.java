@@ -49,7 +49,7 @@ import retrofit2.Response;
 
 public class PaymentWaitActivity extends BaseActivity
 {
-    private TextView mAccountTextView;
+    TextView mAccountTextView;
     private TextView mDailyTextView;
     private TextView mPriceTextView, mBonusTextView, mCouponTextView, mTotalPriceTextView;
     private TextView mDeadlineTextView;
@@ -190,7 +190,7 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
-    private void showCallDialog()
+    void showCallDialog()
     {
         if (isFinishing())
         {
@@ -318,7 +318,7 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
-    private void setHotelReservationData(JSONObject jsonObject) throws JSONException, ParseException
+    void setHotelReservationData(JSONObject jsonObject) throws JSONException, ParseException
     {
         JSONObject reservationJSONObject = jsonObject.getJSONObject("reservation");
         String accountNumber = reservationJSONObject.getString("vactNum");
@@ -369,7 +369,7 @@ public class PaymentWaitActivity extends BaseActivity
         setGuideText(mGuide1Layout, msg2.split("\\."), true);
     }
 
-    private void setGourmetReservationData(JSONObject jsonObject) throws JSONException
+    void setGourmetReservationData(JSONObject jsonObject) throws JSONException
     {
         String accountNumber = jsonObject.getString("account_num");
         mAccountTextView.setText(jsonObject.getString("bank_name") + ", " + accountNumber);
@@ -407,12 +407,12 @@ public class PaymentWaitActivity extends BaseActivity
         setGuideText(mGuide1Layout, msg2.split("\\."), true);
     }
 
-    private void startFAQ()
+    void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private void startCall()
+    void startCall()
     {
         if (isFinishing() == true)
         {
@@ -447,7 +447,7 @@ public class PaymentWaitActivity extends BaseActivity
         });
     }
 
-    private void startKakao()
+    void startKakao()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);

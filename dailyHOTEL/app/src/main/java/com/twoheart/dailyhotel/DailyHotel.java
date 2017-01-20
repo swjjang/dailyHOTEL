@@ -154,6 +154,10 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
     private static class KakaoSDKAdapter extends KakaoAdapter
     {
+        KakaoSDKAdapter()
+        {
+        }
+
         /**
          * Session Config에 대해서는 default값들이 존재한다.
          * 필요한 상황에서만 override해서 사용하면 됨.
@@ -214,6 +218,10 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
     private class DailyActivityLifecycleCallbacks implements ActivityLifecycleCallbacks
     {
         private int mRunningActivity = 0;
+
+        DailyActivityLifecycleCallbacks()
+        {
+        }
 
         @Override
         public void onActivityCreated(Activity activity, Bundle bundle)

@@ -29,6 +29,7 @@ import retrofit2.Response;
 public class StayListFragment extends PlaceListFragment
 {
     protected StayCuration mStayCuration;
+    private StayListLayout mStayListLayout;
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -44,7 +45,11 @@ public class StayListFragment extends PlaceListFragment
     @Override
     protected PlaceListLayout getPlaceListLayout()
     {
-        return new StayListLayout(mBaseActivity, mEventListener);
+        if (mStayListLayout == null)
+        {
+            mStayListLayout = new StayListLayout(mBaseActivity, mEventListener);
+        }
+        return mStayListLayout;
     }
 
     @Override

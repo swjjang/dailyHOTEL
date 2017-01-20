@@ -36,8 +36,8 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 {
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
 
-    private DailyAutoCompleteEditText mEmailEditText;
-    private View mConfirmView, mEmailView;
+    DailyAutoCompleteEditText mEmailEditText;
+    View mConfirmView, mEmailView;
     private String mUserIndex;
 
     public static Intent newInstance(Context context, String userIndex)

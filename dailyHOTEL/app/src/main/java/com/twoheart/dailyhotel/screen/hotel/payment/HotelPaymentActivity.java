@@ -74,21 +74,21 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 {
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
-    private HotelPaymentLayout mHotelPaymentLayout;
+    HotelPaymentLayout mHotelPaymentLayout;
     //
-    private boolean mIsChangedPrice; // 가격이 변경된 경우.
+    boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
     private boolean mIsUnderPrice;
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
-    private int mPensionPopupMessageType;
-    private String mWarningDialogMessage;
+    int mPensionPopupMessageType;
+    String mWarningDialogMessage;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
 
     // GA용 스크린 정의
-    private String mScreenAnalytics;
+    String mScreenAnalytics;
 
     public static Intent newInstance(Context context, RoomInformation roomInformation//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
@@ -1370,7 +1370,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         return params;
     }
 
-    private void setPaymentInformation(StayPaymentInformation stayPaymentInformation)
+    void setPaymentInformation(StayPaymentInformation stayPaymentInformation)
     {
         if (stayPaymentInformation == null)
         {
@@ -1544,7 +1544,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     }
 
-    private void setBonusSelected(boolean isSelected)
+    void setBonusSelected(boolean isSelected)
     {
         if (mHotelPaymentLayout.setBonusSelected(isSelected) == false)
         {
@@ -1568,7 +1568,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         setPaymentInformation((StayPaymentInformation) mPaymentInformation);
     }
 
-    private void setCouponSelected(boolean isSelected)
+    void setCouponSelected(boolean isSelected)
     {
         mHotelPaymentLayout.setCouponSelected(isSelected);
 
@@ -1583,7 +1583,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         setPaymentInformation((StayPaymentInformation) mPaymentInformation);
     }
 
-    private void startCouponPopup(StayPaymentInformation stayPaymentInformation)
+    void startCouponPopup(StayPaymentInformation stayPaymentInformation)
     {
         RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
 
@@ -1604,13 +1604,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             Action.HOTEL_USING_COUPON_CLICKED, Label.HOTEL_USING_COUPON_CLICKED, null);
     }
 
-    private void startCancelBonusPopup(View.OnClickListener positiveListener)
+    void startCancelBonusPopup(View.OnClickListener positiveListener)
     {
         showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
             getString(R.string.dialog_btn_text_no), positiveListener, null);
     }
 
-    private void startCancelCouponPopup(View.OnClickListener positiveListener)
+    void startCancelCouponPopup(View.OnClickListener positiveListener)
     {
         showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
             getString(R.string.dialog_btn_text_no), positiveListener, null);
@@ -1681,7 +1681,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
 
-    private void setReservationInformation(long checkInDate, long checkOutDate, int nights)
+    void setReservationInformation(long checkInDate, long checkOutDate, int nights)
     {
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
@@ -2109,7 +2109,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mHotelPaymentInformationCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mHotelPaymentInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -2203,6 +2203,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             } else
                             {
                                 stayPaymentInformation.visitType = StayPaymentInformation.VISIT_TYPE_NONE;
+                            }
+
+                            if (StayPaymentInformation.VISIT_TYPE_NONE.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+                            {
+                                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.BOOKING,//
+                                    AnalyticsManager.Action.WAYTOVISIT_CLOSE, AnalyticsManager.ValueType.EMPTY, null);
+                            } else
+                            {
+                                AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.BOOKING,//
+                                    AnalyticsManager.Action.WAYTOVISIT_OPEN, AnalyticsManager.ValueType.EMPTY, null);
                             }
 
                             mHotelPaymentLayout.setVisitTypeInformation(stayPaymentInformation);
@@ -2333,7 +2343,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mFinalCheckPayCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mFinalCheckPayCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -2463,7 +2473,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mUserInformationFinalCheckCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserInformationFinalCheckCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -2534,7 +2544,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mMessageDateTimeCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mMessageDateTimeCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -2621,7 +2631,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

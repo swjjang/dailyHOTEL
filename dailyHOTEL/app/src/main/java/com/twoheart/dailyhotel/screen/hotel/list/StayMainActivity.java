@@ -55,7 +55,7 @@ import retrofit2.Response;
 
 public class StayMainActivity extends PlaceMainActivity
 {
-    private StayCuration mStayCuration;
+    StayCuration mStayCuration;
 
     public static Intent newInstance(Context context)
     {
@@ -297,7 +297,7 @@ public class StayMainActivity extends PlaceMainActivity
         }
     }
 
-    private void startCalendar(String callByScreen)
+    void startCalendar(String callByScreen)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -340,7 +340,7 @@ public class StayMainActivity extends PlaceMainActivity
         return mStayCuration;
     }
 
-    private void recordAnalyticsStayList(String screen)
+    void recordAnalyticsStayList(String screen)
     {
         if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.DAILYHOTEL_LIST.equalsIgnoreCase(screen) == false)
@@ -695,9 +695,8 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-                        selectedProvince = province;
                         DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, selectedProvince.name);
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
@@ -709,16 +708,6 @@ public class StayMainActivity extends PlaceMainActivity
             }
 
             mStayCuration.setProvince(selectedProvince);
-
-            // 기존 저장 Province 가 소지역이 아닐수도 있고, 또한 default 지역인 서울로 하드 코딩 될수 있음으로 한번더 검사
-            String saveProvinceName = DailyPreference.getInstance(StayMainActivity.this).getSelectedRegionTypeProvince(PlaceType.HOTEL);
-            if (selectedProvince.name.equalsIgnoreCase(saveProvinceName) == false)
-            {
-                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                String realProvinceName = Util.getRealProvinceName(selectedProvince);
-                DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
-                AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
-            }
 
             if (DailyDeepLink.getInstance().isValidateLink() == true//
                 && processDeepLinkByRegionList(StayMainActivity.this, provinceList, areaList) == true)
@@ -763,11 +752,11 @@ public class StayMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkDetail(baseActivity);
-            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkEventBannerWeb(baseActivity);
+//            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
+//            {
+//                unLockUI();
+//
+//                return moveDeepLinkEventBannerWeb(baseActivity);
                 //            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
                 //            {
                 //                unLockUI();
@@ -783,11 +772,11 @@ public class StayMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkSearchResult(baseActivity);
-            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkCollection(baseActivity);
+//            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+//            {
+//                unLockUI();
+//
+//                return moveDeepLinkCollection(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
@@ -869,7 +858,7 @@ public class StayMainActivity extends PlaceMainActivity
         }
     };
 
-    private StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
+    StayListFragment.OnStayListFragmentListener mStayListFragmentListener = new StayListFragment.OnStayListFragmentListener()
     {
         @Override
         public void onStayClick(View view, PlaceViewItem placeViewItem, int listCount)
@@ -1122,7 +1111,7 @@ public class StayMainActivity extends PlaceMainActivity
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private boolean moveDeepLinkDetail(BaseActivity baseActivity)
+    boolean moveDeepLinkDetail(BaseActivity baseActivity)
     {
         try
         {
@@ -1305,7 +1294,7 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearch(BaseActivity baseActivity)
+    boolean moveDeepLinkSearch(BaseActivity baseActivity)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -1375,7 +1364,7 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
+    boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
     {
         String word = DailyDeepLink.getInstance().getSearchWord();
         DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
@@ -1473,7 +1462,7 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkStayList(List<Province> provinceList, List<Area> areaList)
+    boolean moveDeepLinkStayList(List<Province> provinceList, List<Area> areaList)
     {
         String categoryCode = DailyDeepLink.getInstance().getCategoryCode();
         String date = DailyDeepLink.getInstance().getDate();

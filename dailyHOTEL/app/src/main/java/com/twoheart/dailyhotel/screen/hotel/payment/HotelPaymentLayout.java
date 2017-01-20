@@ -47,20 +47,20 @@ import java.util.TimeZone;
 
 public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
-    private ScrollView mScrollView;
+    ScrollView mScrollView;
     //
     private View mBookingLayout;
     private TextView mCheckinDayTextView, mCheckoutDayTextView, mNightsTextView;
     private TextView mAmountNightsTextView;
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private TextView mUserNameTextView, mUserPhoneTextView, mUserEmailTextView;
-    private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
+    EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
     private TextView mPlaceNameTextView, mRoomTypeTextView;
     //    private EditText mMemoEditText;
     private View mUserLayout;
-    private View mGuestFrameLayout, mGuestLinearLayout;
+    View mGuestFrameLayout, mGuestLinearLayout;
     //
-    private TextView mGuestNameHintEditText;
+    TextView mGuestNameHintEditText;
     private TextView mGuideNameMemo;
     private CheckBox mGuestCheckBox;
 
@@ -107,12 +107,12 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     //
     private View mRefundPolicyLayout;
     //
-    private int mAnimationValue;
+    int mAnimationValue;
     private ValueAnimator mValueAnimator;
-    private boolean mIsAnimationCancel;
+    boolean mIsAnimationCancel;
     //
-    private Rect mGuestFrameLayoutRect = new Rect();
-    private int mScrollMoveHeight;
+    Rect mGuestFrameLayoutRect = new Rect();
+    int mScrollMoveHeight;
 
     public interface OnEventListener extends OnBaseEventListener
     {

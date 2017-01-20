@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public abstract class PlaceWishListLayout extends BaseLayout
 {
-    private RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     private View mEmptyLayout;
     private DailyTextView mEmptyMessageView;
     private DailyTextView mEmptyButtonView;

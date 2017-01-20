@@ -26,11 +26,11 @@ public class EditProfilePhoneActivity extends BaseActivity
     private static final String INTENT_EXTRA_DATA_TYPE = "type";
     private static final String INTENT_EXTRA_DATA_PHONENUMBER = "phoneNumber";
 
-    private EditProfilePhoneLayout mEditProfilePhoneLayout;
-    private EditProfilePhoneNetworkController mNetworkController;
-    private String mCountryCode;
-    private String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
-    private int mRequestVerificationCount;
+    EditProfilePhoneLayout mEditProfilePhoneLayout;
+    EditProfilePhoneNetworkController mNetworkController;
+    String mCountryCode;
+    String mUserIndex; // 소셜 계정인 경우에는 userIndex, 일반 계정인 경우에는 이름이 넘어온다
+    int mRequestVerificationCount;
 
     public enum Type
     {

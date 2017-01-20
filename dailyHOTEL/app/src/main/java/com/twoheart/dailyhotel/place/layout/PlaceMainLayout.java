@@ -31,8 +31,6 @@ import java.util.List;
 
 public abstract class PlaceMainLayout extends BaseLayout implements View.OnClickListener
 {
-    private static final int ANIMATION_DELAY = 200;
-
     private TextView mRegionTextView;
     private TextView mDateTextView;
 
@@ -42,16 +40,10 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
 
-    private TabLayout mCategoryTabLayout;
+    TabLayout mCategoryTabLayout;
     private View mToolbarUnderlineView;
     private ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
-    private float mMenuBarLayoutTranslationY;
-
-    private Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-    private Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    private boolean mUpScrolling;
-    private ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -440,6 +432,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
 
         mBottomOptionLayout.setVisibility(View.VISIBLE);
+        mBottomOptionLayout.setTranslationY(0);
 
         setMenuBarLayoutEnabled(true);
     }

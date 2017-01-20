@@ -25,7 +25,7 @@ import retrofit2.Response;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
-    private SaleTime mSaleTime;
+    SaleTime mSaleTime;
 
     @Override
     protected void initContents()

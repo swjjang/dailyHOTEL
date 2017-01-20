@@ -38,7 +38,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private View mPhoneLayout, mEmailLayout, mNameLayout;
     private View mEmailView, mNameView, mBirthdayView, mRecommenderView;
     private DailyAutoCompleteEditText mEmailEditText;
-    private DailyEditText mNameEditText, mBirthdayEditText, mRecommenderEditText;
+    DailyEditText mNameEditText, mBirthdayEditText, mRecommenderEditText;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;

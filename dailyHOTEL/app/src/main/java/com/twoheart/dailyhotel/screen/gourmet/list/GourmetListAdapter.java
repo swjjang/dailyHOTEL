@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class GourmetListAdapter extends PlaceListAdapter
 {
-    private View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnClickListener;
 
     public GourmetListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {

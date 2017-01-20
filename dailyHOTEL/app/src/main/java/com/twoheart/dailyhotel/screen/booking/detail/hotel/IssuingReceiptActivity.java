@@ -38,8 +38,8 @@ import retrofit2.Response;
 public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
-    private String mReservationIndex;
-    private boolean mIsFullscreen;
+    String mReservationIndex;
+    boolean mIsFullscreen;
     private DailyToolbarLayout mDailyToolbarLayout;
     private View mBottomLayout;
 
@@ -143,7 +143,7 @@ public class IssuingReceiptActivity extends BaseActivity
         }
     }
 
-    private void showSendEmailDialog()
+    void showSendEmailDialog()
     {
         if (isFinishing())
         {
@@ -263,7 +263,7 @@ public class IssuingReceiptActivity extends BaseActivity
         }
     }
 
-    private boolean makeLayout(JSONObject jsonObject)
+    boolean makeLayout(JSONObject jsonObject)
     {
         try
         {
@@ -458,7 +458,7 @@ public class IssuingReceiptActivity extends BaseActivity
         return true;
     }
 
-    private void updateFullscreenStatus(boolean bUseFullscreen)
+    void updateFullscreenStatus(boolean bUseFullscreen)
     {
         if (bUseFullscreen)
         {
@@ -563,7 +563,7 @@ public class IssuingReceiptActivity extends BaseActivity
         }
     };
 
-    private retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

@@ -380,7 +380,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         checkView.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
     }
 
-    private void setSelectedRangeDay(SaleTime checkInTime, SaleTime checkOutTime)
+    void setSelectedRangeDay(SaleTime checkInTime, SaleTime checkOutTime)
     {
         if (checkInTime == null || checkOutTime == null)
         {
@@ -435,7 +435,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     /**
      * 마지막 날짜는 체크인 날짜로 할수 없다.
      */
-    private void checkLastDay()
+    void checkLastDay()
     {
         if (mCheckInDayView == null || mCheckOutDayView == null)
         {
@@ -450,7 +450,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         mDailyViews[mEndSaleTime.getOffsetDailyDay()].setEnabled(false);
     }
 
-    private void reset()
+    void reset()
     {
         mIsChanged = true;
 

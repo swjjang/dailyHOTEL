@@ -36,12 +36,12 @@ public class AddProfileSocialActivity extends BaseActivity
     private static final int REQUEST_CODE_COUNTRYCODE_LIST_ACTIVITY = 1;
     private static final int REQUEST_CODE_ACTIVITY = 100;
 
-    private String mUserIdx;
-    private String mCountryCode;
+    String mUserIdx;
+    String mCountryCode;
 
-    private Customer mCustomer;
-    private AddProfileSocialLayout mAddProfileSocialLayout;
-    private AddProfileSocialNetworkController mAddProfileSocialNetworkController;
+    Customer mCustomer;
+    AddProfileSocialLayout mAddProfileSocialLayout;
+    AddProfileSocialNetworkController mAddProfileSocialNetworkController;
 
     public static Intent newInstance(Context context, Customer customer, String birthday)
     {
@@ -167,7 +167,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
     }
 
-    private void showCompletedSignupDialog(boolean isBenefit, String updateDate)
+    void showCompletedSignupDialog(boolean isBenefit, String updateDate)
     {
         if (isFinishing())
         {

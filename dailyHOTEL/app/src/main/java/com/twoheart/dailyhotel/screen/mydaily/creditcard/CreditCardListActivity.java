@@ -30,10 +30,10 @@ import retrofit2.Response;
  */
 public class CreditCardListActivity extends BaseActivity
 {
-    private CreditCardLayout mCreditCardLayout;
-    private boolean mIsPickMode;
-    private CreditCard mSelectedCreditCard;
-    private boolean mIsRegisterCreditCard;
+    CreditCardLayout mCreditCardLayout;
+    boolean mIsPickMode;
+    CreditCard mSelectedCreditCard;
+    boolean mIsRegisterCreditCard;
 
     public interface OnUserActionListener
     {
@@ -278,7 +278,7 @@ public class CreditCardListActivity extends BaseActivity
     // Network Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mCreditCardListCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mCreditCardListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -387,7 +387,7 @@ public class CreditCardListActivity extends BaseActivity
         }
     };
 
-    private retrofit2.Callback mDeleteCreditCardCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mDeleteCreditCardCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

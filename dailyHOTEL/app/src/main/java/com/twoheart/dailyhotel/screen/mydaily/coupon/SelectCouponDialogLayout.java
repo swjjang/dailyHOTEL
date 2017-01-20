@@ -39,9 +39,9 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     private TextView mTitleTextView;
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
-    private TextView mPositiveTextView, mNegativeTextView, mConfirmTextView;
+    TextView mPositiveTextView, mNegativeTextView, mConfirmTextView;
     private ListView mListView;
-    private SelectCouponAdapter mListAdapter;
+    SelectCouponAdapter mListAdapter;
 
     public SelectCouponDialogLayout(Context context, OnBaseEventListener listener)
     {

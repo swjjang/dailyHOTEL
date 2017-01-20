@@ -57,7 +57,7 @@ import retrofit2.Response;
 
 public class GourmetMainActivity extends PlaceMainActivity
 {
-    private GourmetCuration mGourmetCuration;
+    GourmetCuration mGourmetCuration;
 
     public static Intent newInstance(Context context)
     {
@@ -238,7 +238,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     }
 
-    private void startCalendar(String callByScreen)
+    void startCalendar(String callByScreen)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -278,7 +278,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return mGourmetCuration;
     }
 
-    private void recordAnalyticsGourmetList(String screen)
+    void recordAnalyticsGourmetList(String screen)
     {
         if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screen) == false)
@@ -331,7 +331,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     // EventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private PlaceMainLayout.OnEventListener mOnEventListener = new PlaceMainLayout.OnEventListener()
+    PlaceMainLayout.OnEventListener mOnEventListener = new PlaceMainLayout.OnEventListener()
     {
         @Override
         public void onCategoryTabSelected(TabLayout.Tab tab)
@@ -590,7 +590,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             boolean mIsProvinceSetting = DailyPreference.getInstance(GourmetMainActivity.this).isSettingRegion(PlaceType.FNB);
             DailyPreference.getInstance(GourmetMainActivity.this).setSettingRegion(PlaceType.FNB, true);
 
-            // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
+            // 마지막으로 지역이 Area로 되어있으면 Province
             if (mIsProvinceSetting == false && selectedProvince instanceof Area)
             {
                 int provinceIndex = selectedProvince.getProvinceIndex();
@@ -599,9 +599,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-                        selectedProvince = province;
                         DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, province.name);
+                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, selectedProvince.name);
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
@@ -613,16 +612,6 @@ public class GourmetMainActivity extends PlaceMainActivity
             }
 
             mGourmetCuration.setProvince(selectedProvince);
-
-            // 기존 저장 Province 가 소지역이 아닐수도 있고, 또한 default 지역인 서울로 하드 코딩 될수 있음으로 한번더 검사
-            String saveProvinceName = DailyPreference.getInstance(GourmetMainActivity.this).getSelectedRegionTypeProvince(PlaceType.FNB);
-            if (selectedProvince.name.equalsIgnoreCase(saveProvinceName) == false)
-            {
-                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                String realProvinceName = Util.getRealProvinceName(selectedProvince);
-                DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
-                AnalyticsManager.getInstance(GourmetMainActivity.this).onRegionChanged(country, realProvinceName);
-            }
 
             if (DailyDeepLink.getInstance().isValidateLink() == true//
                 && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList) == true)
@@ -668,11 +657,11 @@ public class GourmetMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkDetail(baseActivity);
-            } else if (DailyDeepLink.getInstance().isGourmetEventBannerWebView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkEventBannerWeb(baseActivity);
+//            } else if (DailyDeepLink.getInstance().isGourmetEventBannerWebView() == true)
+//            {
+//                unLockUI();
+//
+//                return moveDeepLinkEventBannerWeb(baseActivity);
                 //            } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
                 //            {
                 //                unLockUI();
@@ -688,11 +677,11 @@ public class GourmetMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkSearchResult(baseActivity);
-            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
-            {
-                unLockUI();
-
-                return moveDeepLinkCollection(baseActivity);
+//            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+//            {
+//                unLockUI();
+//
+//                return moveDeepLinkCollection(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
@@ -772,7 +761,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     };
 
-    private GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
+    GourmetListFragment.OnGourmetListFragmentListener mOnPlaceListFragmentListener = new GourmetListFragment.OnGourmetListFragmentListener()
     {
         @Override
         public void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount)
@@ -1032,7 +1021,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private boolean moveDeepLinkDetail(BaseActivity baseActivity)
+    boolean moveDeepLinkDetail(BaseActivity baseActivity)
     {
         try
         {
@@ -1193,7 +1182,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearch(BaseActivity baseActivity)
+    boolean moveDeepLinkSearch(BaseActivity baseActivity)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -1247,7 +1236,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
+    boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
     {
         String word = DailyDeepLink.getInstance().getSearchWord();
         DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
@@ -1330,7 +1319,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList)
+    boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();

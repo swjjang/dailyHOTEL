@@ -40,14 +40,14 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     private static final String INTENT_EXTRA_DATA_PLACETYPE = "placeType";
     private static final String INTENT_EXTRA_DATA_TITLE = "title";
 
-    private DailyPlaceDetailListView mListView;
-    private View mAlphaView;
-    private float mY;
-    private boolean mIsMoved, mIsTop, mIsBottom;
-    private VelocityTracker mVelocityTracker;
-    private View mToolbarView;
+    DailyPlaceDetailListView mListView;
+    View mAlphaView;
+    float mY;
+    boolean mIsMoved, mIsTop, mIsBottom;
+    VelocityTracker mVelocityTracker;
+    View mToolbarView;
 
-    private PlaceType mPlaceType;
+    PlaceType mPlaceType;
 
     public static Intent newInstance(Context context, Constants.PlaceType placeType, String title, ArrayList<ImageInformation> arrayList, int position)
     {
@@ -308,7 +308,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         });
     }
 
-    private void scrollListEffect(float y)
+    void scrollListEffect(float y)
     {
         mListView.setTranslationY(y);
         mToolbarView.setTranslationY(y);
@@ -429,7 +429,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             return view;
         }
 
-        private void setImageViewHeight(ImageView imageView, int width, int height)
+        void setImageViewHeight(ImageView imageView, int width, int height)
         {
             RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 

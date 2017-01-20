@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class StayListAdapter extends PlaceListAdapter
 {
-    private View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnClickListener;
 
     public StayListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {

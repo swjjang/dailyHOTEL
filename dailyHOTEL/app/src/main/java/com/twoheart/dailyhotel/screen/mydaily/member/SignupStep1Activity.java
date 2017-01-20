@@ -41,9 +41,9 @@ public class SignupStep1Activity extends BaseActivity
     private static final int REQUEST_CODE_ACTIVITY = 100;
     private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
-    private SignupStep1Layout mSignupStep1Layout;
-    private Map<String, String> mSignupParams;
-    private String mCallByScreen;
+    SignupStep1Layout mSignupStep1Layout;
+    Map<String, String> mSignupParams;
+    String mCallByScreen;
 
     public static Intent newInstance(Context context, String callByScreen)
     {
@@ -389,7 +389,7 @@ public class SignupStep1Activity extends BaseActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mSignupValidationCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mSignupValidationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

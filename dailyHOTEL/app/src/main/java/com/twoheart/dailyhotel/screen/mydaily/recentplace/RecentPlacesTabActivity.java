@@ -34,9 +34,9 @@ import retrofit2.Response;
 
 public class RecentPlacesTabActivity extends BaseActivity
 {
-    private RecentPlaces mRecentStayPlaces;
-    private RecentPlaces mRecentGourmetPlaces;
-    private ArrayList<RecentPlacesListFragment> mFragmentList;
+    RecentPlaces mRecentStayPlaces;
+    RecentPlaces mRecentGourmetPlaces;
+    ArrayList<RecentPlacesListFragment> mFragmentList;
 
     private RecentStayListFragment mRecentStayListFragment;
     private RecentGourmetListFragment mRecentGourmetListFragment;
@@ -45,7 +45,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private RecentPlacesNetworkController mNetworkController;
 
-    private DailyViewPager mViewPager;
+    DailyViewPager mViewPager;
     private TabLayout mTabLayout;
     private View mEmptyView;
 
@@ -185,7 +185,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         FontManager.apply(mTabLayout, FontManager.getInstance(this).getRegularTypeface());
     }
 
-    private void setTabLayout()
+    void setTabLayout()
     {
         int position = 0;
 

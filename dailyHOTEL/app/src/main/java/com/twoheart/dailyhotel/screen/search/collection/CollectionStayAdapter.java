@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class CollectionStayAdapter extends PlaceListAdapter
 {
-    private View.OnClickListener mOnClickListener;
-    private View.OnClickListener mCalendarListener;
+    View.OnClickListener mOnClickListener;
+    View.OnClickListener mCalendarListener;
 
     public CollectionStayAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener calendarClickListener)
     {

@@ -69,8 +69,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private RelativeLayout mEmptyLayout;
     private PinnedSectionListView mListView;
     private View btnLogin;
-    private long mCurrentTime;
-    private boolean mDontReload;
+    long mCurrentTime;
+    boolean mDontReload;
 
     public interface OnUserActionListener
     {
@@ -109,7 +109,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         btnLogin.setOnClickListener(this);
     }
 
-    private void updateLayout(boolean isSignin, ArrayList<Booking> bookingArrayList)
+    void updateLayout(boolean isSignin, ArrayList<Booking> bookingArrayList)
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -173,6 +173,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     public void onStart()
     {
         super.onStart();
+
+        unLockUI();
 
         if (DailyHotel.isLogin() == false)
         {
@@ -429,8 +431,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         return -1;
     }
 
-    private boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType,//
-                                       int reservationIndex, String imageUrl, boolean isDeepLink)
+    boolean startBookingDetail(BaseActivity baseActivity, PlaceType placeType,//
+                               int reservationIndex, String imageUrl, boolean isDeepLink)
     {
         Intent intent;
 
@@ -539,7 +541,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mReservationListCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mReservationListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -796,7 +798,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     };
 
-    private retrofit2.Callback mReservationHiddenCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mReservationHiddenCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -947,7 +949,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     };
 
-    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

@@ -54,13 +54,13 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     public static final int PROGRESS_STAT_NOT_START = 1;
     public static final int PROGRESS_STAT_IN = 2;
     public static final int PROGRESS_DONE = 3;
-    private static String CARD_CD = "";
-    private static String QUOTA = "";
+    static String CARD_CD = "";
+    static String QUOTA = "";
     public int m_nStat = PROGRESS_STAT_NOT_START;
-    private StayPaymentInformation mStayPaymentInformation;
+    StayPaymentInformation mStayPaymentInformation;
 
-    private WebView mWebView;
-    private Handler handler = new Handler();
+    WebView mWebView;
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -237,7 +237,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     }
 
     @JavascriptInterface
-    private boolean url_scheme_intent(WebView view, String url)
+    boolean url_scheme_intent(WebView view, String url)
     {
         // chrome 버젼 방식 : 2014.01 추가
         if (url.startsWith("intent"))
@@ -557,6 +557,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     {
         boolean isActionBarProgressBarShowing = false;
 
+        DailyWebChromeClient()
+        {
+        }
+
         @Override
         public void onProgressChanged(WebView view, int newProgress)
         {
@@ -586,6 +590,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
     private class DailyWebViewClient extends WebViewClient
     {
+        DailyWebViewClient()
+        {
+        }
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url)
         {
@@ -678,6 +686,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
      */
     private class TeleditBridge
     {
+        TeleditBridge()
+        {
+        }
+
         /**
          * @param val 휴대폰 결제 완료 후 결과값.
          */
@@ -707,6 +719,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
     private class KCPPayPinReturn
     {
+        KCPPayPinReturn()
+        {
+        }
+
         @JavascriptInterface
         public String getConfirm()
         {
@@ -723,6 +739,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
     private class KCPPayPinInfoBridge
     {
+        KCPPayPinInfoBridge()
+        {
+        }
+
         @JavascriptInterface
         public void getPaypinInfo(final String url)
         {
@@ -744,7 +764,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         }
 
         @JavascriptInterface
-        private void paypinConfim()
+        void paypinConfim()
         {
             if (isFinishing() == true)
             {
@@ -779,6 +799,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
     // 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
     private class KCPPayCardInfoBridge
     {
+        KCPPayCardInfoBridge()
+        {
+        }
+
         @JavascriptInterface
         public void getCardInfo(final String card_cd, final String quota)
         {
@@ -800,7 +824,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         }
 
         @JavascriptInterface
-        private void alertToNext()
+        void alertToNext()
         {
             if (isFinishing() == true)
             {
@@ -826,6 +850,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
     private class KCPPayBridge
     {
+        KCPPayBridge()
+        {
+        }
+
         @JavascriptInterface
         public void launchMISP(final String arg)
         {

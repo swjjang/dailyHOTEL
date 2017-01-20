@@ -35,7 +35,7 @@ import java.util.TimeZone;
 
 public class GourmetPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
-    private ScrollView mScrollView;
+    ScrollView mScrollView;
     //
     private View mBookingLayout;
     private TextView mTicketTypeTextView, mTicketDateTextView, mTicketCountTextView, mTicketTimeTextView;
@@ -43,10 +43,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private TextView mPriceTextView, mDiscountPriceTextView, mFinalPaymentTextView;
     private TextView mPlaceNameTextView;
     private TextView mUserNameTextView, mUserPhoneTextView, mUserEmailTextView;
-    private EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
+    EditText mGuestNameEditText, mGuestPhoneEditText, mGuestEmailEditText;
     //    private EditText mMemoEditText;
     private View mUserLayout;
-    private View mGuestFrameLayout, mGuestLinearLayout;
+    View mGuestFrameLayout, mGuestLinearLayout;
     private CheckBox mGuestCheckBox;
 
     private View mTicketCountMinusButton, mTicketCountPlusButton;
@@ -81,12 +81,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mEmptySimpleCardLayout;
     private View mSelectedSimpleCardLayout;
     //
-    private int mAnimationValue;
+    int mAnimationValue;
     private ValueAnimator mValueAnimator;
-    private boolean mIsAnimationCancel;
+    boolean mIsAnimationCancel;
     //
-    private Rect mGuestFrameLayoutRect = new Rect();
-    private int mScrollMoveHeight;
+    Rect mGuestFrameLayoutRect = new Rect();
+    int mScrollMoveHeight;
 
     public interface OnEventListener extends OnBaseEventListener
     {

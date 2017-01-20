@@ -50,13 +50,13 @@ import retrofit2.Response;
 
 public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 {
-    private int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
+    int mReceiveDataFlag; // 0 연동 전 , 1 데이터 리시브 상태, 2 로그 발송 상태
 
-    private String mInputText;
-    private String mAddress;
+    String mInputText;
+    String mAddress;
 
-    private SearchType mSearchType;
-    private GourmetSearchCuration mGourmetSearchCuration;
+    SearchType mSearchType;
+    GourmetSearchCuration mGourmetSearchCuration;
 
     private PlaceSearchResultNetworkController mNetworkController;
 
@@ -349,7 +349,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         super.onResume();
     }
 
-    private void recordScreenSearchResult(String screen)
+    void recordScreenSearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
             && AnalyticsManager.Screen.SEARCH_RESULT_EMPTY.equalsIgnoreCase(screen) == false)
@@ -386,7 +386,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
     }
 
-    private void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
+    void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
     {
         if (Util.isTextEmpty(address))
         {

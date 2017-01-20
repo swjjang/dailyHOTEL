@@ -31,8 +31,8 @@ import retrofit2.Response;
 
 public class CollectionStayActivity extends CollectionBaseActivity
 {
-    private SaleTime mCheckInSaleTime;
-    private int mNights;
+    SaleTime mCheckInSaleTime;
+    int mNights;
 
     public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime, String title, String titleImageUrl, String queryType, String query)
     {

@@ -45,7 +45,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     protected DailyHotelWebChromeClient webChromeClient;
     protected DailyHotelWebViewClient webViewClient;
     protected WebView mWebView;
-    private boolean mEnabledPorgoress = true;
+    boolean mEnabledPorgoress = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -28,11 +28,11 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 {
     private static final int VERIFICATION_NUMBER_LENGTH = 4;
 
-    private View mVerificationLayout, mSignUpView, mCertificationNumberView;
+    View mVerificationLayout, mSignUpView, mCertificationNumberView;
     private View mPhoneView, mVerificationView;
-    private DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
+    DailyEditText mCountryEditText, mPhoneEditText, mVerificationEditText;
     private TextWatcher mTextWatcher;
-    private ScrollView mScrollView;
+    ScrollView mScrollView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -343,7 +343,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         mPhoneEditText.setText(null);
     }
 
-    private void doSignUp()
+    void doSignUp()
     {
         String verificationNumber = mVerificationEditText.getText().toString().trim();
 
@@ -365,7 +365,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         return phoneNumber;
     }
 
-    private boolean provenCertificationButton(String phoneNumber)
+    boolean provenCertificationButton(String phoneNumber)
     {
         String tag = (String) mCountryEditText.getTag();
 

@@ -16,7 +16,7 @@ public class DailyToolbarLayout
     private static final int ANIMATION_DELAY = 200;
 
     private Context mContext;
-    private View mToolbar;
+    View mToolbar;
     private AlphaAnimation mAlphaAnimation;
 
     public DailyToolbarLayout(Context context, View toolbar)

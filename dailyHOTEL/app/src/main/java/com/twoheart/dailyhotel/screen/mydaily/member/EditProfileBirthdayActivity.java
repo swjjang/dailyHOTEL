@@ -48,8 +48,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     private static final String INTENT_EXTRA_DATA_USERINDEX = "userIndex";
     private static final String INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
 
-    private DailyEditText mBirthdayEditText;
-    private View mConfirmView, mBirthdayView;
+    DailyEditText mBirthdayEditText;
+    View mConfirmView, mBirthdayView;
     private String mUserIndex;
 
     public static Intent newInstance(Context context, String userIndex, String birthday)
@@ -334,13 +334,13 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         }, null, true);
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
-    private void setBirthdayText(int year, int month, int dayOfMonth)
+    void setBirthdayText(int year, int month, int dayOfMonth)
     {
         Calendar calendar = DailyCalendar.getInstance();
         calendar.set(year, month, dayOfMonth, 0, 0, 0);

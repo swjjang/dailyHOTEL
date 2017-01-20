@@ -30,8 +30,8 @@ import retrofit2.Response;
 public class ForgotPasswordActivity extends BaseActivity implements Constants, OnClickListener, View.OnFocusChangeListener
 {
     private View mEmailView;
-    private DailyEditText mEmailEditText;
-    private String mEmail;
+    DailyEditText mEmailEditText;
+    String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -161,7 +161,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mUserChangePwCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserChangePwCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

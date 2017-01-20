@@ -33,10 +33,10 @@ public class DailyLocationFactory
     protected PendingIntent mUpdatePendingIntent;
     private LocationManager mLocationManager = null;
     private boolean mIsMeasuringLocation = false;
-    private LocationListenerEx mLocationListener;
-    private View mMyLocationView;
-    private Drawable mMyLocationDrawable;
-    private BaseActivity mBaseActivity;
+    LocationListenerEx mLocationListener;
+    View mMyLocationView;
+    Drawable mMyLocationDrawable;
+    BaseActivity mBaseActivity;
 
     private Handler mHandler = new Handler()
     {

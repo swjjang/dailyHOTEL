@@ -40,21 +40,21 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_HOTEL_NAME = "hotelName";
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
 
-    private SelectCouponDialogLayout mLayout;
-    private SelectStayCouponNetworkController mNetworkController;
+    SelectCouponDialogLayout mLayout;
+    SelectStayCouponNetworkController mNetworkController;
 
-    private boolean mIsSetOk = false;
+    boolean mIsSetOk = false;
 
-    private int mHotelIdx;
-    private int mRoomIdx;
-    private int mNights;
+    int mHotelIdx;
+    int mRoomIdx;
+    int mNights;
 
     private String mRoomPrice;
-    private String mCheckInDate;
-    private String mCheckOutDate;
+    String mCheckInDate;
+    String mCheckOutDate;
     private String mCategoryCode;
     private String mHotelName;
-    private String mCallByScreen;
+    String mCallByScreen;
 
     public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, //
                                      String checkOutDate, String categoryCode, String hotelName, String roomPrice)

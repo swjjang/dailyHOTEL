@@ -24,6 +24,7 @@ public class Keyword implements Parcelable
 
     public Keyword()
     {
+        price = -1;
     }
 
     public Keyword(int icon, String name)
@@ -80,6 +81,7 @@ public class Keyword implements Parcelable
         return 0;
     }
 
+    @JsonIgnore
     public static final Creator CREATOR = new Creator()
     {
         public Keyword createFromParcel(Parcel in)

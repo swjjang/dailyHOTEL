@@ -39,7 +39,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
     private static final String CHANGE_STYLE_TEXT = "\'허용\'";
 
     private PermissionType mPermissionType;
-    private Dialog mDialog;
+    Dialog mDialog;
 
     public enum PermissionType
     {
@@ -225,13 +225,13 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         }
     }
 
-    private void finish(int resultCode)
+    void finish(int resultCode)
     {
         setResult(resultCode);
         finish();
     }
 
-    private void processCheckPermission(PermissionType permissionType)
+    void processCheckPermission(PermissionType permissionType)
     {
         String permission = null;
 
@@ -258,7 +258,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         }
     }
 
-    private void requestPermissions(PermissionType permissionType)
+    void requestPermissions(PermissionType permissionType)
     {
         switch (permissionType)
         {
@@ -272,7 +272,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         }
     }
 
-    private void startSettingDetailsActivity(PermissionType permissionType)
+    void startSettingDetailsActivity(PermissionType permissionType)
     {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setData(Uri.parse("package:com.twoheart.dailyhotel"));
