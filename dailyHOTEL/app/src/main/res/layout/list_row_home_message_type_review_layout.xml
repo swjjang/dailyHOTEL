@@ -79,8 +79,7 @@
                     <com.twoheart.dailyhotel.widget.DailyEmoticonImageView
                         android:id="@+id/badEmoticonImageView"
                         android:layout_width="34dp"
-                        android:layout_height="34dp"
-                        android:background="@color/white"/>
+                        android:layout_height="34dp"/>
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
                         android:id="@+id/badEmoticonTextView"

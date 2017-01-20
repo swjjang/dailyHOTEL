@@ -11,6 +11,7 @@ import com.facebook.keyframes.deserializers.KFImageDeserializer;
 import com.facebook.keyframes.model.KFImage;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -125,6 +126,11 @@ public class DailyEmoticonImageView extends ImageView
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         setImageDrawable(mKeyFramesDrawable);
         setBackgroundColor(getResources().getColor(R.color.transparent));
+
+        if (Util.isOverAPI16() == true)
+        {
+            setImageAlpha(0.0d);
+        }
     }
 
     private void clearImage()
