@@ -144,7 +144,7 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, EventListActivity.class), Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST);
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
         }
 
@@ -161,7 +161,7 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, NoticeListActivity.class), Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST);
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
         }
 

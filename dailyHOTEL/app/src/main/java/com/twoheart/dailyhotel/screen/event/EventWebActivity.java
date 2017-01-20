@@ -417,7 +417,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             if (isShowCalendar == true)
             {
-                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
             }
         } catch (Exception e)
@@ -489,7 +489,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             if (isShowCalendar == true)
             {
-                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
             }
         } catch (Exception e)
@@ -1267,7 +1267,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                                     showSimpleDialog(title, message, positive, null);
 
-                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                                         AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
                                 }
                             }

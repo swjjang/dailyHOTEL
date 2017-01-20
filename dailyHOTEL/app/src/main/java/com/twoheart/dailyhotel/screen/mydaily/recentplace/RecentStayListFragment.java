@@ -193,7 +193,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
                 stay.name, null);
         }
@@ -221,7 +221,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, mRecentPlaces);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_DELETE, //
                 place.name, null);
         }

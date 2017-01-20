@@ -317,7 +317,7 @@ public class StayMainActivity extends PlaceMainActivity
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
@@ -424,20 +424,19 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
-
             Intent intent = SearchActivity.newInstance(StayMainActivity.this, PlaceType.HOTEL, mStayCuration.getCheckInSaleTime(), mStayCuration.getNights());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
             {
                 case LIST:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_LIST, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_LIST, null);
                     break;
 
                 case MAP:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_MAP_VIEW, null);
                     break;
             }
         }
@@ -466,11 +465,11 @@ public class StayMainActivity extends PlaceMainActivity
             switch (mViewType)
             {
                 case LIST:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_LIST, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_LIST, null);
                     break;
 
                 case MAP:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_MAP, null);
                     break;
             }
         }
@@ -508,7 +507,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                     mViewType = ViewType.MAP;
 
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
                     break;
                 }
 
@@ -516,7 +515,7 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     mViewType = ViewType.LIST;
 
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
                     break;
                 }
             }
@@ -567,7 +566,7 @@ public class StayMainActivity extends PlaceMainActivity
                     break;
             }
 
-            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
 
@@ -922,7 +921,7 @@ public class StayMainActivity extends PlaceMainActivity
                     if (mViewType == ViewType.LIST)
                     {
                         String label = String.format("%s-%s", stay.categoryCode, stay.name);
-                        AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                             , AnalyticsManager.Action.HOTEL_ITEM_CLICKED, label, null);
                     }
                     break;
@@ -949,7 +948,7 @@ public class StayMainActivity extends PlaceMainActivity
 
             lockUI();
 
-            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.HOTEL_EVENT_BANNER_CLICKED, eventBanner.name, null);
 
             //            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();

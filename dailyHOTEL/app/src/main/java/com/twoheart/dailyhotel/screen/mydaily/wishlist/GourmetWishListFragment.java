@@ -161,7 +161,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             params.put(AnalyticsManager.KeyType.CATEGORY, category);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_DELETE, //
                 placeName, params);
         }
@@ -236,7 +236,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_CLICKED, //
                 gourmet.name, null);
         }

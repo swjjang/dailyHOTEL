@@ -40,7 +40,7 @@ public class MenuBarLayout implements View.OnClickListener
 
     public interface OnMenuBarSelectedListener
     {
-        void onMenuSelected(int index);
+        void onMenuSelected(int index, int previousIndex);
 
         void onMenuUnselected(int index);
 
@@ -122,13 +122,14 @@ public class MenuBarLayout implements View.OnClickListener
                 mOnMenuBarSelectedListener.onMenuUnselected(mSelectedMenuIndex);
             }
 
-            mSelectedMenuIndex = index;
             mMenuView[index].setSelected(true);
 
             if (mOnMenuBarSelectedListener != null)
             {
-                mOnMenuBarSelectedListener.onMenuSelected(index);
+                mOnMenuBarSelectedListener.onMenuSelected(index, mSelectedMenuIndex);
             }
+
+            mSelectedMenuIndex = index;
         }
     }
 

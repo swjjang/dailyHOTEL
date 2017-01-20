@@ -190,7 +190,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
                 gourmet.name, null);
         }
@@ -217,7 +217,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.FNB, mRecentPlaces);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_DELETE, //
                 place.name, null);
         }

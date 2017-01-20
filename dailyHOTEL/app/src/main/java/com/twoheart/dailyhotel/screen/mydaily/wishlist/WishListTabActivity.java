@@ -330,7 +330,7 @@ public class WishListTabActivity extends BaseActivity
         Intent intent = LoginActivity.newInstance(this, null);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_,//
             AnalyticsManager.Action.WISHLIST_LOGIN_CLICKED, null, null);
     }
 
@@ -354,7 +354,7 @@ public class WishListTabActivity extends BaseActivity
             }
 
             AnalyticsManager.getInstance(WishListTabActivity.this).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_TAB_CHANGE, //
                 tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.HOTEL, null);
         }

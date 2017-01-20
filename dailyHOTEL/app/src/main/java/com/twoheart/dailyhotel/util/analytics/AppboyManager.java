@@ -203,7 +203,7 @@ public class AppboyManager extends BaseAnalyticsManager
                     mAppboy.logCustomEvent(EventName.FIRST_NOTIFICATION_POPUP_OFF, appboyProperties);
                 }
             }
-        } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
+        } else if (AnalyticsManager.Category.NAVIGATION_.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.DAILY_HOTEL_CLICKED.equalsIgnoreCase(action) == true)
             {

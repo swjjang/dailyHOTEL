@@ -705,7 +705,7 @@ public class MainActivity extends BaseActivity implements Constants
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
     {
         @Override
-        public void onMenuSelected(int index)
+        public void onMenuSelected(int index, int previousIndex)
         {
             if (mMainFragmentManager.getLastIndexFragment() == index || lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -724,28 +724,28 @@ public class MainActivity extends BaseActivity implements Constants
                     }
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
+                        , AnalyticsManager.Action.HOME_CLICK, getIndexName(previousIndex), null);
                     break;
 
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
+                        , AnalyticsManager.Action.BOOKINGSTATUS_CLICK, getIndexName(previousIndex), null);
                     break;
 
                 case 2:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, false);
 
-                    //                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    //                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.MYDAILY_CLICK, getIndexName(previousIndex), null);                   //                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
                     break;
 
                 case 3:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.MENU_CLICKED, AnalyticsManager.Label.MENU_SCREEN, null);
+                        , AnalyticsManager.Action.MENU_CLICK, getIndexName(previousIndex), null);
                     break;
             }
         }
@@ -759,6 +759,27 @@ public class MainActivity extends BaseActivity implements Constants
         public void onMenuReselected(int intdex)
         {
 
+        }
+
+        private String getIndexName(int index)
+        {
+            switch(index)
+            {
+                case 0:
+                    return AnalyticsManager.Label.HOME;
+
+                case 1:
+                    return AnalyticsManager.Label.BOOKINGSTATUS;
+
+                case 2:
+                    return AnalyticsManager.Label.MYDAILY;
+
+                case 3:
+                    return AnalyticsManager.Label.MENU;
+
+                default:
+                    return AnalyticsManager.Label.HOME;
+            }
         }
     };
 

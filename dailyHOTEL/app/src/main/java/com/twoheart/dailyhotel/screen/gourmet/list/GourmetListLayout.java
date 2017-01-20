@@ -58,7 +58,7 @@ public class GourmetListLayout extends PlaceListLayout
     {
         ((OnEventListener) mOnEventListener).onPlaceClick(view, placeViewItem);
 
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
     }
 

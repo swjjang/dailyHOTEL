@@ -144,7 +144,7 @@ public class AddProfileSocialActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
-        AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.ACCOUNT_DETAIL, "BackButton", null);
+        AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.ACCOUNT_DETAIL, "BackButton", null);
 
         super.onBackPressed();
     }
@@ -449,7 +449,7 @@ public class AddProfileSocialActivity extends BaseActivity
         @Override
         public void finish()
         {
-            AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.ACCOUNT_DETAIL, "BackButton", null);
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.ACCOUNT_DETAIL, "BackButton", null);
 
             AddProfileSocialActivity.this.finish();
         }
@@ -467,7 +467,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 DailyPreference.getInstance(AddProfileSocialActivity.this).setUserBenefitAlarm(isBenefit);
                 AnalyticsManager.getInstance(AddProfileSocialActivity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
 
-                AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.ACCOUNT_DETAIL, "Confirm", null);
+                AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.ACCOUNT_DETAIL, "Confirm", null);
 
                 showCompletedSignupDialog(isBenefit, agreedDate);
             } else

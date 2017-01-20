@@ -200,7 +200,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             return;
         }
 
-        if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true//
+        if (AnalyticsManager.Category.NAVIGATION_.equalsIgnoreCase(category) == true//
             && (AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true//
             || AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true))
         {

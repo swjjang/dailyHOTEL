@@ -876,7 +876,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             nights, startSaleTime, endSaleTime, placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
-        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
@@ -1451,7 +1451,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
 
                     AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
-                        AnalyticsManager.Category.NAVIGATION,//
+                        AnalyticsManager.Category.NAVIGATION_,//
                         Action.WISHLIST_ON, mPlaceDetail.name, params);
                 } catch (Exception e)
                 {
@@ -1544,7 +1544,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
 
                 AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Category.NAVIGATION_,//
                     Action.WISHLIST_OFF, mPlaceDetail.name, params);
             } else
             {

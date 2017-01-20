@@ -192,7 +192,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     public void onBackPressed()
     {
         // 일단은 애니메이션으로 검색 선택시에 Analytics를 구분하도록 한다.
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
 
         hideAnimation();
@@ -206,7 +206,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             case R.id.exitView:
             case R.id.closeView:
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
 
                 hideAnimation();
@@ -327,7 +327,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         //        String phoneDate = simpleDateFormat.format(new Date());
         String phoneDate = DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분");
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED//
             , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE) + "-" + checkInDate + "-" + checkOutDate + "-" + phoneDate, params);
 
         Intent intent = new Intent();

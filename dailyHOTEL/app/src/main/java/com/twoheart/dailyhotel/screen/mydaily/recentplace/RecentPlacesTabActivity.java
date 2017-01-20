@@ -289,7 +289,7 @@ public class RecentPlacesTabActivity extends BaseActivity
             }
 
             AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_TAB_CHANGE, //
                 tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.HOTEL, null);
         }

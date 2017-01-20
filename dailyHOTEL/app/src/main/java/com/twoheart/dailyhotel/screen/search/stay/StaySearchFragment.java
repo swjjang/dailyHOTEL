@@ -226,7 +226,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             mPlaceSearchLayout.updateRecentSearchesLayout(null);
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH//
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.DELETE_ALL_KEYWORDS, null);
         }
 
@@ -310,7 +310,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (isAnimation == true)
             {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
             }
 

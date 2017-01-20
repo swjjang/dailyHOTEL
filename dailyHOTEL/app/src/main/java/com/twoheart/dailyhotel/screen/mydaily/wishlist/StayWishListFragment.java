@@ -161,7 +161,7 @@ public class StayWishListFragment extends PlaceWishListFragment
             params.put(AnalyticsManager.KeyType.CATEGORY, category);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_DELETE, //
                 placeName, params);
         }
@@ -241,7 +241,7 @@ public class StayWishListFragment extends PlaceWishListFragment
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_CLICKED, //
                 stay.name, null);
         }

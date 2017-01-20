@@ -411,7 +411,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (Util.isTextEmpty(action) == false)
             {
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , action, address, params);
             }
         } catch (Exception e)
@@ -469,7 +469,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
-                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED,//
+                AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED,//
                 AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
@@ -506,7 +506,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                     mViewType = ViewType.MAP;
 
-                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
+                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
                     break;
                 }
 
@@ -514,7 +514,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 {
                     mViewType = ViewType.LIST;
 
-                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_LIST, null);
+                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_LIST_, null);
                     break;
                 }
             }
@@ -548,7 +548,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
-                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED,//
+                AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED,//
                 AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
@@ -559,11 +559,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (resultCode == Constants.CODE_RESULT_ACTIVITY_HOME)
             {
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CANCEL, null);
             } else
             {
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.BACK_BUTTON, null);
             }
         }
@@ -573,7 +573,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             GourmetSearchResultActivity.this.finish(resultCode);
 
-            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.SEARCH_AGAIN, null);
         }
 
@@ -582,7 +582,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             showDailyCallDialog(null);
 
-            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CALL, null);
         }
     };

@@ -255,7 +255,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
@@ -360,13 +360,13 @@ public class GourmetMainActivity extends PlaceMainActivity
             switch (mViewType)
             {
                 case LIST:
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LIST, null);
+                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.GOURMET_LIST_, null);
                     break;
 
                 case MAP:
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_MAP, null);
+                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.GOURMET_MAP_VIEW, null);
                     break;
             }
         }
@@ -394,11 +394,11 @@ public class GourmetMainActivity extends PlaceMainActivity
             switch (mViewType)
             {
                 case LIST:
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.GOURMET_LIST, null);
+                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.GOURMET_LIST_, null);
                     break;
 
                 case MAP:
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.GOURMET_MAP, null);
+                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.GOURMET_MAP, null);
                     break;
             }
         }
@@ -436,7 +436,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                     mViewType = ViewType.MAP;
 
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
+                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
                     break;
                 }
 
@@ -444,7 +444,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     mViewType = ViewType.LIST;
 
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_LIST, null);
+                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_LIST_, null);
                     break;
                 }
             }
@@ -495,7 +495,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     break;
             }
 
-            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
 
@@ -822,7 +822,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                     if (mViewType == ViewType.LIST)
                     {
-                        AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                             , AnalyticsManager.Action.GOURMET_ITEM_CLICKED, gourmet.name, null);
                     }
                     break;
@@ -859,7 +859,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             lockUI();
 
-            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, null);
 
             // SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);

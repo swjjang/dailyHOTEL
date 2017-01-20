@@ -255,7 +255,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 mFacebookLoginView.performClick();
 
-                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.FACEBOOK_LOGIN, null);
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_CLICKED, Label.FACEBOOK_LOGIN, null);
             }
         });
 
@@ -273,7 +273,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             {
                 mKakaoLoginView.performClick();
 
-                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.KAKAO_LOGIN, null);
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_CLICKED, Label.KAKAO_LOGIN, null);
             }
         });
 
@@ -385,7 +385,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 Intent intent = SignupStep1Activity.newInstance(this, mCallByScreen);
                 startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
 
-                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.REGISTRATION_CLICKED, Label.REGISTER_ACCOUNT, null);
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.REGISTRATION_CLICKED, Label.REGISTER_ACCOUNT, null);
                 break;
             }
 
@@ -394,7 +394,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 Intent intent = new Intent(this, ForgotPasswordActivity.class);
                 startActivity(intent);
 
-                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOST_PASSWORD_CLICKED, null, null);
+                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOST_PASSWORD_CLICKED, null, null);
                 break;
             }
 
@@ -474,7 +474,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         DailyMobileAPI.getInstance(this).requestDailyUserLogin(mNetworkTag, params, mDailyUserLoginCallback);
 
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_CLICKED, Label.EMAIL_LOGIN, null);
     }
 
     public String storeLoginInformation(JSONObject jsonObject) throws JSONException
@@ -820,11 +820,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             if (Constants.FACEBOOK_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                             {
                                 DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
-                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.SIGN_UP, AnalyticsManager.UserType.FACEBOOK, null);
                             } else if (Constants.KAKAO_USER.equalsIgnoreCase(mStoreParams.get("user_type")) == true)
                             {
                                 DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserLogin(mNetworkTag, analyticsParams, mSocialUserLoginCallback);
-                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.SIGN_UP, AnalyticsManager.UserType.KAKAO, null);
                             }
 
                             AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_REGISTRATION_CONFIRM, null);
@@ -892,7 +892,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
 
                             AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_LOGIN_COMPLETE, null);
-                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.EMAIL, null);
+                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.EMAIL, null);
                             return;
                         }
                     }
@@ -963,10 +963,10 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                             if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
                             {
-                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.KAKAO, null);
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.KAKAO, null);
                             } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                             {
-                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.FACEBOOK, null);
+                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.FACEBOOK, null);
                             }
                         }
                     } else
