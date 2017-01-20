@@ -960,6 +960,7 @@
     <string name="label_calendar_gourmet_search_selected_date">방문일 선택 완료</string>
     <string name="label_calendar_stay_search_selected_date">%1$d박 선택 완료</string>
     <string name="message_calendar_search_reset">검색할 날짜를 확인해주세요.\n다시 설정하려면 다른 날짜를 선택해주세요.</string>
+    <string name="message_calendar_select_single_day">1박으로만 예약할 수 있습니다.</string>
 
     <string name="information_empty_name_n_email_after_login">신속한 예약 확인 및 안내를 위해\n고객님의 이름과 이메일을 등록해주세요.</string>
 

@@ -69,9 +69,8 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     public enum SourceType
     {
-        HOTEL_BANNER,
-        GOURMET_BANNER,
-        EVENT
+        EVENT,
+        HOME_EVENT,
     }
 
     Handler mHandler = new Handler();
@@ -278,19 +277,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         switch (mSourceType)
         {
-            case HOTEL_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYHOTEL_BANNER_DETAIL, null);
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYHOTEL_BANNER_DETAIL, null, params);
-                break;
-
-            case GOURMET_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYGOURMET_BANNER_DETAIL, null);
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYGOURMET_BANNER_DETAIL, null, params);
-                break;
-
             case EVENT:
                 AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null);
                 AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null, params);
+                break;
+
+            case HOME_EVENT:
+                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.HOME_EVENT_DETAIL, null);
                 break;
         }
 
@@ -417,7 +410,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             if (isShowCalendar == true)
             {
-                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
             }
         } catch (Exception e)
@@ -489,7 +482,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             if (isShowCalendar == true)
             {
-                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
             }
         } catch (Exception e)
@@ -1051,8 +1044,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             switch (mSourceType)
             {
-                case HOTEL_BANNER:
-                case GOURMET_BANNER:
+                case HOME_EVENT:
                 {
                     if (mSaleTime == null)
                     {
@@ -1102,30 +1094,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                 return;
                             }
                         }
-//                        else if (DailyDeepLink.getInstance().isCollectionView() == true)
-//                        {
-//                            String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
-//
-//                            if (Util.isTextEmpty(deepLinkPlaceType) == false)
-//                            {
-//                                switch (deepLinkPlaceType)
-//                                {
-//                                    case "stay":
-//                                        if (moveDeepLinkCollectionStay(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-//                                        {
-//                                            return;
-//                                        }
-//                                        break;
-//
-//                                    case "gourmet":
-//                                        if (moveDeepLinkCollectionGourmet(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-//                                        {
-//                                            return;
-//                                        }
-//                                        break;
-//                                }
-//                            }
-//                        }
                     }
                     break;
                 }
@@ -1267,7 +1235,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                                     showSimpleDialog(title, message, positive, null);
 
-                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                                         AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
                                 }
                             }

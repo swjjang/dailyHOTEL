@@ -21,7 +21,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -35,6 +37,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
     protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
     protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+    protected static final String INTENT_EXTRA_DATA_ISSINGLE_DAY = "isSingleDay"; // 연박 불가
 
     private static final int ANIMATION_DELAY = 200;
 
@@ -56,6 +59,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
 
+    private int[] mHolidays;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -66,6 +71,26 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.black_a67));
+        }
+
+        // 휴일 정보를 얻어온다.
+        String calendarHolidays = DailyPreference.getInstance(this).getCalendarHolidays();
+
+        if (Util.isTextEmpty(calendarHolidays) == false)
+        {
+            String[] holidays = calendarHolidays.split("\\,");
+            mHolidays = new int[holidays.length];
+
+            for (int i = 0; i < holidays.length; i++)
+            {
+                try
+                {
+                    mHolidays[i] = Integer.parseInt(holidays[i]);
+                } catch (NumberFormatException e)
+                {
+                    ExLog.e(e.toString());
+                }
+            }
         }
     }
 
@@ -242,11 +267,23 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                     break;
 
                 case Calendar.SATURDAY:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
+                    if (isHoliday(day) == true)
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                    } else
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
+                    }
                     break;
 
                 default:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
+                    if (isHoliday(day) == true)
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
+                    } else
+                    {
+                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
+                    }
                     break;
             }
 
@@ -257,6 +294,32 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         relativeLayout.setOnClickListener(this);
 
         return relativeLayout;
+    }
+
+    private boolean isHoliday(Day day)
+    {
+        if (day == null || mHolidays == null || mHolidays.length == 0)
+        {
+            return false;
+        }
+
+        try
+        {
+            int calendarDay = Integer.parseInt(day.dayTime.getDayOfDaysDateFormat("yyyyMMdd"));
+
+            for (int holiday : mHolidays)
+            {
+                if (holiday == calendarDay)
+                {
+                    return true;
+                }
+            }
+        } catch (NumberFormatException e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
     }
 
     private int getMonthInterval(final Calendar calendar, int interval)

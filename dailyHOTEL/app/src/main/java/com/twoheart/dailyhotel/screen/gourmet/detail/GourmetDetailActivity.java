@@ -862,7 +862,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             saleTime, startSaleTime, endSaleTime, placeIndex, callByScreen, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
-        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
@@ -1398,7 +1398,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
 
                     AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
-                        AnalyticsManager.Category.NAVIGATION,//
+                        AnalyticsManager.Category.NAVIGATION_,//
                         AnalyticsManager.Action.WISHLIST_ON, mPlaceDetail.name, params);
                 } catch (Exception e)
                 {
@@ -1487,7 +1487,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
 
                 AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Category.NAVIGATION_,//
                     AnalyticsManager.Action.WISHLIST_OFF, mPlaceDetail.name, params);
             } else
             {

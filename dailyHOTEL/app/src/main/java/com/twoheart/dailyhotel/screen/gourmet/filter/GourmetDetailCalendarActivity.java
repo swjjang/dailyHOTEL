@@ -103,7 +103,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
             //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
             //            String phoneDate = simpleDateFormat.format(new Date());
 
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
                 , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : //
                     AnalyticsManager.ValueType.NONE) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
 

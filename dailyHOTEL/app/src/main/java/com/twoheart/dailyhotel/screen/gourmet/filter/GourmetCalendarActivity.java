@@ -174,7 +174,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     public void onBackPressed()
     {
         // 일단은 애니메이션으로 검색 선택시에 Analytics를 구분하도록 한다.
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
 
         hideAnimation();
@@ -188,7 +188,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             case R.id.exitView:
             case R.id.closeView:
 
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLOSED, mCallByScreen, null);
 
                 hideAnimation();
@@ -256,7 +256,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
         //        String phoneDate = simpleDateFormat.format(new Date());
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
             , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : //
                 AnalyticsManager.ValueType.NONE) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
 

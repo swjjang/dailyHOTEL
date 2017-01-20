@@ -72,6 +72,35 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
             mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+        } else if (AnalyticsManager.Screen.HOME_EVENT_DETAIL.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.RECOMMEND_LIST.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            if (DailyHotel.isLogin() == true)
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.MEMBER);
+            } else
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.GUEST);
+            }
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+        } else if (AnalyticsManager.Screen.MYDAILY.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            if (DailyHotel.isLogin() == true)
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.MEMBER);
+            } else
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.GUEST);
+            }
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
         } else
         {
             mGoogleAnalyticsTracker.setScreenName(screenName);
@@ -200,7 +229,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             return;
         }
 
-        if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true//
+        if (AnalyticsManager.Category.NAVIGATION_.equalsIgnoreCase(category) == true//
             && (AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true//
             || AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true))
         {
@@ -236,9 +265,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             //        } else if (dailyDeepLink.isHotelRegionListView() == true)
             //        {
             //            screenName = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-//        } else if (dailyDeepLink.isHotelEventBannerWebView() == true)
-//        {
-//            screenName = AnalyticsManager.Screen.DAILYHOTEL_BANNER_DETAIL;
+            //        } else if (dailyDeepLink.isHotelEventBannerWebView() == true)
+            //        {
+            //            screenName = AnalyticsManager.Screen.DAILYHOTEL_BANNER_DETAIL;
         } else if (dailyDeepLink.isGourmetListView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST;
@@ -248,9 +277,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             //        } else if (dailyDeepLink.isGourmetRegionListView() == true)
             //        {
             //            screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
-//        } else if (dailyDeepLink.isGourmetEventBannerWebView() == true)
-//        {
-//            screenName = AnalyticsManager.Screen.DAILYGOURMET_BANNER_DETAIL;
+            //        } else if (dailyDeepLink.isGourmetEventBannerWebView() == true)
+            //        {
+            //            screenName = AnalyticsManager.Screen.DAILYGOURMET_BANNER_DETAIL;
         } else if (dailyDeepLink.isBookingView() == true)
         {
             screenName = AnalyticsManager.Screen.BOOKING_LIST;

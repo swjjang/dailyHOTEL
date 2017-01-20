@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -130,9 +131,10 @@ public class MainActivity extends BaseActivity implements Constants
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
 
-        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.HOTEL, false);
-        DailyPreference.getInstance(MainActivity.this).setSettingRegion(PlaceType.FNB, false);
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
+        DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
         DailyPreference.getInstance(this).clearPaymentInformation();
+        DailyPreference.getInstance(this).setCheckCalendarHolidays(false);
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
@@ -704,7 +706,7 @@ public class MainActivity extends BaseActivity implements Constants
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
     {
         @Override
-        public void onMenuSelected(int index)
+        public void onMenuSelected(int index, int previousIndex)
         {
             if (mMainFragmentManager.getLastIndexFragment() == index || lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -723,28 +725,28 @@ public class MainActivity extends BaseActivity implements Constants
                     }
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.DAILY_HOTEL_CLICKED, AnalyticsManager.Label.HOTEL_SCREEN, null);
+                        , AnalyticsManager.Action.HOME_CLICK, getIndexName(previousIndex), null);
                     break;
 
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
+                        , AnalyticsManager.Action.BOOKINGSTATUS_CLICK, getIndexName(previousIndex), null);
                     break;
 
                 case 2:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, false);
 
-                    //                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    //                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
+                    AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.MYDAILY_CLICK, getIndexName(previousIndex), null);                   //                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
                     break;
 
                 case 3:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.MENU_CLICKED, AnalyticsManager.Label.MENU_SCREEN, null);
+                        , AnalyticsManager.Action.MENU_CLICK, getIndexName(previousIndex), null);
                     break;
             }
         }
@@ -758,6 +760,27 @@ public class MainActivity extends BaseActivity implements Constants
         public void onMenuReselected(int intdex)
         {
 
+        }
+
+        private String getIndexName(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return AnalyticsManager.Label.HOME;
+
+                case 1:
+                    return AnalyticsManager.Label.BOOKINGSTATUS;
+
+                case 2:
+                    return AnalyticsManager.Label.MYDAILY;
+
+                case 3:
+                    return AnalyticsManager.Label.MENU;
+
+                default:
+                    return AnalyticsManager.Label.HOME;
+            }
         }
     };
 
@@ -890,24 +913,6 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
-                //                if (DailyDeepLink.getInstance().isCollectionView() == true)
-                //                {
-                //                    String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
-                //
-                //                    if (Util.isTextEmpty(deepLinkPlaceType) == false)
-                //                    {
-                //                        switch (deepLinkPlaceType)
-                //                        {
-                //                            case "stay":
-                //                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                //                                break;
-                //
-                //                            case "gourmet":
-                //                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                //                                break;
-                //                        }
-                //                    }
-                //                } else
                 if (DailyDeepLink.getInstance().isHomeEventDetailView() == true//
                     || DailyDeepLink.getInstance().isHomeFeaturedDetailListView() == true)
                 {
@@ -1108,7 +1113,7 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onCommonDateTime(long currentDateTime, long openDateTime, long closeDateTime)
+        public void onCommonDateTime(long currentDateTime, long dailyDateTime, long openDateTime, long closeDateTime)
         {
             try
             {
@@ -1152,6 +1157,22 @@ public class MainActivity extends BaseActivity implements Constants
             if (Util.isTextEmpty(viewedNoticeTime) == true)
             {
                 viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
+            }
+
+            if (DailyPreference.getInstance(MainActivity.this).isCheckCalendarHolidays() == false)
+            {
+                DailyPreference.getInstance(MainActivity.this).setCheckCalendarHolidays(true);
+
+                Calendar dailyCalendar = DailyCalendar.getInstance();
+                dailyCalendar.setTimeInMillis(dailyDateTime - 3600 * 1000 * 9);
+
+                String startDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
+
+                // 90일을 미리 얻어온다.
+                dailyCalendar.add(Calendar.DAY_OF_MONTH, 90);
+                String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
+
+                mNetworkController.requestHoliday(startDay, endDay);
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);

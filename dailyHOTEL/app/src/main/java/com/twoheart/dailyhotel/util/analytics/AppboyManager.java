@@ -203,9 +203,10 @@ public class AppboyManager extends BaseAnalyticsManager
                     mAppboy.logCustomEvent(EventName.FIRST_NOTIFICATION_POPUP_OFF, appboyProperties);
                 }
             }
-        } else if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
+        } else if (AnalyticsManager.Category.NAVIGATION_.equalsIgnoreCase(category) == true//
+            || AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.DAILY_HOTEL_CLICKED.equalsIgnoreCase(action) == true)
+            if (AnalyticsManager.Action.STAY_LIST_CLICK.equalsIgnoreCase(action) == true)
             {
                 AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -217,7 +218,7 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + " : " + EventName.DAILYHOTEL_CLICKED + ", " + appboyProperties.forJsonPut().toString());
                 }
-            } else if (AnalyticsManager.Action.DAILY_GOURMET_CLICKED.equalsIgnoreCase(action) == true)
+            } else if (AnalyticsManager.Action.GOURMET_LIST_CLICK.equalsIgnoreCase(action) == true)
             {
                 AppboyProperties appboyProperties = new AppboyProperties();
 

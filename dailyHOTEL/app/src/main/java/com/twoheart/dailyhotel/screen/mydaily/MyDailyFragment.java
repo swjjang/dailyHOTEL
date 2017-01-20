@@ -75,6 +75,8 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
         mMyDailyLayout.updateNewIconView(hasNewCoupon);
 
+        AnalyticsManager.getInstance(context).recordScreen(getActivity(), AnalyticsManager.Screen.MYDAILY, null);
+
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
             if (DailyDeepLink.getInstance().isMyDailyView() == true)
@@ -290,7 +292,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivityForResult(LoginActivity.newInstance(baseActivity), CODE_REQUEST_ACTIVITY_LOGIN);
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                 Action.LOGIN_CLICKED, AnalyticsManager.Label.LOGIN_CLICKED, null);
         }
 
@@ -300,7 +302,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             MyDailyFragment.this.startSignUp(null);
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_,//
                 Action.REGISTRATION_CLICKED, AnalyticsManager.Label.MENU_REGISTER_ACCOUNT, null);
         }
 
@@ -353,7 +355,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivity(new Intent(baseActivity, BonusActivity.class));
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
         }
 
@@ -370,7 +372,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivity(new Intent(baseActivity, CreditCardListActivity.class));
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.CARD_MANAGEMENT_CLICKED, null);
         }
 
@@ -397,7 +399,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
                 startActivity(InviteFriendsActivity.newInstance(baseActivity, recommender, name));
             }
 
-            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                 Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.INVITE_FRIENDS, null);
         }
 
@@ -412,7 +414,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = WishListTabActivity.newInstance(baseActivity, placeType);
+            Intent intent = WishListTabActivity.newInstance(baseActivity, WishListTabActivity.SourceType.MYDAILY, placeType);
 
             baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
@@ -429,7 +431,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, placeType);
+            Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, RecentPlacesTabActivity.SourceType.MYDAILY, placeType);
 
             baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
         }
@@ -638,7 +640,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
                     }
                 }
 
-                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
             } else
             {
@@ -658,7 +660,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
                 mMyDailyLayout.setLinkAlarmVisible(false);
 
-                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                     Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.OFF, null);
             }
         }

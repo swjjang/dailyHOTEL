@@ -154,7 +154,7 @@ public class BonusActivity extends BaseActivity
             Intent intent = InviteFriendsActivity.newInstance(BonusActivity.this, mRecommendCode, mName);
             startActivityForResult(intent, REQUEST_ACTIVITY_INVITEFRIENDS);
 
-            AnalyticsManager.getInstance(BonusActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.getInstance(BonusActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);
         }
 

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -44,7 +43,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     // onPlaceClick 부분이 있는데 이부분은 고메와 호텔은 서로 상속받아서 사용한다.
     public interface OnPlaceListFragmentListener
     {
-        void onEventBannerClick(EventBanner eventBanner);
+        //        void onEventBannerClick(EventBanner eventBanner);
 
         // 왜 onActivityCreated 했을까?
         // http://blog.saltfactory.net/android/implement-layout-using-with-fragment.html

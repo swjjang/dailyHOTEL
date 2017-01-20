@@ -537,4 +537,6 @@ public interface IDailyNetwork
     void requestAddReviewInformation(String tag, JSONObject jsonObject, Object listener);
 
     void requestAddReviewDetailInformation(String tag, JSONObject jsonObject, Object listener);
+
+    void requestHoliday(String tag, String startDay, String endDay, Object listener);
 }

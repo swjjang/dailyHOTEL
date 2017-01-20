@@ -370,7 +370,7 @@ public class AdjustManager extends BaseAnalyticsManager
 
         DailyAdjustEvent event = null;
 
-        if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
+        if (AnalyticsManager.Category.NAVIGATION_.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.LOGIN_COMPLETE.equalsIgnoreCase(action) == true)
             {
@@ -480,7 +480,7 @@ public class AdjustManager extends BaseAnalyticsManager
                     event.addPartnerParameter(Key.SERVICE, placeType);
                 }
             }
-        } else if (AnalyticsManager.Category.SEARCH.equalsIgnoreCase(category) == true)
+        } else if (AnalyticsManager.Category.SEARCH_.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND.equalsIgnoreCase(action) == true //
                 || AnalyticsManager.Action.AROUND_SEARCH_CLICKED.equalsIgnoreCase(action) == true //
