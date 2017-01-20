@@ -347,7 +347,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
 
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
             , action, keyword.name, params);
     }
 
@@ -359,7 +359,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
 
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
             , action, keyword.name, params);
     }
 

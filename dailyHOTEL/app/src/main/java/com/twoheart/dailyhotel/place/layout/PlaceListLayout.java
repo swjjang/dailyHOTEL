@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
@@ -52,7 +51,7 @@ public abstract class PlaceListLayout extends BaseLayout
     {
         void onPlaceClick(View view, PlaceViewItem placeViewItem);
 
-        void onEventBannerClick(EventBanner eventBanner);
+        //        void onEventBannerClick(EventBanner eventBanner);
 
         void onScrolled(RecyclerView recyclerView, int dx, int dy);
 
@@ -73,9 +72,9 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage);
 
-    protected abstract EventBanner getEventBanner(int index);
-
-    protected abstract PlaceViewItem getEventBannerViewItem();
+    //    protected abstract EventBanner getEventBanner(int index);
+    //
+    //    protected abstract PlaceViewItem getEventBannerViewItem();
 
     protected abstract void onInformationClick(View view, PlaceViewItem placeViewItem);
 
@@ -173,7 +172,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
         mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
         mPlaceRecyclerView.setShadowVisible(false);
-        setBannerVisibility(true);
+        //        setBannerVisibility(false);
     }
 
     public void clearList()
@@ -212,15 +211,15 @@ public abstract class PlaceListLayout extends BaseLayout
         return mPlaceListMapFragment;
     }
 
-    public void setBannerVisibility(Boolean visibility)
-    {
-        mBannerVisibility = visibility;
-    }
-
-    public boolean isBannerVisibility()
-    {
-        return mBannerVisibility;
-    }
+    //    public void setBannerVisibility(Boolean visibility)
+    //    {
+    //        mBannerVisibility = visibility;
+    //    }
+    //
+    //    public boolean isBannerVisibility()
+    //    {
+    //        return mBannerVisibility;
+    //    }
 
     public void setBottomOptionLayout(View view)
     {
@@ -362,14 +361,14 @@ public abstract class PlaceListLayout extends BaseLayout
                 {
                     ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
 
-                    if (sortType == Constants.SortType.DEFAULT && isBannerVisibility() == true)
-                    {
-                        PlaceViewItem placeViewItem = getEventBannerViewItem();
-                        if (placeViewItem != null)
-                        {
-                            mPlaceListAdapter.add(0, placeViewItem);
-                        }
-                    }
+                    //                    if (sortType == Constants.SortType.DEFAULT && isBannerVisibility() == true)
+                    //                    {
+                    //                        PlaceViewItem placeViewItem = getEventBannerViewItem();
+                    //                        if (placeViewItem != null)
+                    //                        {
+                    //                            mPlaceListAdapter.add(0, placeViewItem);
+                    //                        }
+                    //                    }
                 }
 
                 mPlaceListAdapter.setSortType(sortType);
@@ -480,18 +479,18 @@ public abstract class PlaceListLayout extends BaseLayout
         }
     };
 
-    protected View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View view)
-        {
-            Integer index = (Integer) view.getTag(view.getId());
-            if (index != null)
-            {
-                EventBanner eventBanner = getEventBanner(index);
-
-                ((OnEventListener) mOnEventListener).onEventBannerClick(eventBanner);
-            }
-        }
-    };
+    //    protected View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
+    //    {
+    //        @Override
+    //        public void onClick(View view)
+    //        {
+    //            Integer index = (Integer) view.getTag(view.getId());
+    //            if (index != null)
+    //            {
+    //                EventBanner eventBanner = getEventBanner(index);
+    //
+    //                ((OnEventListener) mOnEventListener).onEventBannerClick(eventBanner);
+    //            }
+    //        }
+    //    };
 }

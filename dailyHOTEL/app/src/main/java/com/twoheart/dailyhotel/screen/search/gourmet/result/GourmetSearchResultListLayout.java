@@ -33,7 +33,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
         mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
 
-        setBannerVisibility(false);
+        //        setBannerVisibility(false);
     }
 
     @Override

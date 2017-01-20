@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.Place;
@@ -31,34 +30,34 @@ public class GourmetListLayout extends PlaceListLayout
     @Override
     protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        return new GourmetListAdapter(context, arrayList, mOnItemClickListener, mOnEventBannerItemClickListener);
+        return new GourmetListAdapter(context, arrayList, mOnItemClickListener, null);
     }
 
-    @Override
-    protected EventBanner getEventBanner(int index)
-    {
-        return GourmetEventBannerManager.getInstance().getEventBanner(index);
-    }
-
-    @Override
-    protected PlaceViewItem getEventBannerViewItem()
-    {
-        if (GourmetEventBannerManager.getInstance().getCount() == 0)
-        {
-            return null;
-        }
-
-        PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
-            GourmetEventBannerManager.getInstance().getList());
-        return placeViewItem;
-    }
+    //    @Override
+    //    protected EventBanner getEventBanner(int index)
+    //    {
+    //        return GourmetEventBannerManager.getInstance().getEventBanner(index);
+    //    }
+    //
+    //    @Override
+    //    protected PlaceViewItem getEventBannerViewItem()
+    //    {
+    //        if (GourmetEventBannerManager.getInstance().getCount() == 0)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
+    //            GourmetEventBannerManager.getInstance().getList());
+    //        return placeViewItem;
+    //    }
 
     @Override
     protected void onInformationClick(View view, PlaceViewItem placeViewItem)
     {
         ((OnEventListener) mOnEventListener).onPlaceClick(view, placeViewItem);
 
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.GOURMET_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);
     }
 

@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetParams;
@@ -188,11 +187,11 @@ public class GourmetListFragment extends PlaceListFragment
             ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(view, placeViewItem, getPlaceCount());
         }
 
-        @Override
-        public void onEventBannerClick(EventBanner eventBanner)
-        {
-            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
-        }
+        //        @Override
+        //        public void onEventBannerClick(EventBanner eventBanner)
+        //        {
+        //            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
+        //        }
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)

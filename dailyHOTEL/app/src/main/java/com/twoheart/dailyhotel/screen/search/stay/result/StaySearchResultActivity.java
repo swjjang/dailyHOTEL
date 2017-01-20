@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -430,7 +429,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             if (Util.isTextEmpty(action) == false)
             {
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , action, address, params);
             }
         } catch (Exception e)
@@ -497,7 +496,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
-                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED,//
+                AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED,//
                 AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
@@ -534,7 +533,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                     mViewType = ViewType.MAP;
 
-                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
                     break;
                 }
 
@@ -574,7 +573,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
-                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
+                AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED,//
                 AnalyticsManager.Label.SEARCH_RESULT_VIEW, null);
         }
 
@@ -585,11 +584,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             if (resultCode == Constants.CODE_RESULT_ACTIVITY_HOME)
             {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CANCEL, null);
             } else
             {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.BACK_BUTTON, null);
             }
         }
@@ -599,7 +598,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             StaySearchResultActivity.this.finish(resultCode);
 
-            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.SEARCH_AGAIN, null);
         }
 
@@ -608,7 +607,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             showDailyCallDialog(null);
 
-            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CALL, null);
         }
     };
@@ -769,11 +768,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        @Override
-        public void onEventBannerClick(EventBanner eventBanner)
-        {
-
-        }
+        //        @Override
+        //        public void onEventBannerClick(EventBanner eventBanner)
+        //        {
+        //
+        //        }
 
         @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)

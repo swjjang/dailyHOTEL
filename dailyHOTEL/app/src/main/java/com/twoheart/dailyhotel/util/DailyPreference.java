@@ -76,6 +76,9 @@ public class DailyPreference
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 
+    private static final String KEY_CALENDAR_HOLIDAYS = "1012";
+    private static final String KEY_CHECK_CALENDAR_HOLIDAYS = "1013";
+
     private static final String KEY_BACKGROUND_APP_TIME = "2000";
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -825,6 +828,26 @@ public class DailyPreference
 
         // 반영이 안되는 경우가 있어서 특별히 추가 하였습니다.
         mEditor.commit();
+    }
+
+    public void setCalendarHolidays(String value)
+    {
+        setValue(mEditor, KEY_CALENDAR_HOLIDAYS, value);
+    }
+
+    public String getCalendarHolidays()
+    {
+        return getValue(mPreferences, KEY_CALENDAR_HOLIDAYS, null);
+    }
+
+    public void setCheckCalendarHolidays(boolean value)
+    {
+        setValue(mEditor, KEY_CHECK_CALENDAR_HOLIDAYS, value);
+    }
+
+    public boolean isCheckCalendarHolidays()
+    {
+        return getValue(mPreferences, KEY_CHECK_CALENDAR_HOLIDAYS, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

@@ -543,7 +543,6 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_LIST_REGION_DOMESTIC = "DailyHotel_HotelDomesticLocationList";
         public static final String DAILYHOTEL_LIST_REGION_GLOBAL = "DailyHotel_HotelGlobalLocationList";
         public static final String DAILYHOTEL_LIST_CALENDAR = "DailyHotel_HotelBookingWindow";
-        public static final String DAILYHOTEL_BANNER_DETAIL = "DailyHotel_EventBannerDetailView";
         public static final String DAILYHOTEL_CURATION = "DailyHotel_SortFilterSelectView";
         //
         public static final String DAILYHOTEL_DETAIL = "DailyHotel_HotelDetailView";
@@ -561,7 +560,6 @@ public class AnalyticsManager
         public static final String DAILYGOURMET_LIST_EMPTY = "DailyGourmet_NotGourmetAvailable";
         public static final String DAILYGOURMET_LIST_REGION_DOMESTIC = "DailyGourmet_GourmetLocationList";
         public static final String DAILYGOURMET_LIST_CALENDAR = "DailyGourmet_GourmetBookingWindow";
-        public static final String DAILYGOURMET_BANNER_DETAIL = "DailyGourmet_EventBannerDetailView";
         public static final String DAILYGOURMET_CURATION = "DailyGourmet_SortFilterSelectView";
         //
         public static final String DAILYGOURMET_DETAIL = "DailyGourmet_GourmetDetailView";
@@ -675,14 +673,15 @@ public class AnalyticsManager
         // Detail Image List
         public static final String DAILYHOTEL_HOTELIMAGEVIEW = "DailyHotel_HotelImageView";
         public static final String DAILYGOURMET_GOURMETIMAGEVIEW = "DailyGourmet_GourmetImageView";
+
+        public static final String HOME_EVENT_DETAIL = "home_event_detail";
+        public static final String RECOMMEND_LIST = "recommend_list";
+        public static final String MYDAILY = "mydaily";
     }
 
     public static class Action
     {
-        public static final String DAILY_HOTEL_CLICKED = "DailyHotelClicked";
         public static final String HOTEL_LOCATIONS_CLICKED = "HotelLocationsClicked";
-        public static final String HOTEL_EVENT_BANNER_CLICKED = "HotelEventBannerClicked";
-        public static final String HOTEL_ITEM_CLICKED = "HotelItemClicked";
         public static final String HOTEL_CATEGORY_CLICKED = "DailyHotelCategoryClicked";
         public static final String HOTEL_SORT_FILTER_BUTTON_CLICKED = "HotelSortFilterButtonClicked";
         public static final String HOTEL_SORT_FILTER_BUTTON_UNCLICKED = "HotelSortFilterButtonUnClicked";
@@ -706,10 +705,7 @@ public class AnalyticsManager
         public static final String PAYMENT_CLICKED = "PaymentClicked";
         public static final String PAYMENT_AGREEMENT_POPPEDUP = "PaymentAgreementPoppedup";
         public static final String HOTEL_PAYMENT_COMPLETED = "HotelPaymentCompleted";
-        public static final String DAILY_GOURMET_CLICKED = "DailyGourmetClicked";
         public static final String GOURMET_LOCATIONS_CLICKED = "GourmetLocationsClicked";
-        public static final String GOURMET_EVENT_BANNER_CLICKED = "GourmetEventBannerClicked";
-        public static final String GOURMET_ITEM_CLICKED = "GourmetItemClicked";
         public static final String GOURMET_SORT_FILTER_BUTTON_CLICKED = "GourmetSortFilterButtonClicked";
         public static final String GOURMET_SORT_FILTER_BUTTON_UNCLICKED = "GourmetSortFilterButtonUnClicked";
         public static final String GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED = "GourmetSortFilterApplyButtonClicked";
@@ -723,8 +719,6 @@ public class AnalyticsManager
         public static final String TICKET_TYPE_ITEM_CLICKED = "TicketTypeItemClicked";
         public static final String TICKET_TYPE_CANCEL_CLICKED = "TicketTypeCancelClicked";
         public static final String GOURMET_PAYMENT_COMPLETED = "GourmetPaymentCompleted";
-        public static final String BOOKING_STATUS_CLICKED = "BookingStatusClicked";
-        public static final String MENU_CLICKED = "MenuClicked";
         public static final String LOGIN_CLICKED = "LoginClicked";
         public static final String REGISTRATION_CLICKED = "RegistrationClicked";
         public static final String REGISTRATION_COMPLETE = "RegistrationComplete";
@@ -736,10 +730,6 @@ public class AnalyticsManager
         public static final String EVENT_CLICKED = "EventClicked";
         //
         public static final String SATISFACTION_EVALUATION_POPPEDUP = "SatisfactionEvaluationPoppedup";
-        public static final String HOTEL_SATISFACTION_DETAILED_POPPEDUP = "HotelSatisfactionDetailedPoppedup";
-        public static final String HOTEL_DISSATISFACTION_DETAILED_POPPEDUP = "HotelDissatisfactionDetailedPoppedup";
-        public static final String GOURMET_SATISFACTION_DETAILED_POPPEDUP = "GourmetSatisfactionDetailedPoppedup";
-        public static final String GOURMET_DISSATISFACTION_DETAILED_POPPEDUP = "GourmetDissatisfactionDetailedPoppedup";
         //
         public static final String THANKYOU_SCREEN_BUTTON_CLICKED = "ThankyouScreenButtonClicked";
         //
@@ -871,11 +861,31 @@ public class AnalyticsManager
 
         public static final String WAYTOVISIT_OPEN = "waytovisit_open";
         public static final String WAYTOVISIT_CLOSE = "waytovisit_close";
+
+        public static final String HOME_CLICK = "home_click";
+        public static final String BOOKINGSTATUS_CLICK = "bookingstatus_click";
+        public static final String MYDAILY_CLICK = "mydaily_click";
+        public static final String MENU_CLICK = "menu_click";
+        public static final String SEARCH_BUTTON_CLICK = "search_button_click";
+
+        public static final String STAY_LIST_CLICK = "stay_list_click";
+        public static final String GOURMET_LIST_CLICK = "gourmet_list_click";
+
+        public static final String STAY_BACK_BUTTON_CLICK = "stay_back_button_click";
+        public static final String STAY_ITEM_CLICK = "stay_item_click";
+
+        public static final String GOURMET_BACK_BUTTON_CLICK = "gourmet_back_button_click";
+        public static final String GOURMET_ITEM_CLICK = "gourmet_item_click";
+        public static final String WISHLIST_BACK_BUTTON_CLICK = "wishlist_back_button_click";
+        public static final String WISHLIST_ITEM_DELETE = "wishlist_item_delete";
+        public static final String RECENTVIEW_BACK_BUTTON_CLICK = "recentview_back_button_click";
+        public static final String RECENTVIEW_ITEM_DELETE = "recentview_item_delete";
     }
 
     public static class Category
     {
-        public static final String NAVIGATION = "Navigation";
+        public static final String NAVIGATION_ = "Navigation";
+        public static final String NAVIGATION = "navigation";
         public static final String HOTEL_BOOKINGS = "HotelBookings";
         public static final String GOURMET_BOOKINGS = "GourmetBookings";
         public static final String POPUP_BOXES = "PopupBoxes";
@@ -884,7 +894,7 @@ public class AnalyticsManager
         public static final String BOOKING_STATUS = "BookingStatus";
         public static final String COUPON_BOX = "CouponBox";
         public static final String INVITE_FRIEND = "InviteFriend";
-        public static final String SEARCH = "Search";
+        public static final String SEARCH_ = "Search";
         public static final String AUTO_SEARCH = "AutoSearch";
         public static final String AUTO_SEARCH_NOT_FOUND = "AutoSearchNotFound";
         public static final String CALL_BUTTON_CLICKED = "CallButtonClicked";
@@ -897,6 +907,7 @@ public class AnalyticsManager
         // Share
         public static final String SHARE = "share";
         public static final String BOOKING = "booking";
+        public static final String SEARCH = "search";
     }
 
     public static class Label
@@ -978,10 +989,8 @@ public class AnalyticsManager
         public static final String EVENT_CLICKED = "EventClicked";
         //
         public static final String HOTEL_LIST = "HotelList";
-        public static final String HOTEL_LOCATION_LIST = "HotelLocationList";
         public static final String HOTEL_MAP = "HotelMap";
-        public static final String GOURMET_LIST = "GourmetList";
-        public static final String GOURMET_LOCATION_LIST = "GourmetLocationList";
+        public static final String GOURMET_LIST_ = "GourmetList";
         public static final String GOURMET_MAP = "GourmetMap";
         //
         public static final String TERMSOF_LOCATION = "TermsofLocation";
@@ -1041,6 +1050,17 @@ public class AnalyticsManager
 
         public static final String DIRECTCALL_FRONT = "DirectCall_Front";
         public static final String DIRECTCALL_RESERVATION = "DirectCall_Reservation";
+
+        public static final String HOME = "home";
+        public static final String BOOKINGSTATUS = "bookingstatus";
+        public static final String MYDAILY = " mydaily";
+        public static final String MENU = "menu";
+        public static final String STAY_LIST = "stay_list";
+        public static final String STAY_LOCATION_LIST = "stay_location_list";
+        public static final String STAY_MAP_VIEW = "stay_map_view";
+        public static final String GOURMET_LIST = "gourmet_list";
+        public static final String GOURMET_LOCATION_LIST = "gourmet_location_list";
+        public static final String GOURMET_MAP_VIEW = "gourmet_map_view";
     }
 
     public static class UserType

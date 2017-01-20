@@ -184,7 +184,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         {
             startEventWeb(eventUrl, mSelectedEvent.name);
 
-            AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.EVENT_CLICKED, mSelectedEvent.name, null);
         }
 

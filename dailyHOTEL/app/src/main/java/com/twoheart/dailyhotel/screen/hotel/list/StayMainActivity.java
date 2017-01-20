@@ -31,7 +31,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
@@ -78,6 +77,15 @@ public class StayMainActivity extends PlaceMainActivity
         {
             mStayCuration.setCategory(this, new Category(oldCategoryName, oldCategoryCode));
         }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, AnalyticsManager.Label.HOME, null);
     }
 
     @Override
@@ -317,7 +325,7 @@ public class StayMainActivity extends PlaceMainActivity
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
@@ -391,6 +399,66 @@ public class StayMainActivity extends PlaceMainActivity
         AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
     }
 
+    @Override
+    protected void changeViewType()
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        if (mPlaceMainLayout.getPlaceListFragment() == null)
+        {
+            Util.restartApp(StayMainActivity.this);
+            return;
+        }
+
+        lockUI();
+
+        StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        switch (mViewType)
+        {
+            case LIST:
+            {
+                // 고메 쪽에서 보여지는 메세지로 Stay의 경우도 동일한 처리가 필요해보여서 추가함
+                if (currentFragment.hasSalesPlace() == false)
+                {
+                    unLockUI();
+
+                    DailyToast.showToast(StayMainActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                mViewType = ViewType.MAP;
+
+                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
+                break;
+            }
+
+            case MAP:
+            {
+                mViewType = ViewType.LIST;
+
+                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
+                break;
+            }
+        }
+
+        mPlaceMainLayout.setOptionViewTypeView(mViewType);
+
+        // 현재 페이지 선택 상태를 Fragment에게 알려준다.
+        for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
+        {
+            boolean isCurrentFragment = placeListFragment == currentFragment;
+            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+        }
+
+        refreshCurrentFragment(false);
+
+        unLockUI();
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -424,20 +492,19 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
-
             Intent intent = SearchActivity.newInstance(StayMainActivity.this, PlaceType.HOTEL, mStayCuration.getCheckInSaleTime(), mStayCuration.getNights());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
             {
                 case LIST:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_LIST, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_LIST, null);
                     break;
 
                 case MAP:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_MAP_VIEW, null);
                     break;
             }
         }
@@ -466,11 +533,11 @@ public class StayMainActivity extends PlaceMainActivity
             switch (mViewType)
             {
                 case LIST:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_LIST, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_LIST, null);
                     break;
 
                 case MAP:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_MAP, null);
                     break;
             }
         }
@@ -478,61 +545,7 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onViewTypeClick()
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            if (mPlaceMainLayout.getPlaceListFragment() == null)
-            {
-                Util.restartApp(StayMainActivity.this);
-                return;
-            }
-
-            lockUI();
-
-            StayListFragment currentFragment = (StayListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
-
-            switch (mViewType)
-            {
-                case LIST:
-                {
-                    // 고메 쪽에서 보여지는 메세지로 Stay의 경우도 동일한 처리가 필요해보여서 추가함
-                    if (currentFragment.hasSalesPlace() == false)
-                    {
-                        unLockUI();
-
-                        DailyToast.showToast(StayMainActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-                        return;
-                    }
-
-                    mViewType = ViewType.MAP;
-
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
-                    break;
-                }
-
-                case MAP:
-                {
-                    mViewType = ViewType.LIST;
-
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
-                    break;
-                }
-            }
-
-            mPlaceMainLayout.setOptionViewTypeView(mViewType);
-
-            // 현재 페이지 선택 상태를 Fragment에게 알려준다.
-            for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
-            {
-                boolean isCurrentFragment = placeListFragment == currentFragment;
-                placeListFragment.setVisibility(mViewType, isCurrentFragment);
-            }
-
-            refreshCurrentFragment(false);
-
-            unLockUI();
+            changeViewType();
         }
 
         @Override
@@ -567,7 +580,7 @@ public class StayMainActivity extends PlaceMainActivity
                     break;
             }
 
-            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
 
@@ -752,11 +765,11 @@ public class StayMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkDetail(baseActivity);
-//            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
-//            {
-//                unLockUI();
-//
-//                return moveDeepLinkEventBannerWeb(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isHotelEventBannerWebView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkEventBannerWeb(baseActivity);
                 //            } else if (DailyDeepLink.getInstance().isHotelRegionListView() == true)
                 //            {
                 //                unLockUI();
@@ -772,11 +785,11 @@ public class StayMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkSearchResult(baseActivity);
-//            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
-//            {
-//                unLockUI();
-//
-//                return moveDeepLinkCollection(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkCollection(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
@@ -921,9 +934,8 @@ public class StayMainActivity extends PlaceMainActivity
 
                     if (mViewType == ViewType.LIST)
                     {
-                        String label = String.format("%s-%s", stay.categoryCode, stay.name);
                         AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.HOTEL_ITEM_CLICKED, label, null);
+                            , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
                     }
                     break;
                 }
@@ -934,69 +946,69 @@ public class StayMainActivity extends PlaceMainActivity
             }
         }
 
-        @Override
-        public void onEventBannerClick(EventBanner eventBanner)
-        {
-            if (isFinishing())
-            {
-                return;
-            }
-
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI();
-
-            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.HOTEL_EVENT_BANNER_CLICKED, eventBanner.name, null);
-
-            //            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-
-            // 이벤트 배너 딥링크 사용하지 않기로 했음.
-            if (eventBanner.isDeepLink() == true)
-            {
-                //                try
-                //                {
-                //                    Calendar calendar = DailyCalendar.getInstance();
-                //                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
-                //                    calendar.setTimeInMillis(eventBanner.dateTime);
-                //
-                //                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                //                    Date schemeDate = format.parse(format.format(calendar.getTime()));
-                //                    Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-                //
-                //                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-                //
-                //                    checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
-                //
-                //                    if (eventBanner.isHotel() == true)
-                //                    {
-                //                        startStayDetailByDeeplink(eventBanner.index, checkInSaleTime, eventBanner.nights);
-                //                    } else
-                //                    {
-                //                        Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
-                //
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, eventBanner.index);
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-                //
-                //                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-                //                    }
-                //                } catch (Exception e)
-                //                {
-                //                    ExLog.e(e.toString());
-                //                }
-            } else
-            {
-                Intent intent = EventWebActivity.newInstance(StayMainActivity.this, //
-                    EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, eventBanner.name);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-            }
-        }
+        //        @Override
+        //        public void onEventBannerClick(EventBanner eventBanner)
+        //        {
+        //            if (isFinishing())
+        //            {
+        //                return;
+        //            }
+        //
+        //            if (lockUiComponentAndIsLockUiComponent() == true)
+        //            {
+        //                return;
+        //            }
+        //
+        //            lockUI();
+        //
+        //            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+        //                , AnalyticsManager.Action.HOTEL_EVENT_BANNER_CLICKED, eventBanner.name, null);
+        //
+        //            //            SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
+        //
+        //            // 이벤트 배너 딥링크 사용하지 않기로 했음.
+        //            if (eventBanner.isDeepLink() == true)
+        //            {
+        //                //                try
+        //                //                {
+        //                //                    Calendar calendar = DailyCalendar.getInstance();
+        //                //                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
+        //                //                    calendar.setTimeInMillis(eventBanner.dateTime);
+        //                //
+        //                //                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        //                //                    Date schemeDate = format.parse(format.format(calendar.getTime()));
+        //                //                    Date dailyDate = format.parse(checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        //                //
+        //                //                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+        //                //
+        //                //                    checkInSaleTime.setOffsetDailyDay(dailyDayOfDays);
+        //                //
+        //                //                    if (eventBanner.isHotel() == true)
+        //                //                    {
+        //                //                        startStayDetailByDeeplink(eventBanner.index, checkInSaleTime, eventBanner.nights);
+        //                //                    } else
+        //                //                    {
+        //                //                        Intent intent = new Intent(mBaseActivity, GourmetDetailActivity.class);
+        //                //
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, eventBanner.index);
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+        //                //
+        //                //                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+        //                //                    }
+        //                //                } catch (Exception e)
+        //                //                {
+        //                //                    ExLog.e(e.toString());
+        //                //                }
+        //            } else
+        //            {
+        //                Intent intent = EventWebActivity.newInstance(StayMainActivity.this, //
+        //                    EventWebActivity.SourceType.HOTEL_BANNER, eventBanner.webLink, eventBanner.name);
+        //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+        //            }
+        //        }
 
         @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)
@@ -1189,23 +1201,23 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkEventBannerWeb(BaseActivity baseActivity)
-    {
-        String url = DailyDeepLink.getInstance().getUrl();
-        DailyDeepLink.getInstance().clear();
-
-        if (Util.isTextEmpty(url) == false)
-        {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-
-            mIsDeepLink = true;
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
+    //    private boolean moveDeepLinkEventBannerWeb(BaseActivity baseActivity)
+    //    {
+    //        String url = DailyDeepLink.getInstance().getUrl();
+    //        DailyDeepLink.getInstance().clear();
+    //
+    //        if (Util.isTextEmpty(url) == false)
+    //        {
+    //            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.HOTEL_BANNER, url, null);
+    //            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+    //
+    //            mIsDeepLink = true;
+    //            return true;
+    //        } else
+    //        {
+    //            return false;
+    //        }
+    //    }
 
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, boolean isOverseas, //
                                          List<Province> provinceList, List<Area> areaList)

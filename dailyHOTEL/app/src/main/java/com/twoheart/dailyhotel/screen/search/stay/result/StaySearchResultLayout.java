@@ -67,7 +67,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     protected void onAnalyticsCategoryFlicking(String category)
     {
         Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.SCREEN, AnalyticsManager.Screen.SEARCH_RESULT);
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, params);
     }
 
@@ -75,7 +75,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
     protected void onAnalyticsCategoryClick(String category)
     {
         Map<String, String> params = Collections.singletonMap(AnalyticsManager.KeyType.SCREEN, AnalyticsManager.Screen.SEARCH_RESULT);
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION//
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, params);
     }
 

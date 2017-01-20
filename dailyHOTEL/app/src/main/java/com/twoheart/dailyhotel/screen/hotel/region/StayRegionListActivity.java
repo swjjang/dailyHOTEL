@@ -197,8 +197,8 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mSaleTime, mNights);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.HOTEL_LOCATION_LIST, null);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_LOCATION_LIST, null);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                     , province.name);
             }
 
-            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, label, null);
         }
 
@@ -329,7 +329,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                         {
                             if (analyticsLabel != null)
                             {
-                                AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                                     , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CHANGED, analyticsLabel, null);
                             }
 
@@ -347,11 +347,11 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                         {
                             if (analyticsLabel != null)
                             {
-                                AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                                AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                                     , AnalyticsManager.Action.HOTEL_BOOKING_DATE_CONFIRMED, analyticsLabel, null);
                             }
 
-                            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                                 , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.CHANGE_LOCATION, null);
 
                             // 날짜 선택 화면으로 이동한다.
@@ -402,7 +402,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
             Intent intent = PermissionManagerActivity.newInstance(StayRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
 
-            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.getInstance(StayRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getString(R.string.label_view_myaround_hotel), null);
         }
     };

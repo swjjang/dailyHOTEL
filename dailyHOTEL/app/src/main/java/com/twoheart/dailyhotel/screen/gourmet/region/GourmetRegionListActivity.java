@@ -138,8 +138,8 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         Intent intent = SearchActivity.newInstance(this, PlaceType.FNB, mSaleTime, 1);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-            , AnalyticsManager.Action.SEARCH_BUTTON_CLICKED, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
                     , province.name);
             }
 
-            AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED, label, null);
         }
 
@@ -248,7 +248,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
             Intent intent = PermissionManagerActivity.newInstance(GourmetRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
 
-            AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.getInstance(GourmetRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED, getString(R.string.label_view_myaround_gourmet), null);
         }
     };

@@ -1231,4 +1231,10 @@ public class DailyNetworkAPI_Legacy implements IDailyNetwork
         //
         //        mQueue.add(dailyJsonObjectRequest);
     }
+
+    @Override
+    public void requestHoliday(String tag, String startDay, String endDay, Object listener)
+    {
+
+    }
 }

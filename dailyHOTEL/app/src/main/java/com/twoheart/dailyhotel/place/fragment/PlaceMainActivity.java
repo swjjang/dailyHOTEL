@@ -44,6 +44,8 @@ public abstract class PlaceMainActivity extends BaseActivity
 
     protected abstract PlaceCuration getPlaceCuration();
 
+    protected abstract void changeViewType();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -96,8 +98,12 @@ public abstract class PlaceMainActivity extends BaseActivity
                 if (mPlaceMainLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
                 {
                     mPlaceMainLayout.getCurrentPlaceListFragment().getPlaceListLayout().getListMapFragment().clickMap();
-                    return;
+                } else
+                {
+                    changeViewType();
                 }
+
+                return;
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

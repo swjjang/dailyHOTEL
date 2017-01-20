@@ -44,18 +44,32 @@ public class WishListTabActivity extends BaseActivity
     private View mLoginView;
     private View mLoginButtonView;
 
+    private SourceType mSourceType;
     private PlaceType mPlaceType;
 
     private boolean mDontReloadAtOnResume;
 
-    public static Intent newInstance(Context context, PlaceType placeType)
+    public enum SourceType
     {
+        HOME,
+        MYDAILY
+    }
+
+    public static Intent newInstance(Context context, SourceType sourceType, PlaceType placeType)
+    {
+        if (sourceType == null)
+        {
+            return null;
+        }
+
         Intent intent = new Intent(context, WishListTabActivity.class);
 
         if (placeType != null)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
         return intent;
     }
 
@@ -101,6 +115,25 @@ public class WishListTabActivity extends BaseActivity
     }
 
     @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        switch (mSourceType)
+        {
+            case HOME:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_BACK_BUTTON_CLICK, AnalyticsManager.Label.HOME, null);
+                break;
+
+            case MYDAILY:
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.WISHLIST_BACK_BUTTON_CLICK, AnalyticsManager.Label.MYDAILY, null);
+                break;
+        }
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -126,6 +159,15 @@ public class WishListTabActivity extends BaseActivity
             {
                 ExLog.d(e.getMessage());
             }
+        }
+
+        try
+        {
+            mSourceType = SourceType.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_TYPE));
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+            return;
         }
     }
 
@@ -330,7 +372,7 @@ public class WishListTabActivity extends BaseActivity
         Intent intent = LoginActivity.newInstance(this, null);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_,//
             AnalyticsManager.Action.WISHLIST_LOGIN_CLICKED, null, null);
     }
 
@@ -354,7 +396,7 @@ public class WishListTabActivity extends BaseActivity
             }
 
             AnalyticsManager.getInstance(WishListTabActivity.this).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_TAB_CHANGE, //
                 tab.getPosition() == 1 ? AnalyticsManager.ValueType.GOURMET : AnalyticsManager.ValueType.HOTEL, null);
         }

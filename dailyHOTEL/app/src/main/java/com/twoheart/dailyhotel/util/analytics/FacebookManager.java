@@ -216,7 +216,7 @@ public class FacebookManager extends BaseAnalyticsManager
             return;
         }
 
-        if (AnalyticsManager.Category.NAVIGATION.equalsIgnoreCase(category) == true)
+        if (AnalyticsManager.Category.NAVIGATION_.equalsIgnoreCase(category) == true)
         {
             if (AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED.equalsIgnoreCase(action) == true)
             {

@@ -278,7 +278,7 @@ public class SignupStep2Activity extends BaseActivity
 
             mNetworkController.requestSingUp(mSignupKey, verificationNumber, phoneNumber);
 
-            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , AnalyticsManager.Action.REGISTRATION_CLICKED, AnalyticsManager.Label.AGREE_AND_REGISTER, null);
         }
 
@@ -342,7 +342,7 @@ public class SignupStep2Activity extends BaseActivity
 
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserInformation(userIndex, userType);
             AnalyticsManager.getInstance(SignupStep2Activity.this).recordScreen(SignupStep2Activity.this, Screen.MENU_REGISTRATION_CONFIRM, null);
-            AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.EMAIL, null);
+            AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.SIGN_UP, AnalyticsManager.UserType.EMAIL, null);
 
             // 이미 가입된것이기 때문에 미리 Analytics 넣음
             AnalyticsManager.getInstance(SignupStep2Activity.this).signUpDailyUser( //

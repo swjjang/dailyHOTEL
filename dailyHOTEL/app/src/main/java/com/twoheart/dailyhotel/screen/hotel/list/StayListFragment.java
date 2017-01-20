@@ -6,7 +6,6 @@ import android.view.View;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -200,11 +199,11 @@ public class StayListFragment extends PlaceListFragment
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
         }
 
-        @Override
-        public void onEventBannerClick(EventBanner eventBanner)
-        {
-            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
-        }
+        //        @Override
+        //        public void onEventBannerClick(EventBanner eventBanner)
+        //        {
+        //            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
+        //        }
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)

@@ -402,7 +402,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
 
-        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+        AnalyticsManager.getInstance(SearchActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
             , AnalyticsManager.Action.SEARCH_SCREEN, AnalyticsManager.Label.CLOSED, null);
     }
 
@@ -472,7 +472,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
 
     void analyticsSwitchChanged(PlaceType changedPlaceType)
     {
-        String category = AnalyticsManager.Category.SEARCH;
+        String category = AnalyticsManager.Category.SEARCH_;
         String label = AnalyticsManager.ValueType.EMPTY;
 
         switch (changedPlaceType)
