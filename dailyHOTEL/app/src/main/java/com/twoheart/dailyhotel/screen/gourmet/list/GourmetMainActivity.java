@@ -31,7 +31,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
@@ -72,8 +71,15 @@ public class GourmetMainActivity extends PlaceMainActivity
         super.onCreate(savedInstanceState);
 
         mGourmetCuration = new GourmetCuration();
+    }
 
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
 
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+            AnalyticsManager.Action.GOURMET_BACK_BUTTON_CLICK, AnalyticsManager.Label.HOME, null);
     }
 
     @Override
@@ -327,6 +333,66 @@ public class GourmetMainActivity extends PlaceMainActivity
         AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
     }
 
+    @Override
+    protected void changeViewType()
+    {
+        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        if (mPlaceMainLayout.getPlaceListFragment() == null)
+        {
+            Util.restartApp(GourmetMainActivity.this);
+            return;
+        }
+
+        lockUI();
+
+        GourmetListFragment gourmetListFragment = (GourmetListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        switch (mViewType)
+        {
+            case LIST:
+            {
+                // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
+                if (gourmetListFragment.hasSalesPlace() == false)
+                {
+                    unLockUI();
+
+                    DailyToast.showToast(GourmetMainActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                mViewType = ViewType.MAP;
+
+                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
+                break;
+            }
+
+            case MAP:
+            {
+                mViewType = ViewType.LIST;
+
+                AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_LIST_, null);
+                break;
+            }
+        }
+
+        // 고메는 리스트를 한번에 받기 때문에 계속 요청할 필요는 없다.
+        mPlaceMainLayout.setOptionViewTypeView(mViewType);
+
+        for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
+        {
+            boolean isCurrentFragment = placeListFragment == gourmetListFragment;
+            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+        }
+
+        refreshCurrentFragment(false);
+
+        unLockUI();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // EventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -406,61 +472,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onViewTypeClick()
         {
-            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            if (mPlaceMainLayout.getPlaceListFragment() == null)
-            {
-                Util.restartApp(GourmetMainActivity.this);
-                return;
-            }
-
-            lockUI();
-
-            GourmetListFragment gourmetListFragment = (GourmetListFragment) mPlaceMainLayout.getCurrentPlaceListFragment();
-
-            switch (mViewType)
-            {
-                case LIST:
-                {
-                    // 맵리스트 진입시에 솔드아웃은 맵에서 보여주지 않기 때문에 맵으로 진입시에 아무것도 볼수 없다.
-                    if (gourmetListFragment.hasSalesPlace() == false)
-                    {
-                        unLockUI();
-
-                        DailyToast.showToast(GourmetMainActivity.this, R.string.toast_msg_solodout_area, Toast.LENGTH_SHORT);
-                        return;
-                    }
-
-                    mViewType = ViewType.MAP;
-
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_MAP, null);
-                    break;
-                }
-
-                case MAP:
-                {
-                    mViewType = ViewType.LIST;
-
-                    AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.GOURMET_LIST_, null);
-                    break;
-                }
-            }
-
-            // 고메는 리스트를 한번에 받기 때문에 계속 요청할 필요는 없다.
-            mPlaceMainLayout.setOptionViewTypeView(mViewType);
-
-            for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
-            {
-                boolean isCurrentFragment = placeListFragment == gourmetListFragment;
-                placeListFragment.setVisibility(mViewType, isCurrentFragment);
-            }
-
-            refreshCurrentFragment(false);
-
-            unLockUI();
+            changeViewType();
         }
 
         @Override
@@ -657,11 +669,11 @@ public class GourmetMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkDetail(baseActivity);
-//            } else if (DailyDeepLink.getInstance().isGourmetEventBannerWebView() == true)
-//            {
-//                unLockUI();
-//
-//                return moveDeepLinkEventBannerWeb(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isGourmetEventBannerWebView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkEventBannerWeb(baseActivity);
                 //            } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
                 //            {
                 //                unLockUI();
@@ -677,11 +689,11 @@ public class GourmetMainActivity extends PlaceMainActivity
                 unLockUI();
 
                 return moveDeepLinkSearchResult(baseActivity);
-//            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
-//            {
-//                unLockUI();
-//
-//                return moveDeepLinkCollection(baseActivity);
+                //            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
+                //            {
+                //                unLockUI();
+                //
+                //                return moveDeepLinkCollection(baseActivity);
             } else
             {
                 // 더이상 진입은 없다.
@@ -822,8 +834,8 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                     if (mViewType == ViewType.LIST)
                     {
-                        AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                            , AnalyticsManager.Action.GOURMET_ITEM_CLICKED, gourmet.name, null);
+                        AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
                     }
                     break;
                 }
@@ -844,69 +856,69 @@ public class GourmetMainActivity extends PlaceMainActivity
             }
         }
 
-        @Override
-        public void onEventBannerClick(EventBanner eventBanner)
-        {
-            if (isFinishing())
-            {
-                return;
-            }
-
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            lockUI();
-
-            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , AnalyticsManager.Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, null);
-
-            // SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
-
-            // 이벤트 배너 딥링크 사용하지 않기로 했음.
-            if (eventBanner.isDeepLink() == true)
-            {
-                // 이벤트 베너 클릭후 바로 딥링크로 이동하는 것은 사용하지 않기로 한다.
-                //                try
-                //                {
-                //                    Calendar calendar = DailyCalendar.getInstance();
-                //                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
-                //                    calendar.setTimeInMillis(eventBanner.dateTime);
-                //
-                //                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-                //                    Date schemeDate = format.parse(format.format(calendar.getTime()));
-                //                    Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-                //
-                //                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-                //
-                //                    saleTime.setOffsetDailyDay(dailyDayOfDays);
-                //
-                //                    if (eventBanner.isHotel() == true)
-                //                    {
-                //                        Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, eventBanner.index);
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
-                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-                //
-                //                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-                //                    } else
-                //                    {
-                //                        startGourmetDetailByDeepLink(eventBanner.index, saleTime);
-                //                    }
-                //                } catch (Exception e)
-                //                {
-                //                    ExLog.e(e.toString());
-                //                }
-            } else
-            {
-                Intent intent = EventWebActivity.newInstance(GourmetMainActivity.this, //
-                    EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-            }
-        }
+        //        @Override
+        //        public void onEventBannerClick(EventBanner eventBanner)
+        //        {
+        //            if (isFinishing())
+        //            {
+        //                return;
+        //            }
+        //
+        //            if (lockUiComponentAndIsLockUiComponent() == true)
+        //            {
+        //                return;
+        //            }
+        //
+        //            lockUI();
+        //
+        //            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+        //                , AnalyticsManager.Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, null);
+        //
+        //            // SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
+        //
+        //            // 이벤트 배너 딥링크 사용하지 않기로 했음.
+        //            if (eventBanner.isDeepLink() == true)
+        //            {
+        //                // 이벤트 베너 클릭후 바로 딥링크로 이동하는 것은 사용하지 않기로 한다.
+        //                //                try
+        //                //                {
+        //                //                    Calendar calendar = DailyCalendar.getInstance();
+        //                //                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
+        //                //                    calendar.setTimeInMillis(eventBanner.dateTime);
+        //                //
+        //                //                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
+        //                //                    Date schemeDate = format.parse(format.format(calendar.getTime()));
+        //                //                    Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        //                //
+        //                //                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
+        //                //
+        //                //                    saleTime.setOffsetDailyDay(dailyDayOfDays);
+        //                //
+        //                //                    if (eventBanner.isHotel() == true)
+        //                //                    {
+        //                //                        Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, eventBanner.index);
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
+        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
+        //                //
+        //                //                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+        //                //                    } else
+        //                //                    {
+        //                //                        startGourmetDetailByDeepLink(eventBanner.index, saleTime);
+        //                //                    }
+        //                //                } catch (Exception e)
+        //                //                {
+        //                //                    ExLog.e(e.toString());
+        //                //                }
+        //            } else
+        //            {
+        //                Intent intent = EventWebActivity.newInstance(GourmetMainActivity.this, //
+        //                    EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name);
+        //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+        //            }
+        //        }
 
         @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)
@@ -1083,23 +1095,23 @@ public class GourmetMainActivity extends PlaceMainActivity
         return true;
     }
 
-    private boolean moveDeepLinkEventBannerWeb(BaseActivity baseActivity)
-    {
-        String url = DailyDeepLink.getInstance().getUrl();
-        DailyDeepLink.getInstance().clear();
-
-        if (Util.isTextEmpty(url) == false)
-        {
-            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-
-            mIsDeepLink = true;
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
+    //    private boolean moveDeepLinkEventBannerWeb(BaseActivity baseActivity)
+    //    {
+    //        String url = DailyDeepLink.getInstance().getUrl();
+    //        DailyDeepLink.getInstance().clear();
+    //
+    //        if (Util.isTextEmpty(url) == false)
+    //        {
+    //            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null);
+    //            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+    //
+    //            mIsDeepLink = true;
+    //            return true;
+    //        } else
+    //        {
+    //            return false;
+    //        }
+    //    }
 
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, //
                                          List<Province> provinceList, List<Area> areaList)

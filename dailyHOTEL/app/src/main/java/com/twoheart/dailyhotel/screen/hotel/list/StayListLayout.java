@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCuration;
@@ -30,27 +29,27 @@ public class StayListLayout extends PlaceListLayout
     @Override
     protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        return new StayListAdapter(context, arrayList, mOnItemClickListener, mOnEventBannerItemClickListener);
+        return new StayListAdapter(context, arrayList, mOnItemClickListener, null);
     }
 
-    @Override
-    protected EventBanner getEventBanner(int index)
-    {
-        return StayEventBannerManager.getInstance().getEventBanner(index);
-    }
-
-    @Override
-    protected PlaceViewItem getEventBannerViewItem()
-    {
-        if (StayEventBannerManager.getInstance().getCount() == 0)
-        {
-            return null;
-        }
-
-        PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
-            StayEventBannerManager.getInstance().getList());
-        return placeViewItem;
-    }
+    //    @Override
+    //    protected EventBanner getEventBanner(int index)
+    //    {
+    //        return StayEventBannerManager.getInstance().getEventBanner(index);
+    //    }
+    //
+    //    @Override
+    //    protected PlaceViewItem getEventBannerViewItem()
+    //    {
+    //        if (StayEventBannerManager.getInstance().getCount() == 0)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        PlaceViewItem placeViewItem = new PlaceViewItem(PlaceViewItem.TYPE_EVENT_BANNER, //
+    //            StayEventBannerManager.getInstance().getList());
+    //        return placeViewItem;
+    //    }
 
     @Override
     protected void onInformationClick(View view, PlaceViewItem placeViewItem)

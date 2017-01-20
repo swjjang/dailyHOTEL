@@ -69,8 +69,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     public enum SourceType
     {
-        HOTEL_BANNER,
-        GOURMET_BANNER,
         EVENT,
         HOME_EVENT,
     }
@@ -279,16 +277,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         switch (mSourceType)
         {
-            case HOTEL_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYHOTEL_BANNER_DETAIL, null);
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYHOTEL_BANNER_DETAIL, null, params);
-                break;
-
-            case GOURMET_BANNER:
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYGOURMET_BANNER_DETAIL, null);
-                AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.DAILYGOURMET_BANNER_DETAIL, null, params);
-                break;
-
             case EVENT:
                 AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null);
                 AnalyticsManager.getInstance(EventWebActivity.this).recordScreen(this, Screen.EVENT_DETAIL, null, params);
@@ -1056,8 +1044,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             switch (mSourceType)
             {
-                case HOTEL_BANNER:
-                case GOURMET_BANNER:
+                case HOME_EVENT:
                 {
                     if (mSaleTime == null)
                     {
@@ -1107,30 +1094,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                 return;
                             }
                         }
-//                        else if (DailyDeepLink.getInstance().isCollectionView() == true)
-//                        {
-//                            String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
-//
-//                            if (Util.isTextEmpty(deepLinkPlaceType) == false)
-//                            {
-//                                switch (deepLinkPlaceType)
-//                                {
-//                                    case "stay":
-//                                        if (moveDeepLinkCollectionStay(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-//                                        {
-//                                            return;
-//                                        }
-//                                        break;
-//
-//                                    case "gourmet":
-//                                        if (moveDeepLinkCollectionGourmet(EventWebActivity.this, mSaleTime.getClone(0)) == true)
-//                                        {
-//                                            return;
-//                                        }
-//                                        break;
-//                                }
-//                            }
-//                        }
                     }
                     break;
                 }

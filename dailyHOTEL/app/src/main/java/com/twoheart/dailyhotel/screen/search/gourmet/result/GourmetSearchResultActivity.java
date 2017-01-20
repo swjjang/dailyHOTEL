@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -734,11 +733,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
         }
 
-        @Override
-        public void onEventBannerClick(EventBanner eventBanner)
-        {
-
-        }
+        //        @Override
+        //        public void onEventBannerClick(EventBanner eventBanner)
+        //        {
+        //
+        //        }
 
         @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)

@@ -763,7 +763,7 @@ public class MainActivity extends BaseActivity implements Constants
 
         private String getIndexName(int index)
         {
-            switch(index)
+            switch (index)
             {
                 case 0:
                     return AnalyticsManager.Label.HOME;
@@ -912,24 +912,6 @@ public class MainActivity extends BaseActivity implements Constants
 
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
-                //                if (DailyDeepLink.getInstance().isCollectionView() == true)
-                //                {
-                //                    String deepLinkPlaceType = DailyDeepLink.getInstance().getPlaceType();
-                //
-                //                    if (Util.isTextEmpty(deepLinkPlaceType) == false)
-                //                    {
-                //                        switch (deepLinkPlaceType)
-                //                        {
-                //                            case "stay":
-                //                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                //                                break;
-                //
-                //                            case "gourmet":
-                //                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-                //                                break;
-                //                        }
-                //                    }
-                //                } else
                 if (DailyDeepLink.getInstance().isHomeEventDetailView() == true//
                     || DailyDeepLink.getInstance().isHomeFeaturedDetailListView() == true)
                 {
