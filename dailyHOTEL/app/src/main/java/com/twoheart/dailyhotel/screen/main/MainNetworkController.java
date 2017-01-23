@@ -44,6 +44,8 @@ public class MainNetworkController extends BaseNetworkController
         void onCommonDateTime(long currentDateTime, long dailyDateTime, long openDateTime, long closeDateTime);
 
         void onUserProfileBenefit(boolean isExceedBonus);
+
+        void onHolidays(String startDay, String holidays);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -352,15 +354,15 @@ public class MainNetworkController extends BaseNetworkController
                     // 리뷰가 존재하지 않는 경우 msgCode : 701
                     int msgCode = responseJSONObject.getInt("msgCode");
 
-//                    if (msgCode == 100 && responseJSONObject.has("data") == true)
-//                    {
-//                        Review review = new Review(responseJSONObject.getJSONObject("data"));
-//
-//                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(review);
-//                    } else
-//                    {
+                    if (msgCode == 100 && responseJSONObject.has("data") == true)
+                    {
+                        Review review = new Review(responseJSONObject.getJSONObject("data"));
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStay(review);
+                    } else
+                    {
                         requestReviewGourmet();
-//                    }
+                    }
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -584,11 +586,12 @@ public class MainNetworkController extends BaseNetworkController
                         for (Holiday holiday : baseListDto.data)
                         {
                             stringBuilder.append(holiday.date.replaceAll("\\-", ""));
-                            //                            stringBuilder.append(DailyCalendar.convertDateFormatString(holiday.date, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
                             stringBuilder.append(",");
                         }
 
-                        DailyPreference.getInstance(mContext).setCalendarHolidays(stringBuilder.toString());
+                        String startDay = call.request().url().queryParameter("from");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onHolidays(startDay, stringBuilder.toString());
                     }
                 } catch (Exception e)
                 {
