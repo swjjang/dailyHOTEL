@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/coverView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/leftLayout"
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"/>
+
+    <View
+        android:id="@+id/rightLayout"
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/contentLayout"/>
+
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="239dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/leftLayout"
+        android:layout_toRightOf="@+id/leftLayout"
+        android:background="@drawable/shape_home_viewpager_content_gradient"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/contentImageView"
+            android:layout_width="match_parent"
+            android:layout_height="135dp"
+            android:adjustViewBounds="true"
+            fresco:actualImageScaleType="centerCrop"
+            fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
+
+        <com.twoheart.dailyhotel.widget.shimmer.ShimmerView
+            android:id="@+id/shimmerView1"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/drawermenu_border"/>
+
+        <com.twoheart.dailyhotel.widget.shimmer.ShimmerView
+            android:id="@+id/shimmerView2"
+            android:layout_width="120dp"
+            android:layout_height="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="34dp"
+            android:background="@color/drawermenu_border"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/default_line_ce8e8e9"/>
+
+        <com.twoheart.dailyhotel.widget.shimmer.ShimmerView
+            android:id="@+id/shimmerView3"
+            android:layout_width="64dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/default_line_ce8e8e9"/>
+
+    </LinearLayout>
+</RelativeLayout>

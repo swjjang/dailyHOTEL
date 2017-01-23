@@ -84,6 +84,7 @@ public class HomeFragment extends BaseFragment
 
         if (mHomeLayout != null) {
             mHomeLayout.onResumeReviewAnimation();
+            mHomeLayout.onResumeCarouselAnimation();
         }
     }
 
@@ -96,6 +97,7 @@ public class HomeFragment extends BaseFragment
 
         if (mHomeLayout != null) {
             mHomeLayout.onPauseReviewAnimation();
+            mHomeLayout.onPauseCarouselAnimation();
         }
     }
 

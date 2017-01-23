@@ -1,29 +1,29 @@
 package com.twoheart.dailyhotel.screen.home;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.graphics.drawable.PaintDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.shimmer.Shimmer;
+import com.twoheart.dailyhotel.widget.shimmer.ShimmerView;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import static com.twoheart.dailyhotel.util.Util.dpToPx;
 
 /**
  * Created by android_sam on 2017. 1. 16..
@@ -39,6 +39,9 @@ public class HomeCarouselLayout extends RelativeLayout
     private ArrayList<? extends Place> mPlaceList;
     private RecyclerView mRecyclerView;
     private HomeCarouselAdapter mRecyclerAdapter;
+
+    private Shimmer mShimmer;
+    private View mCoverview;
 
     public interface OnCarouselListener
     {
@@ -108,88 +111,84 @@ public class HomeCarouselLayout extends RelativeLayout
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        // 임시 테스트 데이터
-        ArrayList<Stay> placeList = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < 6; i++)
-        {
-            Stay stay = new Stay();
+        mCoverview = view.findViewById(R.id.coverView);
+        SimpleDraweeView coverImageView = (SimpleDraweeView) mCoverview.findViewById(R.id.contentImageView);
+        coverImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+        coverImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            stay.price = Math.abs(100000 * random.nextInt());
-            stay.name = "Stay " + i;
-            stay.discountPrice = Math.abs(stay.price - (1000 * random.nextInt()));
-            stay.districtName = "서울";
-            if (i % 3 == 0)
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-            } else if (i % 3 == 1)
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-            } else
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
-            }
-            placeList.add(stay);
+        int width = coverImageView.getWidth() == 0 ? dpToPx(mContext, 239) : coverImageView.getWidth();
+        int height = Util.getRatioHeightType16x9(width);
 
-            stay.setGrade(Stay.Grade.special2);
-        }
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        coverImageView.setLayoutParams(layoutParams);
 
-        setData(placeList);
-        // 임시 테스트 데이터 끝!
+        mShimmer = new Shimmer();
 
-        mRecyclerView.setVisibility(GONE);
-
-        mDefaultCenterX = 0;
-
-        final View coverView = view.findViewById(R.id.coverView);
-
-        // 아래 방법으로 일단 비스무리 성공
-        mShaderFactory = new ShapeDrawable.ShaderFactory()
+        this.postDelayed(new Runnable()
         {
             @Override
-            public Shader resize(int width, int height)
+            public void run()
             {
-                LinearGradient linearGradient = new LinearGradient(0 - (coverView.getWidth() * 0.5f), 0, coverView.getWidth() * 1.5f, 0,//
-                    new int[]{Color.GRAY, Color.GRAY, Color.BLACK, Color.GRAY, Color.GRAY}, //substitute the correct colors for these
-                    new float[]{0f, mDefaultCenterX - 0.2f, mDefaultCenterX, mDefaultCenterX + 0.2f, 1f}, Shader.TileMode.CLAMP);
-                return linearGradient;
+                // 임시 테스트 데이터
+                ArrayList<Stay> placeList = new ArrayList<>();
+                Random random = new Random();
+                for (int i = 0; i < 6; i++)
+                {
+                    Stay stay = new Stay();
+
+                    stay.price = Math.abs(100000 * random.nextInt());
+                    stay.name = "Stay " + i;
+                    stay.discountPrice = Math.abs(stay.price - (1000 * random.nextInt()));
+                    stay.districtName = "서울";
+                    if (i % 3 == 0)
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+                    } else if (i % 3 == 1)
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+                    } else
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+                    }
+                    placeList.add(stay);
+
+                    stay.setGrade(Stay.Grade.special2);
+                }
+                setData(placeList);
+                // 임시 테스트 데이터 끝!
             }
-        };
+        }, 5000);
 
-        mPaintDrawable = new PaintDrawable();
-        mRactShape = new RectShape();
-        mPaintDrawable.setShape(mRactShape);
-        mPaintDrawable.setShaderFactory(mShaderFactory);
-
-        if (Util.isOverAPI16() == true)
-        {
-            coverView.setBackground(mPaintDrawable);
-        } else
-        {
-            coverView.setBackgroundDrawable(mPaintDrawable);
-        }
-
-        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(2000);
-        animator.setRepeatCount(10);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                mDefaultCenterX = (float) animation.getAnimatedValue();
-                mPaintDrawable.setShape(mRactShape); // this makes the shader recreate the lineargradient
-            }
-        });
-
-        animator.start();
     }
 
-    private PaintDrawable mPaintDrawable;
-    private RectShape mRactShape;
-    private ShapeDrawable.ShaderFactory mShaderFactory;
+    public void startShimmer()
+    {
+        if (mShimmer == null)
+        {
+            mShimmer = new Shimmer();
+        }
 
-    private float mDefaultCenterX = 0;
+        if (mCoverview == null)
+        {
+            return;
+        }
+
+        ShimmerView shimmerView1 = (ShimmerView) mCoverview.findViewById(R.id.shimmerView1);
+        ShimmerView shimmerView2 = (ShimmerView) mCoverview.findViewById(R.id.shimmerView2);
+        ShimmerView shimmerView3 = (ShimmerView) mCoverview.findViewById(R.id.shimmerView3);
+
+        mShimmer.start(shimmerView1);
+        mShimmer.start(shimmerView2);
+        mShimmer.start(shimmerView3);
+    }
+
+    public void stopShimmer()
+    {
+        if (mShimmer != null && mShimmer.isAnimating() == true)
+        {
+            mShimmer.cancel();
+        }
+    }
 
     public void setCarouselListener(OnCarouselListener listener)
     {
@@ -202,6 +201,9 @@ public class HomeCarouselLayout extends RelativeLayout
         {
             list = new ArrayList<>();
         }
+
+        stopShimmer();
+        mCoverview.setVisibility(View.GONE);
 
         if (mRecyclerAdapter == null)
         {

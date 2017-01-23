@@ -823,4 +823,18 @@ public class HomeLayout extends BaseLayout
 
         mDailyEmoticonImageView = null;
     }
+
+    public void onResumeCarouselAnimation()
+    {
+        if (mRecentListLayout != null) {
+            mRecentListLayout.startShimmer();
+        }
+    }
+
+    public void onPauseCarouselAnimation()
+    {
+        if (mRecentListLayout != null) {
+            mRecentListLayout.stopShimmer();
+        }
+    }
 }

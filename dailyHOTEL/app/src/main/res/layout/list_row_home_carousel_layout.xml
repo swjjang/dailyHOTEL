@@ -65,20 +65,19 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <View
-            android:id="@+id/coverView"
-            android:layout_width="match_parent"
+        <include
+            layout="@layout/list_row_home_carousel_cover_layout"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_below="@id/textLayout"
-            android:visibility="gone"/>
+            android:layout_below="@id/textLayout"/>
 
-        <View
-            android:id="@+id/bottomLine"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/default_line_cf0f0f0"/>
     </RelativeLayout>
+
+    <View
+        android:id="@+id/bottomLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
 
     <View
         android:id="@+id/bottomDivider"
