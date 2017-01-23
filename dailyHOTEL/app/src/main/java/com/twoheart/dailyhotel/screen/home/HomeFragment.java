@@ -82,7 +82,8 @@ public class HomeFragment extends BaseFragment
             mNetworkController.requestCommonDateTime();
         }
 
-        if (mHomeLayout != null) {
+        if (mHomeLayout != null)
+        {
             mHomeLayout.onResumeReviewAnimation();
             mHomeLayout.onResumeCarouselAnimation();
         }
@@ -95,7 +96,8 @@ public class HomeFragment extends BaseFragment
 
         mDontReload = true;
 
-        if (mHomeLayout != null) {
+        if (mHomeLayout != null)
+        {
             mHomeLayout.onPauseReviewAnimation();
             mHomeLayout.onPauseCarouselAnimation();
         }
@@ -106,7 +108,8 @@ public class HomeFragment extends BaseFragment
     {
         super.onDestroy();
 
-        if (mHomeLayout != null) {
+        if (mHomeLayout != null)
+        {
             mHomeLayout.onDestroyReviewAnimation();
         }
     }
@@ -232,7 +235,7 @@ public class HomeFragment extends BaseFragment
         public void onRequestReview()
         {
             // TODO : 리뷰 요청하는 부분 작업 필요!
-//            Test Code
+            //            Test Code
             mNetworkController.requestReviewInformation();
         }
 
@@ -249,6 +252,11 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onCommonDateTime(long currentDateTime, long dailyDateTime)
         {
+            if (isFinishing() == true)
+            {
+                return;
+            }
+
             unLockUI();
 
             mSaleTime = new SaleTime();

@@ -369,8 +369,8 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        HomeRecommedLayout recommendLayout = new HomeRecommedLayout(mContext);
-        recommendLayout.setListener(new HomeRecommedLayout.HomeRecommendListener()
+        mHomeRecommedLayout = new HomeRecommedLayout(mContext);
+        mHomeRecommedLayout.setListener(new HomeRecommedLayout.HomeRecommendListener()
         {
             @Override
             public void onRecommedClick(HomeRecommed recommed, int position)
@@ -379,7 +379,7 @@ public class HomeLayout extends BaseLayout
             }
         });
 
-        mContentLayout.addView(recommendLayout);
+        mContentLayout.addView(mHomeRecommedLayout);
     }
 
     private void initTopButtonLayout(View view)
@@ -826,14 +826,26 @@ public class HomeLayout extends BaseLayout
 
     public void onResumeCarouselAnimation()
     {
-        if (mRecentListLayout != null) {
+        if (mWishListLayout != null)
+        {
+            mWishListLayout.startShimmer();
+        }
+
+        if (mRecentListLayout != null)
+        {
             mRecentListLayout.startShimmer();
         }
     }
 
     public void onPauseCarouselAnimation()
     {
-        if (mRecentListLayout != null) {
+        if (mWishListLayout != null)
+        {
+            mWishListLayout.stopShimmer();
+        }
+
+        if (mRecentListLayout != null)
+        {
             mRecentListLayout.stopShimmer();
         }
     }

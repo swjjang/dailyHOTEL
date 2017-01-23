@@ -89,7 +89,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (rightViewParam == null)
         {
             rightViewParam = new ViewGroup.LayoutParams(rightViewWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        } else {
+        } else
+        {
             rightViewParam.width = rightViewWidth;
         }
 
