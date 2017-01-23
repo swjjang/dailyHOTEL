@@ -20,12 +20,14 @@ import java.util.List;
 
 public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandableListAdapter
 {
+    private Context mContext;
     private LayoutInflater mInflater;
     private List<RegionViewItem> items;
     private View.OnClickListener mOnItemClickListener;
 
     public PlaceRegionAnimatedExpandableListAdapter(Context context)
     {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -164,6 +166,12 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
             {
                 convertView = mInflater.inflate(R.layout.list_row_province, parent, false);
             }
+        }
+
+        if (Util.isTabletDevice(mContext) == true)
+        {
+            ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
+            layoutParams.height = Util.getLCDWidth(mContext) * 10 / 36;
         }
 
         convertView.setTag(parent.getId(), R.layout.list_row_province);

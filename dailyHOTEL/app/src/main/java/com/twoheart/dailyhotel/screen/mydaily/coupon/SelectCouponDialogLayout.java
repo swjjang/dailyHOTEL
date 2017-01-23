@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -56,6 +57,12 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         initListView(view);
 
         mDialogLayout = view.findViewById(R.id.dialogLayout);
+
+        if (Util.isTabletDevice(mContext) == true)
+        {
+            ViewGroup.LayoutParams layoutParams = mDialogLayout.getLayoutParams();
+            layoutParams.width = Util.getLCDWidth(mContext) * 10 / 15;
+        }
 
         mTitleTextView = (TextView) view.findViewById(R.id.titleTextView);
         mOneButtonLayout = view.findViewById(R.id.oneButtonLayout);

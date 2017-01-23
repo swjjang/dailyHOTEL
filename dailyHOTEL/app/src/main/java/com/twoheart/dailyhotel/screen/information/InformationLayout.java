@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -84,7 +85,11 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         if (Constants.DEBUG == true)
         {
             String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
-            versionTextView.setText(version + "\n" + DailyPreference.getInstance(mContext).getBaseUrl());
+
+            WebView webView = new WebView(mContext);
+            String webViewVersion = webView.getSettings().getUserAgentString();
+
+            versionTextView.setText(version + "\n" + DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion);
         } else
         {
             versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE));
