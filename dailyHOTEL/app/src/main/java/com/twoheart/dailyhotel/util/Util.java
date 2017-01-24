@@ -1815,7 +1815,15 @@ public class Util implements Constants
 
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.copyFrom(dialog.getWindow().getAttributes());
-        layoutParams.width = Util.getLCDWidth(context) * 13 / 15;
+
+        if (isTabletDevice(context) == false)
+        {
+            layoutParams.width = Util.getLCDWidth(context) * 13 / 15;
+        } else
+        {
+            layoutParams.width = Util.getLCDWidth(context) * 10 / 15;
+        }
+
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         return layoutParams;
@@ -1855,5 +1863,40 @@ public class Util implements Constants
                 activity.startActivity(intent);
             }
         }
+    }
+
+    /**
+     * 일단은 테블릿으로 정의하지만 실제로는 화면 크기이기 때문에 폰이 테블릿이 되는 경우도
+     * 반대의 경우도 발생하나 스크린 사이즈로 결정되기 때문에 이상없을 것이라고 판단됨
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isTabletDevice(Context context)
+    {
+        return checkTabletDeviceWithScreenSize(context);
+    }
+
+    private static boolean checkTabletDeviceWithScreenSize(Context context)
+    {
+        boolean device_large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE);
+
+        if (device_large)
+        {
+            DisplayMetrics metrics = new DisplayMetrics();
+            Activity activity = (Activity) context;
+            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+            if (metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT//
+                || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH//
+                || metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM//
+                || metrics.densityDpi == DisplayMetrics.DENSITY_TV//
+                || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

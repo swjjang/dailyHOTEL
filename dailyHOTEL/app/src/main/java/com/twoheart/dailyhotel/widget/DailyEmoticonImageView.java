@@ -125,12 +125,7 @@ public class DailyEmoticonImageView extends ImageView
 
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         setImageDrawable(mKeyFramesDrawable);
-        setBackgroundColor(getResources().getColor(R.color.transparent));
-
-        if (Util.isOverAPI16() == true)
-        {
-            setImageAlpha(0);
-        }
+        setBackgroundColor(getResources().getColor(R.color.white));
     }
 
     private void clearImage()

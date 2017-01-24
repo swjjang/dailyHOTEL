@@ -216,17 +216,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         if (isLogin == true)
         {
-            if (isInitialize == false)
-            {
-                if (mContext instanceof Activity)
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, AnalyticsManager.Screen.INFORMATION_SIGNIN, null);
-                } else
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen(null, AnalyticsManager.Screen.INFORMATION_SIGNIN, null);
-                }
-            }
-
             String userName = DailyPreference.getInstance(mContext).getUserName();
             String userEmail = DailyPreference.getInstance(mContext).getUserEmail();
 
@@ -282,17 +271,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_02_login);
         } else
         {
-            if (isInitialize == false)
-            {
-                if (mContext instanceof Activity)
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, AnalyticsManager.Screen.INFORMATION_SIGNOUT, null);
-                } else
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen(null, AnalyticsManager.Screen.INFORMATION_SIGNOUT, null);
-                }
-            }
-
             profileTextView.setText(R.string.frag_need_login);
             loginMessageTextView.setText(R.string.frag_login_message);
             loginMessageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_MESSAGE_TEXT_SIZE_DP);

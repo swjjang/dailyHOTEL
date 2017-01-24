@@ -34,7 +34,6 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -134,7 +133,6 @@ public class MainActivity extends BaseActivity implements Constants
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
         DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
         DailyPreference.getInstance(this).clearPaymentInformation();
-        DailyPreference.getInstance(this).setCheckCalendarHolidays(false);
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
@@ -1159,15 +1157,14 @@ public class MainActivity extends BaseActivity implements Constants
                 viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
-            if (DailyPreference.getInstance(MainActivity.this).isCheckCalendarHolidays() == false)
+            Calendar dailyCalendar = DailyCalendar.getInstance();
+            dailyCalendar.setTimeInMillis(dailyDateTime - 3600 * 1000 * 9);
+
+            String startDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
+
+            // 같은날짜에는 중복으로 요청하지 않는다.
+            if (startDay.equalsIgnoreCase(DailyPreference.getInstance(MainActivity.this).getCalendarHolidays()) == false)
             {
-                DailyPreference.getInstance(MainActivity.this).setCheckCalendarHolidays(true);
-
-                Calendar dailyCalendar = DailyCalendar.getInstance();
-                dailyCalendar.setTimeInMillis(dailyDateTime - 3600 * 1000 * 9);
-
-                String startDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
-
                 // 90일을 미리 얻어온다.
                 dailyCalendar.add(Calendar.DAY_OF_MONTH, 90);
                 String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
@@ -1187,6 +1184,13 @@ public class MainActivity extends BaseActivity implements Constants
             mNetworkController.requestReviewStay();
 
             DailyPreference.getInstance(MainActivity.this).setIsRequestReview(true);
+        }
+
+        @Override
+        public void onHolidays(String startDay, String holidays)
+        {
+            DailyPreference.getInstance(MainActivity.this).setCheckCalendarHolidays(startDay);
+            DailyPreference.getInstance(MainActivity.this).setCalendarHolidays(holidays);
         }
     };
 }

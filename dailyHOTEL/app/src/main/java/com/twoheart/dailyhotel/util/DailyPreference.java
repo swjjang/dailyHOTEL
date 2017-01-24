@@ -77,7 +77,7 @@ public class DailyPreference
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 
     private static final String KEY_CALENDAR_HOLIDAYS = "1012";
-    private static final String KEY_CHECK_CALENDAR_HOLIDAYS = "1013";
+    private static final String KEY_CHECK_CALENDAR_HOLIDAYS_STARTDAY = "1013";
 
     private static final String KEY_BACKGROUND_APP_TIME = "2000";
 
@@ -840,14 +840,14 @@ public class DailyPreference
         return getValue(mPreferences, KEY_CALENDAR_HOLIDAYS, null);
     }
 
-    public void setCheckCalendarHolidays(boolean value)
+    public void setCheckCalendarHolidays(String value)
     {
-        setValue(mEditor, KEY_CHECK_CALENDAR_HOLIDAYS, value);
+        setValue(mEditor, KEY_CHECK_CALENDAR_HOLIDAYS_STARTDAY, value);
     }
 
-    public boolean isCheckCalendarHolidays()
+    public String getCheckCalendarHolidays()
     {
-        return getValue(mPreferences, KEY_CHECK_CALENDAR_HOLIDAYS, false);
+        return getValue(mPreferences, KEY_CHECK_CALENDAR_HOLIDAYS_STARTDAY, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

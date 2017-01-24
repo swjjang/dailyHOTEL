@@ -156,6 +156,9 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                     LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = layoutInflater.inflate(R.layout.list_row_booking, parent, false);
                     convertView.setTag(Booking.TYPE_ENTRY);
+
+                    ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
+                    layoutParams.height = Util.getListRowHeight(mContext);
                 }
 
                 convertView = getEntryView(convertView, booking, isLastPosition);
