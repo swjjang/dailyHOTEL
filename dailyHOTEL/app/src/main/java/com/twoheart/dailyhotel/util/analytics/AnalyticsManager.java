@@ -673,6 +673,7 @@ public class AnalyticsManager
         public static final String RECOMMEND_LIST = "recommend_list";
         public static final String MYDAILY = "mydaily";
         public static final String TERMS_AND_CONDITION = "terms_and_condition";
+        public static final String MENU = "menu";
     }
 
     public static class Action

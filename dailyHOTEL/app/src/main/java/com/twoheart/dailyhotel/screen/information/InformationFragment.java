@@ -79,6 +79,8 @@ public class InformationFragment extends BaseFragment implements Constants
 
             DailyDeepLink.getInstance().clear();
         }
+
+        AnalyticsManager.getInstance(getContext()).recordScreen(getActivity(), AnalyticsManager.Screen.MENU, null);
     }
 
     @Override
