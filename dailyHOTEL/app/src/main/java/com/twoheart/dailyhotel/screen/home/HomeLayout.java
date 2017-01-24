@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static com.facebook.FacebookSdk.getCacheDir;
 
@@ -378,6 +379,42 @@ public class HomeLayout extends BaseLayout
                 // TODO : 추천 상세로 이동!!!
             }
         });
+
+        // Test Data
+        mHomeRecommedLayout.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // 임시 테스트 데이터
+                ArrayList<HomeRecommed> recommendList = new ArrayList<>();
+                Random random = new Random();
+                for (int i = 0; i < 6; i++)
+                {
+                    HomeRecommed homeRecommed = new HomeRecommed();
+
+                    homeRecommed.title = "Recommend " + i;
+                    homeRecommed.description = " Recommend description " + i;
+                    homeRecommed.count = Math.abs(10 * random.nextInt());
+
+                    if (i % 3 == 0)
+                    {
+                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+                    } else if (i % 3 == 1)
+                    {
+                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+                    } else
+                    {
+                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+                    }
+                    recommendList.add(homeRecommed);
+                }
+                setRecommedList(recommendList);
+                // 임시 테스트 데이터 끝!
+            }
+        }, 5000);
+
+
 
         mContentLayout.addView(mHomeRecommedLayout);
     }

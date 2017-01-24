@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -14,6 +15,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
+
+import static com.twoheart.dailyhotel.R.id.contentLayout;
 
 /**
  * Created by android_sam on 2017. 1. 17..
@@ -73,7 +76,7 @@ public class HomeRecommedLayout extends LinearLayout
     {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommed_layout, this);
 
-        mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
+        mContentLayout = (LinearLayout) view.findViewById(contentLayout);
         mContentLayout.removeAllViews();
     }
 
@@ -144,7 +147,7 @@ public class HomeRecommedLayout extends LinearLayout
         imageView.setTag(imageView.getId(), position);
         imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
         imageView.setLayoutParams(layoutParams);
 
         if (Util.isTextEmpty(homeRecommed.imageUrl) == false)
@@ -172,7 +175,7 @@ public class HomeRecommedLayout extends LinearLayout
             }
         });
 
-        this.addView(view);
+        mContentLayout.addView(view);
     }
 
     public int getCount()
