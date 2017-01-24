@@ -12,7 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -100,6 +101,15 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         holder.imageView.setTag(holder.imageView.getId(), position);
 
         Util.requestImageResize(mContext, holder.imageView, place.imageUrl);
+
+        // SOLD OUT 표시
+        if (place.isSoldOut == true)
+        {
+            holder.soldOutView.setVisibility(View.VISIBLE);
+        } else
+        {
+            holder.soldOutView.setVisibility(View.GONE);
+        }
 
         holder.titleView.setText(place.name);
 
@@ -211,6 +221,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private class PlaceViewHolder extends RecyclerView.ViewHolder
     {
         SimpleDraweeView imageView;
+        ImageView soldOutView;
         DailyTextView titleView;
         DailyTextView discountPriceView;
         DailyTextView originPriceView;
@@ -225,6 +236,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(view);
 
             imageView = (SimpleDraweeView) view.findViewById(R.id.contentImageView);
+            soldOutView = (ImageView) view.findViewById(R.id.soldoutView);
             titleView = (DailyTextView) view.findViewById(R.id.contentTextView);
             discountPriceView = (DailyTextView) view.findViewById(R.id.contentDiscountPriceView);
             originPriceView = (DailyTextView) view.findViewById(R.id.contentOriginPriceView);
@@ -240,8 +252,9 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
             imageView.setLayoutParams(layoutParams);
+            soldOutView.setLayoutParams(layoutParams);
         }
     }
 }

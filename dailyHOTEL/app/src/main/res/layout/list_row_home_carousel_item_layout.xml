@@ -21,19 +21,38 @@
         android:id="@+id/contentLayout"
         android:layout_width="239dp"
         android:layout_height="match_parent"
-        android:background="@drawable/shape_home_viewpager_content_gradient"
-        android:orientation="vertical"
         android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/leftLayout"
         android:layout_toRightOf="@+id/leftLayout"
-        android:layout_toEndOf="@+id/leftLayout">
+        android:background="@drawable/shape_home_viewpager_content_gradient"
+        android:orientation="vertical">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/contentImageView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="135dp"
-            android:adjustViewBounds="true"
-            fresco:actualImageScaleType="centerCrop"
-            fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/contentImageView"
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:adjustViewBounds="true"
+                fresco:actualImageScaleType="centerCrop"
+                fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
+
+            <ImageView
+                android:id="@+id/soldoutView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignLeft="@id/contentImageView"
+                android:layout_alignTop="@id/contentImageView"
+                android:layout_alignRight="@id/contentImageView"
+                android:layout_alignBottom="@id/contentImageView"
+                android:background="@color/textView_textColor_shadow_soldout"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                app:srcCompat="@drawable/soldout"/>
+
+        </RelativeLayout>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/contentTextView"
