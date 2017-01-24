@@ -389,13 +389,14 @@ public class HomeLayout extends BaseLayout
                 // 임시 테스트 데이터
                 ArrayList<HomeRecommed> recommendList = new ArrayList<>();
                 Random random = new Random();
-                for (int i = 0; i < 6; i++)
+                int size = random.nextInt(8);
+                for (int i = 0; i < size; i++)
                 {
                     HomeRecommed homeRecommed = new HomeRecommed();
 
                     homeRecommed.title = "Recommend " + i;
                     homeRecommed.description = " Recommend description " + i;
-                    homeRecommed.count = Math.abs(10 * random.nextInt());
+                    homeRecommed.count = Math.abs(random.nextInt(11));
 
                     if (i % 3 == 0)
                     {

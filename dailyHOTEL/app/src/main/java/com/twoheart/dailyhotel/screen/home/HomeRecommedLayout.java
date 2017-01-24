@@ -85,14 +85,34 @@ public class HomeRecommedLayout extends LinearLayout
         if (list == null || list.size() == 0)
         {
             clearAll();
+            setVisibility(View.GONE);
             return;
         }
 
         mRecommedList = list;
 
-        if (isShow == true)
+        if (mContentLayout == null || mContext == null)
         {
-            showRecommedView();
+            clearAll();
+            setVisibility(View.GONE);
+            return;
+        }
+
+        mContentLayout.removeAllViews();
+
+        if (mRecommedList == null || mRecommedList.size() == 0)
+        {
+            // TODO : default loading View or Remove All View
+            clearAll();
+            setVisibility(View.GONE);
+        } else
+        {
+            int size = mRecommedList.size();
+            for (int i = 0; i < size; i++)
+            {
+                HomeRecommed recommed = mRecommedList.get(i);
+                addRecommedItemView(recommed, i);
+            }
         }
     }
 
@@ -103,29 +123,6 @@ public class HomeRecommedLayout extends LinearLayout
         if (mContentLayout != null)
         {
             mContentLayout.removeAllViews();
-        }
-    }
-
-    private void showRecommedView()
-    {
-        if (mContentLayout == null || mContext == null)
-        {
-            return;
-        }
-
-        mContentLayout.removeAllViews();
-
-        if (mRecommedList == null || mRecommedList.size() == 0)
-        {
-            // TODO : default loading View or Remove All View
-        } else
-        {
-            int size = mRecommedList.size();
-            for (int i = 0; i < size; i++)
-            {
-                HomeRecommed recommed = mRecommedList.get(i);
-                addRecommedItemView(recommed, i);
-            }
         }
     }
 
