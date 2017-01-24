@@ -82,9 +82,10 @@ public class HomeRecommedLayout extends LinearLayout
 
     public void setData(ArrayList<HomeRecommed> list, boolean isShow)
     {
+        clearAll();
+
         if (list == null || list.size() == 0)
         {
-            clearAll();
             setVisibility(View.GONE);
             return;
         }
@@ -93,17 +94,12 @@ public class HomeRecommedLayout extends LinearLayout
 
         if (mContentLayout == null || mContext == null)
         {
-            clearAll();
             setVisibility(View.GONE);
             return;
         }
 
-        mContentLayout.removeAllViews();
-
         if (mRecommedList == null || mRecommedList.size() == 0)
         {
-            // TODO : default loading View or Remove All View
-            clearAll();
             setVisibility(View.GONE);
         } else
         {

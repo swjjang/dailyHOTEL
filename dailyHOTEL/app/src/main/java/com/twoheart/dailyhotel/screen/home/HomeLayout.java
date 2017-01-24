@@ -410,7 +410,7 @@ public class HomeLayout extends BaseLayout
                     }
                     recommendList.add(homeRecommed);
                 }
-                setRecommedList(recommendList);
+                setRecommendList(recommendList);
                 // 임시 테스트 데이터 끝!
             }
         }, 5000);
@@ -504,7 +504,7 @@ public class HomeLayout extends BaseLayout
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
     }
 
-    public void setRecommedList(ArrayList<HomeRecommed> list)
+    public void setRecommendList(ArrayList<HomeRecommed> list)
     {
         mHomeRecommedLayout.setData(list, true);
     }
