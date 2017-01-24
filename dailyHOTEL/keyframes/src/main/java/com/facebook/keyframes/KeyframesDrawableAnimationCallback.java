@@ -115,6 +115,8 @@ public abstract class KeyframesDrawableAnimationCallback {
     mStopAtLoopEnd = true;
     mStartTimeMillis = 0;
     mCurrentLoopNumber = 0;
+    mPausedCalibrateMillis = 0;
+    mSavedCalibrateMillis = 0;
     cancelCallback();
     postCallback();
   }
