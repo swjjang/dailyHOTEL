@@ -41,16 +41,16 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void recordScreen(Activity activity, String screenName, String screenClassOverride)
     {
-        AppboyProperties appboyProperties = new AppboyProperties();
-        appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
-        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-        mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
-
-        if (DEBUG == true)
-        {
-            ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
-        }
+        //        AppboyProperties appboyProperties = new AppboyProperties();
+        //        appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
+        //        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+        //
+        //        mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
+        //
+        //        if (DEBUG == true)
+        //        {
+        //            ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
+        //        }
     }
 
     @Override
@@ -61,29 +61,30 @@ public class AppboyManager extends BaseAnalyticsManager
             return;
         }
 
-        if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screenName) == true)
-        {
-            AppboyProperties appboyProperties = new AppboyProperties();
-
-            appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
-            appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-            try
-            {
-                String intValue1 = params.get(AnalyticsManager.KeyType.NUM_OF_BOOKING);
-                appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.parseInt(intValue1));
-
-                mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
-                }
-            } catch (NumberFormatException e)
-            {
-                ExLog.d(e.toString());
-            }
-        } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
+        //        if (AnalyticsManager.Screen.BOOKING_LIST.equalsIgnoreCase(screenName) == true)
+        //        {
+        //            AppboyProperties appboyProperties = new AppboyProperties();
+        //
+        //            appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
+        //            appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+        //
+        //            try
+        //            {
+        //                String intValue1 = params.get(AnalyticsManager.KeyType.NUM_OF_BOOKING);
+        //                appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.parseInt(intValue1));
+        //
+        //                mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
+        //
+        //                if (DEBUG == true)
+        //                {
+        //                    ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
+        //                }
+        //            } catch (NumberFormatException e)
+        //            {
+        //                ExLog.d(e.toString());
+        //            }
+        //        } else
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
@@ -144,23 +145,24 @@ public class AppboyManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Screen.DAILY_GOURMET_FIRST_PURCHASE_SUCCESS.equalsIgnoreCase(screenName) == true)
         {
             firstPurchaseEventGourmet(params);
-        } else
-        {
-            AppboyProperties appboyProperties = getAppboyProperties(params);
-
-            if (appboyProperties != null)
-            {
-                appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
-                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-
-                mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
-
-                if (DEBUG == true)
-                {
-                    ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
-                }
-            }
         }
+        //        else
+        //        {
+        //            AppboyProperties appboyProperties = getAppboyProperties(params);
+        //
+        //            if (appboyProperties != null)
+        //            {
+        //                appboyProperties.addProperty(screenName, AnalyticsManager.ValueType.EMPTY);
+        //                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+        //
+        //                mAppboy.logCustomEvent(EventName.SCREEN, appboyProperties);
+        //
+        //                if (DEBUG == true)
+        //                {
+        //                    ExLog.d(TAG + " : " + EventName.SCREEN + ", " + appboyProperties.forJsonPut().toString());
+        //                }
+        //            }
+        //        }
     }
 
     @Override
@@ -1040,7 +1042,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
     private static final class EventName
     {
-        public static final String SCREEN = "screen";
+        //        public static final String SCREEN = "screen";
 
         public static final String SEARCH_TERM = "search_term";
         public static final String CURRENT_APP_VERSION = "current_app_version";

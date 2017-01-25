@@ -202,12 +202,10 @@ public class CreditCardListActivity extends BaseActivity
         @Override
         public void deleteCreditCard(final CreditCard card)
         {
-            if (isLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
-
-            lockUI();
 
             // 신용카드를 삭제하시겠습니까?
             View.OnClickListener posListener = new View.OnClickListener()
