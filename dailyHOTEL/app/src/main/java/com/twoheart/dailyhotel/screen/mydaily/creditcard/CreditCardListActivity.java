@@ -207,7 +207,7 @@ public class CreditCardListActivity extends BaseActivity
                 return;
             }
 
-            lockUI();
+            lockUiComponent();
 
             // 신용카드를 삭제하시겠습니까?
             View.OnClickListener posListener = new View.OnClickListener()
