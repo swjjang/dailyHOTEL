@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -18,6 +19,7 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -80,6 +82,15 @@ public class HomeFragment extends BaseFragment
 
             // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
             mNetworkController.requestCommonDateTime();
+
+            if (DailyHotel.isLogin() == true)
+            {
+                // TODO : request review data;
+                mNetworkController.requestReviewInformation();
+            } else
+            {
+                requestTextMessage();
+            }
         }
 
         if (mHomeLayout != null)
@@ -133,6 +144,17 @@ public class HomeFragment extends BaseFragment
             {
                 break;
             }
+        }
+    }
+
+    private void requestTextMessage()
+    {
+        String title = DailyPreference.getInstance(mBaseActivity).getRemoteConfigHomeMessageAreaLogoutTitle();
+        String description = DailyPreference.getInstance(mBaseActivity).getRemoteConfigHomeMessageAreaLogoutCallToAction();
+
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.setTextMessageData(title, description);
         }
     }
 
@@ -232,11 +254,9 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onRequestReview()
+        public void onTopButtonClick()
         {
-            // TODO : 리뷰 요청하는 부분 작업 필요!
-            //            Test Code
-            mNetworkController.requestReviewInformation();
+            mHomeLayout.setScrollTop();
         }
 
         @Override
@@ -268,7 +288,10 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onReviewInformation(Review review)
         {
-            mHomeLayout.setReviewMessage(review);
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.setReviewData(review);
+            }
         }
 
         @Override

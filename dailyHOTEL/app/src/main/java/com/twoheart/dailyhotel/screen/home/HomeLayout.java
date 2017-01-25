@@ -1,45 +1,36 @@
 package com.twoheart.dailyhotel.screen.home;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.net.Uri;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.Window;
+import android.widget.AbsListView;
 
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HomeRecommed;
 import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
+import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 
 import static com.facebook.FacebookSdk.getCacheDir;
 
@@ -49,20 +40,17 @@ import static com.facebook.FacebookSdk.getCacheDir;
 
 public class HomeLayout extends BaseLayout
 {
-    private static final int MESSAGE_ANIMATION_DURATION = 200;
-
     private DailyLoopViewPager mEventViewPager;
     private DailyTextView mEventCountTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private AppBarLayout mAppbarLayout;
-    private NestedScrollView mNestedScrollView;
-    private LinearLayout mContentLayout;
     private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
-    private View mMessageLayout;
-    private HomeRecommedLayout mHomeRecommedLayout;
-    private HomeCarouselLayout mWishListLayout;
-    private HomeCarouselLayout mRecentListLayout;
-    private DailyEmoticonImageView[] mDailyEmoticonImageView;
+    private DailyPlaceDetailListView mListView;
+    private HomeListAdapter mListAdapter;
+
+    private int mEventImageHeight;
+    private int mStatusBarHeight;
+
+    private View mActionButtonLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -78,7 +66,7 @@ public class HomeLayout extends BaseLayout
 
         void onRefreshAll(boolean isShowProgress);
 
-        void onRequestReview();
+        void onTopButtonClick();
     }
 
     private enum MessageType
@@ -98,19 +86,13 @@ public class HomeLayout extends BaseLayout
     protected void initLayout(View view)
     {
         initToolbarLayout(view);
-        initAppbarLayout(view);
+        initEventLayout(view);
         initRefreshLayout(view);
         initScrollLayout(view);
-        initContentLayout(view);
+        setStatusBarHeight(mContext);
+        initActionButtonLayout(view);
 
-        initEventLayout(view);
-        initProductLayout(view);
-        initMessageLayout(view);
-        initWishListLayout(view);
-        initRecentListLayout(view);
-        initRecommendLayout(view);
-
-        initTopButtonLayout(view);
+        //        initMessageLayout(view);
     }
 
     private void initToolbarLayout(View view)
@@ -124,11 +106,6 @@ public class HomeLayout extends BaseLayout
                 ((OnEventListener) mOnEventListener).onSearchImageClick();
             }
         });
-    }
-
-    private void initAppbarLayout(View view)
-    {
-        mAppbarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
     }
 
     private void initRefreshLayout(View view)
@@ -149,20 +126,9 @@ public class HomeLayout extends BaseLayout
         });
     }
 
-    private void initScrollLayout(View view)
-    {
-        mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
-        mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-    }
-
-    private void initContentLayout(View view)
-    {
-        mContentLayout = (LinearLayout) view.findViewById(R.id.homeContentLayout);
-    }
-
     private void initEventLayout(View view)
     {
-        if (mContentLayout == null || mContext == null)
+        if (mContext == null)
         {
             return;
         }
@@ -170,276 +136,127 @@ public class HomeLayout extends BaseLayout
         mEventViewPager = (DailyLoopViewPager) view.findViewById(R.id.loopViewPager);
         mEventCountTextView = (DailyTextView) view.findViewById(R.id.pagerCountTextView);
 
-        int height = Util.getListRowHeight(mContext);
-
         ViewGroup.LayoutParams params = mEventViewPager.getLayoutParams();
-        params.height = height;
+        params.height = getEventImageHeight(mContext);
         mEventViewPager.setLayoutParams(params);
 
         setDefaultEventImage();
     }
 
-    private void initProductLayout(View view)
+    private void initScrollLayout(View view)
     {
-        if (mContentLayout == null)
-        {
-            return;
-        }
+        mListView = (DailyPlaceDetailListView) view.findViewById(R.id.placeListView);
+        mListAdapter = new HomeListAdapter(mContext, getEventImageHeight(mContext), (OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
+        mListView.setOnScrollListener(mOnScrollListener);
+        mListView.setAdapter(mListAdapter);
+        //        mListView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+    }
 
-        View stayButtonLayout = view.findViewById(R.id.stayButtonLayout);
-        View gourmetButtonLayout = view.findViewById(R.id.gourmetButtonLayout);
+    // 홈의 상단 고정 버튼 레이아웃
+    private void initActionButtonLayout(View view)
+    {
+        mActionButtonLayout = view.findViewById(R.id.productLayout);
+        mActionButtonLayout.setVisibility(View.GONE);
 
-        stayButtonLayout.setOnClickListener(new View.OnClickListener()
+        View stayButton = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
+        View gourmetButton = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
+
+        stayButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).onStayButtonClick();
+                ((HomeLayout.OnEventListener) mOnEventListener).onStayButtonClick();
             }
         });
 
-        gourmetButtonLayout.setOnClickListener(new View.OnClickListener()
+        gourmetButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).onGourmetButtonClick();
+                ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick();
             }
         });
     }
 
-    private void initMessageLayout(View view)
+    private int getEventImageHeight(Context context)
     {
-        if (mContentLayout == null || mContext == null)
+        if (mEventImageHeight == 0)
         {
-            return;
+            mEventImageHeight = Util.getListRowHeight(context);
         }
 
-        MessageType messageType = MessageType.NONE;
+        return mEventImageHeight;
+    }
 
-        if (DailyHotel.isLogin() == true)
+    public void setTextMessageData(String title, String description)
+    {
+        if (mListAdapter != null)
         {
-            boolean isLoginAreaEnable = DailyPreference.getInstance(mContext).isRemoteConfigHomeMessageAreaLoginEnabled();
-            if (isLoginAreaEnable == true)
-            {
-                messageType = MessageType.REVIEW;
-            }
-        } else
-        {
-            boolean isLogoutAreaEnable = DailyPreference.getInstance(mContext).isRemoteConfigHomeMessageAreaLogoutEnabled();
-            if (isLogoutAreaEnable == true)
-            {
-                messageType = MessageType.TEXT;
-            }
-        }
-
-        if (MessageType.REVIEW == messageType)
-        {
-            // init review layout
-            initMessageReviewLayout(view);
-        } else if (MessageType.TEXT == messageType)
-        {
-            // init text layout
-            initNSetMessageTextLayout(view);
-        } else
-        {
-            // gone message layout
-            if (mMessageLayout != null)
-            {
-                mMessageLayout.setVisibility(View.GONE);
-            }
+            mListAdapter.setTextMessageData(title, description);
+            mListAdapter.setReviewMessageData(null);
+            mListAdapter.notifyDataSetChanged();
         }
     }
 
-    private void initMessageReviewLayout(View view)
+    public void setReviewData(Review review)
     {
-        if (mContentLayout == null || mContext == null)
+        if (mListAdapter != null)
         {
-            return;
+            mListAdapter.setTextMessageData(null, null);
+            mListAdapter.setReviewMessageData(review);
+            mListAdapter.notifyDataSetChanged();
         }
-
-        mMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_review_layout, null);
-        mMessageLayout.setVisibility(View.GONE);
-        mContentLayout.addView(mMessageLayout);
-
-        ((OnEventListener) mOnEventListener).onRequestReview();
     }
 
-    private void initNSetMessageTextLayout(View view)
+    public void setActionButtonVisibility(int visibility)
     {
-        if (mContentLayout == null || mContext == null)
-        {
-            return;
-        }
-
-        mMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
-
-        View homeMessageLayout = mMessageLayout.findViewById(R.id.homeMessageLayout);
-        View closeView = mMessageLayout.findViewById(R.id.closeImageView);
-        DailyTextView titleView = (DailyTextView) mMessageLayout.findViewById(R.id.titleTextView);
-        DailyTextView descriptionView = (DailyTextView) mMessageLayout.findViewById(R.id.descriptionTextView);
-
-        homeMessageLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onMessageTextAreaClick();
-            }
-        });
-
-        closeView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startMessageLayoutCloseAnimation();
-
-                ((OnEventListener) mOnEventListener).onMessageCloseClick();
-            }
-        });
-
-        String title = DailyPreference.getInstance(mContext).getRemoteConfigHomeMessageAreaLogoutTitle();
-        titleView.setText(title);
-
-        String description = DailyPreference.getInstance(mContext).getRemoteConfigHomeMessageAreaLogoutCallToAction();
-
-        if (Util.isTextEmpty(description) == true)
-        {
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        } else
-        {
-            // 메세지에 '>'가 포함 되었을 경우 제거하고 trim!
-            if (description.endsWith(">") == true)
-            {
-                int lastIndex = description.lastIndexOf(">");
-                if (lastIndex != -1)
-                {
-                    description = description.substring(0, lastIndex);
-                    description = description.trim();
-                }
-            }
-
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.payment_ic_right, 0);
-            descriptionView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3d));
-        }
-
-        descriptionView.setText(description);
-
-        mMessageLayout.setVisibility(View.INVISIBLE);
-        mContentLayout.addView(mMessageLayout);
-
-        mMessageLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                startMessageLayoutShowAnimation();
-            }
-        });
+        mActionButtonLayout.setVisibility(visibility);
     }
 
-    private void initWishListLayout(View view)
-    {
-        if (mContentLayout == null || mContext == null)
-        {
-            return;
-        }
-
-        mWishListLayout = new HomeCarouselLayout(mContext);
-
-        mContentLayout.addView(mWishListLayout);
-    }
-
-    private void initRecentListLayout(View view)
-    {
-        if (mContentLayout == null || mContext == null)
-        {
-            return;
-        }
-
-        mRecentListLayout = new HomeCarouselLayout(mContext);
-
-        mContentLayout.addView(mRecentListLayout);
-    }
-
-    private void initRecommendLayout(View view)
-    {
-        if (mContentLayout == null || mContext == null)
-        {
-            return;
-        }
-
-        mHomeRecommedLayout = new HomeRecommedLayout(mContext);
-        mHomeRecommedLayout.setListener(new HomeRecommedLayout.HomeRecommendListener()
-        {
-            @Override
-            public void onRecommedClick(HomeRecommed recommed, int position)
-            {
-                // TODO : 추천 상세로 이동!!!
-            }
-        });
-
-        // Test Data
-        mHomeRecommedLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                // 임시 테스트 데이터
-                ArrayList<HomeRecommed> recommendList = new ArrayList<>();
-                Random random = new Random();
-                int size = random.nextInt(8);
-                for (int i = 0; i < size; i++)
-                {
-                    HomeRecommed homeRecommed = new HomeRecommed();
-
-                    homeRecommed.title = "Recommend " + i;
-                    homeRecommed.description = " Recommend description " + i;
-                    homeRecommed.count = Math.abs(random.nextInt(11));
-
-                    if (i % 3 == 0)
-                    {
-                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-                    } else if (i % 3 == 1)
-                    {
-                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-                    } else
-                    {
-                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
-                    }
-                    recommendList.add(homeRecommed);
-                }
-                setRecommendList(recommendList);
-                // 임시 테스트 데이터 끝!
-            }
-        }, 5000);
-
-
-
-        mContentLayout.addView(mHomeRecommedLayout);
-    }
-
-    private void initTopButtonLayout(View view)
-    {
-        if (mContentLayout == null || mContext == null)
-        {
-            return;
-        }
-
-        final View topButtonLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_top_button_layout, null);
-
-        topButtonLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mNestedScrollView.fullScroll(0);
-                mAppbarLayout.setExpanded(true);
-            }
-        });
-        mContentLayout.addView(topButtonLayout);
-    }
+    //    private void initMessageLayout(View view)
+    //    {
+    //        if (mContentLayout == null || mContext == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        MessageType messageType = MessageType.NONE;
+    //
+    //        if (DailyHotel.isLogin() == true)
+    //        {
+    //            boolean isLoginAreaEnable = DailyPreference.getInstance(mContext).isRemoteConfigHomeMessageAreaLoginEnabled();
+    //            if (isLoginAreaEnable == true)
+    //            {
+    //                messageType = MessageType.REVIEW;
+    //            }
+    //        } else
+    //        {
+    //            boolean isLogoutAreaEnable = DailyPreference.getInstance(mContext).isRemoteConfigHomeMessageAreaLogoutEnabled();
+    //            if (isLogoutAreaEnable == true)
+    //            {
+    //                messageType = MessageType.TEXT;
+    //            }
+    //        }
+    //
+    //        if (MessageType.REVIEW == messageType)
+    //        {
+    //            // init review layout
+    //            initMessageReviewLayout(view);
+    //        } else if (MessageType.TEXT == messageType)
+    //        {
+    //            // init text layout
+    //            initNSetMessageTextLayout(view);
+    //        } else
+    //        {
+    //            // gone message layout
+    //            if (mMessageLayout != null)
+    //            {
+    //                mMessageLayout.setVisibility(View.GONE);
+    //            }
+    //        }
+    //    }
 
     public void setRefreshing(boolean isRefreshing)
     {
@@ -449,6 +266,15 @@ public class HomeLayout extends BaseLayout
         }
 
         mSwipeRefreshLayout.setRefreshing(isRefreshing);
+    }
+
+    public void setScrollTop()
+    {
+        if (mListView != null || mListView.getChildCount() == 0)
+        {
+            mListView.smoothScrollBy(0, 0);
+            mListView.setSelection(0);
+        }
     }
 
     public void setEventCountView(int pageIndex, int totalCount)
@@ -504,11 +330,6 @@ public class HomeLayout extends BaseLayout
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
     }
 
-    public void setRecommendList(ArrayList<HomeRecommed> list)
-    {
-        mHomeRecommedLayout.setData(list, true);
-    }
-
     // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
     private String getDefaultImage()
     {
@@ -552,339 +373,267 @@ public class HomeLayout extends BaseLayout
         }
     }
 
-    public void setReviewMessage(Review review)
+    public View getProductLayout()
     {
-        if (mMessageLayout == null)
+        if (mListAdapter == null)
+        {
+            return null;
+        }
+
+        return mListAdapter.getProductLayout();
+    }
+
+    public void setStatusBarHeight(Context context)
+    {
+        if (context == null)
         {
             return;
         }
 
-        if (review == null)
-        {
-            mMessageLayout.setVisibility(View.GONE);
-            mMessageLayout.clearAnimation();
+        Activity activity = (Activity) context;
+        final Window window = activity.getWindow();
 
-            if (mContentLayout != null)
-            {
-                mContentLayout.removeView(mMessageLayout);
-            }
-
-            mMessageLayout = null;
-            return;
-        }
-
-        View closeView = mMessageLayout.findViewById(R.id.closeImageView);
-        closeView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startMessageLayoutCloseAnimation();
-            }
-        });
-
-        TextView titleTextView = (TextView) mMessageLayout.findViewById(R.id.titleTextView);
-        TextView periodTextView = (TextView) mMessageLayout.findViewById(R.id.descriptionTextView);
-        View goodEmoticonView = mMessageLayout.findViewById(R.id.goodEmoticonView);
-        View badEmoticonView = mMessageLayout.findViewById(R.id.badEmoticonView);
-
-        final ReviewItem reviewItem = review.getReviewItem();
-        if (reviewItem == null)
-        {
-            mMessageLayout.setVisibility(View.GONE);
-            mMessageLayout.clearAnimation();
-
-            if (mContentLayout != null)
-            {
-                mContentLayout.removeView(mMessageLayout);
-            }
-
-            mMessageLayout = null;
-
-            throw new NullPointerException("reviewItem == null");
-        }
-
-        // 타이틀
-        String title = mContext.getResources().getString(R.string.message_review_title, reviewItem.itemName);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title);
-        spannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getRegularTypeface()),//
-            title.lastIndexOf('\'') + 1, title.length(),//
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        titleTextView.setText(spannableStringBuilder);
-
-        try
-        {
-            // 시간
-            switch (reviewItem.placeType)
-            {
-                case HOTEL:
-                {
-                    String periodDate = String.format("%s - %s"//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
-                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
-                    break;
-                }
-
-                case FNB:
-                {
-                    String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
-
-                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
-                    break;
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        mDailyEmoticonImageView = null;
-        mDailyEmoticonImageView = new DailyEmoticonImageView[2];
-
-        // 이미지
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) mMessageLayout.findViewById(R.id.badEmoticonImageView);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) mMessageLayout.findViewById(R.id.goodEmoticonImageView);
-
-        mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-737-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-573-B_satfisfied.kf.json");
-
-        mDailyEmoticonImageView[0].startAnimation();
-        mDailyEmoticonImageView[1].startAnimation();
-
-        // 딤이미지
-        final View badEmoticonDimView = mMessageLayout.findViewById(R.id.badEmoticonDimView);
-        final View goodEmoticonDimView = mMessageLayout.findViewById(R.id.goodEmoticonDimView);
-
-        // 텍스트
-        final TextView badEmoticonTextView = (TextView) mMessageLayout.findViewById(R.id.badEmoticonTextView);
-        final TextView goodEmoticonTextView = (TextView) mMessageLayout.findViewById(R.id.goodEmoticonTextView);
-
-        goodEmoticonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // TODO : 클릭 이벤트 적용 필요!
-            }
-        });
-
-        badEmoticonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // TODO : 클릭 이벤트 적용 필요!
-            }
-        });
-
-        mMessageLayout.setVisibility(View.INVISIBLE);
-
-        mMessageLayout.post(new Runnable()
+        mListView.post(new Runnable()
         {
             @Override
             public void run()
             {
-                startMessageLayoutShowAnimation();
+                Rect rect = new Rect();
+                window.getDecorView().getWindowVisibleDisplayFrame(rect);
+
+                mStatusBarHeight = rect.top;
             }
         });
-    }
-
-    private void startMessageLayoutShowAnimation()
-    {
-        if (mMessageLayout == null)
-        {
-            return;
-        }
-
-        if (mMessageLayout.getVisibility() == View.VISIBLE)
-        {
-            return;
-        }
-
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, mMessageLayout.getHeight());
-        valueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
-        valueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (int) animation.getAnimatedValue();
-                ViewGroup.LayoutParams params = mMessageLayout.getLayoutParams();
-                params.height = value;
-                mMessageLayout.setLayoutParams(params);
-            }
-        });
-
-        valueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                mMessageLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mMessageLayout.setVisibility(View.VISIBLE);
-                mMessageLayout.clearAnimation();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-                mMessageLayout.setVisibility(View.VISIBLE);
-                mMessageLayout.clearAnimation();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        valueAnimator.start();
-    }
-
-    private void startMessageLayoutCloseAnimation()
-    {
-        if (mMessageLayout == null)
-        {
-            return;
-        }
-
-        if (mMessageLayout.getVisibility() == View.GONE)
-        {
-            return;
-        }
-
-        ValueAnimator closeValueAnimator = ValueAnimator.ofInt(mMessageLayout.getHeight(), 0);
-        closeValueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
-        closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (int) animation.getAnimatedValue();
-                ViewGroup.LayoutParams params = mMessageLayout.getLayoutParams();
-                params.height = value;
-                mMessageLayout.setLayoutParams(params);
-            }
-        });
-
-        closeValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mMessageLayout.setVisibility(View.GONE);
-                mMessageLayout.clearAnimation();
-
-                if (mContentLayout != null)
-                {
-                    mContentLayout.removeView(mMessageLayout);
-                }
-
-                mMessageLayout = null;
-
-                onDestroyReviewAnimation();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-                mMessageLayout.setVisibility(View.GONE);
-                mMessageLayout.clearAnimation();
-
-                if (mContentLayout != null)
-                {
-                    mContentLayout.removeView(mMessageLayout);
-                }
-
-                mMessageLayout = null;
-
-                onDestroyReviewAnimation();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        closeValueAnimator.start();
     }
 
     public void onResumeReviewAnimation()
     {
-        if (mDailyEmoticonImageView != null)
+        if (mListAdapter != null)
         {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.startAnimation();
-            }
+            mListAdapter.onResumeReviewAnimation();
         }
     }
 
     public void onPauseReviewAnimation()
     {
-        if (mDailyEmoticonImageView != null)
+        if (mListAdapter != null)
         {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.stopAnimation();
-            }
+            mListAdapter.onPauseReviewAnimation();
         }
     }
 
     public void onDestroyReviewAnimation()
     {
-        if (mDailyEmoticonImageView != null)
+        if (mListAdapter != null)
         {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.stopAnimation();
-            }
+            mListAdapter.onDestroyReviewAnimation();
         }
-
-        mDailyEmoticonImageView = null;
     }
 
     public void onResumeCarouselAnimation()
     {
-        if (mWishListLayout != null)
+        if (mListAdapter != null)
         {
-            mWishListLayout.startShimmer();
-        }
-
-        if (mRecentListLayout != null)
-        {
-            mRecentListLayout.startShimmer();
+            mListAdapter.onResumeCarouselAnimation();
         }
     }
 
     public void onPauseCarouselAnimation()
     {
-        if (mWishListLayout != null)
+        if (mListAdapter != null)
         {
-            mWishListLayout.stopShimmer();
-        }
-
-        if (mRecentListLayout != null)
-        {
-            mRecentListLayout.stopShimmer();
+            mListAdapter.onPauseCarouselAnimation();
         }
     }
+
+    private AbsListView.OnScrollListener mOnScrollListener = new AbsListView.OnScrollListener()
+    {
+        private Rect mProductLayoutRect = new Rect();
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState)
+        {
+            // do nothing!
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
+        {
+            if (view.getAdapter() == null)
+            {
+                return;
+            }
+
+            if (firstVisibleItem > 1)
+            {
+                // ????? - 발생가능 ???? 발생하면 초기화 ???
+                return;
+            }
+
+            if (mStatusBarHeight == 0)
+            {
+                return;
+            }
+
+            View productLayout = getProductLayout();
+            if (productLayout == null)
+            {
+                return;
+            }
+
+            final int TOOLBAR_HEIGHT = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+
+            productLayout.getGlobalVisibleRect(mProductLayoutRect);
+            int globalTop = mProductLayoutRect.top;
+            int globalRight = mProductLayoutRect.right;
+
+            productLayout.getLocalVisibleRect(mProductLayoutRect);
+            int localTop = mProductLayoutRect.top;
+
+            if (globalTop == globalRight)
+            {
+                // do nothing!
+            } else
+            {
+                ExLog.d(globalTop + " , " + localTop);
+                if (globalTop <= (mStatusBarHeight + TOOLBAR_HEIGHT) || localTop > 0)
+                {
+                    // show
+                    ExLog.d("Show");
+                    setActionButtonVisibility(View.VISIBLE);
+                } else
+                {
+                    // hide
+                    ExLog.d("Hide");
+                    setActionButtonVisibility(View.GONE);
+                }
+            }
+        }
+    };
+
+    protected View.OnTouchListener mEmptyViewOnTouchListener = new View.OnTouchListener()
+    {
+        private int mMoveState;
+        private float mPrevX, mPrevY;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event)
+        {
+            switch (event.getAction() & MotionEventCompat.ACTION_MASK)
+            {
+                case MotionEvent.ACTION_DOWN:
+                {
+                    mPrevX = event.getX();
+                    mPrevY = event.getY();
+
+                    mMoveState = 0;
+                    mListView.setScrollEnabled(false);
+
+                    try
+                    {
+                        mEventViewPager.onTouchEvent(event);
+                    } catch (Exception e)
+                    {
+                    }
+                    break;
+                }
+
+                case MotionEvent.ACTION_UP:
+                {
+                    int touchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();
+
+                    int x = (int) (mPrevX - event.getX());
+                    int y = (int) (mPrevY - event.getY());
+
+                    int distance = (int) Math.sqrt(x * x + y * y);
+
+                    if (distance < touchSlop)
+                    {
+                        // TODO : 이벤트 아이템 클릭 이벤트 처리 추가 필요!
+                        //                        ((PlaceDetailLayout.OnEventListener) mOnEventListener).onClickImage(mPlaceDetail);
+
+                        mMoveState = 0;
+
+                        try
+                        {
+                            mEventViewPager.onTouchEvent(event);
+                        } catch (Exception e)
+                        {
+                            event.setAction(MotionEvent.ACTION_CANCEL);
+                            event.setLocation(mEventViewPager.getScrollX(), mEventViewPager.getScrollY());
+                            mEventViewPager.onTouchEvent(event);
+                        }
+
+                        mListView.setScrollEnabled(true);
+                        break;
+                    }
+                }
+                case MotionEvent.ACTION_CANCEL:
+                {
+                    mMoveState = 0;
+
+                    try
+                    {
+                        mEventViewPager.onTouchEvent(event);
+                    } catch (Exception e)
+                    {
+                        event.setAction(MotionEvent.ACTION_CANCEL);
+                        event.setLocation(mEventViewPager.getScrollX(), mEventViewPager.getScrollY());
+                        mEventViewPager.onTouchEvent(event);
+                    }
+
+                    mListView.setScrollEnabled(true);
+                    break;
+                }
+
+                case MotionEvent.ACTION_MOVE:
+                {
+                    float x = event.getX();
+                    float y = event.getY();
+
+                    if (mMoveState == 0)
+                    {
+                        if (Math.abs(x - mPrevX) == Math.abs(y - mPrevY))
+                        {
+
+                        } else if (Math.abs(x - mPrevX) > Math.abs(y - mPrevY))
+                        {
+                            // x 축으로 이동한 경우.
+                            mMoveState = 100;
+
+                            try
+                            {
+                                mEventViewPager.onTouchEvent(event);
+                            } catch (Exception e)
+                            {
+                                event.setAction(MotionEvent.ACTION_CANCEL);
+                                event.setLocation(mEventViewPager.getScrollX(), mEventViewPager.getScrollY());
+                                mEventViewPager.onTouchEvent(event);
+                            }
+                        } else
+                        {
+                            // y축으로 이동한 경우.
+                            mMoveState = 10;
+                            mListView.setScrollEnabled(true);
+                            return true;
+                        }
+                    } else if (mMoveState == 100)
+                    {
+                        try
+                        {
+                            mEventViewPager.onTouchEvent(event);
+                        } catch (Exception e)
+                        {
+                            event.setAction(MotionEvent.ACTION_CANCEL);
+                            event.setLocation(mEventViewPager.getScrollX(), mEventViewPager.getScrollY());
+                            mEventViewPager.onTouchEvent(event);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            return false;
+        }
+    };
 }

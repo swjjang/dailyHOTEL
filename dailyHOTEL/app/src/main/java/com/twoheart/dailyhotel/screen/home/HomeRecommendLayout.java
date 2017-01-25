@@ -22,7 +22,7 @@ import static com.twoheart.dailyhotel.R.id.contentLayout;
  * Created by android_sam on 2017. 1. 17..
  */
 
-public class HomeRecommedLayout extends LinearLayout
+public class HomeRecommendLayout extends LinearLayout
 {
     private Context mContext;
     private LinearLayout mContentLayout;
@@ -35,7 +35,7 @@ public class HomeRecommedLayout extends LinearLayout
         void onRecommedClick(HomeRecommed recommed, int position);
     }
 
-    public HomeRecommedLayout(Context context)
+    public HomeRecommendLayout(Context context)
     {
         super(context);
 
@@ -43,7 +43,7 @@ public class HomeRecommedLayout extends LinearLayout
         initLayout();
     }
 
-    public HomeRecommedLayout(Context context, AttributeSet attrs)
+    public HomeRecommendLayout(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
@@ -51,7 +51,7 @@ public class HomeRecommedLayout extends LinearLayout
         initLayout();
     }
 
-    public HomeRecommedLayout(Context context, AttributeSet attrs, int defStyleAttr)
+    public HomeRecommendLayout(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
@@ -59,7 +59,7 @@ public class HomeRecommedLayout extends LinearLayout
         initLayout();
     }
 
-    public HomeRecommedLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    public HomeRecommendLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
 
