@@ -362,4 +362,9 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<BaseListDto<Holiday>> requestHoliday(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
                                               @Query("from") String startDay, @Query("to") String endDay, @Query("isHoliday") boolean isHoliday);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<BaseListDto<Holiday>> requestFeaturedPlaceList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                              @Query("startday") String startDay, @Query("endDay") String endDay);
 }

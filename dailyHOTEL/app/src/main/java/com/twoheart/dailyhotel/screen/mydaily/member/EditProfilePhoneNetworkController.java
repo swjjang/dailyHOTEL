@@ -51,7 +51,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         params.put("user_idx", userIndex);
         params.put("user_phone", phoneNumber.replaceAll("-", ""));
 
-        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +225,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mUserUpdateSocialJsonResponseListener = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mUserUpdateSocialCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

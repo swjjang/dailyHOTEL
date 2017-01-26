@@ -1048,4 +1048,18 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Holiday>>) listener);
     }
+
+    @Override
+    public void requestFeaturedPlaceList(String tag, int index, String startDay, String endDay, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendation/{idx}"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{idx}", Integer.toString(index));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestFeaturedPlaceList(Crypto.getUrlDecoderEx(URL), startDay, endDay);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Holiday>>) listener);
+    }
 }

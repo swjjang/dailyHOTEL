@@ -1003,7 +1003,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             , gourmetPaymentInformation.getTicketInformation().index//
             , saleTime.getDayOfDaysDateFormat("yyMMdd")//
             , gourmetPaymentInformation.ticketCount//
-            , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketJsonResponseListener);
+            , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketCallback);
     }
 
     void recordAnalyticsPaymentComplete(GourmetPaymentInformation gourmetPaymentInformation)
@@ -2043,7 +2043,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    private retrofit2.Callback mCheckAvailableTicketJsonResponseListener = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mCheckAvailableTicketCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

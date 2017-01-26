@@ -34,30 +34,23 @@ public class CollectionStayActivity extends CollectionBaseActivity
     SaleTime mCheckInSaleTime;
     int mNights;
 
-    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime, String title, String titleImageUrl, String queryType, String query)
+    public static Intent newInstance(Context context, int index)
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY, query);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int night, String title, String titleImageUrl, String queryType, String query)
+    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle)
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_SALE_TIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHT, night);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY, query);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, index);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE, index);
+        intent.putExtra(INTENT_EXTRA_DATA_SUBTITLE, index);
 
         return intent;
     }
@@ -65,38 +58,38 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void initIntentTime(Intent intent)
     {
-        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
-        {
-            mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
-            mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
-
-            mStartSaleTime = mCheckInSaleTime.getClone(0);
-            mEndSaleTime = null;
-        } else
-        {
-            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
-            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
-
-            // 범위 지정인데 이미 날짜가 지난 경우
-            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
-            {
-                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Intent eventIntent = new Intent();
-                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
-                        startActivity(eventIntent);
-                    }
-                }, null);
-
-                mEndSaleTime = null;
-            }
-
-            mCheckInSaleTime = mStartSaleTime.getClone();
-            mNights = 1;
-        }
+//        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
+//        {
+//            mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
+//            mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
+//
+//            mStartSaleTime = mCheckInSaleTime.getClone(0);
+//            mEndSaleTime = null;
+//        } else
+//        {
+//            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+//            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+//
+//            // 범위 지정인데 이미 날짜가 지난 경우
+//            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+//            {
+//                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View v)
+//                    {
+//                        Intent eventIntent = new Intent();
+//                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
+//                        startActivity(eventIntent);
+//                    }
+//                }, null);
+//
+//                mEndSaleTime = null;
+//            }
+//
+//            mCheckInSaleTime = mStartSaleTime.getClone();
+//            mNights = 1;
+//        }
     }
 
     @Override
@@ -115,31 +108,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void requestPlaceList(String params)
+    protected void requestFeaturedPlaceList()
     {
-        String stayParams = String.format("dateCheckIn=%s&stays=%d&details=true&%s", mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mNights, params);
 
-        Uri uri = Uri.parse("http://www.daily.com/stay?" + stayParams);
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        List<String> bedTypeList = null;
-        List<String> luxuryList = null;
-
-        for (String parameter : uri.getQueryParameterNames())
-        {
-            if ("bedType".equalsIgnoreCase(parameter) == true)
-            {
-                bedTypeList = uri.getQueryParameters("bedType");
-            } else if ("luxury".equalsIgnoreCase(parameter) == true)
-            {
-                luxuryList = uri.getQueryParameters("luxury");
-            } else
-            {
-                hashMap.put(parameter, uri.getQueryParameter(parameter));
-            }
-        }
-
-        DailyMobileAPI.getInstance(this).requestStayList(mNetworkTag, hashMap, bedTypeList, luxuryList, mStayListJsonResponseListener);
+        DailyMobileAPI.getInstance(this).requestFeaturedPlaceList(mNetworkTag, mFeaturedIndex, "", "", mFeaturedStayListCallback);
     }
 
     @Override
@@ -225,7 +197,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         return getString(R.string.label_count_stay, count);
     }
 
-    private retrofit2.Callback mStayListJsonResponseListener = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mFeaturedStayListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

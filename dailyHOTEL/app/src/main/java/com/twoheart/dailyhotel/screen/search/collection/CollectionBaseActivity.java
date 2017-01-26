@@ -15,43 +15,45 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import org.json.JSONObject;
+
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public abstract class CollectionBaseActivity extends BaseActivity
 {
     private static final String QUERY_TYPE_INDEX = "index";
     private static final String QUERY_TYPE_SEARCH = "search";
 
+    protected static final String INTENT_EXTRA_DATA_INDEX = "index";
+    protected static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
-    protected static final String INTENT_EXTRA_DATA_TITLE_IMAGE_URL = "titleImageUrl";
-    protected static final String INTENT_EXTRA_DATA_QUERY_TYPE = "queryType";
-    protected static final String INTENT_EXTRA_DATA_QUERY = "query";
-    protected static final String INTENT_EXTRA_DATA_SALE_TIME = "saleTime";
-    protected static final String INTENT_EXTRA_DATA_NIGHT = "night";
-    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
-    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+    protected static final String INTENT_EXTRA_DATA_SUBTITLE = "subTitle";
 
     DailyToolbarLayout mDailyToolbarLayout;
     RecyclerView mRecyclerView;
     PlaceListAdapter mPlaceListAdapter;
-    private String[] mPlaceIndexs;
-    private String mQueryType;
-    private String mParams;
     protected SaleTime mStartSaleTime, mEndSaleTime;
+    int mFeaturedIndex;
 
     protected abstract void initIntentTime(Intent intent);
 
-    protected abstract void requestPlaceList(String params);
+    protected abstract void requestFeaturedPlaceList();
 
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
 
@@ -75,35 +77,85 @@ public abstract class CollectionBaseActivity extends BaseActivity
         if (intent == null)
         {
             finish();
+            return;
         }
 
         initIntentTime(intent);
 
+        mFeaturedIndex = intent.getIntExtra(INTENT_EXTRA_DATA_INDEX, -1);
         String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
-        String titleImageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL);
-        mQueryType = intent.getStringExtra(INTENT_EXTRA_DATA_QUERY_TYPE);
-        String query = intent.getStringExtra(INTENT_EXTRA_DATA_QUERY);
+        String subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
+        String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
 
-        initLayout(title, titleImageUrl);
-
-        if (QUERY_TYPE_INDEX.equalsIgnoreCase(mQueryType) == true)
-        {
-            String[] targetIndices = query.split("=");
-            mPlaceIndexs = targetIndices[1].split(",");
-
-            mParams = String.format("targetIndices=%s", URLEncoder.encode(targetIndices[1]));
-        } else if (QUERY_TYPE_SEARCH.equalsIgnoreCase(mQueryType) == true)
-        {
-            mParams = String.format("page=1&limit=100&%s", query);
-        } else
+        if(mFeaturedIndex <= 0)
         {
             finish();
             return;
         }
 
-        lockUI();
+        if(Util.isUsedMultiTransition() == true)
+        {
 
-        requestPlaceList(mParams);
+        } else
+        {
+            initLayout(title, imageUrl);
+
+            lockUI();
+
+            requestCommonDateTime();
+        }
+    }
+
+    private void requestCommonDateTime()
+    {
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+
+                            long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                            long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
+
+                            mStartSaleTime = new SaleTime();
+                            mStartSaleTime.setCurrentTime(currentDateTime);
+                            mStartSaleTime.setDailyTime(dailyDateTime);
+
+                            mEndSaleTime = mStartSaleTime.getClone(1);
+
+                            requestFeaturedPlaceList();
+                        } else
+                        {
+                            String message = responseJSONObject.getString("msg");
+                            onErrorPopupMessage(msgCode, message);
+                        }
+                    } catch (Exception e)
+                    {
+                        onError(e);
+                    }
+                } else
+                {
+                    onErrorResponse(call, response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                onError(t);
+            }
+        });
     }
 
     @Override
@@ -210,7 +262,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                     case CODE_RESULT_ACTIVITY_REFRESH:
                         lockUI();
 
-                        requestPlaceList(mParams);
+                        requestFeaturedPlaceList();
                         break;
                 }
                 break;
@@ -221,7 +273,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
                 lockUI();
 
-                requestPlaceList(mParams);
+                requestFeaturedPlaceList();
                 break;
         }
     }
@@ -278,18 +330,18 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     protected void onPlaceList(ArrayList<Place> list)
     {
-        if (isFinishing() == true)
-        {
-            unLockUI();
-            return;
-        }
-
-        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, mPlaceIndexs);
-
-        mPlaceListAdapter.setAll(placeViewItems);
-        mPlaceListAdapter.notifyDataSetChanged();
-
-        unLockUI();
+//        if (isFinishing() == true)
+//        {
+//            unLockUI();
+//            return;
+//        }
+//
+//        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, mFeaturedIndex);
+//
+//        mPlaceListAdapter.setAll(placeViewItems);
+//        mPlaceListAdapter.notifyDataSetChanged();
+//
+//        unLockUI();
     }
 
     protected View.OnClickListener mOnItemClickListener = new View.OnClickListener()

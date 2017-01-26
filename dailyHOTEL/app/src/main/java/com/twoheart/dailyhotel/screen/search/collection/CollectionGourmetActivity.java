@@ -33,29 +33,23 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 {
     SaleTime mSaleTime;
 
-    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime, String title, String titleImageUrl, String queryType, String query)
+    public static Intent newInstance(Context context, int index)
     {
-        Intent intent = new Intent(context, CollectionGourmetActivity.class);
+        Intent intent = new Intent(context, CollectionStayActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY, query);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, String title, String titleImageUrl, String queryType, String query)
+    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle)
     {
-        Intent intent = new Intent(context, CollectionGourmetActivity.class);
+        Intent intent = new Intent(context, CollectionStayActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_SALE_TIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
-        intent.putExtra(INTENT_EXTRA_DATA_TITLE_IMAGE_URL, titleImageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY_TYPE, queryType);
-        intent.putExtra(INTENT_EXTRA_DATA_QUERY, query);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, index);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE, index);
+        intent.putExtra(INTENT_EXTRA_DATA_SUBTITLE, index);
 
         return intent;
     }
@@ -63,36 +57,36 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     @Override
     protected void initIntentTime(Intent intent)
     {
-        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
-        {
-            mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
-
-            mStartSaleTime = mSaleTime.getClone(0);
-            mEndSaleTime = null;
-        } else
-        {
-            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
-            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
-
-            // 범위 지정인데 이미 날짜가 지난 경우, 초기화
-            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
-            {
-                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Intent eventIntent = new Intent();
-                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
-                        startActivity(eventIntent);
-                    }
-                }, null);
-
-                mEndSaleTime = null;
-            }
-
-            mSaleTime = mStartSaleTime.getClone();
-        }
+//        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
+//        {
+//            mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
+//
+//            mStartSaleTime = mSaleTime.getClone(0);
+//            mEndSaleTime = null;
+//        } else
+//        {
+//            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
+//            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+//
+//            // 범위 지정인데 이미 날짜가 지난 경우, 초기화
+//            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
+//            {
+//                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(View v)
+//                    {
+//                        Intent eventIntent = new Intent();
+//                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
+//                        startActivity(eventIntent);
+//                    }
+//                }, null);
+//
+//                mEndSaleTime = null;
+//            }
+//
+//            mSaleTime = mStartSaleTime.getClone();
+//        }
     }
 
     @Override
@@ -111,35 +105,9 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void requestPlaceList(String params)
+    protected void requestFeaturedPlaceList()
     {
-        String gourmetParams = String.format("reserveDate=%s&details=true&%s", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), params);
-
-        Uri uri = Uri.parse("http://www.daily.com/gourmet?" + gourmetParams);
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        List<String> categoryList = null;
-        List<String> timeList = null;
-        List<String> luxuryList = null;
-
-        for (String parameter : uri.getQueryParameterNames())
-        {
-            if ("category".equalsIgnoreCase(parameter) == true)
-            {
-                categoryList = uri.getQueryParameters("category");
-            } else if ("timeFrame".equalsIgnoreCase(parameter) == true)
-            {
-                timeList = uri.getQueryParameters("timeFrame");
-            } else if ("luxury".equalsIgnoreCase(parameter) == true)
-            {
-                luxuryList = uri.getQueryParameters("luxury");
-            } else
-            {
-                hashMap.put(parameter, uri.getQueryParameter(parameter));
-            }
-        }
-
-        DailyMobileAPI.getInstance(this).requestGourmetList(mNetworkTag, hashMap, categoryList, timeList, luxuryList, mGourmetListCallback);
+        DailyMobileAPI.getInstance(this).requestFeaturedPlaceList(mNetworkTag, mFeaturedIndex, "", "", mFeaturedGourmetListCallback);
     }
 
 
@@ -214,7 +182,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         return getString(R.string.label_count_gourmet, count);
     }
 
-    private retrofit2.Callback mGourmetListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mFeaturedGourmetListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
