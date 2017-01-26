@@ -63,9 +63,6 @@ public class HomeLayout extends BaseLayout
     private int mScrollButtonMaxHeight;
     private int mScrollButtonMinHeight;
 
-    // new 정의
-    private MessageType mMessageType = MessageType.NONE;
-
     private View mActionButtonLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private NestedScrollView mNestedScrollView;
@@ -474,7 +471,6 @@ public class HomeLayout extends BaseLayout
         layout.addView(topButtonLayout);
 
         View topButton = topButtonLayout.findViewById(R.id.topButtonView);
-
         topButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -622,12 +618,6 @@ public class HomeLayout extends BaseLayout
                 mEventCountTextView.setText(spannableString);
             }
         }
-    }
-
-    // message area
-    public void setMessageType(MessageType type)
-    {
-        mMessageType = type;
     }
 
     public void hideMessageLayout()
@@ -996,7 +986,7 @@ public class HomeLayout extends BaseLayout
     {
         if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
         {
-            mNestedScrollView.smoothScrollBy(0, 0);
+            mNestedScrollView.fullScroll(View.FOCUS_UP);
         }
     }
 
