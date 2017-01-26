@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/productLayout"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/productLayout"
                 android:layout_width="match_parent"
-                android:background="@color/white"
-                android:layout_height="82dp">
+                android:layout_height="82dp"
+                android:background="@color/white">
 
     <View
         android:id="@+id/verticalLine"

@@ -38,19 +38,12 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
     @Override
     public int getCount()
     {
-        if (mImageList != null)
-        {
-            if (mImageList.size() == 0)
-            {
-                return 1;
-            } else
-            {
-                return mImageList.size();
-            }
-        } else
-        {
-            return 1;
-        }
+        return mImageList == null || mImageList.size() == 0 ? 1 : mImageList.size();
+    }
+
+    public int getRealCount()
+    {
+        return mImageList == null ? 0 : mImageList.size();
     }
 
     @Override

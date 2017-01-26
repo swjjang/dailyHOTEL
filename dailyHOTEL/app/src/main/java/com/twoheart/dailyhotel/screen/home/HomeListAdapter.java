@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HomeRecommed;
+import com.twoheart.dailyhotel.model.HomeRecommend;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -568,7 +568,7 @@ public class HomeListAdapter extends BaseAdapter
         recommendLayout.setListener(new HomeRecommendLayout.HomeRecommendListener()
         {
             @Override
-            public void onRecommedClick(HomeRecommed recommed, int position)
+            public void onRecommedClick(HomeRecommend recommed, int position)
             {
                 // TODO : 추천 상세로 이동!!!
             }
@@ -581,28 +581,28 @@ public class HomeListAdapter extends BaseAdapter
             public void run()
             {
                 // 임시 테스트 데이터
-                ArrayList<HomeRecommed> recommendList = new ArrayList<>();
+                ArrayList<HomeRecommend> recommendList = new ArrayList<>();
                 Random random = new Random();
                 int size = random.nextInt(8);
                 for (int i = 0; i < size; i++)
                 {
-                    HomeRecommed homeRecommed = new HomeRecommed();
+                    HomeRecommend homeRecommend = new HomeRecommend();
 
-                    homeRecommed.title = "Recommend " + i;
-                    homeRecommed.description = " Recommend description " + i;
-                    homeRecommed.count = Math.abs(random.nextInt(11));
+                    homeRecommend.title = "Recommend " + i;
+                    homeRecommend.description = " Recommend description " + i;
+                    homeRecommend.count = Math.abs(random.nextInt(11));
 
                     if (i % 3 == 0)
                     {
-                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+                        homeRecommend.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
                     } else if (i % 3 == 1)
                     {
-                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+                        homeRecommend.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
                     } else
                     {
-                        homeRecommed.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+                        homeRecommend.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
                     }
-                    recommendList.add(homeRecommed);
+                    recommendList.add(homeRecommend);
                 }
                 recommendLayout.setData(recommendList, true);
                 // 임시 테스트 데이터 끝!

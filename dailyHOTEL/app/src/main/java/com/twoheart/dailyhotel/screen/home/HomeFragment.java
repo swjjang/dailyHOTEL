@@ -82,17 +82,11 @@ public class HomeFragment extends BaseFragment
 
             // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
             mNetworkController.requestCommonDateTime();
+            requestMessageData();
 
-            if (DailyHotel.isLogin() == true)
-            {
-                // TODO : request review data;
-                mNetworkController.requestReviewInformation();
-            } else
-            {
-                requestTextMessage();
-            }
         }
 
+        // 애니메이션 처리!
         if (mHomeLayout != null)
         {
             mHomeLayout.onResumeReviewAnimation();
@@ -144,6 +138,46 @@ public class HomeFragment extends BaseFragment
             {
                 break;
             }
+        }
+    }
+
+    private void requestMessageData()
+    {
+        if (mHomeLayout == null)
+        {
+            return;
+        }
+
+        HomeLayout.MessageType messageType = HomeLayout.MessageType.NONE;
+
+        if (DailyHotel.isLogin() == true)
+        {
+            boolean isLoginAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLoginEnabled();
+            if (isLoginAreaEnable == true)
+            {
+                messageType = HomeLayout.MessageType.REVIEW;
+            }
+        } else
+        {
+            boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
+            if (isLogoutAreaEnable == true)
+            {
+                messageType = HomeLayout.MessageType.TEXT;
+            }
+        }
+
+        mHomeLayout.setMessageType(messageType);
+
+        if (HomeLayout.MessageType.REVIEW == messageType)
+        {
+            // TODO : request review data;
+            mNetworkController.requestReviewInformation();
+        } else if (HomeLayout.MessageType.TEXT == messageType)
+        {
+            requestTextMessage();
+        } else
+        {
+            mHomeLayout.hideMessageLayout();
         }
     }
 
