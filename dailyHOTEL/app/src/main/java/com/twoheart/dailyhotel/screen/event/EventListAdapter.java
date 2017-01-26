@@ -8,7 +8,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Event;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -97,7 +97,13 @@ public class EventListAdapter extends ArrayAdapter<Event>
         com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
         Event event = getItem(position);
 
-        Util.requestImageResize(mContext, imageView, event.imageUrl);
+        if (Util.getLCDWidth(mContext) < 1440)
+        {
+            Util.requestImageResize(mContext, imageView, event.lowResolutionImageUrl);
+        } else
+        {
+            Util.requestImageResize(mContext, imageView, event.defaultImageUrl);
+        }
 
         return view;
     }

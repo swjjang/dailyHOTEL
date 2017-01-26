@@ -303,7 +303,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    void requestEventList(String tag, Object listener);
+    void requestEventList(String tag, String store, Object listener);
 
     /**
      * api/daily/event/count

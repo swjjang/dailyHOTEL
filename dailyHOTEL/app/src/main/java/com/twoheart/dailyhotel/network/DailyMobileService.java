@@ -170,8 +170,9 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestStayReceipt(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reservation_idx") String index);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<JSONObject> requestEventList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Call<JSONObject> requestEventList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("store") String store);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

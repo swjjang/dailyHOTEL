@@ -7,7 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Event;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -28,7 +28,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 {
     View mEmptyView;
     ListView mListView;
-    Event mSelectedEvent;
     EventListAdapter mEventListAdapter;
     private EventListNetworkController mEventListNetworkController;
     private boolean mDontReload;
@@ -137,8 +136,12 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         lockUI();
 
-        mSelectedEvent = mEventListAdapter.getItem(position);
-        mEventListNetworkController.requestEventPageUrl(mSelectedEvent);
+        Event event = mEventListAdapter.getItem(position);
+
+        startEventWeb(event.linkUrl, event.title);
+
+        AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+            , AnalyticsManager.Action.EVENT_CLICKED, event.title, null);
     }
 
     @Override
@@ -179,15 +182,6 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
     private EventListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new EventListNetworkController.OnNetworkControllerListener()
     {
-        @Override
-        public void processEventPage(String eventUrl)
-        {
-            startEventWeb(eventUrl, mSelectedEvent.name);
-
-            AnalyticsManager.getInstance(EventListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , AnalyticsManager.Action.EVENT_CLICKED, mSelectedEvent.name, null);
-        }
-
         @Override
         public void onEventListResponse(List<Event> eventList)
         {
