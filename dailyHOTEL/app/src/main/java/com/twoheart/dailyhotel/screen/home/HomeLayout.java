@@ -94,6 +94,8 @@ public class HomeLayout extends BaseLayout
         void onRefreshAll(boolean isShowProgress);
 
         void onTopButtonClick();
+
+        void onEventItemClick(HomeEvent event);
     }
 
     public enum MessageType

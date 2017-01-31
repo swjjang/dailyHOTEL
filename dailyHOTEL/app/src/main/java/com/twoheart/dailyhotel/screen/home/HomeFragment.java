@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.model.HomeEvent;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
@@ -143,6 +144,12 @@ public class HomeFragment extends BaseFragment
             {
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_EVENTWEB:
+            {
+                mDontReload = true;
+                break;
+            }
         }
     }
 
@@ -217,6 +224,17 @@ public class HomeFragment extends BaseFragment
         }
 
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+    }
+
+    private void startEventListActivity(String url, String eventName)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            return;
+        }
+
+        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.EVENT, url, eventName);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
@@ -294,6 +312,16 @@ public class HomeFragment extends BaseFragment
         public void onTopButtonClick()
         {
             mHomeLayout.setScrollTop();
+        }
+
+        @Override
+        public void onEventItemClick(HomeEvent event)
+        {
+            if (event == null) {
+                return;
+            }
+
+            HomeFragment.this.startEventListActivity(event.linkUrl, event.title);
         }
 
         @Override
