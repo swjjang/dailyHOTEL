@@ -2,7 +2,10 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
 
+import com.twoheart.dailyhotel.model.ImageInformation;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -10,6 +13,9 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -30,6 +36,10 @@ public class HomeNetworkController extends BaseNetworkController
         void onCommonDateTime(long currentDateTime, long dailyDateTime);
 
         void onReviewInformation(Review review);
+
+        void onEventListInformation(ArrayList<ImageInformation> list);
+
+        void onWishList(ArrayList<? extends Place> list);
     }
 
     public void requestCommonDateTime()
@@ -40,6 +50,45 @@ public class HomeNetworkController extends BaseNetworkController
     public void requestReviewInformation()
     {
         DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, mReviewStayCallback);
+    }
+
+    public void requestEventList()
+    {
+        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventListInformation(null);
+    }
+
+    public void requestWishList()
+    {
+        // 임시 테스트 데이터
+        ArrayList<Stay> placeList = new ArrayList<>();
+        Random random = new Random();
+        int size = random.nextInt(14);
+        for (int i = 0; i < size; i++)
+        {
+            Stay stay = new Stay();
+
+            stay.price = Math.abs(random.nextInt(100000));
+            stay.name = "Stay " + i;
+            stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
+            stay.districtName = "서울";
+            stay.isSoldOut = i % 5 == 0;
+
+            if (i % 3 == 0)
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+            } else if (i % 3 == 1)
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+            } else
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+            }
+            placeList.add(stay);
+
+            stay.setGrade(Stay.Grade.special2);
+        }
+
+        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(placeList);
     }
 
     private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<JSONObject>()

@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.ImageInformation;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -22,6 +24,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -83,7 +87,8 @@ public class HomeFragment extends BaseFragment
             // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
             mNetworkController.requestCommonDateTime();
             requestMessageData();
-
+            mNetworkController.requestEventList();
+            mNetworkController.requestWishList();
         }
 
         // 애니메이션 처리!
@@ -165,8 +170,6 @@ public class HomeFragment extends BaseFragment
                 messageType = HomeLayout.MessageType.TEXT;
             }
         }
-
-        mHomeLayout.setMessageType(messageType);
 
         if (HomeLayout.MessageType.REVIEW == messageType)
         {
@@ -325,6 +328,22 @@ public class HomeFragment extends BaseFragment
             if (mHomeLayout != null)
             {
                 mHomeLayout.setReviewData(review);
+            }
+        }
+
+        @Override
+        public void onEventListInformation(ArrayList<ImageInformation> list)
+        {
+            if (mHomeLayout != null) {
+                mHomeLayout.setEventImageList(null);
+            }
+        }
+
+        @Override
+        public void onWishList(ArrayList<? extends Place> list)
+        {
+            if (mHomeLayout != null) {
+                mHomeLayout.setWishListData(list);
             }
         }
 
