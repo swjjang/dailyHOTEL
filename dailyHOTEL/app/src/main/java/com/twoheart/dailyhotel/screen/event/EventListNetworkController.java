@@ -2,15 +2,12 @@ package com.twoheart.dailyhotel.screen.event;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.model.Event;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +19,6 @@ public class EventListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void processEventPage(String eventUrl);
-
         void onEventListResponse(List<Event> eventList);
     }
 
@@ -33,11 +28,6 @@ public class EventListNetworkController extends BaseNetworkController
     }
 
     public void requestEventList()
-    {
-        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, mDailyEventListCallback);
-    }
-
-    public void requestEventPageUrl(Event event)
     {
         String store;
 
@@ -49,66 +39,41 @@ public class EventListNetworkController extends BaseNetworkController
             store = "skt";
         }
 
-        DailyMobileAPI.getInstance(mContext).requestEventPageUrl(mNetworkTag, event.index, store, mDailyEventPageJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, store, mDailyEventListCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mDailyEventListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mDailyEventListCallback = new retrofit2.Callback<BaseListDto<Event>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseListDto<Event>> call, Response<BaseListDto<Event>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseListDto<Event> baseListDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msg_code");
-
-                    if (msgCode != 0)
+                    if (baseListDto.msgCode == 100)
                     {
-                        if (responseJSONObject.has("msg") == true)
-                        {
-                            String message = responseJSONObject.getString("msg");
+                        ArrayList<Event> arrayList = (ArrayList<Event>) baseListDto.data;
 
-                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                        }
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
-                    } else
-                    {
-                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
-
-                        if (dataJSONArray == null)
+                        if (arrayList == null && arrayList.size() == 0)
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                         } else
                         {
-                            int length = dataJSONArray.length();
-
-                            if (length == 0)
-                            {
-                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
-                            } else
-                            {
-                                ArrayList<Event> eventList = new ArrayList<>(length);
-
-                                for (int i = 0; i < length; i++)
-                                {
-                                    eventList.add(new Event(dataJSONArray.getJSONObject(i)));
-                                }
-
-                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(eventList);
-                            }
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(arrayList);
                         }
+                    } else
+                    {
+                        mOnNetworkControllerListener.onErrorPopupMessage(baseListDto.msgCode, baseListDto.msg);
                     }
                 } catch (Exception e)
                 {
-                    ExLog.d(e.toString());
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                 }
             } else
@@ -118,49 +83,7 @@ public class EventListNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(t);
-        }
-    };
-
-    private retrofit2.Callback mDailyEventPageJsonResponseListener = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msg_code");
-
-                    if (msgCode != 0)
-                    {
-                        if (responseJSONObject.has("msg") == true)
-                        {
-                            String message = responseJSONObject.getString("msg");
-                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                        }
-                    } else
-                    {
-                        String eventUrl = responseJSONObject.getJSONObject("data").getString("url");
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).processEventPage(eventUrl);
-                    }
-                } catch (Exception e)
-                {
-                    mOnNetworkControllerListener.onError(e);
-                }
-            } else
-            {
-                mOnNetworkControllerListener.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseListDto<Event>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
         }

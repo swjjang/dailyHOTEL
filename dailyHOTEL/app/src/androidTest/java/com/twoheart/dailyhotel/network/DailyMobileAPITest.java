@@ -3429,7 +3429,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, networkCallback);
+        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, "google", networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
