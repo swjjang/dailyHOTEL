@@ -43,8 +43,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static com.facebook.FacebookSdk.getCacheDir;
-
 /**
  * Created by android_sam on 2017. 1. 11..
  */
@@ -474,8 +472,8 @@ public class HomeLayout extends BaseLayout
             return HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL;
         } else
         {
-            String fileName = Util.makeIntroImageFileName(homeEventCurrentVersion);
-            File file = new File(getCacheDir(), fileName);
+            String fileName = Util.makeImageFileName(homeEventCurrentVersion);
+            File file = new File(mContext.getCacheDir(), fileName);
 
             if (file.exists() == false)
             {
@@ -513,7 +511,7 @@ public class HomeLayout extends BaseLayout
             String url = getDefaultEventImage();
 
             list = new ArrayList<>();
-            list.add(new HomeEvent(url));
+            list.add(new HomeEvent(url, null, null));
         }
 
         if (mEventViewPagerAdapter == null)

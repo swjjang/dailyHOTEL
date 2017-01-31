@@ -15,11 +15,10 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Holiday;
-import com.twoheart.dailyhotel.network.model.HomeEvents;
+import com.twoheart.dailyhotel.network.model.HomeEvent;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -1058,6 +1057,6 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeEvents(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomeEvents>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<HomeEvent>>) listener);
     }
 }

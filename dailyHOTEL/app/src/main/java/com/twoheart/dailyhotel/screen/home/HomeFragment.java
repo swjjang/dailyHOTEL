@@ -317,7 +317,8 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onEventItemClick(HomeEvent event)
         {
-            if (event == null) {
+            if (event == null)
+            {
                 return;
             }
 
@@ -360,14 +361,10 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onEventList(String serverDate, ArrayList<HomeEvent> list)
+        public void onEventList(ArrayList<HomeEvent> list)
         {
-//            mSaleTime = new SaleTime();
-//            mSaleTime.setCurrentTime(serverDate);
-////            mSaleTime.setDailyTime(dailyDateTime);
-//            mSaleTime.setOffsetDailyDay(0);
-
-            if (mHomeLayout != null) {
+            if (mHomeLayout != null)
+            {
                 mHomeLayout.setEventList(list);
             }
         }
@@ -375,7 +372,8 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onWishList(ArrayList<? extends Place> list)
         {
-            if (mHomeLayout != null) {
+            if (mHomeLayout != null)
+            {
                 mHomeLayout.setWishListData(list);
             }
         }

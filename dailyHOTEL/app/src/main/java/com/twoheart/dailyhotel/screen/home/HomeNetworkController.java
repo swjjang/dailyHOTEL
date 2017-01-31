@@ -6,9 +6,8 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.HomeEvent;
-import com.twoheart.dailyhotel.network.model.HomeEvents;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -40,7 +39,7 @@ public class HomeNetworkController extends BaseNetworkController
 
         void onReviewInformation(Review review);
 
-        void onEventList(String serverDate, ArrayList<HomeEvent> list);
+        void onEventList(ArrayList<HomeEvent> list);
 
         void onWishList(ArrayList<? extends Place> list);
     }
@@ -57,7 +56,7 @@ public class HomeNetworkController extends BaseNetworkController
 
     public void requestEventList()
     {
-        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, mEventCallback);
+        DailyMobileAPI.getInstance(mContext).requestHomeEvents(mNetworkTag, mEventCallback);
     }
 
     public void requestWishList()
@@ -178,42 +177,39 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mEventCallback = new Callback<BaseDto<HomeEvents>>()
+    private retrofit2.Callback mEventCallback = new Callback<BaseListDto<HomeEvent>>()
     {
         @Override
-        public void onResponse(Call<BaseDto<HomeEvents>> call, Response<BaseDto<HomeEvents>> response)
+        public void onResponse(Call<BaseListDto<HomeEvent>> call, Response<BaseListDto<HomeEvent>> response)
         {
 
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    BaseDto<HomeEvents> baseDto = response.body();
+                    BaseListDto<HomeEvent> baseListDto = response.body();
 
-                    if (baseDto.msgCode == 100)
+                    if (baseListDto.msgCode == 100)
                     {
-                        HomeEvents homeEvents = baseDto.data;
+                        ArrayList<HomeEvent> homeEventList = (ArrayList<HomeEvent>) baseListDto.data;
 
-                        String serverDate = homeEvents.serverDate;
-                        ArrayList<HomeEvent> homeEventArrayList = (ArrayList<HomeEvent>) homeEvents.list;
-
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(serverDate, homeEventArrayList);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(homeEventList);
                     }
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
-                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null, null);
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null);
                 }
             } else
             {
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null, null);
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null);
             }
         }
 
         @Override
         public void onFailure(Call call, Throwable t)
         {
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null, null);
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null);
         }
     };
 }

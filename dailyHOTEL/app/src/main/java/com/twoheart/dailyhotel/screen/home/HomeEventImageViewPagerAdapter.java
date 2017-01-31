@@ -81,8 +81,8 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
             String url = homeEvent.defaultImageUrl;
             if (DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(url) == true)
             {
-                // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
-                imageView.setImageResource(R.drawable.banner);
+                // RemoteConfig 실패등의 상황에서 기본 layerlist_placeholder 만 노출
+//                imageView.setImageResource(R.drawable.banner);
             } else
             {
                 Util.requestImageResize(mContext, imageView, url);

@@ -40,8 +40,11 @@ public class HomeEvent implements Parcelable
     }
 
     // 로컬 저장용 홈 이벤트 처리를 위한 생성자
-    public HomeEvent(String defaultImageUrl) {
+    public HomeEvent(String defaultImageUrl, String title, String linkUrl)
+    {
         this.defaultImageUrl = defaultImageUrl;
+        this.title = title;
+        this.linkUrl = linkUrl;
     }
 
     public HomeEvent(Parcel in)
