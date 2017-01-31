@@ -25,7 +25,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.network.model.HomeEvent;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -93,7 +93,7 @@ public class HomeLayout extends BaseLayout
 
         void onTopButtonClick();
 
-        void onEventItemClick(HomeEvent event);
+        void onEventItemClick(Event event);
     }
 
     public enum MessageType
@@ -504,14 +504,14 @@ public class HomeLayout extends BaseLayout
         }
     }
 
-    public void setEventList(ArrayList<HomeEvent> list)
+    public void setEventList(ArrayList<Event> list)
     {
         if (list == null || list.size() == 0)
         {
             String url = getDefaultEventImage();
 
             list = new ArrayList<>();
-            list.add(new HomeEvent(url, null, null));
+            list.add(new Event(url, url, null, null));
         }
 
         if (mEventViewPagerAdapter == null)
@@ -528,9 +528,9 @@ public class HomeLayout extends BaseLayout
                         return;
                     }
 
-                    if (tag instanceof HomeEvent)
+                    if (tag instanceof Event)
                     {
-                        HomeEvent homeEvent = (HomeEvent) tag;
+                        Event homeEvent = (Event) tag;
                         String defaultImageUrl = homeEvent.defaultImageUrl;
 
                         if (HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultImageUrl) == true)

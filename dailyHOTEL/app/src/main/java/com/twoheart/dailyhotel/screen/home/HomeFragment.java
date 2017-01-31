@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.network.model.HomeEvent;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
@@ -315,7 +315,7 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onEventItemClick(HomeEvent event)
+        public void onEventItemClick(Event event)
         {
             if (event == null)
             {
@@ -361,7 +361,7 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onEventList(ArrayList<HomeEvent> list)
+        public void onEventList(ArrayList<Event> list)
         {
             if (mHomeLayout != null)
             {

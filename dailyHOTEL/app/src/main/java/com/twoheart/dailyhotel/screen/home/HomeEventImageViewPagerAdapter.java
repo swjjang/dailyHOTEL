@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.HomeEvent;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
     public static final String DEFAULT_EVENT_IMAGE_URL = "defaultImageUrl";
 
     private Context mContext;
-    private List<HomeEvent> mHomeEventList;
+    private List<Event> mHomeEventList;
     private View.OnClickListener mClickListener;
 
     public HomeEventImageViewPagerAdapter(Context context, View.OnClickListener clickListener)
@@ -32,7 +32,7 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
         mClickListener = clickListener;
     }
 
-    public void setData(List<HomeEvent> list)
+    public void setData(List<Event> list)
     {
         mHomeEventList = list;
     }
@@ -71,14 +71,14 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
 
         if (position < mHomeEventList.size())
         {
-            HomeEvent homeEvent = mHomeEventList.get(position);
+            Event homeEvent = mHomeEventList.get(position);
 
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
 //            imageView.setTag(imageView.getId(), position);
             imageView.setTag(homeEvent);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            String url = homeEvent.defaultImageUrl;
+            String url = Util.getLCDWidth(mContext) < 1440 ? homeEvent.lowResolutionImageUrl : homeEvent.defaultImageUrl;
             if (DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(url) == true)
             {
                 // RemoteConfig 실패등의 상황에서 기본 layerlist_placeholder 만 노출

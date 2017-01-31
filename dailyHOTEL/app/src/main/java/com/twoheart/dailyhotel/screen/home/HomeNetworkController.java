@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
-import com.twoheart.dailyhotel.network.model.HomeEvent;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -39,7 +39,7 @@ public class HomeNetworkController extends BaseNetworkController
 
         void onReviewInformation(Review review);
 
-        void onEventList(ArrayList<HomeEvent> list);
+        void onEventList(ArrayList<Event> list);
 
         void onWishList(ArrayList<? extends Place> list);
     }
@@ -177,21 +177,21 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mEventCallback = new Callback<BaseListDto<HomeEvent>>()
+    private retrofit2.Callback mEventCallback = new Callback<BaseListDto<Event>>()
     {
         @Override
-        public void onResponse(Call<BaseListDto<HomeEvent>> call, Response<BaseListDto<HomeEvent>> response)
+        public void onResponse(Call<BaseListDto<Event>> call, Response<BaseListDto<Event>> response)
         {
 
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    BaseListDto<HomeEvent> baseListDto = response.body();
+                    BaseListDto<Event> baseListDto = response.body();
 
                     if (baseListDto.msgCode == 100)
                     {
-                        ArrayList<HomeEvent> homeEventList = (ArrayList<HomeEvent>) baseListDto.data;
+                        ArrayList<Event> homeEventList = (ArrayList<Event>) baseListDto.data;
 
                         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(homeEventList);
                     }
