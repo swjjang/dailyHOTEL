@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
@@ -89,6 +90,7 @@ public class HomeFragment extends BaseFragment
             mNetworkController.requestCommonDateTime();
             requestMessageData();
             mNetworkController.requestEventList();
+            mNetworkController.requestRecommendationList();
             mNetworkController.requestWishList();
         }
 
@@ -375,6 +377,15 @@ public class HomeFragment extends BaseFragment
             if (mHomeLayout != null)
             {
                 mHomeLayout.setWishListData(list);
+            }
+        }
+
+        @Override
+        public void onRecommendationList(ArrayList<Recommendation> list)
+        {
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.setRecommendationData(list);
             }
         }
 

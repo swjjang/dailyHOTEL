@@ -14,7 +14,7 @@ public class Event implements Parcelable
     public String defaultImageUrl;
 
     @JsonField(name = "endedAt")
-    public String endedAt;
+    public String endedAt; // ISO-8601
 
     @JsonField(name = "exposeHome")
     public boolean exposeHome;
@@ -26,7 +26,7 @@ public class Event implements Parcelable
     public String lowResolutionImageUrl;
 
     @JsonField(name = "startedAt")
-    public String startedAt;
+    public String startedAt; // ISO-8601
 
     @JsonField(name = "title")
     public String title;

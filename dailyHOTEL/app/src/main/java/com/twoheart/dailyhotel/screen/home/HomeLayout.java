@@ -20,12 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HomeRecommend;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -72,7 +72,7 @@ public class HomeLayout extends BaseLayout
     private View mReviewMessageLayout;
     private HomeCarouselLayout mRecentListLayout;
     private HomeCarouselLayout mWishListLayout;
-    private HomeRecommendLayout mHomeRecommendLayout;
+    private HomeRecommendationLayout mHomeRecommendationLayout;
 
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
 
@@ -209,7 +209,7 @@ public class HomeLayout extends BaseLayout
         initMessageLayout(mHomeContentLayout);
         initWishListLayout(mHomeContentLayout);
         initRecentListLayout(mHomeContentLayout);
-        initRecommendLayout(mHomeContentLayout);
+        initRecommendationLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);
     }
 
@@ -367,59 +367,27 @@ public class HomeLayout extends BaseLayout
         }, 5000);
     }
 
-    private void initRecommendLayout(LinearLayout layout)
+    private void initRecommendationLayout(LinearLayout layout)
     {
         if (layout == null || mContext == null)
         {
             return;
         }
 
-        mHomeRecommendLayout = new HomeRecommendLayout(mContext);
-        mHomeRecommendLayout.setListener(new HomeRecommendLayout.HomeRecommendListener()
+        mHomeRecommendationLayout = new HomeRecommendationLayout(mContext);
+        mHomeRecommendationLayout.setListener(new HomeRecommendationLayout.HomeRecommendationListener()
         {
             @Override
-            public void onRecommedClick(HomeRecommend recommed, int position)
+            public void onRecommendationClick(Recommendation recommendation, int position)
             {
                 // TODO : 추천 상세로 이동!!!
             }
         });
 
-        layout.addView(mHomeRecommendLayout);
+        layout.addView(mHomeRecommendationLayout);
 
-        // Test Data
-        mHomeRecommendLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                // 임시 테스트 데이터
-                ArrayList<HomeRecommend> recommendList = new ArrayList<>();
-                Random random = new Random();
-                int size = random.nextInt(8);
-                for (int i = 0; i < size; i++)
-                {
-                    HomeRecommend homeRecommend = new HomeRecommend();
 
-                    homeRecommend.title = "Recommend " + i;
-                    homeRecommend.description = " Recommend description " + i;
-                    homeRecommend.count = Math.abs(random.nextInt(11));
-
-                    if (i % 3 == 0)
-                    {
-                        homeRecommend.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-                    } else if (i % 3 == 1)
-                    {
-                        homeRecommend.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-                    } else
-                    {
-                        homeRecommend.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
-                    }
-                    recommendList.add(homeRecommend);
-                }
-                mHomeRecommendLayout.setData(recommendList, true);
-                // 임시 테스트 데이터 끝!
-            }
-        }, 5000);
+        setRecommendationData(null);
     }
 
     private void initTopButtonLayout(LinearLayout layout)
@@ -828,6 +796,11 @@ public class HomeLayout extends BaseLayout
     public void setWishListData(ArrayList<? extends Place> list)
     {
         mWishListLayout.setData(list);
+    }
+
+    public void setRecommendationData(ArrayList<Recommendation> list)
+    {
+        mHomeRecommendationLayout.setData(list);
     }
 
     private void startMessageLayoutShowAnimation(final View view)

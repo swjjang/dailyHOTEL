@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -42,6 +43,8 @@ public class HomeNetworkController extends BaseNetworkController
         void onEventList(ArrayList<Event> list);
 
         void onWishList(ArrayList<? extends Place> list);
+
+        void onRecommendationList(ArrayList<Recommendation> list);
     }
 
     public void requestCommonDateTime()
@@ -91,6 +94,10 @@ public class HomeNetworkController extends BaseNetworkController
         }
 
         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(placeList);
+    }
+
+    public void requestRecommendationList() {
+        DailyMobileAPI.getInstance(mContext).requestRecommendationList(mNetworkTag, mRecommendationCallback);
     }
 
     private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<JSONObject>()
@@ -210,6 +217,42 @@ public class HomeNetworkController extends BaseNetworkController
         public void onFailure(Call call, Throwable t)
         {
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null);
+        }
+    };
+
+    private retrofit2.Callback mRecommendationCallback = new Callback<BaseListDto<Recommendation>>()
+    {
+        @Override
+        public void onResponse(Call<BaseListDto<Recommendation>> call, Response<BaseListDto<Recommendation>> response)
+        {
+
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseListDto<Recommendation> baseListDto = response.body();
+
+                    if (baseListDto.msgCode == 100)
+                    {
+                        ArrayList<Recommendation> recommendationList = (ArrayList<Recommendation>) baseListDto.data;
+
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(recommendationList);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
+                }
+            } else
+            {
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, Throwable t)
+        {
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
         }
     };
 }

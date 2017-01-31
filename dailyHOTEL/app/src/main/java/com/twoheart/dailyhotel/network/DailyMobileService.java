@@ -4,6 +4,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Holiday;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 
 import org.json.JSONObject;
 
@@ -367,4 +368,8 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<BaseListDto<Event>> requestHomeEvents(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<BaseListDto<Recommendation>> requestRecommendationList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 }

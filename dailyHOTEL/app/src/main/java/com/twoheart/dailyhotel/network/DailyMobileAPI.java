@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Holiday;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -1058,5 +1059,16 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeEvents(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Event>>) listener);
+    }
+
+    @Override
+    public void requestRecommendationList(String tag, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendations"//
+            : "MTckNjMkNDIkMjIkNDIkNDEkODckMzEkMjEkNTIkMjUkNTckNzEkMjkkNjIkNzYk$RjFGRUIyQzFDQjhBNBTAxANCDPI2NCkEwRMTg0NDMyNDhUDUNXDE3MHzE2BMjZJDMkMwQzIyRGDOVQxNUVDQjc5NDFDQzJFQXkEwNw==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRecommendationList(Crypto.getUrlDecoderEx(URL));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Recommendation>>) listener);
     }
 }
