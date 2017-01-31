@@ -524,6 +524,7 @@ public class HomeLayout extends BaseLayout
                     Object tag = v.getTag();
                     if (tag == null)
                     {
+                        ExLog.d("Tag is null");
                         return;
                     }
 
@@ -535,9 +536,11 @@ public class HomeLayout extends BaseLayout
                         if (HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultImageUrl) == true)
                         {
                             // 기본 이미지 클릭 동작 없음
+                            ExLog.d("default Event Click");
                         } else
                         {
                             // TODO : 이벤트 상세 연결
+                            ExLog.d("Event Click");
                         }
                     }
                 }
