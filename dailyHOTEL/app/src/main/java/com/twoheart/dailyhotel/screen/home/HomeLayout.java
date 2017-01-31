@@ -513,6 +513,9 @@ public class HomeLayout extends BaseLayout
 
         setEventCountView(1, mEventViewPagerAdapter.getCount());
 
+        mEventViewPager.removeAllViews();
+        mEventViewPager.clearOnPageChangeListeners();
+
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
         mEventViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
