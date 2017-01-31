@@ -82,7 +82,7 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
             if (DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(url) == true)
             {
                 // RemoteConfig 실패등의 상황에서 기본 layerlist_placeholder 만 노출
-//                imageView.setImageResource(R.drawable.banner);
+                imageView.setImageURI((String) null);
             } else
             {
                 Util.requestImageResize(mContext, imageView, url);

@@ -462,14 +462,14 @@ public class HomeLayout extends BaseLayout
     }
 
     // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
-    private String getDefaultEventImage()
+    private Event getDefaultEvent()
     {
         String homeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
 
         if (Util.isTextEmpty(homeEventCurrentVersion) == true  //
             || Constants.DAILY_HOME_EVENT_CURRENT_VERSION.equalsIgnoreCase(homeEventCurrentVersion) == true)
         {
-            return HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL;
+            return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
         } else
         {
             String fileName = Util.makeImageFileName(homeEventCurrentVersion);
@@ -478,7 +478,7 @@ public class HomeLayout extends BaseLayout
             if (file.exists() == false)
             {
                 DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(Constants.DAILY_HOME_EVENT_CURRENT_VERSION);
-                return HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL;
+                return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
             } else
             {
                 String urlString = null;
@@ -495,10 +495,10 @@ public class HomeLayout extends BaseLayout
                 if (Util.isTextEmpty(urlString) == true)
                 {
                     DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(Constants.DAILY_HOME_EVENT_CURRENT_VERSION);
-                    return HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL;
+                    return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
                 } else
                 {
-                    return urlString;
+                    return new Event(urlString, urlString, null, null);
                 }
             }
         }
@@ -508,10 +508,8 @@ public class HomeLayout extends BaseLayout
     {
         if (list == null || list.size() == 0)
         {
-            String url = getDefaultEventImage();
-
             list = new ArrayList<>();
-            list.add(new Event(url, url, null, null));
+            list.add(getDefaultEvent());
         }
 
         if (mEventViewPagerAdapter == null)
