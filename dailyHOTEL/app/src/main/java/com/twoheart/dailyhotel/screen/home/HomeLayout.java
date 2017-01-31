@@ -21,11 +21,11 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.HomeRecommend;
-import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.network.model.HomeEvent;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -230,7 +230,7 @@ public class HomeLayout extends BaseLayout
         params.height = getEventImageHeight(mContext);
         mEventViewPager.setLayoutParams(params);
 
-        setEventImageList(null);
+        setEventList(null);
     }
 
     private void initScrollButtonLayout(LinearLayout layout)
@@ -462,7 +462,7 @@ public class HomeLayout extends BaseLayout
     }
 
     // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
-    private String getDefaultImage()
+    private String getDefaultEventImage()
     {
         String homeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
 
@@ -504,19 +504,44 @@ public class HomeLayout extends BaseLayout
         }
     }
 
-    public void setEventImageList(ArrayList<ImageInformation> list)
+    public void setEventList(ArrayList<HomeEvent> list)
     {
         if (list == null || list.size() == 0)
         {
-            String url = getDefaultImage();
+            String url = getDefaultEventImage();
 
             list = new ArrayList<>();
-            list.add(new ImageInformation(url, null));
+            list.add(new HomeEvent(url));
         }
 
         if (mEventViewPagerAdapter == null)
         {
-            mEventViewPagerAdapter = new HomeEventImageViewPagerAdapter(mContext);
+            mEventViewPagerAdapter = new HomeEventImageViewPagerAdapter(mContext, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Object tag = v.getTag();
+                    if (tag == null)
+                    {
+                        return;
+                    }
+
+                    if (tag instanceof HomeEvent)
+                    {
+                        HomeEvent homeEvent = (HomeEvent) tag;
+                        String defaultImageUrl = homeEvent.defaultImageUrl;
+
+                        if (HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultImageUrl) == true)
+                        {
+                            // 기본 이미지 클릭 동작 없음
+                        } else
+                        {
+                            // TODO : 이벤트 상세 연결
+                        }
+                    }
+                }
+            });
         }
 
         mEventViewPagerAdapter.setData(list);

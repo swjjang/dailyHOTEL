@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.HomeEvent;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -23,27 +23,29 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
     public static final String DEFAULT_EVENT_IMAGE_URL = "defaultImageUrl";
 
     private Context mContext;
-    private List<ImageInformation> mImageList;
+    private List<HomeEvent> mHomeEventList;
+    private View.OnClickListener mClickListener;
 
-    public HomeEventImageViewPagerAdapter(Context context)
+    public HomeEventImageViewPagerAdapter(Context context, View.OnClickListener clickListener)
     {
         mContext = context;
+        mClickListener = clickListener;
     }
 
-    public void setData(List<ImageInformation> list)
+    public void setData(List<HomeEvent> list)
     {
-        mImageList = list;
+        mHomeEventList = list;
     }
 
     @Override
     public int getCount()
     {
-        return mImageList == null || mImageList.size() == 0 ? 1 : mImageList.size();
+        return mHomeEventList == null || mHomeEventList.size() == 0 ? 1 : mHomeEventList.size();
     }
 
     public int getRealCount()
     {
-        return mImageList == null ? 0 : mImageList.size();
+        return mHomeEventList == null ? 0 : mHomeEventList.size();
     }
 
     @Override
@@ -54,10 +56,11 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
 
         final SimpleDraweeView imageView = new SimpleDraweeView(mContext);
 
-        if (mImageList == null || mImageList.size() == 0 || position < 0)
+        if (mHomeEventList == null || mHomeEventList.size() == 0 || position < 0)
         {
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-            imageView.setTag(imageView.getId(), position);
+//            imageView.setTag(imageView.getId(), position);
+            imageView.setTag(null);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
@@ -66,13 +69,16 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
             return imageView;
         }
 
-        if (position < mImageList.size())
+        if (position < mHomeEventList.size())
         {
+            HomeEvent homeEvent = mHomeEventList.get(position);
+
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-            imageView.setTag(imageView.getId(), position);
+//            imageView.setTag(imageView.getId(), position);
+            imageView.setTag(homeEvent);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            String url = mImageList.get(position).url;
+            String url = homeEvent.defaultImageUrl;
             if (DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(url) == true)
             {
                 // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
@@ -81,6 +87,8 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
             {
                 Util.requestImageResize(mContext, imageView, url);
             }
+
+            imageView.setOnClickListener(mClickListener);
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
             container.addView(imageView, 0, layoutParams);

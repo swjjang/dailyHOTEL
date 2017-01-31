@@ -1237,4 +1237,10 @@ public class DailyNetworkAPI_Legacy implements IDailyNetwork
     {
 
     }
+
+    @Override
+    public void requestHomeEvents(String tag, Object listener)
+    {
+
+    }
 }

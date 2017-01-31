@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.model.HomeEvent;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
@@ -332,10 +332,15 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onEventListInformation(ArrayList<ImageInformation> list)
+        public void onEventList(String serverDate, ArrayList<HomeEvent> list)
         {
+//            mSaleTime = new SaleTime();
+//            mSaleTime.setCurrentTime(serverDate);
+////            mSaleTime.setDailyTime(dailyDateTime);
+//            mSaleTime.setOffsetDailyDay(0);
+
             if (mHomeLayout != null) {
-                mHomeLayout.setEventImageList(null);
+                mHomeLayout.setEventList(list);
             }
         }
 

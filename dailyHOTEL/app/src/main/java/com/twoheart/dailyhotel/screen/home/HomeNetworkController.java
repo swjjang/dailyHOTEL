@@ -2,11 +2,13 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.HomeEvent;
+import com.twoheart.dailyhotel.network.model.HomeEvents;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -37,7 +40,7 @@ public class HomeNetworkController extends BaseNetworkController
 
         void onReviewInformation(Review review);
 
-        void onEventListInformation(ArrayList<ImageInformation> list);
+        void onEventList(String serverDate, ArrayList<HomeEvent> list);
 
         void onWishList(ArrayList<? extends Place> list);
     }
@@ -54,7 +57,7 @@ public class HomeNetworkController extends BaseNetworkController
 
     public void requestEventList()
     {
-        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventListInformation(null);
+        DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, mEventCallback);
     }
 
     public void requestWishList()
@@ -172,6 +175,45 @@ public class HomeNetworkController extends BaseNetworkController
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(null);
+        }
+    };
+
+    private retrofit2.Callback mEventCallback = new Callback<BaseDto<HomeEvents>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<HomeEvents>> call, Response<BaseDto<HomeEvents>> response)
+        {
+
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseDto<HomeEvents> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        HomeEvents homeEvents = baseDto.data;
+
+                        String serverDate = homeEvents.serverDate;
+                        ArrayList<HomeEvent> homeEventArrayList = (ArrayList<HomeEvent>) homeEvents.list;
+
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(serverDate, homeEventArrayList);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null, null);
+                }
+            } else
+            {
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null, null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, Throwable t)
+        {
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null, null);
         }
     };
 }
