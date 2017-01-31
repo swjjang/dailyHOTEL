@@ -541,8 +541,7 @@ public class HomeLayout extends BaseLayout
                             ExLog.d("default Event Click");
                         } else
                         {
-                            // TODO : 이벤트 상세 연결
-                            ExLog.d("Event Click");
+                            ((HomeLayout.OnEventListener) mOnEventListener).onEventItemClick(homeEvent);
                         }
                     }
                 }
