@@ -324,6 +324,11 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
+            if (Util.isTextEmpty(event.linkUrl, event.title) == true)
+            {
+                return;
+            }
+
             HomeFragment.this.startEventListActivity(event.linkUrl, event.title);
         }
 

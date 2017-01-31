@@ -28,7 +28,6 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -429,13 +428,13 @@ public class HomeLayout extends BaseLayout
         return mEventImageHeight;
     }
 
-    // TODO : R.drawable.banner 의 경우 임시 테스트로 들어간 이미지로 1월 30일 이후에 growth 에서 전달받은 이미지로 적용해야 함
     private Event getDefaultEvent()
     {
         String homeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
+        String homeEventUrl = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventUrl();
+        String homeEventTitle = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventTitle();
 
-        if (Util.isTextEmpty(homeEventCurrentVersion) == true  //
-            || Constants.DAILY_HOME_EVENT_CURRENT_VERSION.equalsIgnoreCase(homeEventCurrentVersion) == true)
+        if (Util.isTextEmpty(homeEventCurrentVersion) == true)
         {
             return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
         } else
@@ -445,7 +444,6 @@ public class HomeLayout extends BaseLayout
 
             if (file.exists() == false)
             {
-                DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(Constants.DAILY_HOME_EVENT_CURRENT_VERSION);
                 return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
             } else
             {
@@ -462,11 +460,10 @@ public class HomeLayout extends BaseLayout
 
                 if (Util.isTextEmpty(urlString) == true)
                 {
-                    DailyPreference.getInstance(mContext).setRemoteConfigIntroImageVersion(Constants.DAILY_HOME_EVENT_CURRENT_VERSION);
                     return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
                 } else
                 {
-                    return new Event(urlString, urlString, null, null);
+                    return new Event(urlString, urlString, homeEventTitle, homeEventUrl);
                 }
             }
         }
