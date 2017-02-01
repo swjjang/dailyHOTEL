@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.collection;
+package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.content.Context;

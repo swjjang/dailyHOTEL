@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.collection;
+package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
-import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
@@ -48,47 +47,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void initIntentTime(Intent intent)
-    {
-        //        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
-        //        {
-        //            mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
-        //
-        //            mStartSaleTime = mSaleTime.getClone(0);
-        //            mEndSaleTime = null;
-        //        } else
-        //        {
-        //            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
-        //            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
-        //
-        //            // 범위 지정인데 이미 날짜가 지난 경우, 초기화
-        //            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
-        //            {
-        //                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-        //                {
-        //                    @Override
-        //                    public void onClick(View v)
-        //                    {
-        //                        Intent eventIntent = new Intent();
-        //                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
-        //                        startActivity(eventIntent);
-        //                    }
-        //                }, null);
-        //
-        //                mEndSaleTime = null;
-        //            }
-        //
-        //            mSaleTime = mStartSaleTime.getClone();
-        //        }
-    }
-
-    @Override
-    protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener)
-    {
-        return new CollectionGourmetAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
-    }
-
-    @Override
     protected void requestRecommendationPlaceList()
     {
         String period = mStartSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
@@ -97,42 +55,9 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+    protected CollectionBaseLayout getCollectionLayout(Context context)
     {
-        if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
-        {
-            return;
-        }
-
-        Gourmet gourmet = placeViewItem.getItem();
-
-        Intent intent = GourmetDetailActivity.newInstance(this, mStartSaleTime, gourmet, mStartSaleTime, null, count);
-
-        if (Util.isUsedMultiTransition() == true)
-        {
-            View simpleDraweeView = view.findViewById(R.id.imageView);
-            View nameTextView = view.findViewById(R.id.nameTextView);
-            View gradientTopView = view.findViewById(R.id.gradientTopView);
-            View gradientBottomView = view.findViewById(R.id.gradientView);
-
-            Object mapTag = gradientBottomView.getTag();
-
-            if (mapTag != null && "map".equals(mapTag) == true)
-            {
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
-            }
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,//
-                android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
-                android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
-
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
-        } else
-        {
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-        }
+        return new CollectionGourmetLayout(this, mOnEventListener);
     }
 
     @Override
@@ -168,13 +93,61 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         return getString(R.string.label_count_gourmet, count);
     }
 
-    @Override
-    protected void onCalendarClick()
+    private CollectionStayLayout.OnEventListener mOnEventListener = new CollectionBaseLayout.OnEventListener()
     {
-        Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
-            , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
-    }
+        @Override
+        public void onCalendarClick()
+        {
+            Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
+                , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+        }
+
+        @Override
+        public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+        {
+            if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+            {
+                return;
+            }
+
+            Gourmet gourmet = placeViewItem.getItem();
+
+            Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, gourmet, mStartSaleTime, null, count);
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                Object mapTag = gradientBottomView.getTag();
+
+                if (mapTag != null && "map".equals(mapTag) == true)
+                {
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                }
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionGourmetActivity.this,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+            }
+        }
+
+        @Override
+        public void finish()
+        {
+            CollectionGourmetActivity.this.onBackPressed();
+        }
+    };
 
     private retrofit2.Callback mRecommendationGourmetListCallback = new retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationGourmet>>>()
     {
@@ -192,7 +165,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                         ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>();
                         gourmetList.addAll(baseDto.data.items);
 
-                        onPlaceList(baseDto.data.imageBaseUrl, gourmetList);
+                        onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, gourmetList);
                     } else
                     {
                         onErrorPopupMessage(baseDto.msgCode, baseDto.msg);

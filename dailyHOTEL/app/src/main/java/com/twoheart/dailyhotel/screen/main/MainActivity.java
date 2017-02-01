@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -912,9 +913,12 @@ public class MainActivity extends BaseActivity implements Constants
             if (DailyDeepLink.getInstance().isValidateLink() == true)
             {
                 if (DailyDeepLink.getInstance().isHomeEventDetailView() == true//
-                    || DailyDeepLink.getInstance().isHomeFeaturedDetailListView() == true)
+                    || DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
+
+                    startActivity(CollectionStayActivity.newInstance(MainActivity.this, 3));
+
                 } else if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);

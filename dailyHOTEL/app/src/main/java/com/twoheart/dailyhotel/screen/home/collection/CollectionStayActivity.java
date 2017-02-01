@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.collection;
+package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
-import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.util.Util;
@@ -50,49 +49,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void initIntentTime(Intent intent)
-    {
-        //        if (intent.hasExtra(INTENT_EXTRA_DATA_SALE_TIME) == true)
-        //        {
-        //            mCheckInSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALE_TIME);
-        //            mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHT, 1);
-        //
-        //            mStartSaleTime = mCheckInSaleTime.getClone(0);
-        //            mEndSaleTime = null;
-        //        } else
-        //        {
-        //            mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
-        //            mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
-        //
-        //            // 범위 지정인데 이미 날짜가 지난 경우
-        //            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
-        //            {
-        //                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-        //                {
-        //                    @Override
-        //                    public void onClick(View v)
-        //                    {
-        //                        Intent eventIntent = new Intent();
-        //                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
-        //                        startActivity(eventIntent);
-        //                    }
-        //                }, null);
-        //
-        //                mEndSaleTime = null;
-        //            }
-        //
-        //            mCheckInSaleTime = mStartSaleTime.getClone();
-        //            mNights = 1;
-        //        }
-    }
-
-    @Override
-    protected PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener)
-    {
-        return new CollectionStayAdapter(this, new ArrayList<PlaceViewItem>(), mOnItemClickListener);
-    }
-
-    @Override
     protected void requestRecommendationPlaceList()
     {
         String salesDate = mStartSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
@@ -102,44 +58,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+    protected CollectionBaseLayout getCollectionLayout(Context context)
     {
-        if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
-        {
-            return;
-        }
-
-        Stay stay = placeViewItem.getItem();
-
-        Intent intent = StayDetailActivity.newInstance(this, mStartSaleTime, stay, mStartSaleTime, null, count);
-
-        if (Util.isUsedMultiTransition() == true)
-        {
-            View simpleDraweeView = view.findViewById(R.id.imageView);
-            View gradeTextView = view.findViewById(R.id.gradeTextView);
-            View nameTextView = view.findViewById(R.id.nameTextView);
-            View gradientTopView = view.findViewById(R.id.gradientTopView);
-            View gradientBottomView = view.findViewById(R.id.gradientView);
-
-            Object mapTag = gradientBottomView.getTag();
-
-            if (mapTag != null && "map".equals(mapTag) == true)
-            {
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
-            }
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,//
-                android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
-                android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
-                android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
-
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
-        } else
-        {
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-        }
+        return new CollectionStayLayout(context, mOnEventListener);
     }
 
     @Override
@@ -182,16 +103,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
         return getString(R.string.label_count_stay, count);
     }
 
-    @Override
-    protected void onCalendarClick()
-    {
-        final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
-
-        Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
-            , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
-    }
-
     protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
@@ -221,6 +132,66 @@ public class CollectionStayActivity extends CollectionBaseActivity
         return placeViewItemList;
     }
 
+    private CollectionStayLayout.OnEventListener mOnEventListener = new CollectionBaseLayout.OnEventListener()
+    {
+        @Override
+        public void onCalendarClick()
+        {
+            final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
+
+            Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
+                , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+        }
+
+        @Override
+        public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+        {
+            if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+            {
+                return;
+            }
+
+            Stay stay = placeViewItem.getItem();
+
+            Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, stay, mStartSaleTime, null, count);
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.imageView);
+                View gradeTextView = view.findViewById(R.id.gradeTextView);
+                View nameTextView = view.findViewById(R.id.nameTextView);
+                View gradientTopView = view.findViewById(R.id.gradientTopView);
+                View gradientBottomView = view.findViewById(R.id.gradientView);
+
+                Object mapTag = gradientBottomView.getTag();
+
+                if (mapTag != null && "map".equals(mapTag) == true)
+                {
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP, true);
+                }
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionStayActivity.this,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
+                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
+                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+            } else
+            {
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+            }
+        }
+
+        @Override
+        public void finish()
+        {
+            CollectionStayActivity.this.onBackPressed();
+        }
+    };
+
     private retrofit2.Callback mRecommendationStayListCallback = new retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationStay>>>()
     {
         @Override
@@ -237,7 +208,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                         ArrayList<RecommendationStay> stayList = new ArrayList<>();
                         stayList.addAll(baseDto.data.items);
 
-                        onPlaceList(baseDto.data.imageBaseUrl, stayList);
+                        onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList);
                     } else
                     {
                         onErrorPopupMessage(baseDto.msgCode, baseDto.msg);

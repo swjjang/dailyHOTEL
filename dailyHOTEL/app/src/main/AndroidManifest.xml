@@ -502,12 +502,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.search.collection.CollectionStayActivity"
+            android:name=".screen.home.collection.CollectionStayActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.search.collection.CollectionGourmetActivity"
+            android:name=".screen.home.collection.CollectionGourmetActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
