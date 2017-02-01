@@ -24,6 +24,8 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     protected SaleTime mSaleTime;
 
+    protected boolean mDontReload = false;
+
     /**
      * 해당 데이터는 리퀘스트 및 저장 용도로만 사용해야 합니다. emptyList 의 판단은 listAdapter의 갯수 또는 서버 전달 데이터 갯수로 판단해야 합니다.
      */
@@ -53,6 +55,8 @@ public abstract class RecentPlacesListFragment extends BaseFragment
         mListLayout = getListLayout();
         mNetworkController = getNetworkController();
 
+        mDontReload = false;
+
         return mListLayout.onCreateView(R.layout.fragment_recent_places_list, container);
     }
 
@@ -61,7 +65,13 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     {
         super.onResume();
 
-        requestRecentPlacesList();
+        if (mDontReload == true)
+        {
+            mDontReload = false;
+        } else
+        {
+            requestRecentPlacesList();
+        }
     }
 
     public void setSaleTime(SaleTime saleTime)
@@ -78,5 +88,10 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     public void setRecentPlaces(RecentPlaces recentPlaces)
     {
         mRecentPlaces = recentPlaces;
+    }
+
+    public void setDontReload(boolean dontReload)
+    {
+        mDontReload = dontReload;
     }
 }
