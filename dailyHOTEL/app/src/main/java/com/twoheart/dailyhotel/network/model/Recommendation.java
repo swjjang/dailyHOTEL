@@ -34,5 +34,5 @@ public class Recommendation
     public String endedAt; // ISO-8601
 
     @JsonField
-    public int itemCount;
+    public int countOfItems;
 }
