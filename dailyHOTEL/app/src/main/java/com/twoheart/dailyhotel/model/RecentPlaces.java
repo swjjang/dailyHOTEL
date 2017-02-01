@@ -4,7 +4,11 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by android_sam on 2016. 10. 11..
@@ -14,12 +18,13 @@ public class RecentPlaces
 {
     public static final int MAX_RECENT_PLACE_COUNT = 30;
     public static final String RECENT_PLACE_DELIMITER = ",";
+    public static final String RECENT_KEY_DELIMITER = "=";
 
-    private List<String> mPlaceIndexList;
+    private HashMap<Integer, Long> mPlaceList;
 
     public RecentPlaces(String preferenceText)
     {
-        mPlaceIndexList = new ArrayList<>();
+        mPlaceList = new HashMap<>();
 
         parse(preferenceText);
     }
@@ -38,14 +43,31 @@ public class RecentPlaces
             return;
         }
 
-        for (String placeIndex : splitArray)
+        for (String recentPlace : splitArray)
         {
+            if (Util.isTextEmpty(recentPlace) == true)
+            {
+                continue;
+            }
+
+            if (recentPlace.contains(RECENT_KEY_DELIMITER) == false)
+            {
+                continue;
+            }
+
+            String[] keyValueArray = recentPlace.split(RECENT_KEY_DELIMITER);
+
+            if (keyValueArray == null || keyValueArray.length < 2)
+            {
+                continue;
+            }
+
             try
             {
-                if (Util.isTextEmpty(placeIndex) == false && Util.isTextEmpty(placeIndex.trim()) == false)
-                {
-                    mPlaceIndexList.add(placeIndex);
-                }
+                int key = Integer.parseInt(keyValueArray[0]);
+                long value = Long.parseLong(keyValueArray[1]);
+
+                mPlaceList.put(key, value);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -55,54 +77,79 @@ public class RecentPlaces
 
     public void add(int placeIndex)
     {
-        String checkString = Integer.toString(placeIndex);
-
-        if (mPlaceIndexList == null || mPlaceIndexList.size() == 0)
-        {
-            mPlaceIndexList.add(checkString);
-        } else
-        {
-            if (mPlaceIndexList.contains(checkString) == true)
-            {
-                mPlaceIndexList.remove(checkString);
-            }
-
-            if (mPlaceIndexList.size() == MAX_RECENT_PLACE_COUNT)
-            {
-                mPlaceIndexList.remove(mPlaceIndexList.size() - 1);
-            }
-
-            mPlaceIndexList.add(0, checkString);
-        }
-    }
-
-    public void remove(int position)
-    {
-        if (mPlaceIndexList == null || mPlaceIndexList.size() == 0)
+        if (placeIndex < 0)
         {
             return;
         }
 
-        mPlaceIndexList.remove(position);
+        mPlaceList.put(placeIndex, System.currentTimeMillis());
+
+        removeOverflow();
     }
 
+    public void removeKey(int placeIndex)
+    {
+        if (mPlaceList.size() == 0)
+        {
+            return;
+        }
+
+        mPlaceList.remove(placeIndex);
+    }
+
+    @Override
     public String toString()
     {
-        if (mPlaceIndexList == null || mPlaceIndexList.size() == 0)
+        if (mPlaceList.size() == 0)
+        {
+            return "";
+        }
+
+        Iterator<Map.Entry<Integer, Long>> iterator = mPlaceList.entrySet().iterator();
+        if (iterator.hasNext() == false)
         {
             return "";
         }
 
         StringBuilder builder = new StringBuilder();
-        for (String text : mPlaceIndexList)
+
+        while (iterator.hasNext() == true)
         {
-            builder.append(text).append(RECENT_PLACE_DELIMITER);
+            Map.Entry entry = iterator.next();
+            builder.append(entry.getKey()).append(RECENT_KEY_DELIMITER).append(entry.getValue());
+
+            if (iterator.hasNext() == true)
+            {
+                builder.append(RECENT_PLACE_DELIMITER);
+            }
         }
 
-        int length = builder.length();
-        if (builder.charAt(length - 1) == ',')
+        return builder.toString();
+    }
+
+    public String toKeyString()
+    {
+        if (mPlaceList.size() == 0)
         {
-            builder.setLength(length - 1);
+            return "";
+        }
+
+        Iterator<Integer> iterator = mPlaceList.keySet().iterator();
+        if (iterator.hasNext() == false)
+        {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        while (iterator.hasNext() == true)
+        {
+            builder.append(iterator.next());
+
+            if (iterator.hasNext() == true)
+            {
+                builder.append(RECENT_PLACE_DELIMITER);
+            }
         }
 
         return builder.toString();
@@ -110,19 +157,66 @@ public class RecentPlaces
 
     public int size()
     {
-        return mPlaceIndexList == null ? 0 : mPlaceIndexList.size();
+        return mPlaceList == null ? 0 : mPlaceList.size();
     }
 
-    public List<String> getList()
+    public Long getValue(int placeIndex)
     {
-        return mPlaceIndexList;
+        return mPlaceList.get(placeIndex);
     }
 
     public void clear()
     {
-        if (mPlaceIndexList != null)
+        mPlaceList.clear();
+    }
+
+    public void sortList(ArrayList<? extends Place> list)
+    {
+        if (list != null && list.size() > 0)
         {
-            mPlaceIndexList.clear();
+            Collections.sort(list, new Comparator<Place>()
+            {
+                @Override
+                public int compare(Place gourmet1, Place gourmet2)
+                {
+                    int index1 = gourmet1.index;
+                    int index2 = gourmet2.index;
+
+                    Long value1 = mPlaceList.get(index1);
+                    Long value2 = mPlaceList.get(index2);
+
+                    return value1.compareTo(value2);
+                }
+            });
+
+            Collections.reverse(list);
+        }
+    }
+
+    private void removeOverflow()
+    {
+        int removeSize = mPlaceList.size() - MAX_RECENT_PLACE_COUNT;
+        if (removeSize <= 0)
+        {
+            return;
+        }
+
+        ArrayList<Map.Entry<Integer, Long>> list = new ArrayList<>();
+        list.addAll(mPlaceList.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>()
+        {
+            @Override
+            public int compare(Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2)
+            {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+
+        for (int i = 0; i < removeSize; i++)
+        {
+            Map.Entry<Integer, Long> entry = list.get(i);
+            removeKey(entry.getKey());
         }
     }
 }
