@@ -93,6 +93,8 @@ public class HomeLayout extends BaseLayout
         void onTopButtonClick();
 
         void onEventItemClick(Event event);
+
+        void onRecommendationClick(Recommendation recommendation);
     }
 
     public enum MessageType
@@ -379,7 +381,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onRecommendationClick(Recommendation recommendation, int position)
             {
-                // TODO : 추천 상세로 이동!!!
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecommendationClick(recommendation);
             }
         });
 

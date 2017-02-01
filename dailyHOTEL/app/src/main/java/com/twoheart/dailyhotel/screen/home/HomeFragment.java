@@ -333,6 +333,12 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
+        public void onRecommendationClick(Recommendation recommendation)
+        {
+            // TODO : 추천 상세 영역 이동
+        }
+
+        @Override
         public void finish()
         {
             unLockUI();
