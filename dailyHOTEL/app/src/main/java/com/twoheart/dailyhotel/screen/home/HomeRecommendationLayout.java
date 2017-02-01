@@ -163,7 +163,7 @@ public class HomeRecommendationLayout extends LinearLayout
 
         titleView.setText(recommendation.title);
         descriptionView.setText(recommendation.subtitle);
-        countView.setText(mContext.getResources().getString(R.string.label_booking_count, recommendation.itemCount));
+        countView.setText(mContext.getResources().getString(R.string.label_booking_count, recommendation.countOfItems));
 
         view.setOnClickListener(new OnClickListener()
         {

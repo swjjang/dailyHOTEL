@@ -106,6 +106,14 @@ public class RecentPlacesTabActivity extends BaseActivity
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
+
+            if (mFragmentList != null && mFragmentList.size() != 0)
+            {
+                for (RecentPlacesListFragment fragment : mFragmentList)
+                {
+                    fragment.setDontReload(true);
+                }
+            }
         } else
         {
             lockUI();

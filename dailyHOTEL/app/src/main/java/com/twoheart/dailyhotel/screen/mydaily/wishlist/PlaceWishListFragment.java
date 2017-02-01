@@ -25,8 +25,6 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     protected SaleTime mSaleTime;
 
-    protected boolean mDontReloadAtOnResume;
-
     protected OnWishListFragmentListener mWishListFragmentListener;
 
     protected abstract PlaceWishListLayout getListLayout();
@@ -64,31 +62,24 @@ public abstract class PlaceWishListFragment extends BaseFragment
     {
         super.onResume();
 
-        if (mDontReloadAtOnResume == true)
+        if (mWishListCount == 0)
         {
-            mDontReloadAtOnResume = false;
-        } else
-        {
-            if (mWishListCount == 0)
+            unLockUI();
+
+            if (isFinishing() == true)
             {
-                unLockUI();
-
-                if (isFinishing() == true)
-                {
-                    return;
-                }
-
-                if (mListLayout == null)
-                {
-                    return;
-                }
-
-                mListLayout.setData(null);
-            } else
-            {
-                requestWishList();
+                return;
             }
 
+            if (mListLayout == null)
+            {
+                return;
+            }
+
+            mListLayout.setData(null);
+        } else
+        {
+            requestWishList();
         }
     }
 
@@ -105,7 +96,6 @@ public abstract class PlaceWishListFragment extends BaseFragment
     public void forceRefreshList()
     {
         mListLayout.setData(null, false);
-        mDontReloadAtOnResume = false;
         onResume();
     }
 
