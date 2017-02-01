@@ -324,7 +324,18 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
+            if (Util.isTextEmpty(event.linkUrl, event.title) == true)
+            {
+                return;
+            }
+
             HomeFragment.this.startEventListActivity(event.linkUrl, event.title);
+        }
+
+        @Override
+        public void onRecommendationClick(Recommendation recommendation)
+        {
+            // TODO : 추천 상세 영역 이동
         }
 
         @Override

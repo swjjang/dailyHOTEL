@@ -75,7 +75,7 @@ public class DailyRemoteConfig
                 String androidSplashImageUrl = mFirebaseRemoteConfig.getString("androidSplashImageLink");
                 String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
-                String androidHomeEventDefaultImageLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultImageLink");
+                String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
 
                 if (Constants.DEBUG == true)
                 {
@@ -87,7 +87,7 @@ public class DailyRemoteConfig
                         ExLog.d("androidSplashImageLink : " + new JSONObject(androidSplashImageUrl).toString());
                         ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
-                        ExLog.d("androidHomeEventDefaultImageLink : " + new JSONObject(androidHomeEventDefaultImageLink).toString());
+                        ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -132,31 +132,8 @@ public class DailyRemoteConfig
                 // 이미지 로딩 관련(추후 진행)
                 processSplashImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
 
-
-                // 홈 이벤트 디폴트 이미지
-                final String clientHomeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
-                processImage(mContext, clientHomeEventCurrentVersion, androidHomeEventDefaultImageLink, new ImageDownloadAsyncTask.OnCompletedListener()
-                {
-                    @Override
-                    public void onCompleted(boolean result, String version)
-                    {
-                        if (result == true)
-                        {
-                            // 이전 파일 삭제
-                            if (Util.isTextEmpty(clientHomeEventCurrentVersion) == false)
-                            {
-                                String fileName = Util.makeImageFileName(clientHomeEventCurrentVersion);
-                                File currentFile = new File(mContext.getCacheDir(), fileName);
-                                if (currentFile.exists() == true && currentFile.delete() == false)
-                                {
-                                    currentFile.deleteOnExit();
-                                }
-                            }
-
-                            DailyPreference.getInstance(mContext).setRemoteConfigHomeEventCurrentVersion(version);
-                        }
-                    }
-                });
+                // default Event link
+                writeHomeEventDefaultLink(mContext, androidHomeEventDefaultLink);
 
                 if (listener != null)
                 {
@@ -318,9 +295,58 @@ public class DailyRemoteConfig
         }
     }
 
-    void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
+    void writeHomeEventDefaultLink(final Context context, String androidHomeEventDefaultLink)
     {
-        if (Util.isTextEmpty(jsonObject, clientVersion) == true)
+        String title;
+        String eventUrl;
+        try
+        {
+            JSONObject eventJSONObject = new JSONObject(androidHomeEventDefaultLink);
+
+            title = eventJSONObject.getString("title");
+            eventUrl = eventJSONObject.getString("eventUrl");
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            title = null;
+            eventUrl = null;
+        }
+
+        final String eventTitle = title;
+        final String eventLinkUrl = eventUrl;
+
+        final String clientHomeEventCurrentVersion = DailyPreference.getInstance(context).getRemoteConfigHomeEventCurrentVersion();
+
+        processEventImage(context, clientHomeEventCurrentVersion, androidHomeEventDefaultLink, new ImageDownloadAsyncTask.OnCompletedListener()
+        {
+            @Override
+            public void onCompleted(boolean result, String version)
+            {
+                if (result == true)
+                {
+                    // 이전 파일 삭제
+                    if (Util.isTextEmpty(clientHomeEventCurrentVersion) == false)
+                    {
+                        String fileName = Util.makeImageFileName(clientHomeEventCurrentVersion);
+                        File currentFile = new File(context.getCacheDir(), fileName);
+                        if (currentFile.exists() == true && currentFile.delete() == false)
+                        {
+                            currentFile.deleteOnExit();
+                        }
+                    }
+
+                    DailyPreference.getInstance(context).setRemoteConfigHomeEventCurrentVersion(version);
+                    DailyPreference.getInstance(context).setRemoteConfigHomeEventTitle(eventTitle);
+                    DailyPreference.getInstance(context).setRemoteConfigHomeEventUrl(eventLinkUrl);
+                }
+            }
+        });
+    }
+
+    void processEventImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
+    {
+        if (Util.isTextEmpty(jsonObject) == true)
         {
             return;
         }
@@ -335,6 +361,11 @@ public class DailyRemoteConfig
         } else
         {
             dpi = "xxxhdpi";
+        }
+
+        if (Util.isTextEmpty(clientVersion) == true)
+        {
+            clientVersion = "";
         }
 
         try

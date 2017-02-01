@@ -120,6 +120,8 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_CTA = "313";
 
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION = "314";
+    private static final String KEY_REMOTE_CONFIG_HOME_EVENT_TITLE = "315";
+    private static final String KEY_REMOTE_CONFIG_HOME_EVENT_URL = "316";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // "GOOD_NIGHT" Preference - 1.9.4 이상의 버전에서 강업 2회 이후 삭제 예정
@@ -1106,7 +1108,6 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_MESSAGE_AREA_LOGOUT_CTA, null);
     }
 
-
     public void setRemoteConfigHomeEventCurrentVersion(String value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION, value);
@@ -1115,6 +1116,24 @@ public class DailyPreference
     public String getRemoteConfigHomeEventCurrentVersion()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION, null);
+    }
+
+    public void setRemoteConfigHomeEventUrl(String value) {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_URL, value);
+    }
+
+    public String getRemoteConfigHomeEventUrl()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_URL, null);
+    }
+
+    public void setRemoteConfigHomeEventTitle(String value) {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_TITLE, value);
+    }
+
+    public String getRemoteConfigHomeEventTitle()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_TITLE, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
