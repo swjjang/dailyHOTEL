@@ -1,67 +1,96 @@
 package com.twoheart.dailyhotel.network.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 @JsonObject
-public class Event
+public class Event implements Parcelable
 {
-    @JsonField
-    public String title;
-
-    @JsonField
+    @JsonField(name = "defaultImageUrl")
     public String defaultImageUrl;
 
-    @JsonField
-    public String lowResolutionImageUrl;
+    @JsonField(name = "endedAt")
+    public String endedAt; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "exposeHome")
+    public boolean exposeHome;
+
+    @JsonField(name = "linkUrl")
     public String linkUrl;
 
-    @JsonField
-    public String startedAt;
+    @JsonField(name = "lowResolutionImageUrl")
+    public String lowResolutionImageUrl;
 
-    @JsonField
-    public String endedAt;
+    @JsonField(name = "startedAt")
+    public String startedAt; // ISO-8601
 
-    //    public Event(Parcel in)
-    //    {
-    //        readFromParcel(in);
-    //    }
-    //
-    //    @Override
-    //    public void writeToParcel(Parcel dest, int flags)
-    //    {
-    //        dest.writeInt(index);
-    //        dest.writeString(imageUrl);
-    //        dest.writeInt(isJoin ? 1 : 0);
-    //    }
-    //
-    //    private void readFromParcel(Parcel in)
-    //    {
-    //        index = in.readInt();
-    //        imageUrl = in.readString();
-    //        isJoin = in.readInt() != 0;
-    //    }
-    //
-    //    @Override
-    //    public int describeContents()
-    //    {
-    //        return 0;
-    //    }
-    //
-    //    public static final Creator CREATOR = new Creator()
-    //    {
-    //        public Event createFromParcel(Parcel in)
-    //        {
-    //            return new Event(in);
-    //        }
-    //
-    //        @Override
-    //        public Event[] newArray(int size)
-    //        {
-    //            return new Event[size];
-    //        }
-    //
-    //    };
+    @JsonField(name = "title")
+    public String title;
+
+    public Event()
+    {
+    }
+
+    // 로컬 저장용 홈 이벤트 처리를 위한 생성자
+    public Event(String defaultImageUrl, String lowResolutionImageUrl, String title, String linkUrl)
+    {
+        this.defaultImageUrl = defaultImageUrl;
+        this.lowResolutionImageUrl = lowResolutionImageUrl;
+        this.title = title;
+        this.linkUrl = linkUrl;
+    }
+
+    public Event(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeString(defaultImageUrl);
+        dest.writeString(endedAt);
+        dest.writeInt(exposeHome == true ? 1 : 0);
+        dest.writeString(linkUrl);
+        dest.writeString(lowResolutionImageUrl);
+        dest.writeString(startedAt);
+        dest.writeString(title);
+    }
+
+    private void readFromParcel(Parcel in)
+    {
+        defaultImageUrl = in.readString();
+        endedAt = in.readString();
+        exposeHome = in.readInt() == 1 ? true : false;
+        linkUrl = in.readString();
+        lowResolutionImageUrl = in.readString();
+        startedAt = in.readString();
+        title = in.readString();
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @JsonIgnore
+    public static final Creator CREATOR = new Creator()
+    {
+        public Event createFromParcel(Parcel in)
+        {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size)
+        {
+            return new Event[size];
+        }
+
+    };
 }

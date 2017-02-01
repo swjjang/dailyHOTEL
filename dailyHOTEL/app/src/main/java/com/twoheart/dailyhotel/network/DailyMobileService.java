@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.network;
 
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Holiday;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 
 import org.json.JSONObject;
 
@@ -363,8 +365,14 @@ public interface DailyMobileService
     Call<BaseListDto<Holiday>> requestHoliday(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
                                               @Query("from") String startDay, @Query("to") String endDay, @Query("isHoliday") boolean isHoliday);
 
+    Call<BaseListDto<Event>> requestHomeEvents(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<BaseListDto<Recommendation>> requestRecommendationList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<BaseListDto<Holiday>> requestFeaturedPlaceList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                              @Query("startday") String startDay, @Query("endDay") String endDay);
+                                                        @Query("startday") String startDay, @Query("endDay") String endDay);
 }

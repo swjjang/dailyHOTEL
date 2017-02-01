@@ -1,70 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/titleImageView"
+    <RelativeLayout
+        android:id="@+id/imageViewLayout"
         android:layout_width="match_parent"
-        android:layout_height="202dp"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:overlayImage="@drawable/shape_fillrect_b99000000"/>
+        android:layout_height="wrap_content">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/titleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:gravity="bottom|center_horizontal"
-        android:maxLines="1"
-        android:minHeight="29dp"
-        android:singleLine="true"
-        android:text="크리스마스 로맨틱 호텔 컬렉션"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        dailyFont:style="Medium"/>
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simpleDraweeView"
+            android:layout_width="match_parent"
+            android:layout_height="202dp"
+            fresco:actualImageScaleType="centerCrop"
+            fresco:overlayImage="@drawable/shape_fillrect_b99000000"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/subTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_below="@+id/titleTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="2dp"
-        android:gravity="center"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:text="선착순 한정판매, 9만원부터 예약 가능!"
-        android:textColor="@color/white"
-        android:textSize="12dp"/>
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/countTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_below="@+id/subTitleTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/shape_fillrect_l99ffffff_b4d000000_r50"
-        android:gravity="center"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:text="10개"
-        android:textColor="@color/white"
-        android:textSize="11dp"
-        dailyFont:style="DemiLight"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginTop="143dp"
+            android:background="@drawable/img_bottom_white_gradient_rec"/>
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/backImageView"
@@ -75,5 +34,125 @@
         android:tint="@color/white"
         app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
-    <include layout="@layout/toolbar_default"/>
+    <FrameLayout
+        android:id="@+id/titleBoxLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="150dp">
+
+        <RelativeLayout
+            android:id="@+id/titleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/home_pick_bg">
+
+            <LinearLayout
+                android:id="@+id/subTitleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="41dp">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/subTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="선착순 한정판매, 9만원부터 예약 가능!"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="5px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginTop="14dp"
+                    android:background="@color/default_line_ce7e7e7"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/default_background_cf4f4f6">
+
+                    <ImageView
+                        android:id="@+id/calendarImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        app:srcCompat="@drawable/search_ic_01_date"/>
+
+                    <ImageView
+                        android:id="@+id/calendarDownArrowView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="9dp"
+                        app:srcCompat="@drawable/navibar_m_ic_v"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/calendarTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="8dp"
+                        android:layout_toLeftOf="@id/calendarDownArrowView"
+                        android:layout_toRightOf="@id/calendarImageView"
+                        android:gravity="center_vertical"
+                        android:paddingRight="8dp"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="27dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="13dp"
+                android:gravity="bottom|center_horizontal"
+                android:maxLines="1"
+                android:minHeight="29dp"
+                android:singleLine="true"
+                android:text="크리스마스 로맨틱 호텔 컬렉션"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="18dp"/>
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/fakeBackImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_marginLeft="-15dp"
+            android:layout_marginTop="-150dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/navibar_ic_back_01_black"/>
+    </FrameLayout>
+
+    <com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="96dp"
+        android:divider="@null"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"/>
 </RelativeLayout>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/productLayout"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/productLayout"
                 android:layout_width="match_parent"
-                android:background="@color/white"
-                android:layout_height="82dp">
+                android:layout_height="82dp"
+                android:background="@color/white">
 
     <View
         android:id="@+id/verticalLine"
@@ -24,9 +24,12 @@
         android:orientation="horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyImageView
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="18dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_home_category_01_hotel"
             />
 
@@ -66,7 +69,10 @@
         <com.twoheart.dailyhotel.widget.DailyImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="18dp"
+            android:layout_marginTop="20dp"
+            android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_home_category_02_gourmet"/>
 
         <LinearLayout

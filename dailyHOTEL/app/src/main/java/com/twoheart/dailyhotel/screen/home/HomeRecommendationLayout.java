@@ -10,32 +10,30 @@ import android.widget.RelativeLayout;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HomeRecommed;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
 
-import static com.twoheart.dailyhotel.R.id.contentLayout;
-
 /**
  * Created by android_sam on 2017. 1. 17..
  */
 
-public class HomeRecommendLayout extends LinearLayout
+public class HomeRecommendationLayout extends LinearLayout
 {
     private Context mContext;
     private LinearLayout mContentLayout;
-    private HomeRecommendListener mListener;
+    private HomeRecommendationListener mListener;
 
-    private ArrayList<HomeRecommed> mRecommedList;
+    private ArrayList<Recommendation> mRecommendationList;
 
-    public interface HomeRecommendListener
+    public interface HomeRecommendationListener
     {
-        void onRecommedClick(HomeRecommed recommed, int position);
+        void onRecommendationClick(Recommendation recommendation, int position);
     }
 
-    public HomeRecommendLayout(Context context)
+    public HomeRecommendationLayout(Context context)
     {
         super(context);
 
@@ -43,7 +41,7 @@ public class HomeRecommendLayout extends LinearLayout
         initLayout();
     }
 
-    public HomeRecommendLayout(Context context, AttributeSet attrs)
+    public HomeRecommendationLayout(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
@@ -51,7 +49,7 @@ public class HomeRecommendLayout extends LinearLayout
         initLayout();
     }
 
-    public HomeRecommendLayout(Context context, AttributeSet attrs, int defStyleAttr)
+    public HomeRecommendationLayout(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
@@ -59,7 +57,7 @@ public class HomeRecommendLayout extends LinearLayout
         initLayout();
     }
 
-    public HomeRecommendLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
+    public HomeRecommendationLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
 
@@ -67,20 +65,20 @@ public class HomeRecommendLayout extends LinearLayout
         initLayout();
     }
 
-    public void setListener(HomeRecommendListener listener)
+    public void setListener(HomeRecommendationListener listener)
     {
         mListener = listener;
     }
 
     private void initLayout()
     {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommed_layout, this);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_layout, this);
 
-        mContentLayout = (LinearLayout) view.findViewById(contentLayout);
+        mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
         mContentLayout.removeAllViews();
     }
 
-    public void setData(ArrayList<HomeRecommed> list, boolean isShow)
+    public void setData(ArrayList<Recommendation> list)
     {
         clearAll();
 
@@ -90,7 +88,7 @@ public class HomeRecommendLayout extends LinearLayout
             return;
         }
 
-        mRecommedList = list;
+        mRecommendationList = list;
 
         if (mContentLayout == null || mContext == null)
         {
@@ -98,23 +96,31 @@ public class HomeRecommendLayout extends LinearLayout
             return;
         }
 
-        if (mRecommedList == null || mRecommedList.size() == 0)
+        if (mRecommendationList == null || mRecommendationList.size() == 0)
         {
             setVisibility(View.GONE);
         } else
         {
-            int size = mRecommedList.size();
-            for (int i = 0; i < size; i++)
+            int size = mRecommendationList.size();
+            if (size > 0)
             {
-                HomeRecommed recommed = mRecommedList.get(i);
-                addRecommedItemView(recommed, i);
+                for (int i = 0; i < size; i++)
+                {
+                    Recommendation recommendation = mRecommendationList.get(i);
+                    addRecommendationItemView(recommendation, i);
+                }
+                setVisibility(View.VISIBLE);
+            } else
+            {
+                setVisibility(View.GONE);
             }
+
         }
     }
 
     public void clearAll()
     {
-        mRecommedList = null;
+        mRecommendationList = null;
 
         if (mContentLayout != null)
         {
@@ -122,15 +128,15 @@ public class HomeRecommendLayout extends LinearLayout
         }
     }
 
-    public void addRecommedItemView(final HomeRecommed homeRecommed, final int position)
+    public void addRecommendationItemView(final Recommendation recommendation, final int position)
     {
-        if (homeRecommed == null)
+        if (recommendation == null)
         {
             return;
         }
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommend_item_layout, null);
-        view.setTag(homeRecommed);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_item_layout, null);
+        view.setTag(recommendation);
 
         int width = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
         int height = Util.getRatioHeightType21x9(width);
@@ -143,18 +149,21 @@ public class HomeRecommendLayout extends LinearLayout
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
         imageView.setLayoutParams(layoutParams);
 
-        if (Util.isTextEmpty(homeRecommed.imageUrl) == false)
+        if (Util.getLCDWidth(mContext) < 1440)
         {
-            Util.requestImageResize(mContext, imageView, homeRecommed.imageUrl);
+            Util.requestImageResize(mContext, imageView, recommendation.lowResolutionImageUrl);
+        } else
+        {
+            Util.requestImageResize(mContext, imageView, recommendation.defaultImageUrl);
         }
 
         DailyTextView titleView = (DailyTextView) view.findViewById(R.id.contentTextView);
         DailyTextView descriptionView = (DailyTextView) view.findViewById(R.id.contentDescriptionView);
         DailyTextView countView = (DailyTextView) view.findViewById(R.id.contentCountView);
 
-        titleView.setText(homeRecommed.title);
-        descriptionView.setText(homeRecommed.description);
-        countView.setText(mContext.getResources().getString(R.string.label_booking_count, homeRecommed.count));
+        titleView.setText(recommendation.title);
+        descriptionView.setText(recommendation.subtitle);
+        countView.setText(mContext.getResources().getString(R.string.label_booking_count, recommendation.itemCount));
 
         view.setOnClickListener(new OnClickListener()
         {
@@ -163,7 +172,7 @@ public class HomeRecommendLayout extends LinearLayout
             {
                 if (mListener != null)
                 {
-                    mListener.onRecommedClick(homeRecommed, position);
+                    mListener.onRecommendationClick(recommendation, position);
                 }
             }
         });
@@ -173,11 +182,11 @@ public class HomeRecommendLayout extends LinearLayout
 
     public int getCount()
     {
-        if (mRecommedList == null || mRecommedList.size() == 0)
+        if (mRecommendationList == null || mRecommendationList.size() == 0)
         {
             return 0;
         }
 
-        return mRecommedList.size();
+        return mRecommendationList.size();
     }
 }

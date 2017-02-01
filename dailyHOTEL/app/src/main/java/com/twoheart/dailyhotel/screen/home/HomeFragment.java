@@ -10,10 +10,14 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
@@ -22,6 +26,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -82,17 +88,13 @@ public class HomeFragment extends BaseFragment
 
             // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
             mNetworkController.requestCommonDateTime();
-
-            if (DailyHotel.isLogin() == true)
-            {
-                // TODO : request review data;
-                mNetworkController.requestReviewInformation();
-            } else
-            {
-                requestTextMessage();
-            }
+            requestMessageData();
+            mNetworkController.requestEventList();
+            mNetworkController.requestRecommendationList();
+            mNetworkController.requestWishList();
         }
 
+        // 애니메이션 처리!
         if (mHomeLayout != null)
         {
             mHomeLayout.onResumeReviewAnimation();
@@ -144,6 +146,50 @@ public class HomeFragment extends BaseFragment
             {
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_EVENTWEB:
+            {
+                mDontReload = true;
+                break;
+            }
+        }
+    }
+
+    private void requestMessageData()
+    {
+        if (mHomeLayout == null)
+        {
+            return;
+        }
+
+        HomeLayout.MessageType messageType = HomeLayout.MessageType.NONE;
+
+        if (DailyHotel.isLogin() == true)
+        {
+            boolean isLoginAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLoginEnabled();
+            if (isLoginAreaEnable == true)
+            {
+                messageType = HomeLayout.MessageType.REVIEW;
+            }
+        } else
+        {
+            boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
+            if (isLogoutAreaEnable == true)
+            {
+                messageType = HomeLayout.MessageType.TEXT;
+            }
+        }
+
+        if (HomeLayout.MessageType.REVIEW == messageType)
+        {
+            // TODO : request review data;
+            mNetworkController.requestReviewInformation();
+        } else if (HomeLayout.MessageType.TEXT == messageType)
+        {
+            requestTextMessage();
+        } else
+        {
+            mHomeLayout.hideMessageLayout();
         }
     }
 
@@ -180,6 +226,17 @@ public class HomeFragment extends BaseFragment
         }
 
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+    }
+
+    private void startEventListActivity(String url, String eventName)
+    {
+        if (Util.isTextEmpty(url) == true)
+        {
+            return;
+        }
+
+        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.EVENT, url, eventName);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
@@ -260,6 +317,17 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
+        public void onEventItemClick(Event event)
+        {
+            if (event == null)
+            {
+                return;
+            }
+
+            HomeFragment.this.startEventListActivity(event.linkUrl, event.title);
+        }
+
+        @Override
         public void finish()
         {
             unLockUI();
@@ -291,6 +359,33 @@ public class HomeFragment extends BaseFragment
             if (mHomeLayout != null)
             {
                 mHomeLayout.setReviewData(review);
+            }
+        }
+
+        @Override
+        public void onEventList(ArrayList<Event> list)
+        {
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.setEventList(list);
+            }
+        }
+
+        @Override
+        public void onWishList(ArrayList<? extends Place> list)
+        {
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.setWishListData(list);
+            }
+        }
+
+        @Override
+        public void onRecommendationList(ArrayList<Recommendation> list)
+        {
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.setRecommendationData(list);
             }
         }
 

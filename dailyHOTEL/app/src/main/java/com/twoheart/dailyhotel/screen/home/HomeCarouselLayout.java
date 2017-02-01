@@ -105,7 +105,7 @@ public class HomeCarouselLayout extends RelativeLayout
         mRecyclerView = (RecyclerView) view.findViewById(R.id.horizontalRecyclerView);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
