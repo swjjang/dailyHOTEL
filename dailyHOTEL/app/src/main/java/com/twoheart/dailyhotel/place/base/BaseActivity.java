@@ -40,8 +40,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Response;
 

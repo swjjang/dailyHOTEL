@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.collection.CollectionGourmetActivity;
-import com.twoheart.dailyhotel.screen.search.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -338,9 +337,9 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onRecommendationClick(View view, Recommendation recommendation)
         {
-//            Intent intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
-//                , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-//                , recommendation.title, recommendation.subtitle);
+            //            Intent intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
+            //                , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+            //                , recommendation.title, recommendation.subtitle);
 
             Intent intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
                 , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//

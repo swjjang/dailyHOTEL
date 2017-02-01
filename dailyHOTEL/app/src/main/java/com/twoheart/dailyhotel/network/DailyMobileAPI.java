@@ -14,9 +14,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
