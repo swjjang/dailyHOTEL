@@ -1071,10 +1071,10 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestFeaturedPlaceList(String tag, int index, String startDay, String endDay, Object listener)
+    public void requestRecommendationPlaceList(String tag, int index, String startDay, String endDay, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendation/{idx}"//
-            : "";
+            : "MjgkODMkNzEkMzYkNDMkOTEkNCQyMCQxMzEkOCQxMDAkNjgkNjkkMzMkNjkkNTIk$QzczANjBIBODhDRkMxQkMJxNUFBRUFGOMHjZCMTFRDQTg5NPzY5NXTdFRDkyOTI5Njg4Q0OIAFBQkMyRDRJFQTFCOTAxRDGMxRDNE4RDkWxQzdFQTYxODM3RTIwNzFEN0Y3RDgyNEIB3RDEw$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{idx}", Integer.toString(index));

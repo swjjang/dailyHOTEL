@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.search.collection;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
 
@@ -23,8 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -107,7 +104,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     @Override
     protected void requestFeaturedPlaceList()
     {
-        DailyMobileAPI.getInstance(this).requestFeaturedPlaceList(mNetworkTag, mFeaturedIndex, "", "", mFeaturedGourmetListCallback);
+        DailyMobileAPI.getInstance(this).requestRecommendationPlaceList(mNetworkTag, mRecommendationIndex, "", "", mFeaturedGourmetListCallback);
     }
 
 

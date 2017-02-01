@@ -46,13 +46,13 @@ public abstract class CollectionBaseActivity extends BaseActivity
     PinnedSectionRecyclerView mRecyclerView;
     PlaceListAdapter mPlaceListAdapter;
     protected SaleTime mStartSaleTime, mEndSaleTime;
-    int mFeaturedIndex;
+    int mRecommendationIndex;
     private int mScrollState;
     private int mTitleLayoutHeight;
 
     protected abstract void initIntentTime(Intent intent);
 
-    protected abstract void requestFeaturedPlaceList();
+    protected abstract void requestRecommendationPlaceList();
 
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
 
@@ -81,12 +81,12 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         initIntentTime(intent);
 
-        mFeaturedIndex = intent.getIntExtra(INTENT_EXTRA_DATA_INDEX, -1);
+        mRecommendationIndex = intent.getIntExtra(INTENT_EXTRA_DATA_INDEX, -1);
         String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
         String subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
         String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
 
-        if (mFeaturedIndex <= 0)
+        if (mRecommendationIndex <= 0)
         {
             finish();
             return;
@@ -133,7 +133,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
                             mEndSaleTime = mStartSaleTime.getClone(1);
 
-                            requestFeaturedPlaceList();
+                            requestRecommendationPlaceList();
                         } else
                         {
                             String message = responseJSONObject.getString("msg");
@@ -273,7 +273,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         float titleLayoutTopPaddingValue = dp171Height - (firstView.getHeight() - startAnimationHeight) * (1.0f - titleLayoutValue);
                         titleBoxLayout.setPadding(dp15Height, (int) titleLayoutTopPaddingValue, dp15Height, dp15Height);
 
-
                         FrameLayout.LayoutParams fakeBackImageLayoutParams = (FrameLayout.LayoutParams) fakeBackImageView.getLayoutParams();
                         fakeBackImageLayoutParams.topMargin = -dp171Height;
                         fakeBackImageLayoutParams.leftMargin = -dp15Height;
@@ -296,7 +295,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         titleBoxLayout.setPadding(titleLayoutPaddingValue, (int) titleLayoutTopPaddingValue, titleLayoutPaddingValue, 0);
                         titleBoxLayout.setTranslationY(-dp21Height * titleLayoutValue);
 
-
                         FrameLayout.LayoutParams fakeBackImageLayoutParams = (FrameLayout.LayoutParams) fakeBackImageView.getLayoutParams();
                         fakeBackImageLayoutParams.topMargin = -titleBoxLayout.getPaddingTop() - (int) titleBoxLayout.getTranslationY();
                         fakeBackImageLayoutParams.leftMargin = -titleLayoutPaddingValue;
@@ -316,8 +314,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         titleTextView.setTranslationX(titleTranslationX * (1.0f - titleLayoutValue));
                         titleTextView.setTranslationY(-dp3Height * (1.0f - titleLayoutValue));
 
-
-                        float alphaValue = titleLayoutValue / 3;
+                        float alphaValue = titleLayoutValue / 4;
                         if (alphaValue > 1.0f)
                         {
                             alphaValue = 1.0f;
@@ -454,7 +451,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                     case CODE_RESULT_ACTIVITY_REFRESH:
                         lockUI();
 
-                        requestFeaturedPlaceList();
+                        requestRecommendationPlaceList();
                         break;
                 }
                 break;
@@ -465,7 +462,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
                 lockUI();
 
-                requestFeaturedPlaceList();
+                requestRecommendationPlaceList();
                 break;
         }
     }
@@ -525,7 +522,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         //            return;
         //        }
         //
-        //        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, mFeaturedIndex);
+        //        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, mRecommendationIndex);
         //
         //        mPlaceListAdapter.setAll(placeViewItems);
         //        mPlaceListAdapter.notifyDataSetChanged();
