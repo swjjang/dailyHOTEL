@@ -1033,10 +1033,9 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     /**
-     *
      * @param tag
      * @param startDay yyyy-MM-dd
-     * @param endDay yyyy-MM-dd
+     * @param endDay   yyyy-MM-dd
      * @param listener
      */
     @Override

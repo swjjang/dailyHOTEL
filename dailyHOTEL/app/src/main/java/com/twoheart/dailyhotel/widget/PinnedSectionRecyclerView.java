@@ -18,8 +18,6 @@ import android.widget.SectionIndexer;
 
 public class PinnedSectionRecyclerView extends RecyclerView
 {
-    //-- inner classes
-
     // fields used for handling touch events
     private final Rect mTouchRect = new Rect();
     private final PointF mTouchPoint = new PointF();

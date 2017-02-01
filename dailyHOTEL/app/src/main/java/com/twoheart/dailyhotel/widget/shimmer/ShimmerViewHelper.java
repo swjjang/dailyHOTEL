@@ -20,7 +20,8 @@ import com.twoheart.dailyhotel.R;
 public class ShimmerViewHelper
 {
 
-    public interface AnimationSetupCallback {
+    public interface AnimationSetupCallback
+    {
         void onSetupAnimation(View target);
     }
 
@@ -55,7 +56,8 @@ public class ShimmerViewHelper
     // callback called after first global layout
     private AnimationSetupCallback callback;
 
-    public ShimmerViewHelper(View view, AttributeSet attributeSet) {
+    public ShimmerViewHelper(View view, AttributeSet attributeSet)
+    {
         this.view = view;
         this.paint = new Paint();
         this.paint.setAntiAlias(true);
@@ -64,67 +66,85 @@ public class ShimmerViewHelper
         init(attributeSet);
     }
 
-    public float getGradientX() {
+    public float getGradientX()
+    {
         return gradientX;
     }
 
-    public void setGradientX(float gradientX) {
+    public void setGradientX(float gradientX)
+    {
         this.gradientX = gradientX;
         view.invalidate();
     }
 
-    public boolean isShimmering() {
+    public boolean isShimmering()
+    {
         return isShimmering;
     }
 
-    public void setShimmering(boolean isShimmering) {
+    public void setShimmering(boolean isShimmering)
+    {
         this.isShimmering = isShimmering;
     }
 
-    public boolean isSetUp() {
+    public boolean isSetUp()
+    {
         return isSetUp;
     }
 
-    public void setAnimationSetupCallback(AnimationSetupCallback callback) {
+    public void setAnimationSetupCallback(AnimationSetupCallback callback)
+    {
         this.callback = callback;
     }
 
-    public int getPrimaryColor() {
+    public int getPrimaryColor()
+    {
         return primaryColor;
     }
 
-    public void setPrimaryColor(int primaryColor) {
+    public void setPrimaryColor(int primaryColor)
+    {
         this.primaryColor = primaryColor;
-        if (isSetUp) {
+        if (isSetUp)
+        {
             resetLinearGradient();
         }
     }
 
-    public int getReflectionColor() {
+    public int getReflectionColor()
+    {
         return reflectionColor;
     }
 
-    public void setReflectionColor(int reflectionColor) {
+    public void setReflectionColor(int reflectionColor)
+    {
         this.reflectionColor = reflectionColor;
-        if (isSetUp) {
+        if (isSetUp)
+        {
             resetLinearGradient();
         }
     }
 
-    private void init(AttributeSet attributeSet) {
+    private void init(AttributeSet attributeSet)
+    {
 
         primaryColor = DEFAULT_PRIMARY_COLOR;
         reflectionColor = DEFAULT_REFLECTION_COLOR;
 
-        if (attributeSet != null) {
+        if (attributeSet != null)
+        {
             TypedArray a = view.getContext().obtainStyledAttributes(attributeSet, R.styleable.ShimmerView, 0, 0);
-            if (a != null) {
-                try {
+            if (a != null)
+            {
+                try
+                {
                     primaryColor = a.getColor(R.styleable.ShimmerView_primaryColor, DEFAULT_PRIMARY_COLOR);
                     reflectionColor = a.getColor(R.styleable.ShimmerView_reflectionColor, DEFAULT_REFLECTION_COLOR);
-                } catch (Exception e) {
+                } catch (Exception e)
+                {
                     android.util.Log.e("ShimmerTextView", "Error while creating the view:", e);
-                } finally {
+                } finally
+                {
                     a.recycle();
                 }
             }
@@ -133,39 +153,29 @@ public class ShimmerViewHelper
         linearGradientMatrix = new Matrix();
     }
 
-    private void resetLinearGradient() {
-
-
+    private void resetLinearGradient()
+    {
 
 
         // our gradient is a simple linear gradient from textColor to reflectionColor. its axis is at the center
         // when it's outside of the view, the outer color (textColor) will be repeated (Shader.TileMode.CLAMP)
         // initially, the linear gradient is positioned on the left side of the view
-        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0,
-                new int[]{
-                        primaryColor,
-                        reflectionColor,
-                        primaryColor,
-                },
-                new float[]{
-                        0,
-                        0.5f,
-                        1
-                },
-                Shader.TileMode.CLAMP
-        );
+        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0, new int[]{primaryColor, reflectionColor, primaryColor,}, new float[]{0, 0.5f, 1}, Shader.TileMode.CLAMP);
 
         paint.setShader(linearGradient);
     }
 
-    protected void onSizeChanged() {
+    protected void onSizeChanged()
+    {
 
         resetLinearGradient();
 
-        if (!isSetUp) {
+        if (!isSetUp)
+        {
             isSetUp = true;
 
-            if (callback != null) {
+            if (callback != null)
+            {
                 callback.onSetupAnimation(view);
             }
         }
@@ -175,13 +185,16 @@ public class ShimmerViewHelper
      * content of the wrapping view's onDraw(Canvas)
      * MUST BE CALLED BEFORE SUPER STATEMENT
      */
-    public void onDraw(Canvas canvas) {
+    public void onDraw(Canvas canvas)
+    {
 
         // only draw the shader gradient over the text while animating
-        if (isShimmering) {
+        if (isShimmering)
+        {
 
             // first onDraw() when shimmering
-            if (paint.getShader() == null) {
+            if (paint.getShader() == null)
+            {
                 paint.setShader(linearGradient);
             }
 
@@ -192,7 +205,8 @@ public class ShimmerViewHelper
             linearGradient.setLocalMatrix(linearGradientMatrix);
             canvas.drawPaint(paint);
 
-        } else {
+        } else
+        {
             // we're not animating, remove the shader from the paint
             paint.setShader(null);
             paint.setColor(DEFAULT_PRIMARY_COLOR);

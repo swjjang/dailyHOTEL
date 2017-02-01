@@ -31,47 +31,57 @@ public class Shimmer
 
     private ObjectAnimator animator;
 
-    public Shimmer() {
+    public Shimmer()
+    {
         repeatCount = DEFAULT_REPEAT_COUNT;
         duration = DEFAULT_DURATION;
         startDelay = DEFAULT_START_DELAY;
         direction = DEFAULT_DIRECTION;
     }
 
-    public int getRepeatCount() {
+    public int getRepeatCount()
+    {
         return repeatCount;
     }
 
-    public Shimmer setRepeatCount(int repeatCount) {
+    public Shimmer setRepeatCount(int repeatCount)
+    {
         this.repeatCount = repeatCount;
         return this;
     }
 
-    public long getDuration() {
+    public long getDuration()
+    {
         return duration;
     }
 
-    public Shimmer setDuration(long duration) {
+    public Shimmer setDuration(long duration)
+    {
         this.duration = duration;
         return this;
     }
 
-    public long getStartDelay() {
+    public long getStartDelay()
+    {
         return startDelay;
     }
 
-    public Shimmer setStartDelay(long startDelay) {
+    public Shimmer setStartDelay(long startDelay)
+    {
         this.startDelay = startDelay;
         return this;
     }
 
-    public int getDirection() {
+    public int getDirection()
+    {
         return direction;
     }
 
-    public Shimmer setDirection(int direction) {
+    public Shimmer setDirection(int direction)
+    {
 
-        if (direction != ANIMATION_DIRECTION_LTR && direction != ANIMATION_DIRECTION_RTL) {
+        if (direction != ANIMATION_DIRECTION_LTR && direction != ANIMATION_DIRECTION_RTL)
+        {
             throw new IllegalArgumentException("The animation direction must be either ANIMATION_DIRECTION_LTR or ANIMATION_DIRECTION_RTL");
         }
 
@@ -79,30 +89,37 @@ public class Shimmer
         return this;
     }
 
-    public Animator.AnimatorListener getAnimatorListener() {
+    public Animator.AnimatorListener getAnimatorListener()
+    {
         return animatorListener;
     }
 
-    public Shimmer setAnimatorListener(Animator.AnimatorListener animatorListener) {
+    public Shimmer setAnimatorListener(Animator.AnimatorListener animatorListener)
+    {
         this.animatorListener = animatorListener;
         return this;
     }
 
-    public <V extends View & ShimmerViewBase> void start(final V shimmerView) {
+    public <V extends View & ShimmerViewBase> void start(final V shimmerView)
+    {
 
-        if (isAnimating()) {
+        if (isAnimating())
+        {
             return;
         }
 
-        final Runnable animate = new Runnable() {
+        final Runnable animate = new Runnable()
+        {
             @Override
-            public void run() {
+            public void run()
+            {
 
                 shimmerView.setShimmering(true);
 
                 float fromX = 0;
                 float toX = shimmerView.getWidth();
-                if (direction == ANIMATION_DIRECTION_RTL) {
+                if (direction == ANIMATION_DIRECTION_RTL)
+                {
                     fromX = shimmerView.getWidth();
                     toX = 0;
                 }
@@ -111,18 +128,23 @@ public class Shimmer
                 animator.setRepeatCount(repeatCount);
                 animator.setDuration(duration);
                 animator.setStartDelay(startDelay);
-                animator.addListener(new Animator.AnimatorListener() {
+                animator.addListener(new Animator.AnimatorListener()
+                {
                     @Override
-                    public void onAnimationStart(Animator animation) {
+                    public void onAnimationStart(Animator animation)
+                    {
                     }
 
                     @Override
-                    public void onAnimationEnd(Animator animation) {
+                    public void onAnimationEnd(Animator animation)
+                    {
                         shimmerView.setShimmering(false);
 
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+                        {
                             shimmerView.postInvalidate();
-                        } else {
+                        } else
+                        {
                             shimmerView.postInvalidateOnAnimation();
                         }
 
@@ -130,17 +152,20 @@ public class Shimmer
                     }
 
                     @Override
-                    public void onAnimationCancel(Animator animation) {
+                    public void onAnimationCancel(Animator animation)
+                    {
 
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animator animation) {
+                    public void onAnimationRepeat(Animator animation)
+                    {
 
                     }
                 });
 
-                if (animatorListener != null) {
+                if (animatorListener != null)
+                {
                     animator.addListener(animatorListener);
                 }
 
@@ -148,25 +173,32 @@ public class Shimmer
             }
         };
 
-        if (!shimmerView.isSetUp()) {
-            shimmerView.setAnimationSetupCallback(new ShimmerViewHelper.AnimationSetupCallback() {
+        if (!shimmerView.isSetUp())
+        {
+            shimmerView.setAnimationSetupCallback(new ShimmerViewHelper.AnimationSetupCallback()
+            {
                 @Override
-                public void onSetupAnimation(final View target) {
+                public void onSetupAnimation(final View target)
+                {
                     animate.run();
                 }
             });
-        } else {
+        } else
+        {
             animate.run();
         }
     }
 
-    public void cancel() {
-        if (animator != null) {
+    public void cancel()
+    {
+        if (animator != null)
+        {
             animator.cancel();
         }
     }
 
-    public boolean isAnimating() {
+    public boolean isAnimating()
+    {
         return animator != null && animator.isRunning();
     }
 }

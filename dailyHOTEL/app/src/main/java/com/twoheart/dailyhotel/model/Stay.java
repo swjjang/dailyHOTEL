@@ -65,8 +65,10 @@ public class Stay extends Place
         return mGrade;
     }
 
-    public void setGrade(Grade grade) {
-        if (grade == null) {
+    public void setGrade(Grade grade)
+    {
+        if (grade == null)
+        {
             mGrade = Grade.etc;
         } else
         {
