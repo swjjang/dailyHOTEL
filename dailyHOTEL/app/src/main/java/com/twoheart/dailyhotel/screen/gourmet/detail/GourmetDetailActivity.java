@@ -645,6 +645,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         if (resultCode == RESULT_OK)
         {
+            hideSimpleDialog();
+
             SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
             if (checkInSaleTime == null)

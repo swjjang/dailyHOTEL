@@ -660,6 +660,8 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         if (resultCode == RESULT_OK)
         {
+            hideSimpleDialog();
+
             SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
             SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
 

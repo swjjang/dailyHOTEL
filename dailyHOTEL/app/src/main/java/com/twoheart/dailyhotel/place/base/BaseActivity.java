@@ -614,6 +614,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         return mDialog;
     }
 
+    public void hideSimpleDialog()
+    {
+        if (mDialog != null)
+        {
+            if (mDialog.isShowing())
+            {
+                mDialog.cancel();
+            }
+
+            mDialog = null;
+        }
+    }
+
     public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener)
     {
         showSimpleDialog(title, msg, positive, null, positiveListener, null);
