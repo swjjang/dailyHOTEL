@@ -59,7 +59,7 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
         if (mHomeEventList == null || mHomeEventList.size() == 0 || position < 0)
         {
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-//            imageView.setTag(imageView.getId(), position);
+            //            imageView.setTag(imageView.getId(), position);
             imageView.setTag(null);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
@@ -74,7 +74,7 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
             Event homeEvent = mHomeEventList.get(position);
 
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-//            imageView.setTag(imageView.getId(), position);
+            //            imageView.setTag(imageView.getId(), position);
             imageView.setTag(homeEvent);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 

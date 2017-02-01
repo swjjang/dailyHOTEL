@@ -86,7 +86,7 @@ public abstract class PlaceListLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        mPlaceRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recycleView);
+        mPlaceRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recyclerView);
 
         mLayoutManager = new LinearLayoutManager(mContext);
         mPlaceRecyclerView.setLayoutManager(mLayoutManager);

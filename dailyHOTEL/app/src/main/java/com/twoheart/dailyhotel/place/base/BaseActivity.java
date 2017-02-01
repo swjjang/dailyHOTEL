@@ -40,8 +40,6 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -360,7 +358,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onDestroy();
     }
 
-    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+    public void onErrorResponse(Call call, Response response)
     {
         unLockUI();
 

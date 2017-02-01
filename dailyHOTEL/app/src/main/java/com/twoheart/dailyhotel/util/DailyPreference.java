@@ -1118,7 +1118,8 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION, null);
     }
 
-    public void setRemoteConfigHomeEventUrl(String value) {
+    public void setRemoteConfigHomeEventUrl(String value)
+    {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_URL, value);
     }
 
@@ -1127,7 +1128,8 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_URL, null);
     }
 
-    public void setRemoteConfigHomeEventTitle(String value) {
+    public void setRemoteConfigHomeEventTitle(String value)
+    {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_TITLE, value);
     }
 

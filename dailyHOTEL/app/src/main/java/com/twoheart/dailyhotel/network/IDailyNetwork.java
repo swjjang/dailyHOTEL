@@ -543,4 +543,8 @@ public interface IDailyNetwork
     void requestHomeEvents(String tag, Object listener);
 
     void requestRecommendationList(String tag, Object listener);
+
+    void requestRecommendationStayList(String tag, int index, String salesDate, int period, Object listener);
+
+    void requestRecommendationGourmetList(String tag, int index, String salesDate, int period, Object listener);
 }

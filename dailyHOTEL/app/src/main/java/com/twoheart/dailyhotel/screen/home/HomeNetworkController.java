@@ -96,7 +96,8 @@ public class HomeNetworkController extends BaseNetworkController
         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(placeList);
     }
 
-    public void requestRecommendationList() {
+    public void requestRecommendationList()
+    {
         DailyMobileAPI.getInstance(mContext).requestRecommendationList(mNetworkTag, mRecommendationCallback);
     }
 
