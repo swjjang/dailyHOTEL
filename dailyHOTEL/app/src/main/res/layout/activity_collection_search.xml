@@ -15,6 +15,7 @@
             android:id="@+id/simpleDraweeView"
             android:layout_width="match_parent"
             android:layout_height="202dp"
+            android:transitionName="@string/transition_place_image"
             fresco:actualImageScaleType="centerCrop"
             fresco:overlayImage="@drawable/shape_fillrect_b99000000"/>
 
@@ -40,12 +41,14 @@
         android:layout_height="wrap_content"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="150dp">
+        android:translationY="-21dp"
+        android:paddingTop="171dp">
 
         <RelativeLayout
             android:id="@+id/titleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:transitionName="@string/transition_layout"
             android:background="@drawable/home_pick_bg">
 
             <LinearLayout
@@ -65,9 +68,9 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="선착순 한정판매, 9만원부터 예약 가능!"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"/>
+                    android:textSize="12dp"
+                    android:transitionName="@string/transition_subtitle"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -131,9 +134,9 @@
                 android:maxLines="1"
                 android:minHeight="29dp"
                 android:singleLine="true"
-                android:text="크리스마스 로맨틱 호텔 컬렉션"
                 android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"/>
+                android:textSize="18dp"
+                android:transitionName="@string/transition_title"/>
         </RelativeLayout>
 
         <ImageView

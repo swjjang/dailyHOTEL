@@ -14,12 +14,18 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.Recommendation;
+import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
+import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
+import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -1071,7 +1077,7 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestRecommendationPlaceList(String tag, int index, String startDay, String endDay, Object listener)
+    public void requestRecommendationStayList(String tag, int index, String salesDate, int period, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendation/{idx}"//
             : "MjgkODMkNzEkMzYkNDMkOTEkNCQyMCQxMzEkOCQxMDAkNjgkNjkkMzMkNjkkNTIk$QzczANjBIBODhDRkMxQkMJxNUFBRUFGOMHjZCMTFRDQTg5NPzY5NXTdFRDkyOTI5Njg4Q0OIAFBQkMyRDRJFQTFCOTAxRDGMxRDNE4RDkWxQzdFQTYxODM3RTIwNzFEN0Y3RDgyNEIB3RDEw$";
@@ -1079,8 +1085,22 @@ public class DailyMobileAPI implements IDailyNetwork
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{idx}", Integer.toString(index));
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestFeaturedPlaceList(Crypto.getUrlDecoderEx(URL), startDay, endDay);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRecommendationStayList(Crypto.getUrlDecoderEx(URL, urlParams), salesDate, period);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Holiday>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationStay>>>) listener);
+    }
+
+    @Override
+    public void requestRecommendationGourmetList(String tag, int index, String salesDate, int period, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recommendation/{idx}"//
+            : "MjgkODMkNzEkMzYkNDMkOTEkNCQyMCQxMzEkOCQxMDAkNjgkNjkkMzMkNjkkNTIk$QzczANjBIBODhDRkMxQkMJxNUFBRUFGOMHjZCMTFRDQTg5NPzY5NXTdFRDkyOTI5Njg4Q0OIAFBQkMyRDRJFQTFCOTAxRDGMxRDNE4RDkWxQzdFQTYxODM3RTIwNzFEN0Y3RDgyNEIB3RDEw$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{idx}", Integer.toString(index));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRecommendationGourmetList(Crypto.getUrlDecoderEx(URL, urlParams), salesDate, period);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationGourmet>>>) listener);
     }
 }

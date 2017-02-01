@@ -30,7 +30,7 @@ public class HomeRecommendationLayout extends LinearLayout
 
     public interface HomeRecommendationListener
     {
-        void onRecommendationClick(Recommendation recommendation, int position);
+        void onRecommendationClick(View view, Recommendation recommendation, int position);
     }
 
     public HomeRecommendationLayout(Context context)
@@ -172,7 +172,7 @@ public class HomeRecommendationLayout extends LinearLayout
             {
                 if (mListener != null)
                 {
-                    mListener.onRecommendationClick(recommendation, position);
+                    mListener.onRecommendationClick(v, recommendation, position);
                 }
             }
         });

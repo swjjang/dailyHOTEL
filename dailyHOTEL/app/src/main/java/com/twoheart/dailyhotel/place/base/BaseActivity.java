@@ -360,7 +360,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onDestroy();
     }
 
-    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+    public void onErrorResponse(Call call, Response response)
     {
         unLockUI();
 

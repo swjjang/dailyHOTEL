@@ -449,7 +449,8 @@ public class Util implements Constants
      */
     public static boolean isUsedMultiTransition()
     {
-        return isOverAPI21() == true && isOverAPI24() == false;
+//        return isOverAPI21() == true && isOverAPI24() == false;
+        return isOverAPI21() == true;
     }
 
     public static boolean isTelephonyEnabled(Context context)
@@ -1898,5 +1899,10 @@ public class Util implements Constants
         }
 
         return false;
+    }
+
+    public static String getResolutionImageUrl(Context context, String defaultImageUrl, String lowResolutionImageUrl)
+    {
+        return Util.getLCDWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;
     }
 }

@@ -94,7 +94,7 @@ public class HomeLayout extends BaseLayout
 
         void onEventItemClick(Event event);
 
-        void onRecommendationClick(Recommendation recommendation);
+        void onRecommendationClick(View view, Recommendation recommendation);
     }
 
     public enum MessageType
@@ -379,9 +379,9 @@ public class HomeLayout extends BaseLayout
         mHomeRecommendationLayout.setListener(new HomeRecommendationLayout.HomeRecommendationListener()
         {
             @Override
-            public void onRecommendationClick(Recommendation recommendation, int position)
+            public void onRecommendationClick(View view, Recommendation recommendation, int position)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onRecommendationClick(recommendation);
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation);
             }
         });
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.screen.search.collection.CollectionGourmetActivity;
+import com.twoheart.dailyhotel.screen.search.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -333,9 +336,35 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onRecommendationClick(Recommendation recommendation)
+        public void onRecommendationClick(View view, Recommendation recommendation)
         {
-            // TODO : 추천 상세 영역 이동
+//            Intent intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
+//                , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+//                , recommendation.title, recommendation.subtitle);
+
+            Intent intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
+                , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                , recommendation.title, recommendation.subtitle);
+
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                View contentTextLayout = view.findViewById(R.id.contentTextLayout);
+                View titleTextView = contentTextLayout.findViewById(R.id.contentTextView);
+                View subTitleTextView = contentTextLayout.findViewById(R.id.contentDescriptionView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(contentTextLayout, getString(R.string.transition_layout)),//
+                    android.support.v4.util.Pair.create(titleTextView, getString(R.string.transition_title)),//
+                    android.support.v4.util.Pair.create(subTitleTextView, getString(R.string.transition_subtitle)));
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION, options.toBundle());
+            } else
+            {
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+            }
         }
 
         @Override

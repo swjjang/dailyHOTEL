@@ -12,24 +12,22 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CollectionStayAdapter extends PlaceListAdapter
 {
     View.OnClickListener mOnClickListener;
-    View.OnClickListener mCalendarListener;
 
-    public CollectionStayAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener calendarClickListener)
+    public CollectionStayAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
     {
         super(context, arrayList);
 
         mOnClickListener = listener;
-        mCalendarListener = calendarClickListener;
 
         setSortType(Constants.SortType.DEFAULT);
     }
@@ -54,13 +52,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
                 view.setLayoutParams(layoutParams);
 
                 return new HotelViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_CALENDAR_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_collection_calendar, parent, false);
-
-                return new CalendarViewHolder(view);
             }
 
             case PlaceViewItem.TYPE_HEADER_VIEW:
@@ -104,22 +95,18 @@ public class CollectionStayAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item);
                 break;
-
-            case PlaceViewItem.TYPE_CALENDAR_VIEW:
-                onBindViewHolder((CalendarViewHolder) holder, item);
-                break;
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(HotelViewHolder holder, PlaceViewItem placeViewItem)
     {
-        final Stay stay = placeViewItem.getItem();
+        final RecommendationStay recommendationStay = placeViewItem.getItem();
 
-        String strPrice = Util.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, stay.discountPrice, false);
+        String strPrice = Util.getPriceFormat(mContext, recommendationStay.price, false);
+        String strDiscount = Util.getPriceFormat(mContext, recommendationStay.discount, false);
 
-        String address = stay.addressSummary;
+        String address = recommendationStay.addrSummary;
 
         int barIndex = address.indexOf('|');
         if (barIndex >= 0)
@@ -131,9 +118,9 @@ public class CollectionStayAdapter extends PlaceListAdapter
         }
 
         holder.hotelAddressView.setText(address);
-        holder.hotelNameView.setText(stay.name);
+        holder.hotelNameView.setText(recommendationStay.name);
 
-        if (stay.price <= 0 || stay.price <= stay.discountPrice)
+        if (recommendationStay.price <= 0 || recommendationStay.price <= recommendationStay.discount)
         {
             holder.hotelPriceView.setVisibility(View.INVISIBLE);
             holder.hotelPriceView.setText(null);
@@ -145,17 +132,17 @@ public class CollectionStayAdapter extends PlaceListAdapter
         }
 
         // 만족도
-        if (stay.satisfaction > 0)
+        if (recommendationStay.rating > 0)
         {
             holder.satisfactionView.setVisibility(View.VISIBLE);
             holder.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, stay.satisfaction));
+                mContext.getResources().getString(R.string.label_list_satisfaction, recommendationStay.rating));
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (stay.nights > 1)
+        if (recommendationStay.nights > 1)
         {
             holder.averageView.setVisibility(View.VISIBLE);
         } else
@@ -175,13 +162,14 @@ public class CollectionStayAdapter extends PlaceListAdapter
         }
 
         // grade
-        holder.hotelGradeView.setText(stay.getGrade().getName(mContext));
-        holder.hotelGradeView.setBackgroundResource(stay.getGrade().getColorResId());
+        Stay.Grade grade = Stay.Grade.valueOf(recommendationStay.grade);
+        holder.hotelGradeView.setText(grade.getName(mContext));
+        holder.hotelGradeView.setBackgroundResource(grade.getColorResId());
 
-        Util.requestImageResize(mContext, holder.hotelImageView, stay.imageUrl);
+        Util.requestImageResize(mContext, holder.hotelImageView, recommendationStay.imageUrl);
 
         // SOLD OUT 표시
-        if (stay.isSoldOut == true)
+        if (recommendationStay.isSoldOut == true)
         {
             holder.hotelSoldOutView.setVisibility(View.VISIBLE);
         } else
@@ -189,30 +177,23 @@ public class CollectionStayAdapter extends PlaceListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(stay.dBenefitText) == false)
+        if (Util.isTextEmpty(recommendationStay.benefit) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
-            holder.dBenefitTextView.setText(stay.dBenefitText);
+            holder.dBenefitTextView.setText(recommendationStay.benefit);
         } else
         {
             holder.dBenefitLayout.setVisibility(View.GONE);
         }
 
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
-        } else
-        {
-            holder.distanceTextView.setVisibility(View.GONE);
-        }
-    }
-
-    private void onBindViewHolder(CalendarViewHolder holder, PlaceViewItem placeViewItem)
-    {
-        final String dateText = placeViewItem.getItem();
-
-        holder.calendarTextView.setText(dateText);
+        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+        //        {
+        //            holder.distanceTextView.setVisibility(View.VISIBLE);
+        //            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
+        //        } else
+        //        {
+        holder.distanceTextView.setVisibility(View.GONE);
+        //        }
     }
 
     private class HotelViewHolder extends RecyclerView.ViewHolder
@@ -258,20 +239,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
         public HeaderViewHolder(View itemView)
         {
             super(itemView);
-        }
-    }
-
-    private class CalendarViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView calendarTextView;
-
-        public CalendarViewHolder(View itemView)
-        {
-            super(itemView);
-
-            calendarTextView = (TextView) itemView.findViewById(R.id.calendarTextView);
-
-            itemView.setOnClickListener(mCalendarListener);
         }
     }
 }

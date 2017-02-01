@@ -123,6 +123,9 @@
     <string name="transition_place_name">placeName</string>
     <string name="transition_gradient_bottom_view">gradientBottomView</string>
     <string name="transition_gradient_top_view">gradientTopView</string>
+    <string name="transition_title">title</string>
+    <string name="transition_subtitle">subTitle</string>
+    <string name="transition_layout">layout</string>
 
     <!-- Stay Grade -->
     <string name="grade_special">특급</string>

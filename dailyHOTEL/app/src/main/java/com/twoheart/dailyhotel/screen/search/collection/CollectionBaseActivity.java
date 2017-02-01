@@ -7,22 +7,25 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Transition;
+import android.transition.TransitionSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
@@ -45,6 +48,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     PinnedSectionRecyclerView mRecyclerView;
     PlaceListAdapter mPlaceListAdapter;
+    private TextView mCalendarTextView;
     protected SaleTime mStartSaleTime, mEndSaleTime;
     int mRecommendationIndex;
     private int mScrollState;
@@ -59,6 +63,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected abstract void onPlaceClick(View view, PlaceViewItem placeViewItem, int count);
 
     protected abstract String getCalendarDate();
+
+    protected abstract void onCalendarClick();
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
@@ -94,10 +100,12 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         if (Util.isUsedMultiTransition() == true)
         {
+            initLayout(title, subTitle, imageUrl);
 
+            initTransition();
         } else
         {
-            initLayout(title, imageUrl);
+            initLayout(title, subTitle, imageUrl);
 
             lockUI();
 
@@ -127,13 +135,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                             long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
                             long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
 
-                            mStartSaleTime = new SaleTime();
-                            mStartSaleTime.setCurrentTime(currentDateTime);
-                            mStartSaleTime.setDailyTime(dailyDateTime);
-
-                            mEndSaleTime = mStartSaleTime.getClone(1);
-
-                            requestRecommendationPlaceList();
+                            onCommonDateTime(currentDateTime, dailyDateTime);
                         } else
                         {
                             String message = responseJSONObject.getString("msg");
@@ -165,10 +167,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
         AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.RECOMMEND_LIST, null);
     }
 
-    private void initLayout(String title, String titleImageUrl)
+    private void initLayout(String title, String subTitle, String titleImageUrl)
     {
-        initToolbar(title);
-
         // 백이미지
         final View backImageView = findViewById(R.id.backImageView);
         backImageView.setOnClickListener(new View.OnClickListener()
@@ -179,7 +179,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
                 finish();
             }
         });
-
 
         final View imageViewLayout = findViewById(R.id.imageViewLayout);
 
@@ -202,8 +201,18 @@ public abstract class CollectionBaseActivity extends BaseActivity
         final TextView titleTextView = (TextView) titleBoxLayout.findViewById(R.id.titleTextView);
         final TextView subTitleTextView = (TextView) subTitleLayout.findViewById(R.id.subTitleTextView);
 
-        final TextView calendarTextView = (TextView) subTitleLayout.findViewById(R.id.calendarTextView);
-        calendarTextView.setText(getCalendarDate());
+        titleTextView.setText(title);
+        subTitleTextView.setText(subTitle);
+
+        mCalendarTextView = (TextView) subTitleLayout.findViewById(R.id.calendarTextView);
+        mCalendarTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                onCalendarClick();
+            }
+        });
 
         // 리스트
         mRecyclerView = (PinnedSectionRecyclerView) findViewById(R.id.recyclerView);
@@ -286,9 +295,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         titleBoxLayout.setTranslationY(-dp21Height);
                     } else
                     {
-
                         final float titleLayoutValue = (float) firstView.getBottom() / startAnimationHeight;
-
                         final float titleLayoutTopPaddingValue = (dp171Height - (firstView.getHeight() - startAnimationHeight)) * titleLayoutValue;
                         final int titleLayoutPaddingValue = (int) (titleLayoutValue * dp15Height);
 
@@ -300,7 +307,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         fakeBackImageLayoutParams.leftMargin = -titleLayoutPaddingValue;
 
                         subTitleLayout.setPadding(0, dp20Height + (int) (dp21Height * titleLayoutValue), 0, 0);
-
 
                         if (titleBoxLayout.getPaddingTop() < 5)
                         {
@@ -408,6 +414,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                             }
 
                         case RecyclerView.SCROLL_STATE_DRAGGING:
+                        case RecyclerView.SCROLL_STATE_SETTLING:
                             mDragDistance = 0;
                             break;
                     }
@@ -416,18 +423,53 @@ public abstract class CollectionBaseActivity extends BaseActivity
         });
     }
 
-    private void initToolbar(String title)
+    private void initTransition()
     {
-        //        View toolbar = findViewById(R.id.toolbar);
-        //        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        //        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                finish();
-        //            }
-        //        });
+        if (Util.isUsedMultiTransition() == true)
+        {
+            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+
+            getWindow().setSharedElementEnterTransition(intransitionSet);
+
+            TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            outTransitionSet.setDuration(200);
+
+            getWindow().setSharedElementReturnTransition(outTransitionSet);
+            intransitionSet.addListener(new Transition.TransitionListener()
+            {
+                @Override
+                public void onTransitionStart(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition)
+                {
+                    lockUI();
+
+                    requestCommonDateTime();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition)
+                {
+
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition)
+                {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -467,7 +509,20 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
     }
 
-    private ArrayList<PlaceViewItem> makePlaceList(List<? extends Place> placeList, String[] placeIndexs)
+    private void onCommonDateTime(long currentDateTime, long dailyDateTime)
+    {
+        mStartSaleTime = new SaleTime();
+        mStartSaleTime.setCurrentTime(currentDateTime);
+        mStartSaleTime.setDailyTime(dailyDateTime);
+
+        mEndSaleTime = mStartSaleTime.getClone(1);
+
+        mCalendarTextView.setText(getCalendarDate());
+
+        requestRecommendationPlaceList();
+    }
+
+    protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
@@ -482,52 +537,30 @@ public abstract class CollectionBaseActivity extends BaseActivity
             // 개수 넣기
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
-            if (placeIndexs != null && placeIndexs.length > 0)
+            for (RecommendationPlace place : placeList)
             {
-                for (String hotelIndex : placeIndexs)
-                {
-                    try
-                    {
-                        int index = Integer.parseInt(hotelIndex);
-
-                        for (Place place : placeList)
-                        {
-                            if (index == place.index)
-                            {
-                                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                            }
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-            } else
-            {
-                for (Place place : placeList)
-                {
-                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                }
+                place.imageUrl = imageBaseUrl + place.imageUrl;
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
             }
         }
 
         return placeViewItemList;
     }
 
-    protected void onPlaceList(ArrayList<Place> list)
+    protected void onPlaceList(String imageBaseUrl, ArrayList<? extends RecommendationPlace> list)
     {
-        //        if (isFinishing() == true)
-        //        {
-        //            unLockUI();
-        //            return;
-        //        }
-        //
-        //        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(list, mRecommendationIndex);
-        //
-        //        mPlaceListAdapter.setAll(placeViewItems);
-        //        mPlaceListAdapter.notifyDataSetChanged();
-        //
-        //        unLockUI();
+        if (isFinishing() == true)
+        {
+            unLockUI();
+            return;
+        }
+
+        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list);
+
+        mPlaceListAdapter.setAll(placeViewItems);
+        mPlaceListAdapter.notifyDataSetChanged();
+
+        unLockUI();
     }
 
     protected View.OnClickListener mOnItemClickListener = new View.OnClickListener()

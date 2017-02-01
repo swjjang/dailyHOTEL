@@ -58,7 +58,7 @@ public abstract class BaseFragment extends Fragment implements Constants
         baseActivity.onError(e);
     }
 
-    public void onErrorResponse(Call<JSONObject> call, Response<JSONObject> response)
+    public void onErrorResponse(Call call, Response<JSONObject> response)
     {
         unLockUI();
 
