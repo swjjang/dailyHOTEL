@@ -67,7 +67,7 @@ public class SelectStayCouponNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadJsonResponseListener);
+        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadCallback);
     }
 
     public SelectStayCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -123,7 +123,7 @@ public class SelectStayCouponNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mDownloadJsonResponseListener = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mDownloadCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

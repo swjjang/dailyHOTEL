@@ -113,7 +113,7 @@ public class DailyDeepLink
 
     private static final String MYDAILY_V12 = "md"; // 마이 데일리 화면
     private static final String HOME_V12_EVENT_DETAIL = "hed"; // 홈의 이벤트 상세화면
-    private static final String HOME_V12_FEATURED_DETAIL_LIST = "hfdl"; // 홈의 데일리 추천 -> 상세 리스트
+    private static final String HOME_V12_RECOMMENDATION_PLACE_LIST = "hrpl"; // 홈의 데일리 추천 -> 상세 리스트
 
 
     private static final int MINIMUM_VERSION_CODE = 2;
@@ -213,13 +213,13 @@ public class DailyDeepLink
         }
     }
 
-    public boolean isHomeFeaturedDetailListView()
+    public boolean isHomeRecommendationPlaceListView()
     {
         String view = getView();
 
         if (mVersionCode >= 12)
         {
-            return HOME_V12_FEATURED_DETAIL_LIST.equalsIgnoreCase(view);
+            return HOME_V12_RECOMMENDATION_PLACE_LIST.equalsIgnoreCase(view);
         } else
         {
             return false;

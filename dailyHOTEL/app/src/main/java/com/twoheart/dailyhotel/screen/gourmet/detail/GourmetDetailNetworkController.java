@@ -30,7 +30,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
     public void requestGourmetDetailInformation(String day, int index)
     {
         DailyMobileAPI.getInstance(mContext).requestGourmetDetailInformation(mNetworkTag, //
-            index, day, mGourmetDetailJsonResponseListener);
+            index, day, mGourmetDetailCallback);
     }
 
     public void requestHasCoupon(int placeIndex, String date)
@@ -38,7 +38,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
         DailyMobileAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, mHasCouponCallback);
     }
 
-    private retrofit2.Callback mGourmetDetailJsonResponseListener = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mGourmetDetailCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

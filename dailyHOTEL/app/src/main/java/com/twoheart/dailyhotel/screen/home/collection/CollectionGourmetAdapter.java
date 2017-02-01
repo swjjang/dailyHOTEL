@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.collection;
+package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,26 +10,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CollectionGourmetAdapter extends PlaceListAdapter
 {
     View.OnClickListener mOnClickListener;
-    View.OnClickListener mCalendarListener;
 
-    public CollectionGourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener calendarClickListener)
+    public CollectionGourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
     {
         super(context, arrayList);
 
         mOnClickListener = listener;
-        mCalendarListener = calendarClickListener;
 
         setSortType(Constants.SortType.DEFAULT);
     }
@@ -54,13 +51,6 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                 view.setLayoutParams(layoutParams);
 
                 return new GourmetViewHolder(view);
-            }
-
-            case PlaceViewItem.TYPE_CALENDAR_VIEW:
-            {
-                View view = mInflater.inflate(R.layout.list_row_collection_calendar, parent, false);
-
-                return new CalendarViewHolder(view);
             }
 
             case PlaceViewItem.TYPE_HEADER_VIEW:
@@ -103,22 +93,18 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item);
                 break;
-
-            case PlaceViewItem.TYPE_CALENDAR_VIEW:
-                onBindViewHolder((CalendarViewHolder) holder, item);
-                break;
         }
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(GourmetViewHolder holder, PlaceViewItem placeViewItem)
     {
-        final Gourmet gourmet = placeViewItem.getItem();
+        final RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
-        String strPrice = Util.getPriceFormat(mContext, gourmet.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, gourmet.discountPrice, false);
+        String strPrice = Util.getPriceFormat(mContext, recommendationGourmet.price, false);
+        String strDiscount = Util.getPriceFormat(mContext, recommendationGourmet.discount, false);
 
-        String address = gourmet.addressSummary;
+        String address = recommendationGourmet.addrSummary;
 
         int barIndex = address.indexOf('|');
         if (barIndex >= 0)
@@ -130,19 +116,19 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         }
 
         holder.addressView.setText(address);
-        holder.nameView.setText(gourmet.name);
+        holder.nameView.setText(recommendationGourmet.name);
 
         // 인원
-        if (gourmet.persons > 1)
+        if (recommendationGourmet.persons > 1)
         {
             holder.personsTextView.setVisibility(View.VISIBLE);
-            holder.personsTextView.setText(mContext.getString(R.string.label_persions, gourmet.persons));
+            holder.personsTextView.setText(mContext.getString(R.string.label_persions, recommendationGourmet.persons));
         } else
         {
             holder.personsTextView.setVisibility(View.GONE);
         }
 
-        if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+        if (recommendationGourmet.price <= 0 || recommendationGourmet.price <= recommendationGourmet.discount)
         {
             holder.priceView.setVisibility(View.INVISIBLE);
             holder.priceView.setText(null);
@@ -155,11 +141,11 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         }
 
         // 만족도
-        if (gourmet.satisfaction > 0)
+        if (recommendationGourmet.rating > 0)
         {
             holder.satisfactionView.setVisibility(View.VISIBLE);
             holder.satisfactionView.setText(//
-                mContext.getResources().getString(R.string.label_list_satisfaction, gourmet.satisfaction));
+                mContext.getResources().getString(R.string.label_list_satisfaction, recommendationGourmet.rating));
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);
@@ -177,12 +163,12 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         }
 
         String displayCategory;
-        if (Util.isTextEmpty(gourmet.subCategory) == false)
+        if (Util.isTextEmpty(recommendationGourmet.categorySub) == false)
         {
-            displayCategory = gourmet.subCategory;
+            displayCategory = recommendationGourmet.categorySub;
         } else
         {
-            displayCategory = gourmet.category;
+            displayCategory = recommendationGourmet.category;
         }
 
         // grade
@@ -195,10 +181,10 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.gradeView.setText(displayCategory);
         }
 
-        Util.requestImageResize(mContext, holder.gourmetImageView, gourmet.imageUrl);
+        Util.requestImageResize(mContext, holder.gourmetImageView, recommendationGourmet.imageUrl);
 
         // SOLD OUT 표시
-        if (gourmet.isSoldOut)
+        if (recommendationGourmet.isSoldOut)
         {
             holder.soldOutView.setVisibility(View.VISIBLE);
         } else
@@ -206,30 +192,23 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.soldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(gourmet.dBenefitText) == false)
+        if (Util.isTextEmpty(recommendationGourmet.benefit) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
-            holder.dBenefitTextView.setText(gourmet.dBenefitText);
+            holder.dBenefitTextView.setText(recommendationGourmet.benefit);
         } else
         {
             holder.dBenefitLayout.setVisibility(View.GONE);
         }
 
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.distanceTextView.setVisibility(View.VISIBLE);
-            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance) + "km)");
-        } else
-        {
-            holder.distanceTextView.setVisibility(View.GONE);
-        }
-    }
-
-    private void onBindViewHolder(CalendarViewHolder holder, PlaceViewItem placeViewItem)
-    {
-        final String dateText = placeViewItem.getItem();
-
-        holder.calendarTextView.setText(dateText);
+        //        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
+        //        {
+        //            holder.distanceTextView.setVisibility(View.VISIBLE);
+        //            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance) + "km)");
+        //        } else
+        //        {
+        holder.distanceTextView.setVisibility(View.GONE);
+        //        }
     }
 
     private class GourmetViewHolder extends RecyclerView.ViewHolder
@@ -275,20 +254,6 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         public HeaderViewHolder(View itemView)
         {
             super(itemView);
-        }
-    }
-
-    private class CalendarViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView calendarTextView;
-
-        public CalendarViewHolder(View itemView)
-        {
-            super(itemView);
-
-            calendarTextView = (TextView) itemView.findViewById(R.id.calendarTextView);
-
-            itemView.setOnClickListener(mCalendarListener);
         }
     }
 }
