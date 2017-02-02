@@ -1053,12 +1053,12 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Holiday>>) listener);
     }
 
-    public void requestHomeEvents(String tag, Object listener)
+    public void requestHomeEvents(String tag, String store, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/events"//
             : "NTQkODckNzQkMiQzNCQxNiQzOCQ0OSQ5MyQ3MiQyNiQyJDUkMTAwJDIzJDk1JA==$N0YDRHGQkFDMzlBN0QC3NkUGzM0EzJMTg1QzYzRWkQF0NTAzQTE3QFTFBOTdDQkGU4NzAxNUIzMzZM5Q0U4NTzdFODNFQ0NPGMgSJ=L=$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeEvents(Crypto.getUrlDecoderEx(URL));
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeEvents(Crypto.getUrlDecoderEx(URL), store);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Event>>) listener);
     }

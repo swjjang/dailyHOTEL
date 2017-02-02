@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -59,7 +59,17 @@ public class HomeNetworkController extends BaseNetworkController
 
     public void requestEventList()
     {
-        DailyMobileAPI.getInstance(mContext).requestHomeEvents(mNetworkTag, mEventCallback);
+        String store;
+
+        if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE)
+        {
+            store = "GOOGLE";
+        } else
+        {
+            store = "ONE";
+        }
+
+        DailyMobileAPI.getInstance(mContext).requestHomeEvents(mNetworkTag, store, mEventCallback);
     }
 
     public void requestWishList()
@@ -185,12 +195,11 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mEventCallback = new Callback<BaseListDto<Event>>()
+    private retrofit2.Callback mEventCallback = new retrofit2.Callback<BaseListDto<Event>>()
     {
         @Override
         public void onResponse(Call<BaseListDto<Event>> call, Response<BaseListDto<Event>> response)
         {
-
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
@@ -221,12 +230,11 @@ public class HomeNetworkController extends BaseNetworkController
         }
     };
 
-    private retrofit2.Callback mRecommendationCallback = new Callback<BaseListDto<Recommendation>>()
+    private retrofit2.Callback mRecommendationCallback = new retrofit2.Callback<BaseListDto<Recommendation>>()
     {
         @Override
         public void onResponse(Call<BaseListDto<Recommendation>> call, Response<BaseListDto<Recommendation>> response)
         {
-
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
