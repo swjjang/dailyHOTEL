@@ -104,7 +104,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         public void onCalendarClick()
         {
             Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
-                , mStartSaleTime, null, AnalyticsManager.ValueType.SEARCH, true, true);
+                , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
@@ -118,7 +118,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
-            Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, recommendationGourmet, mStartSaleTime, null, count);
+            Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, recommendationGourmet, null, null, count);
 
             if (Util.isUsedMultiTransition() == true)
             {

@@ -148,7 +148,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
             final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
 
             Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
-                , mStartSaleTime, null, AnalyticsManager.ValueType.SEARCH, true, true);
+                , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
@@ -162,7 +162,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             RecommendationStay recommendationStay = placeViewItem.getItem();
 
-            Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, mStartSaleTime, null, count);
+            Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count);
 
             if (Util.isUsedMultiTransition() == true)
             {
