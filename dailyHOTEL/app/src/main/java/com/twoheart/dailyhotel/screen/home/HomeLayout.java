@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -40,7 +39,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by android_sam on 2017. 1. 11..
@@ -347,45 +345,6 @@ public class HomeLayout extends BaseLayout
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListViewAllClick();
             }
         });
-
-        // Test Data
-        mRecentListLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                // 임시 테스트 데이터
-                ArrayList<Stay> placeList = new ArrayList<>();
-                Random random = new Random();
-                int size = random.nextInt(14);
-                for (int i = 0; i < size; i++)
-                {
-                    Stay stay = new Stay();
-
-                    stay.price = Math.abs(random.nextInt(100000));
-                    stay.name = "Stay " + i;
-                    stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
-                    stay.districtName = "서울";
-                    stay.isSoldOut = i % 5 == 0;
-
-                    if (i % 3 == 0)
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-                    } else if (i % 3 == 1)
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-                    } else
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
-                    }
-                    placeList.add(stay);
-
-                    stay.setGrade(Stay.Grade.special2);
-                }
-                mRecentListLayout.setData(placeList);
-                // 임시 테스트 데이터 끝!
-            }
-        }, 5000);
     }
 
     private void initRecommendationLayout(LinearLayout layout)
@@ -826,6 +785,11 @@ public class HomeLayout extends BaseLayout
     public void setWishListData(ArrayList<? extends Place> list)
     {
         mWishListLayout.setData(list);
+    }
+
+    public void setmRecentListData(ArrayList<? extends Place> list)
+    {
+        mRecentListLayout.setData(list);
     }
 
     public void setRecommendationData(ArrayList<Recommendation> list)

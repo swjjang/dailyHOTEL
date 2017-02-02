@@ -110,10 +110,10 @@ public class HomeFragment extends BaseFragment
                 mOnEventListener.onGourmetButtonClick();
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
-                startRecentPlaces(PlaceType.HOTEL);
+                startRecentList(PlaceType.HOTEL);
             } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
             {
-                startRecentPlaces(PlaceType.FNB);
+                startRecentList(PlaceType.FNB);
             } else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
             {
                 startWishList(PlaceType.HOTEL);
@@ -144,6 +144,7 @@ public class HomeFragment extends BaseFragment
             mNetworkController.requestEventList();
             mNetworkController.requestRecommendationList();
             mNetworkController.requestWishList();
+            mNetworkController.requestRecentList();
         }
 
         // 애니메이션 처리!
@@ -330,7 +331,7 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
-    public void startRecentPlaces(PlaceType placeType)
+    public void startRecentList(PlaceType placeType)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {
@@ -489,7 +490,7 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onRecentListViewAllClick()
         {
-            startRecentPlaces(PlaceType.HOTEL);
+            startRecentList(PlaceType.HOTEL);
         }
 
         @Override
@@ -542,6 +543,15 @@ public class HomeFragment extends BaseFragment
             if (mHomeLayout != null)
             {
                 mHomeLayout.setWishListData(list);
+            }
+        }
+
+        @Override
+        public void onRecentList(ArrayList<? extends Place> list)
+        {
+            if (mHomeLayout != null)
+            {
+                mHomeLayout.setmRecentListData(list);
             }
         }
 

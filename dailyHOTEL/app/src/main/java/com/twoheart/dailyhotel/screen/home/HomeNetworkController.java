@@ -44,6 +44,8 @@ public class HomeNetworkController extends BaseNetworkController
 
         void onWishList(ArrayList<? extends Place> list);
 
+        void onRecentList(ArrayList<? extends Place> list);
+
         void onRecommendationList(ArrayList<Recommendation> list);
     }
 
@@ -104,6 +106,40 @@ public class HomeNetworkController extends BaseNetworkController
         }
 
         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(placeList);
+    }
+
+    public void requestRecentList()
+    {
+        // 임시 테스트 데이터
+        ArrayList<Stay> placeList = new ArrayList<>();
+        Random random = new Random();
+        int size = random.nextInt(14);
+        for (int i = 0; i < size; i++)
+        {
+            Stay stay = new Stay();
+
+            stay.price = Math.abs(random.nextInt(100000));
+            stay.name = "Stay " + i;
+            stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
+            stay.districtName = "서울";
+            stay.isSoldOut = i % 5 == 0;
+
+            if (i % 3 == 0)
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+            } else if (i % 3 == 1)
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+            } else
+            {
+                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+            }
+            placeList.add(stay);
+
+            stay.setGrade(Stay.Grade.special2);
+        }
+
+        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(placeList);
     }
 
     public void requestRecommendationList()
