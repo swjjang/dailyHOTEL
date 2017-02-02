@@ -370,6 +370,14 @@ public class MainActivity extends BaseActivity implements Constants
 
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+
+                        startActivityForResult(StayMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_GOURMET_LIST:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+
+                        startActivityForResult(GourmetMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                         break;
 
                     default:

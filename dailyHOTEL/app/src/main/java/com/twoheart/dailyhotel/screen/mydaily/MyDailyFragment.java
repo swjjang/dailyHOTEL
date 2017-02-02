@@ -427,7 +427,6 @@ public class MyDailyFragment extends BaseFragment implements Constants
                 return;
             }
 
-
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
