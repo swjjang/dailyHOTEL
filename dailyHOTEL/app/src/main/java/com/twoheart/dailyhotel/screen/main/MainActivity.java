@@ -917,19 +917,14 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
 
-                    startActivity(CollectionStayActivity.newInstance(MainActivity.this, 3));
-
                 } else if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-
-                    startActivityForResult(new Intent(MainActivity.this, StayMainActivity.class), Constants.CODE_REQUEST_ACTIVITY_STAY);
 
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
 
-                    startActivityForResult(new Intent(MainActivity.this, GourmetMainActivity.class), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                 } else if (DailyDeepLink.getInstance().isBookingView() == true //
                     || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {
