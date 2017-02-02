@@ -24,6 +24,8 @@ import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
+import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
+import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -83,21 +85,41 @@ public class HomeFragment extends BaseFragment
             } else if (DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = DailyDeepLink.getInstance().getPlaceType();
+                String stringIndex = DailyDeepLink.getInstance().getIndex();
 
                 int idx;
 
                 try
                 {
-                    idx = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+                    idx = Integer.parseInt(stringIndex);
+                    startDeepLinkRecommendationActivity(serviceType, idx);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
-
+                } finally
+                {
                     DailyDeepLink.getInstance().clear();
                     return;
-                }
 
-                startDeepLinkRecommendationActivity(serviceType, idx);
+                }
+            } else if (DailyDeepLink.getInstance().isHotelView() == true)
+            {
+                mOnEventListener.onStayButtonClick();
+            } else if (DailyDeepLink.getInstance().isGourmetListView() == true)
+            {
+                mOnEventListener.onGourmetButtonClick();
+            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
+            {
+                startRecentPlaces(PlaceType.HOTEL);
+            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
+            {
+                startRecentPlaces(PlaceType.FNB);
+            } else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
+            {
+                startWishList(PlaceType.HOTEL);
+            } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
+            {
+                startWishList(PlaceType.FNB);
             }
 
             DailyDeepLink.getInstance().clear();
@@ -111,7 +133,7 @@ public class HomeFragment extends BaseFragment
 
         if (mDontReload == true)
         {
-            mDontReload = true;
+            mDontReload = false;
         } else
         {
             lockUI();
@@ -275,13 +297,13 @@ public class HomeFragment extends BaseFragment
 
         switch (serviceType)
         {
-            case "GOURMET":
+            case "gourmet":
                 intent = CollectionGourmetActivity.newInstance(mBaseActivity, index//
                     , null//
                     , null, null);
                 break;
 
-            case "HOTEL":
+            case "stay":
             default:
                 intent = CollectionStayActivity.newInstance(mBaseActivity, index//
                     , null//
@@ -291,6 +313,36 @@ public class HomeFragment extends BaseFragment
         }
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+    }
+
+    private void startWishList(PlaceType placeType)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+        Intent intent = WishListTabActivity.newInstance(baseActivity, WishListTabActivity.SourceType.HOME, placeType);
+
+        baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
+    }
+
+    public void startRecentPlaces(PlaceType placeType)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+        Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, RecentPlacesTabActivity.SourceType.HOME, placeType);
+
+        baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
@@ -426,6 +478,18 @@ public class HomeFragment extends BaseFragment
             {
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
             }
+        }
+
+        @Override
+        public void onWishListViewAllClick()
+        {
+            startWishList(PlaceType.HOTEL);
+        }
+
+        @Override
+        public void onRecentListViewAllClick()
+        {
+            startRecentPlaces(PlaceType.HOTEL);
         }
 
         @Override
