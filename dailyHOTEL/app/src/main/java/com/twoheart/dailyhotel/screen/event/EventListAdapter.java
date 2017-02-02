@@ -96,14 +96,7 @@ public class EventListAdapter extends ArrayAdapter<Event>
 
         com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
         Event event = getItem(position);
-
-        if (Util.getLCDWidth(mContext) < 1440)
-        {
-            Util.requestImageResize(mContext, imageView, event.lowResolutionImageUrl);
-        } else
-        {
-            Util.requestImageResize(mContext, imageView, event.defaultImageUrl);
-        }
+        Util.requestImageResize(mContext, imageView, Util.getResolutionImageUrl(mContext, event.defaultImageUrl, event.lowResolutionImageUrl));
 
         return view;
     }

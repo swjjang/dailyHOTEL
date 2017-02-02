@@ -13,6 +13,9 @@ public class Recommendation
     public int idx;
 
     @JsonField
+    public String serviceType;
+
+    @JsonField
     public String title;
 
     @JsonField

@@ -57,7 +57,8 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             {
                 View view = mInflater.inflate(R.layout.list_row_collection_header, parent, false);
 
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
+                    , Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - Util.dpToPx(mContext, 96));
                 view.setLayoutParams(layoutParams);
 
                 return new HeaderViewHolder(view);
@@ -65,7 +66,10 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.view_empty_stay_collection, parent, false);
+                View view = mInflater.inflate(R.layout.view_empty_gourmet_collection, parent, false);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
+                    , Util.getLCDHeight(mContext) - Util.dpToPx(mContext, 96) - Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - Util.dpToPx(mContext, 96));
+                view.setLayoutParams(layoutParams);
 
                 return new FooterViewHolder(view);
             }

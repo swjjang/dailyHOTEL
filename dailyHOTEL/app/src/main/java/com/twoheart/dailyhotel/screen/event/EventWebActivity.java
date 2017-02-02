@@ -125,7 +125,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         setContentView(R.layout.activity_event_web);
 
-        initToolbar();
+        initToolbar(mEventName);
 
         WebView webView = (WebView) findViewById(R.id.webView);
         webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
@@ -153,11 +153,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
         initLayout((DailyWebView) webView);
     }
 
-    private void initToolbar()
+    private void initToolbar(String title)
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_event_list_frag), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

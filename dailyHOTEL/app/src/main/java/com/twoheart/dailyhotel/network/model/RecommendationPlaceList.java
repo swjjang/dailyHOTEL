@@ -14,5 +14,6 @@ public class RecommendationPlaceList<E>
     @JsonField
     public List<E> items;
 
-    public String imageBaseUrl = "https://img.dailyhotel.me/resources/images/";
+    @JsonField(name = "imgUrl")
+    public String imageBaseUrl;
 }
