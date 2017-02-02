@@ -8,23 +8,25 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -35,7 +37,6 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -45,40 +46,32 @@ import retrofit2.Response;
 
 public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 {
-    public StayBookingDetail mStayBookingDetail;
-    public StayBookingDetailTabBookingFragment mStayBookingDetailTabBookingFragment;
+    private StayBookingDetail mStayBookingDetail;
+    private StayBookingDetailLayout mStayBookingDetailLayout;
+    private StayBookingDetailTabBookingNetworkController mNetworkController;
+
+    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
+    {
+        Intent intent = new Intent(context, StayBookingDetailTabActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
+        mStayBookingDetailLayout = new StayBookingDetailLayout(this, mOnEventListener);
+
+        mNetworkController = new StayBookingDetailTabBookingNetworkController(this, mNetworkTag, mNetworkControllerListener);
         mStayBookingDetail = new StayBookingDetail();
-    }
 
-    @Override
-    protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
-    {
-        String tag = (String) viewPager.getTag();
-
-        if (tag != null)
-        {
-            return;
-        }
-
-        if (mStayBookingDetailTabBookingFragment != null)
-        {
-            mStayBookingDetailTabBookingFragment.updateRefundPolicyLayout((StayBookingDetail) placeBookingDetail);
-            return;
-        }
-
-        ArrayList<BaseFragment> fragmentList = new ArrayList<>();
-
-        mStayBookingDetailTabBookingFragment = StayBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
-        fragmentList.add(mStayBookingDetailTabBookingFragment);
-
-        BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-        viewPager.setAdapter(fragmentPagerAdapter);
+        setContentView(mStayBookingDetailLayout.onCreateView(R.layout.activity_booking_tab));
     }
 
     @Override
@@ -108,6 +101,16 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         finish();
                         break;
                     }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    mStayBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                    mStayBookingDetailLayout.updateReviewButtonLayout(mStayBookingDetail.reviewStatusType);
                 }
                 break;
             }
@@ -220,7 +223,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     dialog.dismiss();
                 }
 
-                startKakao();
+                startKakao(false);
             }
         });
 
@@ -418,6 +421,101 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
+    private void showRefundCallDialog()
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_contact_us_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(true);
+
+        // 버튼
+        View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
+        View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
+        contactUs01Layout.setVisibility(View.GONE);
+        contactUs02Layout.setVisibility(View.GONE);
+
+        TextView kakaoDailyView = (TextView) dialogView.findViewById(R.id.kakaoDailyView);
+        TextView callDailyView = (TextView) dialogView.findViewById(R.id.callDailyView);
+
+        kakaoDailyView.setText(R.string.label_contact_refund_kakao);
+        callDailyView.setText(R.string.label_contact_refund_daily);
+
+        kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                startKakao(true);
+            }
+        });
+
+        callDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+
+                showDailyCallDialog(null);
+
+                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.CALL, null);
+            }
+        });
+
+        View closeView = dialogView.findViewById(R.id.closeView);
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog.isShowing() == true)
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+
+            dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
     @Override
     protected void requestPlaceBookingDetail(final int reservationIndex)
     {
@@ -598,10 +696,17 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    void startKakao()
+    void startKakao(boolean isRefund)
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+        if (isRefund == true)
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.KAKAO, null);
+        } else
+        {
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+        }
 
         try
         {
@@ -620,9 +725,151 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
     }
 
+    private String getRefundPolicyStatus(StayBookingDetail bookingDetail)
+    {
+        // 환불 대기 상태
+        if (bookingDetail.readyForRefund == true)
+        {
+            return StayBookingDetail.STATUS_WAIT_REFUND;
+        } else
+        {
+            if (Util.isTextEmpty(bookingDetail.refundPolicy) == false)
+            {
+                return bookingDetail.refundPolicy;
+            } else
+            {
+                return StayBookingDetail.STATUS_SURCHARGE_REFUND;
+            }
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private StayBookingDetailLayout.OnEventListener mOnEventListener = new StayBookingDetailLayout.OnEventListener()
+    {
+        @Override
+        public void finish()
+        {
+            StayBookingDetailTabActivity.this.finish();
+        }
+
+        @Override
+        public void onIssuingReceiptClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = new Intent(StayBookingDetailTabActivity.this, IssuingReceiptActivity.class);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onMapClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = ZoomMapActivity.newInstance(StayBookingDetailTabActivity.this//
+                , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayBookingDetail.placeName, mStayBookingDetail.address//
+                , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas);
+
+            startActivity(intent);
+        }
+
+        @Override
+        public void onViewDetailClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            SaleTime saleTime = new SaleTime();
+            saleTime.setCurrentTime(mStayBookingDetail.currentDateTime);
+            saleTime.setDailyTime(mStayBookingDetail.dailyDateTime);
+
+            Intent intent = StayDetailActivity.newInstance(StayBookingDetailTabActivity.this, saleTime, 1, mStayBookingDetail.placeIndex, 0, false);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+        }
+
+        @Override
+        public void onViewMapClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Util.showShareMapDialog(StayBookingDetailTabActivity.this, mStayBookingDetail.placeName//
+                , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas//
+                , AnalyticsManager.Category.HOTEL_BOOKINGS//
+                , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
+                , null);
+        }
+
+        @Override
+        public void onRefundClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            switch (getRefundPolicyStatus(mStayBookingDetail))
+            {
+                case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
+                {
+                    Intent intent = StayAutoRefundActivity.newInstance(StayBookingDetailTabActivity.this, mStayBookingDetail);
+                    startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
+
+                    AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, null);
+                    break;
+                }
+
+                default:
+                    StayBookingDetailTabActivity.this.showRefundCallDialog();
+
+                    AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                        , AnalyticsManager.Action.REFUND_INQUIRY_CLICKED, null, null);
+                    break;
+            }
+        }
+
+        @Override
+        public void onReviewClick(String reviewStatus)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+            {
+                lockUI();
+                mNetworkController.requestReviewInformation(mReservationIndex);
+            }
+        }
+
+        @Override
+        public void showCallDialog()
+        {
+            StayBookingDetailTabActivity.this.showCallDialog();
+        }
+
+        @Override
+        public void showShareDialog()
+        {
+            StayBookingDetailTabActivity.this.showShareDialog();
+        }
+    };
 
     retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
     {
@@ -653,7 +900,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                                 if (mStayBookingDetail.readyForRefund == true)
                                 {
                                     // 환불 대기 인 상태에서는 문구가 고정이다.
-                                    loadFragments(getViewPager(), mStayBookingDetail);
+                                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
                                 } else
                                 {
                                     DailyMobileAPI.getInstance(StayBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
@@ -663,7 +910,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                             {
                                 mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                                loadFragments(getViewPager(), mStayBookingDetail);
+                                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
                             }
                             break;
 
@@ -746,7 +993,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                                     mStayBookingDetail.mRefundComment = responseJSONObject.getString("msg");
                                 }
 
-                                loadFragments(getViewPager(), mStayBookingDetail);
+                                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
                             } else
                             {
                                 if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
@@ -758,7 +1005,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                                 }
 
                                 mStayBookingDetail.refundPolicy = refundPolicy;
-                                loadFragments(getViewPager(), mStayBookingDetail);
+                                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
                             }
 
                             // Analytics
@@ -788,7 +1035,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         default:
                             mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                            loadFragments(getViewPager(), mStayBookingDetail);
+                            mStayBookingDetailLayout.initLayout(mStayBookingDetail);
 
                             AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
                             break;
@@ -802,7 +1049,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                     mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                    loadFragments(getViewPager(), mStayBookingDetail);
+                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
                 } finally
                 {
                     unLockUI();
@@ -811,7 +1058,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             {
                 mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                loadFragments(getViewPager(), mStayBookingDetail);
+                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
 
                 unLockUI();
             }
@@ -827,9 +1074,44 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
             mStayBookingDetail.isVisibleRefundPolicy = false;
 
-            loadFragments(getViewPager(), mStayBookingDetail);
+            mStayBookingDetailLayout.initLayout(mStayBookingDetail);
 
             unLockUI();
+        }
+    };
+
+    private StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener //
+        mNetworkControllerListener = new StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onReviewInformation(Review review)
+        {
+            Intent intent = ReviewActivity.newInstance(StayBookingDetailTabActivity.this, review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+        }
+
+        @Override
+        public void onError(Throwable e)
+        {
+            StayBookingDetailTabActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            StayBookingDetailTabActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call call, Response response)
+        {
+            StayBookingDetailTabActivity.this.onErrorResponse(call, response);
         }
     };
 }

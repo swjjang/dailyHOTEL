@@ -23,17 +23,10 @@ import retrofit2.Response;
 
 public abstract class PlaceBookingDetailTabActivity extends BaseActivity
 {
-    protected static final int TAB_COUNT = 1;
-
-    private ViewPager mViewPager;
     private boolean mDontReload;
     protected int mReservationIndex;
     protected String mImageUrl;
     protected boolean mIsDeepLink;
-
-    private DailyToolbarLayout mDailyToolbarLayout;
-
-    protected abstract void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail);
 
     protected abstract void requestPlaceBookingDetail(int reservationIndex);
 
@@ -62,57 +55,6 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             Util.restartApp(this);
             return;
         }
-
-        initLayout();
-    }
-
-    private void initLayout()
-    {
-        setContentView(R.layout.activity_booking_tab);
-
-        initToolbar(getString(R.string.actionbar_title_booking_list_frag));
-
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mViewPager.setOffscreenPageLimit(TAB_COUNT);
-        mViewPager.clearOnPageChangeListeners();
-    }
-
-    private void initToolbar(String title)
-    {
-        View toolbar = findViewById(R.id.toolbar);
-        mDailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        mDailyToolbarLayout.initToolbar(title, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        });
-
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, R.drawable.navibar_ic_share_01_black);
-        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                switch (v.getId())
-                {
-                    case R.id.menu1View:
-                        showCallDialog();
-                        break;
-
-                    case R.id.menu2View:
-                        showShareDialog();
-                        break;
-                }
-            }
-        });
-    }
-
-    public ViewPager getViewPager()
-    {
-        return mViewPager;
     }
 
     @Override
