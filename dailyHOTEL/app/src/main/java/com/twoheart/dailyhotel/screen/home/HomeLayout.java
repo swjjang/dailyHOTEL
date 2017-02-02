@@ -73,7 +73,6 @@ public class HomeLayout extends BaseLayout
 
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
 
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onMessageTextAreaClick();
