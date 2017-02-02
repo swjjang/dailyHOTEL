@@ -270,7 +270,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivity(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights));
+            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
         }
 
         @Override
