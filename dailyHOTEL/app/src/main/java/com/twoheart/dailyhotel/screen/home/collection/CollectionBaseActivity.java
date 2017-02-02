@@ -36,6 +36,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
     protected static final String INTENT_EXTRA_DATA_SUBTITLE = "subTitle";
 
+    protected SaleTime mSaleTIme;
     protected SaleTime mStartSaleTime, mEndSaleTime;
     int mRecommendationIndex;
     CollectionBaseLayout mCollectionBaseLayout;
@@ -233,6 +234,10 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     private void onCommonDateTime(long currentDateTime, long dailyDateTime)
     {
+        mSaleTIme = new SaleTime();
+        mSaleTIme.setCurrentTime(currentDateTime);
+        mSaleTIme.setDailyTime(dailyDateTime);
+
         mStartSaleTime = new SaleTime();
         mStartSaleTime.setCurrentTime(currentDateTime);
         mStartSaleTime.setDailyTime(dailyDateTime);
