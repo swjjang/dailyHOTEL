@@ -116,12 +116,12 @@ public class MyDailyFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startCouponList(CouponListActivity.SortType.ALL);
                 return;
-            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
-            {
-                mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
-            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
-            {
-                mOnEventListener.startRecentPlaces(PlaceType.FNB);
+                //            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
+                //            {
+                //                mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
+                //            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
+                //            {
+                //                mOnEventListener.startRecentPlaces(PlaceType.FNB);
             } else if (DailyDeepLink.getInstance().isProfileView() == true)
             {
                 mOnEventListener.startEditProfile();
@@ -129,13 +129,14 @@ public class MyDailyFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startEditProfile();
                 return;
-            } else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
-            {
-                mOnEventListener.startWishList(PlaceType.HOTEL);
-            } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
-            {
-                mOnEventListener.startWishList(PlaceType.FNB);
             }
+            //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
+            //            {
+            //                mOnEventListener.startWishList(PlaceType.HOTEL);
+            //            } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
+            //            {
+            //                mOnEventListener.startWishList(PlaceType.FNB);
+            //            }
 
             DailyDeepLink.getInstance().clear();
         }
