@@ -36,6 +36,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
     protected static final String INTENT_EXTRA_DATA_SUBTITLE = "subTitle";
 
+    protected SaleTime mSaleTIme;
     protected SaleTime mStartSaleTime, mEndSaleTime;
     int mRecommendationIndex;
     CollectionBaseLayout mCollectionBaseLayout;
@@ -219,7 +220,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                     case CODE_RESULT_ACTIVITY_REFRESH:
                         lockUI();
 
-                        requestRecommendationPlaceList();
+                        requestCommonDateTime();
                         break;
                 }
                 break;
@@ -227,16 +228,16 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
             case CODE_REQUEST_ACTIVITY_CALENDAR:
                 onCalendarActivityResult(resultCode, data);
-
-                lockUI();
-
-                requestRecommendationPlaceList();
                 break;
         }
     }
 
     private void onCommonDateTime(long currentDateTime, long dailyDateTime)
     {
+        mSaleTIme = new SaleTime();
+        mSaleTIme.setCurrentTime(currentDateTime);
+        mSaleTIme.setDailyTime(dailyDateTime);
+
         mStartSaleTime = new SaleTime();
         mStartSaleTime.setCurrentTime(currentDateTime);
         mStartSaleTime.setDailyTime(dailyDateTime);
@@ -263,9 +264,12 @@ public abstract class CollectionBaseActivity extends BaseActivity
             // 개수 넣기
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
+            int entryPosition = 0;
+
             for (RecommendationPlace place : placeList)
             {
                 place.imageUrl = imageBaseUrl + place.imageUrl;
+                place.entryPosition = entryPosition++;
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
             }
         }

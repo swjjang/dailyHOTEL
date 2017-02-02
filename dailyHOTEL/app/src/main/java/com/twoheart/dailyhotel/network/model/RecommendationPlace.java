@@ -45,4 +45,6 @@ public abstract class RecommendationPlace
     public boolean isSoldOut;
 
     public String imageUrl;
+
+    public int entryPosition;
 }

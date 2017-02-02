@@ -69,7 +69,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
         RecentGourmetParams params = new RecentGourmetParams();
         params.setSaleTime(mSaleTime);
-        params.setTargetIndices(mRecentPlaces.toString());
+        params.setTargetIndices(mRecentPlaces.toKeyString());
 
         ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
     }
@@ -86,44 +86,12 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            ArrayList<Gourmet> resultList = new ArrayList<>();
-
-            if (mRecentPlaces != null && list != null && list.size() > 0)
+            if (mRecentPlaces != null)
             {
-                ArrayList<Gourmet> cloneList = (ArrayList<Gourmet>) list.clone();
-
-                for (String stringIndex : mRecentPlaces.getList())
-                {
-                    if (Util.isTextEmpty(stringIndex) == true)
-                    {
-                        continue;
-                    }
-
-                    int index = -1;
-                    try
-                    {
-                        index = Integer.parseInt(stringIndex);
-                    } catch (NumberFormatException e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
-                    if (index > 0)
-                    {
-                        for (Gourmet gourmet : cloneList)
-                        {
-                            if (index == gourmet.index)
-                            {
-                                resultList.add(gourmet);
-                                cloneList.remove(gourmet);
-                                break;
-                            }
-                        }
-                    }
-                }
+                mRecentPlaces.sortList(list);
             }
 
-            mListLayout.setData(resultList);
+            mListLayout.setData(list);
         }
 
         @Override
@@ -203,10 +171,10 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            mRecentPlaces.remove(position);
-
             Place place = mListLayout.removeItem(position);
             ExLog.d("isRemove : " + (place != null));
+
+            mRecentPlaces.removeKey(place.index);
 
             if (place != null)
             {

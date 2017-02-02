@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
@@ -193,6 +194,40 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         String isShowOriginalPrice;
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+        {
+            isShowOriginalPrice = "N";
+        } else
+        {
+            isShowOriginalPrice = "Y";
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, RecommendationGourmet recommendationGourmet, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    {
+        Intent intent = new Intent(context, GourmetDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, recommendationGourmet.imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, recommendationGourmet.price);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, recommendationGourmet.entryPosition);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, listCount);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, recommendationGourmet.isDailyChoice);
+
+        String isShowOriginalPrice;
+        if (recommendationGourmet.price <= 0 || recommendationGourmet.price <= recommendationGourmet.discount)
         {
             isShowOriginalPrice = "N";
         } else
@@ -645,6 +680,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         if (resultCode == RESULT_OK)
         {
+            hideSimpleDialog();
+
             SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
 
             if (checkInSaleTime == null)

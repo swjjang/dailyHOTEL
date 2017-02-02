@@ -6,7 +6,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -84,6 +83,12 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             }
 
             mStartSaleTime = checkInSaleTime;
+
+            mCollectionBaseLayout.setCalendarText(getCalendarDate());
+
+            lockUI();
+
+            requestRecommendationPlaceList();
         }
     }
 
@@ -99,7 +104,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         public void onCalendarClick()
         {
             Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
-                , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
+                , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
@@ -111,9 +116,9 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 return;
             }
 
-            Gourmet gourmet = placeViewItem.getItem();
+            RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
-            Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, gourmet, mStartSaleTime, null, count);
+            Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, recommendationGourmet, null, null, count);
 
             if (Util.isUsedMultiTransition() == true)
             {

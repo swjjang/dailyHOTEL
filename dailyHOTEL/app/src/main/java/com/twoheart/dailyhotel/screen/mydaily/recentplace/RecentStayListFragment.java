@@ -70,7 +70,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
         RecentStayParams recentStayParams = new RecentStayParams();
         recentStayParams.setCheckInTime(mSaleTime);
-        recentStayParams.setTargetIndices(mRecentPlaces.toString());
+        recentStayParams.setTargetIndices(mRecentPlaces.toKeyString());
 
         ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(recentStayParams);
         //        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
@@ -88,44 +88,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            ArrayList<Stay> resultList = new ArrayList<>();
-
-            if (mRecentPlaces != null && list != null && list.size() > 0)
+            if (mRecentPlaces != null)
             {
-                ArrayList<Stay> cloneList = (ArrayList<Stay>) list.clone();
-
-                for (String stringIndex : mRecentPlaces.getList())
-                {
-                    if (Util.isTextEmpty(stringIndex) == true)
-                    {
-                        continue;
-                    }
-
-                    int index = -1;
-                    try
-                    {
-                        index = Integer.parseInt(stringIndex);
-                    } catch (NumberFormatException e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
-                    if (index > 0)
-                    {
-                        for (Stay stay : cloneList)
-                        {
-                            if (index == stay.index)
-                            {
-                                resultList.add(stay);
-                                cloneList.remove(stay);
-                                break;
-                            }
-                        }
-                    }
-                }
+                mRecentPlaces.sortList(list);
             }
 
-            mListLayout.setData(resultList);
+            mListLayout.setData(list);
         }
 
         @Override
@@ -207,10 +175,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            mRecentPlaces.remove(position);
-
             Place place = mListLayout.removeItem(position);
             ExLog.d("isRemove : " + (place != null));
+
+            mRecentPlaces.removeKey(place.index);
 
             if (place != null)
             {

@@ -370,6 +370,14 @@ public class MainActivity extends BaseActivity implements Constants
 
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+
+                        startActivityForResult(StayMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_GOURMET_LIST:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+
+                        startActivityForResult(GourmetMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                         break;
 
                     default:
@@ -917,19 +925,14 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
 
-                    startActivity(CollectionStayActivity.newInstance(MainActivity.this, 3));
-
                 } else if (DailyDeepLink.getInstance().isHotelView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
-
-                    startActivityForResult(new Intent(MainActivity.this, StayMainActivity.class), Constants.CODE_REQUEST_ACTIVITY_STAY);
 
                 } else if (DailyDeepLink.getInstance().isGourmetView() == true)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
 
-                    startActivityForResult(new Intent(MainActivity.this, GourmetMainActivity.class), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                 } else if (DailyDeepLink.getInstance().isBookingView() == true //
                     || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {

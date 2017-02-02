@@ -13,6 +13,9 @@ public class Recommendation
     public int idx;
 
     @JsonField
+    public String serviceType;
+
+    @JsonField
     public String title;
 
     @JsonField
@@ -34,5 +37,5 @@ public class Recommendation
     public String endedAt; // ISO-8601
 
     @JsonField
-    public int itemCount;
+    public int countOfItems;
 }

@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
@@ -269,7 +270,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivity(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights));
+            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
         }
 
         @Override
@@ -337,14 +338,24 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onRecommendationClick(View view, Recommendation recommendation)
         {
-            Intent intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
-                , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                , recommendation.title, recommendation.subtitle);
+            Intent intent;
 
-            //            Intent intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
-            //                , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-            //                , recommendation.title, recommendation.subtitle);
+            switch (recommendation.serviceType)
+            {
+                case "GOURMET":
+                    intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
+                        , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                        , recommendation.title, recommendation.subtitle);
+                    break;
 
+                case "HOTEL":
+                default:
+                    intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
+                        , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                        , recommendation.title, recommendation.subtitle);
+                    break;
+
+            }
 
             if (Util.isUsedMultiTransition() == true)
             {

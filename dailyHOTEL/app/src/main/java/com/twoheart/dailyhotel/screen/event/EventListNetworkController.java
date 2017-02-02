@@ -33,10 +33,10 @@ public class EventListNetworkController extends BaseNetworkController
 
         if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE)
         {
-            store = "google";
+            store = "GOOGLE";
         } else
         {
-            store = "skt";
+            store = "ONE";
         }
 
         DailyMobileAPI.getInstance(mContext).requestEventList(mNetworkTag, store, mDailyEventListCallback);
