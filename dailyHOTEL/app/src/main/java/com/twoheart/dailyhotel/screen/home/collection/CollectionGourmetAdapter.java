@@ -185,6 +185,11 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.gradeView.setText(displayCategory);
         }
 
+        if (Util.isUsedMultiTransition() == true)
+        {
+            holder.gourmetImageView.setTransitionName(null);
+        }
+
         Util.requestImageResize(mContext, holder.gourmetImageView, recommendationGourmet.imageUrl);
 
         // SOLD OUT 표시
