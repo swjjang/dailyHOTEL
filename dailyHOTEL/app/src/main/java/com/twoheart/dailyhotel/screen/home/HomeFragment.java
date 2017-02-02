@@ -97,7 +97,7 @@ public class HomeFragment extends BaseFragment
                     return;
                 }
 
-                startDeeplinkRecommendationActivity(serviceType, idx);
+                startDeepLinkRecommendationActivity(serviceType, idx);
             }
 
             DailyDeepLink.getInstance().clear();
@@ -269,7 +269,8 @@ public class HomeFragment extends BaseFragment
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
-    private void startDeeplinkRecommendationActivity(String serviceType, int index) {
+    private void startDeepLinkRecommendationActivity(String serviceType, int index)
+    {
         Intent intent;
 
         switch (serviceType)
