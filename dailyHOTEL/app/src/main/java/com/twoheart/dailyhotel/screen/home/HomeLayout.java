@@ -551,9 +551,17 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onPageSelected(int position)
             {
-                int displayPosition = position + 1;
                 int totalCount = mEventViewPagerAdapter.getCount();
-                setEventCountView(displayPosition, totalCount);
+
+                if (position < 1)
+                {
+                    position = totalCount;
+                } else if (position > totalCount)
+                {
+                    position = 1;
+                }
+
+                setEventCountView(position, totalCount);
             }
 
             @Override
