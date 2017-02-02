@@ -540,7 +540,7 @@ public interface IDailyNetwork
 
     void requestHoliday(String tag, String startDay, String endDay, Object listener);
 
-    void requestHomeEvents(String tag, Object listener);
+    void requestHomeEvents(String tag, String store, Object listener);
 
     void requestRecommendationList(String tag, Object listener);
 
