@@ -121,7 +121,7 @@ public class HomeCarouselLayout extends RelativeLayout
         coverImageView.setLayoutParams(layoutParams);
 
         mShimmer = new Shimmer();
-        mShimmer.setSimmerWidth(width);
+//        mShimmer.setSimmerWidth(width);
     }
 
     public void startShimmer()
@@ -193,6 +193,8 @@ public class HomeCarouselLayout extends RelativeLayout
         public void onItemClick(View view, int position)
         {
             // TODO : 아이템 클릭 시 이동하는 부분 생성
+
+
         }
     };
 }
