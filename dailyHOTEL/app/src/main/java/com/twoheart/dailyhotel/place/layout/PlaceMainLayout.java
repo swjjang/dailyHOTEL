@@ -106,7 +106,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         // 검색
         // 지역 이름
         // 날짜
-        View searchTextView = view.findViewById(R.id.searchTextView);
+        View searchTextView = view.findViewById(R.id.searchImageView);
 
         View regionTextLayout = view.findViewById(R.id.regionTextLayout);
         mRegionTextView = (TextView) view.findViewById(R.id.regionTextView);
@@ -385,7 +385,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     {
         switch (v.getId())
         {
-            case R.id.searchTextView:
+            case R.id.searchImageView:
                 ((PlaceMainLayout.OnEventListener) mOnEventListener).onSearchClick();
                 break;
 

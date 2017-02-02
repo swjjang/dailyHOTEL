@@ -199,12 +199,6 @@ public class StayListFragment extends PlaceListFragment
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
         }
 
-        //        @Override
-        //        public void onEventBannerClick(EventBanner eventBanner)
-        //        {
-        //            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
-        //        }
-
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
