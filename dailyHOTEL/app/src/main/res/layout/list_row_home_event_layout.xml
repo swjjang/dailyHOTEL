@@ -25,6 +25,7 @@
         android:gravity="center"
         android:textColor="@color/white_a50"
         android:textSize="11dp"
+        android:visibility="gone"
         dailyFont:style="Medium"/>
 
     <View

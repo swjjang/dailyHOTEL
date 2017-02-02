@@ -234,8 +234,6 @@ public class HomeLayout extends BaseLayout
         ViewGroup.LayoutParams params = mEventViewPager.getLayoutParams();
         params.height = getEventImageHeight(mContext);
         mEventViewPager.setLayoutParams(params);
-
-        setEventList(null);
     }
 
     private void initScrollButtonLayout(LinearLayout layout)
