@@ -6,12 +6,6 @@ import android.animation.ValueAnimator;
 import android.os.Build;
 import android.view.View;
 
-/**
- * Shimmer
- * User: romainpiel
- * Date: 06/03/2014
- * Time: 15:42
- */
 public class Shimmer
 {
 
