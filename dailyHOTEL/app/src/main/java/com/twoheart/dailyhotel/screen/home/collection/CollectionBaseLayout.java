@@ -182,7 +182,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
 
                         subTitleLayout.setPadding(0, dp20Height + (int) (dp21Height * titleLayoutValue), 0, 0);
 
-                        if (titleBoxLayout.getPaddingTop() < 5)
+                        if (titleBoxLayout.getPaddingTop() < 6)
                         {
                             titleBoxLayout.getChildAt(0).setBackgroundColor(mContext.getResources().getColor(R.color.white));
                         } else
@@ -194,7 +194,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
                         mTitleTextView.setTranslationX(titleTranslationX * (1.0f - titleLayoutValue));
                         mTitleTextView.setTranslationY(-dp3Height * (1.0f - titleLayoutValue));
 
-                        float alphaValue = titleLayoutValue / 4;
+                        float alphaValue = titleLayoutValue / 5;
                         if (alphaValue > 1.0f)
                         {
                             alphaValue = 1.0f;

@@ -8,7 +8,6 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
@@ -94,6 +93,12 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             mStartSaleTime = checkInSaleTime;
             mEndSaleTime = checkOutSaleTime;
+
+            mCollectionBaseLayout.setCalendarText(getCalendarDate());
+
+            lockUI();
+
+            requestRecommendationPlaceList();
         }
     }
 
@@ -119,11 +124,14 @@ public class CollectionStayActivity extends CollectionBaseActivity
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
             int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
+            int entryPosition = 0;
 
             for (RecommendationPlace place : placeList)
             {
                 place.imageUrl = imageBaseUrl + place.imageUrl;
                 ((RecommendationStay) place).nights = nights;
+
+                place.entryPosition = entryPosition++;
 
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
             }
@@ -140,7 +148,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
             final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
 
             Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
-                , mStartSaleTime, mEndSaleTime, AnalyticsManager.ValueType.SEARCH, true, true);
+                , mStartSaleTime, null, AnalyticsManager.ValueType.SEARCH, true, true);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
         }
 
@@ -152,9 +160,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 return;
             }
 
-            Stay stay = placeViewItem.getItem();
+            RecommendationStay recommendationStay = placeViewItem.getItem();
 
-            Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, stay, mStartSaleTime, null, count);
+            Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, mStartSaleTime, null, count);
 
             if (Util.isUsedMultiTransition() == true)
             {
