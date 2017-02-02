@@ -61,7 +61,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
                     , Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - Util.dpToPx(mContext, 96));
                 view.setLayoutParams(layoutParams);
-                view.setEnabled(false);
 
                 return new HeaderViewHolder(view);
             }

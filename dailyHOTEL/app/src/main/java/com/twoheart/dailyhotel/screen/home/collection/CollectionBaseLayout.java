@@ -70,7 +70,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
         mSimpleDraweeView.setLayoutParams(layoutParams);
 
         final FrameLayout titleBoxLayout = (FrameLayout) view.findViewById(R.id.titleBoxLayout);
-        titleBoxLayout.setPadding(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 171), Util.dpToPx(mContext, 15), 0);
+        titleBoxLayout.setPadding(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 171), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15));
 
         final View fakeBackImageView = titleBoxLayout.findViewById(R.id.fakeBackImageView);
         final View subTitleLayout = view.findViewById(R.id.subTitleLayout);
@@ -173,7 +173,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
                         final float titleLayoutTopPaddingValue = (dp171Height - (firstView.getHeight() - startAnimationHeight)) * titleLayoutValue;
                         final int titleLayoutPaddingValue = (int) (titleLayoutValue * dp15Height);
 
-                        titleBoxLayout.setPadding(titleLayoutPaddingValue, (int) titleLayoutTopPaddingValue, titleLayoutPaddingValue, 0);
+                        titleBoxLayout.setPadding(titleLayoutPaddingValue, (int) titleLayoutTopPaddingValue, titleLayoutPaddingValue, titleLayoutPaddingValue);
                         titleBoxLayout.setTranslationY(-dp21Height * titleLayoutValue);
 
                         FrameLayout.LayoutParams fakeBackImageLayoutParams = (FrameLayout.LayoutParams) fakeBackImageView.getLayoutParams();
