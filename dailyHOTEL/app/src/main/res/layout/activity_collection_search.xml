@@ -16,14 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="202dp"
             android:transitionName="@string/transition_place_image"
-            fresco:actualImageScaleType="centerCrop"
-            fresco:overlayImage="@drawable/shape_fillrect_b99000000"/>
+            fresco:actualImageScaleType="centerCrop"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:layout_marginTop="143dp"
-            android:background="@drawable/img_bottom_white_gradient_rec"/>
+            android:background="@drawable/img_bottom_white_gradient_rec"
+            android:layout_alignBottom="@+id/simpleDraweeView"
+            android:layout_marginBottom="-26dp"/>
     </RelativeLayout>
 
     <com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView
