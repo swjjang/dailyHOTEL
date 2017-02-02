@@ -316,6 +316,8 @@ public class HomeLayout extends BaseLayout
         //        mWishListLayout.setVisibility(View.GONE);
         layout.addView(mWishListLayout);
 
+        mWishListLayout.setTitleText(R.string.label_wishlist);
+
         mWishListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
         {
             @Override
@@ -336,6 +338,8 @@ public class HomeLayout extends BaseLayout
         mRecentListLayout = new HomeCarouselLayout(mContext);
         //        mRecentListLayout.setVisibility(View.GONE);
         layout.addView(mRecentListLayout);
+
+        mRecentListLayout.setTitleText(R.string.frag_recent_places);
 
         mRecentListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
         {
@@ -787,7 +791,7 @@ public class HomeLayout extends BaseLayout
         mWishListLayout.setData(list);
     }
 
-    public void setmRecentListData(ArrayList<? extends Place> list)
+    public void setRecentListData(ArrayList<? extends Place> list)
     {
         mRecentListLayout.setData(list);
     }

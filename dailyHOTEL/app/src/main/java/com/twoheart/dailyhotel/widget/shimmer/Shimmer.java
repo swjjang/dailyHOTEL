@@ -22,11 +22,13 @@ public class Shimmer
     private static final long DEFAULT_DURATION = 1000;
     private static final long DEFAULT_START_DELAY = 0;
     private static final int DEFAULT_DIRECTION = ANIMATION_DIRECTION_LTR;
+    private static final int DEFAULT_SIMMER_WIDTH = -1;
 
     private int repeatCount;
     private long duration;
     private long startDelay;
     private int direction;
+    private int simmerWidth;
     private Animator.AnimatorListener animatorListener;
 
     private ObjectAnimator animator;
@@ -37,6 +39,7 @@ public class Shimmer
         duration = DEFAULT_DURATION;
         startDelay = DEFAULT_START_DELAY;
         direction = DEFAULT_DIRECTION;
+        simmerWidth = DEFAULT_SIMMER_WIDTH;
     }
 
     public int getRepeatCount()
@@ -58,6 +61,17 @@ public class Shimmer
     public Shimmer setDuration(long duration)
     {
         this.duration = duration;
+        return this;
+    }
+
+    public int getSimmerWidth()
+    {
+        return simmerWidth;
+    }
+
+    public Shimmer setSimmerWidth(int width)
+    {
+        this.simmerWidth = width;
         return this;
     }
 
@@ -117,7 +131,7 @@ public class Shimmer
                 shimmerView.setShimmering(true);
 
                 float fromX = 0;
-                float toX = shimmerView.getWidth();
+                float toX = simmerWidth == DEFAULT_SIMMER_WIDTH ? shimmerView.getWidth() : simmerWidth;
                 if (direction == ANIMATION_DIRECTION_RTL)
                 {
                     fromX = shimmerView.getWidth();

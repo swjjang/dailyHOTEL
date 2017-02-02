@@ -39,7 +39,7 @@ public class HomeCarouselLayout extends RelativeLayout
     private HomeCarouselAdapter mRecyclerAdapter;
 
     private Shimmer mShimmer;
-    private View mCoverview;
+    private View mCoverView;
 
     public interface OnCarouselListener
     {
@@ -109,8 +109,8 @@ public class HomeCarouselLayout extends RelativeLayout
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mCoverview = view.findViewById(R.id.coverView);
-        SimpleDraweeView coverImageView = (SimpleDraweeView) mCoverview.findViewById(R.id.contentImageView);
+        mCoverView = view.findViewById(R.id.coverView);
+        SimpleDraweeView coverImageView = (SimpleDraweeView) mCoverView.findViewById(R.id.contentImageView);
         coverImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
         coverImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
@@ -121,6 +121,7 @@ public class HomeCarouselLayout extends RelativeLayout
         coverImageView.setLayoutParams(layoutParams);
 
         mShimmer = new Shimmer();
+        mShimmer.setSimmerWidth(width);
     }
 
     public void startShimmer()
@@ -130,14 +131,14 @@ public class HomeCarouselLayout extends RelativeLayout
             mShimmer = new Shimmer();
         }
 
-        if (mCoverview == null)
+        if (mCoverView == null)
         {
             return;
         }
 
-        ShimmerView shimmerView1 = (ShimmerView) mCoverview.findViewById(R.id.shimmerView1);
-        ShimmerView shimmerView2 = (ShimmerView) mCoverview.findViewById(R.id.shimmerView2);
-        ShimmerView shimmerView3 = (ShimmerView) mCoverview.findViewById(R.id.shimmerView3);
+        ShimmerView shimmerView1 = (ShimmerView) mCoverView.findViewById(R.id.shimmerView1);
+        ShimmerView shimmerView2 = (ShimmerView) mCoverView.findViewById(R.id.shimmerView2);
+        ShimmerView shimmerView3 = (ShimmerView) mCoverView.findViewById(R.id.shimmerView3);
 
         mShimmer.start(shimmerView1);
         mShimmer.start(shimmerView2);
@@ -152,9 +153,12 @@ public class HomeCarouselLayout extends RelativeLayout
         }
     }
 
-    public void setCarouselListener(OnCarouselListener listener)
+    public void setTitleText(int titleResId)
     {
-        mCarouselListenter = listener;
+        if (mTitleTextView != null)
+        {
+            mTitleTextView.setText(titleResId);
+        }
     }
 
     public void setData(ArrayList<? extends Place> list)
@@ -165,7 +169,7 @@ public class HomeCarouselLayout extends RelativeLayout
         }
 
         stopShimmer();
-        mCoverview.setVisibility(View.GONE);
+        mCoverView.setVisibility(View.GONE);
 
         if (mRecyclerAdapter == null)
         {
@@ -176,6 +180,11 @@ public class HomeCarouselLayout extends RelativeLayout
             mRecyclerAdapter.setData(list);
             mRecyclerAdapter.notifyDataSetChanged();
         }
+    }
+
+    public void setCarouselListener(OnCarouselListener listener)
+    {
+        mCarouselListenter = listener;
     }
 
     private HomeCarouselAdapter.ItemClickListener mRecyclerItemClcikListner = new HomeCarouselAdapter.ItemClickListener()

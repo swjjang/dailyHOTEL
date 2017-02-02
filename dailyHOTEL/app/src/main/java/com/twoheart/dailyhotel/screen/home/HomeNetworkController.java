@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
+import android.os.Handler;
 
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
@@ -76,70 +77,84 @@ public class HomeNetworkController extends BaseNetworkController
 
     public void requestWishList()
     {
-        // 임시 테스트 데이터
-        ArrayList<Stay> placeList = new ArrayList<>();
-        Random random = new Random();
-        int size = random.nextInt(14);
-        for (int i = 0; i < size; i++)
+        new Handler().postDelayed(new Runnable()
         {
-            Stay stay = new Stay();
+            @Override
+            public void run()
+            {
+                // 임시 테스트 데이터
+                ArrayList<Stay> placeList = new ArrayList<>();
+                Random random = new Random();
+                int size = random.nextInt(14);
+                for (int i = 0; i < size; i++)
+                {
+                    Stay stay = new Stay();
 
-            stay.price = Math.abs(random.nextInt(100000));
-            stay.name = "Stay " + i;
-            stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
-            stay.districtName = "서울";
-            stay.isSoldOut = i % 5 == 0;
+                    stay.price = Math.abs(random.nextInt(100000));
+                    stay.name = "Stay " + i;
+                    stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
+                    stay.districtName = "서울";
+                    stay.isSoldOut = i % 5 == 0;
 
-            if (i % 3 == 0)
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-            } else if (i % 3 == 1)
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-            } else
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+                    if (i % 3 == 0)
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+                    } else if (i % 3 == 1)
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+                    } else
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+                    }
+                    placeList.add(stay);
+
+                    stay.setGrade(Stay.Grade.special2);
+                }
+
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(placeList);
             }
-            placeList.add(stay);
-
-            stay.setGrade(Stay.Grade.special2);
-        }
-
-        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(placeList);
+        }, 5000);
     }
 
     public void requestRecentList()
     {
-        // 임시 테스트 데이터
-        ArrayList<Stay> placeList = new ArrayList<>();
-        Random random = new Random();
-        int size = random.nextInt(14);
-        for (int i = 0; i < size; i++)
+        new Handler().postDelayed(new Runnable()
         {
-            Stay stay = new Stay();
+            @Override
+            public void run()
+            {
+                // 임시 테스트 데이터
+                ArrayList<Stay> placeList = new ArrayList<>();
+                Random random = new Random();
+                int size = random.nextInt(14);
+                for (int i = 0; i < size; i++)
+                {
+                    Stay stay = new Stay();
 
-            stay.price = Math.abs(random.nextInt(100000));
-            stay.name = "Stay " + i;
-            stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
-            stay.districtName = "서울";
-            stay.isSoldOut = i % 5 == 0;
+                    stay.price = Math.abs(random.nextInt(100000));
+                    stay.name = "Stay " + i;
+                    stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
+                    stay.districtName = "서울";
+                    stay.isSoldOut = i % 5 == 0;
 
-            if (i % 3 == 0)
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-            } else if (i % 3 == 1)
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-            } else
-            {
-                stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+                    if (i % 3 == 0)
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+                    } else if (i % 3 == 1)
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
+                    } else
+                    {
+                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
+                    }
+                    placeList.add(stay);
+
+                    stay.setGrade(Stay.Grade.special2);
+                }
+
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(placeList);
             }
-            placeList.add(stay);
-
-            stay.setGrade(Stay.Grade.special2);
-        }
-
-        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(placeList);
+        }, 6000);
     }
 
     public void requestRecommendationList()

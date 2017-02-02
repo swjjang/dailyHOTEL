@@ -551,7 +551,7 @@ public class HomeFragment extends BaseFragment
         {
             if (mHomeLayout != null)
             {
-                mHomeLayout.setmRecentListData(list);
+                mHomeLayout.setRecentListData(list);
             }
         }
 
