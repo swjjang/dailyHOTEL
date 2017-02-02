@@ -11,12 +11,6 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 
-/**
- * Shimmer
- * User: romainpiel
- * Date: 10/03/2014
- * Time: 17:06
- */
 public class ShimmerViewHelper
 {
 
