@@ -95,6 +95,10 @@ public class HomeLayout extends BaseLayout
         void onEventItemClick(Event event);
 
         void onRecommendationClick(View view, Recommendation recommendation);
+
+        void onWishListViewAllClick();
+
+        void onRecentListViewAllClick();
     }
 
     public enum MessageType
@@ -315,6 +319,15 @@ public class HomeLayout extends BaseLayout
         mWishListLayout = new HomeCarouselLayout(mContext);
         //        mWishListLayout.setVisibility(View.GONE);
         layout.addView(mWishListLayout);
+
+        mWishListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        {
+            @Override
+            public void onViewAllClick()
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onWishListViewAllClick();
+            }
+        });
     }
 
     private void initRecentListLayout(LinearLayout layout)
@@ -327,6 +340,15 @@ public class HomeLayout extends BaseLayout
         mRecentListLayout = new HomeCarouselLayout(mContext);
         //        mRecentListLayout.setVisibility(View.GONE);
         layout.addView(mRecentListLayout);
+
+        mRecentListLayout.setCarouselListener(new HomeCarouselLayout.OnCarouselListener()
+        {
+            @Override
+            public void onViewAllClick()
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListViewAllClick();
+            }
+        });
 
         // Test Data
         mRecentListLayout.postDelayed(new Runnable()
