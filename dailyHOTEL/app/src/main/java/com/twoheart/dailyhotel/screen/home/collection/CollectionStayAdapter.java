@@ -170,6 +170,11 @@ public class CollectionStayAdapter extends PlaceListAdapter
         holder.hotelGradeView.setText(grade.getName(mContext));
         holder.hotelGradeView.setBackgroundResource(grade.getColorResId());
 
+        if (Util.isUsedMultiTransition() == true)
+        {
+            holder.hotelImageView.setTransitionName(null);
+        }
+
         Util.requestImageResize(mContext, holder.hotelImageView, recommendationStay.imageUrl);
 
         // SOLD OUT 표시

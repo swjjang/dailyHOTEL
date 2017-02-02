@@ -227,14 +227,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     return;
             }
 
-            if (Util.isUsedMultiTransition() == true && mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+            if (Util.isUsedMultiTransition() == true)
             {
-                finish();
-                return;
-            }
+                if(mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    finish();
+                    return;
+                }
 
-            if (Util.isOverAPI21() == true)
-            {
                 if (mPlaceDetailLayout.isListScrollTop() == true)
                 {
                     mPlaceDetailLayout.setTransImageVisibility(true);
@@ -247,7 +247,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         @Override
                         public void run()
                         {
-                            onBackPressed();
+                            PlaceDetailActivity.super.onBackPressed();
                         }
                     }, 100);
 

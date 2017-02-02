@@ -314,6 +314,16 @@ public abstract class CollectionBaseLayout extends BaseLayout
         mCalendarTextView.setText(date);
     }
 
+    public void setListScrollTop()
+    {
+        if (mRecyclerView == null || mRecyclerView.getChildCount() == 0)
+        {
+            return;
+        }
+
+        mRecyclerView.scrollToPosition(0);
+    }
+
     protected void setData(ArrayList<PlaceViewItem> placeViewItems)
     {
         mPlaceListAdapter.setAll(placeViewItems);

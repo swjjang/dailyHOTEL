@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.transition.Transition;
 import android.transition.TransitionSet;
+import android.view.animation.LinearInterpolator;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -19,6 +21,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.AlphaTransition;
 
 import org.json.JSONObject;
 
@@ -40,6 +43,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected SaleTime mStartSaleTime, mEndSaleTime;
     int mRecommendationIndex;
     CollectionBaseLayout mCollectionBaseLayout;
+
+    private Handler mHandler = new Handler();
 
     protected abstract void requestRecommendationPlaceList();
 
@@ -148,6 +153,28 @@ public abstract class CollectionBaseActivity extends BaseActivity
         super.onStart();
 
         AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.RECOMMEND_LIST, null);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (Util.isUsedMultiTransition() == true)
+        {
+            mCollectionBaseLayout.setListScrollTop();
+
+            mHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    CollectionBaseActivity.super.onBackPressed();
+                }
+            }, 100);
+
+            return;
+        }
+
+        super.onBackPressed();
     }
 
     private void initTransition()
