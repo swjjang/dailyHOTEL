@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -74,7 +75,33 @@ public class HomeFragment extends BaseFragment
     {
         super.onStart();
 
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            if (DailyDeepLink.getInstance().isHomeEventDetailView() == true)
+            {
+                startEventListActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
+            } else if (DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
+            {
+                String serviceType = DailyDeepLink.getInstance().getPlaceType();
 
+                int idx;
+
+                try
+                {
+                    idx = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+
+                    DailyDeepLink.getInstance().clear();
+                    return;
+                }
+
+                startDeeplinkRecommendationActivity(serviceType, idx);
+            }
+
+            DailyDeepLink.getInstance().clear();
+        }
     }
 
     @Override
@@ -240,6 +267,29 @@ public class HomeFragment extends BaseFragment
 
         Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.EVENT, url, eventName);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+    }
+
+    private void startDeeplinkRecommendationActivity(String serviceType, int index) {
+        Intent intent;
+
+        switch (serviceType)
+        {
+            case "GOURMET":
+                intent = CollectionGourmetActivity.newInstance(mBaseActivity, index//
+                    , null//
+                    , null, null);
+                break;
+
+            case "HOTEL":
+            default:
+                intent = CollectionStayActivity.newInstance(mBaseActivity, index//
+                    , null//
+                    , null, null);
+                break;
+
+        }
+
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
