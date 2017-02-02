@@ -77,36 +77,6 @@ public class HomeFragment extends BaseFragment
     {
         super.onStart();
 
-
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        if (mDontReload == true)
-        {
-            mDontReload = false;
-        } else
-        {
-            lockUI();
-
-            // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
-            mNetworkController.requestCommonDateTime();
-            requestMessageData();
-            mNetworkController.requestEventList();
-            mNetworkController.requestRecommendationList();
-            mNetworkController.requestWishList();
-        }
-
-        // 애니메이션 처리!
-        if (mHomeLayout != null)
-        {
-            mHomeLayout.onResumeReviewAnimation();
-            mHomeLayout.onResumeCarouselAnimation();
-        }
-
         if (DailyDeepLink.getInstance().isValidateLink() == true)
         {
             if (DailyDeepLink.getInstance().isHomeEventDetailView() == true)
@@ -153,6 +123,34 @@ public class HomeFragment extends BaseFragment
             }
 
             DailyDeepLink.getInstance().clear();
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if (mDontReload == true)
+        {
+            mDontReload = false;
+        } else
+        {
+            lockUI();
+
+            // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
+            mNetworkController.requestCommonDateTime();
+            requestMessageData();
+            mNetworkController.requestEventList();
+            mNetworkController.requestRecommendationList();
+            mNetworkController.requestWishList();
+        }
+
+        // 애니메이션 처리!
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.onResumeReviewAnimation();
+            mHomeLayout.onResumeCarouselAnimation();
         }
     }
 
