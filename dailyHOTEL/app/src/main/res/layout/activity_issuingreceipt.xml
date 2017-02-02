@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -254,55 +255,55 @@
                         android:textSize="11dp"/>
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginRight="11dp"
-                    android:layout_marginTop="@dimen/issuingreceipt_linespacing">
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="11dp"-->
+                    <!--android:layout_marginRight="11dp"-->
+                    <!--android:layout_marginTop="@dimen/issuingreceipt_linespacing">-->
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/textView24"
-                        android:layout_width="wrap_content"
-                        android:layout_height="13dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_supplyvalue"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
+                    <!--<com.twoheart.dailyhotel.widget.DailyTextView-->
+                        <!--android:id="@+id/textView24"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="13dp"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="@string/label_receipt_supplyvalue"-->
+                        <!--android:textColor="@color/default_text_c929292"-->
+                        <!--android:textSize="10dp"/>-->
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/textView25"
-                        android:layout_width="wrap_content"
-                        android:layout_height="13dp"
-                        android:layout_alignParentRight="true"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-                </RelativeLayout>
+                    <!--<com.twoheart.dailyhotel.widget.DailyTextView-->
+                        <!--android:id="@+id/textView25"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="13dp"-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:textColor="@color/default_text_c323232"-->
+                        <!--android:textSize="11dp"/>-->
+                <!--</RelativeLayout>-->
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginRight="11dp"
-                    android:layout_marginTop="@dimen/issuingreceipt_linespacing">
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="11dp"-->
+                    <!--android:layout_marginRight="11dp"-->
+                    <!--android:layout_marginTop="@dimen/issuingreceipt_linespacing">-->
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/textView26"
-                        android:layout_width="wrap_content"
-                        android:layout_height="13dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_vat"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
+                    <!--<com.twoheart.dailyhotel.widget.DailyTextView-->
+                        <!--android:id="@+id/textView26"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="13dp"-->
+                        <!--android:gravity="center_vertical"-->
+                        <!--android:text="@string/label_receipt_vat"-->
+                        <!--android:textColor="@color/default_text_c929292"-->
+                        <!--android:textSize="10dp"/>-->
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/textView27"
-                        android:layout_width="wrap_content"
-                        android:layout_height="13dp"
-                        android:layout_alignParentRight="true"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-                </RelativeLayout>
+                    <!--<com.twoheart.dailyhotel.widget.DailyTextView-->
+                        <!--android:id="@+id/textView27"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="13dp"-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:textColor="@color/default_text_c323232"-->
+                        <!--android:textSize="11dp"/>-->
+                <!--</RelativeLayout>-->
 
                 <LinearLayout
                     android:id="@+id/saleLayout"
@@ -343,7 +344,7 @@
                         android:background="@color/default_line_ce6e6e6"/>
 
                     <RelativeLayout
-                        android:id="@+id/bonusLayout"
+                        android:id="@+id/discountLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/issuingreceipt_linespacing">
@@ -352,35 +353,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="13dp"
                             android:gravity="center_vertical"
-                            android:text="@string/label_receipt_bonus"
+                            android:text="@string/label_receipt_discounted_amount"
                             android:textColor="@color/default_text_c929292"
                             android:textSize="10dp"/>
 
                         <com.twoheart.dailyhotel.widget.DailyTextView
-                            android:id="@+id/bonusTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="13dp"
-                            android:layout_alignParentRight="true"
-                            android:textColor="@color/default_text_c323232"
-                            android:textSize="11dp"/>
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/couponLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing">
-
-                        <com.twoheart.dailyhotel.widget.DailyTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="13dp"
-                            android:gravity="center_vertical"
-                            android:text="@string/label_receipt_coupon"
-                            android:textColor="@color/default_text_c929292"
-                            android:textSize="10dp"/>
-
-                        <com.twoheart.dailyhotel.widget.DailyTextView
-                            android:id="@+id/couponTextView"
+                            android:id="@+id/discountedTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="13dp"
                             android:layout_alignParentRight="true"
@@ -426,7 +404,7 @@
             <RelativeLayout
                 android:id="@+id/providerInfoLayout"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/paymentInfoLayout"
                 android:background="@drawable/receipt_bg_bottom"
                 android:paddingBottom="15dp"
@@ -439,94 +417,52 @@
                     android:layout_marginTop="4dp"
                     android:background="@drawable/tile_receipt_bottom_underline"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView41"
-                    android:layout_width="wrap_content"
-                    android:layout_height="15dp"
-                    android:layout_marginTop="21dp"
-                    android:text="@string/label_receipt_provider"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"
-                    dailyFont:style="Bold"/>
-
                 <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/receipt_logo"/>
+                    app:srcCompat="@drawable/receipt_logo"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView42"
+                    android:id="@+id/companyNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="12dp"
                     android:layout_below="@id/imageView1"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="9dp"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView43"
+                    android:id="@+id/addressTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="12dp"
-                    android:layout_below="@id/imageView1"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
+                    android:layout_below="@id/companyNameTextView"
+                    android:layout_marginTop="9dp"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="10dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView44"
+                    android:id="@+id/registrationNoTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="12dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@id/imageView1"
-                    android:layout_marginTop="8dp"
+                    android:layout_below="@id/addressTextView"
+                    android:layout_marginTop="9dp"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView46"
-                    android:layout_width="wrap_content"
-                    android:layout_height="12dp"
-                    android:layout_below="@id/textView42"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView47"
-                    android:layout_width="wrap_content"
-                    android:layout_height="12dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="false"
-                    android:layout_below="@+id/textView46"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView48"
-                    android:layout_width="wrap_content"
-                    android:layout_height="12dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/textView46"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/textView49"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/textView48"
-                    android:layout_marginTop="15dp"
-                    android:gravity="center_horizontal"
-                    android:lineSpacingExtra="3dp"
-                    android:textColor="@color/default_text_cb70038"
                     android:textSize="10dp"/>
             </RelativeLayout>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/commentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/providerInfoLayout"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="22dp"
+                android:gravity="center_horizontal"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/default_text_cb70038"
+                android:textSize="10dp"/>
         </RelativeLayout>
     </ScrollView>
 

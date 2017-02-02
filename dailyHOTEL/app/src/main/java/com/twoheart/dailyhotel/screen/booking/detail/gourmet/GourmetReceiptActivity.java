@@ -108,14 +108,6 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             paymentTypeTextView.setText(paymentType);
         }
 
-        // 소계
-        TextView supplyValueTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView25);
-        supplyValueTextView.setText(Util.getPriceFormat(this, supplyPrice, true));
-
-        // 세금 및 수수료
-        TextView vatTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView27);
-        vatTextView.setText(Util.getPriceFormat(this, tax, true));
-
         View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
         saleLayout.setVisibility(View.VISIBLE);
 
@@ -123,30 +115,35 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
         totalPriceTextView.setText(Util.getPriceFormat(this, sellingPrice, true));
 
-        // 적립금 사용
-        View bonusLayout = paymentInfoLayout.findViewById(R.id.bonusLayout);
+        // 적립금 혹은 쿠폰 사용
+        View discountLayout = paymentInfoLayout.findViewById(R.id.discountLayout);
 
-        if (bonus > 0)
+        if (bonus > 0 || coupon > 0)
         {
-            bonusLayout.setVisibility(View.VISIBLE);
-            TextView bonusTextView = (TextView) paymentInfoLayout.findViewById(R.id.bonusTextView);
-            bonusTextView.setText("- " + Util.getPriceFormat(this, bonus, true));
+            if (bonus < 0)
+            {
+                bonus = 0;
+            }
+
+            if (coupon < 0)
+            {
+                coupon = 0;
+            }
+
+            discountLayout.setVisibility(View.VISIBLE);
+            TextView discountedTextView = (TextView) paymentInfoLayout.findViewById(R.id.discountedTextView);
+            discountedTextView.setText("- " + Util.getPriceFormat(this, bonus + coupon, true));
         } else
         {
-            bonusLayout.setVisibility(View.GONE);
+            discountLayout.setVisibility(View.GONE);
         }
 
-        // 할인쿠폰 사용
-        View couponLayout = paymentInfoLayout.findViewById(R.id.couponLayout);
-
-        if (coupon > 0)
+        if (bonus > 0 || coupon > 0)
         {
-            couponLayout.setVisibility(View.VISIBLE);
-            TextView couponTextView = (TextView) couponLayout.findViewById(R.id.couponTextView);
-            couponTextView.setText("- " + Util.getPriceFormat(this, coupon, true));
+            saleLayout.setVisibility(View.VISIBLE);
         } else
         {
-            couponLayout.setVisibility(View.GONE);
+            saleLayout.setVisibility(View.GONE);
         }
 
         if (bonus > 0 || coupon > 0)
@@ -174,31 +171,19 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 
         // 상호
-        TextView companyNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView42);
-        companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName));
-
-        // 등록번호
-        TextView registrationNoTextView = (TextView) providerInfoLayout.findViewById(R.id.textView43);
-        registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
-
-        // 대표자
-        TextView ceoNameTextView = (TextView) providerInfoLayout.findViewById(R.id.textView44);
-        ceoNameTextView.setText(getString(R.string.label_receipt_ceo, ceoName));
+        TextView companyNameTextView = (TextView) providerInfoLayout.findViewById(R.id.companyNameTextView);
+        companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName, ceoName, phone, fax));
 
         // 주소
-        TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.textView46);
+        TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.addressTextView);
         addressTextView.setText(getString(R.string.label_receipt_address, address));
 
-        // 전화번호
-        TextView phoneTextView = (TextView) providerInfoLayout.findViewById(R.id.textView47);
-        phoneTextView.setText(getString(R.string.label_receipt_phone, phone));
-
-        // 팩스
-        TextView faxTextView = (TextView) providerInfoLayout.findViewById(R.id.textView48);
-        faxTextView.setText(getString(R.string.label_receipt_fax, fax));
+        // 등록번호
+        TextView registrationNoTextView = (TextView) providerInfoLayout.findViewById(R.id.registrationNoTextView);
+        registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
 
         // 코멘트
-        TextView commentTextView = (TextView) providerInfoLayout.findViewById(R.id.textView49);
+        TextView commentTextView = (TextView) findViewById(R.id.commentTextView);
         commentTextView.setText(receiptNotice);
 
         View view = findViewById(R.id.receiptLayout);
