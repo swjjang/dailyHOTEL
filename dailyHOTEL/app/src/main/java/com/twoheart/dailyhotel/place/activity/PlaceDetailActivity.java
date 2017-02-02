@@ -229,7 +229,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
             if (Util.isUsedMultiTransition() == true)
             {
-                if(mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                if (mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
                 {
                     finish();
                     return;

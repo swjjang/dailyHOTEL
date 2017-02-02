@@ -29,6 +29,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
     private TextView mTitleTextView, mSubTitleTextView;
     private SimpleDraweeView mSimpleDraweeView;
     private int mTitleLayoutHeight;
+    private int mTitleLayoutTopPaddingHeight;
     private int mScrollState;
 
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
@@ -70,7 +71,10 @@ public abstract class CollectionBaseLayout extends BaseLayout
         mSimpleDraweeView.setLayoutParams(layoutParams);
 
         final FrameLayout titleBoxLayout = (FrameLayout) view.findViewById(R.id.titleBoxLayout);
-        titleBoxLayout.setPadding(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 171), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15));
+        final int dp15Height = Util.dpToPx(mContext, 15);
+        int titleBoxTopPading = Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - dp15Height - Util.dpToPx(mContext, 118);
+        //        titleBoxLayout.setPadding(dp15Height, (int)Math.ceil(height16x9 * 0.74) + Util.dpToPx(mContext, 21), dp15Height, dp15Height);
+        titleBoxLayout.setPadding(dp15Height, titleBoxTopPading + Util.dpToPx(mContext, 21), dp15Height, dp15Height);
 
         final View fakeBackImageView = titleBoxLayout.findViewById(R.id.fakeBackImageView);
         final View subTitleLayout = view.findViewById(R.id.subTitleLayout);
@@ -107,6 +111,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
             @Override
             public void run()
             {
+                mTitleLayoutTopPaddingHeight = titleBoxLayout.getPaddingTop();
                 mTitleLayoutHeight = titleBoxLayout.getHeight() - titleBoxLayout.getPaddingTop() - titleBoxLayout.getPaddingBottom();
             }
         });
@@ -120,7 +125,6 @@ public abstract class CollectionBaseLayout extends BaseLayout
             private final int dp41Height = Util.dpToPx(mContext, 41);
             private final int dp30Height = Util.dpToPx(mContext, 30);
             private final int dp44Height = Util.dpToPx(mContext, 44);
-            private final int dp171Height = Util.dpToPx(mContext, 171);
 
             private int mDragDistance;
             private boolean mIsFirstCollapse;
@@ -153,11 +157,11 @@ public abstract class CollectionBaseLayout extends BaseLayout
                     {
                         float titleLayoutValue = (float) (firstView.getBottom() - startAnimationHeight) / (firstView.getHeight() - startAnimationHeight);
 
-                        float titleLayoutTopPaddingValue = dp171Height - (firstView.getHeight() - startAnimationHeight) * (1.0f - titleLayoutValue);
+                        float titleLayoutTopPaddingValue = mTitleLayoutTopPaddingHeight - (firstView.getHeight() - startAnimationHeight) * (1.0f - titleLayoutValue);
                         titleBoxLayout.setPadding(dp15Height, (int) titleLayoutTopPaddingValue, dp15Height, dp15Height);
 
                         FrameLayout.LayoutParams fakeBackImageLayoutParams = (FrameLayout.LayoutParams) fakeBackImageView.getLayoutParams();
-                        fakeBackImageLayoutParams.topMargin = -dp171Height;
+                        fakeBackImageLayoutParams.topMargin = -mTitleLayoutTopPaddingHeight;
                         fakeBackImageLayoutParams.leftMargin = -dp15Height;
 
                         mTitleTextView.setTranslationX(0);
@@ -170,7 +174,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
                     } else
                     {
                         final float titleLayoutValue = (float) firstView.getBottom() / startAnimationHeight;
-                        final float titleLayoutTopPaddingValue = (dp171Height - (firstView.getHeight() - startAnimationHeight)) * titleLayoutValue;
+                        final float titleLayoutTopPaddingValue = (mTitleLayoutTopPaddingHeight - (firstView.getHeight() - startAnimationHeight)) * titleLayoutValue;
                         final int titleLayoutPaddingValue = (int) (titleLayoutValue * dp15Height);
 
                         titleBoxLayout.setPadding(titleLayoutPaddingValue, (int) titleLayoutTopPaddingValue, titleLayoutPaddingValue, titleLayoutPaddingValue);

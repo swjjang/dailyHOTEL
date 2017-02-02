@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Transition;
 import android.transition.TransitionSet;
-import android.view.animation.LinearInterpolator;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -21,7 +20,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.AlphaTransition;
 
 import org.json.JSONObject;
 

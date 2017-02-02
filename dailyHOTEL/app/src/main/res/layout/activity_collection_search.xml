@@ -16,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="202dp"
             android:transitionName="@string/transition_place_image"
-            fresco:actualImageScaleType="centerCrop"
-            fresco:overlayImage="@drawable/shape_fillrect_b99000000"/>
+            fresco:actualImageScaleType="centerCrop"/>
 
         <View
             android:layout_width="match_parent"
