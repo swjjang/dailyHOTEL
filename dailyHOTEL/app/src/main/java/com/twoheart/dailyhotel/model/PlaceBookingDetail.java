@@ -48,12 +48,6 @@ public abstract class PlaceBookingDetail implements Parcelable
 
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
-    public PlaceBookingDetail()
-    {
-    }
-
-    public abstract void setData(JSONObject jsonObject) throws Exception;
-
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {

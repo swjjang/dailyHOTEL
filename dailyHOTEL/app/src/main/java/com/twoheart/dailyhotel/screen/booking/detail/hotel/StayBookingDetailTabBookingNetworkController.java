@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.model.ErrorBuilder;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -26,7 +28,7 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
 
         void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message);
 
-        void onStayBookingDetailInformation(JSONObject jsonObject);
+        void onStayBookingDetailInformation(StayBookingDetail stayBookingDetail);
     }
 
     public StayBookingDetailTabBookingNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -66,12 +68,8 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
                     if (msgCode == 100)
                     {
                         JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                        Review review = new Review(dataJSONObject);
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(review);
-
-                        //                } else if (msgCode == 701) {
-                        //                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation();
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(new Review(dataJSONObject));
                     } else
                     {
                         String message = responseJSONObject.getString("msg");
@@ -166,33 +164,32 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
                     JSONObject responseJSONObject = response.body();
 
                     int msgCode = responseJSONObject.getInt("msgCode");
+                    String message = responseJSONObject.getString("msg");
 
                     switch (msgCode)
                     {
                         case 100:
                             JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayBookingDetailInformation(jsonObject);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayBookingDetailInformation(new StayBookingDetail(jsonObject));
                             break;
 
                         // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
                         case 501:
-                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    Util.restartApp(StayBookingDetailTabActivity.this);
-                                }
-                            });
+                            mOnNetworkControllerListener.onError(new ErrorBuilder(response.code(), msgCode, message)//
+                                .setAfterActive(ErrorBuilder.AfterType.POPUP, ErrorBuilder.AfterActive.RESTART));
                             break;
 
                         default:
-                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
+                            mOnNetworkControllerListener.onError(new ErrorBuilder(response.code(), msgCode, message)//
+                                .setAfterActive(ErrorBuilder.AfterType.POPUP, ErrorBuilder.AfterActive.FINISH));
                             break;
                     }
                 } catch (Exception e)
                 {
+                    mOnNetworkControllerListener.onError(new ErrorBuilder(response.code(), -1, null)//
+                        .setAfterActive(ErrorBuilder.AfterType.TOAST, ErrorBuilder.AfterActive.FINISH));
+
                     mOnNetworkControllerListener.onError(e);
                 }
             } else

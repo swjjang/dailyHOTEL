@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -69,7 +70,6 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         mStayBookingDetailLayout = new StayBookingDetailLayout(this, mOnEventListener);
 
         mNetworkController = new StayBookingDetailTabBookingNetworkController(this, mNetworkTag, mNetworkControllerListener);
-        mStayBookingDetail = new StayBookingDetail();
 
         setContentView(mStayBookingDetailLayout.onCreateView(R.layout.activity_booking_tab));
     }
@@ -963,7 +963,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message)
         {
-            if(isSuccess == true)
+            if (isSuccess == true)
             {
                 // 환불 킬스위치 ON
                 if (refundManual == true)
@@ -1027,6 +1027,51 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
 
         @Override
+        public void onStayBookingDetailInformation(StayBookingDetail stayBookingDetail)
+        {
+            if (stayBookingDetail == null)
+            {
+                finish();
+                return;
+            }
+
+            try
+            {
+                mStayBookingDetail = stayBookingDetail;
+
+                long checkOutDateTime = DailyCalendar.getTimeGMT9(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+
+                if (mStayBookingDetail.currentDateTime < checkOutDateTime)
+                {
+                    mStayBookingDetail.isVisibleRefundPolicy = true;
+
+                    if (mStayBookingDetail.readyForRefund == true)
+                    {
+                        // 환불 대기 인 상태에서는 문구가 고정이다.
+                        mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                    } else
+                    {
+                        mNetworkController.requestPolicyRefund(mStayBookingDetail.reservationIndex, mStayBookingDetail.transactionType);
+                    }
+                } else
+                {
+                    mStayBookingDetail.isVisibleRefundPolicy = false;
+
+                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                }
+            } catch (Exception e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.logException(e);
+                }
+
+                finish();
+                return;
+            }
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StayBookingDetailTabActivity.this.onError(e);
@@ -1035,7 +1080,20 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+            if (msgCode == 501)
+            {
+                StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.restartApp(StayBookingDetailTabActivity.this);
+                    }
+                });
+            } else
+            {
+                StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+            }
         }
 
         @Override

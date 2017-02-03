@@ -30,6 +30,7 @@ import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.model.ErrorBuilder;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -459,6 +460,189 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                     DailyToast.showToast(BaseActivity.this, message, Toast.LENGTH_LONG);
                 }
             });
+        }
+    }
+
+    public void onError(final ErrorBuilder errorBuilder)
+    {
+        unLockUI();
+
+        if (errorBuilder == null)
+        {
+            return;
+        }
+
+        if (Constants.DEBUG == false && errorBuilder.throwable != null)
+        {
+            if (Util.isTextEmpty(errorBuilder.log) == false)
+            {
+                Crashlytics.log(errorBuilder.log);
+            }
+
+            Crashlytics.logException(errorBuilder.throwable);
+        }
+
+        if (errorBuilder.responseCode == 401)
+        {
+            DailyPreference.getInstance(this).clear();
+
+            try
+            {
+                LoginManager.getInstance().logOut();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            try
+            {
+                UserManagement.requestLogout(null);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            // 로그 아웃이 필요한 경우에는 강제로 수정 하도록 한다.
+            errorBuilder.message = getString(R.string.dialog_msg_session_expired);
+            errorBuilder.setAfterActive(ErrorBuilder.AfterType.TOAST, ErrorBuilder.AfterActive.RESTART);
+        }
+
+        //            DEFAULT, // 결과를 내부 구조가 알아서
+        //            NONE, // 결과를 아무것도 하지 않음
+        //            RESTART, // 재시작
+        //            FINISH, // 종료
+
+        if (errorBuilder.afterActive == null)
+        {
+            errorBuilder.afterActive = ErrorBuilder.AfterActive.DEFAULT;
+        }
+
+        final ErrorBuilder.AfterCallback afterActiveCallback;
+
+        switch (errorBuilder.afterActive)
+        {
+            case DEFAULT:
+            case NONE:
+                afterActiveCallback = null;
+                break;
+
+            case RESTART:
+                afterActiveCallback = new ErrorBuilder.AfterCallback()
+                {
+                    @Override
+                    public void onAfterRun()
+                    {
+                        Util.restartApp(BaseActivity.this);
+                    }
+                };
+                break;
+
+            case FINISH:
+                afterActiveCallback = new ErrorBuilder.AfterCallback()
+                {
+                    @Override
+                    public void onAfterRun()
+                    {
+                        BaseActivity.this.finish();
+                    }
+                };
+                break;
+
+            default:
+                afterActiveCallback = null;
+                break;
+        }
+
+        //            DEFAULT, // 결과를 내부 구조가 알아서
+        //            NONE, // 아무것도 하지 않음
+        //            TOAST, // 토스트로 보여줌
+        //            POPUP, // 팝업으로 보여줌.
+
+        if (errorBuilder.afterType == null)
+        {
+            errorBuilder.afterType = ErrorBuilder.AfterType.DEFAULT;
+        }
+
+        switch (errorBuilder.afterType)
+        {
+            case DEFAULT:
+                // 혹시나 스레드 상태에서 호출이 될경우를 대비해서
+                mHandler.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        DailyToast.showToast(BaseActivity.this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
+
+                        if (errorBuilder.mAfterCallback != null)
+                        {
+                            errorBuilder.mAfterCallback.onAfterRun();
+                        }
+
+                        if (afterActiveCallback != null)
+                        {
+                            afterActiveCallback.onAfterRun();
+                        }
+                    }
+                });
+                break;
+
+            case NONE:
+                if (errorBuilder.mAfterCallback != null)
+                {
+                    errorBuilder.mAfterCallback.onAfterRun();
+                }
+                break;
+
+            case TOAST:
+                mHandler.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        if (Util.isTextEmpty(errorBuilder.message) == true)
+                        {
+                            errorBuilder.message = getResources().getString(R.string.act_base_network_connect);
+                        }
+
+                        DailyToast.showToast(BaseActivity.this, errorBuilder.message, Toast.LENGTH_LONG);
+
+                        if (errorBuilder.mAfterCallback != null)
+                        {
+                            errorBuilder.mAfterCallback.onAfterRun();
+                        }
+
+                        if (afterActiveCallback != null)
+                        {
+                            afterActiveCallback.onAfterRun();
+                        }
+                    }
+                });
+                break;
+
+            case POPUP:
+                if (Util.isTextEmpty(errorBuilder.message) == true)
+                {
+                    errorBuilder.message = getResources().getString(R.string.act_base_network_connect);
+                }
+
+                showSimpleDialog(getString(R.string.dialog_notice2), errorBuilder.message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (errorBuilder.mAfterCallback != null)
+                        {
+                            errorBuilder.mAfterCallback.onAfterRun();
+                        }
+
+                        if (afterActiveCallback != null)
+                        {
+                            afterActiveCallback.onAfterRun();
+                        }
+                    }
+                }, null, false);
+                break;
         }
     }
 
