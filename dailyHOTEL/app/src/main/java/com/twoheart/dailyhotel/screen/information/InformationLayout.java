@@ -78,12 +78,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
 
         initSnsLayout(view);
-        initBusinessLayout(mContext, view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
         if (Constants.DEBUG == true)
         {
+
             String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
 
             WebView webView = new WebView(mContext);
@@ -114,30 +114,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         instagramView.setOnClickListener(this);
         naverView.setOnClickListener(this);
         youtubeLinkView.setOnClickListener(this);
-    }
-
-    private void initBusinessLayout(Context context, View view)
-    {
-        TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
-        TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
-        TextView business3TextView = (TextView) view.findViewById(R.id.business3TextView);
-        TextView business4TextView = (TextView) view.findViewById(R.id.business4TextView);
-        TextView business5TextView = (TextView) view.findViewById(R.id.business5TextView);
-
-        business1TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license01//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyCEO()//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyPhoneNumber()));
-
-        business2TextView.setText(DailyPreference.getInstance(context).getRemoteConfigCompanyAddress());
-
-        business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license02//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyBizRegNumber()));
-
-        business4TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyItcRegNumber()));
-
-        business5TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license04//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyPrivacyEmail()));
     }
 
     public void updateNewIconView(boolean hasNewEvent, boolean hasNewNotice)

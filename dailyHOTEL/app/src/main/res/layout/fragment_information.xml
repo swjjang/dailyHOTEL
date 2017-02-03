@@ -214,10 +214,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:minHeight="185dp"
                 android:orientation="vertical"
-                android:paddingBottom="44dp"
-                android:paddingTop="44dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -258,51 +257,6 @@
                         android:paddingLeft="6dp"
                         app:srcCompat="@drawable/more_sns_04"/>
                 </LinearLayout>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/business1TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/frag_about_business_license01"
-                    android:textColor="@color/setting_business_license"
-                    android:textSize="11dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/business2TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/frag_about_business_license02"
-                    android:textColor="@color/setting_business_license"
-                    android:textSize="11dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/business3TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/frag_about_business_license02"
-                    android:textColor="@color/setting_business_license"
-                    android:textSize="11dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/business4TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/frag_about_business_license03"
-                    android:textColor="@color/setting_business_license"
-                    android:textSize="11dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/business5TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:text="@string/frag_about_business_license04"
-                    android:textColor="@color/setting_business_license"
-                    android:textSize="11dp"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/versionTextView"
