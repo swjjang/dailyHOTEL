@@ -93,7 +93,7 @@
         <View
             android:id="@+id/transGradientTopView"
             android:layout_width="match_parent"
-            android:layout_height="113dp"
+            android:layout_height="112dp"
             android:background="@drawable/img_detail_gradient"/>
 
         <RelativeLayout

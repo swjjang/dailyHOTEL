@@ -7,14 +7,12 @@
         android:id="@+id/mapLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/menubar_height"
         android:visibility="gone"/>
 
     <include
         layout="@layout/view_empty_hotel_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/menubar_height"
         android:visibility="gone"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
