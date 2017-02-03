@@ -270,6 +270,8 @@ public class DailyPreference
 
         String baseUrl = getBaseUrl();
 
+        boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
+
         if (mEditor != null)
         {
             mEditor.clear();
@@ -291,6 +293,8 @@ public class DailyPreference
         setGourmetRecentPlaces(gourmetRecentPlace);
 
         setBaseUrl(baseUrl);
+
+        setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -1499,12 +1503,12 @@ public class DailyPreference
         removeValue(mEditor, KEY_PAYMENT_INFORMATION);
     }
 
-    public boolean isHomeMessageAreaEnabled()
+    public boolean isHomeTextMessageAreaEnabled()
     {
         return getValue(mPreferences, KEY_SETTING_HOME_MESSAGE_AREA_ENABLED, true);
     }
 
-    public void setHomeMessageAreaEnabled(boolean isEnabled)
+    public void setHomeTextMessageAreaEnabled(boolean isEnabled)
     {
         setValue(mEditor, KEY_SETTING_HOME_MESSAGE_AREA_ENABLED, isEnabled);
     }

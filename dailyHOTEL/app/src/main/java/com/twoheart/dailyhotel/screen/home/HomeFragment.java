@@ -227,7 +227,7 @@ public class HomeFragment extends BaseFragment
         } else
         {
             boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
-            boolean isTextMessageAreaEnable = DailyPreference.getInstance(mBaseActivity).isHomeMessageAreaEnabled();
+            boolean isTextMessageAreaEnable = DailyPreference.getInstance(mBaseActivity).isHomeTextMessageAreaEnabled();
 
             if (isLogoutAreaEnable == true && isTextMessageAreaEnable == true)
             {
@@ -360,7 +360,7 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onMessageTextAreaCloseClick()
         {
-            DailyPreference.getInstance(mBaseActivity).setHomeMessageAreaEnabled(false);
+            DailyPreference.getInstance(mBaseActivity).setHomeTextMessageAreaEnabled(false);
         }
 
         @Override
