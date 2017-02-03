@@ -903,8 +903,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                                     mStayBookingDetailLayout.initLayout(mStayBookingDetail);
                                 } else
                                 {
-                                    DailyMobileAPI.getInstance(StayBookingDetailTabActivity.this).requestPolicyRefund(mNetworkTag//
-                                        , mStayBookingDetail.reservationIndex, mStayBookingDetail.transactionType, mPolicyRefundCallback);
+                                    mNetworkController.requestPolicyRefund(mStayBookingDetail.reservationIndex, mStayBookingDetail.transactionType);
                                 }
                             } else
                             {
@@ -951,135 +950,6 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
     };
 
-    retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    switch (msgCode)
-                    {
-                        case 100:
-                        case 1015:
-                        {
-                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                            String comment = dataJSONObject.getString("comment");
-                            String refundPolicy = dataJSONObject.getString("refundPolicy");
-                            boolean refundManual = dataJSONObject.getBoolean("refundManual");
-
-                            // 환불 킬스위치 ON
-                            if (refundManual == true)
-                            {
-                                if (StayBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
-                                {
-                                    mStayBookingDetail.refundPolicy = refundPolicy;
-                                    mStayBookingDetail.mRefundComment = comment;
-                                } else
-                                {
-                                    mStayBookingDetail.refundPolicy = StayBookingDetail.STATUS_SURCHARGE_REFUND;
-                                    mStayBookingDetail.mRefundComment = responseJSONObject.getString("msg");
-                                }
-
-                                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-                            } else
-                            {
-                                if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
-                                {
-                                    mStayBookingDetail.isVisibleRefundPolicy = false;
-                                } else
-                                {
-                                    mStayBookingDetail.mRefundComment = comment;
-                                }
-
-                                mStayBookingDetail.refundPolicy = refundPolicy;
-                                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-                            }
-
-                            // Analytics
-                            if (Util.isTextEmpty(refundPolicy) == false)
-                            {
-                                switch (refundPolicy)
-                                {
-                                    case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
-                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null);
-                                        break;
-
-                                    case StayBookingDetail.STATUS_SURCHARGE_REFUND:
-                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null);
-                                        break;
-
-                                    default:
-                                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
-                                        break;
-                                }
-                            } else
-                            {
-                                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
-                            }
-                            break;
-                        }
-
-                        default:
-                            mStayBookingDetail.isVisibleRefundPolicy = false;
-
-                            mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-
-                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
-                            break;
-                    }
-                } catch (Exception e)
-                {
-                    if (DEBUG == false)
-                    {
-                        Crashlytics.logException(e);
-                    }
-
-                    mStayBookingDetail.isVisibleRefundPolicy = false;
-
-                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-                } finally
-                {
-                    unLockUI();
-                }
-            } else
-            {
-                mStayBookingDetail.isVisibleRefundPolicy = false;
-
-                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-
-                unLockUI();
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            if (DEBUG == false)
-            {
-                Crashlytics.logException(t);
-            }
-
-            mStayBookingDetail.isVisibleRefundPolicy = false;
-
-            mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-
-            unLockUI();
-        }
-    };
-
     private StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener //
         mNetworkControllerListener = new StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener()
     {
@@ -1088,6 +958,72 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         {
             Intent intent = ReviewActivity.newInstance(StayBookingDetailTabActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+        }
+
+        @Override
+        public void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message)
+        {
+            if(isSuccess == true)
+            {
+                // 환불 킬스위치 ON
+                if (refundManual == true)
+                {
+                    if (StayBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
+                    {
+                        mStayBookingDetail.refundPolicy = refundPolicy;
+                        mStayBookingDetail.mRefundComment = comment;
+                    } else
+                    {
+                        mStayBookingDetail.refundPolicy = StayBookingDetail.STATUS_SURCHARGE_REFUND;
+                        mStayBookingDetail.mRefundComment = message;
+                    }
+
+                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                } else
+                {
+                    if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
+                    {
+                        mStayBookingDetail.isVisibleRefundPolicy = false;
+                    } else
+                    {
+                        mStayBookingDetail.mRefundComment = comment;
+                    }
+
+                    mStayBookingDetail.refundPolicy = refundPolicy;
+                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                }
+
+                // Analytics
+                if (Util.isTextEmpty(refundPolicy) == false)
+                {
+                    switch (refundPolicy)
+                    {
+                        case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
+                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null);
+                            break;
+
+                        case StayBookingDetail.STATUS_SURCHARGE_REFUND:
+                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null);
+                            break;
+
+                        default:
+                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
+                            break;
+                    }
+                } else
+                {
+                    AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
+                }
+            } else
+            {
+                mStayBookingDetail.isVisibleRefundPolicy = false;
+
+                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+
+                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
+            }
+
+            unLockUI();
         }
 
         @Override
