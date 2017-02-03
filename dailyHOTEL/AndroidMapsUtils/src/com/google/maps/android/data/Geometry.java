@@ -1,11 +1,11 @@
 /*
- * Copyright 2013 Google Inc.
+ * Copyright 2017 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *       http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package com.google.maps.android.clustering;
-
-import com.google.android.gms.maps.model.LatLng;
+package com.google.maps.android.data;
 
 /**
- * ClusterItem represents a marker on the map.
+ * An abstraction that represents a Geometry object
+ * @param <T> the type of Geometry object
  */
-public interface ClusterItem {
+public interface Geometry<T> {
+    /**
+     * Gets the type of geometry
+     *
+     * @return type of geometry
+     */
+    public String getGeometryType();
 
     /**
-     * The position of this marker. This must always return the same value.
+     * Gets the stored KML Geometry object
+     *
+     * @return geometry object
      */
-    LatLng getPosition();
+    public T getGeometryObject();
 
-    /**
-     * The title of this marker.
-     */
-    String getTitle();
-
-    /**
-     * The description of this marker.
-     */
-    String getSnippet();
 }
