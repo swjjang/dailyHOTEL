@@ -5,16 +5,6 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
-/**
- * Customize romainpiel's Shimmer
- * Shimmer
- * User: romainpiel
- * Date: 06/03/2014
- * Time: 10:19
- * <p>
- * Shimmering View
- * Dumb class wrapping a ShimmerViewHelper
- */
 public class ShimmerView extends View implements ShimmerViewBase
 {
 

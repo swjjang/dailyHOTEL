@@ -78,13 +78,17 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
 
         initSnsLayout(view);
-        initBusinessLayout(mContext, view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
         if (Constants.DEBUG == true)
         {
-            String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
+            String dotVersion = String.format("%s.%d.%d.%s", DailyHotel.VERSION_CODE.substring(0, 1) //
+                , Integer.parseInt(DailyHotel.VERSION_CODE.substring(1, 3))//
+                , Integer.parseInt(DailyHotel.VERSION_CODE.substring(3, 5)) //
+                , DailyHotel.VERSION_CODE.substring(5, 7));
+
+            String version = mContext.getResources().getString(R.string.label_version, dotVersion);
 
             WebView webView = new WebView(mContext);
             String webViewVersion = webView.getSettings().getUserAgentString();
@@ -92,7 +96,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             versionTextView.setText(version + "\n" + DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion);
         } else
         {
-            versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE));
+            String dotVersion = String.format("%s.%d.%d.%s", DailyHotel.VERSION_CODE.substring(0, 1) //
+                , Integer.parseInt(DailyHotel.VERSION_CODE.substring(1, 3))//
+                , Integer.parseInt(DailyHotel.VERSION_CODE.substring(3, 5)) //
+                , DailyHotel.VERSION_CODE.substring(5, 7));
+
+            versionTextView.setText(mContext.getResources().getString(R.string.label_version, dotVersion));
         }
     }
 
@@ -114,30 +123,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         instagramView.setOnClickListener(this);
         naverView.setOnClickListener(this);
         youtubeLinkView.setOnClickListener(this);
-    }
-
-    private void initBusinessLayout(Context context, View view)
-    {
-        TextView business1TextView = (TextView) view.findViewById(R.id.business1TextView);
-        TextView business2TextView = (TextView) view.findViewById(R.id.business2TextView);
-        TextView business3TextView = (TextView) view.findViewById(R.id.business3TextView);
-        TextView business4TextView = (TextView) view.findViewById(R.id.business4TextView);
-        TextView business5TextView = (TextView) view.findViewById(R.id.business5TextView);
-
-        business1TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license01//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyCEO()//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyPhoneNumber()));
-
-        business2TextView.setText(DailyPreference.getInstance(context).getRemoteConfigCompanyAddress());
-
-        business3TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license02//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyBizRegNumber()));
-
-        business4TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license03//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyItcRegNumber()));
-
-        business5TextView.setText(mContext.getResources().getString(R.string.frag_about_business_license04//
-            , DailyPreference.getInstance(context).getRemoteConfigCompanyPrivacyEmail()));
     }
 
     public void updateNewIconView(boolean hasNewEvent, boolean hasNewNotice)

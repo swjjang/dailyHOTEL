@@ -1,11 +1,5 @@
 package com.twoheart.dailyhotel.widget.shimmer;
 
-/**
- * Shimmer
- * User: romainpiel
- * Date: 10/03/2014
- * Time: 17:33
- */
 public interface ShimmerViewBase
 {
 

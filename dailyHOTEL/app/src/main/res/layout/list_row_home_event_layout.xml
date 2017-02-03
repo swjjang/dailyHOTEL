@@ -10,7 +10,8 @@
     <com.twoheart.dailyhotel.widget.DailyLoopViewPager
         android:id="@+id/loopViewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/layerlist_placeholder"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/pagerCountTextView"
@@ -25,6 +26,7 @@
         android:gravity="center"
         android:textColor="@color/white_a50"
         android:textSize="11dp"
+        android:visibility="gone"
         dailyFont:style="Medium"/>
 
     <View
