@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.place.layout;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -88,6 +89,42 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     {
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         mAppBarLayout.setTag(0);
+
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
+        {
+            final int dp52Height = Util.dpToPx(mContext, 52);
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+            {
+                if (mViewPager == null)
+                {
+                    return;
+                }
+
+                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mViewPager.getLayoutParams();
+
+                if (verticalOffset == 0)
+                {
+                    if (layoutParams.bottomMargin == dp52Height)
+                    {
+                        return;
+                    }
+
+                    layoutParams.bottomMargin = dp52Height;
+                } else
+                {
+                    if (layoutParams.bottomMargin == 0)
+                    {
+                        return;
+                    }
+
+                    layoutParams.bottomMargin = 0;
+                }
+
+                mViewPager.setLayoutParams(layoutParams);
+            }
+        });
 
         mToolbarLayout = mAppBarLayout.findViewById(R.id.toolbarLayout);
         View backImageView = mToolbarLayout.findViewById(R.id.backImageView);
