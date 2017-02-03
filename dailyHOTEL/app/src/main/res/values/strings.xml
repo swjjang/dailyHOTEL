@@ -41,7 +41,7 @@
     <string name="label_global">해외</string>
     <string name="label_on">ON</string>
     <string name="label_off">OFF</string>
-    <string name="label_version">Version %1$s</string>
+    <string name="label_version">앱 버전</string>
     <string name="label_share_daum_map">카카오맵</string>
     <string name="label_share_naver_map">네이버맵</string>
     <string name="label_share_google_map">구글맵</string>
@@ -401,6 +401,12 @@
     <string name="frag_about_business_license03">통신판매업 신고번호 : %1$s</string>
     <string name="frag_about_business_license04">개인정보담당자 : %1$s</string>
     <string name="frag_recent_places">최근 확인한 호텔/고메</string>
+
+    <string name="label_link_facebook">데일리 페이스북</string>
+    <string name="label_link_instagram">데일리 인스타그램</string>
+    <string name="label_link_naver">데일리 블로그</string>
+    <string name="label_link_youtube">데일리 유투브</string>
+
     <string name="message_empty_notice">공지사항이 없습니다.</string>
     <string name="message_alarm_benefit_off01">[모바일 단말 환경설정] > [알림허용]이 OFF 상태이므로 혜택 알림을 받을 수 없습니다. 여기를 눌러 [알림허용]을 ON으로 변경해주세요!</string>
     <string name="message_input_email">이메일 주소를 입력해 주세요.</string>

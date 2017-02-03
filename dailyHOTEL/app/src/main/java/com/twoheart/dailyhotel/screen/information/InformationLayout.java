@@ -81,18 +81,22 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
+        String dotVersion = String.format("%s.%d.%d.%s", DailyHotel.VERSION_CODE.substring(0, 1) //
+            , Integer.parseInt(DailyHotel.VERSION_CODE.substring(1, 3))//
+            , Integer.parseInt(DailyHotel.VERSION_CODE.substring(3, 5)) //
+            , DailyHotel.VERSION_CODE.substring(5, 7));
+
+        versionTextView.setText(dotVersion);
+
         if (Constants.DEBUG == true)
         {
-
-            String version = mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE);
+            TextView debugTextView = (TextView) view.findViewById(R.id.debugTextView);
+            debugTextView.setVisibility(View.VISIBLE);
 
             WebView webView = new WebView(mContext);
             String webViewVersion = webView.getSettings().getUserAgentString();
 
-            versionTextView.setText(version + "\n" + DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion);
-        } else
-        {
-            versionTextView.setText(mContext.getResources().getString(R.string.label_version, DailyHotel.VERSION_CODE));
+            debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion);
         }
     }
 
