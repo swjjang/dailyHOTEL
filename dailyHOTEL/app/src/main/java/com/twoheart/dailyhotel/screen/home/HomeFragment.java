@@ -81,7 +81,7 @@ public class HomeFragment extends BaseFragment
         {
             if (DailyDeepLink.getInstance().isHomeEventDetailView() == true)
             {
-                startEventListActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
+                startEventWebActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
             } else if (DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = DailyDeepLink.getInstance().getPlaceType();
@@ -283,14 +283,14 @@ public class HomeFragment extends BaseFragment
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
     }
 
-    private void startEventListActivity(String url, String eventName)
+    private void startEventWebActivity(String url, String eventName)
     {
         if (Util.isTextEmpty(url) == true)
         {
             return;
         }
 
-        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.EVENT, url, eventName);
+        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
@@ -444,7 +444,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            HomeFragment.this.startEventListActivity(event.linkUrl, event.title);
+            HomeFragment.this.startEventWebActivity(event.linkUrl, event.title);
         }
 
         @Override
