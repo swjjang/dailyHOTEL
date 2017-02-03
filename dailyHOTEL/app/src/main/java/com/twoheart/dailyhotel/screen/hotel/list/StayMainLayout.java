@@ -68,11 +68,9 @@ public class StayMainLayout extends PlaceMainLayout
             return;
         }
 
-        String format = Util.getLCDWidth(mContext) > 480 ? "M.d(EEE)" : "M.d";
+        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
 
-        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat(format);
-        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat(format);
-
-        setToolbarDateText(String.format("%s-%s", checkInDay, checkOutDay));
+        setToolbarDateText(String.format("%s - %s", checkInDay, checkOutDay));
     }
 }
