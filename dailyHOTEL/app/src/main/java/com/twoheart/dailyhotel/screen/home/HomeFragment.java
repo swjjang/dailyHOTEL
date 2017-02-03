@@ -45,7 +45,7 @@ import retrofit2.Response;
 public class HomeFragment extends BaseFragment
 {
     private HomeLayout mHomeLayout;
-    BaseActivity mBaseActivity;
+    private BaseActivity mBaseActivity;
     private PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
     private SaleTime mSaleTime;
@@ -227,7 +227,9 @@ public class HomeFragment extends BaseFragment
         } else
         {
             boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
-            if (isLogoutAreaEnable == true)
+            boolean isTextMessageAreaEnable = DailyPreference.getInstance(mBaseActivity).isHomeMessageAreaEnabled();
+
+            if (isLogoutAreaEnable == true && isTextMessageAreaEnable == true)
             {
                 messageType = HomeLayout.MessageType.TEXT;
             }
@@ -356,9 +358,15 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onMessageCloseClick()
+        public void onMessageTextAreaCloseClick()
         {
-            // TODO : 다시 보지 않기 기능 추가 필요???
+            DailyPreference.getInstance(mBaseActivity).setHomeMessageAreaEnabled(false);
+        }
+
+        @Override
+        public void onMessageReviewAreaCloseClick(Review review)
+        {
+            // TODO : 리뷰 다시 보지 않기 처리
         }
 
         @Override
