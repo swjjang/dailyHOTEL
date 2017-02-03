@@ -205,7 +205,7 @@ public class HomeLayout extends BaseLayout
 
     private void initHomeContentLayout(View view)
     {
-        mHomeContentLayout = (LinearLayout) view.findViewById(R.id.homContentLayout);
+        mHomeContentLayout = (LinearLayout) view.findViewById(R.id.homeContentLayout);
         //        mHomeContentLayout.removeAllViews();
 
         initEventLayout(mHomeContentLayout);
