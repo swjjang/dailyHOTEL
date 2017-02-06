@@ -52,26 +52,26 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
         AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.BOOKING_DETAIL, null);
     }
 
-    @Override
-    protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
-    {
-        String tag = (String) viewPager.getTag();
-
-        if (tag != null)
-        {
-            return;
-        }
-
-        viewPager.setTag("GourmetBookingDetailTabActivity");
-
-        ArrayList<BaseFragment> fragmentList = new ArrayList<>();
-
-        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
-        fragmentList.add(baseFragment01);
-
-        BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-        viewPager.setAdapter(fragmentPagerAdapter);
-    }
+//    @Override
+//    protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
+//    {
+//        String tag = (String) viewPager.getTag();
+//
+//        if (tag != null)
+//        {
+//            return;
+//        }
+//
+//        viewPager.setTag("GourmetBookingDetailTabActivity");
+//
+//        ArrayList<BaseFragment> fragmentList = new ArrayList<>();
+//
+//        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
+//        fragmentList.add(baseFragment01);
+//
+//        BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
+//        viewPager.setAdapter(fragmentPagerAdapter);
+//    }
 
     @Override
     protected void showCallDialog()
@@ -516,7 +516,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                             mGourmetBookingDetail.setData(dataJSONObject);
 
-                            loadFragments(getViewPager(), mGourmetBookingDetail);
+//                            loadFragments(getViewPager(), mGourmetBookingDetail);
                             break;
 
                         // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가

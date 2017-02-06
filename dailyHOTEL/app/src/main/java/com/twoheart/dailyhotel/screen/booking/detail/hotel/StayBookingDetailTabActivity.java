@@ -540,7 +540,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                             mStayBookingDetail.userName = jsonObject.getString("name");
 
-                            DailyMobileAPI.getInstance(StayBookingDetailTabActivity.this).requestStayBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+                            mNetworkController.requestStayBookingDetailInformation(reservationIndex);
                         } else
                         {
                             String msg = responseJSONObject.getString("msg");
@@ -871,85 +871,6 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
     };
 
-    retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    switch (msgCode)
-                    {
-                        case 100:
-                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
-
-                            mStayBookingDetail.setData(jsonObject);
-
-                            long checkOutDateTime = DailyCalendar.getTimeGMT9(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
-
-                            if (mStayBookingDetail.currentDateTime < checkOutDateTime)
-                            {
-                                mStayBookingDetail.isVisibleRefundPolicy = true;
-
-                                if (mStayBookingDetail.readyForRefund == true)
-                                {
-                                    // 환불 대기 인 상태에서는 문구가 고정이다.
-                                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-                                } else
-                                {
-                                    mNetworkController.requestPolicyRefund(mStayBookingDetail.reservationIndex, mStayBookingDetail.transactionType);
-                                }
-                            } else
-                            {
-                                mStayBookingDetail.isVisibleRefundPolicy = false;
-
-                                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
-                            }
-                            break;
-
-                        // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
-                        case 501:
-                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    Util.restartApp(StayBookingDetailTabActivity.this);
-                                }
-                            });
-                            break;
-
-                        default:
-                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
-                            break;
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
-            } else
-            {
-                StayBookingDetailTabActivity.this.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            StayBookingDetailTabActivity.this.onError(t);
-            finish();
-        }
-    };
-
     private StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener //
         mNetworkControllerListener = new StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener()
     {
@@ -1029,6 +950,8 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onStayBookingDetailInformation(StayBookingDetail stayBookingDetail)
         {
+            unLockUI();
+
             if (stayBookingDetail == null)
             {
                 finish();
@@ -1072,6 +995,32 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
 
         @Override
+        public void onEnterOtherUserReservationBookingError(int msgCode, String message)
+        {
+            StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Util.restartApp(StayBookingDetailTabActivity.this);
+                }
+            });
+        }
+
+        @Override
+        public void onExpiredSessionError()
+        {
+            StayBookingDetailTabActivity.this.onExpiredSessionError();
+        }
+
+        @Override
+        public void onReservationBookingDetailError(Throwable throwable)
+        {
+            onError(throwable);
+            finish();
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StayBookingDetailTabActivity.this.onError(e);
@@ -1080,20 +1029,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            if (msgCode == 501)
-            {
-                StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Util.restartApp(StayBookingDetailTabActivity.this);
-                    }
-                });
-            } else
-            {
-                StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
-            }
+            StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override

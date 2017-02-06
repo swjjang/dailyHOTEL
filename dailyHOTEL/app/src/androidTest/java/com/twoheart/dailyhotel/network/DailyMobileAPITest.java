@@ -3187,8 +3187,7 @@ public class DailyMobileAPITest
 
                     JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                    StayBookingDetail stayBookingDetail = new StayBookingDetail();
-                    stayBookingDetail.setData(jsonObject);
+                    StayBookingDetail stayBookingDetail = new StayBookingDetail(jsonObject);
                     assertThat(stayBookingDetail, notNullValue());
                 } catch (Throwable t)
                 {

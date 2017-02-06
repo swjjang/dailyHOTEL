@@ -6,7 +6,6 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.model.ErrorBuilder;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -29,6 +28,12 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
         void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message);
 
         void onStayBookingDetailInformation(StayBookingDetail stayBookingDetail);
+
+        void onEnterOtherUserReservationBookingError(int msgCode, String message);
+
+        void onExpiredSessionError();
+
+        void onReservationBookingDetailError(Throwable throwable);
     }
 
     public StayBookingDetailTabBookingNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -176,32 +181,34 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
 
                         // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
                         case 501:
-                            mOnNetworkControllerListener.onError(new ErrorBuilder(response.code(), msgCode, message)//
-                                .setAfterActive(ErrorBuilder.AfterType.POPUP, ErrorBuilder.AfterActive.RESTART));
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEnterOtherUserReservationBookingError(msgCode, message);
                             break;
 
                         default:
-                            mOnNetworkControllerListener.onError(new ErrorBuilder(response.code(), msgCode, message)//
-                                .setAfterActive(ErrorBuilder.AfterType.POPUP, ErrorBuilder.AfterActive.FINISH));
+                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                             break;
                     }
                 } catch (Exception e)
                 {
-                    mOnNetworkControllerListener.onError(new ErrorBuilder(response.code(), -1, null)//
-                        .setAfterActive(ErrorBuilder.AfterType.TOAST, ErrorBuilder.AfterActive.FINISH));
-
-                    mOnNetworkControllerListener.onError(e);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReservationBookingDetailError(e);
                 }
             } else
             {
-                mOnNetworkControllerListener.onErrorResponse(call, response);
+                if(response != null && response.code() == 401)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onExpiredSessionError();
+                } else
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onReservationBookingDetailError(null);
+                }
+
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onReservationBookingDetailError(t);
         }
     };
 }
