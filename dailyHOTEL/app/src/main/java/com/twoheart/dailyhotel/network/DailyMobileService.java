@@ -129,6 +129,7 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestGourmetAccountInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("tid") String tid);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestGourmetRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
