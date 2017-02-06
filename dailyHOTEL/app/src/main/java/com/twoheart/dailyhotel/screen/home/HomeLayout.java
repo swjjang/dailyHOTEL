@@ -21,18 +21,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -71,7 +68,6 @@ public class HomeLayout extends BaseLayout
     private View mEventAreaLayout;
     private View mScrollButtonLayout;
     private View mTextMessageLayout;
-    private View mReviewMessageLayout;
     private HomeCarouselLayout mRecentListLayout;
     private HomeCarouselLayout mWishListLayout;
     private HomeRecommendationLayout mHomeRecommendationLayout;
@@ -118,8 +114,7 @@ public class HomeLayout extends BaseLayout
     public enum MessageType
     {
         NONE,
-        TEXT,
-        REVIEW
+        TEXT
     }
 
     public HomeLayout(Context context, OnBaseEventListener listener)
@@ -221,11 +216,10 @@ public class HomeLayout extends BaseLayout
     private void initHomeContentLayout(View view)
     {
         mHomeContentLayout = (LinearLayout) view.findViewById(R.id.homeContentLayout);
-        //        mHomeContentLayout.removeAllViews();
 
         initEventLayout(mHomeContentLayout);
         initScrollButtonLayout(mHomeContentLayout);
-        initMessageLayout(mHomeContentLayout);
+        initTextMessageLayout(mHomeContentLayout);
         initWishListLayout(mHomeContentLayout);
         initRecentListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
@@ -288,17 +282,6 @@ public class HomeLayout extends BaseLayout
         });
     }
 
-    private void initMessageLayout(LinearLayout layout)
-    {
-        if (layout == null)
-        {
-            return;
-        }
-
-        initTextMessageLayout(layout);
-        initReviewMessageLayout(layout);
-    }
-
     private void initTextMessageLayout(LinearLayout layout)
     {
         if (layout == null || mContext == null)
@@ -306,21 +289,11 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        mTextMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
+        View messageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
+        layout.addView(messageLayout);
+
+        mTextMessageLayout = messageLayout.findViewById(R.id.homeMessageLayout);
         mTextMessageLayout.setVisibility(View.GONE);
-        layout.addView(mTextMessageLayout);
-    }
-
-    private void initReviewMessageLayout(LinearLayout layout)
-    {
-        if (layout == null || mContext == null)
-        {
-            return;
-        }
-
-        mReviewMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_review_layout, null);
-        mReviewMessageLayout.setVisibility(View.GONE);
-        layout.addView(mReviewMessageLayout);
     }
 
     private void initWishListLayout(LinearLayout layout)
@@ -729,7 +702,6 @@ public class HomeLayout extends BaseLayout
     public void hideMessageLayout()
     {
         mTextMessageLayout.setVisibility(View.GONE);
-        mReviewMessageLayout.setVisibility(View.GONE);
     }
 
     public void setTextMessageData(String title, String description)
@@ -737,11 +709,6 @@ public class HomeLayout extends BaseLayout
         if (mTextMessageLayout == null)
         {
             return;
-        }
-
-        if (mReviewMessageLayout != null)
-        {
-            mReviewMessageLayout.setVisibility(View.GONE);
         }
 
         mTextMessageLayout.setVisibility(View.GONE);
@@ -809,140 +776,6 @@ public class HomeLayout extends BaseLayout
             public void run()
             {
                 startMessageLayoutShowAnimation(mTextMessageLayout);
-            }
-        });
-    }
-
-    public void setReviewData(Review review)
-    {
-        if (mReviewMessageLayout == null)
-        {
-            return;
-        }
-
-        if (mTextMessageLayout != null)
-        {
-            mTextMessageLayout.setVisibility(View.GONE);
-        }
-
-        mReviewMessageLayout.setVisibility(View.GONE);
-        mReviewMessageLayout.clearAnimation();
-
-        if (review == null)
-        {
-            return;
-        }
-
-        View closeView = mReviewMessageLayout.findViewById(R.id.closeImageView);
-        closeView.setTag(review);
-        closeView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startMessageLayoutCloseAnimation(mReviewMessageLayout);
-
-                ((HomeLayout.OnEventListener) mOnEventListener).onMessageReviewAreaCloseClick((Review) v.getTag());
-            }
-        });
-
-        TextView titleTextView = (TextView) mReviewMessageLayout.findViewById(R.id.titleTextView);
-        TextView periodTextView = (TextView) mReviewMessageLayout.findViewById(R.id.descriptionTextView);
-        View goodEmoticonView = mReviewMessageLayout.findViewById(R.id.goodEmoticonView);
-        View badEmoticonView = mReviewMessageLayout.findViewById(R.id.badEmoticonView);
-
-        final ReviewItem reviewItem = review.getReviewItem();
-        if (reviewItem == null)
-        {
-            mReviewMessageLayout.setVisibility(View.GONE);
-            mReviewMessageLayout.clearAnimation();
-
-            throw new NullPointerException("reviewItem == null");
-        }
-
-        // 타이틀
-        String title = mContext.getResources().getString(R.string.message_review_title, reviewItem.itemName);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title);
-        spannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getRegularTypeface()),//
-            title.lastIndexOf('\'') + 1, title.length(),//
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        titleTextView.setText(spannableStringBuilder);
-
-        try
-        {
-            // 시간
-            switch (reviewItem.placeType)
-            {
-                case HOTEL:
-                {
-                    String periodDate = String.format("%s - %s"//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
-                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
-                    break;
-                }
-
-                case FNB:
-                {
-                    String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
-
-                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
-                    break;
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        mDailyEmoticonImageView = null;
-        mDailyEmoticonImageView = new DailyEmoticonImageView[2];
-
-        // 이미지
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) mReviewMessageLayout.findViewById(R.id.badEmoticonImageView);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) mReviewMessageLayout.findViewById(R.id.goodEmoticonImageView);
-
-        mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-737-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-573-B_satfisfied.kf.json");
-
-        mDailyEmoticonImageView[0].startAnimation();
-        mDailyEmoticonImageView[1].startAnimation();
-
-        // 딤이미지
-        final View badEmoticonDimView = mReviewMessageLayout.findViewById(R.id.badEmoticonDimView);
-        final View goodEmoticonDimView = mReviewMessageLayout.findViewById(R.id.goodEmoticonDimView);
-
-        // 텍스트
-        final TextView badEmoticonTextView = (TextView) mReviewMessageLayout.findViewById(R.id.badEmoticonTextView);
-        final TextView goodEmoticonTextView = (TextView) mReviewMessageLayout.findViewById(R.id.goodEmoticonTextView);
-
-        goodEmoticonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // TODO : 클릭 이벤트 적용 필요!
-            }
-        });
-
-        badEmoticonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // TODO : 클릭 이벤트 적용 필요!
-            }
-        });
-
-        mReviewMessageLayout.setVisibility(View.INVISIBLE);
-
-        mReviewMessageLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                startMessageLayoutShowAnimation(mReviewMessageLayout);
             }
         });
     }
@@ -1061,11 +894,6 @@ public class HomeLayout extends BaseLayout
             {
                 view.setVisibility(View.GONE);
                 view.clearAnimation();
-
-                if (view.getId() == mReviewMessageLayout.getId())
-                {
-                    onDestroyReviewAnimation();
-                }
             }
 
             @Override
@@ -1073,11 +901,6 @@ public class HomeLayout extends BaseLayout
             {
                 view.setVisibility(View.GONE);
                 view.clearAnimation();
-
-                if (view.getId() == mReviewMessageLayout.getId())
-                {
-                    onDestroyReviewAnimation();
-                }
             }
 
             @Override

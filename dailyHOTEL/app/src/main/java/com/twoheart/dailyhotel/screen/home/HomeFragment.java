@@ -227,14 +227,7 @@ public class HomeFragment extends BaseFragment
 
         HomeLayout.MessageType messageType = HomeLayout.MessageType.NONE;
 
-        if (DailyHotel.isLogin() == true)
-        {
-            boolean isLoginAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLoginEnabled();
-            if (isLoginAreaEnable == true)
-            {
-                messageType = HomeLayout.MessageType.REVIEW;
-            }
-        } else
+        if (DailyHotel.isLogin() == false)
         {
             boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
             boolean isTextMessageAreaEnable = DailyPreference.getInstance(mBaseActivity).isHomeTextMessageAreaEnabled();
@@ -245,11 +238,7 @@ public class HomeFragment extends BaseFragment
             }
         }
 
-        if (HomeLayout.MessageType.REVIEW == messageType)
-        {
-            // TODO : request review data;
-            mNetworkController.requestReviewInformation();
-        } else if (HomeLayout.MessageType.TEXT == messageType)
+        if (HomeLayout.MessageType.TEXT == messageType)
         {
             requestTextMessage();
         } else
@@ -564,15 +553,6 @@ public class HomeFragment extends BaseFragment
             mSaleTime.setCurrentTime(currentDateTime);
             mSaleTime.setDailyTime(dailyDateTime);
             mSaleTime.setOffsetDailyDay(0);
-        }
-
-        @Override
-        public void onReviewInformation(Review review)
-        {
-            if (mHomeLayout != null)
-            {
-                mHomeLayout.setReviewData(review);
-            }
         }
 
         @Override
