@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
@@ -154,7 +153,6 @@ public class HomeFragment extends BaseFragment
         // 애니메이션 처리!
         if (mHomeLayout != null)
         {
-            mHomeLayout.onResumeReviewAnimation();
             mHomeLayout.onResumeCarouselAnimation();
         }
     }
@@ -168,19 +166,7 @@ public class HomeFragment extends BaseFragment
 
         if (mHomeLayout != null)
         {
-            mHomeLayout.onPauseReviewAnimation();
             mHomeLayout.onPauseCarouselAnimation();
-        }
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
-        if (mHomeLayout != null)
-        {
-            mHomeLayout.onDestroyReviewAnimation();
         }
     }
 
@@ -360,12 +346,6 @@ public class HomeFragment extends BaseFragment
         public void onMessageTextAreaCloseClick()
         {
             DailyPreference.getInstance(mBaseActivity).setHomeTextMessageAreaEnabled(false);
-        }
-
-        @Override
-        public void onMessageReviewAreaCloseClick(Review review)
-        {
-            // TODO : 리뷰 다시 보지 않기 처리
         }
 
         @Override

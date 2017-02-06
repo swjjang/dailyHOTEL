@@ -25,7 +25,6 @@ import android.widget.RelativeLayout;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -34,7 +33,6 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -74,15 +72,11 @@ public class HomeLayout extends BaseLayout
 
     private LinearLayout mProviderInfoView;
 
-    private DailyEmoticonImageView[] mDailyEmoticonImageView;
-
     public interface OnEventListener extends OnBaseEventListener
     {
         void onMessageTextAreaClick();
 
         void onMessageTextAreaCloseClick();
-
-        void onMessageReviewAreaCloseClick(Review review);
 
         void onSearchImageClick();
 
@@ -975,41 +969,6 @@ public class HomeLayout extends BaseLayout
                 canvas.restore();
             }
         };
-    }
-
-    public void onResumeReviewAnimation()
-    {
-        if (mDailyEmoticonImageView != null)
-        {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.startAnimation();
-            }
-        }
-    }
-
-    public void onPauseReviewAnimation()
-    {
-        if (mDailyEmoticonImageView != null)
-        {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.stopAnimation();
-            }
-        }
-    }
-
-    public void onDestroyReviewAnimation()
-    {
-        if (mDailyEmoticonImageView != null)
-        {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.stopAnimation();
-            }
-        }
-
-        mDailyEmoticonImageView = null;
     }
 
     public void onResumeCarouselAnimation()
