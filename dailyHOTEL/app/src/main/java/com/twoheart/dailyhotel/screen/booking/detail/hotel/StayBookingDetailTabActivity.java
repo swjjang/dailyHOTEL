@@ -439,6 +439,15 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             }
         });
 
+        shareDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
         try
         {
             shareDialog.setContentView(dialogView);
@@ -833,8 +842,6 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             } else
             {
                 mStayBookingDetailLayout.expandMap();
-
-                releaseUiComponent();
             }
         }
 
@@ -916,18 +923,33 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void showCallDialog()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             StayBookingDetailTabActivity.this.showCallDialog();
         }
 
         @Override
         public void showShareDialog()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             StayBookingDetailTabActivity.this.showShareDialog();
         }
 
         @Override
         public void onMyLocationClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             Intent intent = PermissionManagerActivity.newInstance(StayBookingDetailTabActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
@@ -935,13 +957,31 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onClipAddressClick()
         {
-
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
         }
 
         @Override
         public void onSearchMapClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+        }
 
+        @Override
+        public void onLockUiComponent()
+        {
+            lockUiComponent();
+        }
+
+        @Override
+        public void onReleaseUiComponent()
+        {
+            releaseUiComponent();
         }
     };
 

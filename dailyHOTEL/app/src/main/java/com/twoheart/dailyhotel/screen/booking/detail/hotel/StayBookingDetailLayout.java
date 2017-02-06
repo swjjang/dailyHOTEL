@@ -59,7 +59,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
     private View mPlaceInformationLayout;
 
-    private View mInputReviewVerticalLine;
+    private View mInputReviewVerticalLine, mMapExpandedView;
     private DailyTextView mInputReviewView;
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -96,6 +96,10 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
         void onClipAddressClick();
 
         void onSearchMapClick();
+
+        void onLockUiComponent();
+
+        void onReleaseUiComponent();
     }
 
     public StayBookingDetailLayout(Context context, OnBaseEventListener listener)
@@ -189,6 +193,8 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
         com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
         mapImageView.setOnClickListener(this);
+
+        mMapExpandedView = view.findViewById(R.id.mapExpandedView);
 
         if (Util.isInstallGooglePlayService(context) == false)
         {
@@ -789,10 +795,12 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
     public void expandMap()
     {
+        ((OnEventListener) mOnEventListener).onLockUiComponent();
+
         setMapToolbar();
 
-        mScrollLayout.scrollTo(0, 0);
         mScrollLayout.setScrollingEnabled(false);
+        mScrollLayout.scrollTo(0, 0);
 
         mSearchMapsLayout.setVisibility(View.INVISIBLE);
         mAddressLayout.setVisibility(View.INVISIBLE);
@@ -831,6 +839,9 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
             @Override
             public void onAnimationStart(Animator animation)
             {
+                mMapLayout.setTranslationY(0.0f);
+
+                mMapExpandedView.setVisibility(View.GONE);
                 mSearchMapsLayout.setVisibility(View.VISIBLE);
                 mAddressLayout.setVisibility(View.VISIBLE);
             }
@@ -843,6 +854,8 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
                 mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
                 mScrollLayout.setVisibility(View.INVISIBLE);
+
+                ((OnEventListener) mOnEventListener).onReleaseUiComponent();
             }
 
             @Override
@@ -865,6 +878,8 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
     public void collapseMap(double latitude, double longitude)
     {
+        ((OnEventListener) mOnEventListener).onLockUiComponent();
+
         setBookingToolbar();
 
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
@@ -913,9 +928,13 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
             {
                 mScrollLayout.scrollTo(0, 0);
                 mScrollLayout.setScrollingEnabled(true);
+                mMapLayout.setTranslationY(0.0f);
 
                 mSearchMapsLayout.setVisibility(View.GONE);
                 mAddressLayout.setVisibility(View.GONE);
+                mMapExpandedView.setVisibility(View.VISIBLE);
+
+                ((OnEventListener) mOnEventListener).onReleaseUiComponent();
             }
 
             @Override
@@ -937,7 +956,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
         LatLng latLng = new LatLng(latitude, longitude);
         CameraPosition cameraPosition = new CameraPosition.Builder().target((latLng)).zoom(15).build();
-        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 500, null);
     }
 
     public void changeLocation(Location location)
