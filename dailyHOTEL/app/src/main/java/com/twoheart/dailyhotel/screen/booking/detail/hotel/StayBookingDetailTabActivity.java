@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
@@ -114,15 +116,37 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 }
                 break;
             }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                if (mStayBookingDetailLayout != null)
+                {
+                    searchMyLocation(mStayBookingDetailLayout.getMyLocationView());
+                }
+
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    if (mStayBookingDetailLayout != null)
+                    {
+                        searchMyLocation(mStayBookingDetailLayout.getMyLocationView());
+                    }
+                }
+                break;
+            }
         }
     }
 
     @Override
     public void onBackPressed()
     {
-        if (mStayBookingDetailLayout.isExpandedMap() == true)
+        if (mStayBookingDetailLayout != null && mStayBookingDetailLayout.isExpandedMap() == true)
         {
-            mStayBookingDetailLayout.collapseMapAnimation();
+            mStayBookingDetailLayout.collapseMap(mStayBookingDetail.latitude, mStayBookingDetail.longitude);
         } else
         {
             super.onBackPressed();
@@ -431,6 +455,17 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE//
             , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.STAY, null);
+    }
+
+    @Override
+    protected void onLocationChanged(Location location)
+    {
+        if (mStayBookingDetailLayout == null || location == null)
+        {
+            return;
+        }
+
+        mStayBookingDetailLayout.changeLocation(location);
     }
 
     private void showRefundCallDialog()
@@ -797,7 +832,9 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 startActivity(intent);
             } else
             {
+                mStayBookingDetailLayout.expandMap();
 
+                releaseUiComponent();
             }
         }
 
@@ -886,6 +923,25 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         public void showShareDialog()
         {
             StayBookingDetailTabActivity.this.showShareDialog();
+        }
+
+        @Override
+        public void onMyLocationClick()
+        {
+            Intent intent = PermissionManagerActivity.newInstance(StayBookingDetailTabActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+        }
+
+        @Override
+        public void onClipAddressClick()
+        {
+
+        }
+
+        @Override
+        public void onSearchMapClick()
+        {
+
         }
     };
 
