@@ -35,6 +35,11 @@
         android:overScrollMode="never"
         android:scrollbars="vertical"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:background="@drawable/img_detail_gradient"/>
+
     <ImageView
         android:id="@+id/backImageView"
         android:layout_width="wrap_content"

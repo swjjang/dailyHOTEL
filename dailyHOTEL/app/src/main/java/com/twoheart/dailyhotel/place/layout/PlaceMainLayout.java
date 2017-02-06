@@ -89,6 +89,38 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
         mAppBarLayout.setTag(0);
 
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
+        {
+            final int dp52Height = Util.dpToPx(mContext, 52);
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+            {
+                if (mViewPager == null)
+                {
+                    return;
+                }
+
+                if (verticalOffset == 0)
+                {
+                    if (mViewPager.getPaddingBottom() == dp52Height)
+                    {
+                        return;
+                    }
+
+                    mViewPager.setPadding(mViewPager.getPaddingLeft(), mViewPager.getPaddingTop(), mViewPager.getPaddingRight(), dp52Height);
+                } else
+                {
+                    if (mViewPager.getPaddingBottom() == 0)
+                    {
+                        return;
+                    }
+
+                    mViewPager.setPadding(mViewPager.getPaddingLeft(), mViewPager.getPaddingTop(), mViewPager.getPaddingRight(), 0);
+                }
+            }
+        });
+
         mToolbarLayout = mAppBarLayout.findViewById(R.id.toolbarLayout);
         View backImageView = mToolbarLayout.findViewById(R.id.backImageView);
         backImageView.setOnClickListener(new View.OnClickListener()

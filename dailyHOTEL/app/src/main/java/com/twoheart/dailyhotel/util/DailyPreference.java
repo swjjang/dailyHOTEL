@@ -177,6 +177,9 @@ public class DailyPreference
     private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
     private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122";
 
+    // Setting - Home
+    private static final String KEY_SETTING_HOME_MESSAGE_AREA_ENABLED = "1201";
+
     // User
     private static final String KEY_USER_EMAIL = "2001";
     private static final String KEY_USER_TYPE = "2002";
@@ -267,6 +270,8 @@ public class DailyPreference
 
         String baseUrl = getBaseUrl();
 
+        boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
+
         if (mEditor != null)
         {
             mEditor.clear();
@@ -288,6 +293,8 @@ public class DailyPreference
         setGourmetRecentPlaces(gourmetRecentPlace);
 
         setBaseUrl(baseUrl);
+
+        setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -1494,6 +1501,16 @@ public class DailyPreference
     public void clearPaymentInformation()
     {
         removeValue(mEditor, KEY_PAYMENT_INFORMATION);
+    }
+
+    public boolean isHomeTextMessageAreaEnabled()
+    {
+        return getValue(mPreferences, KEY_SETTING_HOME_MESSAGE_AREA_ENABLED, true);
+    }
+
+    public void setHomeTextMessageAreaEnabled(boolean isEnabled)
+    {
+        setValue(mEditor, KEY_SETTING_HOME_MESSAGE_AREA_ENABLED, isEnabled);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

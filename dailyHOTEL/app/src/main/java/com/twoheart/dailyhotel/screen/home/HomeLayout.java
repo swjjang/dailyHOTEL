@@ -50,14 +50,14 @@ public class HomeLayout extends BaseLayout
     private static final double BUTTON_LAYOUT_MIN_HEIGHT = 76d;
     private static final double BUTTON_LAYOUT_MAX_HEIGHT = 82d;
 
-    private DailyLoopViewPager mEventViewPager;
-    private DailyTextView mEventCountTextView;
-    private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
-
     private int mEventImageHeight;
     private int mButtonGapHeight;
     private int mScrollButtonMaxHeight;
     private int mScrollButtonMinHeight;
+
+    private DailyLoopViewPager mEventViewPager;
+    private DailyTextView mEventCountTextView;
+    private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
 
     private View mActionButtonLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -77,7 +77,9 @@ public class HomeLayout extends BaseLayout
     {
         void onMessageTextAreaClick();
 
-        void onMessageCloseClick();
+        void onMessageTextAreaCloseClick();
+
+        void onMessageReviewAreaCloseClick(Review review);
 
         void onSearchImageClick();
 
@@ -244,7 +246,8 @@ public class HomeLayout extends BaseLayout
         layout.addView(mScrollButtonLayout);
 
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(//
+            ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT));
         mScrollButtonLayout.setLayoutParams(params);
 
         View stayButton = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
@@ -369,7 +372,6 @@ public class HomeLayout extends BaseLayout
 
         layout.addView(mHomeRecommendationLayout);
 
-
         setRecommendationData(null);
     }
 
@@ -420,7 +422,8 @@ public class HomeLayout extends BaseLayout
 
         if (Util.isTextEmpty(homeEventCurrentVersion) == true)
         {
-            return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
+            return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
+                HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
         } else
         {
             String fileName = Util.makeImageFileName(homeEventCurrentVersion);
@@ -428,7 +431,8 @@ public class HomeLayout extends BaseLayout
 
             if (file.exists() == false)
             {
-                return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
+                return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
+                    HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
             } else
             {
                 String urlString = null;
@@ -444,7 +448,8 @@ public class HomeLayout extends BaseLayout
 
                 if (Util.isTextEmpty(urlString) == true)
                 {
-                    return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
+                    return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
+                        HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
                 } else
                 {
                     return new Event(urlString, urlString, homeEventTitle, homeEventUrl);
@@ -614,7 +619,7 @@ public class HomeLayout extends BaseLayout
             {
                 startMessageLayoutCloseAnimation(mTextMessageLayout);
 
-                ((HomeLayout.OnEventListener) mOnEventListener).onMessageCloseClick();
+                ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
             }
         });
 
@@ -675,12 +680,15 @@ public class HomeLayout extends BaseLayout
         }
 
         View closeView = mReviewMessageLayout.findViewById(R.id.closeImageView);
+        closeView.setTag(review);
         closeView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 startMessageLayoutCloseAnimation(mReviewMessageLayout);
+
+                ((HomeLayout.OnEventListener) mOnEventListener).onMessageReviewAreaCloseClick((Review) v.getTag());
             }
         });
 
