@@ -118,6 +118,18 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        if (mStayBookingDetailLayout.isExpandedMap() == true)
+        {
+            mStayBookingDetailLayout.collapseMapAnimation();
+        } else
+        {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     protected void showCallDialog()
     {
         if (isFinishing())
@@ -752,7 +764,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void finish()
         {
-            StayBookingDetailTabActivity.this.finish();
+            StayBookingDetailTabActivity.this.onBackPressed();
         }
 
         @Override

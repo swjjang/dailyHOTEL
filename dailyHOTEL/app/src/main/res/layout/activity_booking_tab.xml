@@ -4,17 +4,93 @@
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:fresco="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
     <include layout="@layout/toolbar_default_underline_menu"/>
 
-    <ScrollView
+    <RelativeLayout
+        android:id="@+id/googleMapLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <FrameLayout
+            android:id="@+id/mapLayout"
+            android:layout_width="match_parent"
+            android:layout_height="202dp"
+            android:visibility="visible"/>
+
+        <RelativeLayout
+            android:id="@+id/addressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="74dp"
+            android:layout_above="@+id/searchMapsLayout"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/copyAddressView"
+                android:layout_width="58dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/more_btn_padding"
+                android:freezesText="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/label_copy_address"
+                android:textColor="@color/hoteldetail_title_text"
+                android:textSize="11dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/addressTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/copyAddressView"
+                android:freezesText="true"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/hoteldetail_title_text"
+                android:textSize="13dp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/searchMapsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_ce7e7e7"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/searchMapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_fillrect_bb70038_r2"
+                android:gravity="center"
+                android:text="@string/label_map_searchmap"
+                android:textColor="@color/white"
+                android:textSize="17dp"
+                dailyFont:style="Medium"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.twoheart.dailyhotel.widget.DailyScrollView
         android:id="@+id/scrollLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:background="@color/white"
         android:fadingEdge="none"
         android:fillViewport="true"
         android:orientation="vertical">
@@ -26,27 +102,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
-                <FrameLayout
-                    android:id="@+id/mapsFrameLayout"
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/mapImageView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/mapImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="202dp"
-                        android:adjustViewBounds="true"
-                        fresco:actualImageScaleType="focusCrop"
-                        android:visibility="gone"/>
-
-                    <FrameLayout
-                        android:id="@+id/mapLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="202dp"
-                        android:visibility="gone"/>
-                </FrameLayout>
+                    android:layout_height="202dp"
+                    android:adjustViewBounds="true"
+                    fresco:actualImageScaleType="focusCrop"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -60,7 +123,7 @@
                     android:id="@+id/lineView"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_below="@id/mapsFrameLayout"
+                    android:layout_below="@id/mapImageView"
                     android:background="@color/default_line_cdcdcdd"/>
 
                 <View
@@ -173,23 +236,30 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <include
-                layout="@layout/fragment_booking_tab_booking_01"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"/>
+                android:background="@color/white"
+                android:orientation="vertical">
 
-            <include
-                layout="@layout/fragment_booking_tab_booking_02"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"/>
+                <include
+                    layout="@layout/fragment_booking_tab_booking_01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"/>
 
-            <include
-                layout="@layout/fragment_booking_tab_booking_03"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="visible"/>
+                <include
+                    layout="@layout/fragment_booking_tab_booking_02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"/>
+
+                <include
+                    layout="@layout/fragment_booking_tab_booking_03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"/>
+            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.twoheart.dailyhotel.widget.DailyScrollView>
 </RelativeLayout>

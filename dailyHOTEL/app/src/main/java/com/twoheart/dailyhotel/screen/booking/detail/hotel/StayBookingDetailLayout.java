@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.PointF;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -37,6 +40,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+import com.twoheart.dailyhotel.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -47,7 +51,7 @@ import java.util.TimeZone;
 
 public class StayBookingDetailLayout extends BaseLayout implements View.OnClickListener
 {
-    private ScrollView mScrollLayout;
+    private DailyScrollView mScrollLayout;
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
     private View mPlaceInformationLayout;
@@ -56,11 +60,15 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
     private DailyTextView mInputReviewView;
 
     // Map
-    private FrameLayout mGoogleMapLayout;
+    private RelativeLayout mGoogleMapLayout;
+    private FrameLayout mMapLayout;
     private GoogleMap mGoogleMap;
     private View mMyLocationView;
     MarkerOptions mMyLocationMarkerOptions;
     Marker mMyLocationMarker, mPlaceLocationMarker;
+
+    private View mAddressLayout, mSearchMapsLayout;
+
     private Handler mHandler = new Handler();
 
     interface OnEventListener extends OnBaseEventListener
@@ -92,7 +100,8 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
     {
         initToolbar(view, mContext.getString(R.string.actionbar_title_booking_list_frag));
 
-        mScrollLayout = (ScrollView) view.findViewById(R.id.scrollLayout);
+        mGoogleMapLayout = (RelativeLayout) view.findViewById(R.id.googleMapLayout);
+        mScrollLayout = (DailyScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(mScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
@@ -151,16 +160,13 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
         final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
 
         com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
-        mGoogleMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
+        mapImageView.setOnClickListener(this);
 
         if (Util.isInstallGooglePlayService(context) == false)
         {
             mGoogleMapLayout.setVisibility(View.GONE);
-            mapImageView.setVisibility(View.VISIBLE);
 
             // Map 4 :2 비율 맞추기
-            mapImageView.setOnClickListener(this);
-
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
             layoutParams.width = (int) width;
             layoutParams.height = (int) height;
@@ -182,17 +188,32 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
         } else
         {
             mGoogleMapLayout.setVisibility(View.VISIBLE);
-            mapImageView.setVisibility(View.GONE);
 
-            mGoogleMapLayout.setOnClickListener(this);
+            mAddressLayout = mGoogleMapLayout.findViewById(R.id.addressLayout);
+            mSearchMapsLayout = mGoogleMapLayout.findViewById(R.id.searchMapsLayout);
 
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mGoogleMapLayout.getLayoutParams();
+            mAddressLayout.setVisibility(View.GONE);
+            mSearchMapsLayout.setVisibility(View.GONE);
+
+            mMapLayout = (FrameLayout) mGoogleMapLayout.findViewById(R.id.mapLayout);
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
             layoutParams.width = (int) width;
             layoutParams.height = (int) height;
 
-            mGoogleMapLayout.setLayoutParams(layoutParams);
+            mMapLayout.setLayoutParams(layoutParams);
+            mMapLayout.setTag((int) height);
 
-            googleMapSetting((FragmentActivity)mContext, mGoogleMapLayout, stayBookingDetail);
+            mScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+            {
+                @Override
+                public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+                {
+                    mMapLayout.setTranslationY(-t);
+                }
+            });
+
+            googleMapSetting((FragmentActivity) mContext, mMapLayout, stayBookingDetail);
         }
 
         mPlaceInformationLayout = view.findViewById(R.id.placeInformationLayout);
@@ -245,16 +266,6 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
                 relocationMyLocation(googleMapLayout);
                 relocationZoomControl(googleMapLayout);
                 addMarker(mGoogleMap, stayBookingDetail.latitude, stayBookingDetail.longitude, stayBookingDetail.placeName);
-
-
-                mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
-                {
-                    @Override
-                    public void onMapClick(LatLng latLng)
-                    {
-                        ExLog.d("latLng : "+ latLng.toString());
-                    }
-                });
             }
         });
     }
@@ -302,25 +313,25 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
             googleMap.setInfoWindowAdapter(new PlaceNameInfoWindowAdapter(mContext));
-            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
-            {
-                @Override
-                public boolean onMarkerClick(Marker marker)
-                {
-                    marker.showInfoWindow();
-                    return true;
-                }
-            });
+            //            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+            //            {
+            //                @Override
+            //                public boolean onMarkerClick(Marker marker)
+            //                {
+            //                    marker.showInfoWindow();
+            //                    return true;
+            //                }
+            //            });
 
-//            mPlaceLocationMarker.hideInfoWindow();
-//            mHandler.post(new Runnable()
-//            {
-//                @Override
-//                public void run()
-//                {
-//                    mPlaceLocationMarker.showInfoWindow();
-//                }
-//            });
+            //            mPlaceLocationMarker.hideInfoWindow();
+            //            mHandler.post(new Runnable()
+            //            {
+            //                @Override
+            //                public void run()
+            //                {
+            //                    mPlaceLocationMarker.showInfoWindow();
+            //                }
+            //            });
         }
     }
 
@@ -731,19 +742,19 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v)
+    public void onClick(final View v)
     {
         switch (v.getId())
         {
             case R.id.mapImageView:
             {
-                ((OnEventListener) mOnEventListener).onMapClick(false);
-                break;
-            }
-
-            case R.id.mapLayout:
-            {
-                ((OnEventListener) mOnEventListener).onMapClick(true);
+                if (mGoogleMapLayout.getVisibility() == View.VISIBLE)
+                {
+                    expandMapAnimation();
+                } else
+                {
+                    ((OnEventListener) mOnEventListener).onMapClick(false);
+                }
                 break;
             }
 
@@ -783,6 +794,148 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
                 break;
             }
         }
+    }
+
+    public boolean isExpandedMap()
+    {
+        return mSearchMapsLayout.getVisibility() != View.GONE;
+    }
+
+    public void expandMapAnimation()
+    {
+        mScrollLayout.scrollTo(0, 0);
+        mScrollLayout.setScrollingEnabled(false);
+
+        mSearchMapsLayout.setVisibility(View.INVISIBLE);
+        mAddressLayout.setVisibility(View.INVISIBLE);
+
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                float value = (Float) animation.getAnimatedValue();
+
+                int height = (int) mMapLayout.getTag();
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
+                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
+
+                mMapLayout.setLayoutParams(layoutParams);
+
+                mScrollLayout.setTranslationY(((int) mAddressLayout.getY() - height) * value);
+                mScrollLayout.setAlpha(1.0f - value);
+
+                mSearchMapsLayout.setAlpha(value);
+                mAddressLayout.setAlpha(value);
+            }
+        });
+
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mSearchMapsLayout.setVisibility(View.VISIBLE);
+                mAddressLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.setDuration(300);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.start();
+    }
+
+    public void collapseMapAnimation()
+    {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                float value = (Float) animation.getAnimatedValue();
+
+                int height = (int) mMapLayout.getTag();
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
+                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
+
+                mMapLayout.setLayoutParams(layoutParams);
+
+                mScrollLayout.setTranslationY(((int) mAddressLayout.getY() - height) * value);
+                mScrollLayout.setAlpha(1.0f - value);
+
+                mSearchMapsLayout.setAlpha(value);
+                mAddressLayout.setAlpha(value);
+            }
+        });
+
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mScrollLayout.scrollTo(0, 0);
+                mScrollLayout.setScrollingEnabled(true);
+
+                mSearchMapsLayout.setVisibility(View.GONE);
+                mAddressLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.setDuration(300);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.reverse();
     }
 
     private long getCompareDate(long timeInMillis)
