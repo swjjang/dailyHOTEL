@@ -399,9 +399,8 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onRefreshAll(boolean isShowProgress)
         {
-            ExLog.d("isShowProgress : " + isShowProgress);
-
-            mHomeLayout.setRefreshing(false);
+            mDontReload = false;
+            onResume();
         }
 
         @Override
@@ -528,6 +527,14 @@ public class HomeFragment extends BaseFragment
             }
 
             unLockUI();
+
+            if (mHomeLayout != null)
+            {
+                if (mHomeLayout.isRefreshing() == true)
+                {
+                    mHomeLayout.setRefreshing(false);
+                }
+            }
 
             mSaleTime = new SaleTime();
             mSaleTime.setCurrentTime(currentDateTime);

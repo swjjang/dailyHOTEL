@@ -126,6 +126,11 @@ public class HomeRecommendationLayout extends LinearLayout
         {
             mContentLayout.removeAllViews();
         }
+
+        if (getVisibility() != View.VISIBLE)
+        {
+            setVisibility(View.VISIBLE);
+        }
     }
 
     public void addRecommendationItemView(final Recommendation recommendation, final int position)

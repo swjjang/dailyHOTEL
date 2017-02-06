@@ -139,15 +139,16 @@ public class HomeLayout extends BaseLayout
     {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
 
-        // 리프레시 기능 미 구현으로 인한 false 처리
-        mSwipeRefreshLayout.setEnabled(false);
-
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
             {
+                mWishListLayout.clearAll();
+                mRecentListLayout.clearAll();
+                mHomeRecommendationLayout.clearAll();
+
                 ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
             }
         });
@@ -923,6 +924,16 @@ public class HomeLayout extends BaseLayout
         mSwipeRefreshLayout.setRefreshing(isRefreshing);
     }
 
+    public boolean isRefreshing()
+    {
+        if (mSwipeRefreshLayout == null)
+        {
+            return false;
+        }
+
+        return mSwipeRefreshLayout.isRefreshing();
+    }
+
     public void setScrollTop()
     {
         if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
@@ -1042,6 +1053,14 @@ public class HomeLayout extends BaseLayout
             {
                 // hide
                 setActionButtonVisibility(View.GONE);
+            }
+
+            if (scrollY < mEventImageHeight)
+            {
+                mSwipeRefreshLayout.setEnabled(true);
+            } else
+            {
+                mSwipeRefreshLayout.setEnabled(false);
             }
         }
     };
