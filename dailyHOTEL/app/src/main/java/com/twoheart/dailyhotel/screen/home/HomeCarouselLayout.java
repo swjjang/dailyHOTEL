@@ -81,6 +81,7 @@ public class HomeCarouselLayout extends RelativeLayout
     private void initLayout()
     {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
+        setVisibility(View.VISIBLE);
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
         mCountTextView = (DailyTextView) view.findViewById(R.id.countTextView);
@@ -121,7 +122,6 @@ public class HomeCarouselLayout extends RelativeLayout
         coverImageView.setLayoutParams(layoutParams);
 
         mShimmer = new Shimmer();
-//        mShimmer.setSimmerWidth(width);
     }
 
     public void startShimmer()
@@ -163,17 +163,25 @@ public class HomeCarouselLayout extends RelativeLayout
 
     public void setData(ArrayList<? extends Place> list)
     {
-        if (list == null || list.size() == 0)
-        {
-            list = new ArrayList<>();
-        }
-
         stopShimmer();
         mCoverView.setVisibility(View.GONE);
 
+        if (list == null || list.size() == 0)
+        {
+            setVisibility(View.GONE);
+            return;
+        }
+
+        setVisibility(View.VISIBLE);
+
+        setRecyclerAdapter(list);
+    }
+
+    private void setRecyclerAdapter(ArrayList<? extends Place> list)
+    {
         if (mRecyclerAdapter == null)
         {
-            mRecyclerAdapter = new HomeCarouselAdapter(mContext, list, mRecyclerItemClcikListner);
+            mRecyclerAdapter = new HomeCarouselAdapter(mContext, list, mRecyclerItemClickListener);
             mRecyclerView.setAdapter(mRecyclerAdapter);
         } else
         {
@@ -182,12 +190,19 @@ public class HomeCarouselLayout extends RelativeLayout
         }
     }
 
+    public void clearAll()
+    {
+        setRecyclerAdapter(null);
+        mCoverView.setVisibility(View.VISIBLE);
+        setVisibility(View.VISIBLE);
+    }
+
     public void setCarouselListener(OnCarouselListener listener)
     {
         mCarouselListenter = listener;
     }
 
-    private HomeCarouselAdapter.ItemClickListener mRecyclerItemClcikListner = new HomeCarouselAdapter.ItemClickListener()
+    private HomeCarouselAdapter.ItemClickListener mRecyclerItemClickListener = new HomeCarouselAdapter.ItemClickListener()
     {
         @Override
         public void onItemClick(View view, int position)

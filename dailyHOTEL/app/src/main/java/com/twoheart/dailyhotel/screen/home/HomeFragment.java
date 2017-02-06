@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
@@ -23,6 +22,10 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
+import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
+import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
+import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
@@ -81,7 +84,7 @@ public class HomeFragment extends BaseFragment
         {
             if (DailyDeepLink.getInstance().isHomeEventDetailView() == true)
             {
-                startEventListActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
+                startEventWebActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
             } else if (DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = DailyDeepLink.getInstance().getPlaceType();
@@ -150,7 +153,6 @@ public class HomeFragment extends BaseFragment
         // 애니메이션 처리!
         if (mHomeLayout != null)
         {
-            mHomeLayout.onResumeReviewAnimation();
             mHomeLayout.onResumeCarouselAnimation();
         }
     }
@@ -164,19 +166,7 @@ public class HomeFragment extends BaseFragment
 
         if (mHomeLayout != null)
         {
-            mHomeLayout.onPauseReviewAnimation();
             mHomeLayout.onPauseCarouselAnimation();
-        }
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-
-        if (mHomeLayout != null)
-        {
-            mHomeLayout.onDestroyReviewAnimation();
         }
     }
 
@@ -205,6 +195,12 @@ public class HomeFragment extends BaseFragment
                 mDontReload = true;
                 break;
             }
+
+            case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                }
+                break;
         }
     }
 
@@ -217,14 +213,7 @@ public class HomeFragment extends BaseFragment
 
         HomeLayout.MessageType messageType = HomeLayout.MessageType.NONE;
 
-        if (DailyHotel.isLogin() == true)
-        {
-            boolean isLoginAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLoginEnabled();
-            if (isLoginAreaEnable == true)
-            {
-                messageType = HomeLayout.MessageType.REVIEW;
-            }
-        } else
+        if (DailyHotel.isLogin() == false)
         {
             boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
             boolean isTextMessageAreaEnable = DailyPreference.getInstance(mBaseActivity).isHomeTextMessageAreaEnabled();
@@ -235,11 +224,7 @@ public class HomeFragment extends BaseFragment
             }
         }
 
-        if (HomeLayout.MessageType.REVIEW == messageType)
-        {
-            // TODO : request review data;
-            mNetworkController.requestReviewInformation();
-        } else if (HomeLayout.MessageType.TEXT == messageType)
+        if (HomeLayout.MessageType.TEXT == messageType)
         {
             requestTextMessage();
         } else
@@ -283,7 +268,7 @@ public class HomeFragment extends BaseFragment
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
     }
 
-    private void startEventListActivity(String url, String eventName)
+    private void startEventWebActivity(String url, String eventName)
     {
         if (Util.isTextEmpty(url) == true)
         {
@@ -364,12 +349,6 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onMessageReviewAreaCloseClick(Review review)
-        {
-            // TODO : 리뷰 다시 보지 않기 처리
-        }
-
-        @Override
         public void onSearchImageClick()
         {
             if (mBaseActivity == null)
@@ -420,9 +399,8 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onRefreshAll(boolean isShowProgress)
         {
-            ExLog.d("isShowProgress : " + isShowProgress);
-
-            mHomeLayout.setRefreshing(false);
+            mDontReload = false;
+            onResume();
         }
 
         @Override
@@ -444,7 +422,7 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            HomeFragment.this.startEventListActivity(event.linkUrl, event.title);
+            HomeFragment.this.startEventWebActivity(event.linkUrl, event.title);
         }
 
         @Override
@@ -502,6 +480,35 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
+        public void onTermsClick()
+        {
+            Intent intent = new Intent(mBaseActivity, TermActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onPrivacyTermsClick()
+        {
+
+            Intent intent = new Intent(mBaseActivity, PrivacyActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onLocationTermsClick()
+        {
+            Intent intent = new Intent(mBaseActivity, LocationTermsActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onProtectedYouthClick()
+        {
+            Intent intent = new Intent(mBaseActivity, ProtectYouthTermsActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
         public void finish()
         {
             unLockUI();
@@ -521,19 +528,18 @@ public class HomeFragment extends BaseFragment
 
             unLockUI();
 
+            if (mHomeLayout != null)
+            {
+                if (mHomeLayout.isRefreshing() == true)
+                {
+                    mHomeLayout.setRefreshing(false);
+                }
+            }
+
             mSaleTime = new SaleTime();
             mSaleTime.setCurrentTime(currentDateTime);
             mSaleTime.setDailyTime(dailyDateTime);
             mSaleTime.setOffsetDailyDay(0);
-        }
-
-        @Override
-        public void onReviewInformation(Review review)
-        {
-            if (mHomeLayout != null)
-            {
-                mHomeLayout.setReviewData(review);
-            }
         }
 
         @Override

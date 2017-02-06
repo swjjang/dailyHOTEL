@@ -2,7 +2,11 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -17,22 +21,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.ReviewItem;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -66,20 +66,17 @@ public class HomeLayout extends BaseLayout
     private View mEventAreaLayout;
     private View mScrollButtonLayout;
     private View mTextMessageLayout;
-    private View mReviewMessageLayout;
     private HomeCarouselLayout mRecentListLayout;
     private HomeCarouselLayout mWishListLayout;
     private HomeRecommendationLayout mHomeRecommendationLayout;
 
-    private DailyEmoticonImageView[] mDailyEmoticonImageView;
+    private LinearLayout mProviderInfoView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onMessageTextAreaClick();
 
         void onMessageTextAreaCloseClick();
-
-        void onMessageReviewAreaCloseClick(Review review);
 
         void onSearchImageClick();
 
@@ -98,13 +95,20 @@ public class HomeLayout extends BaseLayout
         void onWishListViewAllClick();
 
         void onRecentListViewAllClick();
+
+        void onTermsClick();
+
+        void onPrivacyTermsClick();
+
+        void onLocationTermsClick();
+
+        void onProtectedYouthClick();
     }
 
     public enum MessageType
     {
         NONE,
-        TEXT,
-        REVIEW
+        TEXT
     }
 
     public HomeLayout(Context context, OnBaseEventListener listener)
@@ -135,15 +139,16 @@ public class HomeLayout extends BaseLayout
     {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
 
-        // 리프레시 기능 미 구현으로 인한 false 처리
-        mSwipeRefreshLayout.setEnabled(false);
-
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
             @Override
             public void onRefresh()
             {
+                mWishListLayout.clearAll();
+                mRecentListLayout.clearAll();
+                mHomeRecommendationLayout.clearAll();
+
                 ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
             }
         });
@@ -205,15 +210,15 @@ public class HomeLayout extends BaseLayout
 
     private void initHomeContentLayout(View view)
     {
-        mHomeContentLayout = (LinearLayout) view.findViewById(R.id.homContentLayout);
-        //        mHomeContentLayout.removeAllViews();
+        mHomeContentLayout = (LinearLayout) view.findViewById(R.id.homeContentLayout);
 
         initEventLayout(mHomeContentLayout);
         initScrollButtonLayout(mHomeContentLayout);
-        initMessageLayout(mHomeContentLayout);
+        initTextMessageLayout(mHomeContentLayout);
         initWishListLayout(mHomeContentLayout);
         initRecentListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
+        initProviderInfoLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);
     }
 
@@ -272,17 +277,6 @@ public class HomeLayout extends BaseLayout
         });
     }
 
-    private void initMessageLayout(LinearLayout layout)
-    {
-        if (layout == null)
-        {
-            return;
-        }
-
-        initTextMessageLayout(layout);
-        initReviewMessageLayout(layout);
-    }
-
     private void initTextMessageLayout(LinearLayout layout)
     {
         if (layout == null || mContext == null)
@@ -290,21 +284,11 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        mTextMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
+        View messageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_text_layout, null);
+        layout.addView(messageLayout);
+
+        mTextMessageLayout = messageLayout.findViewById(R.id.homeMessageLayout);
         mTextMessageLayout.setVisibility(View.GONE);
-        layout.addView(mTextMessageLayout);
-    }
-
-    private void initReviewMessageLayout(LinearLayout layout)
-    {
-        if (layout == null || mContext == null)
-        {
-            return;
-        }
-
-        mReviewMessageLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_message_type_review_layout, null);
-        mReviewMessageLayout.setVisibility(View.GONE);
-        layout.addView(mReviewMessageLayout);
     }
 
     private void initWishListLayout(LinearLayout layout)
@@ -373,6 +357,144 @@ public class HomeLayout extends BaseLayout
         layout.addView(mHomeRecommendationLayout);
 
         setRecommendationData(null);
+    }
+
+    private void initProviderInfoLayout(LinearLayout layout)
+    {
+        if (layout == null || mContext == null)
+        {
+            return;
+        }
+
+        View providerLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_provider_information_layout, null);
+        layout.addView(providerLayout);
+
+        mProviderInfoView = (LinearLayout) providerLayout.findViewById(R.id.providerInfoLayout);
+
+        LinearLayout policyLayout = (LinearLayout) providerLayout.findViewById(R.id.policyLayout);
+        View verticalLine1 = providerLayout.findViewById(R.id.vericalLineTextView1);
+        View verticalLine2 = providerLayout.findViewById(R.id.vericalLineTextView2);
+        View verticalLine3 = providerLayout.findViewById(R.id.vericalLineTextView3);
+
+        mProviderInfoView.setVisibility(View.GONE);
+
+        if (DeviceResolutionUtil.RESOLUTION_XHDPI > DeviceResolutionUtil.getResolutionType((Activity) mContext))
+        {
+            policyLayout.setOrientation(LinearLayout.VERTICAL);
+            verticalLine1.setVisibility(View.GONE);
+            verticalLine2.setVisibility(View.GONE);
+            verticalLine3.setVisibility(View.GONE);
+        } else
+        {
+            policyLayout.setOrientation(LinearLayout.HORIZONTAL);
+            verticalLine1.setVisibility(View.VISIBLE);
+            verticalLine2.setVisibility(View.VISIBLE);
+            verticalLine3.setVisibility(View.VISIBLE);
+        }
+
+        String phone = DailyPreference.getInstance(mContext).getRemoteConfigCompanyPhoneNumber();
+        String privacyEmail = DailyPreference.getInstance(mContext).getRemoteConfigCompanyPrivacyEmail();
+        String address = DailyPreference.getInstance(mContext).getRemoteConfigCompanyAddress();
+        String ceoName = DailyPreference.getInstance(mContext).getRemoteConfigCompanyCEO();
+        String registrationNo = DailyPreference.getInstance(mContext).getRemoteConfigCompanyBizRegNumber();
+        String mailSalesOrderNo = DailyPreference.getInstance(mContext).getRemoteConfigCompanyItcRegNumber();
+        String companyName = DailyPreference.getInstance(mContext).getRemoteConfigCompanyName();
+
+        DailyTextView companyInfoTextView = (DailyTextView) providerLayout.findViewById(R.id.companyInfoTextView);
+        DailyTextView companyAddressTextView = (DailyTextView) providerLayout.findViewById(R.id.companyAddressTextView);
+        DailyTextView registrationNoTextView = (DailyTextView) providerLayout.findViewById(R.id.registrationNoTextView);
+        DailyTextView mailSalesOrderNoTextView = (DailyTextView) providerLayout.findViewById(R.id.mailSalesOrderNoTextView);
+        DailyTextView privacyEmailTextView = (DailyTextView) providerLayout.findViewById(R.id.privacyEmailTextView);
+
+        String companyText = mContext.getString(R.string.label_home_business_license01, companyName, ceoName, phone);
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(companyText);
+
+        int start = companyText.indexOf("ㅣ");
+        int length = companyText.length();
+
+        while (start != -1 && start < length)
+        {
+            stringBuilder.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getDemiLightTypeface()),//
+                start, start + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            start = companyText.indexOf("ㅣ", start + 1);
+        }
+
+        companyInfoTextView.setText(stringBuilder);
+
+        companyAddressTextView.setText(address);
+        registrationNoTextView.setText(mContext.getString(R.string.label_home_business_license02, registrationNo));
+        mailSalesOrderNoTextView.setText(mContext.getString(R.string.label_home_business_license03, mailSalesOrderNo));
+        privacyEmailTextView.setText(mContext.getString(R.string.label_home_business_license04, privacyEmail));
+
+        final DailyTextView providerButtonView = (DailyTextView) providerLayout.findViewById(R.id.providerInfoButtonView);
+        providerButtonView.setDrawableVectorTint(R.color.default_text_cababab);
+        providerButtonView.setSelected(false);
+        providerButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                boolean isSelected = !providerButtonView.isSelected();
+                providerButtonView.setSelected(isSelected);
+
+                if (isSelected == true)
+                {
+                    mProviderInfoView.setVisibility(View.VISIBLE);
+                    Drawable[] drawables = providerButtonView.getCompoundDrawables();
+
+                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(null, null, getRotateDrawable(drawables[2], 180f), null);
+                    setScrollBottom();
+                } else
+                {
+                    mProviderInfoView.setVisibility(View.GONE);
+                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_v, 0);
+                }
+            }
+        });
+
+        View termsView = providerLayout.findViewById(R.id.termsTextView);
+        View privacyView = providerLayout.findViewById(R.id.privacyTextView);
+        View locationView = providerLayout.findViewById(R.id.locationTermsTextView);
+        View protectYouthView = providerLayout.findViewById(R.id.protectYouthTermsTextView);
+
+        termsView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onTermsClick();
+            }
+        });
+
+        privacyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onPrivacyTermsClick();
+            }
+        });
+
+        locationView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onLocationTermsClick();
+            }
+        });
+
+        protectYouthView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onProtectedYouthClick();
+            }
+        });
     }
 
     private void initTopButtonLayout(LinearLayout layout)
@@ -575,7 +697,6 @@ public class HomeLayout extends BaseLayout
     public void hideMessageLayout()
     {
         mTextMessageLayout.setVisibility(View.GONE);
-        mReviewMessageLayout.setVisibility(View.GONE);
     }
 
     public void setTextMessageData(String title, String description)
@@ -583,11 +704,6 @@ public class HomeLayout extends BaseLayout
         if (mTextMessageLayout == null)
         {
             return;
-        }
-
-        if (mReviewMessageLayout != null)
-        {
-            mReviewMessageLayout.setVisibility(View.GONE);
         }
 
         mTextMessageLayout.setVisibility(View.GONE);
@@ -655,140 +771,6 @@ public class HomeLayout extends BaseLayout
             public void run()
             {
                 startMessageLayoutShowAnimation(mTextMessageLayout);
-            }
-        });
-    }
-
-    public void setReviewData(Review review)
-    {
-        if (mReviewMessageLayout == null)
-        {
-            return;
-        }
-
-        if (mTextMessageLayout != null)
-        {
-            mTextMessageLayout.setVisibility(View.GONE);
-        }
-
-        mReviewMessageLayout.setVisibility(View.GONE);
-        mReviewMessageLayout.clearAnimation();
-
-        if (review == null)
-        {
-            return;
-        }
-
-        View closeView = mReviewMessageLayout.findViewById(R.id.closeImageView);
-        closeView.setTag(review);
-        closeView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startMessageLayoutCloseAnimation(mReviewMessageLayout);
-
-                ((HomeLayout.OnEventListener) mOnEventListener).onMessageReviewAreaCloseClick((Review) v.getTag());
-            }
-        });
-
-        TextView titleTextView = (TextView) mReviewMessageLayout.findViewById(R.id.titleTextView);
-        TextView periodTextView = (TextView) mReviewMessageLayout.findViewById(R.id.descriptionTextView);
-        View goodEmoticonView = mReviewMessageLayout.findViewById(R.id.goodEmoticonView);
-        View badEmoticonView = mReviewMessageLayout.findViewById(R.id.badEmoticonView);
-
-        final ReviewItem reviewItem = review.getReviewItem();
-        if (reviewItem == null)
-        {
-            mReviewMessageLayout.setVisibility(View.GONE);
-            mReviewMessageLayout.clearAnimation();
-
-            throw new NullPointerException("reviewItem == null");
-        }
-
-        // 타이틀
-        String title = mContext.getResources().getString(R.string.message_review_title, reviewItem.itemName);
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(title);
-        spannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getRegularTypeface()),//
-            title.lastIndexOf('\'') + 1, title.length(),//
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        titleTextView.setText(spannableStringBuilder);
-
-        try
-        {
-            // 시간
-            switch (reviewItem.placeType)
-            {
-                case HOTEL:
-                {
-                    String periodDate = String.format("%s - %s"//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
-                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
-                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
-                    break;
-                }
-
-                case FNB:
-                {
-                    String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
-
-                    periodTextView.setText(mContext.getResources().getString(R.string.message_review_date, periodDate));
-                    break;
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        mDailyEmoticonImageView = null;
-        mDailyEmoticonImageView = new DailyEmoticonImageView[2];
-
-        // 이미지
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) mReviewMessageLayout.findViewById(R.id.badEmoticonImageView);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) mReviewMessageLayout.findViewById(R.id.goodEmoticonImageView);
-
-        mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-737-A_not_satisfied.kf.json");
-        mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-573-B_satfisfied.kf.json");
-
-        mDailyEmoticonImageView[0].startAnimation();
-        mDailyEmoticonImageView[1].startAnimation();
-
-        // 딤이미지
-        final View badEmoticonDimView = mReviewMessageLayout.findViewById(R.id.badEmoticonDimView);
-        final View goodEmoticonDimView = mReviewMessageLayout.findViewById(R.id.goodEmoticonDimView);
-
-        // 텍스트
-        final TextView badEmoticonTextView = (TextView) mReviewMessageLayout.findViewById(R.id.badEmoticonTextView);
-        final TextView goodEmoticonTextView = (TextView) mReviewMessageLayout.findViewById(R.id.goodEmoticonTextView);
-
-        goodEmoticonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // TODO : 클릭 이벤트 적용 필요!
-            }
-        });
-
-        badEmoticonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // TODO : 클릭 이벤트 적용 필요!
-            }
-        });
-
-        mReviewMessageLayout.setVisibility(View.INVISIBLE);
-
-        mReviewMessageLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                startMessageLayoutShowAnimation(mReviewMessageLayout);
             }
         });
     }
@@ -907,11 +889,6 @@ public class HomeLayout extends BaseLayout
             {
                 view.setVisibility(View.GONE);
                 view.clearAnimation();
-
-                if (view.getId() == mReviewMessageLayout.getId())
-                {
-                    onDestroyReviewAnimation();
-                }
             }
 
             @Override
@@ -919,11 +896,6 @@ public class HomeLayout extends BaseLayout
             {
                 view.setVisibility(View.GONE);
                 view.clearAnimation();
-
-                if (view.getId() == mReviewMessageLayout.getId())
-                {
-                    onDestroyReviewAnimation();
-                }
             }
 
             @Override
@@ -952,47 +924,62 @@ public class HomeLayout extends BaseLayout
         mSwipeRefreshLayout.setRefreshing(isRefreshing);
     }
 
+    public boolean isRefreshing()
+    {
+        if (mSwipeRefreshLayout == null)
+        {
+            return false;
+        }
+
+        return mSwipeRefreshLayout.isRefreshing();
+    }
+
     public void setScrollTop()
     {
         if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
         {
-            mNestedScrollView.fullScroll(View.FOCUS_UP);
+            mNestedScrollView.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mNestedScrollView.fullScroll(View.FOCUS_UP);
+                }
+            }, 50);
         }
     }
 
-    public void onResumeReviewAnimation()
+    public void setScrollBottom()
     {
-        if (mDailyEmoticonImageView != null)
+        if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
         {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            mNestedScrollView.postDelayed(new Runnable()
             {
-                dailyEmoticonImageView.startAnimation();
-            }
+                @Override
+                public void run()
+                {
+                    // 간헐적으로 2번 해줘야 동작하는 경우로 인하여 2번 처리
+                    mNestedScrollView.fullScroll(View.FOCUS_DOWN);
+                    mNestedScrollView.scrollBy(0, 10000);
+                }
+            }, 50);
         }
     }
 
-    public void onPauseReviewAnimation()
+    private Drawable getRotateDrawable(Drawable drawable, final float degrees)
     {
-        if (mDailyEmoticonImageView != null)
+        final Drawable[] drawables = {drawable};
+        return new LayerDrawable(drawables)
         {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
+            @Override
+            public void draw(final Canvas canvas)
             {
-                dailyEmoticonImageView.stopAnimation();
+                canvas.save();
+                canvas.rotate(degrees, drawables[0].getBounds().width() / 2, drawables[0].getBounds().height() / 2);
+                super.draw(canvas);
+                canvas.restore();
             }
-        }
-    }
-
-    public void onDestroyReviewAnimation()
-    {
-        if (mDailyEmoticonImageView != null)
-        {
-            for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
-            {
-                dailyEmoticonImageView.stopAnimation();
-            }
-        }
-
-        mDailyEmoticonImageView = null;
+        };
     }
 
     public void onResumeCarouselAnimation()
@@ -1066,6 +1053,14 @@ public class HomeLayout extends BaseLayout
             {
                 // hide
                 setActionButtonVisibility(View.GONE);
+            }
+
+            if (scrollY < mEventImageHeight)
+            {
+                mSwipeRefreshLayout.setEnabled(true);
+            } else
+            {
+                mSwipeRefreshLayout.setEnabled(false);
             }
         }
     };
