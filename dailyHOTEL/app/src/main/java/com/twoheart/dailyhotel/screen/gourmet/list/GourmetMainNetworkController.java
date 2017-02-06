@@ -61,10 +61,10 @@ public class GourmetMainNetworkController extends PlaceMainNetworkController
                     {
                         JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
 
-                        JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                        JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
                         ArrayList<Province> provinceList = makeProvinceList(provinceArray);
 
-                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                        JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
                         ArrayList<Area> areaList = makeAreaList(areaJSONArray);
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegionList(provinceList, areaList);

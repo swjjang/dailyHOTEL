@@ -340,8 +340,8 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestGourmetRegionList(String tag, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "gourmet/region/v1/list"//
-            : "NzMkNiQ1OCQ4MCQxJDI3JDMxJDg4JDI0JDQzJDYkNjQkNTAkMjAkMzQkNzgk$QZTgxRUUGQ0RkFFRDZDNAzBFQjZAyQVzAwINNTY2OTExMTZlERjAC5NzZCMThDQzNFMGBTk4NkU3QzPhCMDgwQQUNFOEUFEMJ0Y1Mg==$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/gourmet/region"//
+            : "MTckNjIkMjUkNjAkNTIkNzEkNjckMzEkNjgkMiQ0MSQ4MyQ2OSQ0MiQyNyQ3NyQ=$REVYwRDJCM0NGRTNERZjJFQzMxXZRTI1MRzg1NzJENIIjlDMUFFM0ZDQkIM1RjJBNkAY0QPEzZXRGGQzZU4QUFDHOENGOTE2NDk3Mg==$";
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetRegionList(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
