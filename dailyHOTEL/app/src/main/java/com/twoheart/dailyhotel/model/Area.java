@@ -25,7 +25,13 @@ public class Area extends Province
     {
         super(jsonObject, null);
 
-        mProvinceIndex = jsonObject.getInt("provinceIdx");
+        if (jsonObject.has("provinceIdx") == true)
+        {
+            mProvinceIndex = jsonObject.getInt("provinceIdx");
+        } else if (jsonObject.has("fnbRegionProvinceIdx") == true)
+        {
+            mProvinceIndex = jsonObject.getInt("fnbRegionProvinceIdx");
+        }
     }
 
     public Province getProvince()

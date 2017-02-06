@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.place.layout;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -102,27 +101,23 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                     return;
                 }
 
-                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mViewPager.getLayoutParams();
-
                 if (verticalOffset == 0)
                 {
-                    if (layoutParams.bottomMargin == dp52Height)
+                    if (mViewPager.getPaddingBottom() == dp52Height)
                     {
                         return;
                     }
 
-                    layoutParams.bottomMargin = dp52Height;
+                    mViewPager.setPadding(mViewPager.getPaddingLeft(), mViewPager.getPaddingTop(), mViewPager.getPaddingRight(), dp52Height);
                 } else
                 {
-                    if (layoutParams.bottomMargin == 0)
+                    if (mViewPager.getPaddingBottom() == 0)
                     {
                         return;
                     }
 
-                    layoutParams.bottomMargin = 0;
+                    mViewPager.setPadding(mViewPager.getPaddingLeft(), mViewPager.getPaddingTop(), mViewPager.getPaddingRight(), 0);
                 }
-
-                mViewPager.setLayoutParams(layoutParams);
             }
         });
 

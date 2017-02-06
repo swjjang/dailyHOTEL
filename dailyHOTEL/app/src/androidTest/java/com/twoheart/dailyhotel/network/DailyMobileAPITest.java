@@ -2354,14 +2354,14 @@ public class DailyMobileAPITest
                     JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
                     assertThat(dataJSONObject, notNullValue());
 
-                    JSONArray provinceArray = dataJSONObject.getJSONArray("province");
+                    JSONArray provinceArray = dataJSONObject.getJSONArray("regionProvince");
                     assertThat(provinceArray, notNullValue());
 
                     ArrayList<Province> provinceList = makeProvinceList(provinceArray);
                     assertThat(provinceList, notNullValue());
                     assertThat(provinceList.size(), moreThan(1));
 
-                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("area");
+                    JSONArray areaJSONArray = dataJSONObject.getJSONArray("regionArea");
                     ArrayList<Area> areaList = makeAreaList(areaJSONArray);
                     assertThat(areaList, notNullValue());
                     assertThat(areaList.size(), moreThan(1));
