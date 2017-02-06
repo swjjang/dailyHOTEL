@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
@@ -71,6 +73,8 @@ public class HomeLayout extends BaseLayout
     private HomeCarouselLayout mWishListLayout;
     private HomeRecommendationLayout mHomeRecommendationLayout;
 
+    private LinearLayout mProviderInfoView;
+
     private DailyEmoticonImageView[] mDailyEmoticonImageView;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -98,6 +102,14 @@ public class HomeLayout extends BaseLayout
         void onWishListViewAllClick();
 
         void onRecentListViewAllClick();
+
+        void onTermsClick();
+
+        void onPrivacyTermsClick();
+
+        void onLocationTermsClick();
+
+        void onProtectedYouthClick();
     }
 
     public enum MessageType
@@ -214,6 +226,7 @@ public class HomeLayout extends BaseLayout
         initWishListLayout(mHomeContentLayout);
         initRecentListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
+        initProviderInfoLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);
     }
 
@@ -373,6 +386,122 @@ public class HomeLayout extends BaseLayout
         layout.addView(mHomeRecommendationLayout);
 
         setRecommendationData(null);
+    }
+
+    private void initProviderInfoLayout(LinearLayout layout)
+    {
+        if (layout == null || mContext == null)
+        {
+            return;
+        }
+
+        View providerLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_provider_information_layout, null);
+        layout.addView(providerLayout);
+
+        mProviderInfoView = (LinearLayout) providerLayout.findViewById(R.id.providerInfoLayout);
+
+        LinearLayout policyLayout = (LinearLayout) providerLayout.findViewById(R.id.policyLayout);
+        View verticalLine1 = providerLayout.findViewById(R.id.vericalLineTextView1);
+        View verticalLine2 = providerLayout.findViewById(R.id.vericalLineTextView2);
+        View verticalLine3 = providerLayout.findViewById(R.id.vericalLineTextView3);
+
+        mProviderInfoView.setVisibility(View.GONE);
+
+        if (DeviceResolutionUtil.RESOLUTION_XHDPI > DeviceResolutionUtil.getResolutionType((Activity) mContext))
+        {
+            policyLayout.setOrientation(LinearLayout.VERTICAL);
+            verticalLine1.setVisibility(View.GONE);
+            verticalLine2.setVisibility(View.GONE);
+            verticalLine3.setVisibility(View.GONE);
+        } else
+        {
+            policyLayout.setOrientation(LinearLayout.HORIZONTAL);
+            verticalLine1.setVisibility(View.VISIBLE);
+            verticalLine2.setVisibility(View.VISIBLE);
+            verticalLine3.setVisibility(View.VISIBLE);
+        }
+
+        String phone = DailyPreference.getInstance(mContext).getRemoteConfigCompanyPhoneNumber();
+        String privacyEmail = DailyPreference.getInstance(mContext).getRemoteConfigCompanyPrivacyEmail();
+        String address = DailyPreference.getInstance(mContext).getRemoteConfigCompanyAddress();
+        String ceoName = DailyPreference.getInstance(mContext).getRemoteConfigCompanyCEO();
+        String registrationNo = DailyPreference.getInstance(mContext).getRemoteConfigCompanyBizRegNumber();
+        String mailSalesOrderNo = DailyPreference.getInstance(mContext).getRemoteConfigCompanyItcRegNumber();
+        String companyName = DailyPreference.getInstance(mContext).getRemoteConfigCompanyName();
+
+        DailyTextView companyInfoTextView = (DailyTextView) providerLayout.findViewById(R.id.companyInfoTextView);
+        DailyTextView companyAddressTextView = (DailyTextView) providerLayout.findViewById(R.id.companyAddressTextView);
+        DailyTextView registrationNoTextView = (DailyTextView) providerLayout.findViewById(R.id.registrationNoTextView);
+        DailyTextView mailSalesOrderNoTextView = (DailyTextView) providerLayout.findViewById(R.id.mailSalesOrderNoTextView);
+        DailyTextView privacyEmailTextView = (DailyTextView) providerLayout.findViewById(R.id.privacyEmailTextView);
+
+        companyInfoTextView.setText(mContext.getString(R.string.label_home_business_license01, companyName, ceoName, phone));
+        companyAddressTextView.setText(address);
+        registrationNoTextView.setText(mContext.getString(R.string.label_home_business_license02, registrationNo));
+        mailSalesOrderNoTextView.setText(mContext.getString(R.string.label_home_business_license03, mailSalesOrderNo));
+        privacyEmailTextView.setText(mContext.getString(R.string.label_home_business_license04, privacyEmail));
+
+        final DailyTextView providerButtonView = (DailyTextView) providerLayout.findViewById(R.id.providerInfoButtonView);
+        providerButtonView.setDrawableVectorTint(R.color.default_text_cababab);
+        providerButtonView.setSelected(false);
+        providerButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                boolean isSelected = !providerButtonView.isSelected();
+                providerButtonView.setSelected(isSelected);
+
+                if (isSelected == true)
+                {
+                    mProviderInfoView.setVisibility(View.VISIBLE);
+                } else
+                {
+                    mProviderInfoView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        View termsView = providerLayout.findViewById(R.id.termsTextView);
+        View privacyView = providerLayout.findViewById(R.id.privacyTextView);
+        View locationView = providerLayout.findViewById(R.id.locationTermsTextView);
+        View protectYouthView = providerLayout.findViewById(R.id.protectYouthTermsTextView);
+
+        termsView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onTermsClick();
+            }
+        });
+
+        privacyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onPrivacyTermsClick();
+            }
+        });
+
+        locationView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onLocationTermsClick();
+            }
+        });
+
+        protectYouthView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onProtectedYouthClick();
+            }
+        });
     }
 
     private void initTopButtonLayout(LinearLayout layout)

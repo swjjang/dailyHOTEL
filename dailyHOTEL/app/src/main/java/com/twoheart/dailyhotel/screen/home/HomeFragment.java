@@ -23,6 +23,10 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
+import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
+import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
+import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
@@ -205,6 +209,12 @@ public class HomeFragment extends BaseFragment
                 mDontReload = true;
                 break;
             }
+
+            case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                }
+                break;
         }
     }
 
@@ -499,6 +509,35 @@ public class HomeFragment extends BaseFragment
         public void onRecentListViewAllClick()
         {
             startRecentList(PlaceType.HOTEL);
+        }
+
+        @Override
+        public void onTermsClick()
+        {
+            Intent intent = new Intent(mBaseActivity, TermActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onPrivacyTermsClick()
+        {
+
+            Intent intent = new Intent(mBaseActivity, PrivacyActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onLocationTermsClick()
+        {
+            Intent intent = new Intent(mBaseActivity, LocationTermsActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onProtectedYouthClick()
+        {
+            Intent intent = new Intent(mBaseActivity, ProtectYouthTermsActivity.class);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
         }
 
         @Override
