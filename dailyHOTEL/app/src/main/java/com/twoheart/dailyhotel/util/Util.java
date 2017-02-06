@@ -514,9 +514,9 @@ public class Util implements Constants
         return result == ConnectionResult.SUCCESS;
     }
 
-    public static boolean isInstallGooglePlayService(Activity activity)
+    public static boolean isInstallGooglePlayService(Context context)
     {
-        if (Util.isGooglePlayServicesAvailable(activity) == false)
+        if (Util.isGooglePlayServicesAvailable(context) == false)
         {
             return false;
         }
@@ -525,12 +525,12 @@ public class Util implements Constants
 
         try
         {
-            PackageManager packageManager = activity.getPackageManager();
+            PackageManager packageManager = context.getPackageManager();
 
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.google.android.gms", 0);
             PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName, PackageManager.GET_SIGNATURES);
 
-            int version = activity.getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version);
+            int version = context.getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version);
 
             isInstalled = packageInfo.versionCode >= version;
         } catch (PackageManager.NameNotFoundException e)
@@ -1086,8 +1086,6 @@ public class Util implements Constants
 
     public static void shareTMapNavi(final Activity activity, final String placeName, final float latitude, final float longitude)
     {
-        ExLog.d("TMap : shareTMapNavi");
-
         if (activity == null || latitude == 0 || longitude == 0)
         {
             return;

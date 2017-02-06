@@ -769,18 +769,24 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
 
         @Override
-        public void onMapClick()
+        public void onMapClick(boolean isGoogleMap)
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            Intent intent = ZoomMapActivity.newInstance(StayBookingDetailTabActivity.this//
-                , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayBookingDetail.placeName, mStayBookingDetail.address//
-                , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas);
+            if (isGoogleMap == false)
+            {
+                Intent intent = ZoomMapActivity.newInstance(StayBookingDetailTabActivity.this//
+                    , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayBookingDetail.placeName, mStayBookingDetail.address//
+                    , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas);
 
-            startActivity(intent);
+                startActivity(intent);
+            } else
+            {
+
+            }
         }
 
         @Override

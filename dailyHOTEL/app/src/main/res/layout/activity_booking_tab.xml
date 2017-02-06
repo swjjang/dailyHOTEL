@@ -33,7 +33,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="202dp"
                     android:adjustViewBounds="true"
-                    fresco:actualImageScaleType="focusCrop"/>
+                    fresco:actualImageScaleType="focusCrop"
+                    android:visibility="gone"/>
+
+                <FrameLayout
+                    android:id="@+id/mapLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="202dp"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
