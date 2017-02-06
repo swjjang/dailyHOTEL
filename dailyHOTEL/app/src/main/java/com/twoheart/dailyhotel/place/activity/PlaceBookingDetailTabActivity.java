@@ -164,10 +164,13 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
+                        PlaceBookingDetailTabActivity.this.onError(e);
+                        finish();
                     }
                 } else
                 {
                     PlaceBookingDetailTabActivity.this.onErrorResponse(call, response);
+                    finish();
                 }
             }
 
@@ -175,6 +178,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             public void onFailure(Call<JSONObject> call, Throwable t)
             {
                 PlaceBookingDetailTabActivity.this.onError(t);
+                finish();
             }
         });
     }

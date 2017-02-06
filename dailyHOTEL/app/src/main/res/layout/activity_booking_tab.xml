@@ -28,19 +28,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/mapImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="202dp"
-                    android:adjustViewBounds="true"
-                    fresco:actualImageScaleType="focusCrop"
-                    android:visibility="gone"/>
-
                 <FrameLayout
-                    android:id="@+id/mapLayout"
+                    android:id="@+id/mapsFrameLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="202dp"
-                    android:visibility="gone"/>
+                    android:layout_height="wrap_content">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/mapImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="202dp"
+                        android:adjustViewBounds="true"
+                        fresco:actualImageScaleType="focusCrop"
+                        android:visibility="gone"/>
+
+                    <FrameLayout
+                        android:id="@+id/mapLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="202dp"
+                        android:visibility="gone"/>
+                </FrameLayout>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -54,7 +60,7 @@
                     android:id="@+id/lineView"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_below="@id/mapImageView"
+                    android:layout_below="@id/mapsFrameLayout"
                     android:background="@color/default_line_cdcdcdd"/>
 
                 <View

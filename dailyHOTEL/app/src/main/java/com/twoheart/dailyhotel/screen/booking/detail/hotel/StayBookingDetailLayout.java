@@ -50,6 +50,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
     private ScrollView mScrollLayout;
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
+    private View mPlaceInformationLayout;
 
     private View mInputReviewVerticalLine;
     private DailyTextView mInputReviewView;
@@ -172,7 +173,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
                 width = 720;
             }
 
-            String size = String.format("%dx%d", (int) width * 3 / 5, (int) width * ratio * 5 / 7);
+            String size = String.format("%dx%d", (int) width * 3 / 5, (int) (width * ratio * 5) / 7);
             String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
             String url = String.format("https://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
                 , size, iconUrl, stayBookingDetail.latitude, stayBookingDetail.longitude, Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
@@ -185,7 +186,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
             mGoogleMapLayout.setOnClickListener(this);
 
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mGoogleMapLayout.getLayoutParams();
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mGoogleMapLayout.getLayoutParams();
             layoutParams.width = (int) width;
             layoutParams.height = (int) height;
 
@@ -194,10 +195,10 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
             googleMapSetting((FragmentActivity)mContext, mGoogleMapLayout, stayBookingDetail);
         }
 
-
-        View placeInformationLayout = view.findViewById(R.id.placeInformationLayout);
-        RelativeLayout.LayoutParams placeInformationLayoutParams = (RelativeLayout.LayoutParams) placeInformationLayout.getLayoutParams();
+        mPlaceInformationLayout = view.findViewById(R.id.placeInformationLayout);
+        RelativeLayout.LayoutParams placeInformationLayoutParams = (RelativeLayout.LayoutParams) mPlaceInformationLayout.getLayoutParams();
         placeInformationLayoutParams.topMargin = (int) (PLACE_INFORMATION_LAYOUT_RATIO * height);
+        mPlaceInformationLayout.setLayoutParams(placeInformationLayoutParams);
 
         TextView placeNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
         placeNameTextView.setText(stayBookingDetail.placeName);
@@ -234,16 +235,26 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
                 mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
                 mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
                 mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
-                mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+                mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
 
                 mGoogleMap.setMyLocationEnabled(false);
 
 
-//                mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
+                mGoogleMap.getUiSettings().setAllGesturesEnabled(false);
 
                 relocationMyLocation(googleMapLayout);
                 relocationZoomControl(googleMapLayout);
                 addMarker(mGoogleMap, stayBookingDetail.latitude, stayBookingDetail.longitude, stayBookingDetail.placeName);
+
+
+                mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
+                {
+                    @Override
+                    public void onMapClick(LatLng latLng)
+                    {
+                        ExLog.d("latLng : "+ latLng.toString());
+                    }
+                });
             }
         });
     }
@@ -254,7 +265,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
         if (mMyLocationView != null)
         {
-            mMyLocationView.setVisibility(View.VISIBLE);
+            mMyLocationView.setVisibility(View.INVISIBLE);
             //            mMyLocationView.setOnClickListener(mOnMyLocationClickListener);
         }
     }
@@ -265,6 +276,8 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
         if (zoomControl != null && zoomControl.getLayoutParams() instanceof RelativeLayout.LayoutParams)
         {
+            zoomControl.setVisibility(View.INVISIBLE);
+
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControl.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -299,15 +312,15 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
                 }
             });
 
-            mPlaceLocationMarker.hideInfoWindow();
-            mHandler.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    mPlaceLocationMarker.showInfoWindow();
-                }
-            });
+//            mPlaceLocationMarker.hideInfoWindow();
+//            mHandler.post(new Runnable()
+//            {
+//                @Override
+//                public void run()
+//                {
+//                    mPlaceLocationMarker.showInfoWindow();
+//                }
+//            });
         }
     }
 
@@ -724,13 +737,13 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
         {
             case R.id.mapImageView:
             {
-                ((OnEventListener) mOnEventListener).onMapClick();
+                ((OnEventListener) mOnEventListener).onMapClick(false);
                 break;
             }
 
             case R.id.mapLayout:
             {
-                ((OnEventListener) mOnEventListener).onMapClick();
+                ((OnEventListener) mOnEventListener).onMapClick(true);
                 break;
             }
 

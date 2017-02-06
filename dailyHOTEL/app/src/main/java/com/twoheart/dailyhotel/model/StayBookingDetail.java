@@ -39,7 +39,11 @@ public class StayBookingDetail extends PlaceBookingDetail
 
     public String visitType = VISIT_TYPE_NONE; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
 
-    public StayBookingDetail(JSONObject jsonObject) throws Exception
+    public StayBookingDetail()
+    {
+    }
+
+    public void setData(JSONObject jsonObject) throws Exception
     {
         placeName = jsonObject.getString("hotelName");
 

@@ -67,8 +67,8 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     {
         super.onCreate(savedInstanceState);
 
+        mStayBookingDetail = new StayBookingDetail();
         mStayBookingDetailLayout = new StayBookingDetailLayout(this, mOnEventListener);
-
         mNetworkController = new StayBookingDetailTabBookingNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mStayBookingDetailLayout.onCreateView(R.layout.activity_booking_tab));
@@ -954,11 +954,11 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
 
         @Override
-        public void onStayBookingDetailInformation(StayBookingDetail stayBookingDetail)
+        public void onStayBookingDetailInformation(JSONObject jsonObject)
         {
             unLockUI();
 
-            if (stayBookingDetail == null)
+            if (jsonObject == null)
             {
                 finish();
                 return;
@@ -966,7 +966,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
             try
             {
-                mStayBookingDetail = stayBookingDetail;
+                mStayBookingDetail.setData(jsonObject);
 
                 long checkOutDateTime = DailyCalendar.getTimeGMT9(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
 

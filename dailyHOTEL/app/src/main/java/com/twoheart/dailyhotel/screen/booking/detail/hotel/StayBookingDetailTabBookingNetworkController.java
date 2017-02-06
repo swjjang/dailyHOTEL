@@ -27,7 +27,7 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
 
         void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message);
 
-        void onStayBookingDetailInformation(StayBookingDetail stayBookingDetail);
+        void onStayBookingDetailInformation(JSONObject jsonObject);
 
         void onEnterOtherUserReservationBookingError(int msgCode, String message);
 
@@ -176,7 +176,7 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
                         case 100:
                             JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayBookingDetailInformation(new StayBookingDetail(jsonObject));
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayBookingDetailInformation(jsonObject);
                             break;
 
                         // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
