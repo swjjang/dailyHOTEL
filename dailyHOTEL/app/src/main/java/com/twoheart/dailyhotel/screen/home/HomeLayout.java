@@ -4,6 +4,9 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
@@ -435,7 +438,24 @@ public class HomeLayout extends BaseLayout
         DailyTextView mailSalesOrderNoTextView = (DailyTextView) providerLayout.findViewById(R.id.mailSalesOrderNoTextView);
         DailyTextView privacyEmailTextView = (DailyTextView) providerLayout.findViewById(R.id.privacyEmailTextView);
 
-        companyInfoTextView.setText(mContext.getString(R.string.label_home_business_license01, companyName, ceoName, phone));
+        String companyText = mContext.getString(R.string.label_home_business_license01, companyName, ceoName, phone);
+        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(companyText);
+
+        int start = companyText.indexOf("ㅣ");
+        int length = companyText.length();
+
+        while (start != -1 && start < length)
+        {
+            stringBuilder.setSpan( //
+                new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getDemiLightTypeface()),//
+                start, start + 1,//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            start = companyText.indexOf("ㅣ", start + 1);
+        }
+
+        companyInfoTextView.setText(stringBuilder);
+
         companyAddressTextView.setText(address);
         registrationNoTextView.setText(mContext.getString(R.string.label_home_business_license02, registrationNo));
         mailSalesOrderNoTextView.setText(mContext.getString(R.string.label_home_business_license03, mailSalesOrderNo));
@@ -455,9 +475,14 @@ public class HomeLayout extends BaseLayout
                 if (isSelected == true)
                 {
                     mProviderInfoView.setVisibility(View.VISIBLE);
+                    Drawable[] drawables = providerButtonView.getCompoundDrawables();
+
+                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(null, null, getRotateDrawable(drawables[2], 180f), null);
+                    setScrollBottom();
                 } else
                 {
                     mProviderInfoView.setVisibility(View.GONE);
+                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_v, 0);
                 }
             }
         });
@@ -1085,8 +1110,48 @@ public class HomeLayout extends BaseLayout
     {
         if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
         {
-            mNestedScrollView.fullScroll(View.FOCUS_UP);
+            mNestedScrollView.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mNestedScrollView.fullScroll(View.FOCUS_UP);
+                }
+            }, 50);
         }
+    }
+
+    public void setScrollBottom()
+    {
+        if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
+        {
+            mNestedScrollView.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    // 간헐적으로 2번 해줘야 동작하는 경우로 인하여 2번 처리
+                    mNestedScrollView.fullScroll(View.FOCUS_DOWN);
+                    mNestedScrollView.scrollBy(0, 10000);
+                }
+            }, 50);
+        }
+    }
+
+    private Drawable getRotateDrawable(Drawable drawable, final float degrees)
+    {
+        final Drawable[] drawables = {drawable};
+        return new LayerDrawable(drawables)
+        {
+            @Override
+            public void draw(final Canvas canvas)
+            {
+                canvas.save();
+                canvas.rotate(degrees, drawables[0].getBounds().width() / 2, drawables[0].getBounds().height() / 2);
+                super.draw(canvas);
+                canvas.restore();
+            }
+        };
     }
 
     public void onResumeReviewAnimation()
