@@ -279,8 +279,8 @@ public class IssuingReceiptActivity extends BaseActivity
 
             String userName = receiptJSONObject.getString("user_name");
             String userPhone = receiptJSONObject.getString("user_phone");
-            String checkin = receiptJSONObject.getString("checkin");
-            String checkout = receiptJSONObject.getString("checkout");
+            String checkIn = receiptJSONObject.getString("checkin");
+            String checkOut = receiptJSONObject.getString("checkout");
             int nights = receiptJSONObject.getInt("nights");
             int rooms = receiptJSONObject.getInt("rooms");
             String hotelName = receiptJSONObject.getString("hotel_name");
@@ -317,7 +317,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             // 체크인/아웃
             TextView checkInOutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
-            checkInOutTextView.setText(checkin + " - " + checkout);
+            checkInOutTextView.setText(checkIn + " - " + checkOut);
 
             // 숙박 일수/객실수
             TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);

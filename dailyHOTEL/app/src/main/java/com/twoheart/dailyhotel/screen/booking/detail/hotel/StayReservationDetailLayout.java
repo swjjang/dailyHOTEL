@@ -106,8 +106,8 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         StayBookingDetail stayBookingDetail = (StayBookingDetail) placeBookingDetail;
 
-        TextView checkinDayTextView = (TextView) view.findViewById(R.id.checkinDayTextView);
-        TextView checkoutDayTextView = (TextView) view.findViewById(R.id.checkoutDayTextView);
+        TextView checkInDayTextView = (TextView) view.findViewById(R.id.checkinDayTextView);
+        TextView checkOutDayTextView = (TextView) view.findViewById(R.id.checkoutDayTextView);
         TextView nightsTextView = (TextView) view.findViewById(R.id.nightsTextView);
 
         try
@@ -118,10 +118,10 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                 checkInDateFormat.length() - 3, checkInDateFormat.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            checkinDayTextView.setText(checkInSpannableStringBuilder);
+            checkInDayTextView.setText(checkInSpannableStringBuilder);
         } catch (Exception e)
         {
-            checkinDayTextView.setText(null);
+            checkInDayTextView.setText(null);
         }
 
         try
@@ -132,10 +132,10 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                 checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            checkoutDayTextView.setText(checkOutSpannableStringBuilder);
+            checkOutDayTextView.setText(checkOutSpannableStringBuilder);
         } catch (Exception e)
         {
-            checkoutDayTextView.setText(null);
+            checkOutDayTextView.setText(null);
         }
 
         try

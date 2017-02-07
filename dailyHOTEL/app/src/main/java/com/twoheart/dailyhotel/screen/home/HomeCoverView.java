@@ -20,7 +20,7 @@ public class HomeCoverView extends View
 {
     private Context mContext;
     private PaintDrawable mPaintDrawable;
-    private RectShape mRactShape;
+    private RectShape mRectShape;
     private ShapeDrawable.ShaderFactory mShaderFactory;
     private ValueAnimator mAnimator;
 
@@ -82,8 +82,8 @@ public class HomeCoverView extends View
         };
 
         mPaintDrawable = new PaintDrawable();
-        mRactShape = new RectShape();
-        mPaintDrawable.setShape(mRactShape);
+        mRectShape = new RectShape();
+        mPaintDrawable.setShape(mRectShape);
         mPaintDrawable.setShaderFactory(mShaderFactory);
     }
 
@@ -144,7 +144,7 @@ public class HomeCoverView extends View
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 mCenterX = (float) animation.getAnimatedValue();
-                mPaintDrawable.setShape(mRactShape); // this makes the shader recreate the lineargradient
+                mPaintDrawable.setShape(mRectShape); // this makes the shader recreate the lineargradient
             }
         });
 

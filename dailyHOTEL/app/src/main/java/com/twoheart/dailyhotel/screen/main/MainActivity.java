@@ -380,6 +380,10 @@ public class MainActivity extends BaseActivity implements Constants
                         startActivityForResult(GourmetMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                         break;
 
+                    case Constants.CODE_RESULT_ACTIVITY_GO_HOME:
+                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                        break;
+
                     default:
                         mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
                         break;

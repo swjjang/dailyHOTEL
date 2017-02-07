@@ -37,6 +37,8 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         void onEmptyButtonClick();
 
         void onRecordAnalyticsList(ArrayList<? extends Place> list);
+
+        void onHomeClick();
     }
 
     protected abstract int getEmptyTextResId();
@@ -56,6 +58,16 @@ public abstract class RecentPlacesListLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
+        View homeButtonView = view.findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onHomeClick();
+            }
+        });
+
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
         setEmptyViewVisibility(View.GONE);
 

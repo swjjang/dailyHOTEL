@@ -52,7 +52,7 @@ import java.util.List;
 
 public abstract class PlaceListMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
-    private static final int ANIMATION_DEALY = 200;
+    private static final int ANIMATION_DELAY = 200;
     private static final int VIEWPAGER_HEIGHT_DP = 120;
     private static final int VIEWPAGER_TOP_N_BOTTOM_PADDING_DP = 10;
     private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
@@ -696,7 +696,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         mValueAnimator = ValueAnimator.ofInt(0, 100);
-        mValueAnimator.setDuration(ANIMATION_DEALY);
+        mValueAnimator.setDuration(ANIMATION_DELAY);
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override
@@ -778,7 +778,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         mValueAnimator = ValueAnimator.ofInt(0, 100);
-        mValueAnimator.setDuration(ANIMATION_DEALY);
+        mValueAnimator.setDuration(ANIMATION_DELAY);
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override

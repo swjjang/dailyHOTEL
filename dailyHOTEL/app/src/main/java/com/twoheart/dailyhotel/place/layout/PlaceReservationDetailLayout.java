@@ -264,7 +264,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             width = 720;
         }
 
-        String size = String.format("%dx%d", (int) width * 3 / 5, (int) (width * ratio * 5) / 7);
+        String size = String.format("%dx%d", width * 3 / 5, (int) (width * ratio * 5) / 7);
         String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
         String url = String.format("https://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
             , size, iconUrl, placeBookingDetail.latitude, placeBookingDetail.longitude, Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
