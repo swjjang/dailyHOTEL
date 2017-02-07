@@ -876,6 +876,9 @@ public class AnalyticsManager
         public static final String WISHLIST_ITEM_DELETE = "wishlist_item_delete";
         public static final String RECENTVIEW_BACK_BUTTON_CLICK = "recentview_back_button_click";
         public static final String RECENTVIEW_ITEM_DELETE = "recentview_item_delete";
+
+        public static final String HOME_EVENT_BANNER_CLICK = "home_event_banner_click";
+        public static final String HOME_ALL_WISHLIST_CLICK = "home_all_wishlist_click";
     }
 
     public static class Category
