@@ -166,15 +166,15 @@ public class HomeCarouselLayout extends RelativeLayout
         stopShimmer();
         mCoverView.setVisibility(View.GONE);
 
+        setRecyclerAdapter(list);
+
         if (list == null || list.size() == 0)
         {
             setVisibility(View.GONE);
-            return;
+        } else
+        {
+            setVisibility(View.VISIBLE);
         }
-
-        setVisibility(View.VISIBLE);
-
-        setRecyclerAdapter(list);
     }
 
     private void setRecyclerAdapter(ArrayList<? extends Place> list)
@@ -195,6 +195,26 @@ public class HomeCarouselLayout extends RelativeLayout
         setRecyclerAdapter(null);
         mCoverView.setVisibility(View.VISIBLE);
         setVisibility(View.VISIBLE);
+    }
+
+    public boolean isShowCoverView()
+    {
+        if (mCoverView == null)
+        {
+            return false;
+        }
+
+        return mCoverView.getVisibility() == View.VISIBLE;
+    }
+
+    public boolean hasData()
+    {
+        if (mRecyclerAdapter == null)
+        {
+            return false;
+        }
+
+        return mRecyclerAdapter.getItemCount() > 0 ? true : false;
     }
 
     public void setCarouselListener(OnCarouselListener listener)

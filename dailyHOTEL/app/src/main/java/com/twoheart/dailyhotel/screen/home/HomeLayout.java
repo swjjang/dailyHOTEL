@@ -790,6 +790,26 @@ public class HomeLayout extends BaseLayout
         mHomeRecommendationLayout.setData(list);
     }
 
+    public boolean hasWishListData()
+    {
+        return mWishListLayout.hasData();
+    }
+
+    public boolean hasRecentListData()
+    {
+        return mRecentListLayout.hasData();
+    }
+
+    public boolean isShowWishListCoverView()
+    {
+        return mWishListLayout.isShowCoverView();
+    }
+
+    public boolean isShowRecentListCoverView()
+    {
+        return mRecentListLayout.isShowCoverView();
+    }
+
     private void startMessageLayoutShowAnimation(final View view)
     {
         if (view == null)

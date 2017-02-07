@@ -674,6 +674,7 @@ public class AnalyticsManager
         public static final String MYDAILY = "mydaily";
         public static final String TERMS_AND_CONDITION = "terms_and_condition";
         public static final String MENU = "menu";
+        public static final String HOME = "home";
     }
 
     public static class Action
@@ -1167,6 +1168,7 @@ public class AnalyticsManager
         public static final String VENDOR_ID = "vendor_id";
         public static final String VENDOR_NAME = "vendor_name";
         public static final String SERVICE = "service";
+        public static final String HOME_SCREEN = "home_screen";
     }
 
     public static class ValueType
@@ -1200,5 +1202,8 @@ public class AnalyticsManager
         public static final String MESSAGE = "message";
         public static final String OVERSEAS = "overseas";
         public static final String DOMESTIC = "domestic";
+        public static final String WISHLIST = "wishlist";
+        public static final String RECENTVIEW = "recentview";
+        public static final String WISHLIST_RECENTVIEW = "wishlist_recentview";
     }
 }

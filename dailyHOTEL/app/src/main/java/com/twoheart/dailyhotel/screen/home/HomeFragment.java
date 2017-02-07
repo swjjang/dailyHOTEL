@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -334,6 +335,42 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
+    public void sendHomeScreenAnalytics()
+    {
+        if (mHomeLayout == null || mBaseActivity == null)
+        {
+            return;
+        }
+
+        // 커버뷰가 보이지 않을때, 즉 위시리스트와 최근 본 업장의 리퀘스트가 완료 되었을때
+        if (mHomeLayout.isShowRecentListCoverView() == false && mHomeLayout.isShowWishListCoverView() == false)
+        {
+
+            String memberType = DailyHotel.isLogin() == true //
+                ? AnalyticsManager.ValueType.MEMBER : AnalyticsManager.ValueType.GUEST;
+
+            String viewScreen = AnalyticsManager.ValueType.NONE;
+            if (mHomeLayout.hasWishListData() == true && mHomeLayout.hasRecentListData() == true)
+            {
+                viewScreen = AnalyticsManager.ValueType.WISHLIST_RECENTVIEW;
+            } else if (mHomeLayout.hasWishListData() == true)
+            {
+                viewScreen = AnalyticsManager.ValueType.WISHLIST;
+            } else if (mHomeLayout.hasRecentListData() == true)
+            {
+                viewScreen = AnalyticsManager.ValueType.RECENTVIEW;
+            }
+
+            HashMap<String, String> params = new HashMap<>();
+
+            params.put(AnalyticsManager.KeyType.MEMBER_TYPE, memberType);
+            params.put(AnalyticsManager.KeyType.HOME_SCREEN, viewScreen);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordScreen(//
+                mBaseActivity, AnalyticsManager.Screen.HOME, null, params);
+        }
+    }
+
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
     {
         @Override
@@ -592,6 +629,8 @@ public class HomeFragment extends BaseFragment
             {
                 mHomeLayout.setWishListData(list);
             }
+
+            sendHomeScreenAnalytics();
         }
 
         @Override
@@ -601,6 +640,8 @@ public class HomeFragment extends BaseFragment
             {
                 mHomeLayout.setRecentListData(list);
             }
+
+            sendHomeScreenAnalytics();
         }
 
         @Override
