@@ -19,7 +19,7 @@ import retrofit2.Response;
  * Created by android_sam on 2016. 11. 25..
  */
 
-public class StayBookingDetailTabBookingNetworkController extends BaseNetworkController
+public class StayReservationDetailNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
@@ -36,7 +36,7 @@ public class StayBookingDetailTabBookingNetworkController extends BaseNetworkCon
         void onReservationBookingDetailError(Throwable throwable);
     }
 
-    public StayBookingDetailTabBookingNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public StayReservationDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }

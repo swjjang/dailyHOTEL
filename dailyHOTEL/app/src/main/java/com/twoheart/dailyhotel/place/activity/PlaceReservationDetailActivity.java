@@ -3,13 +3,10 @@ package com.twoheart.dailyhotel.place.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -19,14 +16,13 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Response;
 
-public abstract class PlaceBookingDetailTabActivity extends BaseActivity
+public abstract class PlaceReservationDetailActivity extends BaseActivity
 {
     private boolean mDontReload;
     protected int mReservationIndex;
@@ -166,17 +162,17 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                         } else
                         {
                             String message = responseJSONObject.getString("msg");
-                            PlaceBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+                            PlaceReservationDetailActivity.this.onErrorPopupMessage(msgCode, message);
                         }
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
-                        PlaceBookingDetailTabActivity.this.onError(e);
+                        PlaceReservationDetailActivity.this.onError(e);
                         finish();
                     }
                 } else
                 {
-                    PlaceBookingDetailTabActivity.this.onErrorResponse(call, response);
+                    PlaceReservationDetailActivity.this.onErrorResponse(call, response);
                     finish();
                 }
             }
@@ -184,7 +180,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             @Override
             public void onFailure(Call<JSONObject> call, Throwable t)
             {
-                PlaceBookingDetailTabActivity.this.onError(t);
+                PlaceReservationDetailActivity.this.onError(t);
                 finish();
             }
         });
@@ -197,7 +193,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Intent intent = LoginActivity.newInstance(PlaceBookingDetailTabActivity.this);
+                Intent intent = LoginActivity.newInstance(PlaceReservationDetailActivity.this);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
             }
         }, new View.OnClickListener()
@@ -221,7 +217,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
             {
                 unLockUI();
 
-                Intent intent = PermissionManagerActivity.newInstance(PlaceBookingDetailTabActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                Intent intent = PermissionManagerActivity.newInstance(PlaceReservationDetailActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
             }
 
@@ -256,7 +252,7 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                 }
 
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
-                DailyLocationFactory.getInstance(PlaceBookingDetailTabActivity.this).stopLocationMeasure();
+                DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).stopLocationMeasure();
 
                 showSimpleDialog(getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), getString(R.string.dialog_btn_text_dosetting), getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
                 {
@@ -279,9 +275,9 @@ public abstract class PlaceBookingDetailTabActivity extends BaseActivity
                     return;
                 }
 
-                DailyLocationFactory.getInstance(PlaceBookingDetailTabActivity.this).stopLocationMeasure();
+                DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).stopLocationMeasure();
 
-                onLocationChanged(location);
+                PlaceReservationDetailActivity.this.onLocationChanged(location);
             }
         });
     }

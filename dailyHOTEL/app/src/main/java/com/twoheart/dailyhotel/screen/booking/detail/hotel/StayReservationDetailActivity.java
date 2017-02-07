@@ -23,7 +23,7 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
+import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -47,15 +47,15 @@ import java.util.TimeZone;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
+public class StayReservationDetailActivity extends PlaceReservationDetailActivity
 {
     private StayBookingDetail mStayBookingDetail;
-    private StayBookingDetailLayout mStayBookingDetailLayout;
-    private StayBookingDetailTabBookingNetworkController mNetworkController;
+    private StayReservationDetailLayout mStayReservationDetailLayout;
+    private StayReservationDetailNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
     {
-        Intent intent = new Intent(context, StayBookingDetailTabActivity.class);
+        Intent intent = new Intent(context, StayReservationDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
@@ -70,10 +70,10 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         super.onCreate(savedInstanceState);
 
         mStayBookingDetail = new StayBookingDetail();
-        mStayBookingDetailLayout = new StayBookingDetailLayout(this, mOnEventListener);
-        mNetworkController = new StayBookingDetailTabBookingNetworkController(this, mNetworkTag, mNetworkControllerListener);
+        mStayReservationDetailLayout = new StayReservationDetailLayout(this, mOnEventListener);
+        mNetworkController = new StayReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
-        setContentView(mStayBookingDetailLayout.onCreateView(R.layout.activity_booking_tab));
+        setContentView(mStayReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
     }
 
     @Override
@@ -112,16 +112,16 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 if (resultCode == RESULT_OK)
                 {
                     mStayBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
-                    mStayBookingDetailLayout.updateReviewButtonLayout(mStayBookingDetail.reviewStatusType);
+                    mStayReservationDetailLayout.updateReviewButtonLayout(mStayBookingDetail.reviewStatusType);
                 }
                 break;
             }
 
             case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
             {
-                if (mStayBookingDetailLayout != null)
+                if (mStayReservationDetailLayout != null)
                 {
-                    searchMyLocation(mStayBookingDetailLayout.getMyLocationView());
+                    searchMyLocation(mStayReservationDetailLayout.getMyLocationView());
                 }
 
                 break;
@@ -131,9 +131,9 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    if (mStayBookingDetailLayout != null)
+                    if (mStayReservationDetailLayout != null)
                     {
-                        searchMyLocation(mStayBookingDetailLayout.getMyLocationView());
+                        searchMyLocation(mStayReservationDetailLayout.getMyLocationView());
                     }
                 }
                 break;
@@ -144,9 +144,9 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     @Override
     public void onBackPressed()
     {
-        if (mStayBookingDetailLayout != null && mStayBookingDetailLayout.isExpandedMap() == true)
+        if (mStayReservationDetailLayout != null && mStayReservationDetailLayout.isExpandedMap() == true)
         {
-            mStayBookingDetailLayout.collapseMap(mStayBookingDetail.latitude, mStayBookingDetail.longitude);
+            mStayReservationDetailLayout.collapseMap(mStayBookingDetail.latitude, mStayBookingDetail.longitude);
         } else
         {
             super.onBackPressed();
@@ -284,7 +284,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     @Override
                     public void onPositiveButtonClick(View v)
                     {
-                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(//
+                        AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(//
                             AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL, //
                             AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
                     }
@@ -369,7 +369,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 {
                     String message = getString(R.string.message_booking_stay_share_kakao, //
                         mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
-                        Util.getPriceFormat(StayBookingDetailTabActivity.this, mStayBookingDetail.paymentPrice, false), //
+                        Util.getPriceFormat(StayReservationDetailActivity.this, mStayBookingDetail.paymentPrice, false), //
                         mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
                         DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                         mStayBookingDetail.address);
@@ -382,14 +382,14 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                     int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
 
-                    KakaoLinkManager.newInstance(StayBookingDetailTabActivity.this).shareBookingStay(message, mStayBookingDetail.placeIndex,//
+                    KakaoLinkManager.newInstance(StayReservationDetailActivity.this).shareBookingStay(message, mStayBookingDetail.placeIndex,//
                         mImageUrl, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
 
-                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                     , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
             }
         });
@@ -410,18 +410,18 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 {
                     String message = getString(R.string.message_booking_stay_share_sms, //
                         mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
-                        Util.getPriceFormat(StayBookingDetailTabActivity.this, mStayBookingDetail.paymentPrice, false), //
+                        Util.getPriceFormat(StayReservationDetailActivity.this, mStayBookingDetail.paymentPrice, false), //
                         mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
                         DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                         mStayBookingDetail.address);
 
-                    Util.sendSms(StayBookingDetailTabActivity.this, message);
+                    Util.sendSms(StayReservationDetailActivity.this, message);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
 
-                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                     , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
@@ -469,12 +469,12 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     @Override
     protected void onLocationChanged(Location location)
     {
-        if (mStayBookingDetailLayout == null || location == null)
+        if (mStayReservationDetailLayout == null || location == null)
         {
             return;
         }
 
-        mStayBookingDetailLayout.changeLocation(location);
+        mStayReservationDetailLayout.changeLocation(location);
     }
 
     private void showRefundCallDialog()
@@ -530,7 +530,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                 showDailyCallDialog(null);
 
-                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                     , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.CALL, null);
             }
         });
@@ -600,7 +600,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         } else
                         {
                             String msg = responseJSONObject.getString("msg");
-                            DailyToast.showToast(StayBookingDetailTabActivity.this, msg, Toast.LENGTH_SHORT);
+                            DailyToast.showToast(StayReservationDetailActivity.this, msg, Toast.LENGTH_SHORT);
                             finish();
                         }
                     } catch (Exception e)
@@ -609,14 +609,14 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     }
                 } else
                 {
-                    StayBookingDetailTabActivity.this.onErrorResponse(call, response);
+                    StayReservationDetailActivity.this.onErrorResponse(call, response);
                 }
             }
 
             @Override
             public void onFailure(Call<JSONObject> call, Throwable t)
             {
-                StayBookingDetailTabActivity.this.onError(t);
+                StayReservationDetailActivity.this.onError(t);
                 finish();
             }
         });
@@ -659,21 +659,21 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                 String noCallMessage = getString(R.string.toast_msg_no_hotel_call, phoneNumber);
 
-                if (Util.isTelephonyEnabled(StayBookingDetailTabActivity.this) == true)
+                if (Util.isTelephonyEnabled(StayReservationDetailActivity.this) == true)
                 {
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
 
-                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                        AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_FRONT, null);
                     } catch (ActivityNotFoundException e)
                     {
-                        DailyToast.showToast(StayBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        DailyToast.showToast(StayReservationDetailActivity.this, noCallMessage, Toast.LENGTH_LONG);
                     }
                 } else
                 {
-                    DailyToast.showToast(StayBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    DailyToast.showToast(StayReservationDetailActivity.this, noCallMessage, Toast.LENGTH_LONG);
                 }
             }
         };
@@ -711,21 +711,21 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
                 String noCallMessage = getString(R.string.toast_msg_no_hotel_call, phoneNumber);
 
-                if (Util.isTelephonyEnabled(StayBookingDetailTabActivity.this) == true)
+                if (Util.isTelephonyEnabled(StayReservationDetailActivity.this) == true)
                 {
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
 
-                        AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                        AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECTCALL_RESERVATION, null);
                     } catch (ActivityNotFoundException e)
                     {
-                        DailyToast.showToast(StayBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        DailyToast.showToast(StayReservationDetailActivity.this, noCallMessage, Toast.LENGTH_LONG);
                     }
                 } else
                 {
-                    DailyToast.showToast(StayBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    DailyToast.showToast(StayReservationDetailActivity.this, noCallMessage, Toast.LENGTH_LONG);
                 }
             }
         };
@@ -803,12 +803,12 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private StayBookingDetailLayout.OnEventListener mOnEventListener = new StayBookingDetailLayout.OnEventListener()
+    private StayReservationDetailLayout.OnEventListener mOnEventListener = new StayReservationDetailLayout.OnEventListener()
     {
         @Override
         public void finish()
         {
-            StayBookingDetailTabActivity.this.onBackPressed();
+            StayReservationDetailActivity.this.onBackPressed();
         }
 
         @Override
@@ -819,7 +819,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 return;
             }
 
-            Intent intent = new Intent(StayBookingDetailTabActivity.this, IssuingReceiptActivity.class);
+            Intent intent = new Intent(StayReservationDetailActivity.this, IssuingReceiptActivity.class);
             intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
             startActivity(intent);
         }
@@ -834,14 +834,14 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
 
             if (isGoogleMap == false)
             {
-                Intent intent = ZoomMapActivity.newInstance(StayBookingDetailTabActivity.this//
+                Intent intent = ZoomMapActivity.newInstance(StayReservationDetailActivity.this//
                     , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayBookingDetail.placeName, mStayBookingDetail.address//
                     , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas);
 
                 startActivity(intent);
             } else
             {
-                mStayBookingDetailLayout.expandMap();
+                mStayReservationDetailLayout.expandMap();
             }
         }
 
@@ -857,7 +857,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             saleTime.setCurrentTime(mStayBookingDetail.currentDateTime);
             saleTime.setDailyTime(mStayBookingDetail.dailyDateTime);
 
-            Intent intent = StayDetailActivity.newInstance(StayBookingDetailTabActivity.this, saleTime, 1, mStayBookingDetail.placeIndex, 0, false);
+            Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, saleTime, 1, mStayBookingDetail.placeIndex, 0, false);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
         }
 
@@ -869,7 +869,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 return;
             }
 
-            Util.showShareMapDialog(StayBookingDetailTabActivity.this, mStayBookingDetail.placeName//
+            Util.showShareMapDialog(StayReservationDetailActivity.this, mStayBookingDetail.placeName//
                 , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas//
                 , AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
@@ -888,18 +888,18 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
             {
                 case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
                 {
-                    Intent intent = StayAutoRefundActivity.newInstance(StayBookingDetailTabActivity.this, mStayBookingDetail);
+                    Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, mStayBookingDetail);
                     startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
 
-                    AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                         , AnalyticsManager.Action.FREE_CANCELLATION_CLICKED, null, null);
                     break;
                 }
 
                 default:
-                    StayBookingDetailTabActivity.this.showRefundCallDialog();
+                    StayReservationDetailActivity.this.showRefundCallDialog();
 
-                    AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                         , AnalyticsManager.Action.REFUND_INQUIRY_CLICKED, null, null);
                     break;
             }
@@ -928,7 +928,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 return;
             }
 
-            StayBookingDetailTabActivity.this.showCallDialog();
+            StayReservationDetailActivity.this.showCallDialog();
         }
 
         @Override
@@ -939,7 +939,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 return;
             }
 
-            StayBookingDetailTabActivity.this.showShareDialog();
+            StayReservationDetailActivity.this.showShareDialog();
         }
 
         @Override
@@ -950,7 +950,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 return;
             }
 
-            Intent intent = PermissionManagerActivity.newInstance(StayBookingDetailTabActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            Intent intent = PermissionManagerActivity.newInstance(StayReservationDetailActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
         }
 
@@ -985,13 +985,13 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         }
     };
 
-    private StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener //
-        mNetworkControllerListener = new StayBookingDetailTabBookingNetworkController.OnNetworkControllerListener()
+    private StayReservationDetailNetworkController.OnNetworkControllerListener //
+        mNetworkControllerListener = new StayReservationDetailNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onReviewInformation(Review review)
         {
-            Intent intent = ReviewActivity.newInstance(StayBookingDetailTabActivity.this, review);
+            Intent intent = ReviewActivity.newInstance(StayReservationDetailActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
         }
 
@@ -1013,7 +1013,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                         mStayBookingDetail.mRefundComment = message;
                     }
 
-                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                    mStayReservationDetailLayout.initLayout(mStayBookingDetail);
                 } else
                 {
                     if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
@@ -1025,7 +1025,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     }
 
                     mStayBookingDetail.refundPolicy = refundPolicy;
-                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                    mStayReservationDetailLayout.initLayout(mStayBookingDetail);
                 }
 
                 // Analytics
@@ -1034,28 +1034,28 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     switch (refundPolicy)
                     {
                         case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
-                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null);
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELABLE, null);
                             break;
 
                         case StayBookingDetail.STATUS_SURCHARGE_REFUND:
-                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null);
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_CANCELLATIONFEE, null);
                             break;
 
                         default:
-                            AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
+                            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
                             break;
                     }
                 } else
                 {
-                    AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
                 }
             } else
             {
                 mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                mStayReservationDetailLayout.initLayout(mStayBookingDetail);
 
-                AnalyticsManager.getInstance(StayBookingDetailTabActivity.this).recordScreen(StayBookingDetailTabActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
             }
 
             unLockUI();
@@ -1085,7 +1085,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                     if (mStayBookingDetail.readyForRefund == true)
                     {
                         // 환불 대기 인 상태에서는 문구가 고정이다.
-                        mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                        mStayReservationDetailLayout.initLayout(mStayBookingDetail);
                     } else
                     {
                         mNetworkController.requestPolicyRefund(mStayBookingDetail.reservationIndex, mStayBookingDetail.transactionType);
@@ -1094,7 +1094,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
                 {
                     mStayBookingDetail.isVisibleRefundPolicy = false;
 
-                    mStayBookingDetailLayout.initLayout(mStayBookingDetail);
+                    mStayReservationDetailLayout.initLayout(mStayBookingDetail);
                 }
             } catch (Exception e)
             {
@@ -1111,12 +1111,12 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onEnterOtherUserReservationBookingError(int msgCode, String message)
         {
-            StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message, new View.OnClickListener()
+            StayReservationDetailActivity.this.onErrorPopupMessage(msgCode, message, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    Util.restartApp(StayBookingDetailTabActivity.this);
+                    Util.restartApp(StayReservationDetailActivity.this);
                 }
             });
         }
@@ -1124,7 +1124,7 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onExpiredSessionError()
         {
-            StayBookingDetailTabActivity.this.onExpiredSessionError();
+            StayReservationDetailActivity.this.onExpiredSessionError();
         }
 
         @Override
@@ -1137,25 +1137,25 @@ public class StayBookingDetailTabActivity extends PlaceBookingDetailTabActivity
         @Override
         public void onError(Throwable e)
         {
-            StayBookingDetailTabActivity.this.onError(e);
+            StayReservationDetailActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            StayBookingDetailTabActivity.this.onErrorPopupMessage(msgCode, message);
+            StayReservationDetailActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            StayBookingDetailTabActivity.this.onErrorToastMessage(message);
+            StayReservationDetailActivity.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call call, Response response)
         {
-            StayBookingDetailTabActivity.this.onErrorResponse(call, response);
+            StayReservationDetailActivity.this.onErrorResponse(call, response);
         }
     };
 }

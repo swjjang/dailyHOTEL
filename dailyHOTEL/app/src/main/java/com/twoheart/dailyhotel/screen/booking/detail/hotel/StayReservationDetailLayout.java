@@ -52,7 +52,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class StayBookingDetailLayout extends BaseLayout implements View.OnClickListener
+public class StayReservationDetailLayout extends BaseLayout implements View.OnClickListener
 {
     private DailyScrollView mScrollLayout;
     private View mRefundPolicyLayout, mButtonBottomMarginView;
@@ -64,6 +64,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
     private DailyToolbarLayout mDailyToolbarLayout;
 
     // Map
+    private boolean mIsReadyMap;
     private RelativeLayout mGoogleMapLayout;
     private FrameLayout mMapLayout;
     private GoogleMap mGoogleMap;
@@ -102,7 +103,7 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
         void onReleaseUiComponent();
     }
 
-    public StayBookingDetailLayout(Context context, OnBaseEventListener listener)
+    public StayReservationDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -191,8 +192,15 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
         double height = Util.getListRowHeight(context);
         final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
 
+        // Map 4 :2 비율 맞추기
         com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
         mapImageView.setOnClickListener(this);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
+        layoutParams.width = (int) width;
+        layoutParams.height = (int) height;
+
+        mapImageView.setLayoutParams(layoutParams);
 
         mMapExpandedView = view.findViewById(R.id.mapExpandedView);
 
@@ -222,21 +230,17 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
 
+        mPlaceInformationLayout.setVisibility(View.VISIBLE);
+
         initReviewButtonLayout(view, stayBookingDetail);
     }
 
     private void initImageMapLayout(Context context, com.facebook.drawee.view.SimpleDraweeView mapImageView, StayBookingDetail stayBookingDetail, int height, int width)
     {
-        // Map 4 :2 비율 맞추기
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
-        layoutParams.width = width;
-        layoutParams.height = height;
-
-        double ratio = height / width;
+        final double ratio = height / width;
         final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
 
         mapImageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, PLACE_INFORMATION_LAYOUT_RATIO));
-        mapImageView.setLayoutParams(layoutParams);
 
         if (width >= 720)
         {
@@ -253,6 +257,11 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
 
     private void initGoogleMapLayout(Context context, View view, final StayBookingDetail stayBookingDetail, int width, int height)
     {
+        if (context == null || view == null || stayBookingDetail == null)
+        {
+            return;
+        }
+
         mAddressLayout = view.findViewById(R.id.addressLayout);
         mSearchMapsLayout = view.findViewById(R.id.searchMapsLayout);
 
@@ -323,6 +332,15 @@ public class StayBookingDetailLayout extends BaseLayout implements View.OnClickL
                 relocationMyLocation(mMapLayout);
                 relocationZoomControl(mMapLayout);
                 addMarker(mGoogleMap, stayBookingDetail.latitude, stayBookingDetail.longitude, stayBookingDetail.placeName);
+
+                mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
+                {
+                    @Override
+                    public void onMapLoaded()
+                    {
+                        mIsReadyMap = true;
+                    }
+                });
             }
         });
     }

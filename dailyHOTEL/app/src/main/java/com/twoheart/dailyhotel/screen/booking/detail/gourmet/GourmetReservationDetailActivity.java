@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -18,11 +17,8 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
-import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.place.activity.PlaceBookingDetailTabActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.screen.booking.detail.BookingDetailFragmentPagerAdapter;
+import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -34,12 +30,10 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivity
+public class GourmetReservationDetailActivity extends PlaceReservationDetailActivity
 {
     GourmetBookingDetail mGourmetBookingDetail;
 
@@ -63,7 +57,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 //            return;
 //        }
 //
-//        viewPager.setTag("GourmetBookingDetailTabActivity");
+//        viewPager.setTag("GourmetReservationDetailActivity");
 //
 //        ArrayList<BaseFragment> fragmentList = new ArrayList<>();
 //
@@ -190,7 +184,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     @Override
                     public void onPositiveButtonClick(View v)
                     {
-                        AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(//
+                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(//
                             AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL,//
                             AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
                     }
@@ -275,20 +269,20 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 {
                     String message = getString(R.string.message_booking_gourmet_share_kakao, //
                         mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
-                        Util.getPriceFormat(GourmetBookingDetailTabActivity.this, mGourmetBookingDetail.paymentPrice, false), //
+                        Util.getPriceFormat(GourmetReservationDetailActivity.this, mGourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
                         mGourmetBookingDetail.address);
 
-                    KakaoLinkManager.newInstance(GourmetBookingDetailTabActivity.this).shareBookingGourmet(message, mGourmetBookingDetail.placeIndex,//
+                    KakaoLinkManager.newInstance(GourmetReservationDetailActivity.this).shareBookingGourmet(message, mGourmetBookingDetail.placeIndex,//
                         mImageUrl, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
 
-                AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                     , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
             }
         });
@@ -309,19 +303,19 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 {
                     String message = getString(R.string.message_booking_gourmet_share_sms, //
                         mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
-                        Util.getPriceFormat(GourmetBookingDetailTabActivity.this, mGourmetBookingDetail.paymentPrice, false), //
+                        Util.getPriceFormat(GourmetReservationDetailActivity.this, mGourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                         DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
                         mGourmetBookingDetail.address);
 
-                    Util.sendSms(GourmetBookingDetailTabActivity.this, message);
+                    Util.sendSms(GourmetReservationDetailActivity.this, message);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
 
-                AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                     , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
@@ -387,11 +381,11 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                             mGourmetBookingDetail.userName = jsonObject.getString("name");
 
-                            DailyMobileAPI.getInstance(GourmetBookingDetailTabActivity.this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+                            DailyMobileAPI.getInstance(GourmetReservationDetailActivity.this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
                         } else
                         {
                             String msg = responseJSONObject.getString("msg");
-                            DailyToast.showToast(GourmetBookingDetailTabActivity.this, msg, Toast.LENGTH_SHORT);
+                            DailyToast.showToast(GourmetReservationDetailActivity.this, msg, Toast.LENGTH_SHORT);
                             finish();
                         }
                     } catch (Exception e)
@@ -400,14 +394,14 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                     }
                 } else
                 {
-                    GourmetBookingDetailTabActivity.this.onErrorResponse(call, response);
+                    GourmetReservationDetailActivity.this.onErrorResponse(call, response);
                 }
             }
 
             @Override
             public void onFailure(Call<JSONObject> call, Throwable t)
             {
-                GourmetBookingDetailTabActivity.this.onError(t);
+                GourmetReservationDetailActivity.this.onError(t);
                 finish();
             }
         });
@@ -436,21 +430,21 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
 
                 String noCallMessage = getString(R.string.toast_msg_no_gourmet_call, phoneNumber);
 
-                if (Util.isTelephonyEnabled(GourmetBookingDetailTabActivity.this) == true)
+                if (Util.isTelephonyEnabled(GourmetReservationDetailActivity.this) == true)
                 {
                     try
                     {
                         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
 
-                        AnalyticsManager.getInstance(GourmetBookingDetailTabActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                        AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
                     } catch (ActivityNotFoundException e)
                     {
-                        DailyToast.showToast(GourmetBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        DailyToast.showToast(GourmetReservationDetailActivity.this, noCallMessage, Toast.LENGTH_LONG);
                     }
                 } else
                 {
-                    DailyToast.showToast(GourmetBookingDetailTabActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    DailyToast.showToast(GourmetReservationDetailActivity.this, noCallMessage, Toast.LENGTH_LONG);
                 }
             }
         };
@@ -533,7 +527,7 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                                 @Override
                                 public void onClick(View v)
                                 {
-                                    Util.restartApp(GourmetBookingDetailTabActivity.this);
+                                    Util.restartApp(GourmetReservationDetailActivity.this);
                                 }
                             });
                             break;
@@ -551,14 +545,14 @@ public class GourmetBookingDetailTabActivity extends PlaceBookingDetailTabActivi
                 }
             } else
             {
-                GourmetBookingDetailTabActivity.this.onErrorResponse(call, response);
+                GourmetReservationDetailActivity.this.onErrorResponse(call, response);
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            GourmetBookingDetailTabActivity.this.onError(t);
+            GourmetReservationDetailActivity.this.onError(t);
         }
     };
 }
