@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class StayReservationDetailLayout extends PlaceReservationDetailLayout implements View.OnClickListener
+public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 {
     private View mRefundPolicyLayout, mButtonBottomMarginView;
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;

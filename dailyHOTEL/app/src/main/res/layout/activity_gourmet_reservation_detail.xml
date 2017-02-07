@@ -245,23 +245,22 @@
                 android:orientation="vertical">
 
                 <include
-                    layout="@layout/layout_stay_reservation_detail_01"
+                    layout="@layout/layout_gourmet_reservation_detail_01"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"/>
 
                 <include
-                    layout="@layout/layout_stay_reservation_detail_02"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"/>
-
-                <include
-                    layout="@layout/layout_reservation_detail_03"
+                    layout="@layout/layout_gourmet_reservation_detail_02"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:background="@color/default_background"/>
         </LinearLayout>
     </com.twoheart.dailyhotel.widget.DailyScrollView>
 </RelativeLayout>

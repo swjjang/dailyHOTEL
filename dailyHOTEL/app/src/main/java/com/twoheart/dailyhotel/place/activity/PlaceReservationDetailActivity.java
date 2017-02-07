@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
@@ -61,6 +62,8 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             Util.restartApp(this);
             return;
         }
+
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.BOOKING_DETAIL, null);
     }
 
     @Override
@@ -153,6 +156,17 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                     {
                         searchMyLocation(mPlaceReservationDetailLayout.getMyLocationView());
                     }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    mPlaceBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                    mPlaceReservationDetailLayout.updateReviewButtonLayout(mPlaceBookingDetail.reviewStatusType);
                 }
                 break;
             }

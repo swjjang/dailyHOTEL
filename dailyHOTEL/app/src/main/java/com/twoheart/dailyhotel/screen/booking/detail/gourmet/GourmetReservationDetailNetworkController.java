@@ -1,13 +1,11 @@
-package com.twoheart.dailyhotel.screen.booking.detail.hotel;
+package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
 
@@ -18,13 +16,11 @@ import retrofit2.Response;
  * Created by android_sam on 2016. 11. 25..
  */
 
-public class StayReservationDetailNetworkController extends BaseNetworkController
+public class GourmetReservationDetailNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onReviewInformation(Review review);
-
-        void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message);
 
         void onReservationDetail(JSONObject jsonObject);
 
@@ -35,27 +31,22 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         void onReservationDetailError(Throwable throwable);
     }
 
-    public StayReservationDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public GourmetReservationDetailNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
 
-    public void requestPolicyRefund(int reservationIndex, String transactionType)
+    public void requestReviewInformation(int reserveIdx)
     {
-        DailyMobileAPI.getInstance(mContext).requestPolicyRefund(mNetworkTag, reservationIndex, transactionType, mPolicyRefundCallback);
+        DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, reserveIdx, mGourmetReviewInformationCallback);
     }
 
-    public void requestReviewInformation(int reservationIndex)
+    public void requestGourmetReservationDetail(int reservationIndex)
     {
-        DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, reservationIndex, mStayReviewInformationCallback);
+        DailyMobileAPI.getInstance(mContext).requestGourmetReservationDetail(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
     }
 
-    public void requestStayReservationDetail(int reservationIndex)
-    {
-        DailyMobileAPI.getInstance(mContext).requestStayReservationDetail(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
-    }
-
-    private retrofit2.Callback mStayReviewInformationCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mGourmetReviewInformationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -71,8 +62,9 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
                     if (msgCode == 100)
                     {
                         JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        Review review = new Review(dataJSONObject);
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(new Review(dataJSONObject));
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewInformation(review);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");
@@ -92,66 +84,6 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
-        }
-    };
-
-    private retrofit2.Callback mPolicyRefundCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    switch (msgCode)
-                    {
-                        case 100:
-                        case 1015:
-                        {
-                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                            String comment = dataJSONObject.getString("comment");
-                            String refundPolicy = dataJSONObject.getString("refundPolicy");
-                            boolean refundManual = dataJSONObject.getBoolean("refundManual");
-                            String message = responseJSONObject.getString("msg");
-
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPolicyRefund(true, comment, refundPolicy, refundManual, message);
-                            break;
-                        }
-
-                        default:
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPolicyRefund(false, null, null, false, null);
-                            break;
-                    }
-                } catch (Exception e)
-                {
-                    if (Constants.DEBUG == false)
-                    {
-                        Crashlytics.logException(e);
-                    }
-
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPolicyRefund(false, null, null, false, null);
-                }
-            } else
-            {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPolicyRefund(false, null, null, false, null);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.logException(t);
-            }
-
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPolicyRefund(false, null, null, false, null);
         }
     };
 
@@ -192,14 +124,13 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
                 }
             } else
             {
-                if(response != null && response.code() == 401)
+                if (response != null && response.code() == 401)
                 {
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onExpiredSessionError();
                 } else
                 {
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onReservationDetailError(null);
                 }
-
             }
         }
 

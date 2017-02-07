@@ -185,7 +185,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    void requestGourmetBookingDetailInformation(String tag, int index, Object listener);
+    void requestGourmetReservationDetail(String tag, int index, Object listener);
 
     /**
      * api/fnb/reservation/booking/receipt

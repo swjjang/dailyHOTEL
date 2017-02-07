@@ -104,16 +104,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
                 break;
             }
-
-            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
-            {
-                if (resultCode == RESULT_OK)
-                {
-                    ((StayBookingDetail) mPlaceBookingDetail).reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
-                    mPlaceReservationDetailLayout.updateReviewButtonLayout(((StayBookingDetail) mPlaceBookingDetail).reviewStatusType);
-                }
-                break;
-            }
         }
     }
 
@@ -540,20 +530,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private long getCompareDate(long timeInMillis)
-    {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTimeInMillis();
-    }
-
     private void startFrontCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
@@ -703,6 +679,20 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return StayBookingDetail.STATUS_SURCHARGE_REFUND;
             }
         }
+    }
+
+    private long getCompareDate(long timeInMillis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(timeInMillis);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -869,15 +859,16 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 return;
             }
+
+            Util.clipText(StayReservationDetailActivity.this, mPlaceBookingDetail.address);
+
+            DailyToast.showToast(StayReservationDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
         }
 
         @Override
         public void onSearchMapClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
+            onViewMapClick();
         }
 
         @Override
@@ -972,7 +963,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         @Override
-        public void onStayBookingDetailInformation(JSONObject jsonObject)
+        public void onReservationDetail(JSONObject jsonObject)
         {
             unLockUI();
 
@@ -1021,7 +1012,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         @Override
-        public void onEnterOtherUserReservationBookingError(int msgCode, String message)
+        public void onEnterOtherUserReservationDetailError(int msgCode, String message)
         {
             StayReservationDetailActivity.this.onErrorPopupMessage(msgCode, message, new View.OnClickListener()
             {
@@ -1040,7 +1031,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         @Override
-        public void onReservationBookingDetailError(Throwable throwable)
+        public void onReservationDetailError(Throwable throwable)
         {
             onError(throwable);
             finish();

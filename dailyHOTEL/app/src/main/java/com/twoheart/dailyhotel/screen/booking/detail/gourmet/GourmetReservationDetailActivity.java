@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,11 +14,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -35,38 +43,65 @@ import retrofit2.Response;
 
 public class GourmetReservationDetailActivity extends PlaceReservationDetailActivity
 {
-    GourmetBookingDetail mGourmetBookingDetail;
+    private GourmetReservationDetailNetworkController mNetworkController;
+
+    public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
+    {
+        Intent intent = new Intent(context, GourmetReservationDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        mGourmetBookingDetail = new GourmetBookingDetail();
+        // GourmetBookingDetail Class는 원래 처음부터 생성하면 안되는데
+        // 내부에 시간값을 미리 받아서 진행되는 부분이 있어서 어쩔수 없이 미리 생성.
+        mPlaceBookingDetail = new GourmetBookingDetail();
+        mPlaceReservationDetailLayout = new GourmetReservationDetailLayout(this, mOnEventListener);
+        mNetworkController = new GourmetReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
-        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.BOOKING_DETAIL, null);
+        setContentView(mPlaceReservationDetailLayout.onCreateView(R.layout.activity_gourmet_reservation_detail));
     }
 
-//    @Override
-//    protected void loadFragments(ViewPager viewPager, PlaceBookingDetail placeBookingDetail)
-//    {
-//        String tag = (String) viewPager.getTag();
-//
-//        if (tag != null)
-//        {
-//            return;
-//        }
-//
-//        viewPager.setTag("GourmetReservationDetailActivity");
-//
-//        ArrayList<BaseFragment> fragmentList = new ArrayList<>();
-//
-//        BaseFragment baseFragment01 = GourmetBookingDetailTabBookingFragment.newInstance(placeBookingDetail, mReservationIndex);
-//        fragmentList.add(baseFragment01);
-//
-//        BookingDetailFragmentPagerAdapter fragmentPagerAdapter = new BookingDetailFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-//        viewPager.setAdapter(fragmentPagerAdapter);
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_RESULT_ACTIVITY_STAY_AUTOREFUND:
+            {
+                switch (resultCode)
+                {
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    {
+                        lockUI();
+
+                        requestCommonDatetime();
+
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        break;
+                    }
+
+                    case RESULT_OK:
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                        finish();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
 
     @Override
     protected void showCallDialog()
@@ -108,15 +143,15 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
         final String phone;
 
-        if (Util.isTextEmpty(mGourmetBookingDetail.phone2) == false)
+        if (Util.isTextEmpty(mPlaceBookingDetail.phone2) == false)
         {
-            phone = mGourmetBookingDetail.phone2;
-        } else if (Util.isTextEmpty(mGourmetBookingDetail.phone1) == false)
+            phone = mPlaceBookingDetail.phone2;
+        } else if (Util.isTextEmpty(mPlaceBookingDetail.phone1) == false)
         {
-            phone = mGourmetBookingDetail.phone1;
-        } else if (Util.isTextEmpty(mGourmetBookingDetail.phone3) == false)
+            phone = mPlaceBookingDetail.phone1;
+        } else if (Util.isTextEmpty(mPlaceBookingDetail.phone3) == false)
         {
-            phone = mGourmetBookingDetail.phone3;
+            phone = mPlaceBookingDetail.phone3;
         } else
         {
             phone = null;
@@ -267,16 +302,18 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
                 try
                 {
-                    String message = getString(R.string.message_booking_gourmet_share_kakao, //
-                        mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
-                        Util.getPriceFormat(GourmetReservationDetailActivity.this, mGourmetBookingDetail.paymentPrice, false), //
-                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
-                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
-                        mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
-                        mGourmetBookingDetail.address);
+                    GourmetBookingDetail gourmetBookingDetail = ((GourmetBookingDetail) mPlaceBookingDetail);
 
-                    KakaoLinkManager.newInstance(GourmetReservationDetailActivity.this).shareBookingGourmet(message, mGourmetBookingDetail.placeIndex,//
-                        mImageUrl, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+                    String message = getString(R.string.message_booking_gourmet_share_kakao, //
+                        gourmetBookingDetail.userName, gourmetBookingDetail.placeName, gourmetBookingDetail.guestName,//
+                        Util.getPriceFormat(GourmetReservationDetailActivity.this, gourmetBookingDetail.paymentPrice, false), //
+                        DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
+                        DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                        gourmetBookingDetail.ticketName, getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount), //
+                        gourmetBookingDetail.address);
+
+                    KakaoLinkManager.newInstance(GourmetReservationDetailActivity.this).shareBookingGourmet(message, gourmetBookingDetail.placeIndex,//
+                        mImageUrl, DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -301,13 +338,15 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
                 try
                 {
+                    GourmetBookingDetail gourmetBookingDetail = ((GourmetBookingDetail) mPlaceBookingDetail);
+
                     String message = getString(R.string.message_booking_gourmet_share_sms, //
-                        mGourmetBookingDetail.userName, mGourmetBookingDetail.placeName, mGourmetBookingDetail.guestName,//
-                        Util.getPriceFormat(GourmetReservationDetailActivity.this, mGourmetBookingDetail.paymentPrice, false), //
-                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
-                        DailyCalendar.convertDateFormatString(mGourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
-                        mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
-                        mGourmetBookingDetail.address);
+                        gourmetBookingDetail.userName, gourmetBookingDetail.placeName, gourmetBookingDetail.guestName,//
+                        Util.getPriceFormat(GourmetReservationDetailActivity.this, gourmetBookingDetail.paymentPrice, false), //
+                        DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
+                        DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                        gourmetBookingDetail.ticketName, getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount), //
+                        gourmetBookingDetail.address);
 
                     Util.sendSms(GourmetReservationDetailActivity.this, message);
                 } catch (Exception e)
@@ -333,6 +372,15 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             }
         });
 
+        shareDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockUI();
+            }
+        });
+
         try
         {
             shareDialog.setContentView(dialogView);
@@ -354,66 +402,15 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
     @Override
     protected void requestPlaceReservationDetail(final int reservationIndex)
     {
-        lockUI();
-
-        DailyMobileAPI.getInstance(this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                if (response != null && response.isSuccessful() && response.body() != null)
-                {
-                    try
-                    {
-                        JSONObject responseJSONObject = response.body();
-
-                        int msgCode = responseJSONObject.getInt("msgCode");
-
-                        if (msgCode == 100)
-                        {
-                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
-
-                            mGourmetBookingDetail.userName = jsonObject.getString("name");
-
-                            DailyMobileAPI.getInstance(GourmetReservationDetailActivity.this).requestGourmetBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
-                        } else
-                        {
-                            String msg = responseJSONObject.getString("msg");
-                            DailyToast.showToast(GourmetReservationDetailActivity.this, msg, Toast.LENGTH_SHORT);
-                            finish();
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                } else
-                {
-                    GourmetReservationDetailActivity.this.onErrorResponse(call, response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                GourmetReservationDetailActivity.this.onError(t);
-                finish();
-            }
-        });
+        mNetworkController.requestGourmetReservationDetail(reservationIndex);
     }
 
-    @Override
-    protected void setCurrentDateTime(long currentDateTime, long dailyDateTime)
-    {
-        mGourmetBookingDetail.currentDateTime = currentDateTime;
-        mGourmetBookingDetail.dailyDateTime = dailyDateTime;
-    }
-
-    void startFAQ()
+    private void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    void startGourmetCall(final String phoneNumber)
+    private void startGourmetCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -465,7 +462,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    void startKakao()
+    private void startKakao()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
@@ -491,62 +488,253 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    retrofit2.Callback mReservationBookingDetailCallback = new retrofit2.Callback<JSONObject>()
+    private GourmetReservationDetailLayout.OnEventListener mOnEventListener = new GourmetReservationDetailLayout.OnEventListener()
     {
+
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void finish()
         {
-            if (response != null && response.isSuccessful() && response.body() != null)
+            GourmetReservationDetailActivity.this.onBackPressed();
+        }
+
+        @Override
+        public void onIssuingReceiptClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
+                return;
+            }
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
+            Intent intent = new Intent(GourmetReservationDetailActivity.this, GourmetReceiptActivity.class);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+            startActivity(intent);
+        }
 
-                    switch (msgCode)
-                    {
-                        case 100:
-                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+        @Override
+        public void onMapClick(boolean isGoogleMap)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
-                            mGourmetBookingDetail.setData(dataJSONObject);
+            if (isGoogleMap == false)
+            {
+                Intent intent = ZoomMapActivity.newInstance(GourmetReservationDetailActivity.this//
+                    , ZoomMapActivity.SourceType.GOURMET_BOOKING, mPlaceBookingDetail.placeName, mPlaceBookingDetail.address//
+                    , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas);
 
-//                            loadFragments(getViewPager(), mGourmetBookingDetail);
-                            break;
-
-                        // 예약 내역 진입시에 다른 사용자가 딥링크로 진입시 예외 처리 추가
-                        case 501:
-                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"), new View.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    Util.restartApp(GourmetReservationDetailActivity.this);
-                                }
-                            });
-                            break;
-
-                        default:
-                            onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
-                            break;
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
+                startActivity(intent);
             } else
             {
-                GourmetReservationDetailActivity.this.onErrorResponse(call, response);
+                mPlaceReservationDetailLayout.expandMap();
             }
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onViewDetailClick()
         {
-            GourmetReservationDetailActivity.this.onError(t);
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            SaleTime saleTime = new SaleTime();
+            saleTime.setCurrentTime(mPlaceBookingDetail.currentDateTime);
+            saleTime.setDailyTime(mPlaceBookingDetail.dailyDateTime);
+
+            Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, saleTime, mPlaceBookingDetail.placeIndex, 0, false);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+        }
+
+        @Override
+        public void onViewMapClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Util.showShareMapDialog(GourmetReservationDetailActivity.this, mPlaceBookingDetail.placeName//
+                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
+                , AnalyticsManager.Category.GOURMET_BOOKINGS//
+                , AnalyticsManager.Action.GOURMET_DETAIL_NAVIGATION_APP_CLICKED//
+                , null);
+        }
+
+        @Override
+        public void onRefundClick()
+        {
+
+        }
+
+        @Override
+        public void onReviewClick(String reviewStatus)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+            {
+                lockUI();
+                mNetworkController.requestReviewInformation(mReservationIndex);
+            }
+        }
+
+        @Override
+        public void showCallDialog()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            GourmetReservationDetailActivity.this.showCallDialog();
+        }
+
+        @Override
+        public void showShareDialog()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            GourmetReservationDetailActivity.this.showShareDialog();
+        }
+
+        @Override
+        public void onMyLocationClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Intent intent = PermissionManagerActivity.newInstance(GourmetReservationDetailActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+        }
+
+        @Override
+        public void onClipAddressClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Util.clipText(GourmetReservationDetailActivity.this, mPlaceBookingDetail.address);
+
+            DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+        }
+
+        @Override
+        public void onSearchMapClick()
+        {
+            onViewMapClick();
+        }
+
+        @Override
+        public void onReleaseUiComponent()
+        {
+            releaseUiComponent();
+        }
+
+        @Override
+        public void onLoadingMap()
+        {
+            DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.message_loading_map, Toast.LENGTH_SHORT);
+        }
+    };
+
+    private GourmetReservationDetailNetworkController.OnNetworkControllerListener //
+        mNetworkControllerListener = new GourmetReservationDetailNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onReviewInformation(Review review)
+        {
+            Intent intent = ReviewActivity.newInstance(GourmetReservationDetailActivity.this, review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+        }
+
+        @Override
+        public void onReservationDetail(JSONObject jsonObject)
+        {
+            unLockUI();
+
+            if (jsonObject == null)
+            {
+                finish();
+                return;
+            }
+
+            try
+            {
+                GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) mPlaceBookingDetail;
+                gourmetBookingDetail.setData(jsonObject);
+                mPlaceReservationDetailLayout.initLayout(gourmetBookingDetail);
+            } catch (Exception e)
+            {
+                if (Constants.DEBUG == false)
+                {
+                    Crashlytics.logException(e);
+                }
+
+                finish();
+                return;
+            }
+        }
+
+        @Override
+        public void onEnterOtherUserReservationDetailError(int msgCode, String message)
+        {
+            GourmetReservationDetailActivity.this.onErrorPopupMessage(msgCode, message, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Util.restartApp(GourmetReservationDetailActivity.this);
+                }
+            });
+        }
+
+        @Override
+        public void onExpiredSessionError()
+        {
+            GourmetReservationDetailActivity.this.onExpiredSessionError();
+        }
+
+        @Override
+        public void onReservationDetailError(Throwable throwable)
+        {
+            onError(throwable);
+            finish();
+        }
+
+        @Override
+        public void onError(Throwable e)
+        {
+            GourmetReservationDetailActivity.this.onError(e);
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            GourmetReservationDetailActivity.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            GourmetReservationDetailActivity.this.onErrorToastMessage(message);
+        }
+
+        @Override
+        public void onErrorResponse(Call call, Response response)
+        {
+            GourmetReservationDetailActivity.this.onErrorResponse(call, response);
         }
     };
 }
