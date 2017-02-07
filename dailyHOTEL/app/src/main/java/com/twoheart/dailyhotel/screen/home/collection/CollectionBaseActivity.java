@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -309,10 +311,42 @@ public abstract class CollectionBaseActivity extends BaseActivity
             return;
         }
 
+        long currentTime, endTime;
+        try
+        {
+            currentTime = mSaleTIme.getCurrentTime() - DailyCalendar.NINE_HOUR_MILLISECOND;
+            endTime = DailyCalendar.convertDate(recommendation.endedAt, DailyCalendar.ISO_8601_FORMAT).getTime();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+
+            currentTime = 0;
+            endTime = -1;
+        }
+
         mCollectionBaseLayout.setTitleLayout(recommendation.title, recommendation.subtitle, Util.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
 
-        ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list);
+        if (endTime < currentTime)
+        {
+            mCollectionBaseLayout.setData(null);
 
-        mCollectionBaseLayout.setData(placeViewItems);
+            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null);
+
+            mCollectionBaseLayout.setData(placeViewItems);
+
+            showSimpleDialog(null, getString(R.string.message_collection_finished_recommendation), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    finish();
+                }
+            });
+        } else
+        {
+            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list);
+
+            mCollectionBaseLayout.setData(placeViewItems);
+        }
     }
 }
