@@ -352,6 +352,9 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
+        } else if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(screenName) == true)
+        {
+            event = new DailyAdjustEvent(EventToken.VIEW_HOME);
         }
 
         if (event != null)
@@ -1301,6 +1304,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String RECENT_VIEW = "kmmxda"; // 최근 본 업장
         public static final String ADD_TO_WISH_LIST = "7z705c"; // 위시리스트에 추가버튼을 누를 때
         public static final String DELETE_TO_WISH_LIST = "kkeukz"; // 위시리스트에 삭제버튼을 누를 때
+        public static final String VIEW_HOME = "mfjyoa"; // 홈 화면 진입 후 위시리스트와 최근 본 업장 결과를 가져온 때
     }
 
     private static final class Key
