@@ -145,11 +145,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onRefresh()
             {
-                mWishListLayout.clearAll();
-                mRecentListLayout.clearAll();
-                mHomeRecommendationLayout.clearAll();
-
-                ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
+                refreshAll(false);
             }
         });
     }
@@ -932,6 +928,21 @@ public class HomeLayout extends BaseLayout
         }
 
         return mSwipeRefreshLayout.isRefreshing();
+    }
+
+    public void refreshAll(boolean showSwipeRefreshLayout)
+    {
+        if (showSwipeRefreshLayout == true)
+        {
+            mNestedScrollView.fullScroll(View.FOCUS_UP);
+            setRefreshing(true);
+        }
+
+        mWishListLayout.clearAll();
+        mRecentListLayout.clearAll();
+        mHomeRecommendationLayout.clearAll();
+
+        ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
     }
 
     public void setScrollTop()

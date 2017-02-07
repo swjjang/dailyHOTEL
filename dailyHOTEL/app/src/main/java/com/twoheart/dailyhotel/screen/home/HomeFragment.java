@@ -334,6 +334,16 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
+    public void refreshAll()
+    {
+        if (mHomeLayout == null && mHomeLayout.isRefreshing() == false)
+        {
+            return;
+        }
+
+        mHomeLayout.refreshAll(true);
+    }
+
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
     {
         @Override
