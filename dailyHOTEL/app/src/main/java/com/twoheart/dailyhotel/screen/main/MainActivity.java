@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity implements Constants
                     imageView.setPadding(0, 0, 0, 0);
                     imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     imageView.setImageURI(Uri.fromFile(file));
-                } catch (Exception e)
+                } catch (Exception | OutOfMemoryError e)
                 {
                     DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                     imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
