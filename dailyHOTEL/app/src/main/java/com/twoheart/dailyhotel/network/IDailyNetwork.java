@@ -279,7 +279,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    void requestStayBookingDetailInformation(String tag, int index, Object listener);
+    void requestStayReservationDetail(String tag, int index, Object listener);
 
     /**
      * api/reserv/mine/hidden

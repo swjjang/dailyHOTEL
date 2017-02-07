@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -46,15 +45,14 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         DailyMobileAPI.getInstance(mContext).requestPolicyRefund(mNetworkTag, reservationIndex, transactionType, mPolicyRefundCallback);
     }
 
-
     public void requestReviewInformation(int reservationIndex)
     {
         DailyMobileAPI.getInstance(mContext).requestStayReviewInformation(mNetworkTag, reservationIndex, mStayReviewInformationCallback);
     }
 
-    public void requestStayBookingDetailInformation(int reservationIndex)
+    public void requestStayReservationDetail(int reservationIndex)
     {
-        DailyMobileAPI.getInstance(mContext).requestStayBookingDetailInformation(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
+        DailyMobileAPI.getInstance(mContext).requestStayReservationDetail(mNetworkTag, reservationIndex, mReservationBookingDetailCallback);
     }
 
     private retrofit2.Callback mStayReviewInformationCallback = new retrofit2.Callback<JSONObject>()

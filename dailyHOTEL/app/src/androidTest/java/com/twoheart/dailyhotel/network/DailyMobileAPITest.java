@@ -3207,7 +3207,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestStayBookingDetailInformation( //
+        DailyMobileAPI.getInstance(mContext).requestStayReservationDetail( //
             mNetworkTag, Const.TEST_GOURMET_RESERVATION_INDEX, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }

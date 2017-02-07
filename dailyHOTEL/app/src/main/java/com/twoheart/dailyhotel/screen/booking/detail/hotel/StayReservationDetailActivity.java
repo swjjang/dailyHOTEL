@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -49,8 +47,6 @@ import retrofit2.Response;
 
 public class StayReservationDetailActivity extends PlaceReservationDetailActivity
 {
-    private StayBookingDetail mStayBookingDetail;
-    private StayReservationDetailLayout mStayReservationDetailLayout;
     private StayReservationDetailNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
@@ -69,11 +65,13 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     {
         super.onCreate(savedInstanceState);
 
-        mStayBookingDetail = new StayBookingDetail();
-        mStayReservationDetailLayout = new StayReservationDetailLayout(this, mOnEventListener);
+        // StayBookingDetail Class는 원래 처음부터 생성하면 안되는데
+        // 내부에 시간값을 미리 받아서 진행되는 부분이 있어서 어쩔수 없이 미리 생성.
+        mPlaceBookingDetail = new StayBookingDetail();
+        mPlaceReservationDetailLayout = new StayReservationDetailLayout(this, mOnEventListener);
         mNetworkController = new StayReservationDetailNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
-        setContentView(mStayReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
+        setContentView(mPlaceReservationDetailLayout.onCreateView(R.layout.activity_stay_reservation_detail));
     }
 
     @Override
@@ -111,50 +109,11 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 if (resultCode == RESULT_OK)
                 {
-                    mStayBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
-                    mStayReservationDetailLayout.updateReviewButtonLayout(mStayBookingDetail.reviewStatusType);
+                    ((StayBookingDetail) mPlaceBookingDetail).reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                    mPlaceReservationDetailLayout.updateReviewButtonLayout(((StayBookingDetail) mPlaceBookingDetail).reviewStatusType);
                 }
                 break;
             }
-
-            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
-            {
-                if (mStayReservationDetailLayout != null)
-                {
-                    searchMyLocation(mStayReservationDetailLayout.getMyLocationView());
-                }
-
-                break;
-            }
-
-            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
-            {
-                if (resultCode == RESULT_OK)
-                {
-                    if (mStayReservationDetailLayout != null)
-                    {
-                        searchMyLocation(mStayReservationDetailLayout.getMyLocationView());
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed()
-    {
-        if (mStayReservationDetailLayout != null && mStayReservationDetailLayout.isExpandedMap() == true)
-        {
-            if(lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            mStayReservationDetailLayout.collapseMap(mStayBookingDetail.latitude, mStayBookingDetail.longitude);
-        } else
-        {
-            super.onBackPressed();
         }
     }
 
@@ -197,7 +156,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             }
         });
 
-        if (Util.isTextEmpty(mStayBookingDetail.phone1) == false)
+        if (Util.isTextEmpty(mPlaceBookingDetail.phone1) == false)
         {
             DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
             contactUs02TextView.setText(R.string.label_hotel_front_phone);
@@ -213,7 +172,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         dialog.dismiss();
                     }
 
-                    startFrontCall(mStayBookingDetail.phone1);
+                    startFrontCall(mPlaceBookingDetail.phone1);
                 }
             });
         } else
@@ -222,10 +181,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeInMillis(mStayBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
+        calendar.setTimeInMillis(mPlaceBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
         int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
 
-        if (Util.isTextEmpty(mStayBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
+        if (Util.isTextEmpty(mPlaceBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
         {
             contactUs03Layout.setVisibility(View.VISIBLE);
 
@@ -243,7 +202,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         dialog.dismiss();
                     }
 
-                    startReservationCall(mStayBookingDetail.phone2);
+                    startReservationCall(mPlaceBookingDetail.phone2);
                 }
             });
         } else
@@ -372,23 +331,25 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 try
                 {
-                    String message = getString(R.string.message_booking_stay_share_kakao, //
-                        mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
-                        Util.getPriceFormat(StayReservationDetailActivity.this, mStayBookingDetail.paymentPrice, false), //
-                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
-                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
-                        mStayBookingDetail.address);
+                    StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
 
-                    String[] checkInDates = mStayBookingDetail.checkInDate.split("T");
-                    String[] checkOutDates = mStayBookingDetail.checkOutDate.split("T");
+                    String message = getString(R.string.message_booking_stay_share_kakao, //
+                        stayBookingDetail.userName, stayBookingDetail.placeName, stayBookingDetail.guestName,//
+                        Util.getPriceFormat(StayReservationDetailActivity.this, stayBookingDetail.paymentPrice, false), //
+                        stayBookingDetail.roomName, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
+                        stayBookingDetail.address);
+
+                    String[] checkInDates = stayBookingDetail.checkInDate.split("T");
+                    String[] checkOutDates = stayBookingDetail.checkOutDate.split("T");
 
                     Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
                     Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
 
                     int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
 
-                    KakaoLinkManager.newInstance(StayReservationDetailActivity.this).shareBookingStay(message, mStayBookingDetail.placeIndex,//
-                        mImageUrl, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+                    KakaoLinkManager.newInstance(StayReservationDetailActivity.this).shareBookingStay(message, stayBookingDetail.placeIndex,//
+                        mImageUrl, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -413,12 +374,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 try
                 {
+                    StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
+
                     String message = getString(R.string.message_booking_stay_share_sms, //
-                        mStayBookingDetail.userName, mStayBookingDetail.placeName, mStayBookingDetail.guestName,//
-                        Util.getPriceFormat(StayReservationDetailActivity.this, mStayBookingDetail.paymentPrice, false), //
-                        mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
-                        DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
-                        mStayBookingDetail.address);
+                        stayBookingDetail.userName, stayBookingDetail.placeName, stayBookingDetail.guestName,//
+                        Util.getPriceFormat(StayReservationDetailActivity.this, stayBookingDetail.paymentPrice, false), //
+                        stayBookingDetail.roomName, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
+                        DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
+                        stayBookingDetail.address);
 
                     Util.sendSms(StayReservationDetailActivity.this, message);
                 } catch (Exception e)
@@ -469,17 +432,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE//
             , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.STAY, null);
-    }
-
-    @Override
-    protected void onLocationChanged(Location location)
-    {
-        if (mStayReservationDetailLayout == null || location == null)
-        {
-            return;
-        }
-
-        mStayReservationDetailLayout.changeLocation(location);
     }
 
     private void showRefundCallDialog()
@@ -578,68 +530,17 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     }
 
     @Override
-    protected void requestPlaceBookingDetail(final int reservationIndex)
+    protected void requestPlaceReservationDetail(int reservationIndex)
     {
-        lockUI();
-
-        DailyMobileAPI.getInstance(this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                if (response != null && response.isSuccessful() && response.body() != null)
-                {
-                    try
-                    {
-                        JSONObject responseJSONObject = response.body();
-
-                        int msgCode = responseJSONObject.getInt("msgCode");
-
-                        if (msgCode == 100)
-                        {
-                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
-
-                            mStayBookingDetail.userName = jsonObject.getString("name");
-
-                            mNetworkController.requestStayBookingDetailInformation(reservationIndex);
-                        } else
-                        {
-                            String msg = responseJSONObject.getString("msg");
-                            DailyToast.showToast(StayReservationDetailActivity.this, msg, Toast.LENGTH_SHORT);
-                            finish();
-                        }
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                } else
-                {
-                    StayReservationDetailActivity.this.onErrorResponse(call, response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                StayReservationDetailActivity.this.onError(t);
-                finish();
-            }
-        });
+        mNetworkController.requestStayReservationDetail(reservationIndex);
     }
 
-    @Override
-    protected void setCurrentDateTime(long currentDateTime, long dailyDateTime)
-    {
-        mStayBookingDetail.currentDateTime = currentDateTime;
-        mStayBookingDetail.dailyDateTime = dailyDateTime;
-    }
-
-    void startFAQ()
+    private void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    long getCompareDate(long timeInMillis)
+    private long getCompareDate(long timeInMillis)
     {
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -653,7 +554,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         return calendar.getTimeInMillis();
     }
 
-    void startFrontCall(final String phoneNumber)
+    private void startFrontCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -705,7 +606,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    void startReservationCall(final String phoneNumber)
+    private void startReservationCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -757,7 +658,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    void startKakao(boolean isRefund)
+    private void startKakao(boolean isRefund)
     {
         if (isRefund == true)
         {
@@ -840,13 +741,13 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             if (isGoogleMap == false)
             {
                 Intent intent = ZoomMapActivity.newInstance(StayReservationDetailActivity.this//
-                    , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayBookingDetail.placeName, mStayBookingDetail.address//
-                    , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas);
+                    , ZoomMapActivity.SourceType.HOTEL_BOOKING, mPlaceBookingDetail.placeName, mPlaceBookingDetail.address//
+                    , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas);
 
                 startActivity(intent);
             } else
             {
-                mStayReservationDetailLayout.expandMap();
+                mPlaceReservationDetailLayout.expandMap();
             }
         }
 
@@ -859,10 +760,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             }
 
             SaleTime saleTime = new SaleTime();
-            saleTime.setCurrentTime(mStayBookingDetail.currentDateTime);
-            saleTime.setDailyTime(mStayBookingDetail.dailyDateTime);
+            saleTime.setCurrentTime(mPlaceBookingDetail.currentDateTime);
+            saleTime.setDailyTime(mPlaceBookingDetail.dailyDateTime);
 
-            Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, saleTime, 1, mStayBookingDetail.placeIndex, 0, false);
+            Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, saleTime, 1, mPlaceBookingDetail.placeIndex, 0, false);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
         }
 
@@ -874,8 +775,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            Util.showShareMapDialog(StayReservationDetailActivity.this, mStayBookingDetail.placeName//
-                , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.isOverseas//
+            Util.showShareMapDialog(StayReservationDetailActivity.this, mPlaceBookingDetail.placeName//
+                , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas//
                 , AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
                 , null);
@@ -889,11 +790,13 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            switch (getRefundPolicyStatus(mStayBookingDetail))
+            StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
+
+            switch (getRefundPolicyStatus(stayBookingDetail))
             {
                 case StayBookingDetail.STATUS_NO_CHARGE_REFUND:
                 {
-                    Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, mStayBookingDetail);
+                    Intent intent = StayAutoRefundActivity.newInstance(StayReservationDetailActivity.this, stayBookingDetail);
                     startActivityForResult(intent, CODE_RESULT_ACTIVITY_STAY_AUTOREFUND);
 
                     AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
@@ -1003,6 +906,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         @Override
         public void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message)
         {
+            StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
+
             if (isSuccess == true)
             {
                 // 환불 킬스위치 ON
@@ -1010,27 +915,27 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 {
                     if (StayBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy) == true)
                     {
-                        mStayBookingDetail.refundPolicy = refundPolicy;
-                        mStayBookingDetail.mRefundComment = comment;
+                        stayBookingDetail.refundPolicy = refundPolicy;
+                        stayBookingDetail.mRefundComment = comment;
                     } else
                     {
-                        mStayBookingDetail.refundPolicy = StayBookingDetail.STATUS_SURCHARGE_REFUND;
-                        mStayBookingDetail.mRefundComment = message;
+                        stayBookingDetail.refundPolicy = StayBookingDetail.STATUS_SURCHARGE_REFUND;
+                        stayBookingDetail.mRefundComment = message;
                     }
 
-                    mStayReservationDetailLayout.initLayout(mStayBookingDetail);
+                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
                 } else
                 {
                     if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
                     {
-                        mStayBookingDetail.isVisibleRefundPolicy = false;
+                        stayBookingDetail.isVisibleRefundPolicy = false;
                     } else
                     {
-                        mStayBookingDetail.mRefundComment = comment;
+                        stayBookingDetail.mRefundComment = comment;
                     }
 
-                    mStayBookingDetail.refundPolicy = refundPolicy;
-                    mStayReservationDetailLayout.initLayout(mStayBookingDetail);
+                    stayBookingDetail.refundPolicy = refundPolicy;
+                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
                 }
 
                 // Analytics
@@ -1056,9 +961,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
             } else
             {
-                mStayBookingDetail.isVisibleRefundPolicy = false;
+                stayBookingDetail.isVisibleRefundPolicy = false;
 
-                mStayReservationDetailLayout.initLayout(mStayBookingDetail);
+                mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
 
                 AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
             }
@@ -1079,27 +984,29 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
             try
             {
-                mStayBookingDetail.setData(jsonObject);
+                StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
 
-                long checkOutDateTime = DailyCalendar.getTimeGMT9(mStayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+                stayBookingDetail.setData(jsonObject);
 
-                if (mStayBookingDetail.currentDateTime < checkOutDateTime)
+                long checkOutDateTime = DailyCalendar.getTimeGMT9(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+
+                if (stayBookingDetail.currentDateTime < checkOutDateTime)
                 {
-                    mStayBookingDetail.isVisibleRefundPolicy = true;
+                    stayBookingDetail.isVisibleRefundPolicy = true;
 
-                    if (mStayBookingDetail.readyForRefund == true)
+                    if (stayBookingDetail.readyForRefund == true)
                     {
                         // 환불 대기 인 상태에서는 문구가 고정이다.
-                        mStayReservationDetailLayout.initLayout(mStayBookingDetail);
+                        mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
                     } else
                     {
-                        mNetworkController.requestPolicyRefund(mStayBookingDetail.reservationIndex, mStayBookingDetail.transactionType);
+                        mNetworkController.requestPolicyRefund(stayBookingDetail.reservationIndex, stayBookingDetail.transactionType);
                     }
                 } else
                 {
-                    mStayBookingDetail.isVisibleRefundPolicy = false;
+                    stayBookingDetail.isVisibleRefundPolicy = false;
 
-                    mStayReservationDetailLayout.initLayout(mStayBookingDetail);
+                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
                 }
             } catch (Exception e)
             {

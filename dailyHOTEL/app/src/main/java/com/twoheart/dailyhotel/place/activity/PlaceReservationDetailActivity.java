@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -16,6 +19,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
@@ -28,16 +32,15 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     protected int mReservationIndex;
     protected String mImageUrl;
     protected boolean mIsDeepLink;
+    protected PlaceBookingDetail mPlaceBookingDetail;
 
-    protected abstract void requestPlaceBookingDetail(int reservationIndex);
+    protected PlaceReservationDetailLayout mPlaceReservationDetailLayout;
 
-    protected abstract void setCurrentDateTime(long currentDateTime, long dailyDateTime);
+    protected abstract void requestPlaceReservationDetail(int reservationIndex);
 
     protected abstract void showCallDialog();
 
     protected abstract void showShareDialog();
-
-    protected abstract void onLocationChanged(Location location);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -131,6 +134,45 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                 }
                 break;
             }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                if (mPlaceReservationDetailLayout != null)
+                {
+                    searchMyLocation(mPlaceReservationDetailLayout.getMyLocationView());
+                }
+
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    if (mPlaceReservationDetailLayout != null)
+                    {
+                        searchMyLocation(mPlaceReservationDetailLayout.getMyLocationView());
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mPlaceReservationDetailLayout != null && mPlaceReservationDetailLayout.isExpandedMap() == true)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            mPlaceReservationDetailLayout.collapseMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
+        } else
+        {
+            super.onBackPressed();
         }
     }
 
@@ -158,11 +200,61 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
                             setCurrentDateTime(currentDateTime, dailyDateTime);
 
-                            requestPlaceBookingDetail(mReservationIndex);
+                            requestUserProfile();
                         } else
                         {
                             String message = responseJSONObject.getString("msg");
                             PlaceReservationDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                        PlaceReservationDetailActivity.this.onError(e);
+                        finish();
+                    }
+                } else
+                {
+                    PlaceReservationDetailActivity.this.onErrorResponse(call, response);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t)
+            {
+                PlaceReservationDetailActivity.this.onError(t);
+                finish();
+            }
+        });
+    }
+
+    protected void requestUserProfile()
+    {
+        DailyMobileAPI.getInstance(this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
+        {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            {
+                if (response != null && response.isSuccessful() && response.body() != null)
+                {
+                    try
+                    {
+                        JSONObject responseJSONObject = response.body();
+
+                        int msgCode = responseJSONObject.getInt("msgCode");
+
+                        if (msgCode == 100)
+                        {
+                            JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                            setUserName(jsonObject.getString("name"));
+
+                            requestPlaceReservationDetail(mReservationIndex);
+                        } else
+                        {
+                            String msg = responseJSONObject.getString("msg");
+                            DailyToast.showToast(PlaceReservationDetailActivity.this, msg, Toast.LENGTH_SHORT);
+                            finish();
                         }
                     } catch (Exception e)
                     {
@@ -204,6 +296,27 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                 finish();
             }
         });
+    }
+
+    private void setCurrentDateTime(long currentDateTime, long dailyDateTime)
+    {
+        if (mPlaceBookingDetail == null)
+        {
+            return;
+        }
+
+        mPlaceBookingDetail.currentDateTime = currentDateTime;
+        mPlaceBookingDetail.dailyDateTime = dailyDateTime;
+    }
+
+    private void setUserName(String userName)
+    {
+        if (mPlaceBookingDetail == null)
+        {
+            return;
+        }
+
+        mPlaceBookingDetail.userName = userName;
     }
 
     protected void searchMyLocation(View myLocationView)
@@ -277,7 +390,12 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
                 DailyLocationFactory.getInstance(PlaceReservationDetailActivity.this).stopLocationMeasure();
 
-                PlaceReservationDetailActivity.this.onLocationChanged(location);
+                if (mPlaceReservationDetailLayout == null || location == null)
+                {
+                    return;
+                }
+
+                mPlaceReservationDetailLayout.changeLocation(location);
             }
         });
     }

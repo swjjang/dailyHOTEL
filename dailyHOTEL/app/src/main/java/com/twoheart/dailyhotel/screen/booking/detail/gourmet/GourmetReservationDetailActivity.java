@@ -352,13 +352,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
     }
 
     @Override
-    protected void onLocationChanged(Location location)
-    {
-
-    }
-
-    @Override
-    protected void requestPlaceBookingDetail(final int reservationIndex)
+    protected void requestPlaceReservationDetail(final int reservationIndex)
     {
         lockUI();
 

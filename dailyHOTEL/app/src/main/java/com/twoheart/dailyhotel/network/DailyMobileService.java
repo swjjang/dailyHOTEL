@@ -168,7 +168,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<JSONObject> requestStayBookingDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Call<JSONObject> requestStayReservationDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
     @POST("{mobileAPI}")
