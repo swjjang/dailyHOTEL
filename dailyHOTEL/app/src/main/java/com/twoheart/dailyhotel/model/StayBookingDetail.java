@@ -22,7 +22,6 @@ public class StayBookingDetail extends PlaceBookingDetail
     public static final String VISIT_TYPE_CAR = "CAR";
     public static final String VISIT_TYPE_NO_PARKING = "NO_PARKING";
 
-    public boolean isOverseas;
     public String checkInDate;
     public String checkOutDate;
 
@@ -41,11 +40,6 @@ public class StayBookingDetail extends PlaceBookingDetail
 
     public StayBookingDetail()
     {
-    }
-
-    public StayBookingDetail(Parcel in)
-    {
-        readFromParcel(in);
     }
 
     public void setData(JSONObject jsonObject) throws Exception
@@ -169,12 +163,16 @@ public class StayBookingDetail extends PlaceBookingDetail
         }
     }
 
+    public StayBookingDetail(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(roomName);
         dest.writeString(checkInDate);
         dest.writeString(checkOutDate);
@@ -194,7 +192,6 @@ public class StayBookingDetail extends PlaceBookingDetail
     {
         super.readFromParcel(in);
 
-        isOverseas = in.readInt() == 1;
         roomName = in.readString();
         checkInDate = in.readString();
         checkOutDate = in.readString();

@@ -153,19 +153,19 @@
         </RelativeLayout>
 
         <include
-            layout="@layout/fragment_booking_tab_booking_01"
+            layout="@layout/layout_stay_reservation_detail_01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
 
         <include
-            layout="@layout/fragment_booking_tab_booking_02"
+            layout="@layout/layout_stay_reservation_detail_02"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
 
         <include
-            layout="@layout/fragment_booking_tab_booking_03"
+            layout="@layout/layout_reservation_detail_03"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>

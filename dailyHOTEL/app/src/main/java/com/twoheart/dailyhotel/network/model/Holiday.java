@@ -14,8 +14,4 @@ public class Holiday
 
     @JsonField
     public boolean holiday;
-
-    public Holiday()
-    {
-    }
 }

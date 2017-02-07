@@ -358,31 +358,38 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         super.onDestroy();
     }
 
+    public void onExpiredSessionError()
+    {
+        unLockUI();
+
+        DailyPreference.getInstance(this).clear();
+
+        try
+        {
+            LoginManager.getInstance().logOut();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        try
+        {
+            UserManagement.requestLogout(null);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        restartExpiredSession();
+    }
+
     public void onErrorResponse(Call call, Response response)
     {
         unLockUI();
 
         if (response != null && response.code() == 401)
         {
-            DailyPreference.getInstance(this).clear();
-
-            try
-            {
-                LoginManager.getInstance().logOut();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            try
-            {
-                UserManagement.requestLogout(null);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            restartExpiredSession();
+            onExpiredSessionError();
             return;
         }
 

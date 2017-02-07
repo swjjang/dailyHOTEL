@@ -288,7 +288,7 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestGourmetBookingDetailInformation(String tag, int index, Object listener)
+    public void requestGourmetReservationDetail(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{fnbReservationIdx}"//
             : "ODQkNDQkNDckODEkMTIyJDE0JDQ2JDAkMTckMjQkNzEkMzEkMTAzJDQxJDEyNiQxMTYk$NNzVFQUVFRDlBRTYkO0NzQxOWDJGNjAZ4MEI2RDBBTREZCNURGLZQzUYyQkNBQjJGMDU5RDJERQjAwMkFDODE0OTIOyNzMxTOEUwQjNEQREVDNTAyMzIJ1RUI0Q0U0OTDBDOEXY2RTIzRkQ2$";
@@ -296,7 +296,7 @@ public class DailyMobileAPI implements IDailyNetwork
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{fnbReservationIdx}", Integer.toString(index));
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetBookingDetailInformation(Crypto.getUrlDecoderEx(URL, urlParams));
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetReservationDetail(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
@@ -432,7 +432,7 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestStayBookingDetailInformation(String tag, int index, Object listener)
+    public void requestStayReservationDetail(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/{hotelReservationIdx}"//
             : "MTI3JDExMyQxMTckMCQ4NiQ4JDE1JDU4JDExOSQxMzAkMzUkMTkkNDUkNDEkMTIwJDk3JA==$FMjIxNzUN4MzVDRPUFECOTBDNjg0MjdGQUU0ERDBDFQkRCENEVEREVDQ0ZFRDUWzN0MwRDhDMDFGNDdDRTUxODQzMDQ3OHTdDWMkQ1NDE2REIxNjJDMkJCQTgX3ONJEQyPOEYzNDJE2QkQF4$";
@@ -440,7 +440,7 @@ public class DailyMobileAPI implements IDailyNetwork
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelReservationIdx}", Integer.toString(index));
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayBookingDetailInformation(Crypto.getUrlDecoderEx(URL, urlParams));
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayReservationDetail(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
