@@ -80,9 +80,9 @@ public class HomeLayout extends BaseLayout
 
         void onSearchImageClick();
 
-        void onStayButtonClick();
+        void onStayButtonClick(boolean isDeepLink);
 
-        void onGourmetButtonClick();
+        void onGourmetButtonClick(boolean isDeepLink);
 
         void onRefreshAll(boolean isShowProgress);
 
@@ -194,7 +194,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onStayButtonClick();
+                ((HomeLayout.OnEventListener) mOnEventListener).onStayButtonClick(false);
             }
         });
 
@@ -203,7 +203,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick();
+                ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick(false);
             }
         });
     }
@@ -263,7 +263,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onStayButtonClick();
+                ((HomeLayout.OnEventListener) mOnEventListener).onStayButtonClick(false);
             }
         });
 
@@ -272,7 +272,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick();
+                ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick(false);
             }
         });
     }

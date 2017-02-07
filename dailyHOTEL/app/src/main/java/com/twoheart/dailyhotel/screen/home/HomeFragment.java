@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -107,10 +108,10 @@ public class HomeFragment extends BaseFragment
                 }
             } else if (DailyDeepLink.getInstance().isHotelView() == true)
             {
-                mOnEventListener.onStayButtonClick();
+                mOnEventListener.onStayButtonClick(true);
             } else if (DailyDeepLink.getInstance().isGourmetListView() == true)
             {
-                mOnEventListener.onGourmetButtonClick();
+                mOnEventListener.onGourmetButtonClick(true);
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
                 startRecentList(PlaceType.HOTEL);
@@ -362,10 +363,14 @@ public class HomeFragment extends BaseFragment
             }
 
             mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
+                AnalyticsManager.Label.HOME, null);
         }
 
         @Override
-        public void onStayButtonClick()
+        public void onStayButtonClick(boolean isDeepLink)
         {
             if (mBaseActivity == null)
             {
@@ -378,10 +383,17 @@ public class HomeFragment extends BaseFragment
             }
 
             mBaseActivity.startActivityForResult(StayMainActivity.newInstance(mBaseActivity), Constants.CODE_REQUEST_ACTIVITY_STAY);
+
+            if (isDeepLink == false)
+            {
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_LIST_CLICK,//
+                    AnalyticsManager.Label.HOME, null);
+            }
         }
 
         @Override
-        public void onGourmetButtonClick()
+        public void onGourmetButtonClick(boolean isDeepLink)
         {
             if (mBaseActivity == null)
             {
@@ -394,6 +406,13 @@ public class HomeFragment extends BaseFragment
             }
 
             mBaseActivity.startActivityForResult(GourmetMainActivity.newInstance(getContext()), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
+
+            if (isDeepLink == false)
+            {
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_LIST_CLICK,//
+                    AnalyticsManager.Label.HOME, null);
+            }
         }
 
         @Override
@@ -423,6 +442,10 @@ public class HomeFragment extends BaseFragment
             }
 
             HomeFragment.this.startEventWebActivity(event.linkUrl, event.title);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_EVENT_BANNER_CLICK,//
+                event.title, null);
         }
 
         @Override
@@ -444,7 +467,6 @@ public class HomeFragment extends BaseFragment
                         , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                         , recommendation.title, recommendation.subtitle);
                     break;
-
             }
 
             if (Util.isUsedMultiTransition() == true)
@@ -465,18 +487,30 @@ public class HomeFragment extends BaseFragment
             {
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
             }
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECOMMEND_LIST_CLICK,//
+                Integer.toString(recommendation.idx), null);
         }
 
         @Override
         public void onWishListViewAllClick()
         {
             startWishList(PlaceType.HOTEL);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_WISHLIST_CLICK, //
+                null, null);
         }
 
         @Override
         public void onRecentListViewAllClick()
         {
             startRecentList(PlaceType.HOTEL);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_RECENTVIEW_CLICK, //
+                null, null);
         }
 
         @Override

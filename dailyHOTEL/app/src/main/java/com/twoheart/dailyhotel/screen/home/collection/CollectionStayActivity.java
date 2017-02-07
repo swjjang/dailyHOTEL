@@ -191,6 +191,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
             {
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
+
+            AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, Integer.toString(mRecommendationIndex),//
+                Integer.toString(recommendationStay.index), null);
         }
 
         @Override
