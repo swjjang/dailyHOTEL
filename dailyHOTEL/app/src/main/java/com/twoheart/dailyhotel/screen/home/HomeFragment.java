@@ -276,7 +276,7 @@ public class HomeFragment extends BaseFragment
         }
 
         Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
     }
 
     private void startDeepLinkRecommendationActivity(String serviceType, int index)
