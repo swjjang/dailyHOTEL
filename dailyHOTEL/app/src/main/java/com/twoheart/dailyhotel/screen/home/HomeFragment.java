@@ -492,7 +492,7 @@ public class HomeFragment extends BaseFragment
             startWishList(PlaceType.HOTEL);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_WISHLIST_CLICK, //
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_RECENTVIEW_CLICK, //
                 null, null);
         }
 
