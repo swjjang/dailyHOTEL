@@ -49,6 +49,8 @@ public abstract class PlaceMainActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         mPlaceMainLayout = getPlaceMainLayout(this);
@@ -239,6 +241,14 @@ public abstract class PlaceMainActivity extends BaseActivity
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     protected void refreshCurrentFragment(boolean isClearList)
