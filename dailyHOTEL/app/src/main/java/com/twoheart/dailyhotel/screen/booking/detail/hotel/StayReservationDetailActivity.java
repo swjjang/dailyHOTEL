@@ -146,6 +146,11 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     {
         if (mStayReservationDetailLayout != null && mStayReservationDetailLayout.isExpandedMap() == true)
         {
+            if(lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             mStayReservationDetailLayout.collapseMap(mStayBookingDetail.latitude, mStayBookingDetail.longitude);
         } else
         {
@@ -973,15 +978,15 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         @Override
-        public void onLockUiComponent()
-        {
-            lockUiComponent();
-        }
-
-        @Override
         public void onReleaseUiComponent()
         {
             releaseUiComponent();
+        }
+
+        @Override
+        public void onLoadingMap()
+        {
+            DailyToast.showToast(StayReservationDetailActivity.this, R.string.message_loading_map, Toast.LENGTH_SHORT);
         }
     };
 

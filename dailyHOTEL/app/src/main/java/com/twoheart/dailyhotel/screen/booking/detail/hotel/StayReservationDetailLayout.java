@@ -98,9 +98,9 @@ public class StayReservationDetailLayout extends BaseLayout implements View.OnCl
 
         void onSearchMapClick();
 
-        void onLockUiComponent();
-
         void onReleaseUiComponent();
+
+        void onLoadingMap();
     }
 
     public StayReservationDetailLayout(Context context, OnBaseEventListener listener)
@@ -760,7 +760,13 @@ public class StayReservationDetailLayout extends BaseLayout implements View.OnCl
             {
                 if (mGoogleMapLayout.getVisibility() == View.VISIBLE)
                 {
-                    ((OnEventListener) mOnEventListener).onMapClick(true);
+                    if (mIsReadyMap == true)
+                    {
+                        ((OnEventListener) mOnEventListener).onMapClick(true);
+                    } else
+                    {
+                        ((OnEventListener) mOnEventListener).onLoadingMap();
+                    }
                 } else
                 {
                     ((OnEventListener) mOnEventListener).onMapClick(false);
@@ -813,8 +819,6 @@ public class StayReservationDetailLayout extends BaseLayout implements View.OnCl
 
     public void expandMap()
     {
-        ((OnEventListener) mOnEventListener).onLockUiComponent();
-
         setMapToolbar();
 
         mScrollLayout.setScrollingEnabled(false);
@@ -896,8 +900,6 @@ public class StayReservationDetailLayout extends BaseLayout implements View.OnCl
 
     public void collapseMap(double latitude, double longitude)
     {
-        ((OnEventListener) mOnEventListener).onLockUiComponent();
-
         setBookingToolbar();
 
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);

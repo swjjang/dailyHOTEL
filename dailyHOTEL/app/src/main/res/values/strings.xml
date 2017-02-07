@@ -750,6 +750,7 @@
 
     <!-- Map -->
     <string name="message_failed_mylocation">일시적으로 내 위치 정보를 얻을 수 없습니다.</string>
+    <string name="message_loading_map">맵 로딩 중입니다.</string>
 
     <!-- CreditCardFragment -->
     <string name="label_add_creditcard">간편결제 카드 등록하기</string>
