@@ -363,6 +363,10 @@ public class HomeFragment extends BaseFragment
             }
 
             mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
+                AnalyticsManager.Label.HOME, null);
         }
 
         @Override
