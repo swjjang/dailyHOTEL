@@ -74,8 +74,8 @@
     <string name="label_daily_gourmet">데일리고메</string>
     <string name="label_daily_hotel">데일리호텔</string>
 
-    <string name="label_count_stay">%1$d개의 숙소</string>
-    <string name="label_count_gourmet">%1$d개의 레스토랑</string>
+    <string name="label_count_stay">%1$d개 호텔</string>
+    <string name="label_count_gourmet">%1$d개 고메</string>
 
     <string name="label_visit_walk">도보</string>
     <string name="label_visit_car">차량</string>
