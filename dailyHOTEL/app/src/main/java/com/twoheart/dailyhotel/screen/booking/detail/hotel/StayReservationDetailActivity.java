@@ -855,11 +855,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         @Override
         public void onClipAddressClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
             Util.clipText(StayReservationDetailActivity.this, mPlaceBookingDetail.address);
 
             DailyToast.showToast(StayReservationDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);

@@ -620,11 +620,6 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         @Override
         public void onClipAddressClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
             Util.clipText(GourmetReservationDetailActivity.this, mPlaceBookingDetail.address);
 
             DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
