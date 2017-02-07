@@ -1106,8 +1106,8 @@
     <string name="label_write_review_comment_modify_dialog_message">수정하신 내용이 적용되지 않습니다.</string>
 
     <!-- Collection -->
-    <string name="message_collection_stay_empty_text">선택하신 날짜에\n예약할 수 있는 숙소가 없습니다.</string>
-    <string name="message_collection_gourmet_empty_text">선택하신 날짜에\n예약할 수 있는 레스토랑이 없습니다.</string>
+    <string name="message_collection_stay_empty_text">선택하신 날짜에\n예약할 수 있는 호텔이 없습니다.</string>
+    <string name="message_collection_gourmet_empty_text">선택하신 날짜에\n예약할 수 있는 고메가 없습니다.</string>
     <string name="message_collection_selected_other_date">다른 날짜로 확인해보세요.</string>
     <string name="message_collection_finished_recommendation">종료된 추천입니다.</string>
 
