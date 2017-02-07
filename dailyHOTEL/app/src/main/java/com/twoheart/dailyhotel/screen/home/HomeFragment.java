@@ -492,7 +492,7 @@ public class HomeFragment extends BaseFragment
             startWishList(PlaceType.HOTEL);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_RECENTVIEW_CLICK, //
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_WISHLIST_CLICK, //
                 null, null);
         }
 
@@ -500,6 +500,10 @@ public class HomeFragment extends BaseFragment
         public void onRecentListViewAllClick()
         {
             startRecentList(PlaceType.HOTEL);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_RECENTVIEW_CLICK, //
+                null, null);
         }
 
         @Override
