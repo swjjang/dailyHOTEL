@@ -880,6 +880,7 @@ public class AnalyticsManager
         public static final String HOME_EVENT_BANNER_CLICK = "home_event_banner_click";
         public static final String HOME_ALL_WISHLIST_CLICK = "home_all_wishlist_click";
         public static final String HOME_ALL_RECENTVIEW_CLICK = "home_all_recentview_click";
+        public static final String HOME_RECOMMEND_LIST_CLICK = "home_recommend_list_click";
     }
 
     public static class Category

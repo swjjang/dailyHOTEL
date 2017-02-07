@@ -463,7 +463,6 @@ public class HomeFragment extends BaseFragment
                         , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                         , recommendation.title, recommendation.subtitle);
                     break;
-
             }
 
             if (Util.isUsedMultiTransition() == true)
@@ -484,6 +483,10 @@ public class HomeFragment extends BaseFragment
             {
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
             }
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECOMMEND_LIST_CLICK,//
+                Integer.toString(recommendation.idx), null);
         }
 
         @Override

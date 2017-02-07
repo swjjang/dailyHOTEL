@@ -145,6 +145,10 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             {
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
+
+            AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, Integer.toString(mRecommendationIndex),//
+                Integer.toString(recommendationGourmet.index), null);
         }
 
         @Override
