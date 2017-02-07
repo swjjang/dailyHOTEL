@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.home.HomeFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -721,6 +722,7 @@ public class MainActivity extends BaseActivity implements Constants
 
             switch (index)
             {
+                // 홈
                 case 0:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
 
@@ -734,6 +736,7 @@ public class MainActivity extends BaseActivity implements Constants
                         , AnalyticsManager.Action.HOME_CLICK, getIndexName(previousIndex), null);
                     break;
 
+                // 예약내역
                 case 1:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
 
@@ -741,13 +744,15 @@ public class MainActivity extends BaseActivity implements Constants
                         , AnalyticsManager.Action.BOOKINGSTATUS_CLICK, getIndexName(previousIndex), null);
                     break;
 
+                // 마이데일리
                 case 2:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.MYDAILY_CLICK, getIndexName(previousIndex), null);                   //                        , AnalyticsManager.Action.BOOKING_STATUS_CLICKED, AnalyticsManager.Label.BOOKINGSTATUS_SCREEN, null);
+                        , AnalyticsManager.Action.MYDAILY_CLICK, getIndexName(previousIndex), null);
                     break;
 
+                // 더보기
                 case 3:
                     mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, false);
 
@@ -763,9 +768,28 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onMenuReselected(int intdex)
+        public void onMenuReselected(int index)
         {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
 
+            switch (index)
+            {
+                // 홈
+                case 0:
+                    if (mMainFragmentManager != null)
+                    {
+                        Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                        if (fragment instanceof HomeFragment && fragment.isResumed())
+                        {
+                            ((HomeFragment) fragment).refreshAll();
+                        }
+                    }
+                    break;
+            }
         }
 
         private String getIndexName(int index)

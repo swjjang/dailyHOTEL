@@ -140,15 +140,18 @@ public class HomeFragment extends BaseFragment
             mDontReload = false;
         } else
         {
-            lockUI();
+            if (mNetworkController != null)
+            {
+                lockUI();
 
-            // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
-            mNetworkController.requestCommonDateTime();
-            requestMessageData();
-            mNetworkController.requestEventList();
-            mNetworkController.requestRecommendationList();
-            mNetworkController.requestWishList();
-            mNetworkController.requestRecentList();
+                // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
+                mNetworkController.requestCommonDateTime();
+                requestMessageData();
+                mNetworkController.requestEventList();
+                mNetworkController.requestRecommendationList();
+                mNetworkController.requestWishList();
+                mNetworkController.requestRecentList();
+            }
         }
 
         // 애니메이션 처리!
@@ -332,6 +335,16 @@ public class HomeFragment extends BaseFragment
         Intent intent = RecentPlacesTabActivity.newInstance(baseActivity, RecentPlacesTabActivity.SourceType.HOME, placeType);
 
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
+    }
+
+    public void refreshAll()
+    {
+        if (mHomeLayout == null && mHomeLayout.isRefreshing() == false)
+        {
+            return;
+        }
+
+        mHomeLayout.refreshAll(true);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()

@@ -104,6 +104,11 @@ public class SaleTime implements Parcelable
         mCurrentTime = new Date(currentTime);
     }
 
+    public long getCurrentTime()
+    {
+        return mCurrentTime.getTime();
+    }
+
     public long getDailyTime()
     {
         return mDailyTime.getTime();
