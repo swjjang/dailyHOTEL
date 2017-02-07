@@ -876,6 +876,7 @@ public class StayReservationDetailLayout extends BaseLayout implements View.OnCl
 
                 mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
                 mScrollLayout.setVisibility(View.INVISIBLE);
+                mPlaceLocationMarker.showInfoWindow();
 
                 ((OnEventListener) mOnEventListener).onReleaseUiComponent();
             }
@@ -940,6 +941,7 @@ public class StayReservationDetailLayout extends BaseLayout implements View.OnCl
                 mZoomControl.setVisibility(View.INVISIBLE);
                 mMyLocationView.setVisibility(View.INVISIBLE);
 
+                mPlaceLocationMarker.hideInfoWindow();
                 mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
             }
 
