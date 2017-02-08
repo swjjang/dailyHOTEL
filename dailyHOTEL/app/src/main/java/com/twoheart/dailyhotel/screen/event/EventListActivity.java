@@ -96,7 +96,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         {
             if (DailyDeepLink.getInstance().isEventDetailView() == true)
             {
-                startEventWeb(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getEventName());
+                startEventWeb(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
             }
 
             DailyDeepLink.getInstance().clear();

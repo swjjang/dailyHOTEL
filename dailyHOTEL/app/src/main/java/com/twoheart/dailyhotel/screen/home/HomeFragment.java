@@ -93,8 +93,6 @@ public class HomeFragment extends BaseFragment
             if (DailyDeepLink.getInstance().isHomeEventDetailView() == true)
             {
                 startEventWebActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
-
-                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = DailyDeepLink.getInstance().getPlaceType();
@@ -118,26 +116,28 @@ public class HomeFragment extends BaseFragment
             } else if (DailyDeepLink.getInstance().isHotelView() == true)
             {
                 mOnEventListener.onStayButtonClick(true);
-            } else if (DailyDeepLink.getInstance().isGourmetListView() == true)
+
+                return;
+            } else if (DailyDeepLink.getInstance().isGourmetView() == true)
             {
                 mOnEventListener.onGourmetButtonClick(true);
+
+                return;
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
                 startRecentList(PlaceType.HOTEL);
-                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
             {
                 startRecentList(PlaceType.FNB);
-                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
             {
                 startWishList(PlaceType.HOTEL);
-                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
             {
                 startWishList(PlaceType.FNB);
-                DailyDeepLink.getInstance().clear();
             }
+
+            DailyDeepLink.getInstance().clear();
         }
     }
 
