@@ -45,6 +45,8 @@ public class HomeCarouselLayout extends RelativeLayout
     public interface OnCarouselListener
     {
         void onViewAllClick();
+
+        void onItemClick(View view, int position);
     }
 
     public HomeCarouselLayout(Context context)
@@ -218,6 +220,16 @@ public class HomeCarouselLayout extends RelativeLayout
         return mRecyclerAdapter.getItemCount() > 0 ? true : false;
     }
 
+    public HomePlace getItem(int position)
+    {
+        if (mRecyclerAdapter == null)
+        {
+            return null;
+        }
+
+        return mRecyclerAdapter.getItem(position);
+    }
+
     public void setCarouselListener(OnCarouselListener listener)
     {
         mCarouselListenter = listener;
@@ -228,9 +240,10 @@ public class HomeCarouselLayout extends RelativeLayout
         @Override
         public void onItemClick(View view, int position)
         {
-            // TODO : 아이템 클릭 시 이동하는 부분 생성
-
-
+            if (mCarouselListenter != null)
+            {
+                mCarouselListenter.onItemClick(view, position);
+            }
         }
     };
 }

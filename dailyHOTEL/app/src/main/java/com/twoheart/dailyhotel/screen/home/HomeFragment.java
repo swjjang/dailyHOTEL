@@ -20,9 +20,11 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
+import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
@@ -346,6 +348,24 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
+    public void startPlaceDetail(HomePlace place)
+    {
+        if (place == null)
+        {
+            return;
+        }
+
+        if (place.placeType == PlaceType.HOTEL)
+        {
+            Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place);
+            mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+        } else if (place.placeType == PlaceType.FNB)
+        {
+            Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place);
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+        }
+    }
+
     public void sendHomeScreenAnalytics()
     {
         if (mHomeLayout == null || mBaseActivity == null)
@@ -382,7 +402,8 @@ public class HomeFragment extends BaseFragment
         }
     }
 
-    private void requestRecentList() {
+    private void requestRecentList()
+    {
         String stayPreferenceText = DailyPreference.getInstance(mBaseActivity).getStayRecentPlaces();
         String gourmetPreferenceText = DailyPreference.getInstance(mBaseActivity).getGourmetRecentPlaces();
 
@@ -587,6 +608,56 @@ public class HomeFragment extends BaseFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_RECENTVIEW_CLICK, //
                 null, null);
+        }
+
+        @Override
+        public void onWishListItemClick(View view, int position)
+        {
+            HomePlace wishItem = null;
+
+            if (view != null)
+            {
+                wishItem = (HomePlace) view.getTag();
+            }
+
+            if (wishItem == null && mHomeLayout != null)
+            {
+                wishItem = mHomeLayout.getWishItem(position);
+            }
+
+            if (wishItem != null)
+            {
+                startPlaceDetail(wishItem);
+            }
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_WISHLIST_CLICK,//
+                Integer.toString(wishItem.idx), null);
+        }
+
+        @Override
+        public void onRecentListItemClick(View view, int position)
+        {
+            HomePlace recentItem = null;
+
+            if (view != null)
+            {
+                recentItem = (HomePlace) view.getTag();
+            }
+
+            if (recentItem == null && mHomeLayout != null)
+            {
+                recentItem = mHomeLayout.getRecentItem(position);
+            }
+
+            if (recentItem != null)
+            {
+                startPlaceDetail(recentItem);
+            }
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
+                Integer.toString(recentItem.idx), null);
         }
 
         @Override

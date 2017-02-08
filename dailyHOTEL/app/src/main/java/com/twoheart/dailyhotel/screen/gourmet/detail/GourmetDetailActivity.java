@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -194,6 +195,42 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         String isShowOriginalPrice;
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
+        {
+            isShowOriginalPrice = "N";
+        } else
+        {
+            isShowOriginalPrice = "Y";
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace)
+    {
+        SaleTime startSaleTime = saleTime.getClone(0);
+
+        Intent intent = new Intent(context, GourmetDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.idx);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+        //        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.discountPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, homePlace.price);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        String isShowOriginalPrice;
+        if (homePlace.price <= 0 || homePlace.price <= homePlace.discountPrice)
         {
             isShowOriginalPrice = "N";
         } else

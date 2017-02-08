@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -201,6 +202,42 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         String isShowOriginalPrice;
         if (stay.price <= 0 || stay.price <= stay.discountPrice)
+        {
+            isShowOriginalPrice = "N";
+        } else
+        {
+            isShowOriginalPrice = "Y";
+        }
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace)
+    {
+        SaleTime startSaleTime = saleTime.getClone(0);
+
+        Intent intent = new Intent(context, StayDetailActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, homePlace.idx);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+
+        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
+//        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, null);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, homePlace.title);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.discountPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, homePlace.details.stayGrade.name());
+
+        String isShowOriginalPrice;
+        if (homePlace.price <= 0 || homePlace.price <= homePlace.discountPrice)
         {
             isShowOriginalPrice = "N";
         } else

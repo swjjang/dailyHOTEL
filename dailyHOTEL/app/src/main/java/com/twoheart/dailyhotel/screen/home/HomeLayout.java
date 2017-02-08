@@ -100,6 +100,10 @@ public class HomeLayout extends BaseLayout
 
         void onRecentListViewAllClick();
 
+        void onWishListItemClick(View view, int position);
+
+        void onRecentListItemClick(View view, int position);
+
         void onTermsClick();
 
         void onPrivacyTermsClick();
@@ -315,6 +319,12 @@ public class HomeLayout extends BaseLayout
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListViewAllClick();
             }
+
+            @Override
+            public void onItemClick(View view, int position)
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view, position);
+            }
         });
     }
 
@@ -337,6 +347,12 @@ public class HomeLayout extends BaseLayout
             public void onViewAllClick()
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListViewAllClick();
+            }
+
+            @Override
+            public void onItemClick(View view, int position)
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view, position);
             }
         });
     }
@@ -802,6 +818,26 @@ public class HomeLayout extends BaseLayout
     public boolean hasRecentListData()
     {
         return mRecentListLayout.hasData();
+    }
+
+    public HomePlace getWishItem(int position)
+    {
+        if (mWishListLayout == null)
+        {
+            return null;
+        }
+
+        return mWishListLayout.getItem(position);
+    }
+
+    public HomePlace getRecentItem(int position)
+    {
+        if (mRecentListLayout == null)
+        {
+            return null;
+        }
+
+        return mRecentListLayout.getItem(position);
     }
 
     public boolean isShowWishListCoverView()

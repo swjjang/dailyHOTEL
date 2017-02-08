@@ -16,7 +16,7 @@ import java.util.Iterator;
 public class Stay extends Place
 {
     public String dBenefitText;
-    public int nights;
+    public int nights = 1;
     public double distance; // 정렬시에 보여주는 내용
     public String categoryCode;
     public String sday;

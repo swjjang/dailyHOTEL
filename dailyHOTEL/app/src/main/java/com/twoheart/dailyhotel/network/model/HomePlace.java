@@ -16,14 +16,6 @@ import java.util.Map;
 @JsonObject
 public class HomePlace
 {
-    //    "details": {},
-    //    "discountPrice": 0,
-    //    "idx": 0,
-    //    "imgPathMain": "string",
-    //    "price": 0,
-    //    "regionName": "string",
-    //    "serviceType": "HOTEL",
-    //    "title": "string"
     @JsonField
     public int idx;
 
