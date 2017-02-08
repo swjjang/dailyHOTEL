@@ -160,7 +160,7 @@ public class HomeFragment extends BaseFragment
                 requestMessageData();
                 mNetworkController.requestEventList();
                 mNetworkController.requestRecommendationList();
-                mNetworkController.requestWishList();
+                requestWishList();
                 requestRecentList();
             }
         }
@@ -400,6 +400,17 @@ public class HomeFragment extends BaseFragment
             AnalyticsManager.getInstance(mBaseActivity).recordScreen(//
                 mBaseActivity, AnalyticsManager.Screen.HOME, null, params);
         }
+    }
+
+    private void requestWishList()
+    {
+        if (DailyHotel.isLogin() == false)
+        {
+            mNetworkControllerListener.onWishList(null);
+            return;
+        }
+
+        mNetworkController.requestWishList();
     }
 
     private void requestRecentList()
