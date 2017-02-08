@@ -59,10 +59,10 @@ public class HomeFragment extends BaseFragment
     private BaseActivity mBaseActivity;
     private PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
-    SaleTime mSaleTime;
-    int mNights = 1;
-    boolean mIsAttach;
-    boolean mDontReload;
+    private SaleTime mSaleTime;
+    private int mNights = 1;
+    private boolean mIsAttach;
+    private boolean mDontReload;
 
     @Nullable
     @Override
