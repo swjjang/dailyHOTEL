@@ -198,6 +198,9 @@ public class HomeNetworkController extends BaseNetworkController
                         ArrayList<Event> homeEventList = (ArrayList<Event>) baseListDto.data;
 
                         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(homeEventList);
+                    } else
+                    {
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null);
                     }
                 } catch (Exception e)
                 {
