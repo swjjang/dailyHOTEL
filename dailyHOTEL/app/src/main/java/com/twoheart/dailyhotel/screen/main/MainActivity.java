@@ -26,6 +26,7 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
+import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
@@ -46,6 +47,7 @@ import com.twoheart.dailyhotel.widget.DailyImageView;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -127,6 +129,23 @@ public class MainActivity extends BaseActivity implements Constants
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        {
+            Random random = new Random();
+            random.setSeed(System.currentTimeMillis());
+
+            RecentPlaces recentPlaces = new RecentPlaces(null);
+
+            long startTime = System.currentTimeMillis();
+
+            for (int i = 0; i < 10000; i++)
+            {
+                recentPlaces.add(random.nextInt());
+            }
+
+            ExLog.d("End Time : " + (System.currentTimeMillis() - startTime));
+
+        }
 
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);

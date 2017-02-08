@@ -101,7 +101,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
     }
 
-    private void requestCommonDateTime()
+    void requestCommonDateTime()
     {
         DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new Callback<JSONObject>()
         {
@@ -181,15 +181,15 @@ public abstract class CollectionBaseActivity extends BaseActivity
     {
         if (Util.isUsedMultiTransition() == true)
         {
-            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
 
-            getWindow().setSharedElementEnterTransition(intransitionSet);
+            getWindow().setSharedElementEnterTransition(inTransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             outTransitionSet.setDuration(200);
 
             getWindow().setSharedElementReturnTransition(outTransitionSet);
-            intransitionSet.addListener(new Transition.TransitionListener()
+            inTransitionSet.addListener(new Transition.TransitionListener()
             {
                 @Override
                 public void onTransitionStart(Transition transition)
@@ -259,7 +259,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
     }
 
-    private void onCommonDateTime(long currentDateTime, long dailyDateTime)
+    void onCommonDateTime(long currentDateTime, long dailyDateTime)
     {
         mSaleTIme = new SaleTime();
         mSaleTIme.setCurrentTime(currentDateTime);

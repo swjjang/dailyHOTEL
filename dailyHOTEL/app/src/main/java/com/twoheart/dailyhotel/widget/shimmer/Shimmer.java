@@ -18,14 +18,14 @@ public class Shimmer
     private static final int DEFAULT_DIRECTION = ANIMATION_DIRECTION_LTR;
     private static final int DEFAULT_SIMMER_WIDTH = -1;
 
-    private int repeatCount;
-    private long duration;
-    private long startDelay;
-    private int direction;
-    private int simmerWidth;
-    private Animator.AnimatorListener animatorListener;
+    int repeatCount;
+    long duration;
+    long startDelay;
+    int direction;
+    int simmerWidth;
+    Animator.AnimatorListener animatorListener;
 
-    private ObjectAnimator animator;
+    ObjectAnimator animator;
 
     public Shimmer()
     {

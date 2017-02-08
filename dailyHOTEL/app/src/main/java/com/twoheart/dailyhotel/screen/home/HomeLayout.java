@@ -52,29 +52,29 @@ public class HomeLayout extends BaseLayout
     private static final double BUTTON_LAYOUT_MIN_HEIGHT = 76d;
     private static final double BUTTON_LAYOUT_MAX_HEIGHT = 82d;
 
-    private int mEventImageHeight;
-    private int mButtonGapHeight;
-    private int mScrollButtonMaxHeight;
-    private int mScrollButtonMinHeight;
+    int mEventImageHeight;
+    int mButtonGapHeight;
+    int mScrollButtonMaxHeight;
+    int mScrollButtonMinHeight;
 
-    private boolean mForceRefreshing;
+    boolean mForceRefreshing;
 
     private DailyLoopViewPager mEventViewPager;
     private DailyTextView mEventCountTextView;
-    private HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
+    HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
 
     private View mActionButtonLayout;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private NestedScrollView mNestedScrollView;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    NestedScrollView mNestedScrollView;
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
-    private View mScrollButtonLayout;
-    private View mTextMessageLayout;
-    private HomeCarouselLayout mRecentListLayout;
-    private HomeCarouselLayout mWishListLayout;
-    private HomeRecommendationLayout mHomeRecommendationLayout;
+    View mScrollButtonLayout;
+    View mTextMessageLayout;
+    HomeCarouselLayout mRecentListLayout;
+    HomeCarouselLayout mWishListLayout;
+    HomeRecommendationLayout mHomeRecommendationLayout;
 
-    private LinearLayout mProviderInfoView;
+    LinearLayout mProviderInfoView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -662,7 +662,7 @@ public class HomeLayout extends BaseLayout
         });
     }
 
-    private void setEventCountView(int pageIndex, int totalCount)
+    void setEventCountView(int pageIndex, int totalCount)
     {
         if (mEventCountTextView == null)
         {
@@ -873,7 +873,7 @@ public class HomeLayout extends BaseLayout
         valueAnimator.start();
     }
 
-    private void startMessageLayoutCloseAnimation(final View view)
+    void startMessageLayoutCloseAnimation(final View view)
     {
         if (view == null)
         {
@@ -1066,7 +1066,7 @@ public class HomeLayout extends BaseLayout
         }
     }
 
-    private Drawable getRotateDrawable(Drawable drawable, final float degrees)
+    Drawable getRotateDrawable(Drawable drawable, final float degrees)
     {
         final Drawable[] drawables = {drawable};
         return new LayerDrawable(drawables)

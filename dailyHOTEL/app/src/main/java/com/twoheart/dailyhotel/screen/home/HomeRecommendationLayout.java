@@ -24,7 +24,7 @@ public class HomeRecommendationLayout extends LinearLayout
 {
     private Context mContext;
     private LinearLayout mContentLayout;
-    private HomeRecommendationListener mListener;
+    HomeRecommendationListener mListener;
 
     private ArrayList<Recommendation> mRecommendationList;
 

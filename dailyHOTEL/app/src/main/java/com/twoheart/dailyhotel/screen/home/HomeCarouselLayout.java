@@ -34,7 +34,7 @@ public class HomeCarouselLayout extends RelativeLayout
     private DailyTextView mTitleTextView;
     private DailyTextView mCountTextView;
     private DailyTextView mViewAllTextView;
-    private OnCarouselListener mCarouselListenter;
+    OnCarouselListener mCarouselListenter;
     private ArrayList<? extends Place> mPlaceList;
     private RecyclerView mRecyclerView;
     private HomeCarouselAdapter mRecyclerAdapter;

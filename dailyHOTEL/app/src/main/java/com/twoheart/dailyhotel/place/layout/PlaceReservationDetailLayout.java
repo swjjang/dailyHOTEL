@@ -41,23 +41,23 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceReservationDetailLayout extends BaseLayout implements View.OnClickListener
 {
-    private DailyScrollView mScrollLayout;
+    DailyScrollView mScrollLayout;
     private View mPlaceInformationLayout;
 
-    private View mInputReviewVerticalLine, mMapExpandedView;
+    View mInputReviewVerticalLine, mMapExpandedView;
     private DailyTextView mInputReviewView;
     private DailyToolbarLayout mDailyToolbarLayout;
 
     // Map
-    private boolean mIsReadyMap;
+    boolean mIsReadyMap;
     private RelativeLayout mGoogleMapLayout;
-    private FrameLayout mMapLayout;
-    private GoogleMap mGoogleMap;
-    private View mMyLocationView, mZoomControl;
+    FrameLayout mMapLayout;
+    GoogleMap mGoogleMap;
+    View mMyLocationView, mZoomControl;
     MarkerOptions mMyLocationMarkerOptions;
     Marker mMyLocationMarker, mPlaceLocationMarker;
 
-    private View mAddressLayout, mSearchMapsLayout;
+    View mAddressLayout, mSearchMapsLayout;
 
     protected abstract void initPlaceInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
 
@@ -671,7 +671,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         return mMyLocationView;
     }
 
-    private void relocationMyLocation(View view)
+    void relocationMyLocation(View view)
     {
         mMyLocationView = view.findViewById(0x2);
 
@@ -689,7 +689,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         }
     }
 
-    private void relocationZoomControl(View view)
+    void relocationZoomControl(View view)
     {
         mZoomControl = view.findViewById(0x1);
 
@@ -709,7 +709,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         }
     }
 
-    private void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
+    void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
     {
         if (googleMap != null)
         {

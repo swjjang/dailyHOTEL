@@ -57,10 +57,10 @@ public class HomeFragment extends BaseFragment
     private BaseActivity mBaseActivity;
     private PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
-    private SaleTime mSaleTime;
-    private int mNights = 1;
-    private boolean mIsAttach;
-    private boolean mDontReload;
+    SaleTime mSaleTime;
+    int mNights = 1;
+    boolean mIsAttach;
+    boolean mDontReload;
 
     @Nullable
     @Override
@@ -257,7 +257,7 @@ public class HomeFragment extends BaseFragment
         }
     }
 
-    private void startSignUp(String recommenderCode)
+    void startSignUp(String recommenderCode)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {
@@ -281,7 +281,7 @@ public class HomeFragment extends BaseFragment
         startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
     }
 
-    private void startEventWebActivity(String url, String eventName)
+    void startEventWebActivity(String url, String eventName)
     {
         if (Util.isTextEmpty(url) == true)
         {
@@ -316,7 +316,7 @@ public class HomeFragment extends BaseFragment
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
     }
 
-    private void startWishList(PlaceType placeType)
+    void startWishList(PlaceType placeType)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {

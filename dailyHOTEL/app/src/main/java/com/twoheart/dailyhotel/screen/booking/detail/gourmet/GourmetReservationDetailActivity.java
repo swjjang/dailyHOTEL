@@ -42,7 +42,7 @@ import retrofit2.Response;
 
 public class GourmetReservationDetailActivity extends PlaceReservationDetailActivity
 {
-    private GourmetReservationDetailNetworkController mNetworkController;
+    GourmetReservationDetailNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
     {
@@ -404,12 +404,12 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         mNetworkController.requestGourmetReservationDetail(reservationIndex);
     }
 
-    private void startFAQ()
+    void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private void startGourmetCall(final String phoneNumber)
+    void startGourmetCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -461,7 +461,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    private void startKakao()
+    void startKakao()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);

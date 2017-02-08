@@ -26,11 +26,11 @@ public abstract class CollectionBaseLayout extends BaseLayout
     PinnedSectionRecyclerView mRecyclerView;
     PlaceListAdapter mPlaceListAdapter;
     private TextView mCalendarTextView;
-    private TextView mTitleTextView, mSubTitleTextView;
+    TextView mTitleTextView, mSubTitleTextView;
     private SimpleDraweeView mSimpleDraweeView;
-    private int mTitleLayoutHeight;
-    private int mTitleLayoutTopPaddingHeight;
-    private int mScrollState;
+    int mTitleLayoutHeight;
+    int mTitleLayoutTopPaddingHeight;
+    int mScrollState;
 
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
 
@@ -72,9 +72,8 @@ public abstract class CollectionBaseLayout extends BaseLayout
 
         final FrameLayout titleBoxLayout = (FrameLayout) view.findViewById(R.id.titleBoxLayout);
         final int dp15Height = Util.dpToPx(mContext, 15);
-        int titleBoxTopPading = Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - dp15Height - Util.dpToPx(mContext, 118);
-        //        titleBoxLayout.setPadding(dp15Height, (int)Math.ceil(height16x9 * 0.74) + Util.dpToPx(mContext, 21), dp15Height, dp15Height);
-        titleBoxLayout.setPadding(dp15Height, titleBoxTopPading + Util.dpToPx(mContext, 21), dp15Height, dp15Height);
+        int titleBoxTopPadding = Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - dp15Height - Util.dpToPx(mContext, 118);
+        titleBoxLayout.setPadding(dp15Height, titleBoxTopPadding + Util.dpToPx(mContext, 21), dp15Height, dp15Height);
 
         final View fakeBackImageView = titleBoxLayout.findViewById(R.id.fakeBackImageView);
         final View subTitleLayout = view.findViewById(R.id.subTitleLayout);

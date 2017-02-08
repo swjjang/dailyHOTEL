@@ -255,6 +255,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         DailyMobileAPI.getInstance(this).requestGourmetPayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
     }
 
+    /**
+     * 전액 결제는 아직 사용하지 않는데 대기중.
+     * @param paymentInformation
+     * @param checkInSaleTime
+     */
     @Override
     protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
