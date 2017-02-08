@@ -938,13 +938,18 @@ public class HomeLayout extends BaseLayout
         return mSwipeRefreshLayout.isRefreshing();
     }
 
-    public void forceRefreshing()
+    public boolean forceRefreshing()
     {
+        if (mSwipeRefreshLayout == null || isRefreshing() == true)
+        {
+            return false;
+        }
+
         if (mSwipeRefreshLayout.isEnabled() == false)
         {
             mForceRefreshing = true;
             setScrollTop();
-            return;
+            return true;
         }
 
         mForceRefreshing = false;
@@ -1005,6 +1010,8 @@ public class HomeLayout extends BaseLayout
         });
 
         valueAnimator.start();
+
+        return true;
     }
 
     public void setScrollTop()
@@ -1138,6 +1145,7 @@ public class HomeLayout extends BaseLayout
 
             if (mForceRefreshing == true && mSwipeRefreshLayout.isEnabled() == true)
             {
+                mForceRefreshing = false;
                 forceRefreshing();
             }
         }

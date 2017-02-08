@@ -192,7 +192,7 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
                 }
             } else
             {
-                if(response != null && response.code() == 401)
+                if (response != null && response.code() == 401)
                 {
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onExpiredSessionError();
                 } else

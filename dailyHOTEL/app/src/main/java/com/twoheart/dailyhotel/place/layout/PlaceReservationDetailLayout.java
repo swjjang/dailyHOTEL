@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.location.Location;
 import android.net.Uri;
-import android.text.Html;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
@@ -28,22 +27,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-
-import java.util.Calendar;
-import java.util.TimeZone;
 
 public abstract class PlaceReservationDetailLayout extends BaseLayout implements View.OnClickListener
 {
@@ -66,9 +60,13 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
     private View mAddressLayout, mSearchMapsLayout;
 
     protected abstract void initPlaceInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
     protected abstract void initTimeInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
     protected abstract void initGuestInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
     protected abstract void initPaymentInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
     protected abstract void initRefundPolicyLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
 
     public interface OnEventListener extends OnBaseEventListener

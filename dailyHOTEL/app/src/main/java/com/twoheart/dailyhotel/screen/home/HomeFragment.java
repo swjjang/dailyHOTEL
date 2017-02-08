@@ -348,8 +348,10 @@ public class HomeFragment extends BaseFragment
             return;
         }
 
-        lockUI(false);
-        mHomeLayout.forceRefreshing();
+        if (mHomeLayout.forceRefreshing() == true)
+        {
+            lockUI(false);
+        }
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
