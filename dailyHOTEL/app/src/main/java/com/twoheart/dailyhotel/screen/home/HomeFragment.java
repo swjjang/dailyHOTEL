@@ -341,14 +341,15 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
-    public void refreshAll()
+    public void forceRefreshing()
     {
         if (mHomeLayout == null && mHomeLayout.isRefreshing() == false)
         {
             return;
         }
 
-        mHomeLayout.refreshAll(true);
+        lockUI(false);
+        mHomeLayout.forceRefreshing();
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()

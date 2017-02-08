@@ -789,7 +789,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                         if (fragment instanceof HomeFragment && fragment.isResumed())
                         {
-                            ((HomeFragment) fragment).refreshAll();
+                            ((HomeFragment) fragment).forceRefreshing();
                         }
                     }
                     break;
