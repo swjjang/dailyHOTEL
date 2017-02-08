@@ -20,6 +20,8 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Holiday;
+import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -1100,5 +1102,27 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestRecommendationGourmetList(Crypto.getUrlDecoderEx(URL, urlParams), salesDate, period);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<RecommendationPlaceList<RecommendationGourmet>>>) listener);
+    }
+
+    @Override
+    public void requestHomeWishList(String tag, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/wishes"//
+            : "MzMkMjkkNDIkNzIkODIkNjEkNzMkNTQkMCQ2MCQ4OSQxMCQxNSQyMSQ1OSQ5MSQ=$JRDI2RUU4MCURFMYkJDN0YE3ODU4MTUyMYjIyNSzQwN0M1TRkY2MThDMTYPIyRkIL5M0GE0NkVGODc2QOOUFDOTQ0MEDEQV2MUUwRQ==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeWishList(Crypto.getUrlDecoderEx(URL));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>) listener);
+    }
+
+    @Override
+    public void requestHomeRecentList(String tag, JSONObject jsonObject, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/last-seen"//
+            : "MiQ1NiQ2MSQzOCQyJDExJDU0JDYzJDM2JDgxJDQ3JDU0JDYzJDMyJDEwMSQ0JA==$RTHFLRBRTE2NB0Q1QTU4MDdBNkQ4RkRFOLUIxQLUFCMBEI1QTUdCNjMyLQTZFDQUNEAFMMDUPxNEExQTY1MDVBZOUIxOUVDQzBGNQ=M=$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Recommendation>>) listener);
     }
 }

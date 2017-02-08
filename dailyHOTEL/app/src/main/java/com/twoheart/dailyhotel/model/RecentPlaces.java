@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -218,5 +219,52 @@ public class RecentPlaces
             Map.Entry<Integer, Long> entry = list.get(i);
             removeKey(entry.getKey());
         }
+    }
+
+    public ArrayList<HomeRecentParam> getParamList(Constants.PlaceType placeType, int size)
+    {
+        if (size <= 0)
+        {
+            return new ArrayList<>();
+        }
+
+        ArrayList<Map.Entry<Integer, Long>> list = new ArrayList<>();
+
+        list.addAll(mPlaceList.entrySet());
+
+        if (size > list.size())
+        {
+            size = list.size();
+        }
+
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Long>>()
+        {
+            @Override
+            public int compare(Map.Entry<Integer, Long> o1, Map.Entry<Integer, Long> o2)
+            {
+                return o1.getValue().compareTo(o2.getValue());
+            }
+        });
+
+        Collections.reverse(list);
+
+        ArrayList<HomeRecentParam> resultList = new ArrayList<>();
+
+        String serviceType = Constants.PlaceType.FNB.equals(placeType) == true ? "GOURMET" : "HOTEL";
+
+        Map.Entry<Integer, Long> item;
+        for (int i = 0; i < size; i++)
+        {
+            item = list.get(i);
+
+            HomeRecentParam homeRecentParam = new HomeRecentParam();
+            homeRecentParam.index = item.getKey();
+            homeRecentParam.savingTime = item.getValue();
+            homeRecentParam.serviceType = serviceType;
+
+            resultList.add(homeRecentParam);
+        }
+
+        return resultList;
     }
 }

@@ -1,24 +1,29 @@
 package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
-import android.os.Handler;
 
-import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.Collections;
+import java.util.Comparator;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -40,9 +45,9 @@ public class HomeNetworkController extends BaseNetworkController
 
         void onEventList(ArrayList<Event> list);
 
-        void onWishList(ArrayList<? extends Place> list);
+        void onWishList(ArrayList<HomePlace> list);
 
-        void onRecentList(ArrayList<? extends Place> list);
+        void onRecentList(ArrayList<HomePlace> list);
 
         void onRecommendationList(ArrayList<Recommendation> list);
     }
@@ -69,89 +74,69 @@ public class HomeNetworkController extends BaseNetworkController
 
     public void requestWishList()
     {
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                // 임시 테스트 데이터
-                ArrayList<Stay> placeList = new ArrayList<>();
-                Random random = new Random();
-                int size = random.nextInt(14);
-                for (int i = 0; i < size; i++)
-                {
-                    Stay stay = new Stay();
-
-                    stay.price = Math.abs(random.nextInt(100000));
-                    stay.name = "Stay " + i;
-                    stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
-                    stay.districtName = "서울";
-                    stay.isSoldOut = i % 5 == 0;
-
-                    if (i % 3 == 0)
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-                    } else if (i % 3 == 1)
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-                    } else
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
-                    }
-                    placeList.add(stay);
-
-                    stay.setGrade(Stay.Grade.special2);
-                }
-
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(placeList);
-            }
-        }, 5000);
+        DailyMobileAPI.getInstance(mContext).requestHomeWishList(mNetworkTag, mWishListCallBack);
     }
 
-    public void requestRecentList()
+    public void requestRecentList(ArrayList<HomeRecentParam> recentParamList)
     {
-        new Handler().postDelayed(new Runnable()
+        JSONArray recentJsonArray = getRecentJsonArray(recentParamList);
+
+        JSONObject recentJsonObject = new JSONObject();
+        try
         {
-            @Override
-            public void run()
-            {
-                // 임시 테스트 데이터
-                ArrayList<Stay> placeList = new ArrayList<>();
-                Random random = new Random();
-                int size = random.nextInt(14);
-                for (int i = 0; i < size; i++)
-                {
-                    Stay stay = new Stay();
+            recentJsonObject.put("keys", recentJsonArray);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.getMessage());
+        }
 
-                    stay.price = Math.abs(random.nextInt(100000));
-                    stay.name = "Stay " + i;
-                    stay.discountPrice = Math.abs(stay.price - random.nextInt(10000));
-                    stay.districtName = "서울";
-                    stay.isSoldOut = i % 5 == 0;
-
-                    if (i % 3 == 0)
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-                    } else if (i % 3 == 1)
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/02.jpg";
-                    } else
-                    {
-                        stay.imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/03.jpg";
-                    }
-                    placeList.add(stay);
-
-                    stay.setGrade(Stay.Grade.special2);
-                }
-
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(placeList);
-            }
-        }, 6000);
+        DailyMobileAPI.getInstance(mContext).requestHomeRecentList(mNetworkTag, recentJsonObject, mRecentListCallBack);
     }
 
     public void requestRecommendationList()
     {
         DailyMobileAPI.getInstance(mContext).requestRecommendationList(mNetworkTag, mRecommendationCallback);
+    }
+
+    private JSONArray getRecentJsonArray(ArrayList<HomeRecentParam> list)
+    {
+        if (list == null || list.size() == 0)
+        {
+            return null;
+        }
+
+        Collections.sort(list, new Comparator<HomeRecentParam>()
+        {
+            @Override
+            public int compare(HomeRecentParam o1, HomeRecentParam o2)
+            {
+                Long time1 = o1.savingTime;
+                Long time2 = o2.savingTime;
+                return time1.compareTo(time2);
+            }
+        });
+
+        Collections.reverse(list);
+
+        JSONArray jsonArray = new JSONArray();
+
+        for (HomeRecentParam param : list)
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            try
+            {
+                jsonObject.put("serviceType", param.serviceType);
+                jsonObject.put("idx", param.index);
+
+                jsonArray.put(jsonObject);
+            } catch (JSONException e)
+            {
+                ExLog.d(e.getMessage());
+            }
+        }
+
+        return jsonArray;
     }
 
     private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<JSONObject>()
@@ -264,6 +249,96 @@ public class HomeNetworkController extends BaseNetworkController
         public void onFailure(Call call, Throwable t)
         {
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
+        }
+    };
+
+    private retrofit2.Callback mWishListCallBack = new retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<HomePlaces<HomePlace>>> call, Response<BaseDto<HomePlaces<HomePlace>>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseDto<HomePlaces<HomePlace>> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        ArrayList<HomePlace> homePlaceList = new ArrayList<>();
+                        homePlaceList.addAll(baseDto.data.items);
+
+                        String imageBaseUrl = baseDto.data.imageBaseUrl;
+
+                        for (HomePlace wishItem : homePlaceList)
+                        {
+                            if (Util.isTextEmpty(wishItem.imageUrl) == false)
+                            {
+                                wishItem.imageUrl = imageBaseUrl + wishItem.imageUrl;
+                            }
+                        }
+
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(homePlaceList);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+            } else
+            {
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, Throwable t)
+        {
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
+        }
+    };
+
+    private retrofit2.Callback mRecentListCallBack = new retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<HomePlaces<HomePlace>>> call, Response<BaseDto<HomePlaces<HomePlace>>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseDto<HomePlaces<HomePlace>> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        ArrayList<HomePlace> homePlaceList = new ArrayList<>();
+                        homePlaceList.addAll(baseDto.data.items);
+
+                        String imageBaseUrl = baseDto.data.imageBaseUrl;
+
+                        for (HomePlace recentItem : homePlaceList)
+                        {
+                            if (Util.isTextEmpty(recentItem.imageUrl) == false)
+                            {
+                                recentItem.imageUrl = imageBaseUrl + recentItem.imageUrl;
+                            }
+                        }
+
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(homePlaceList);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+            } else
+            {
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call call, Throwable t)
+        {
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
         }
     };
 }

@@ -18,9 +18,8 @@ import android.widget.RelativeLayout;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -36,7 +35,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 {
     private Context mContext;
     protected LayoutInflater mInflater;
-    private ArrayList<? extends Place> mList;
+    private ArrayList<HomePlace> mList;
     private ItemClickListener mItemClickListener;
     protected PaintDrawable mPaintDrawable;
 
@@ -45,7 +44,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onItemClick(View view, int position);
     }
 
-    public HomeCarouselAdapter(Context context, ArrayList<? extends Place> list, ItemClickListener listener)
+    public HomeCarouselAdapter(Context context, ArrayList<HomePlace> list, ItemClickListener listener)
     {
         mContext = context;
         mList = list;
@@ -66,7 +65,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        Place place = getItem(position);
+        HomePlace place = getItem(position);
         if (place == null)
         {
             return;
@@ -75,7 +74,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         onBindViewHolder((PlaceViewHolder) holder, place, position);
     }
 
-    public void onBindViewHolder(PlaceViewHolder holder, Place place, final int position)
+    public void onBindViewHolder(PlaceViewHolder holder, HomePlace place, final int position)
     {
         // left view 생성
         holder.leftView.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
@@ -102,16 +101,16 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         Util.requestImageResize(mContext, holder.imageView, place.imageUrl);
 
-        // SOLD OUT 표시
-        if (place.isSoldOut == true)
-        {
-            holder.soldOutView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.soldOutView.setVisibility(View.GONE);
-        }
+        //        // SOLD OUT 표시
+        //        if (place.isSoldOut == true)
+        //        {
+        //            holder.soldOutView.setVisibility(View.VISIBLE);
+        //        } else
+        //        {
+        //            holder.soldOutView.setVisibility(View.GONE);
+        //        }
 
-        holder.titleView.setText(place.name);
+        holder.titleView.setText(place.title);
 
         String strPrice = Util.getPriceFormat(mContext, place.price, false);
         String strDiscount = Util.getPriceFormat(mContext, place.discountPrice, false);
@@ -129,38 +128,40 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.originPriceView.setPaintFlags(holder.originPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        holder.provinceView.setText(place.districtName);
+        holder.provinceView.setText(place.regionName);
 
-        if (place instanceof Stay)
+        if (place.placeType == Constants.PlaceType.HOTEL)
         {
-            holder.gradeView.setText(((Stay) place).getGrade().getName(mContext));
+            holder.gradeView.setText(place.details.stayGrade.getName(mContext));
             holder.dotView.setVisibility(View.VISIBLE);
-        } else if (place instanceof Gourmet)
+
+            holder.personView.setText("");
+            holder.personView.setVisibility(View.GONE);
+        } else if (place.placeType == Constants.PlaceType.FNB)
         {
-            Gourmet gourmet = (Gourmet) place;
-
-            String displayCategory;
-            if (Util.isTextEmpty(gourmet.subCategory) == false)
-            {
-                displayCategory = gourmet.subCategory;
-            } else
-            {
-                displayCategory = gourmet.category;
-            }
-
             // grade
-            if (Util.isTextEmpty(displayCategory) == true)
+            if (Util.isTextEmpty(place.details.category) == true)
             {
                 holder.gradeView.setVisibility(View.GONE);
                 holder.dotView.setVisibility(View.GONE);
+                holder.gradeView.setText("");
             } else
             {
                 holder.gradeView.setVisibility(View.VISIBLE);
                 holder.dotView.setVisibility(View.VISIBLE);
-                holder.gradeView.setText(displayCategory);
+                holder.gradeView.setText(place.details.category);
             }
 
-            holder.gradeView.setText(displayCategory);
+            if (place.details.persons > 0)
+            {
+                holder.personView.setText(//
+                    mContext.getString(R.string.label_home_person_format, place.details.persons));
+                holder.personView.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.personView.setText("");
+                holder.personView.setVisibility(View.GONE);
+            }
         }
 
         holder.itemView.setTag(place);
@@ -177,7 +178,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-    public Place getItem(int position)
+    public HomePlace getItem(int position)
     {
         if (mList == null || mList.size() == 0)
         {
@@ -192,7 +193,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return mList != null && mList.size() > 0 ? mList.size() : 0;
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<HomePlace> list)
     {
         mList = list;
     }
@@ -225,6 +226,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         DailyTextView titleView;
         DailyTextView discountPriceView;
         DailyTextView originPriceView;
+        DailyTextView personView;
         DailyTextView provinceView;
         DailyTextView gradeView;
         View dotView;
@@ -240,6 +242,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             titleView = (DailyTextView) view.findViewById(R.id.contentTextView);
             discountPriceView = (DailyTextView) view.findViewById(R.id.contentDiscountPriceView);
             originPriceView = (DailyTextView) view.findViewById(R.id.contentOriginPriceView);
+            personView = (DailyTextView) view.findViewById(R.id.contentPersonView);
             provinceView = (DailyTextView) view.findViewById(R.id.contentProvinceView);
             gradeView = (DailyTextView) view.findViewById(R.id.contentGradeView);
             dotView = view.findViewById(R.id.contentDotImageView);

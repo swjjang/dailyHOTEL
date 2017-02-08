@@ -5,6 +5,8 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Holiday;
+import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -388,4 +390,13 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<BaseDto<RecommendationPlaceList<RecommendationGourmet>>> requestRecommendationGourmetList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
                                                                                                    @Query("salesDate") String salesDate, @Query("period") int period);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<BaseDto<HomePlaces<HomePlace>>> requestHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Call<BaseDto<HomePlaces<HomePlace>>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                                               @Body JSONObject jsonObject);
 }

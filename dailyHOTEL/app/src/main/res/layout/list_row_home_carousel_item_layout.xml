@@ -83,6 +83,13 @@
                 android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/contentPersonView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/default_text_c666666"
+                android:textSize="12dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/contentOriginPriceView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

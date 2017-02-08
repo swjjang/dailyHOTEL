@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.HomeRecentParam;
+import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -49,6 +51,8 @@ import retrofit2.Response;
 
 public class HomeFragment extends BaseFragment
 {
+    private static final int MAX_REQUEST_SIZE = 10;
+
     private HomeLayout mHomeLayout;
     private BaseActivity mBaseActivity;
     private PlaceType mPlaceType = PlaceType.HOTEL;
@@ -149,7 +153,7 @@ public class HomeFragment extends BaseFragment
             mNetworkController.requestEventList();
             mNetworkController.requestRecommendationList();
             mNetworkController.requestWishList();
-            mNetworkController.requestRecentList();
+            requestRecentList();
         }
 
         // 애니메이션 처리!
@@ -369,6 +373,21 @@ public class HomeFragment extends BaseFragment
             AnalyticsManager.getInstance(mBaseActivity).recordScreen(//
                 mBaseActivity, AnalyticsManager.Screen.HOME, null, params);
         }
+    }
+
+    private void requestRecentList() {
+        String stayPreferenceText = DailyPreference.getInstance(mBaseActivity).getStayRecentPlaces();
+        String gourmetPreferenceText = DailyPreference.getInstance(mBaseActivity).getGourmetRecentPlaces();
+
+        RecentPlaces stayRecentPlaces = new RecentPlaces(stayPreferenceText);
+        RecentPlaces gourmetRecentPlaces = new RecentPlaces(gourmetPreferenceText);
+
+        ArrayList<HomeRecentParam> recentParamList = new ArrayList<>();
+
+        recentParamList.addAll(stayRecentPlaces.getParamList(PlaceType.HOTEL, MAX_REQUEST_SIZE));
+        recentParamList.addAll(gourmetRecentPlaces.getParamList(PlaceType.FNB, MAX_REQUEST_SIZE));
+
+        mNetworkController.requestRecentList(recentParamList);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
@@ -623,7 +642,7 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onWishList(ArrayList<? extends Place> list)
+        public void onWishList(ArrayList<HomePlace> list)
         {
             if (mHomeLayout != null)
             {
@@ -634,7 +653,7 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onRecentList(ArrayList<? extends Place> list)
+        public void onRecentList(ArrayList<HomePlace> list)
         {
             if (mHomeLayout != null)
             {

@@ -24,8 +24,8 @@ import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -775,12 +775,12 @@ public class HomeLayout extends BaseLayout
         });
     }
 
-    public void setWishListData(ArrayList<? extends Place> list)
+    public void setWishListData(ArrayList<HomePlace> list)
     {
         mWishListLayout.setData(list);
     }
 
-    public void setRecentListData(ArrayList<? extends Place> list)
+    public void setRecentListData(ArrayList<HomePlace> list)
     {
         mRecentListLayout.setData(list);
     }

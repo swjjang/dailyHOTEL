@@ -13,6 +13,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -161,7 +162,7 @@ public class HomeCarouselLayout extends RelativeLayout
         }
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<HomePlace> list)
     {
         stopShimmer();
         mCoverView.setVisibility(View.GONE);
@@ -177,7 +178,7 @@ public class HomeCarouselLayout extends RelativeLayout
         }
     }
 
-    private void setRecyclerAdapter(ArrayList<? extends Place> list)
+    private void setRecyclerAdapter(ArrayList<HomePlace> list)
     {
         if (mRecyclerAdapter == null)
         {
