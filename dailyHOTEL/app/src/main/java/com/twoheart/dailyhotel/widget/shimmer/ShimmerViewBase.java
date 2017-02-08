@@ -3,23 +3,23 @@ package com.twoheart.dailyhotel.widget.shimmer;
 public interface ShimmerViewBase
 {
 
-    public float getGradientX();
+    float getGradientX();
 
-    public void setGradientX(float gradientX);
+    void setGradientX(float gradientX);
 
-    public boolean isShimmering();
+    boolean isShimmering();
 
-    public void setShimmering(boolean isShimmering);
+    void setShimmering(boolean isShimmering);
 
-    public boolean isSetUp();
+    boolean isSetUp();
 
-    public void setAnimationSetupCallback(ShimmerViewHelper.AnimationSetupCallback callback);
+    void setAnimationSetupCallback(ShimmerViewHelper.AnimationSetupCallback callback);
 
-    public int getPrimaryColor();
+    int getPrimaryColor();
 
-    public void setPrimaryColor(int primaryColor);
+    void setPrimaryColor(int primaryColor);
 
-    public int getReflectionColor();
+    int getReflectionColor();
 
-    public void setReflectionColor(int reflectionColor);
+    void setReflectionColor(int reflectionColor);
 }

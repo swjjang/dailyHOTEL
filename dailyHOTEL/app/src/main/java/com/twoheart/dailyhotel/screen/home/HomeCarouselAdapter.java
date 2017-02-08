@@ -33,7 +33,7 @@ import static com.twoheart.dailyhotel.util.Util.dpToPx;
 
 public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    private Context mContext;
+    Context mContext;
     protected LayoutInflater mInflater;
     private ArrayList<HomePlace> mList;
     private ItemClickListener mItemClickListener;

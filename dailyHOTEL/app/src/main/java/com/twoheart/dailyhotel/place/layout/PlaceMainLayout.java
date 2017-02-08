@@ -41,7 +41,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
     TabLayout mCategoryTabLayout;
     private View mToolbarUnderlineView;
-    private ViewPager mViewPager;
+    ViewPager mViewPager;
     private PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
     public interface OnEventListener extends OnBaseEventListener

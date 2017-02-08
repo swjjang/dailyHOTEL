@@ -312,7 +312,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         });
     }
 
-    private void setCurrentDateTime(long currentDateTime, long dailyDateTime)
+    void setCurrentDateTime(long currentDateTime, long dailyDateTime)
     {
         if (mPlaceBookingDetail == null)
         {
@@ -323,7 +323,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         mPlaceBookingDetail.dailyDateTime = dailyDateTime;
     }
 
-    private void setUserName(String userName)
+    void setUserName(String userName)
     {
         if (mPlaceBookingDetail == null)
         {

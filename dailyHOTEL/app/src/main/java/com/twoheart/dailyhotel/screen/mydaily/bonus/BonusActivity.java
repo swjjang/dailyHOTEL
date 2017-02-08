@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 public class BonusActivity extends BaseActivity
 {
-    private static final int REQUEST_ACTIVITY_INVITEFRIENDS = 10000;
+    private static final int REQUEST_ACTIVITY_INVITE_FRIENDS = 10000;
     private static final int REQUEST_ACTIVITY_TERMS = 10001;
 
     String mRecommendCode;
@@ -152,7 +152,7 @@ public class BonusActivity extends BaseActivity
             }
 
             Intent intent = InviteFriendsActivity.newInstance(BonusActivity.this, mRecommendCode, mName);
-            startActivityForResult(intent, REQUEST_ACTIVITY_INVITEFRIENDS);
+            startActivityForResult(intent, REQUEST_ACTIVITY_INVITE_FRIENDS);
 
             AnalyticsManager.getInstance(BonusActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);

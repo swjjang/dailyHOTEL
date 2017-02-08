@@ -47,7 +47,7 @@ import retrofit2.Response;
 
 public class StayReservationDetailActivity extends PlaceReservationDetailActivity
 {
-    private StayReservationDetailNetworkController mNetworkController;
+    StayReservationDetailNetworkController mNetworkController;
 
     public static Intent newInstance(Context context, int reservationIndex, String imageUrl, boolean isDeepLink)
     {
@@ -424,7 +424,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
-    private void showRefundCallDialog()
+    void showRefundCallDialog()
     {
         if (isFinishing())
         {
@@ -525,12 +525,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         mNetworkController.requestStayReservationDetail(reservationIndex);
     }
 
-    private void startFAQ()
+    void startFAQ()
     {
         startActivityForResult(new Intent(this, FAQActivity.class), CODE_REQUEST_ACTIVITY_FAQ);
     }
 
-    private void startFrontCall(final String phoneNumber)
+    void startFrontCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -582,7 +582,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    private void startReservationCall(final String phoneNumber)
+    void startReservationCall(final String phoneNumber)
     {
         View.OnClickListener positiveListener = new View.OnClickListener()
         {
@@ -634,7 +634,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             , positiveListener, nativeListener, null, dismissListener, true);
     }
 
-    private void startKakao(boolean isRefund)
+    void startKakao(boolean isRefund)
     {
         if (isRefund == true)
         {
@@ -663,7 +663,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private String getRefundPolicyStatus(StayBookingDetail bookingDetail)
+    String getRefundPolicyStatus(StayBookingDetail bookingDetail)
     {
         // 환불 대기 상태
         if (bookingDetail.readyForRefund == true)
@@ -681,7 +681,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private long getCompareDate(long timeInMillis)
+    long getCompareDate(long timeInMillis)
     {
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
