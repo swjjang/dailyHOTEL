@@ -355,6 +355,8 @@ public class MainActivity extends BaseActivity implements Constants
 
             case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
             {
+                unLockUI();
+                
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {
                     Util.restartApp(this);
