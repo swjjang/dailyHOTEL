@@ -6,7 +6,6 @@
     <!--UI 확인시에만 열어주세요-->
     <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:dailyFont="http://schemas.android.com/apk/res-auto"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
     <!--android:background="@color/white"-->
@@ -16,7 +15,8 @@
         android:id="@+id/remainedDayLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
@@ -46,85 +46,69 @@
             android:background="@color/default_background"/>
     </LinearLayout>
 
-    <RelativeLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
+    <LinearLayout
         android:id="@+id/dateInformationLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_line_cf0f0f0"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="76dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="76dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_visit_day"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/act_booking_chkin"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/checkinDayTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
-            </LinearLayout>
-
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/default_line_cdcdcdd"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="76dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/act_booking_chkout"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/checkoutDayTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
-            </LinearLayout>
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/ticketDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"/>
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/nightsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/payment_overnight_ic_bg"
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/default_line_cdcdcdd"/>
+
+        <LinearLayout
+            android:id="@+id/ticketTimeLayout"
+            android:layout_width="0dp"
+            android:layout_height="76dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@color/default_text_c666666"
-            android:textSize="11dp"/>
-    </RelativeLayout>
+            android:orientation="vertical">
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_booking_select_ticket_time"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/ticketTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -137,7 +121,7 @@
         android:gravity="left|center_vertical"
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
-        android:text="@string/label_booking_room_info"
+        android:text="@string/label_booking_ticket_info"
         android:textColor="@color/default_text_c666666"
         android:textSize="13dp"
         dailyFont:style="Medium"/>
@@ -160,7 +144,7 @@
             android:textSize="13dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/hotelNameTextView"
+            android:id="@+id/gourmetNameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
@@ -183,16 +167,44 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
-            android:text="@string/frag_booking_tab_bed_type"
+            android:text="@string/frag_booking_tab_ticket_type"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/roomTypeTextView"
+            android:id="@+id/ticketTypeTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:gravity="right"
+            android:lineSpacingExtra="-2dp"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="36dp"
+        android:paddingBottom="11dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="11dp">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:text="@string/label_product_count"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="13dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/ticketCountTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:gravity="right|center_vertical"
             android:lineSpacingExtra="-2dp"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"/>
@@ -256,7 +268,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
-            android:text="@string/label_booking_user_name"
+            android:text="@string/label_booking_reservation_name"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 
@@ -300,6 +312,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="36dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:gravity="center_vertical">
@@ -321,59 +334,6 @@
             android:lineSpacingExtra="-2dp"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/visitTypeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:gravity="center_vertical"
-        android:visibility="gone">
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/visitTypeTitleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="@string/label_how_to_visit"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/visitTypeTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="right|center_vertical"
-            android:lineSpacingExtra="-2dp"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/guideVisitMemoLayout"
-        android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_payment_notice"/>
-
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/guideVisitMemoView"
-            android:layout_width="match_parent"
-            android:layout_height="34dp"
-            android:layout_marginLeft="5dp"
-            android:text="@string/message_visit_car_memo"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="11dp"/>
     </LinearLayout>
     <!--</LinearLayout>-->
 </merge>

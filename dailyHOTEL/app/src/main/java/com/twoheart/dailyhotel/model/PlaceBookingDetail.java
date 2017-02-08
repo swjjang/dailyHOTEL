@@ -31,6 +31,7 @@ public abstract class PlaceBookingDetail implements Parcelable
     public String guestPhone;
     public String guestEmail;
     public String addressSummary;
+    public boolean isOverseas;
     //
     public String paymentDate;
     public int price;
@@ -48,12 +49,6 @@ public abstract class PlaceBookingDetail implements Parcelable
 
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
-    public PlaceBookingDetail()
-    {
-    }
-
-    public abstract void setData(JSONObject jsonObject) throws Exception;
-
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -68,6 +63,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeString(guestPhone);
         dest.writeString(guestEmail);
         dest.writeString(addressSummary);
+        dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(phone1);
         dest.writeString(phone2);
         dest.writeString(phone3);
@@ -96,6 +92,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         guestPhone = in.readString();
         guestEmail = in.readString();
         addressSummary = in.readString();
+        isOverseas = in.readInt() == 1;
         phone1 = in.readString();
         phone2 = in.readString();
         phone3 = in.readString();

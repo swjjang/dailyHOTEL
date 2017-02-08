@@ -1,0 +1,737 @@
+package com.twoheart.dailyhotel.place.layout;
+
+import android.animation.Animator;
+import android.animation.ValueAnimator;
+import android.content.Context;
+import android.graphics.PointF;
+import android.location.Location;
+import android.net.Uri;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.MyLocationMarker;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseLayout;
+import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyScrollView;
+import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+public abstract class PlaceReservationDetailLayout extends BaseLayout implements View.OnClickListener
+{
+    private DailyScrollView mScrollLayout;
+    private View mPlaceInformationLayout;
+
+    private View mInputReviewVerticalLine, mMapExpandedView;
+    private DailyTextView mInputReviewView;
+    private DailyToolbarLayout mDailyToolbarLayout;
+
+    // Map
+    private boolean mIsReadyMap;
+    private RelativeLayout mGoogleMapLayout;
+    private FrameLayout mMapLayout;
+    private GoogleMap mGoogleMap;
+    private View mMyLocationView, mZoomControl;
+    MarkerOptions mMyLocationMarkerOptions;
+    Marker mMyLocationMarker, mPlaceLocationMarker;
+
+    private View mAddressLayout, mSearchMapsLayout;
+
+    protected abstract void initPlaceInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
+    protected abstract void initTimeInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
+    protected abstract void initGuestInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
+    protected abstract void initPaymentInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
+    protected abstract void initRefundPolicyLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+
+    public interface OnEventListener extends OnBaseEventListener
+    {
+        void onIssuingReceiptClick();
+
+        void onMapClick(boolean isGoogleMap);
+
+        void onViewDetailClick();
+
+        void onViewMapClick();
+
+        void onRefundClick();
+
+        void onReviewClick(String reviewStatus);
+
+        void showCallDialog();
+
+        void showShareDialog();
+
+        void onMyLocationClick();
+
+        void onClipAddressClick();
+
+        void onSearchMapClick();
+
+        void onReleaseUiComponent();
+
+        void onLoadingMap();
+    }
+
+    public PlaceReservationDetailLayout(Context context, OnBaseEventListener listener)
+    {
+        super(context, listener);
+    }
+
+    @Override
+    protected void initLayout(View view)
+    {
+        initToolbar(view);
+
+        mGoogleMapLayout = (RelativeLayout) view.findViewById(R.id.googleMapLayout);
+        mScrollLayout = (DailyScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(mScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+        double width = Util.getLCDWidth(mContext);
+        double height = Util.getListRowHeight(mContext);
+        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
+
+        // Map 4 :2 비율 맞추기
+        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) mScrollLayout.findViewById(R.id.mapImageView);
+        mapImageView.setOnClickListener(this);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
+        layoutParams.width = (int) width;
+        layoutParams.height = (int) height;
+
+        mapImageView.setLayoutParams(layoutParams);
+
+        mMapExpandedView = view.findViewById(R.id.mapExpandedView);
+
+        if (Util.isInstallGooglePlayService(mContext) == false)
+        {
+            mGoogleMapLayout.setVisibility(View.GONE);
+        } else
+        {
+            mGoogleMapLayout.setVisibility(View.VISIBLE);
+        }
+
+        mPlaceInformationLayout = mScrollLayout.findViewById(R.id.placeInformationLayout);
+        RelativeLayout.LayoutParams placeInformationLayoutParams = (RelativeLayout.LayoutParams) mPlaceInformationLayout.getLayoutParams();
+        placeInformationLayoutParams.topMargin = (int) (PLACE_INFORMATION_LAYOUT_RATIO * height);
+        mPlaceInformationLayout.setLayoutParams(placeInformationLayoutParams);
+
+        mPlaceInformationLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void initToolbar(View view)
+    {
+        View toolbar = view.findViewById(R.id.toolbar);
+        mDailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
+
+        setReservationDetailToolbar();
+    }
+
+    public void initLayout(PlaceBookingDetail placeBookingDetail)
+    {
+        initHeaderInformationLayout(mContext, mScrollLayout, placeBookingDetail);
+        initPlaceInformationLayout(mContext, mScrollLayout, placeBookingDetail);
+        initTimeInformationLayout(mContext, mScrollLayout, placeBookingDetail);
+        initGuestInformationLayout(mContext, mScrollLayout, placeBookingDetail);
+        initPaymentInformationLayout(mContext, mScrollLayout, placeBookingDetail);
+        initRefundPolicyLayout(mContext, mScrollLayout, placeBookingDetail);
+    }
+
+    private void setReservationDetailToolbar()
+    {
+        if (mDailyToolbarLayout == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_booking_list_frag), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnEventListener.finish();
+            }
+        });
+
+        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_help, R.drawable.navibar_ic_share_01_black);
+        mDailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                switch (v.getId())
+                {
+                    case R.id.menu1View:
+                        ((OnEventListener) mOnEventListener).showCallDialog();
+                        break;
+
+                    case R.id.menu2View:
+                        ((OnEventListener) mOnEventListener).showShareDialog();
+                        break;
+                }
+            }
+        });
+    }
+
+    private void setReservationMapToolbar()
+    {
+        if (mDailyToolbarLayout == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout.initToolbar(mContext.getString(R.string.frag_tab_map_title), new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnEventListener.finish();
+            }
+        });
+
+        mDailyToolbarLayout.setToolbarMenu(-1, -1);
+        mDailyToolbarLayout.setToolbarMenuClickListener(null);
+    }
+
+    private void initHeaderInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail)
+    {
+        if (view == null || placeBookingDetail == null)
+        {
+            return;
+        }
+
+        double width = Util.getLCDWidth(context);
+        double height = Util.getListRowHeight(context);
+        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
+
+        if (Util.isInstallGooglePlayService(context) == false)
+        {
+            initImageMapLayout(context, mScrollLayout, placeBookingDetail, (int) width, (int) height);
+        } else
+        {
+            initGoogleMapLayout(context, mGoogleMapLayout, placeBookingDetail, (int) width, (int) height);
+        }
+
+        View viewDetailView = mPlaceInformationLayout.findViewById(R.id.viewDetailView);
+        View viewMapView = mPlaceInformationLayout.findViewById(R.id.viewMapView);
+
+        viewDetailView.setOnClickListener(this);
+        viewMapView.setOnClickListener(this);
+
+        TextView placeNameTextView = (TextView) mPlaceInformationLayout.findViewById(R.id.placeNameTextView);
+        placeNameTextView.setText(placeBookingDetail.placeName);
+
+        initReviewButtonLayout(mPlaceInformationLayout, placeBookingDetail);
+    }
+
+    private void initImageMapLayout(Context context, View view, PlaceBookingDetail placeBookingDetail, int height, int width)
+    {
+        final double ratio = height / width;
+        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
+
+        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
+        mapImageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, PLACE_INFORMATION_LAYOUT_RATIO));
+
+        if (width >= 720)
+        {
+            width = 720;
+        }
+
+        String size = String.format("%dx%d", width * 3 / 5, (int) (width * ratio * 5) / 7);
+        String iconUrl = "http://img.dailyhotel.me/app_static/info_ic_map_large.png";
+        String url = String.format("https://maps.googleapis.com/maps/api/staticmap?zoom=17&size=%s&markers=icon:%s|%s,%s&sensor=false&scale=2&format=png8&mobile=true&key=%s"//
+            , size, iconUrl, placeBookingDetail.latitude, placeBookingDetail.longitude, Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
+
+        mapImageView.setImageURI(Uri.parse(url));
+    }
+
+    private void initGoogleMapLayout(Context context, View view, final PlaceBookingDetail placeBookingDetail, int width, int height)
+    {
+        if (context == null || view == null || placeBookingDetail == null)
+        {
+            return;
+        }
+
+        mAddressLayout = view.findViewById(R.id.addressLayout);
+        mSearchMapsLayout = view.findViewById(R.id.searchMapsLayout);
+
+        mAddressLayout.setVisibility(View.GONE);
+        mSearchMapsLayout.setVisibility(View.GONE);
+
+        TextView addressTextView = (TextView) mAddressLayout.findViewById(R.id.addressTextView);
+        addressTextView.setText(placeBookingDetail.address);
+
+        View clipAddress = mAddressLayout.findViewById(R.id.copyAddressView);
+        clipAddress.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onClipAddressClick();
+            }
+        });
+
+        View searchMapView = mSearchMapsLayout.findViewById(R.id.searchMapView);
+        searchMapView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onSearchMapClick();
+            }
+        });
+
+        mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
+        layoutParams.width = width;
+        layoutParams.height = height;
+
+        mMapLayout.setLayoutParams(layoutParams);
+        mMapLayout.setTag(height);
+
+        mScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        {
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+            {
+                mMapLayout.setTranslationY(-t);
+            }
+        });
+
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+
+        ((BaseActivity) mContext).getSupportFragmentManager().beginTransaction().add(mMapLayout.getId(), mapFragment).commitAllowingStateLoss();
+
+        mapFragment.getMapAsync(new OnMapReadyCallback()
+        {
+            @Override
+            public void onMapReady(GoogleMap googleMap)
+            {
+                mGoogleMap = googleMap;
+
+                mGoogleMap.getUiSettings().setCompassEnabled(false);
+                mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(false);
+                mGoogleMap.getUiSettings().setMapToolbarEnabled(false);
+                mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
+                mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
+                mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
+
+                mGoogleMap.setMyLocationEnabled(false);
+
+                relocationMyLocation(mMapLayout);
+                relocationZoomControl(mMapLayout);
+                addMarker(mGoogleMap, placeBookingDetail.latitude, placeBookingDetail.longitude, placeBookingDetail.placeName);
+
+                mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
+                {
+                    @Override
+                    public void onMapLoaded()
+                    {
+                        mIsReadyMap = true;
+                    }
+                });
+            }
+        });
+    }
+
+    private void initReviewButtonLayout(View view, PlaceBookingDetail placeBookingDetail)
+    {
+        if (view == null || placeBookingDetail == null)
+        {
+            return;
+        }
+
+        mInputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
+        mInputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+        mInputReviewView.setOnClickListener(this);
+
+        String reviewStatus = placeBookingDetail.reviewStatusType;
+        updateReviewButtonLayout(reviewStatus);
+    }
+
+    public void updateReviewButtonLayout(String reviewStatus)
+    {
+        if (Util.isTextEmpty(reviewStatus) == true)
+        {
+            reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
+        }
+
+        mInputReviewView.setTag(reviewStatus);
+
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            mInputReviewVerticalLine.setVisibility(View.VISIBLE);
+            mInputReviewView.setVisibility(View.VISIBLE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545_alpha_20);
+            mInputReviewView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
+            mInputReviewView.setText(R.string.label_booking_completed_input_review);
+        } else
+        {
+            mInputReviewVerticalLine.setVisibility(View.GONE);
+            mInputReviewView.setVisibility(View.GONE);
+            mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            mInputReviewView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+        }
+    }
+
+    @Override
+    public void onClick(final View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.mapImageView:
+            {
+                if (mGoogleMapLayout.getVisibility() == View.VISIBLE)
+                {
+                    if (mIsReadyMap == true)
+                    {
+                        ((OnEventListener) mOnEventListener).onMapClick(true);
+                    } else
+                    {
+                        ((OnEventListener) mOnEventListener).onLoadingMap();
+                    }
+                } else
+                {
+                    ((OnEventListener) mOnEventListener).onMapClick(false);
+                }
+                break;
+            }
+
+            case R.id.viewDetailView:
+            {
+                ((OnEventListener) mOnEventListener).onViewDetailClick();
+                break;
+            }
+
+            case R.id.viewMapView:
+            {
+                ((OnEventListener) mOnEventListener).onViewMapClick();
+                break;
+            }
+
+            case R.id.refundButtonLayout:
+            {
+                ((OnEventListener) mOnEventListener).onRefundClick();
+                break;
+            }
+
+            case R.id.inputReviewView:
+            {
+                if (v.getTag() == null)
+                {
+                    return;
+                }
+
+                if ((v.getTag() instanceof String) == false)
+                {
+                    return;
+                }
+
+                String reviewStatus = (String) v.getTag();
+
+                ((OnEventListener) mOnEventListener).onReviewClick(reviewStatus);
+                break;
+            }
+        }
+    }
+
+    public boolean isExpandedMap()
+    {
+        return mSearchMapsLayout != null && mSearchMapsLayout.getVisibility() != View.GONE;
+    }
+
+    public void expandMap()
+    {
+        setReservationMapToolbar();
+
+        mScrollLayout.setScrollingEnabled(false);
+        mScrollLayout.scrollTo(0, 0);
+
+        mSearchMapsLayout.setVisibility(View.INVISIBLE);
+        mAddressLayout.setVisibility(View.INVISIBLE);
+
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                float value = (Float) animation.getAnimatedValue();
+
+                int height = (int) mMapLayout.getTag();
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
+                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
+
+                mMapLayout.setLayoutParams(layoutParams);
+
+                mScrollLayout.setTranslationY(((int) mAddressLayout.getY() - height) * value);
+                mScrollLayout.setAlpha(1.0f - value);
+
+                mSearchMapsLayout.setAlpha(value);
+                mAddressLayout.setAlpha(value);
+            }
+        });
+
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mMapLayout.setTranslationY(0.0f);
+
+                mMapExpandedView.setVisibility(View.GONE);
+                mSearchMapsLayout.setVisibility(View.VISIBLE);
+                mAddressLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mZoomControl.setVisibility(View.VISIBLE);
+                mMyLocationView.setVisibility(View.VISIBLE);
+
+                mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+                mScrollLayout.setVisibility(View.INVISIBLE);
+                mPlaceLocationMarker.showInfoWindow();
+
+                ((OnEventListener) mOnEventListener).onReleaseUiComponent();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.setDuration(300);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.start();
+    }
+
+    public void collapseMap(double latitude, double longitude)
+    {
+        setReservationDetailToolbar();
+
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                float value = (Float) animation.getAnimatedValue();
+
+                int height = (int) mMapLayout.getTag();
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
+                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
+
+                mMapLayout.setLayoutParams(layoutParams);
+
+                mScrollLayout.setTranslationY(((int) mAddressLayout.getY() - height) * value);
+                mScrollLayout.setAlpha(1.0f - value);
+
+                mSearchMapsLayout.setAlpha(value);
+                mAddressLayout.setAlpha(value);
+            }
+        });
+
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mScrollLayout.setVisibility(View.VISIBLE);
+                mZoomControl.setVisibility(View.INVISIBLE);
+                mMyLocationView.setVisibility(View.INVISIBLE);
+
+                mPlaceLocationMarker.hideInfoWindow();
+                mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mScrollLayout.scrollTo(0, 0);
+                mScrollLayout.setScrollingEnabled(true);
+                mMapLayout.setTranslationY(0.0f);
+
+                mSearchMapsLayout.setVisibility(View.GONE);
+                mAddressLayout.setVisibility(View.GONE);
+                mMapExpandedView.setVisibility(View.VISIBLE);
+
+                ((OnEventListener) mOnEventListener).onReleaseUiComponent();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        valueAnimator.setDuration(300);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.reverse();
+
+        LatLng latLng = new LatLng(latitude, longitude);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target((latLng)).zoom(15).build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 500, null);
+    }
+
+    public void changeLocation(Location location)
+    {
+        if (mGoogleMap == null)
+        {
+            return;
+        }
+
+        if (mMyLocationMarkerOptions == null)
+        {
+            mMyLocationMarkerOptions = new MarkerOptions();
+            mMyLocationMarkerOptions.icon(new MyLocationMarker(mContext).makeIcon());
+            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+        }
+
+        if (mMyLocationMarker != null)
+        {
+            mMyLocationMarker.remove();
+        }
+
+        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+        mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+        LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
+        latLngBounds.include(mPlaceLocationMarker.getPosition());
+        latLngBounds.include(mMyLocationMarker.getPosition());
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), Util.dpToPx(mContext, 50));
+        mGoogleMap.animateCamera(cameraUpdate);
+    }
+
+    public View getMyLocationView()
+    {
+        return mMyLocationView;
+    }
+
+    private void relocationMyLocation(View view)
+    {
+        mMyLocationView = view.findViewById(0x2);
+
+        if (mMyLocationView != null)
+        {
+            mMyLocationView.setVisibility(View.INVISIBLE);
+            mMyLocationView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    ((OnEventListener) mOnEventListener).onMyLocationClick();
+                }
+            });
+        }
+    }
+
+    private void relocationZoomControl(View view)
+    {
+        mZoomControl = view.findViewById(0x1);
+
+        if (mZoomControl != null && mZoomControl.getLayoutParams() instanceof RelativeLayout.LayoutParams)
+        {
+            mZoomControl.setVisibility(View.INVISIBLE);
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mZoomControl.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+
+            mZoomControl.setPadding(mZoomControl.getPaddingLeft(), Util.dpToPx(mContext, 50), mZoomControl.getPaddingRight(), mZoomControl.getPaddingBottom());
+            mZoomControl.setLayoutParams(params);
+        }
+    }
+
+    private void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
+    {
+        if (googleMap != null)
+        {
+            mPlaceLocationMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(hotel_name));
+            mPlaceLocationMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.info_ic_map_large));
+
+            LatLng address = new LatLng(lat, lng);
+            CameraPosition cp = new CameraPosition.Builder().target((address)).zoom(15).build();
+
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+            googleMap.setInfoWindowAdapter(new PlaceNameInfoWindowAdapter(mContext));
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+            {
+                @Override
+                public boolean onMarkerClick(Marker marker)
+                {
+                    marker.showInfoWindow();
+                    return true;
+                }
+            });
+
+            mPlaceLocationMarker.hideInfoWindow();
+        }
+    }
+}

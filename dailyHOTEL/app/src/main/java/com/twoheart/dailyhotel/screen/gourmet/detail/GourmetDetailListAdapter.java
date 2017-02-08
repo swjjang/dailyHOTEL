@@ -29,12 +29,12 @@ public class GourmetDetailListAdapter extends BaseAdapter
 {
     private static final int NUMBER_OF_ROWSLIST = 7;
 
-    private static final int GRID_COLUME_COUNT = 5;
+    private static final int GRID_COLUMN_COUNT = 5;
 
     private GourmetDetail mGourmetDetail;
     private SaleTime mSaleTime;
     private Context mContext;
-    private View[] mDeatilViews;
+    private View[] mDetailViews;
     private int mImageHeight;
     protected View mGourmetTitleLayout;
 
@@ -48,7 +48,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mContext = context;
         mGourmetDetail = gourmetDetail;
         mSaleTime = saleTime;
-        mDeatilViews = new View[NUMBER_OF_ROWSLIST];
+        mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(context);
 
         mOnEventListener = onEventListener;
@@ -105,55 +105,55 @@ public class GourmetDetailListAdapter extends BaseAdapter
         linearLayout.removeAllViews();
 
         // 빈화면
-        if (mDeatilViews[0] == null)
+        if (mDetailViews[0] == null)
         {
-            mDeatilViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
+            mDetailViews[0] = layoutInflater.inflate(R.layout.list_row_detail01, parent, false);
         }
 
-        getEmptyView(mDeatilViews[0]);
-        linearLayout.addView(mDeatilViews[0]);
+        getEmptyView(mDetailViews[0]);
+        linearLayout.addView(mDetailViews[0]);
 
         // 레스토랑 등급과 이름.
-        if (mDeatilViews[1] == null)
+        if (mDetailViews[1] == null)
         {
-            mDeatilViews[1] = layoutInflater.inflate(R.layout.list_row_gourmet_detail02, parent, false);
+            mDetailViews[1] = layoutInflater.inflate(R.layout.list_row_gourmet_detail02, parent, false);
         }
 
-        getTitleView(mDeatilViews[1], mGourmetDetail);
-        linearLayout.addView(mDeatilViews[1]);
+        getTitleView(mDetailViews[1], mGourmetDetail);
+        linearLayout.addView(mDetailViews[1]);
 
         // 주소 및 맵
-        if (mDeatilViews[2] == null)
+        if (mDetailViews[2] == null)
         {
-            mDeatilViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
+            mDetailViews[2] = layoutInflater.inflate(R.layout.list_row_detail03, parent, false);
         }
 
-        getAddressView(mDeatilViews[2], mGourmetDetail);
-        linearLayout.addView(mDeatilViews[2]);
+        getAddressView(mDetailViews[2], mGourmetDetail);
+        linearLayout.addView(mDetailViews[2]);
 
         ArrayList<GourmetDetail.Pictogram> list = mGourmetDetail.getPictogramList();
 
         if (list != null && list.size() > 0)
         {
-            if (mDeatilViews[3] == null)
+            if (mDetailViews[3] == null)
             {
-                mDeatilViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
+                mDetailViews[3] = layoutInflater.inflate(R.layout.list_row_detail_pictogram, parent, false);
             }
 
-            getAmenitiesView(mDeatilViews[3], mGourmetDetail);
-            linearLayout.addView(mDeatilViews[3]);
+            getAmenitiesView(mDetailViews[3], mGourmetDetail);
+            linearLayout.addView(mDetailViews[3]);
         }
 
         if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
         {
             // D Benefit
-            if (mDeatilViews[4] == null)
+            if (mDetailViews[4] == null)
             {
-                mDeatilViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
+                mDetailViews[4] = layoutInflater.inflate(R.layout.list_row_detail_benefit, parent, false);
             }
 
-            getBenefitView(layoutInflater, mDeatilViews[4], mGourmetDetail);
-            linearLayout.addView(mDeatilViews[4]);
+            getBenefitView(layoutInflater, mDetailViews[4], mGourmetDetail);
+            linearLayout.addView(mDetailViews[4]);
         } else
         {
             // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
@@ -165,22 +165,22 @@ public class GourmetDetailListAdapter extends BaseAdapter
         }
 
         // 정보
-        if (mDeatilViews[5] == null)
+        if (mDetailViews[5] == null)
         {
-            mDeatilViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
+            mDetailViews[5] = layoutInflater.inflate(R.layout.list_row_detail04, parent, false);
         }
 
-        getInformationView(layoutInflater, (ViewGroup) mDeatilViews[5], mGourmetDetail);
-        linearLayout.addView(mDeatilViews[5]);
+        getInformationView(layoutInflater, (ViewGroup) mDetailViews[5], mGourmetDetail);
+        linearLayout.addView(mDetailViews[5]);
 
         // 문의 하기
-        if (mDeatilViews[6] == null)
+        if (mDetailViews[6] == null)
         {
-            mDeatilViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
+            mDetailViews[6] = layoutInflater.inflate(R.layout.list_row_detail07, parent, false);
         }
 
-        getConciergeView(mDeatilViews[6]);
-        linearLayout.addView(mDeatilViews[6]);
+        getConciergeView(mDetailViews[6]);
+        linearLayout.addView(mDetailViews[6]);
 
         return linearLayout;
     }
@@ -384,18 +384,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         ArrayList<GourmetDetail.Pictogram> list = gourmetDetail.getPictogramList();
 
-        boolean isSingleLine = list == null || list.size() <= GRID_COLUME_COUNT ? true : false;
+        boolean isSingleLine = list == null || list.size() <= GRID_COLUMN_COUNT ? true : false;
 
         for (GourmetDetail.Pictogram pictogram : list)
         {
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int columnCount = list.size() % GRID_COLUME_COUNT;
+        int columnCount = list.size() % GRID_COLUMN_COUNT;
 
         if (columnCount != 0)
         {
-            int addEmptyViewCount = GRID_COLUME_COUNT - columnCount;
+            int addEmptyViewCount = GRID_COLUMN_COUNT - columnCount;
             for (int i = 0; i < addEmptyViewCount; i++)
             {
                 gridLayout.addView(getGridLayoutItemView(mContext, GourmetDetail.Pictogram.none, isSingleLine));

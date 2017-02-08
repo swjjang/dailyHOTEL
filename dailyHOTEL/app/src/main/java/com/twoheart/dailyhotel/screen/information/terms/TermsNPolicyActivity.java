@@ -43,13 +43,13 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
         View termsLayout = findViewById(R.id.termsLayout);
         View personalLayout = findViewById(R.id.personalLayout);
         View locationLayout = findViewById(R.id.locationLayout);
-        View youthtermsLayout = findViewById(R.id.youthtermsLayout);
+        View youthTermsLayout = findViewById(R.id.youthtermsLayout);
         View licenseLayout = findViewById(R.id.licenseLayout);
 
         termsLayout.setOnClickListener(this);
         personalLayout.setOnClickListener(this);
         locationLayout.setOnClickListener(this);
-        youthtermsLayout.setOnClickListener(this);
+        youthTermsLayout.setOnClickListener(this);
         licenseLayout.setOnClickListener(this);
 
         View homeButtonView = findViewById(R.id.homeButtonView);

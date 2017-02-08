@@ -91,6 +91,8 @@ public class HomeFragment extends BaseFragment
             if (DailyDeepLink.getInstance().isHomeEventDetailView() == true)
             {
                 startEventWebActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
+
+                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
             {
                 String serviceType = DailyDeepLink.getInstance().getPlaceType();
@@ -120,18 +122,20 @@ public class HomeFragment extends BaseFragment
             } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
             {
                 startRecentList(PlaceType.HOTEL);
+                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
             {
                 startRecentList(PlaceType.FNB);
+                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
             {
                 startWishList(PlaceType.HOTEL);
+                DailyDeepLink.getInstance().clear();
             } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
             {
                 startWishList(PlaceType.FNB);
+                DailyDeepLink.getInstance().clear();
             }
-
-            DailyDeepLink.getInstance().clear();
         }
     }
 
@@ -145,15 +149,18 @@ public class HomeFragment extends BaseFragment
             mDontReload = false;
         } else
         {
-            lockUI();
+            if (mNetworkController != null)
+            {
+                lockUI();
 
-            // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
-            mNetworkController.requestCommonDateTime();
-            requestMessageData();
-            mNetworkController.requestEventList();
-            mNetworkController.requestRecommendationList();
-            mNetworkController.requestWishList();
-            requestRecentList();
+                // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
+                mNetworkController.requestCommonDateTime();
+                requestMessageData();
+                mNetworkController.requestEventList();
+                mNetworkController.requestRecommendationList();
+                mNetworkController.requestWishList();
+                requestRecentList();
+            }
         }
 
         // 애니메이션 처리!
@@ -388,6 +395,19 @@ public class HomeFragment extends BaseFragment
         recentParamList.addAll(gourmetRecentPlaces.getParamList(PlaceType.FNB, MAX_REQUEST_SIZE));
 
         mNetworkController.requestRecentList(recentParamList);
+    }
+
+    public void forceRefreshing()
+    {
+        if (mHomeLayout == null && mHomeLayout.isRefreshing() == false)
+        {
+            return;
+        }
+
+        if (mHomeLayout.forceRefreshing() == true)
+        {
+            lockUI(false);
+        }
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()

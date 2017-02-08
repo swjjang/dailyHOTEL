@@ -323,6 +323,20 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
 
         @Override
+        public void onHomeClick()
+        {
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            if (baseActivity == null || baseActivity.isFinishing() == true)
+            {
+                return;
+            }
+
+            baseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+            baseActivity.finish();
+        }
+
+        @Override
         public void finish()
         {
             unLockUI();
