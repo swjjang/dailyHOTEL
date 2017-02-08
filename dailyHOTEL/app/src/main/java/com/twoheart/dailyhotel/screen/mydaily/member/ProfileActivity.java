@@ -85,7 +85,6 @@ public class ProfileActivity extends BaseActivity
         {
             if (DailyHotel.isLogin() == false)
             {
-                lockUI();
                 showLoginDialog();
             }
         }

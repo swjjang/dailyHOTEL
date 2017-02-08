@@ -165,7 +165,6 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
         if (DailyHotel.isLogin() == false)
         {
-            lockUI();
             showLoginDialog();
         } else
         {

@@ -112,7 +112,6 @@ public class CouponListActivity extends BaseActivity
         {
             if (DailyHotel.isLogin() == false)
             {
-                lockUI();
                 showLoginDialog();
             }
         }
