@@ -590,7 +590,7 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onWishListViewAllClick()
         {
-            startWishList(PlaceType.HOTEL);
+            startWishList(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_WISHLIST_CLICK, //
@@ -600,7 +600,7 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onRecentListViewAllClick()
         {
-            startRecentList(PlaceType.HOTEL);
+            startRecentList(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_ALL_RECENTVIEW_CLICK, //
