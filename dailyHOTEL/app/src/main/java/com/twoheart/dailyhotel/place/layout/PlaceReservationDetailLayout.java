@@ -227,7 +227,6 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
 
         double width = Util.getLCDWidth(context);
         double height = Util.getListRowHeight(context);
-        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
 
         if (Util.isInstallGooglePlayService(context) == false)
         {
@@ -252,10 +251,9 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
     private void initImageMapLayout(Context context, View view, PlaceBookingDetail placeBookingDetail, int height, int width)
     {
         final double ratio = height / width;
-        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
 
         com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
-        mapImageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, PLACE_INFORMATION_LAYOUT_RATIO));
+        mapImageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.58f));
 
         if (width >= 720)
         {

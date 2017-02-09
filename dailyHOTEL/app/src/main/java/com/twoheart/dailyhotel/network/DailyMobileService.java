@@ -33,6 +33,7 @@ import retrofit2.http.Url;
 
 public interface DailyMobileService
 {
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
     Call<JSONObject> requestStatusServer(@Url String url);
 

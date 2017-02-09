@@ -57,8 +57,17 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestStatusServer(String tag, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "http://status.dailyhotel.kr/status/health/check"//
-            : "MzUkMTI2JDM2JDIkNjEkNzEkOTMkOTAkMTA5JDYwJDU4JDkxJDEwOCQzOSQxMTkkNTMk$MTTc5NDRENTlBQUUxMzNDRDFEMDY5NTZGNTQHFzVNEFGNEY4RDlBOVEE4Q0VWDRWUBNDNEI2NkUTzN0MyMEYzRTg2MTVCJQRkJBGQTgzMkM5MTEBGQkJEwOEOIxOTlENjIwNzE1REZFQZTIx$";
+        final String URL;
+
+        if (Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
+        {
+            URL = Constants.UNENCRYPTED_URL ? "https://prod-aws-api.dailyhotel.me/service"//
+                : "MTA2JDQ1JDEwNSQyMyQxMTkkMTIwJDExOSQ4NyQxMiQ1NSQ3MCQyMSQxMzIkODMkNzMkODAk$QTNGNERGOEU1QQ0I0M0Q1AODVQGRTM2RjdCNzZDNkVBMTVBMEkY3NzRBGQUNBNDUzQUU5QzScU1QTcyNL0E3MEjlGNzk0MDUEzRUJBM0U2NzI4RUI3YQkRM1N0IyN0UKAI1RDRDYMzQyNzI1$";
+        } else
+        {
+            URL = Constants.UNENCRYPTED_URL ? "https://dev-aws-api.dailyhotel.me/service"//
+                : "NTUkNDUkMiQ4MiQ0JDgzJDY0JDk3JDc0JDE4JDIxJDE2JDYkNjAkMjkkNiQ=$QUTVOGVXNjk3RkMyOEFFFYRjSdDNTgF2MkJDNENBOTQ1MTVBQzU0QYkY0RUEyMAzgO2QkUxVOTBEQzlBOEEZBQUU5NUQHL1RjVDMEZBMkMMwMTc1NjUxMjEzQjQ4RjlDMDhFMTg1NTMyN0M4$";
+        }
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
