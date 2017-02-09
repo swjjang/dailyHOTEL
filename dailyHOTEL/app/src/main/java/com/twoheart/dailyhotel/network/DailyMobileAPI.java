@@ -1120,6 +1120,6 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeRecentList(Crypto.getUrlDecoderEx(URL), jsonObject);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<Recommendation>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>) listener);
     }
 }
