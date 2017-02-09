@@ -547,7 +547,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             }
         });
 
-        valueAnimator.setDuration(300);
+        valueAnimator.setDuration(500);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         valueAnimator.start();
     }
