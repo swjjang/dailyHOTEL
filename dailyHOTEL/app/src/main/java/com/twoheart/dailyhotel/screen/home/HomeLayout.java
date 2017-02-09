@@ -96,6 +96,8 @@ public class HomeLayout extends BaseLayout
 
         void onRecommendationClick(View view, Recommendation recommendation);
 
+        void onRecommendRetryButtonClick();
+
         void onWishListViewAllClick();
 
         void onRecentListViewAllClick();
@@ -103,6 +105,10 @@ public class HomeLayout extends BaseLayout
         void onWishListItemClick(View view, int position);
 
         void onRecentListItemClick(View view, int position);
+
+        void onWishListRetryButtonClick();
+
+        void onRecentListRetryButtonClick();
 
         void onTermsClick();
 
@@ -325,6 +331,12 @@ public class HomeLayout extends BaseLayout
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view, position);
             }
+
+            @Override
+            public void onRetryButtonClick()
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onWishListRetryButtonClick();
+            }
         });
     }
 
@@ -354,6 +366,12 @@ public class HomeLayout extends BaseLayout
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view, position);
             }
+
+            @Override
+            public void onRetryButtonClick()
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListRetryButtonClick();
+            }
         });
     }
 
@@ -372,11 +390,17 @@ public class HomeLayout extends BaseLayout
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation);
             }
+
+            @Override
+            public void onRetryButtonClick()
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecommendRetryButtonClick();
+            }
         });
 
         layout.addView(mHomeRecommendationLayout);
 
-        setRecommendationData(null);
+        setRecommendationData(null, false);
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
@@ -795,19 +819,19 @@ public class HomeLayout extends BaseLayout
         });
     }
 
-    public void setWishListData(ArrayList<HomePlace> list)
+    public void setWishListData(ArrayList<HomePlace> list, boolean isError)
     {
-        mWishListLayout.setData(list);
+        mWishListLayout.setData(list, isError);
     }
 
-    public void setRecentListData(ArrayList<HomePlace> list)
+    public void setRecentListData(ArrayList<HomePlace> list, boolean isError)
     {
-        mRecentListLayout.setData(list);
+        mRecentListLayout.setData(list, isError);
     }
 
-    public void setRecommendationData(ArrayList<Recommendation> list)
+    public void setRecommendationData(ArrayList<Recommendation> list, boolean isError)
     {
-        mHomeRecommendationLayout.setData(list);
+        mHomeRecommendationLayout.setData(list, isError);
     }
 
     public boolean hasWishListData()

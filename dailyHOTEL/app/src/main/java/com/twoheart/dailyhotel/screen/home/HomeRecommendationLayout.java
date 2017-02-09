@@ -24,13 +24,15 @@ public class HomeRecommendationLayout extends LinearLayout
 {
     private Context mContext;
     private LinearLayout mContentLayout;
-    HomeRecommendationListener mListener;
+    private HomeRecommendationListener mListener;
 
     private ArrayList<Recommendation> mRecommendationList;
 
     public interface HomeRecommendationListener
     {
         void onRecommendationClick(View view, Recommendation recommendation, int position);
+
+        void onRetryButtonClick();
     }
 
     public HomeRecommendationLayout(Context context)
@@ -78,9 +80,14 @@ public class HomeRecommendationLayout extends LinearLayout
         mContentLayout.removeAllViews();
     }
 
-    public void setData(ArrayList<Recommendation> list)
+    public void setData(ArrayList<Recommendation> list, boolean isError)
     {
         clearAll();
+
+        if (isError == true) {
+            setErrorView();
+            return;
+        }
 
         if (list == null || list.size() == 0)
         {
@@ -133,7 +140,7 @@ public class HomeRecommendationLayout extends LinearLayout
         }
     }
 
-    public void addRecommendationItemView(final Recommendation recommendation, final int position)
+    private void addRecommendationItemView(final Recommendation recommendation, final int position)
     {
         if (recommendation == null)
         {
@@ -183,6 +190,29 @@ public class HomeRecommendationLayout extends LinearLayout
         });
 
         mContentLayout.addView(view);
+    }
+
+    private void setErrorView()
+    {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_content_server_error_layout, null);
+        View errorView = view.findViewById(R.id.errorView);
+        View retryTextView = errorView.findViewById(R.id.retryTextView);
+
+        retryTextView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mListener != null)
+                {
+                    clearAll();
+                    mListener.onRetryButtonClick();
+                }
+            }
+        });
+
+        mContentLayout.addView(view);
+        errorView.setVisibility(View.VISIBLE);
     }
 
     public int getCount()

@@ -71,6 +71,12 @@
             android:layout_height="match_parent"
             android:layout_below="@id/textLayout"/>
 
+        <include
+            layout="@layout/list_row_home_content_server_error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textLayout"/>
+
     </RelativeLayout>
 
     <View

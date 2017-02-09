@@ -41,12 +41,15 @@ public class HomeCarouselLayout extends RelativeLayout
 
     private Shimmer mShimmer;
     private View mCoverView;
+    private View mErrorView;
 
     public interface OnCarouselListener
     {
         void onViewAllClick();
 
         void onItemClick(View view, int position);
+
+        void onRetryButtonClick();
     }
 
     public HomeCarouselLayout(Context context)
@@ -85,6 +88,31 @@ public class HomeCarouselLayout extends RelativeLayout
     {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
         setVisibility(View.VISIBLE);
+
+        mErrorView = view.findViewById(R.id.errorView);
+        mErrorView.setVisibility(View.GONE);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
+
+        View topMarginView = mErrorView.findViewById(R.id.topMarginView);
+        params.weight = 6.4f;
+        topMarginView.setLayoutParams(params);
+
+        View bottomMarginView = mErrorView.findViewById(R.id.bottomMarginView);
+        params.weight = 7.1f;
+        bottomMarginView.setLayoutParams(params);
+
+        View retryTextView = mErrorView.findViewById(R.id.retryTextView);
+        retryTextView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                clearAll();
+                startShimmer();
+                mCarouselListenter.onRetryButtonClick();
+            }
+        });
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
         mCountTextView = (DailyTextView) view.findViewById(R.id.countTextView);
@@ -164,19 +192,26 @@ public class HomeCarouselLayout extends RelativeLayout
         }
     }
 
-    public void setData(ArrayList<HomePlace> list)
+    public void setData(ArrayList<HomePlace> list, boolean isError)
     {
         stopShimmer();
         mCoverView.setVisibility(View.GONE);
 
         setRecyclerAdapter(list);
 
-        if (list == null || list.size() == 0)
+        if (isError == true)
         {
-            setVisibility(View.GONE);
+            setErrorViewVisibility(View.VISIBLE);
+            setVisibility(View.VISIBLE);
         } else
         {
-            setVisibility(View.VISIBLE);
+            if (list == null || list.size() == 0)
+            {
+                setVisibility(View.GONE);
+            } else
+            {
+                setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -198,6 +233,17 @@ public class HomeCarouselLayout extends RelativeLayout
         setRecyclerAdapter(null);
         mCoverView.setVisibility(View.VISIBLE);
         setVisibility(View.VISIBLE);
+        mErrorView.setVisibility(View.GONE);
+    }
+
+    public void setErrorViewVisibility(int visibility)
+    {
+        if (mErrorView == null)
+        {
+            return;
+        }
+
+        mErrorView.setVisibility(visibility);
     }
 
     public boolean isShowCoverView()

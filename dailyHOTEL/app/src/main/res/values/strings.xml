@@ -1131,6 +1131,7 @@
     <string name="label_home_business_license03">통신판매업 신고번호 : %1$s</string>
     <string name="label_home_business_license04">개인정보담당자 : %1$s</string>
     <string name="label_home_person_format">/%1$d인</string>
+    <string name="label_home_server_error_text">네트워크 연결이 끊어졌습니다.\n잠시 후 다시 시도해주세요.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

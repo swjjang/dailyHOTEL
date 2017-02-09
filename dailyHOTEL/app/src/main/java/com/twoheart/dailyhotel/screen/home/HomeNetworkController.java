@@ -43,11 +43,11 @@ public class HomeNetworkController extends BaseNetworkController
 
         void onEventList(ArrayList<Event> list);
 
-        void onWishList(ArrayList<HomePlace> list);
+        void onWishList(ArrayList<HomePlace> list, boolean isError);
 
-        void onRecentList(ArrayList<HomePlace> list);
+        void onRecentList(ArrayList<HomePlace> list, boolean isError);
 
-        void onRecommendationList(ArrayList<Recommendation> list);
+        void onRecommendationList(ArrayList<Recommendation> list, boolean isError);
     }
 
     public void requestCommonDateTime()
@@ -77,6 +77,13 @@ public class HomeNetworkController extends BaseNetworkController
 
     public void requestRecentList(ArrayList<HomeRecentParam> recentParamList)
     {
+        // 리스트가 비었을때 서버에 리퀘스트시 필수 값 없어 에러 발생, 하지만 해당 경우는 정상인 상태로 서버에 리퀘스트 하지 않음 - 아이폰 동일
+        if (recentParamList == null || recentParamList.size() == 0)
+        {
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, false);
+            return;
+        }
+
         JSONArray recentJsonArray = getRecentJsonArray(recentParamList);
 
         JSONObject recentJsonObject = new JSONObject();
@@ -220,26 +227,26 @@ public class HomeNetworkController extends BaseNetworkController
                     {
                         ArrayList<Recommendation> recommendationList = (ArrayList<Recommendation>) baseListDto.data;
 
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(recommendationList);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(recommendationList, false);
                     } else
                     {
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null, true);
                     }
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
-                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null, true);
                 }
             } else
             {
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null, true);
             }
         }
 
         @Override
         public void onFailure(Call call, Throwable t)
         {
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null, true);
         }
     };
 
@@ -269,26 +276,26 @@ public class HomeNetworkController extends BaseNetworkController
                             }
                         }
 
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(homePlaceList);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(homePlaceList, false);
                     } else
                     {
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
                     }
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
-                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
                 }
             } else
             {
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
             }
         }
 
         @Override
         public void onFailure(Call call, Throwable t)
         {
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
         }
     };
 
@@ -318,26 +325,26 @@ public class HomeNetworkController extends BaseNetworkController
                             }
                         }
 
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(homePlaceList);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(homePlaceList, false);
                     } else
                     {
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
                     }
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
-                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
                 }
             } else
             {
-                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
+                ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
             }
         }
 
         @Override
         public void onFailure(Call call, Throwable t)
         {
-            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
+            ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
         }
     };
 }

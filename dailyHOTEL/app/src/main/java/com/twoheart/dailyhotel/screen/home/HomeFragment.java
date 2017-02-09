@@ -405,7 +405,7 @@ public class HomeFragment extends BaseFragment
     {
         if (DailyHotel.isLogin() == false)
         {
-            mNetworkControllerListener.onWishList(null);
+            mNetworkControllerListener.onWishList(null, false);
             return;
         }
 
@@ -588,6 +588,12 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
+        public void onRecommendRetryButtonClick()
+        {
+            mNetworkController.requestRecommendationList();
+        }
+
+        @Override
         public void onWishListViewAllClick()
         {
             startWishList(null);
@@ -655,6 +661,18 @@ public class HomeFragment extends BaseFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
                 Integer.toString(recentItem.idx), null);
+        }
+
+        @Override
+        public void onWishListRetryButtonClick()
+        {
+            requestWishList();
+        }
+
+        @Override
+        public void onRecentListRetryButtonClick()
+        {
+            requestRecentList();
         }
 
         @Override
@@ -730,33 +748,33 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onWishList(ArrayList<HomePlace> list)
+        public void onWishList(ArrayList<HomePlace> list, boolean isError)
         {
             if (mHomeLayout != null)
             {
-                mHomeLayout.setWishListData(list);
+                mHomeLayout.setWishListData(list, isError);
             }
 
             sendHomeScreenAnalytics();
         }
 
         @Override
-        public void onRecentList(ArrayList<HomePlace> list)
+        public void onRecentList(ArrayList<HomePlace> list, boolean isError)
         {
             if (mHomeLayout != null)
             {
-                mHomeLayout.setRecentListData(list);
+                mHomeLayout.setRecentListData(list, isError);
             }
 
             sendHomeScreenAnalytics();
         }
 
         @Override
-        public void onRecommendationList(ArrayList<Recommendation> list)
+        public void onRecommendationList(ArrayList<Recommendation> list, boolean isError)
         {
             if (mHomeLayout != null)
             {
-                mHomeLayout.setRecommendationData(list);
+                mHomeLayout.setRecommendationData(list, isError);
             }
         }
 
