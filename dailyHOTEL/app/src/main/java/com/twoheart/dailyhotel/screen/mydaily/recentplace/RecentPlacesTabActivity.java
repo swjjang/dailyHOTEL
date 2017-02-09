@@ -255,6 +255,9 @@ public class RecentPlacesTabActivity extends BaseActivity
             if (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true)
             {
                 AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
+            } else if (isEmptyRecentStayPlace() == true)
+            {
+                position = 1;
             }
         }
 

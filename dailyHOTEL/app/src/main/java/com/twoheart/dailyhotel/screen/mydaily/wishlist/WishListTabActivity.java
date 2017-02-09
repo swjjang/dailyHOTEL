@@ -260,6 +260,9 @@ public class WishListTabActivity extends BaseActivity
             if (stayCount == 0 && gourmetCount == 0)
             {
                 AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_WISHLIST_EMPTY, null);
+            } else if (stayCount == 0)
+            {
+                position = 1;
             }
         }
 
