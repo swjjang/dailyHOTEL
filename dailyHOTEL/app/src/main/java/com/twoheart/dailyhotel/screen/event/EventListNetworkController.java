@@ -57,20 +57,28 @@ public class EventListNetworkController extends BaseNetworkController
                 {
                     BaseListDto<Event> baseListDto = response.body();
 
-                    if (baseListDto.msgCode == 100)
+                    switch (baseListDto.msgCode)
                     {
-                        ArrayList<Event> arrayList = (ArrayList<Event>) baseListDto.data;
+                        case 100:
+                            ArrayList<Event> arrayList = (ArrayList<Event>) baseListDto.data;
 
-                        if (arrayList == null && arrayList.size() == 0)
-                        {
+                            if (arrayList == null && arrayList.size() == 0)
+                            {
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
+                            } else
+                            {
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(arrayList);
+                            }
+                            break;
+
+                        // 조회된 데이터가 없는 경우
+                        case -101:
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
-                        } else
-                        {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(arrayList);
-                        }
-                    } else
-                    {
-                        mOnNetworkControllerListener.onErrorPopupMessage(baseListDto.msgCode, baseListDto.msg);
+                            break;
+
+                        default:
+                            mOnNetworkControllerListener.onErrorPopupMessage(baseListDto.msgCode, baseListDto.msg);
+                            break;
                     }
                 } catch (Exception e)
                 {
