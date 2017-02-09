@@ -3,12 +3,14 @@ package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -25,6 +27,8 @@ import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
+
+import static com.twoheart.dailyhotel.model.RecentPlaces.getServiceType;
 
 /**
  * Created by android_sam on 2016. 10. 12..
@@ -56,7 +60,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        int count = mRecentPlaces != null ? mRecentPlaces.size() : 0;
+        int count = mRecentPlaceList != null ? mRecentPlaceList.size() : 0;
         if (count == 0)
         {
             unLockUI();
@@ -70,7 +74,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
         RecentStayParams recentStayParams = new RecentStayParams();
         recentStayParams.setCheckInTime(mSaleTime);
-        recentStayParams.setTargetIndices(mRecentPlaces.toKeyString());
+        recentStayParams.setTargetIndices(getPlaceIndexList());
 
         ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(recentStayParams);
         //        DailyToast.showToast(mBaseActivity, "recent Stay", Toast.LENGTH_SHORT);
@@ -88,10 +92,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            if (mRecentPlaces != null)
-            {
-                mRecentPlaces.sortList(list);
-            }
+            sortList(mRecentPlaceList, list);
 
             mListLayout.setData(list);
         }
@@ -130,7 +131,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemClick(View view, int position)
         {
-            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            if (position < 0 || mRecentPlaceList.size() - 1 < position)
             {
                 return;
             }
@@ -169,7 +170,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         @Override
         public void onListItemDeleteClick(int position)
         {
-            if (position < 0 || mRecentPlaces.size() - 1 < position)
+            if (position < 0 || mRecentPlaceList.size() - 1 < position)
             {
                 ExLog.d("position Error Stay");
                 return;
@@ -178,15 +179,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             Place place = mListLayout.removeItem(position);
             ExLog.d("isRemove : " + (place != null));
 
-            mRecentPlaces.removeKey(place.index);
+            Pair<Integer, String> deleteItem = new Pair<>(place.index, RecentPlaces.getServiceType(PlaceType.HOTEL));
 
-            if (place != null)
-            {
-                DailyPreference.getInstance(mBaseActivity).setStayRecentPlaces(mRecentPlaces.toString());
-            }
+            mRecentPlaceList.remove(deleteItem);
 
             mListLayout.setData(mListLayout.getList());
-            mRecentPlaceListFragmentListener.onDeleteItemClick(PlaceType.HOTEL, mRecentPlaces);
+            mRecentPlaceListFragmentListener.onDeleteItemClick(deleteItem);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION_, //

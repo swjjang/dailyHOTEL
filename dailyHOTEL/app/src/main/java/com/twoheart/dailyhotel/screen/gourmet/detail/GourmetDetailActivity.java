@@ -338,10 +338,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mPlaceDetail = createPlaceDetail(intent);
 
         // 최근 본 업장 저장
-        String preferenceRecentPlaces = DailyPreference.getInstance(this).getGourmetRecentPlaces();
-        RecentPlaces recentPlaces = new RecentPlaces(preferenceRecentPlaces);
-        recentPlaces.add(mPlaceDetail.index);
-        DailyPreference.getInstance(this).setGourmetRecentPlaces(recentPlaces.toString());
+        RecentPlaces recentPlaces = new RecentPlaces(this);
+        recentPlaces.add(PlaceType.FNB, mPlaceDetail.index);
+        recentPlaces.savePreference();
 
         if (mSaleTime == null || mPlaceDetail == null)
         {

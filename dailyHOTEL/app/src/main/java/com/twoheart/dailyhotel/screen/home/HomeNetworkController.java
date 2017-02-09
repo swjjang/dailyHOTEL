@@ -22,8 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -104,19 +102,6 @@ public class HomeNetworkController extends BaseNetworkController
         {
             return null;
         }
-
-        Collections.sort(list, new Comparator<HomeRecentParam>()
-        {
-            @Override
-            public int compare(HomeRecentParam o1, HomeRecentParam o2)
-            {
-                Long time1 = o1.savingTime;
-                Long time2 = o2.savingTime;
-                return time1.compareTo(time2);
-            }
-        });
-
-        Collections.reverse(list);
 
         JSONArray jsonArray = new JSONArray();
 
@@ -236,6 +221,9 @@ public class HomeNetworkController extends BaseNetworkController
                         ArrayList<Recommendation> recommendationList = (ArrayList<Recommendation>) baseListDto.data;
 
                         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(recommendationList);
+                    } else
+                    {
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null);
                     }
                 } catch (Exception e)
                 {
@@ -282,10 +270,14 @@ public class HomeNetworkController extends BaseNetworkController
                         }
 
                         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(homePlaceList);
+                    } else
+                    {
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
                     }
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null);
                 }
             } else
             {
@@ -327,10 +319,14 @@ public class HomeNetworkController extends BaseNetworkController
                         }
 
                         ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(homePlaceList);
+                    } else
+                    {
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
                     }
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
+                    ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null);
                 }
             } else
             {

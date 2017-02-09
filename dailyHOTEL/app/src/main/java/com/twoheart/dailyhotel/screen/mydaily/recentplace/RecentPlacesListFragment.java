@@ -1,16 +1,24 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.RecentPlaces;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+
+import static com.twoheart.dailyhotel.model.RecentPlaces.RECENT_PLACE_DELIMITER;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -29,7 +37,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     /**
      * 해당 데이터는 리퀘스트 및 저장 용도로만 사용해야 합니다. emptyList 의 판단은 listAdapter의 갯수 또는 서버 전달 데이터 갯수로 판단해야 합니다.
      */
-    protected RecentPlaces mRecentPlaces;
+    protected ArrayList<Pair<Integer, String>> mRecentPlaceList;
     protected OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener;
 
     protected abstract RecentPlacesListLayout getListLayout();
@@ -40,7 +48,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     public interface OnRecentPlaceListFragmentListener
     {
-        void onDeleteItemClick(PlaceType placeType, RecentPlaces recentPlaces);
+        void onDeleteItemClick(Pair<Integer, String> deleteItem);
     }
 
     public void setRecentPlaceListFragmentListener(OnRecentPlaceListFragmentListener listener)
@@ -85,13 +93,65 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     }
 
 
-    public void setRecentPlaces(RecentPlaces recentPlaces)
+    public void setRecentPlaceList(ArrayList<Pair<Integer, String>> recentPlaceList)
     {
-        mRecentPlaces = recentPlaces;
+        mRecentPlaceList = recentPlaceList;
     }
 
     public void setDontReload(boolean dontReload)
     {
         mDontReload = dontReload;
+    }
+
+    public String getPlaceIndexList()
+    {
+        if (mRecentPlaceList == null || mRecentPlaceList.size() == 0)
+        {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        Iterator<Pair<Integer, String>> iterator = mRecentPlaceList.iterator();
+
+        while (iterator.hasNext() == true)
+        {
+            Pair<Integer, String> pair = iterator.next();
+            builder.append(pair.first);
+
+            if (iterator.hasNext() == true)
+            {
+                builder.append(RECENT_PLACE_DELIMITER);
+            }
+        }
+
+        return builder.toString();
+    }
+
+    public void sortList(final ArrayList<Pair<Integer, String>> expectedList, ArrayList<? extends Place> actual)
+    {
+        if (expectedList == null || expectedList.size() == 0) {
+            return;
+        }
+
+        final String serviceType = expectedList.get(0).second;
+
+        if (actual != null && actual.size() > 0)
+        {
+            Collections.sort(actual, new Comparator<Place>()
+            {
+                @Override
+                public int compare(Place place1, Place place2)
+                {
+                    Pair<Integer, String> pair1 = new Pair<>(place1.index, serviceType);
+                    Pair<Integer, String> pair2 = new Pair<>(place2.index, serviceType);
+
+                    Integer position1 = expectedList.indexOf(pair1);
+                    Integer position2 = expectedList.indexOf(pair2);
+
+                    return position1.compareTo(position2);
+                }
+            });
+        }
     }
 }

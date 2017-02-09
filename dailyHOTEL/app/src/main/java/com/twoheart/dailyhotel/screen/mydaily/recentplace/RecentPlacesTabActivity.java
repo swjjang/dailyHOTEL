@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -14,7 +15,6 @@ import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -34,9 +34,11 @@ import retrofit2.Response;
 
 public class RecentPlacesTabActivity extends BaseActivity
 {
-    RecentPlaces mRecentStayPlaces;
-    RecentPlaces mRecentGourmetPlaces;
-    ArrayList<RecentPlacesListFragment> mFragmentList;
+    private RecentPlaces mAllRecentPlaces;
+    private ArrayList<Pair<Integer, String>> mRecentStayList;
+    private ArrayList<Pair<Integer, String>> mRecentGourmetList;
+
+    private ArrayList<RecentPlacesListFragment> mFragmentList;
 
     private RecentStayListFragment mRecentStayListFragment;
     private RecentGourmetListFragment mRecentGourmetListFragment;
@@ -45,7 +47,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private RecentPlacesNetworkController mNetworkController;
 
-    DailyViewPager mViewPager;
+    private DailyViewPager mViewPager;
     private TabLayout mTabLayout;
     private View mEmptyView;
 
@@ -89,11 +91,10 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mNetworkController = new RecentPlacesNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        String stayString = DailyPreference.getInstance(this).getStayRecentPlaces();
-        mRecentStayPlaces = new RecentPlaces(stayString);
+        mAllRecentPlaces = new RecentPlaces(this);
 
-        String gourmetString = DailyPreference.getInstance(this).getGourmetRecentPlaces();
-        mRecentGourmetPlaces = new RecentPlaces(gourmetString);
+        mRecentStayList = mAllRecentPlaces.getRecentTypeList(PlaceType.HOTEL);
+        mRecentGourmetList = mAllRecentPlaces.getRecentTypeList(PlaceType.FNB);
 
         initIntent(getIntent());
 
@@ -191,13 +192,13 @@ public class RecentPlacesTabActivity extends BaseActivity
         mFragmentList = new ArrayList<>();
 
         mRecentStayListFragment = new RecentStayListFragment();
-        mRecentStayListFragment.setRecentPlaces(mRecentStayPlaces);
+        mRecentStayListFragment.setRecentPlaceList(mRecentStayList);
         mRecentStayListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentStayListFragment);
 
         mRecentGourmetListFragment = new RecentGourmetListFragment();
-        mRecentGourmetListFragment.setRecentPlaces(mRecentGourmetPlaces);
+        mRecentGourmetListFragment.setRecentPlaceList(mRecentGourmetList);
         mRecentGourmetListFragment.setRecentPlaceListFragmentListener(mRecentPlaceListFragmentListener);
 
         mFragmentList.add(mRecentGourmetListFragment);
@@ -289,12 +290,12 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private boolean isEmptyRecentStayPlace()
     {
-        return mRecentStayPlaces == null || mRecentStayPlaces.size() == 0;
+        return mRecentStayList == null || mRecentStayList.size() == 0;
     }
 
     private boolean isEmptyRecentGourmetPlace()
     {
-        return mRecentGourmetPlaces == null || mRecentGourmetPlaces.size() == 0;
+        return mRecentGourmetList == null || mRecentGourmetList.size() == 0;
     }
 
     @Override
@@ -360,22 +361,30 @@ public class RecentPlacesTabActivity extends BaseActivity
     private RecentPlacesListFragment.OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener = new RecentPlacesListFragment.OnRecentPlaceListFragmentListener()
     {
         @Override
-        public void onDeleteItemClick(PlaceType placeType, RecentPlaces recentPlaces)
+        public void onDeleteItemClick(Pair<Integer, String> deleteItem)
         {
-            if (PlaceType.FNB.equals(placeType) == true)
+            if (mAllRecentPlaces == null || mAllRecentPlaces.size() == 0)
             {
-                mRecentGourmetPlaces = recentPlaces;
+                return;
             }
 
-            if (PlaceType.HOTEL.equals(placeType) == true)
+            if (deleteItem != null)
             {
-                mRecentStayPlaces = recentPlaces;
+                String serviceType = deleteItem.second;
+
+                if (RecentPlaces.getServiceType(PlaceType.HOTEL).equalsIgnoreCase(serviceType) == true)
+                {
+                    mRecentStayList.remove(deleteItem);
+                } else if (RecentPlaces.getServiceType(PlaceType.FNB).equalsIgnoreCase(serviceType) == true)
+                {
+                    mRecentGourmetList.remove(deleteItem);
+                }
             }
 
-            int stayCount = mRecentStayPlaces.size();
-            int gourmetCount = mRecentGourmetPlaces.size();
+            mAllRecentPlaces.remove(deleteItem);
+            mAllRecentPlaces.savePreference();
 
-            if (stayCount == 0 && gourmetCount == 0)
+            if (mAllRecentPlaces.size() == 0)
             {
                 AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
             }
