@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
+import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -61,17 +62,17 @@ public class DailyMobileAPI implements IDailyNetwork
 
         if (Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://prod-aws-api.dailyhotel.me/service"//
-                : "MTA2JDQ1JDEwNSQyMyQxMTkkMTIwJDExOSQ4NyQxMiQ1NSQ3MCQyMSQxMzIkODMkNzMkODAk$QTNGNERGOEU1QQ0I0M0Q1AODVQGRTM2RjdCNzZDNkVBMTVBMEkY3NzRBGQUNBNDUzQUU5QzScU1QTcyNL0E3MEjlGNzk0MDUEzRUJBM0U2NzI4RUI3YQkRM1N0IyN0UKAI1RDRDYMzQyNzI1$";
+            URL = Constants.UNENCRYPTED_URL ? "https://status.dailyhotel.me/prod"//
+                : "ODIkMTA0JDU5JDEyJDE3JDY5JDEzMCQxMzEkMTA4JDckMzAkMCQzNCQxMSQyMyQxMDkk$IMjVCNzRWFNLTVDMRTA0ARTXRFMDBGQUNGEMYDMxNzlFNDA4N0U1RUQ3MkIyQTUwRDNACNUREQjHlDQTNDQ0Y4QUVFRkWVGNTJCRDU3QTdGMEIM4QjFYTCREJBODIzRjRCOUVBMEJFSYQkMy$";
         } else
         {
-            URL = Constants.UNENCRYPTED_URL ? "https://dev-aws-api.dailyhotel.me/service"//
-                : "NTUkNDUkMiQ4MiQ0JDgzJDY0JDk3JDc0JDE4JDIxJDE2JDYkNjAkMjkkNiQ=$QUTVOGVXNjk3RkMyOEFFFYRjSdDNTgF2MkJDNENBOTQ1MTVBQzU0QYkY0RUEyMAzgO2QkUxVOTBEQzlBOEEZBQUU5NUQHL1RjVDMEZBMkMMwMTc1NjUxMjEzQjQ4RjlDMDhFMTg1NTMyN0M4$";
+            URL = Constants.UNENCRYPTED_URL ? "https://status.dailyhotel.me/dev"//
+                : "NDMkMTAyJDIwJDYzJDM4JDEzMCQxMDckNTQkNiQxMzMkMzUkMTM3JDEwNiQ5OCQyOSQxMiQ=$QkUzRkCUxOTQC5MkE5MzgwWRUM4QjdBBNEUyNI0YzRNEVDQjlOCNjA4MTAZ5MDMxREIxMZ0M5MENBRTNFNERBRjgwQzA0OTU2MUEIwNTU3NEMRxQYjVgwNDlBQjY2Q0I3QkZCRkQwRIUELVD$";
         }
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStatusServer(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Status>>) listener);
     }
 
     @Override
