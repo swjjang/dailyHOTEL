@@ -5,8 +5,10 @@ import android.content.Context;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Holiday;
+import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -146,31 +148,24 @@ public class MainNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestNoticeAgreementResult(mNetworkTag, isAgree, mNoticeAgreementResultCallback);
     }
 
-    private retrofit2.Callback<JSONObject> mStatusCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback<BaseDto<Status>> mStatusCallback = new retrofit2.Callback<BaseDto<Status>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<Status>> call, Response<BaseDto<Status>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<Status> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msg_code");
-
-                    if (msgCode == 200)
+                    if (baseDto.msgCode == 200)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        Status status = baseDto.data;
 
-                        boolean isSuspend = dataJSONObject.getBoolean("isSuspend");
-
-                        if (isSuspend == true)
+                        if (status != null && status.isSuspend == true)
                         {
-                            String title = dataJSONObject.getString("messageTitle");
-                            String message = dataJSONObject.getString("messageBody");
-
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(title, message);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(status.messageTitle, status.messageBody);
                         } else
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
@@ -190,7 +185,7 @@ public class MainNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<Status>> call, Throwable t)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
         }

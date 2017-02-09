@@ -425,10 +425,7 @@ public class HomeFragment extends BaseFragment
             return;
         }
 
-        if (mHomeLayout.forceRefreshing() == true)
-        {
-            lockUI(false);
-        }
+        mHomeLayout.forceRefreshing();
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()

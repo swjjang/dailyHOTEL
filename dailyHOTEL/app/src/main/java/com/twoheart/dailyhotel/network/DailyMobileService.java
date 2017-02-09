@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
+import com.twoheart.dailyhotel.network.model.Status;
 
 import org.json.JSONObject;
 
@@ -35,7 +36,7 @@ public interface DailyMobileService
 {
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Call<JSONObject> requestStatusServer(@Url String url);
+    Call<BaseDto<Status>> requestStatusServer(@Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
