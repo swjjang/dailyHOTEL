@@ -66,6 +66,7 @@ public class DailyPreference
 
     private static final String KEY_STAY_RECENT_PLACES = "210";
     private static final String KEY_GOURMET_RECENT_PLACES = "211";
+    private static final String KEY_ALL_RECENT_PLACES = "212";
 
 
     private static final String KEY_AUTHORIZATION = "1000";
@@ -241,7 +242,6 @@ public class DailyPreference
             mOldPreferences = context.getSharedPreferences(DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
             mOldEditor = mOldPreferences.edit();
         }
-
     }
 
     public static synchronized DailyPreference getInstance(Context context)
@@ -265,8 +265,7 @@ public class DailyPreference
         boolean isShowTooltip = isViewWishListTooltip();
         boolean isShowSearchToolTip = isViewSearchTooltip();
 
-        String stayRecentPlace = getStayRecentPlaces();
-        String gourmetRecentPlace = getGourmetRecentPlaces();
+        String allRecentPlaces = getAllRecentPlaces();
 
         String baseUrl = getBaseUrl();
 
@@ -289,8 +288,7 @@ public class DailyPreference
         setIsViewWishListTooltip(isShowTooltip);
         setIsViewSearchTooltip(isShowSearchToolTip);
 
-        setStayRecentPlaces(stayRecentPlace);
-        setGourmetRecentPlaces(gourmetRecentPlace);
+        setAllRecentPlaces(allRecentPlaces);
 
         setBaseUrl(baseUrl);
 
@@ -680,24 +678,14 @@ public class DailyPreference
         return getValue(mPreferences, KEY_GOURMET_SEARCH_RECENTLY, null);
     }
 
-    public void setStayRecentPlaces(String recentPlaces)
+    public void setAllRecentPlaces(String recentPlaces)
     {
-        setValue(mEditor, KEY_STAY_RECENT_PLACES, recentPlaces);
+        setValue(mEditor, KEY_ALL_RECENT_PLACES, recentPlaces);
     }
 
-    public String getStayRecentPlaces()
+    public String getAllRecentPlaces()
     {
-        return getValue(mPreferences, KEY_STAY_RECENT_PLACES, null);
-    }
-
-    public void setGourmetRecentPlaces(String recentPlaces)
-    {
-        setValue(mEditor, KEY_GOURMET_RECENT_PLACES, recentPlaces);
-    }
-
-    public String getGourmetRecentPlaces()
-    {
-        return getValue(mPreferences, KEY_GOURMET_RECENT_PLACES, null);
+        return getValue(mPreferences, KEY_ALL_RECENT_PLACES, null);
     }
 
     public void setTermsOfLocation(boolean value)

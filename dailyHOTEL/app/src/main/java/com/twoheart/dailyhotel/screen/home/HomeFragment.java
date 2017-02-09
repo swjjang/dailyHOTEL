@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -415,18 +414,8 @@ public class HomeFragment extends BaseFragment
 
     private void requestRecentList()
     {
-        String stayPreferenceText = DailyPreference.getInstance(mBaseActivity).getStayRecentPlaces();
-        String gourmetPreferenceText = DailyPreference.getInstance(mBaseActivity).getGourmetRecentPlaces();
-
-        RecentPlaces stayRecentPlaces = new RecentPlaces(stayPreferenceText);
-        RecentPlaces gourmetRecentPlaces = new RecentPlaces(gourmetPreferenceText);
-
-        ArrayList<HomeRecentParam> recentParamList = new ArrayList<>();
-
-        recentParamList.addAll(stayRecentPlaces.getParamList(PlaceType.HOTEL, MAX_REQUEST_SIZE));
-        recentParamList.addAll(gourmetRecentPlaces.getParamList(PlaceType.FNB, MAX_REQUEST_SIZE));
-
-        mNetworkController.requestRecentList(recentParamList);
+        RecentPlaces allRecentPlaces = new RecentPlaces(mBaseActivity);
+        mNetworkController.requestRecentList(allRecentPlaces.getParamList(MAX_REQUEST_SIZE));
     }
 
     public void forceRefreshing()
