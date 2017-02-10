@@ -78,7 +78,6 @@ public class HomeLayout extends BaseLayout
     private View mEventAreaLayout;
     View mScrollButtonLayout;
     View mTextMessageLayout;
-    View mTextMessageDividerView;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -326,7 +325,6 @@ public class HomeLayout extends BaseLayout
         layout.addView(messageLayout);
 
         mTextMessageLayout = messageLayout.findViewById(R.id.homeMessageLayout);
-        mTextMessageDividerView = messageLayout.findViewById(R.id.bottomDivider);
 
         hideMessageLayout();
     }
@@ -707,7 +705,7 @@ public class HomeLayout extends BaseLayout
         mEventViewPager.setOnPageChangeListener(null);
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
         mEventViewPager.setCurrentItem(mLastEventPosition);
-        mEventViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        mEventViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
@@ -795,16 +793,6 @@ public class HomeLayout extends BaseLayout
     public void setMessageLayoutVisibility(int visibility)
     {
         mTextMessageLayout.setVisibility(visibility);
-
-        int marginTop = 0;
-        if (View.GONE == visibility) {
-            marginTop = Util.dpToPx(mContext, 15d);
-        }
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mTextMessageDividerView.getLayoutParams();
-        params.topMargin = marginTop;
-
-        mTextMessageDividerView.setLayoutParams(params);
     }
 
     public void setTextMessageData(String title, String description)
