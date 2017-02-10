@@ -266,26 +266,44 @@ public class GourmetListFragment extends PlaceListFragment
                 Crashlytics.logException(e);
             }
 
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
             GourmetListFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
+            GourmetListFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("message : " + message);
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
+            GourmetListFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call call, Response response)
         {
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
             GourmetListFragment.this.onErrorResponse(call, response);
         }
     };

@@ -221,11 +221,11 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
             Gourmet gourmet = placeViewItem.getItem();
 
-            Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                mSaleTime, gourmet, 0);
-
             if (Util.isUsedMultiTransition() == true)
             {
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
+                    mSaleTime, gourmet, 0, true);
+
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
@@ -240,6 +240,9 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
+                    mSaleTime, gourmet, 0, false);
+
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
 

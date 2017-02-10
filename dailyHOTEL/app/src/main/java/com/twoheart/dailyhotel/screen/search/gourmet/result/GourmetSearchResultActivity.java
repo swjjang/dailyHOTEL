@@ -693,11 +693,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             Gourmet gourmet = placeViewItem.getItem();
 
-            Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
-                mGourmetSearchCuration.getSaleTime(), gourmet, listCount);
-
             if (Util.isUsedMultiTransition() == true)
             {
+                Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
+                    mGourmetSearchCuration.getSaleTime(), gourmet, listCount, true);
+
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
@@ -719,6 +719,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
+                Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
+                    mGourmetSearchCuration.getSaleTime(), gourmet, listCount, false);
+
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
         }

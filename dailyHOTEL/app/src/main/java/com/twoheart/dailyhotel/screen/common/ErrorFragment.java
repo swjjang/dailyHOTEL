@@ -72,14 +72,26 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
     {
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
-        dailyToolbarLayout.initToolbar(title, new OnClickListener()
+
+        switch (mMainFragmentManager.getLastIndexFragment())
         {
-            @Override
-            public void onClick(View v)
-            {
-                baseActivity.finish();
-            }
-        });
+            case MainFragmentManager.INDEX_HOME_FRAGMENT:
+                break;
+
+            case MainFragmentManager.INDEX_BOOKING_FRAGMENT:
+                title = getString(R.string.menu_item_title_bookings);
+                break;
+
+            case MainFragmentManager.INDEX_MYDAILY_FRAGMENT:
+                title = getString(R.string.menu_item_title_mydaily);
+                break;
+
+            case MainFragmentManager.INDEX_INFORMATION_FRAGMENT:
+                title = getString(R.string.menu_item_title_information);
+                break;
+        }
+
+        dailyToolbarLayout.initToolbar(title, null, false);
     }
 
     @Override

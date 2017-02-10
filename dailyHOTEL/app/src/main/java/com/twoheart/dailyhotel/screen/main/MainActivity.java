@@ -640,19 +640,6 @@ public class MainActivity extends BaseActivity implements Constants
         }
     }
 
-    public void onRuntimeError(String message)
-    {
-        if (mIsInitialization == false)
-        {
-            if (DEBUG == false && Util.isTextEmpty(message) == false)
-            {
-                Crashlytics.logException(new RuntimeException(message));
-            }
-
-            onError();
-        }
-    }
-
     void showDisabledNetworkPopup()
     {
         if (isFinishing() == true)

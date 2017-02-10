@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -272,27 +271,44 @@ public class StayListFragment extends PlaceListFragment
                 Crashlytics.logException(e);
             }
 
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onError(e);
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
+            StayListFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("msgCode : " + msgCode + " , message : " + message);
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
+            StayListFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onRuntimeError("message : " + message);
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
+            StayListFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call call, Response response)
         {
+            if (mPlaceListLayout.isRefreshing() == true)
+            {
+                mPlaceListLayout.setSwipeRefreshing(false);
+            }
+
             StayListFragment.this.onErrorResponse(call, response);
         }
     };

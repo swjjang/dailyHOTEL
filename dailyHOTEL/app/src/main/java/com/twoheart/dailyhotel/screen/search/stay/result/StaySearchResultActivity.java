@@ -721,11 +721,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             Stay stay = placeViewItem.getItem();
 
-            Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
-                mStaySearchCuration.getCheckInSaleTime(), stay, listCount);
-
             if (Util.isUsedMultiTransition() == true)
             {
+                Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
+                    mStaySearchCuration.getCheckInSaleTime(), stay, listCount, true);
+
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -749,6 +749,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
+                Intent intent = StayDetailActivity.newInstance(StaySearchResultActivity.this, //
+                    mStaySearchCuration.getCheckInSaleTime(), stay, listCount, false);
+
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
         }

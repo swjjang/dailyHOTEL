@@ -900,11 +900,11 @@ public class StayMainActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
                     }
 
-                    Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
-                        mStayCuration.getCheckInSaleTime(), province, stay, listCount);
-
                     if (Util.isUsedMultiTransition() == true)
                     {
+                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
+                            mStayCuration.getCheckInSaleTime(), province, stay, listCount, true);
+
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View gradeTextView = view.findViewById(R.id.gradeTextView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -928,6 +928,9 @@ public class StayMainActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
+                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this, //
+                            mStayCuration.getCheckInSaleTime(), province, stay, listCount, false);
+
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
                     }
 
@@ -1179,11 +1182,11 @@ public class StayMainActivity extends PlaceMainActivity
 
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
-                Intent intent = StayDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar);
+                Intent intent = StayDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
+                Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
 

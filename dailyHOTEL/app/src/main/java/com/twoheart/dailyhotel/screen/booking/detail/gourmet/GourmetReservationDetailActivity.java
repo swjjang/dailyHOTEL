@@ -542,7 +542,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             saleTime.setCurrentTime(mPlaceBookingDetail.currentDateTime);
             saleTime.setDailyTime(mPlaceBookingDetail.dailyDateTime);
 
-            Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, saleTime, mPlaceBookingDetail.placeIndex, 0, false);
+            Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, saleTime, mPlaceBookingDetail.placeIndex, 0, false, false);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
         }
 

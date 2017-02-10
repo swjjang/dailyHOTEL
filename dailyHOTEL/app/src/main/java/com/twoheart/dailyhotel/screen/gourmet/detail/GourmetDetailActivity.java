@@ -77,7 +77,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Gourmet gourmet, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Gourmet gourmet//
+        , int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -107,6 +108,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -120,7 +122,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, int ticketIndex, boolean isShowCalendar)
+    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, int ticketIndex//
+        , boolean isShowCalendar, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -132,6 +135,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -140,7 +144,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * 딥링크로 호출
      */
     public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
-        , int gourmetIndex, int ticketIndex, boolean isShowCalendar)
+        , int gourmetIndex, int ticketIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -153,6 +157,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -166,14 +171,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, int listCount, boolean isUsedMultiTransition)
     {
         SaleTime startSaleTime = saleTime.getClone(0);
 
-        return newInstance(context, saleTime, gourmet, startSaleTime, null, listCount);
+        return newInstance(context, saleTime, gourmet, startSaleTime, null, listCount, isUsedMultiTransition);
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, SaleTime startSaleTime//
+        , SaleTime endSaleTime, int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -203,11 +209,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace)
+    public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace, boolean isUsedMultiTransition)
     {
         SaleTime startSaleTime = saleTime.getClone(0);
 
@@ -239,11 +246,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, RecommendationGourmet recommendationGourmet, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, RecommendationGourmet recommendationGourmet//
+        , SaleTime startSaleTime, SaleTime endSaleTime, int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -273,6 +282,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -382,7 +392,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
 
-            initTransition();
+            mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
+
+            if (mIsUsedMultiTransition == true)
+            {
+                initTransition();
+            } else
+            {
+                mIsTransitionEnd = true;
+            }
+
             initLayout(placeName, mDefaultImageUrl, isFromMap);
 
             if (isShowCalendar == true)
@@ -394,7 +413,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isUsedMultiTransition() == true)
+        if (mIsUsedMultiTransition == true)
         {
             TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inNameTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
@@ -491,7 +510,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isUsedMultiTransition() == true)
+        if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
             initTransLayout(placeName, imageUrl, isFromMap);
         } else
@@ -500,6 +519,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         mPlaceDetailLayout.setStatusBarHeight(this);
+        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
 
         setLockUICancelable(true);
         initToolbar(placeName);
@@ -509,7 +529,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initTransLayout(String placeName, String imageUrl, boolean isFromMap)
     {
-        if (Util.isTextEmpty(placeName, imageUrl) == true)
+        if (Util.isTextEmpty(imageUrl) == true)
         {
             return;
         }

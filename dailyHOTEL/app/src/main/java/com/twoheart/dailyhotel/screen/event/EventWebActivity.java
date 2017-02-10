@@ -398,11 +398,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
-                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar);
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, ticketIndex, isShowCalendar);
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, ticketIndex, isShowCalendar, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
 
@@ -467,13 +467,13 @@ public class EventWebActivity extends WebViewActivity implements Constants
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                    startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
+                    startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                    saleTime, gourmetIndex, ticketIndex, isShowCalendar);
+                    saleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }

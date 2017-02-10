@@ -364,38 +364,38 @@ public class HomeFragment extends BaseFragment
 
         if (place.placeType == PlaceType.HOTEL)
         {
-            Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place);
-
             if (Util.isUsedMultiTransition() == true)
             {
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
+
                 View simpleDraweeView = view.findViewById(R.id.contentImageView);
-                View nameTextView = view.findViewById(R.id.contentTextView);
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
+
                 mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
         } else if (place.placeType == PlaceType.FNB)
         {
-            Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place);
-
             if (Util.isUsedMultiTransition() == true)
             {
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
+
                 View simpleDraweeView = view.findViewById(R.id.contentImageView);
-                View nameTextView = view.findViewById(R.id.contentTextView);
 
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
+                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
+
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
         }

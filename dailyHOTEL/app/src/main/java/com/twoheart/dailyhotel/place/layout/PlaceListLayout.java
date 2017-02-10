@@ -254,6 +254,16 @@ public abstract class PlaceListLayout extends BaseLayout
         mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
+    public boolean isRefreshing()
+    {
+        if (mSwipeRefreshLayout == null)
+        {
+            return false;
+        }
+
+        return mSwipeRefreshLayout.isRefreshing();
+    }
+
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
                               ArrayList<PlaceViewItem> list, Constants.SortType sortType)
     {

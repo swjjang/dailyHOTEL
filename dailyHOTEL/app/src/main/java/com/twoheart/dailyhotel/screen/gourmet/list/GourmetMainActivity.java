@@ -802,11 +802,11 @@ public class GourmetMainActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(GourmetMainActivity.this).onRegionChanged(country, realProvinceName);
                     }
 
-                    Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                        mGourmetCuration.getSaleTime(), province, gourmet, listCount);
-
                     if (Util.isUsedMultiTransition() == true)
                     {
+                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
+                            mGourmetCuration.getSaleTime(), province, gourmet, listCount, true);
+
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
                         View gradientTopView = view.findViewById(R.id.gradientTopView);
@@ -828,6 +828,9 @@ public class GourmetMainActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
+                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
+                            mGourmetCuration.getSaleTime(), province, gourmet, listCount, false);
+
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
                     }
 
@@ -1073,11 +1076,11 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             } else
             {
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar);
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
             }
 
