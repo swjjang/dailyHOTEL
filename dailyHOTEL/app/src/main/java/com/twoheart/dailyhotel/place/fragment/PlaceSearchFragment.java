@@ -195,6 +195,9 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 } else if (resultCode == CODE_RESULT_ACTIVITY_HOME)
                 {
                     mOnSearchFragmentListener.finish();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    mOnSearchFragmentListener.finish(resultCode);
                 } else
                 {
                     mShowSearchKeyboard = true;

@@ -17,7 +17,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -27,8 +26,6 @@ import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Response;
-
-import static com.twoheart.dailyhotel.model.RecentPlaces.getServiceType;
 
 /**
  * Created by android_sam on 2016. 10. 12..

@@ -270,9 +270,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         } else if (booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT)
         {
             // 가상계좌 입금대기
-            intent = new Intent(baseActivity, PaymentWaitActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING, booking);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
+            intent = PaymentWaitActivity.newInstance(baseActivity, booking);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
         } else
         {
             releaseUiComponent();
@@ -439,24 +438,16 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         switch (placeType)
         {
             case HOTEL:
-                intent = new Intent(baseActivity, StayReservationDetailActivity.class);
+                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink);
                 break;
 
             case FNB:
-                intent = new Intent(baseActivity, GourmetReservationDetailActivity.class);
+                intent = GourmetReservationDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, isDeepLink);
                 break;
             default:
                 return false;
         }
 
-        if (intent == null)
-        {
-            return false;
-        }
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
 
         return true;

@@ -107,6 +107,25 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_FAQ:
+            {
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+                    finish();
+                }
+                break;
+            }
+        }
+    }
+
     private void initToolbar()
     {
         View toolbar = findViewById(R.id.toolbar);

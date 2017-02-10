@@ -203,13 +203,16 @@ public class HomeFragment extends BaseFragment
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_EVENTWEB:
-            {
-                mDontReload = true;
-                break;
-            }
-
             // 해당 go home 목록이 MainActivity 목록과 동일해야함.
+            case Constants.CODE_REQUEST_ACTIVITY_STAY:
+            case Constants.CODE_REQUEST_ACTIVITY_GOURMET:
+            case Constants.CODE_REQUEST_ACTIVITY_EVENTWEB:
+            case Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            case Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case Constants.CODE_REQUEST_ACTIVITY_SEARCH:
+            case Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
+            case Constants.CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
+            case Constants.CODE_REQUEST_ACTIVITY_COLLECTION:
             case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
             case Constants.CODE_REQUEST_ACTIVITY_ABOUT:
             case Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST:
@@ -217,6 +220,7 @@ public class HomeFragment extends BaseFragment
             case Constants.CODE_REQUEST_ACTIVITY_FAQ:
             case Constants.CODE_REQUEST_ACTIVITY_CONTACTUS:
             case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+            case Constants.CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mDontReload = false;

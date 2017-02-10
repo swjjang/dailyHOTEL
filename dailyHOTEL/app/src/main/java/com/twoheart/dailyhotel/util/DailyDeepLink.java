@@ -44,7 +44,7 @@ public class DailyDeepLink
     private static final String PARAM_V4_DATE_PLUS = "dp"; // 오늘 날짜에 더해줄 일
     private static final String PARAM_V4_SORTING = "s"; // lp (낮은 가격). hp (높은 가격), r (만족도)
 
-//    private static final String PARAM_V5_EVENT_NAME = "en"; // 이벤트 이름 --> "t" 로 통일 하도록 한다.
+    //    private static final String PARAM_V5_EVENT_NAME = "en"; // 이벤트 이름 --> "t" 로 통일 하도록 한다.
     private static final String PARAM_V5_CALENDAR_FLAG = "cal"; // 0: 달력을 띄우지 않는다.(디폴트), 1 : 달력 띄운다.
 
     private static final String PARAM_V6_WORD = "w"; // 검색어
@@ -57,10 +57,10 @@ public class DailyDeepLink
     private static final String PARAM_V7_PLACE_TYPE = "pt"; // stay, gourmet, all
     private static final String PARAM_V7_NOTICE_INDEX = "ni"; // 공지사항 인덱스
 
-//    private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
+    //    private static final String PARAM_V9_QUERY = "qr"; // 검색 쿼리
     private static final String PARAM_V9_OPEN_TICKEt_INDEX = "oti"; // 스테이/고메 메뉴 오픈시에 해당 인덱스
     private static final String PARAM_V9_QUERY_TYPE = "qt"; // 쿼리 방식
-//    private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
+    //    private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
 
     private static final String PARAM_V10_START_DATE = "sd"; // 캘린더 시작 날짜
     private static final String PARAM_V10_END_DATE = "ed"; // 캘린더 끝날짜

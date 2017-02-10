@@ -130,7 +130,8 @@ public abstract class RecentPlacesListFragment extends BaseFragment
 
     public void sortList(final ArrayList<Pair<Integer, String>> expectedList, ArrayList<? extends Place> actual)
     {
-        if (expectedList == null || expectedList.size() == 0) {
+        if (expectedList == null || expectedList.size() == 0)
+        {
             return;
         }
 

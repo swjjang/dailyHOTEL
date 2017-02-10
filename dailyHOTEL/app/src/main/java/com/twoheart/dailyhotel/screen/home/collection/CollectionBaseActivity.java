@@ -240,6 +240,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                 {
                     case Activity.RESULT_OK:
                     case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                    case CODE_RESULT_ACTIVITY_GO_HOME:
                         setResult(resultCode);
                         finish();
                         break;
