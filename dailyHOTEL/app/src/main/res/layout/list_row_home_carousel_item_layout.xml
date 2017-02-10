@@ -77,21 +77,22 @@
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/contentDiscountPriceView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/default_text_c323232"
+                dailyFont:style="Medium"
                 android:textSize="13dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/contentPersonView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/default_text_c666666"
                 android:textSize="12dp"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/contentOriginPriceView"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:textColor="@color/default_text_cc5c5c5"
