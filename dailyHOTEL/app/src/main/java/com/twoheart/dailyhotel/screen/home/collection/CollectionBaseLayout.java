@@ -121,7 +121,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
             private final int dp3Height = Util.dpToPx(mContext, 3);
             private final int dp20Height = Util.dpToPx(mContext, 20);
             private final int dp21Height = Util.dpToPx(mContext, 21);
-            private final int dp41Height = Util.dpToPx(mContext, 41);
+            private final int dp42Height = Util.dpToPx(mContext, 42);
             private final int dp30Height = Util.dpToPx(mContext, 30);
             private final int dp44Height = Util.dpToPx(mContext, 44);
 
@@ -166,7 +166,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
                         mTitleTextView.setTranslationX(0);
                         mTitleTextView.setTranslationY(0);
 
-                        subTitleLayout.setPadding(0, dp41Height, 0, 0);
+                        subTitleLayout.setPadding(0, dp42Height, 0, 0);
                         mSubTitleTextView.setAlpha(1.0f);
 
                         titleBoxLayout.setTranslationY(-dp21Height);

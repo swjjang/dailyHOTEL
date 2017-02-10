@@ -77,7 +77,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:visibility="invisible"
-                    app:srcCompat="@drawable/tabbar_ic_n"/>
+                    app:srcCompat="@drawable/list_ic_n"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:visibility="invisible"
-                    app:srcCompat="@drawable/tabbar_ic_n"/>
+                    app:srcCompat="@drawable/list_ic_n"/>
 
                 <View
                     android:id="@+id/view2"

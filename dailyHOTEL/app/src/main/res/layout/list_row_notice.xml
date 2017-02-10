@@ -39,5 +39,5 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
-        app:srcCompat="@drawable/tabbar_ic_n"/>
+        app:srcCompat="@drawable/list_ic_n"/>
 </RelativeLayout>
