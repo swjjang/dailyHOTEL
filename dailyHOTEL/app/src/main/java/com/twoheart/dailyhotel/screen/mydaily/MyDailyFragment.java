@@ -169,7 +169,24 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
                 mMyDailyLayout.updateLoginLayout(false, false);
                 mMyDailyLayout.updateAccountLayout(false, 0, 0);
-                mMyDailyLayout.setLinkAlarmVisible(false);
+
+                boolean isBenefitAlarm = DailyPreference.getInstance(getActivity()).isUserBenefitAlarm();
+
+                if (Util.isOverAPI19() == true && isBenefitAlarm == true)
+                {
+                    boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
+
+                    if (isNotificationsEnabled == false)
+                    {
+                        mMyDailyLayout.setLinkAlarmVisible(true);
+                    } else
+                    {
+                        mMyDailyLayout.setLinkAlarmVisible(false);
+                    }
+                } else
+                {
+                    mMyDailyLayout.setLinkAlarmVisible(false);
+                }
             }
 
             // 혜택 알림 메세지 가져오기

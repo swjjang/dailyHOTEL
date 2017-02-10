@@ -160,11 +160,11 @@
                             android:id="@+id/newCounponIconView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignLeft="@id/couponImageView"
                             android:layout_alignTop="@id/couponImageView"
-                            android:layout_marginRight="38dp"
+                            android:layout_marginLeft="24dp"
                             android:visibility="gone"
-                            app:srcCompat="@drawable/tabbar_ic_n"/>
+                            app:srcCompat="@drawable/list_ic_n"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -217,11 +217,11 @@
                             android:id="@+id/newBonusIconView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignLeft="@id/bonusImageView"
                             android:layout_alignTop="@id/bonusImageView"
-                            android:layout_marginRight="38dp"
+                            android:layout_marginLeft="26dp"
                             android:visibility="gone"
-                            app:srcCompat="@drawable/tabbar_ic_n"/>
+                            app:srcCompat="@drawable/list_ic_n"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"

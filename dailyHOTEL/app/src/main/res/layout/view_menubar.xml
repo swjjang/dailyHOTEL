@@ -82,18 +82,20 @@
 
                 <ImageView
                     android:id="@+id/myDailyImageView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/tabbar_ic_03_mydaily_off"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/myDailyView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
                     android:layout_below="@+id/myDailyImageView"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="3dp"
                     android:gravity="center"
                     android:text="@string/menu_item_title_mydaily"
@@ -102,12 +104,11 @@
 
                 <ImageView
                     android:id="@+id/myDailyNewIconView"
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="6dp"
-                    android:paddingLeft="28dp"
-                    android:scaleType="centerInside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/myDailyImageView"
+                    android:layout_alignTop="@+id/myDailyImageView"
+                    android:layout_marginLeft="23dp"
                     android:visibility="invisible"
                     app:srcCompat="@drawable/tabbar_ic_n"/>
             </RelativeLayout>
@@ -120,18 +121,20 @@
 
                 <ImageView
                     android:id="@+id/informationImageView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/tabbar_ic_04_more_off"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/informationView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentBottom="true"
                     android:layout_below="@+id/informationImageView"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="3dp"
                     android:gravity="center"
                     android:text="@string/menu_item_title_information"
@@ -140,12 +143,11 @@
 
                 <ImageView
                     android:id="@+id/informationNewIconView"
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="6dp"
-                    android:paddingLeft="28dp"
-                    android:scaleType="centerInside"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/informationImageView"
+                    android:layout_alignTop="@+id/informationImageView"
+                    android:layout_marginLeft="26dp"
                     android:visibility="invisible"
                     app:srcCompat="@drawable/tabbar_ic_n"/>
             </RelativeLayout>
