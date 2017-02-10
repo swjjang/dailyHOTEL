@@ -675,15 +675,13 @@ public class HomeLayout extends BaseLayout
         if (defaultEvent == null //
             || HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultEvent.defaultImageUrl) == false)
         {
-            setEventCountView(1, mEventViewPagerAdapter.getCount());
+            setEventCountView(0, mEventViewPagerAdapter.getCount());
         }
 
-//        mEventViewPager.removeAllViews();
-//        mEventViewPager.clearOnPageChangeListeners();
         mEventViewPager.setOnPageChangeListener(null);
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
         mEventViewPager.setCurrentItem(mLastEventPosition);
-        mEventViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        mEventViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
@@ -726,13 +724,14 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-//        if (pageIndex < 1)
-//        {
-//            pageIndex = totalCount;
-//        } else if (pageIndex > totalCount)
-//        {
-//            pageIndex = 1;
-//        }
+        //pageIndex가 0부터 시작함으로 화면에 표시 되는 것은 +1 시켜 줌
+        if (pageIndex < 1)
+        {
+            pageIndex = totalCount;
+        } else if (pageIndex > totalCount)
+        {
+            pageIndex = 1;
+        }
 
         if (totalCount == 0)
         {
