@@ -22,7 +22,7 @@
         android:layout_marginRight="10dp"
         android:background="@drawable/shape_home_event_count_background"
         android:gravity="center"
-        android:textColor="@color/white_a50"
+        android:textColor="@color/white_a60"
         android:textSize="11dp"
         android:visibility="gone"
         dailyFont:style="Medium"/>
