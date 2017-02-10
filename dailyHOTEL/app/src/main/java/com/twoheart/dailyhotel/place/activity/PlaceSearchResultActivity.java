@@ -179,6 +179,9 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
                     finish(resultCode);
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    finish(resultCode);
                 }
                 break;
             }

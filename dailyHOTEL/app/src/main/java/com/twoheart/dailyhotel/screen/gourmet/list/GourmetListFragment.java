@@ -15,7 +15,6 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 

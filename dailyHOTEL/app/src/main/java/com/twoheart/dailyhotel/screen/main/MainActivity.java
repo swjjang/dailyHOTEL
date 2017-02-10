@@ -22,7 +22,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
@@ -316,7 +315,7 @@ public class MainActivity extends BaseActivity implements Constants
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
-                } else if(resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     if (mMainFragmentManager != null)
                     {

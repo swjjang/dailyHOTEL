@@ -84,7 +84,8 @@ public class HomeRecommendationLayout extends LinearLayout
     {
         clearAll();
 
-        if (isError == true) {
+        if (isError == true)
+        {
             setErrorView();
             return;
         }

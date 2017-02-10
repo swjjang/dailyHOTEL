@@ -112,7 +112,7 @@ public class PaymentWaitActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode)
+        switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_FAQ:
             {
