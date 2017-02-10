@@ -80,7 +80,15 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
         } else
         {
-            mPlaceType = Constants.PlaceType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_PLACETYPE));
+            try
+            {
+                mPlaceType = Constants.PlaceType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_PLACETYPE));
+            } catch (Exception e)
+            {
+                Util.restartApp(this);
+                return;
+            }
+
             title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
             arrayList = intent.getParcelableArrayListExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST);
             position = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, 0);
