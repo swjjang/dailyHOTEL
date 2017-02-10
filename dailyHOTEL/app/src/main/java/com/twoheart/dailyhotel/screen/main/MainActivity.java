@@ -296,6 +296,7 @@ public class MainActivity extends BaseActivity implements Constants
                 mNetworkController.requestNoticeAgreement();
                 break;
 
+            // 해당 go home 목록이 MainActivity 목록과 동일해야함.
             case CODE_REQUEST_ACTIVITY_STAY:
             case CODE_REQUEST_ACTIVITY_GOURMET:
             case CODE_REQUEST_ACTIVITY_EVENTWEB:
@@ -315,6 +316,20 @@ public class MainActivity extends BaseActivity implements Constants
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                } else if(resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    if (mMainFragmentManager != null)
+                    {
+                        Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                        if (fragment instanceof HomeFragment)
+                        {
+                            fragment.onActivityResult(requestCode, resultCode, data);
+                        } else
+                        {
+                            mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                        }
+                    }
                 } else
                 {
                     mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
@@ -412,6 +427,7 @@ public class MainActivity extends BaseActivity implements Constants
             case Constants.CODE_REQUEST_ACTIVITY_FAQ:
             case Constants.CODE_REQUEST_ACTIVITY_CONTACTUS:
             case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+            case Constants.CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
             {
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {

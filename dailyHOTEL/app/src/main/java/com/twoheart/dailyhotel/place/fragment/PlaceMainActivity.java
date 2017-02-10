@@ -214,6 +214,10 @@ public abstract class PlaceMainActivity extends BaseActivity
                 {
                     setResult(resultCode);
                     finish();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+                    finish();
                 } else
                 {
                     if (mIsDeepLink == false)

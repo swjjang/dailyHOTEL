@@ -342,6 +342,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 case CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON:
                     mDontReloadAtOnResume = true;
                     break;
+
+                case CODE_REQUEST_ACTIVITY_FAQ:
+                    if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+                        finish();
+                    }
+                    break;
             }
 
             super.onActivityResult(requestCode, resultCode, data);

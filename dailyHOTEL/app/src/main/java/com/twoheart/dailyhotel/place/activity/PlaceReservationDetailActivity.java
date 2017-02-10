@@ -170,6 +170,14 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_FAQ:
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+                    finish();
+                }
+                break;
         }
     }
 
