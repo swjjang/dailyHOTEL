@@ -51,6 +51,7 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="@string/label_home_stay_menu_description"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"/>
@@ -93,6 +94,7 @@
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="@string/label_home_gourmet_menu_description"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"/>
