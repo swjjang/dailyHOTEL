@@ -73,6 +73,7 @@ public class HomeLayout extends BaseLayout
     private View mEventAreaLayout;
     View mScrollButtonLayout;
     View mTextMessageLayout;
+    View mTextMessageDividerView;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -304,7 +305,9 @@ public class HomeLayout extends BaseLayout
         layout.addView(messageLayout);
 
         mTextMessageLayout = messageLayout.findViewById(R.id.homeMessageLayout);
-        mTextMessageLayout.setVisibility(View.GONE);
+        mTextMessageDividerView = messageLayout.findViewById(R.id.bottomDivider);
+
+        hideMessageLayout();
     }
 
     private void initWishListLayout(LinearLayout layout)
@@ -765,7 +768,13 @@ public class HomeLayout extends BaseLayout
 
     public void hideMessageLayout()
     {
-        mTextMessageLayout.setVisibility(View.GONE);
+        setMessageLayoutVisibility(View.GONE);
+    }
+
+    public void setMessageLayoutVisibility(int visibility)
+    {
+        mTextMessageLayout.setVisibility(visibility);
+        mTextMessageDividerView.setVisibility(visibility);
     }
 
     public void setTextMessageData(String title, String description)
@@ -775,7 +784,8 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        mTextMessageLayout.setVisibility(View.GONE);
+        hideMessageLayout();
+
         mTextMessageLayout.clearAnimation();
 
         if (Util.isTextEmpty(title) == true && Util.isTextEmpty(description) == true)
@@ -832,7 +842,7 @@ public class HomeLayout extends BaseLayout
 
         descriptionView.setText(description);
 
-        mTextMessageLayout.setVisibility(View.INVISIBLE);
+        setMessageLayoutVisibility(View.INVISIBLE);
 
         mTextMessageLayout.post(new Runnable()
         {
