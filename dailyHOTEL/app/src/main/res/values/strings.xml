@@ -153,7 +153,7 @@
     <string name="actionbar_title_invite_friends">친구 초대하기</string>
     <string name="actionbar_title_reg_creditcard">간편결제 카드 등록하기</string>
     <string name="actionbar_title_setting_frag">더보기</string>
-    <string name="actionbar_title_error_frag">DAILYHOTEL</string>
+    <string name="actionbar_title_error_frag">DAILY</string>
     <string name="actionbar_title_wait_timer_frag">DAILYHOTEL</string>
     <string name="actionbar_title_booking_tab_activity">예약확인</string>
     <string name="actionbar_title_faq_activity">자주 묻는 질문</string>
