@@ -53,11 +53,16 @@ public class HomeLayout extends BaseLayout
     private static final int MESSAGE_ANIMATION_DURATION = 200;
     private static final double BUTTON_LAYOUT_MIN_HEIGHT = 76d;
     private static final double BUTTON_LAYOUT_MAX_HEIGHT = 82d;
+    private static final double BUTTON_TEXT_MIN_LEFT_MARGIN = 4d;
+    private static final double BUTTON_TEXT_MAX_LEFT_MARGIN = 10d;
 
     int mEventImageHeight;
     int mButtonGapHeight;
+    int mButtonTextGapLeftMargin;
     int mScrollButtonMaxHeight;
     int mScrollButtonMinHeight;
+    int mScrollButtonTextMaxLeftMargin;
+    int mScrollButtonTextMinLeftMargin;
 
     private int mLastEventPosition;
     private Handler mEventHandler;
@@ -146,6 +151,10 @@ public class HomeLayout extends BaseLayout
         mScrollButtonMinHeight = Util.dpToPx(mContext, BUTTON_LAYOUT_MIN_HEIGHT);
         mScrollButtonMaxHeight = Util.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT);
 
+        mButtonTextGapLeftMargin = Util.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN - BUTTON_TEXT_MIN_LEFT_MARGIN);
+        mScrollButtonTextMaxLeftMargin = Util.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN);
+        mScrollButtonTextMinLeftMargin = Util.dpToPx(mContext, BUTTON_TEXT_MIN_LEFT_MARGIN);
+
         initToolbarLayout(view);
         initSwipeRefreshLayout(view);
         initNestedScrollLayout(view);
@@ -198,7 +207,20 @@ public class HomeLayout extends BaseLayout
         mActionButtonLayout.setVisibility(View.GONE);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mActionButtonLayout.getLayoutParams();
-        params.height = Util.dpToPx(mContext, BUTTON_LAYOUT_MIN_HEIGHT);
+        params.height = mScrollButtonMinHeight;
+        mActionButtonLayout.setLayoutParams(params);
+
+        View stayButtonTextView = mActionButtonLayout.findViewById(R.id.stayButtonTextView);
+        View gourmetButtonTextView = mActionButtonLayout.findViewById(R.id.gourmetButtonTextView);
+
+        LinearLayout.LayoutParams stayTextParams = (LinearLayout.LayoutParams) stayButtonTextView.getLayoutParams();
+        LinearLayout.LayoutParams gourmetTextParams = (LinearLayout.LayoutParams) gourmetButtonTextView.getLayoutParams();
+        stayTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
+        gourmetTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
+        stayButtonTextView.setLayoutParams(stayTextParams);
+        gourmetButtonTextView.setLayoutParams(gourmetTextParams);
+
+
 
         View stayButton = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
         View gourmetButton = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
@@ -1217,12 +1239,23 @@ public class HomeLayout extends BaseLayout
             int endScrollY = mEventImageHeight / 5 * 4;
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mScrollButtonLayout.getLayoutParams();
+
+            View stayButtonTextView = mScrollButtonLayout.findViewById(R.id.stayButtonTextView);
+            View gourmetButtonTextView = mScrollButtonLayout.findViewById(R.id.gourmetButtonTextView);
+
+            LinearLayout.LayoutParams stayTextParams = (LinearLayout.LayoutParams) stayButtonTextView.getLayoutParams();
+            LinearLayout.LayoutParams gourmetTextParams = (LinearLayout.LayoutParams) gourmetButtonTextView.getLayoutParams();
+
             if (scrollY <= startScrollY)
             {
                 params.height = mScrollButtonMaxHeight;
+                stayTextParams.leftMargin = mScrollButtonTextMaxLeftMargin;
+                gourmetTextParams.leftMargin = mScrollButtonTextMaxLeftMargin;
             } else if (endScrollY < scrollY)
             {
                 params.height = mScrollButtonMinHeight;
+                stayTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
+                gourmetTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
             } else
             {
                 double ratio = ((double) (scrollY - startScrollY) / (double) (endScrollY - startScrollY));
@@ -1230,9 +1263,15 @@ public class HomeLayout extends BaseLayout
                 int newHeight = mScrollButtonMaxHeight - gapHeight;
 
                 params.height = newHeight;
+
+                int gapMargin = (int) (mButtonTextGapLeftMargin * ratio);
+                stayTextParams.leftMargin = mScrollButtonTextMaxLeftMargin - gapMargin;
+                gourmetTextParams.leftMargin = mScrollButtonTextMaxLeftMargin - gapMargin;
             }
 
             mScrollButtonLayout.setLayoutParams(params);
+            stayButtonTextView.setLayoutParams(stayTextParams);
+            gourmetButtonTextView.setLayoutParams(gourmetTextParams);
 
             // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
             if (scrollY >= mEventImageHeight)

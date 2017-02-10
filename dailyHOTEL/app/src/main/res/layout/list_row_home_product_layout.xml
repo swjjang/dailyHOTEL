@@ -29,11 +29,12 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="18dp"
             android:layout_marginTop="20dp"
-            android:scaleType="centerInside"
+            android:scaleType="fitStart"
             app:srcCompat="@drawable/ic_home_category_01_hotel"
             />
 
         <LinearLayout
+            android:id="@+id/stayButtonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -73,10 +74,11 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="18dp"
             android:layout_marginTop="20dp"
-            android:scaleType="centerInside"
+            android:scaleType="fitStart"
             app:srcCompat="@drawable/ic_home_category_02_gourmet"/>
 
         <LinearLayout
+            android:id="@+id/gourmetButtonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
