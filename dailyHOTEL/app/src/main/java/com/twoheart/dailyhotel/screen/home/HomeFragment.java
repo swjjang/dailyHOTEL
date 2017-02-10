@@ -210,9 +210,18 @@ public class HomeFragment extends BaseFragment
                 break;
             }
 
+            // 해당 go home 목록이 MainActivity 목록과 동일해야함.
+            case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
+            case Constants.CODE_REQUEST_ACTIVITY_ABOUT:
+            case Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST:
+            case Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST:
+            case Constants.CODE_REQUEST_ACTIVITY_FAQ:
+            case Constants.CODE_REQUEST_ACTIVITY_CONTACTUS:
             case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
+                    mDontReload = false;
+                    mHomeLayout.setScrollTop();
                 }
                 break;
         }
@@ -347,7 +356,7 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
-    public void startPlaceDetail(HomePlace place)
+    public void startPlaceDetail(View view, HomePlace place)
     {
         if (place == null)
         {
@@ -357,12 +366,41 @@ public class HomeFragment extends BaseFragment
         if (place.placeType == PlaceType.HOTEL)
         {
             Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place);
-            mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                View nameTextView = view.findViewById(R.id.contentTextView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+            } else
+            {
+                mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+            }
         } else if (place.placeType == PlaceType.FNB)
         {
             Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place);
-            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+            if (Util.isUsedMultiTransition() == true)
+            {
+                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                View nameTextView = view.findViewById(R.id.contentTextView);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
+                    android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)));
+
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+            } else
+            {
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+            }
         }
+
     }
 
     public void sendHomeScreenAnalytics()
@@ -632,7 +670,7 @@ public class HomeFragment extends BaseFragment
 
             if (wishItem != null)
             {
-                startPlaceDetail(wishItem);
+                startPlaceDetail(view, wishItem);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -657,7 +695,7 @@ public class HomeFragment extends BaseFragment
 
             if (recentItem != null)
             {
-                startPlaceDetail(recentItem);
+                startPlaceDetail(view, recentItem);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
