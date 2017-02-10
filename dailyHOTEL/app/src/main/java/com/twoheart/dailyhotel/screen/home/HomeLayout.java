@@ -221,7 +221,6 @@ public class HomeLayout extends BaseLayout
         gourmetButtonTextView.setLayoutParams(gourmetTextParams);
 
 
-
         View stayButton = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
         View gourmetButton = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
 
@@ -796,7 +795,16 @@ public class HomeLayout extends BaseLayout
     public void setMessageLayoutVisibility(int visibility)
     {
         mTextMessageLayout.setVisibility(visibility);
-        mTextMessageDividerView.setVisibility(visibility);
+
+        int marginTop = 0;
+        if (View.GONE == visibility) {
+            marginTop = Util.dpToPx(mContext, 15d);
+        }
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mTextMessageDividerView.getLayoutParams();
+        params.topMargin = marginTop;
+
+        mTextMessageDividerView.setLayoutParams(params);
     }
 
     public void setTextMessageData(String title, String description)
