@@ -38,17 +38,6 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
     }
 
     @Override
-    public int getCount()
-    {
-        return mHomeEventList == null || mHomeEventList.size() == 0 ? 1 : mHomeEventList.size();
-    }
-
-    public int getRealCount()
-    {
-        return mHomeEventList == null ? 0 : mHomeEventList.size();
-    }
-
-    @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
         final int width = Util.getLCDWidth(mContext);
@@ -88,16 +77,28 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
                 Util.requestImageResize(mContext, imageView, url);
             }
 
-            imageView.setOnClickListener(mClickListener);
-
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
-            container.addView(imageView, 0, layoutParams);
+            container.addView(imageView, layoutParams);
+
+            imageView.setOnClickListener(mClickListener);
         } else
         {
             Util.restartApp(mContext);
         }
 
         return imageView;
+    }
+
+    @Override
+    public int getItemPosition(Object object)
+    {
+        return POSITION_NONE;
+    }
+
+    @Override
+    public int getCount()
+    {
+        return mHomeEventList == null ? 0 : mHomeEventList.size();
     }
 
     @Override

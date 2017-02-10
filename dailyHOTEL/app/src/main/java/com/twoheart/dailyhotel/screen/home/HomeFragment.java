@@ -724,7 +724,6 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onPrivacyTermsClick()
         {
-
             Intent intent = new Intent(mBaseActivity, PrivacyActivity.class);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
         }

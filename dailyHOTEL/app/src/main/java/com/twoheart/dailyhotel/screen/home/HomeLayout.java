@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
@@ -38,6 +40,7 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -46,6 +49,7 @@ import java.util.ArrayList;
 
 public class HomeLayout extends BaseLayout
 {
+    private static final int EVENT_VIEWPAGER_ANIMATION_DURATION = 5000;
     private static final int MESSAGE_ANIMATION_DURATION = 200;
     private static final double BUTTON_LAYOUT_MIN_HEIGHT = 76d;
     private static final double BUTTON_LAYOUT_MAX_HEIGHT = 82d;
@@ -54,6 +58,9 @@ public class HomeLayout extends BaseLayout
     int mButtonGapHeight;
     int mScrollButtonMaxHeight;
     int mScrollButtonMinHeight;
+
+    private int mLastEventPosition;
+    private Handler mEventHandler;
 
     private DailyLoopViewPager mEventViewPager;
     private DailyTextView mEventCountTextView;
@@ -244,6 +251,9 @@ public class HomeLayout extends BaseLayout
         ViewGroup.LayoutParams params = mEventViewPager.getLayoutParams();
         params.height = getEventImageHeight(mContext);
         mEventViewPager.setLayoutParams(params);
+        mEventViewPager.setSlideTime(4);
+
+        mEventHandler = new EventHandler(mEventAreaLayout);
     }
 
     private void initScrollButtonLayout(LinearLayout layout)
@@ -618,10 +628,14 @@ public class HomeLayout extends BaseLayout
 
     public void setEventList(ArrayList<Event> list)
     {
+        Event defaultEvent = null;
+
         if (list == null || list.size() == 0)
         {
+            defaultEvent = getDefaultEvent();
+
             list = new ArrayList<>();
-            list.add(getDefaultEvent());
+            list.add(defaultEvent);
         }
 
         if (mEventViewPagerAdapter == null)
@@ -658,12 +672,17 @@ public class HomeLayout extends BaseLayout
 
         mEventViewPagerAdapter.setData(list);
 
-        setEventCountView(1, mEventViewPagerAdapter.getCount());
+        if (defaultEvent == null //
+            || HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultEvent.defaultImageUrl) == false)
+        {
+            setEventCountView(1, mEventViewPagerAdapter.getCount());
+        }
 
-        mEventViewPager.removeAllViews();
-        mEventViewPager.clearOnPageChangeListeners();
-
+//        mEventViewPager.removeAllViews();
+//        mEventViewPager.clearOnPageChangeListeners();
+        mEventViewPager.setOnPageChangeListener(null);
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
+        mEventViewPager.setCurrentItem(mLastEventPosition);
         mEventViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
@@ -674,24 +693,30 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onPageSelected(int position)
             {
+                ExLog.d("position : " + position);
+
+                mLastEventPosition = position;
+
                 int totalCount = mEventViewPagerAdapter.getCount();
-
-                if (position < 1)
-                {
-                    position = totalCount;
-                } else if (position > totalCount)
-                {
-                    position = 1;
-                }
-
                 setEventCountView(position, totalCount);
+
+                moveNextEventPosition(mEventViewPager, position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state)
             {
+                if (state == DailyLoopViewPager.SCROLL_STATE_DRAGGING)
+                {
+                    if (mEventHandler != null)
+                    {
+                        mEventHandler.removeMessages(0);
+                    }
+                }
             }
         });
+
+        moveNextEventPosition(mEventViewPager, mLastEventPosition);
     }
 
     void setEventCountView(int pageIndex, int totalCount)
@@ -700,6 +725,14 @@ public class HomeLayout extends BaseLayout
         {
             return;
         }
+
+//        if (pageIndex < 1)
+//        {
+//            pageIndex = totalCount;
+//        } else if (pageIndex > totalCount)
+//        {
+//            pageIndex = 1;
+//        }
 
         if (totalCount == 0)
         {
@@ -1107,6 +1140,51 @@ public class HomeLayout extends BaseLayout
         if (mRecentListLayout != null)
         {
             mRecentListLayout.stopShimmer();
+        }
+    }
+
+    private void moveNextEventPosition(DailyLoopViewPager eventViewPager, int currentPosition)
+    {
+        if (mEventHandler == null)
+        {
+            return;
+        }
+
+        mEventHandler.removeMessages(0);
+
+        Message message = new Message();
+        message.what = 0;
+        message.arg1 = currentPosition;
+        message.obj = eventViewPager;
+        mEventHandler.sendMessageDelayed(message, EVENT_VIEWPAGER_ANIMATION_DURATION);
+    }
+
+    private static class EventHandler extends Handler
+    {
+        private final WeakReference<View> mWeakReference;
+
+        public EventHandler(View view)
+        {
+            mWeakReference = new WeakReference<>(view);
+        }
+
+        @Override
+        public void handleMessage(Message msg)
+        {
+            if (mWeakReference.get() == null)
+            {
+                return;
+            }
+
+            DailyLoopViewPager eventViewPager = (DailyLoopViewPager) msg.obj;
+            if (eventViewPager == null)
+            {
+                return;
+            }
+
+            ExLog.d("next position : " + (msg.arg1 + 1));
+
+            eventViewPager.setCurrentItem(msg.arg1 + 1);
         }
     }
 
