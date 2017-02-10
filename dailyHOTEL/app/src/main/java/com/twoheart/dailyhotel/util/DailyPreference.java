@@ -12,7 +12,6 @@ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
  */
 public class DailyPreference
 {
-    public static final String DAILYHOTEL_SHARED_PREFERENCE = "GOOD_NIGHT"; // 기존에 존재하던
     public static final String DAILYHOTEL_SHARED_PREFERENCE_V1 = "dailyHOTEL_v1"; // 새로 만든
 
     public static final String PREFERENCE_REMOTE_CONFIG = "DH_RemoteConfig";
@@ -73,7 +72,7 @@ public class DailyPreference
     private static final String KEY_VERIFICATION = "1001";
     private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
 
-    private static final String KEY_SETTING_MIGRATION_FLAG = "1003";
+    private static final String KEY_SETTING_MIGRATION_FLAG = "1003"; // 2.0.0 이후 사용안함
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 
@@ -125,44 +124,6 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_URL = "316";
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    // "GOOD_NIGHT" Preference - 1.9.4 이상의 버전에서 강업 2회 이후 삭제 예정
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-    // Setting
-    private static final String KEY_OLD_SETTING_GCM_ID = "PUSH_ID";
-
-    //Setting - Region
-    private static final String KEY_OLD_SETTING_REGION_STAY_SELECT = "REGION_SELECT";
-    private static final String KEY_OLD_SETTING_REGION_STAY_SETTING = "REGION_SETTING";
-    private static final String KEY_OLD_SETTING_REGION_FNB_SETTING = "FNB_REGION_SETTING";
-    private static final String KEY_OLD_SETTING_REGION_FNB_SELECT = "FNB_REGION_SELECT";
-
-    // Setting - Version
-    private static final String KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION = "SKIP_MAX_VERSION";
-
-    // User - Information
-    private static final String KEY_OLD_USER_EMAIL = "USER_EMAIL";
-    private static final String KEY_OLD_USER_TYPE = "USER_TYPE";
-    private static final String KEY_OLD_USER_NAME = "USER_NAME";
-    private static final String KEY_OLD_USER_RECOMMENDER = "USER_RECOMMENDER";
-    private static final String KEY_OLD_USER_BENEFIT_ALARM = "USER_BENEFIT_ALARM";
-    private static final String KEY_OLD_USER_IS_EXCEED_BONUS = "USER_IS_EXCEED_BONUS";
-
-    // payment
-    private static final String KEY_OLD_PAYMENT_OVERSEAS_NAME = "OVERSEAS_NAME";
-    private static final String KEY_OLD_PAYMENT_OVERSEAS_PHONE = "OVERSEAS_PHONE";
-    private static final String KEY_OLD_PAYMENT_OVERSEAS_EMAIL = "OVERSEAS_EMAIL";
-
-    // payment - Virtual Account
-    private static final String KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG = "ACCOUNT_READY_FLAG";
-
-    // Event
-    private static final String KEY_OLD_EVENT_LASTEST_EVENT_TIME = "LATEST_EVENT_TIME";
-    private static final String KEY_OLD_EVENT_LASTEST_COUPON_TIME = "LATEST_COUPON_TIME";
-    private static final String KEY_OLD_EVENT_VIEWED_EVENT_TIME = "VIEWED_EVENT_TIME";
-    private static final String KEY_OLD_EVENT_VIEWED_COUPON_TIME = "VIEWED_COUPON_TIME";
-
-    /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -212,10 +173,8 @@ public class DailyPreference
     private static DailyPreference mInstance;
     private SharedPreferences mPreferences;
     private SharedPreferences mRemoteConfigPreferences;
-    private SharedPreferences mOldPreferences;
     private Editor mEditor;
     private Editor mRemoteConfigEditor;
-    private Editor mOldEditor;
 
     private DailyPreference(Context context)
     {
@@ -224,24 +183,6 @@ public class DailyPreference
 
         mRemoteConfigPreferences = context.getSharedPreferences(PREFERENCE_REMOTE_CONFIG, Context.MODE_PRIVATE);
         mRemoteConfigEditor = mRemoteConfigPreferences.edit();
-
-        boolean isMigrationFlag = isMigrationFlag();
-
-        boolean isFirst = false;
-
-        String firstAppVersion = getFirstAppVersion();
-        String currentAppVersion = Util.getAppVersionCode(context);
-
-        if (Util.isTextEmpty(firstAppVersion) || firstAppVersion.equalsIgnoreCase(currentAppVersion))
-        {
-            isFirst = true;
-        }
-
-        if (isFirst == false && isMigrationFlag == false)
-        {
-            mOldPreferences = context.getSharedPreferences(DAILYHOTEL_SHARED_PREFERENCE, Context.MODE_PRIVATE);
-            mOldEditor = mOldPreferences.edit();
-        }
     }
 
     public static synchronized DailyPreference getInstance(Context context)
@@ -275,12 +216,6 @@ public class DailyPreference
         {
             mEditor.clear();
             mEditor.apply();
-        }
-
-        if (mOldEditor != null)
-        {
-            mOldEditor.clear();
-            mOldEditor.apply();
         }
 
         setUserBenefitAlarm(isUserBenefitAlarm);
@@ -648,11 +583,13 @@ public class DailyPreference
         setValue(mEditor, KEY_VERIFICATION, value);
     }
 
+    @Deprecated
     public boolean isMigrationFlag()
     {
         return getValue(mPreferences, KEY_SETTING_MIGRATION_FLAG, false);
     }
 
+    @Deprecated
     public void setMigrationFlag(boolean value)
     {
         setValue(mEditor, KEY_SETTING_MIGRATION_FLAG, value);
@@ -1499,119 +1436,5 @@ public class DailyPreference
     public void setHomeTextMessageAreaEnabled(boolean isEnabled)
     {
         setValue(mEditor, KEY_SETTING_HOME_MESSAGE_AREA_ENABLED, isEnabled);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void clearOldPreference()
-    {
-        if (mOldEditor != null)
-        {
-            mOldEditor.clear();
-            mOldEditor.apply();
-        }
-    }
-
-    public void setPreferenceMigration()
-    {
-        boolean isMigrationFlag = isMigrationFlag();
-
-        // 이주 필요 확인!
-        if (isMigrationFlag == false && mOldPreferences != null)
-        {
-            try
-            {
-                if (mOldPreferences.contains(KEY_OLD_EVENT_LASTEST_EVENT_TIME) == true)
-                {
-                    setLastestEventTime(getValue(mOldPreferences, KEY_OLD_EVENT_LASTEST_EVENT_TIME, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_EVENT_LASTEST_COUPON_TIME) == true)
-                {
-                    setLastestCouponTime(getValue(mOldPreferences, KEY_OLD_EVENT_LASTEST_COUPON_TIME, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_EVENT_VIEWED_EVENT_TIME) == true)
-                {
-                    setViewedEventTime(getValue(mOldPreferences, KEY_OLD_EVENT_VIEWED_EVENT_TIME, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_STAY_SELECT) == true)
-                {
-                    setSelectedRegion(Constants.PlaceType.HOTEL, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_STAY_SELECT, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_FNB_SELECT) == true)
-                {
-                    setSelectedRegion(Constants.PlaceType.FNB, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_FNB_SELECT, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_STAY_SETTING) == true)
-                {
-                    setSettingRegion(Constants.PlaceType.HOTEL, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_STAY_SETTING, false));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_SETTING_REGION_FNB_SETTING) == true)
-                {
-                    setSettingRegion(Constants.PlaceType.FNB, getValue(mOldPreferences, KEY_OLD_SETTING_REGION_FNB_SETTING, false));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_EVENT_VIEWED_COUPON_TIME) == true)
-                {
-                    setViewedCouponTime(getValue(mOldPreferences, KEY_OLD_EVENT_VIEWED_COUPON_TIME, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_PAYMENT_OVERSEAS_NAME) == true)
-                {
-                    setOverseasUserInformation(getValue(mOldPreferences, KEY_OLD_PAYMENT_OVERSEAS_NAME, null), //
-                        getValue(mOldPreferences, KEY_OLD_PAYMENT_OVERSEAS_PHONE, null), //
-                        getValue(mOldPreferences, KEY_OLD_PAYMENT_OVERSEAS_EMAIL, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_USER_TYPE) == true)
-                {
-                    // 새로 API가 변경되면서 생일 정보는 기존의 것에서 받도록 한다.
-                    setUserInformation(getValue(mOldPreferences, KEY_OLD_USER_TYPE, null), //
-                        getValue(mOldPreferences, KEY_OLD_USER_EMAIL, null), //
-                        getValue(mOldPreferences, KEY_OLD_USER_NAME, null), //
-                        getValue(mPreferences, KEY_USER_BIRTHDAY, null), //
-                        getValue(mOldPreferences, KEY_OLD_USER_RECOMMENDER, null));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_USER_BENEFIT_ALARM) == true)
-                {
-                    setUserBenefitAlarm(getValue(mOldPreferences, KEY_OLD_USER_BENEFIT_ALARM, false));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_USER_IS_EXCEED_BONUS) == true)
-                {
-                    setUserExceedBonus(getValue(mOldPreferences, KEY_OLD_USER_IS_EXCEED_BONUS, false));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION) == true)
-                {
-                    setSkipVersion(getValue(mOldPreferences, KEY_OLD_SETTING_VERSION_SKIP_MAX_VERSION, "1.0.0"));
-                }
-
-                if (mOldPreferences.contains(KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG) == true)
-                {
-                    setVirtualAccountReadyFlag(getValue(mOldPreferences, KEY_OLD_PAYMENT_ACCOUNT_READY_FLAG, -1));
-                }
-
-                isMigrationFlag = true;
-            } catch (Exception e)
-            {
-                ExLog.d(e.getMessage());
-                isMigrationFlag = false;
-            }
-
-            setMigrationFlag(isMigrationFlag);
-
-            if (isMigrationFlag == true)
-            {
-                clearOldPreference();
-            }
-        }
-
     }
 }
