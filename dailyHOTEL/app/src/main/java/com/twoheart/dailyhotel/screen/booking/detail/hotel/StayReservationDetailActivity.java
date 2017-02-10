@@ -753,7 +753,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             saleTime.setCurrentTime(mPlaceBookingDetail.currentDateTime);
             saleTime.setDailyTime(mPlaceBookingDetail.dailyDateTime);
 
-            Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, saleTime, 1, mPlaceBookingDetail.placeIndex, 0, false);
+            Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, saleTime, 1, mPlaceBookingDetail.placeIndex, 0, false, false);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
         }
 

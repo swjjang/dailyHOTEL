@@ -138,10 +138,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             Stay stay = (Stay) mListLayout.getItem(position);
 
-            Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0);
-
             if (Util.isUsedMultiTransition() == true)
             {
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0, true);
+
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -158,6 +158,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0, false);
+
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
 

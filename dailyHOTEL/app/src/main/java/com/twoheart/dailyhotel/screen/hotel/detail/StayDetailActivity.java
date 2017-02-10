@@ -79,7 +79,8 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Stay stay, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Stay stay//
+        , int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -111,6 +112,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -126,7 +128,8 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int stayIndex, int roomIndex, boolean isShowCalendar)
+    public static Intent newInstance(Context context, SaleTime saleTime, int nights, int stayIndex//
+        , int roomIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -139,6 +142,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -147,7 +151,7 @@ public class StayDetailActivity extends PlaceDetailActivity
      * 딥링크로 호출
      */
     public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
-        , int stayIndex, int roomIndex, boolean isShowCalendar)
+        , int stayIndex, int roomIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -160,6 +164,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -173,14 +178,15 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, int listCount, boolean isUsedMultiTransition)
     {
         SaleTime startSaleTime = saleTime.getClone(0);
 
-        return newInstance(context, saleTime, stay, startSaleTime, null, listCount);
+        return newInstance(context, saleTime, stay, startSaleTime, null, listCount, isUsedMultiTransition);
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, Stay stay, SaleTime startSaleTime//
+        , SaleTime endSaleTime, int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -210,11 +216,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace)
+    public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace, boolean isUsedMultiTransition)
     {
         SaleTime startSaleTime = saleTime.getClone(0);
 
@@ -225,7 +232,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 
         intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-//        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, null);
+        //        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, null);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, homePlace.title);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
@@ -246,11 +253,13 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, RecommendationStay recommendationStay, SaleTime startSaleTime, SaleTime endSaleTime, int listCount)
+    public static Intent newInstance(Context context, SaleTime saleTime, RecommendationStay recommendationStay//
+        , SaleTime startSaleTime, SaleTime endSaleTime, int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -280,6 +289,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -360,6 +370,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             mIsDeepLink = true;
             mDontReloadAtOnResume = false;
             mIsTransitionEnd = true;
+            mIsUsedMultiTransition = false;
 
             mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
@@ -390,7 +401,16 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
 
-            initTransition();
+            mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
+
+            if (mIsUsedMultiTransition == true)
+            {
+                initTransition();
+            } else
+            {
+                mIsTransitionEnd = true;
+            }
+
             initLayout(placeName, mDefaultImageUrl, grade, isFromMap);
 
             if (isShowCalendar == true)
@@ -402,7 +422,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
     private void initTransition()
     {
-        if (Util.isUsedMultiTransition() == true)
+        if (mIsUsedMultiTransition == true)
         {
             TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
@@ -499,7 +519,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
-        if (mIsDeepLink == false && Util.isUsedMultiTransition() == true)
+        if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
             initTransLayout(placeName, imageUrl, grade, isFromMap);
         } else
@@ -508,6 +528,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         mPlaceDetailLayout.setStatusBarHeight(this);
+        mPlaceDetailLayout.setIsUsedMultiTransitions(mIsUsedMultiTransition);
 
         setLockUICancelable(true);
         initToolbar(placeName);
@@ -517,7 +538,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
     private void initTransLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
     {
-        if (Util.isTextEmpty(placeName, imageUrl) == true && grade != null)
+        if (Util.isTextEmpty(placeName, imageUrl) == true)
         {
             return;
         }

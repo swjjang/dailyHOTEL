@@ -162,10 +162,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             RecommendationStay recommendationStay = placeViewItem.getItem();
 
-            Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count);
-
             if (Util.isUsedMultiTransition() == true)
             {
+                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count, true);
+
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -189,6 +189,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
+                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count, false);
+
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
             }
 

@@ -449,8 +449,8 @@ public class Util implements Constants
      */
     public static boolean isUsedMultiTransition()
     {
-        return isOverAPI21() == true && isOverAPI24() == false;
-        //        return isOverAPI21() == true;
+//        return isOverAPI21() == true && isOverAPI24() == false;
+        return isOverAPI21() == true;
     }
 
     public static boolean isTelephonyEnabled(Context context)

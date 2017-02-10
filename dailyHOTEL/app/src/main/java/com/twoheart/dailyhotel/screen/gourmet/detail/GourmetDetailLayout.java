@@ -56,8 +56,11 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     {
         mTransTotalGradeTextView.setVisibility(View.INVISIBLE);
 
-        mTransPlaceNameTextView.setText(placeName);
-        mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+        if(Util.isTextEmpty(placeName) == false)
+        {
+            mTransPlaceNameTextView.setText(placeName);
+            mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
+        }
     }
 
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)

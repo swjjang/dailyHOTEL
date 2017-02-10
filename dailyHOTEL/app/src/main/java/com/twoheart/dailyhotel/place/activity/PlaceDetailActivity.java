@@ -63,6 +63,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     private int mResultCode;
     protected Intent mResultIntent;
+    protected boolean mIsUsedMultiTransition;
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
@@ -165,7 +166,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mDontReloadAtOnResume = false;
         } else
         {
-            if (Util.isUsedMultiTransition() == true && mInitializeStatus != STATUS_INITIALIZE_COMPLETE && mIsDeepLink == false)
+            if (mIsUsedMultiTransition == true && mInitializeStatus != STATUS_INITIALIZE_COMPLETE && mIsDeepLink == false)
             {
                 lockUI(false);
             } else
@@ -227,7 +228,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     return;
             }
 
-            if (Util.isUsedMultiTransition() == true)
+            if (mIsUsedMultiTransition == true)
             {
                 if (mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
                 {

@@ -95,7 +95,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;
     protected TextView mTransTotalGradeTextView, mTransPlaceNameTextView;
-    protected View mTransGradientView;
+    protected View mTransTitleLayout, mTransGradientView;
 
     protected DailyTextView mWishButtonTextView;
     protected DailyTextView mWishPopupTextView;
@@ -165,28 +165,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mTransGradientView = view.findViewById(R.id.transGradientView);
         View transGradientTopView = view.findViewById(R.id.transGradientTopView);
 
-        View transTitleLayout = view.findViewById(R.id.transTitleLayout);
-        mTransTotalGradeTextView = (TextView) transTitleLayout.findViewById(R.id.transGradeTextView);
-        mTransPlaceNameTextView = (TextView) transTitleLayout.findViewById(R.id.transNameTextView);
-
-        if (Util.isUsedMultiTransition() == true)
-        {
-            setTransImageVisibility(true);
-            transTitleLayout.setVisibility(View.VISIBLE);
-
-            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
-            mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
-
-            mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
-            mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
-            mTransGradientView.setBackground(makeShaderFactory());
-
-            transGradientTopView.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
-        } else
-        {
-            setTransImageVisibility(false);
-            transTitleLayout.setVisibility(View.GONE);
-        }
+        mTransTitleLayout = view.findViewById(R.id.transTitleLayout);
+        mTransTotalGradeTextView = (TextView) mTransTitleLayout.findViewById(R.id.transGradeTextView);
+        mTransPlaceNameTextView = (TextView) mTransTitleLayout.findViewById(R.id.transNameTextView);
 
         mListView = (DailyPlaceDetailListView) view.findViewById(R.id.placeListView);
         mListView.setOnScrollListener(mOnScrollListener);
@@ -262,6 +243,28 @@ public abstract class PlaceDetailLayout extends BaseLayout
         hideProductInformationLayout();
         showWishButton();
         setUpdateWishPopup(WishPopupState.GONE);
+    }
+
+    public void setIsUsedMultiTransitions(boolean enabled)
+    {
+        if (enabled == true)
+        {
+            setTransImageVisibility(true);
+            mTransTitleLayout.setVisibility(View.VISIBLE);
+
+            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
+
+            mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
+            mTransGradientView.setBackground(makeShaderFactory());
+
+            mTransTitleLayout.setTransitionName(mContext.getString(R.string.transition_gradient_top_view));
+        } else
+        {
+            setTransImageVisibility(false);
+            mTransTitleLayout.setVisibility(View.GONE);
+        }
     }
 
     private PaintDrawable makeShaderFactory()
