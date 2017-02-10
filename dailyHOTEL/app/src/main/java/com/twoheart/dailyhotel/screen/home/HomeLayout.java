@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
@@ -18,7 +17,6 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -56,8 +54,6 @@ public class HomeLayout extends BaseLayout
     int mButtonGapHeight;
     int mScrollButtonMaxHeight;
     int mScrollButtonMinHeight;
-
-    boolean mForceRefreshing;
 
     private DailyLoopViewPager mEventViewPager;
     private DailyTextView mEventCountTextView;
@@ -159,11 +155,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onRefresh()
             {
-                mWishListLayout.clearAll();
-                mRecentListLayout.clearAll();
-                mHomeRecommendationLayout.clearAll();
-
-                ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
+                forceRefreshing(true);
             }
         });
     }
@@ -1018,80 +1010,30 @@ public class HomeLayout extends BaseLayout
         return mSwipeRefreshLayout.isRefreshing();
     }
 
-    public boolean forceRefreshing()
+    public void forceRefreshing(boolean isSwipeRefresh)
     {
-        if (mSwipeRefreshLayout == null || isRefreshing() == true)
+        if (mSwipeRefreshLayout == null)
         {
-            return false;
+            return;
         }
 
-        if (mSwipeRefreshLayout.isEnabled() == false)
+        if (isSwipeRefresh == false)
         {
-            mForceRefreshing = true;
-            setScrollTop();
-            return true;
+            if (isRefreshing() == true)
+            {
+                return;
+            } else
+            {
+                setScrollTop();
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
         }
 
-        mForceRefreshing = false;
+        mWishListLayout.clearAll();
+        mRecentListLayout.clearAll();
+        mHomeRecommendationLayout.clearAll();
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, Util.getLCDHeight(mContext) / 3);
-        valueAnimator.setDuration(200);
-
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                if (animation == null)
-                {
-                    return;
-                }
-
-                int value = (Integer) animation.getAnimatedValue();
-                long downTime = SystemClock.uptimeMillis();
-                long eventTime = SystemClock.uptimeMillis();
-                MotionEvent moveMotionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, 0, value, 0);
-                mSwipeRefreshLayout.dispatchTouchEvent(moveMotionEvent);
-            }
-        });
-
-        valueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                long downTime = SystemClock.uptimeMillis();
-                long eventTime = SystemClock.uptimeMillis();
-                MotionEvent downMotionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 0, 0, 0);
-
-                mSwipeRefreshLayout.dispatchTouchEvent(downMotionEvent);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                long downTime = SystemClock.uptimeMillis();
-                long eventTime = SystemClock.uptimeMillis();
-                MotionEvent upMotionEvent = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, 0, Util.getLCDHeight(mContext) / 3, 0);
-                mSwipeRefreshLayout.dispatchTouchEvent(upMotionEvent);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        valueAnimator.start();
-
-        return true;
+        ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
     }
 
     public void setScrollTop()
@@ -1221,12 +1163,6 @@ public class HomeLayout extends BaseLayout
             } else
             {
                 mSwipeRefreshLayout.setEnabled(false);
-            }
-
-            if (mForceRefreshing == true && mSwipeRefreshLayout.isEnabled() == true)
-            {
-                mForceRefreshing = false;
-                forceRefreshing();
             }
         }
     };

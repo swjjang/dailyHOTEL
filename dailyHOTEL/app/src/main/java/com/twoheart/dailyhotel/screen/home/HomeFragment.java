@@ -420,12 +420,14 @@ public class HomeFragment extends BaseFragment
 
     public void forceRefreshing()
     {
-        if (mHomeLayout == null && mHomeLayout.isRefreshing() == false)
+        if (mHomeLayout == null && mHomeLayout.isRefreshing() == false && lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        mHomeLayout.forceRefreshing();
+        lockUI(false);
+
+        mHomeLayout.forceRefreshing(false);
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
