@@ -154,7 +154,6 @@ public class HomeFragment extends BaseFragment
             {
                 lockUI();
 
-                // TODO : event, message, wishList, recentList, recommendList 요청 부분 필요
                 mNetworkController.requestCommonDateTime();
                 requestMessageData();
                 mNetworkController.requestEventList();
