@@ -356,7 +356,7 @@ public class MainActivity extends BaseActivity implements Constants
             case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
             {
                 unLockUI();
-                
+
                 if (mMainFragmentManager == null || mMainFragmentManager.getCurrentFragment() == null)
                 {
                     Util.restartApp(this);
@@ -382,8 +382,20 @@ public class MainActivity extends BaseActivity implements Constants
                         startActivityForResult(GourmetMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                         break;
 
+                    // 해당 go home 목록이 HomeFragment 목록과 동일해야함.
                     case Constants.CODE_RESULT_ACTIVITY_GO_HOME:
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                        if (mMainFragmentManager != null)
+                        {
+                            Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                            if (fragment instanceof HomeFragment)
+                            {
+                                fragment.onActivityResult(requestCode, resultCode, data);
+                            } else
+                            {
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                            }
+                        }
                         break;
 
                     default:
@@ -393,6 +405,7 @@ public class MainActivity extends BaseActivity implements Constants
                 break;
             }
 
+            // 해당 go home 목록이 HomeFragment 목록과 동일해야함.
             case Constants.CODE_REQUEST_ACTIVITY_ABOUT:
             case Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST:
             case Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST:
@@ -402,7 +415,18 @@ public class MainActivity extends BaseActivity implements Constants
             {
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                    if (mMainFragmentManager != null)
+                    {
+                        Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                        if (fragment instanceof HomeFragment)
+                        {
+                            fragment.onActivityResult(requestCode, resultCode, data);
+                        } else
+                        {
+                            mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                        }
+                    }
                 }
                 break;
             }
