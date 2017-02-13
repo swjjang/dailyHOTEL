@@ -752,6 +752,12 @@ public class MainActivity extends BaseActivity implements Constants
                 return;
             }
 
+            // 메뉴가 변경될때마다 이벤트 여부를 체크한다.
+            if (mIsInitialization == false)
+            {
+                mNetworkController.requestCommonDatetime();
+            }
+
             switch (index)
             {
                 // 홈
@@ -1220,7 +1226,7 @@ public class MainActivity extends BaseActivity implements Constants
             String startDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
 
             // 같은날짜에는 중복으로 요청하지 않는다.
-            if (startDay.equalsIgnoreCase(DailyPreference.getInstance(MainActivity.this).getCalendarHolidays()) == false)
+            if (startDay.equalsIgnoreCase(DailyPreference.getInstance(MainActivity.this).getCheckCalendarHolidays()) == false)
             {
                 // 90일을 미리 얻어온다.
                 dailyCalendar.add(Calendar.DAY_OF_MONTH, 90);
