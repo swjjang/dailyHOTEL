@@ -74,6 +74,7 @@ public class HomeLayout extends BaseLayout
     private View mActionButtonLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;
     NestedScrollView mNestedScrollView;
+    private View mErrorPopupLayout;
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
     View mScrollButtonLayout;
@@ -104,8 +105,6 @@ public class HomeLayout extends BaseLayout
 
         void onRecommendationClick(View view, Recommendation recommendation);
 
-        void onRecommendRetryButtonClick();
-
         void onWishListViewAllClick();
 
         void onRecentListViewAllClick();
@@ -113,10 +112,6 @@ public class HomeLayout extends BaseLayout
         void onWishListItemClick(View view, int position);
 
         void onRecentListItemClick(View view, int position);
-
-        void onWishListRetryButtonClick();
-
-        void onRecentListRetryButtonClick();
 
         void onTermsClick();
 
@@ -158,6 +153,7 @@ public class HomeLayout extends BaseLayout
         initSwipeRefreshLayout(view);
         initNestedScrollLayout(view);
         initActionButtonLayout(view);
+        initErrorPopupLayout(view);
         initHomeContentLayout(view);
     }
 
@@ -240,6 +236,17 @@ public class HomeLayout extends BaseLayout
                 ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick(false);
             }
         });
+    }
+
+    private void initErrorPopupLayout(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        mErrorPopupLayout = view.findViewById(R.id.errorView);
+        mErrorPopupLayout.setVisibility(View.GONE);
     }
 
     private void initHomeContentLayout(View view)
@@ -355,12 +362,6 @@ public class HomeLayout extends BaseLayout
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view, position);
             }
-
-            @Override
-            public void onRetryButtonClick()
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onWishListRetryButtonClick();
-            }
         });
     }
 
@@ -390,12 +391,6 @@ public class HomeLayout extends BaseLayout
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view, position);
             }
-
-            @Override
-            public void onRetryButtonClick()
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListRetryButtonClick();
-            }
         });
     }
 
@@ -413,12 +408,6 @@ public class HomeLayout extends BaseLayout
             public void onRecommendationClick(View view, Recommendation recommendation, int position)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation);
-            }
-
-            @Override
-            public void onRetryButtonClick()
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onRecommendRetryButtonClick();
             }
         });
 
@@ -874,17 +863,32 @@ public class HomeLayout extends BaseLayout
 
     public void setWishListData(ArrayList<HomePlace> list, boolean isError)
     {
-        mWishListLayout.setData(list, isError);
+        mWishListLayout.setData(list);
+
+        if (isError == true)
+        {
+            setErrorPopupLayout(true);
+        }
     }
 
     public void setRecentListData(ArrayList<HomePlace> list, boolean isError)
     {
-        mRecentListLayout.setData(list, isError);
+        mRecentListLayout.setData(list);
+
+        if (isError == true)
+        {
+            setErrorPopupLayout(true);
+        }
     }
 
     public void setRecommendationData(ArrayList<Recommendation> list, boolean isError)
     {
-        mHomeRecommendationLayout.setData(list, isError);
+        mHomeRecommendationLayout.setData(list);
+
+        if (isError == true)
+        {
+            setErrorPopupLayout(true);
+        }
     }
 
     public boolean hasWishListData()
@@ -917,14 +921,14 @@ public class HomeLayout extends BaseLayout
         return mRecentListLayout.getItem(position);
     }
 
-    public boolean isShowWishListCoverView()
+    private void setErrorPopupLayout(boolean isShow)
     {
-        return mWishListLayout.isShowCoverView();
-    }
+        if (mErrorPopupLayout == null)
+        {
+            return;
+        }
 
-    public boolean isShowRecentListCoverView()
-    {
-        return mRecentListLayout.isShowCoverView();
+        mErrorPopupLayout.setVisibility(isShow == true ? View.VISIBLE : View.GONE);
     }
 
     private void startMessageLayoutShowAnimation(final View view)
@@ -1093,6 +1097,7 @@ public class HomeLayout extends BaseLayout
         mWishListLayout.clearAll();
         mRecentListLayout.clearAll();
         mHomeRecommendationLayout.clearAll();
+        setErrorPopupLayout(false);
 
         ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
     }
@@ -1143,32 +1148,6 @@ public class HomeLayout extends BaseLayout
                 canvas.restore();
             }
         };
-    }
-
-    public void onResumeCarouselAnimation()
-    {
-        if (mWishListLayout != null)
-        {
-            mWishListLayout.startShimmer();
-        }
-
-        if (mRecentListLayout != null)
-        {
-            mRecentListLayout.startShimmer();
-        }
-    }
-
-    public void onPauseCarouselAnimation()
-    {
-        if (mWishListLayout != null)
-        {
-            mWishListLayout.stopShimmer();
-        }
-
-        if (mRecentListLayout != null)
-        {
-            mRecentListLayout.stopShimmer();
-        }
     }
 
     private void moveNextEventPosition(DailyLoopViewPager eventViewPager, int currentPosition)

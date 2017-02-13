@@ -6,23 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.shimmer.Shimmer;
-import com.twoheart.dailyhotel.widget.shimmer.ShimmerView;
 
 import java.util.ArrayList;
-
-import static com.twoheart.dailyhotel.util.Util.dpToPx;
 
 /**
  * Created by android_sam on 2017. 1. 16..
@@ -35,21 +26,14 @@ public class HomeCarouselLayout extends RelativeLayout
     private DailyTextView mCountTextView;
     private DailyTextView mViewAllTextView;
     OnCarouselListener mCarouselListenter;
-    private ArrayList<? extends Place> mPlaceList;
     private RecyclerView mRecyclerView;
     private HomeCarouselAdapter mRecyclerAdapter;
-
-    private Shimmer mShimmer;
-    private View mCoverView;
-    private View mErrorView;
 
     public interface OnCarouselListener
     {
         void onViewAllClick();
 
         void onItemClick(View view, int position);
-
-        void onRetryButtonClick();
     }
 
     public HomeCarouselLayout(Context context)
@@ -89,31 +73,6 @@ public class HomeCarouselLayout extends RelativeLayout
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
         setVisibility(View.VISIBLE);
 
-        mErrorView = view.findViewById(R.id.errorView);
-        mErrorView.setVisibility(View.GONE);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
-
-        View topMarginView = mErrorView.findViewById(R.id.topMarginView);
-        params.weight = 6.4f;
-        topMarginView.setLayoutParams(params);
-
-        View bottomMarginView = mErrorView.findViewById(R.id.bottomMarginView);
-        params.weight = 7.1f;
-        bottomMarginView.setLayoutParams(params);
-
-        View retryTextView = mErrorView.findViewById(R.id.retryTextView);
-        retryTextView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                clearAll();
-                startShimmer();
-                mCarouselListenter.onRetryButtonClick();
-            }
-        });
-
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
         mCountTextView = (DailyTextView) view.findViewById(R.id.countTextView);
         mViewAllTextView = (DailyTextView) view.findViewById(R.id.viewAllTextView);
@@ -140,48 +99,6 @@ public class HomeCarouselLayout extends RelativeLayout
         mRecyclerView.setHasFixedSize(false);
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-
-        mCoverView = view.findViewById(R.id.coverView);
-        SimpleDraweeView coverImageView = (SimpleDraweeView) mCoverView.findViewById(R.id.contentImageView);
-        coverImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-        coverImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-
-        int width = coverImageView.getWidth() == 0 ? dpToPx(mContext, 239) : coverImageView.getWidth();
-        int height = Util.getRatioHeightType16x9(width);
-
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
-        coverImageView.setLayoutParams(layoutParams);
-
-        mShimmer = new Shimmer();
-    }
-
-    public void startShimmer()
-    {
-        if (mShimmer == null)
-        {
-            mShimmer = new Shimmer();
-        }
-
-        if (mCoverView == null)
-        {
-            return;
-        }
-
-        ShimmerView shimmerView1 = (ShimmerView) mCoverView.findViewById(R.id.shimmerView1);
-        ShimmerView shimmerView2 = (ShimmerView) mCoverView.findViewById(R.id.shimmerView2);
-        ShimmerView shimmerView3 = (ShimmerView) mCoverView.findViewById(R.id.shimmerView3);
-
-        mShimmer.start(shimmerView1);
-        mShimmer.start(shimmerView2);
-        mShimmer.start(shimmerView3);
-    }
-
-    public void stopShimmer()
-    {
-        if (mShimmer != null && mShimmer.isAnimating() == true)
-        {
-            mShimmer.cancel();
-        }
     }
 
     public void setTitleText(int titleResId)
@@ -192,26 +109,16 @@ public class HomeCarouselLayout extends RelativeLayout
         }
     }
 
-    public void setData(ArrayList<HomePlace> list, boolean isError)
+    public void setData(ArrayList<HomePlace> list)
     {
-        stopShimmer();
-        mCoverView.setVisibility(View.GONE);
-
         setRecyclerAdapter(list);
 
-        if (isError == true)
+        if (list == null || list.size() == 0)
         {
-            setErrorViewVisibility(View.VISIBLE);
-            setVisibility(View.VISIBLE);
+            setVisibility(View.GONE);
         } else
         {
-            if (list == null || list.size() == 0)
-            {
-                setVisibility(View.GONE);
-            } else
-            {
-                setVisibility(View.VISIBLE);
-            }
+            setVisibility(View.VISIBLE);
         }
     }
 
@@ -231,29 +138,7 @@ public class HomeCarouselLayout extends RelativeLayout
     public void clearAll()
     {
         setRecyclerAdapter(null);
-        mCoverView.setVisibility(View.VISIBLE);
         setVisibility(View.VISIBLE);
-        mErrorView.setVisibility(View.GONE);
-    }
-
-    public void setErrorViewVisibility(int visibility)
-    {
-        if (mErrorView == null)
-        {
-            return;
-        }
-
-        mErrorView.setVisibility(visibility);
-    }
-
-    public boolean isShowCoverView()
-    {
-        if (mCoverView == null)
-        {
-            return false;
-        }
-
-        return mCoverView.getVisibility() == View.VISIBLE;
     }
 
     public boolean hasData()

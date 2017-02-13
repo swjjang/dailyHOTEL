@@ -41,4 +41,13 @@
             layout="@layout/list_row_home_product_layout"/>
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+        <include
+            layout="@layout/list_row_home_content_server_error_layout"/>
+    </RelativeLayout>
+
 </RelativeLayout>

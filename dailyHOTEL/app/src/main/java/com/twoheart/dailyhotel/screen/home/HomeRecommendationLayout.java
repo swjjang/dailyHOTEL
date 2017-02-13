@@ -31,8 +31,6 @@ public class HomeRecommendationLayout extends LinearLayout
     public interface HomeRecommendationListener
     {
         void onRecommendationClick(View view, Recommendation recommendation, int position);
-
-        void onRetryButtonClick();
     }
 
     public HomeRecommendationLayout(Context context)
@@ -77,37 +75,22 @@ public class HomeRecommendationLayout extends LinearLayout
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_layout, this);
 
         mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
-        mContentLayout.removeAllViews();
+
+        clearAll();
     }
 
-    public void setData(ArrayList<Recommendation> list, boolean isError)
+    public void setData(ArrayList<Recommendation> list)
     {
         clearAll();
-
-        if (isError == true)
-        {
-            setErrorView();
-            return;
-        }
-
-        if (list == null || list.size() == 0)
-        {
-            setVisibility(View.GONE);
-            return;
-        }
 
         mRecommendationList = list;
 
         if (mContentLayout == null || mContext == null)
         {
-            setVisibility(View.GONE);
             return;
         }
 
-        if (mRecommendationList == null || mRecommendationList.size() == 0)
-        {
-            setVisibility(View.GONE);
-        } else
+        if (mRecommendationList != null && mRecommendationList.size() > 0)
         {
             int size = mRecommendationList.size();
             if (size > 0)
@@ -122,7 +105,6 @@ public class HomeRecommendationLayout extends LinearLayout
             {
                 setVisibility(View.GONE);
             }
-
         }
     }
 
@@ -135,10 +117,7 @@ public class HomeRecommendationLayout extends LinearLayout
             mContentLayout.removeAllViews();
         }
 
-        if (getVisibility() != View.VISIBLE)
-        {
-            setVisibility(View.VISIBLE);
-        }
+        setVisibility(View.GONE);
     }
 
     private void addRecommendationItemView(final Recommendation recommendation, final int position)
@@ -191,29 +170,6 @@ public class HomeRecommendationLayout extends LinearLayout
         });
 
         mContentLayout.addView(view);
-    }
-
-    private void setErrorView()
-    {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_content_server_error_layout, null);
-        View errorView = view.findViewById(R.id.errorView);
-        View retryTextView = errorView.findViewById(R.id.retryTextView);
-
-        retryTextView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mListener != null)
-                {
-                    clearAll();
-                    mListener.onRetryButtonClick();
-                }
-            }
-        });
-
-        mContentLayout.addView(view);
-        errorView.setVisibility(View.VISIBLE);
     }
 
     public int getCount()

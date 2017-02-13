@@ -63,6 +63,12 @@ public class HomeFragment extends BaseFragment
     private boolean mIsAttach;
     private boolean mDontReload;
 
+    private int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
+
+    private static final int IS_RUNNED_NONE = 0;
+    private static final int IS_RUNNED_WISHLIST = 1 << 1;
+    private static final int IS_RUNNED_RECENTLIST = 1 << 2;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -154,6 +160,8 @@ public class HomeFragment extends BaseFragment
             {
                 lockUI();
 
+                mNetworkRunState = IS_RUNNED_NONE;
+
                 mNetworkController.requestCommonDateTime();
                 requestMessageData();
                 mNetworkController.requestEventList();
@@ -161,12 +169,6 @@ public class HomeFragment extends BaseFragment
                 requestWishList();
                 requestRecentList();
             }
-        }
-
-        // 애니메이션 처리!
-        if (mHomeLayout != null)
-        {
-            mHomeLayout.onResumeCarouselAnimation();
         }
     }
 
@@ -176,11 +178,6 @@ public class HomeFragment extends BaseFragment
         super.onPause();
 
         mDontReload = true;
-
-        if (mHomeLayout != null)
-        {
-            mHomeLayout.onPauseCarouselAnimation();
-        }
     }
 
     @Override
@@ -413,10 +410,11 @@ public class HomeFragment extends BaseFragment
             return;
         }
 
-        // 커버뷰가 보이지 않을때, 즉 위시리스트와 최근 본 업장의 리퀘스트가 완료 되었을때
-        if (mHomeLayout.isShowRecentListCoverView() == false && mHomeLayout.isShowWishListCoverView() == false)
-        {
+        boolean isRunWishList = (mNetworkRunState & IS_RUNNED_WISHLIST) > 0;
+        boolean isRunRecentList = (mNetworkRunState & IS_RUNNED_RECENTLIST) > 0;
 
+        if (mNetworkRunState != IS_RUNNED_NONE && isRunWishList == true && isRunRecentList == true)
+        {
             String memberType = DailyHotel.isLogin() == true //
                 ? AnalyticsManager.ValueType.MEMBER : AnalyticsManager.ValueType.GUEST;
 
@@ -631,12 +629,6 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onRecommendRetryButtonClick()
-        {
-            mNetworkController.requestRecommendationList();
-        }
-
-        @Override
         public void onWishListViewAllClick()
         {
             startWishList(null);
@@ -704,18 +696,6 @@ public class HomeFragment extends BaseFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
                 Integer.toString(recentItem.idx), null);
-        }
-
-        @Override
-        public void onWishListRetryButtonClick()
-        {
-            requestWishList();
-        }
-
-        @Override
-        public void onRecentListRetryButtonClick()
-        {
-            requestRecentList();
         }
 
         @Override
@@ -797,6 +777,8 @@ public class HomeFragment extends BaseFragment
                 mHomeLayout.setWishListData(list, isError);
             }
 
+            mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
+
             sendHomeScreenAnalytics();
         }
 
@@ -807,6 +789,8 @@ public class HomeFragment extends BaseFragment
             {
                 mHomeLayout.setRecentListData(list, isError);
             }
+
+            mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
 
             sendHomeScreenAnalytics();
         }
