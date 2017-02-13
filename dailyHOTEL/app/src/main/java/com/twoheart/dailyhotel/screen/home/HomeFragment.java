@@ -225,6 +225,8 @@ public class HomeFragment extends BaseFragment
                 {
                     mDontReload = false;
                     mHomeLayout.setScrollTop();
+
+                    forceRefreshing();
                 }
                 break;
         }

@@ -105,6 +105,10 @@ public class MainActivity extends BaseActivity implements Constants
                             {
                                 mSplashLayout.setVisibility(View.GONE);
                                 mSplashLayout.setAnimation(null);
+
+                                ViewGroup viewGroup = (ViewGroup) mSplashLayout.getParent();
+                                viewGroup.removeView(mSplashLayout);
+                                mSplashLayout = null;
                             }
 
                             @Override
@@ -214,6 +218,11 @@ public class MainActivity extends BaseActivity implements Constants
 
     private void loadSplash(View splashLayout)
     {
+        if (splashLayout == null)
+        {
+            return;
+        }
+
         String splashVersion = DailyPreference.getInstance(this).getRemoteConfigIntroImageVersion();
 
         DailyImageView imageView = (DailyImageView) splashLayout.findViewById(R.id.splashImageView);
