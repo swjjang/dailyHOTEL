@@ -395,6 +395,8 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             mInputReviewView.setDrawableVectorTint(R.color.default_background_c454545_alpha_20);
             mInputReviewView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
             mInputReviewView.setText(R.string.label_booking_completed_input_review);
+            mInputReviewView.setOnClickListener(null);
+            mInputReviewView.setEnabled(false);
         } else
         {
             mInputReviewVerticalLine.setVisibility(View.GONE);

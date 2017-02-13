@@ -110,6 +110,8 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     {
         super.onActivityResult(requestCode, resultCode, data);
 
+        unLockUI();
+
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
