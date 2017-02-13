@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class HomeCarouselLayout extends RelativeLayout
 {
-    private static final int LAYOUT_ANIMATION_DURATION = 2000;
+    private static final int LAYOUT_ANIMATION_DURATION = 200;
 
     private Context mContext;
     private DailyTextView mTitleTextView;

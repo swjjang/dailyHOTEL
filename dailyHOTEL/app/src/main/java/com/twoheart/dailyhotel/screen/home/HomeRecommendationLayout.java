@@ -1,9 +1,13 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -22,9 +26,12 @@ import java.util.ArrayList;
 
 public class HomeRecommendationLayout extends LinearLayout
 {
+    private static final int LAYOUT_ANIMATION_DURATION = 200;
+
     private Context mContext;
     private LinearLayout mContentLayout;
     private HomeRecommendationListener mListener;
+    private ValueAnimator mValueAnimator;
 
     private ArrayList<Recommendation> mRecommendationList;
 
@@ -75,6 +82,7 @@ public class HomeRecommendationLayout extends LinearLayout
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_layout, this);
 
         mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
+        setVisibility(View.GONE);
 
         clearAll();
     }
@@ -100,10 +108,23 @@ public class HomeRecommendationLayout extends LinearLayout
                     Recommendation recommendation = mRecommendationList.get(i);
                     addRecommendationItemView(recommendation, i);
                 }
-                setVisibility(View.VISIBLE);
+
+                if (getVisibility() != View.VISIBLE)
+                {
+                    setVisibility(View.INVISIBLE);
+
+                    this.postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            startLayoutShowAnimation();
+                        }
+                    }, 100);
+                }
             } else
             {
-                setVisibility(View.GONE);
+                startLayoutCloseAnimation();
             }
         }
     }
@@ -116,8 +137,6 @@ public class HomeRecommendationLayout extends LinearLayout
         {
             mContentLayout.removeAllViews();
         }
-
-        setVisibility(View.GONE);
     }
 
     private void addRecommendationItemView(final Recommendation recommendation, final int position)
@@ -180,5 +199,133 @@ public class HomeRecommendationLayout extends LinearLayout
         }
 
         return mRecommendationList.size();
+    }
+
+    private void startLayoutShowAnimation()
+    {
+        if (getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            mValueAnimator.cancel();
+            mValueAnimator = null;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, getHeight());
+        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
+        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = value;
+                setLayoutParams(params);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                setVisibility(View.VISIBLE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                setVisibility(View.VISIBLE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    void startLayoutCloseAnimation()
+    {
+        if (getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            mValueAnimator.cancel();
+            mValueAnimator = null;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0);
+        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
+        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = value;
+                setLayoutParams(params);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                setVisibility(View.GONE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                setVisibility(View.GONE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
     }
 }
