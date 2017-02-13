@@ -71,7 +71,7 @@ public class HomeCarouselLayout extends RelativeLayout
     private void initLayout()
     {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
-        setVisibility(View.VISIBLE);
+        setVisibility(View.GONE);
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
         mCountTextView = (DailyTextView) view.findViewById(R.id.countTextView);
@@ -138,7 +138,7 @@ public class HomeCarouselLayout extends RelativeLayout
     public void clearAll()
     {
         setRecyclerAdapter(null);
-        setVisibility(View.VISIBLE);
+        setVisibility(View.GONE);
     }
 
     public boolean hasData()
