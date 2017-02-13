@@ -697,7 +697,7 @@ public class HomeLayout extends BaseLayout
         if (defaultEvent == null //
             || HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultEvent.defaultImageUrl) == false)
         {
-            setEventCountView(1, mEventViewPagerAdapter.getCount());
+            setEventCountView(0, mEventViewPagerAdapter.getCount());
         }
 
         mEventViewPager.setOnPageChangeListener(null);
@@ -746,13 +746,15 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        //        if (pageIndex < 1)
-        //        {
-        //            pageIndex = totalCount;
-        //        } else if (pageIndex > totalCount)
-        //        {
-        //            pageIndex = 1;
-        //        }
+        pageIndex++;
+
+        if (pageIndex < 1)
+        {
+            pageIndex = 1;
+        } else if (pageIndex > totalCount)
+        {
+            pageIndex = totalCount;
+        }
 
         if (totalCount == 0)
         {
