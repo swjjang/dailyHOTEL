@@ -1,11 +1,15 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
@@ -21,6 +25,8 @@ import java.util.ArrayList;
 
 public class HomeCarouselLayout extends RelativeLayout
 {
+    private static final int LAYOUT_ANIMATION_DURATION = 2000;
+
     private Context mContext;
     private DailyTextView mTitleTextView;
     private DailyTextView mCountTextView;
@@ -28,6 +34,7 @@ public class HomeCarouselLayout extends RelativeLayout
     OnCarouselListener mCarouselListenter;
     private RecyclerView mRecyclerView;
     private HomeCarouselAdapter mRecyclerAdapter;
+    private ValueAnimator mValueAnimator;
 
     public interface OnCarouselListener
     {
@@ -115,10 +122,24 @@ public class HomeCarouselLayout extends RelativeLayout
 
         if (list == null || list.size() == 0)
         {
-            setVisibility(View.GONE);
+            startLayoutCloseAnimation();
         } else
         {
-            setVisibility(View.VISIBLE);
+            if (getVisibility() == View.VISIBLE)
+            {
+                return;
+            }
+
+            setVisibility(View.INVISIBLE);
+
+            this.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    startLayoutShowAnimation();
+                }
+            }, 100);
         }
     }
 
@@ -138,7 +159,6 @@ public class HomeCarouselLayout extends RelativeLayout
     public void clearAll()
     {
         setRecyclerAdapter(null);
-        setVisibility(View.GONE);
     }
 
     public boolean hasData()
@@ -159,6 +179,134 @@ public class HomeCarouselLayout extends RelativeLayout
         }
 
         return mRecyclerAdapter.getItem(position);
+    }
+
+    private void startLayoutShowAnimation()
+    {
+        if (getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            mValueAnimator.cancel();
+            mValueAnimator = null;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, getHeight());
+        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
+        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = value;
+                setLayoutParams(params);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                setVisibility(View.VISIBLE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                setVisibility(View.VISIBLE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    void startLayoutCloseAnimation()
+    {
+        if (getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        if (mValueAnimator != null)
+        {
+            mValueAnimator.cancel();
+            mValueAnimator = null;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0);
+        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
+        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (int) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = value;
+                setLayoutParams(params);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                setVisibility(View.GONE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                setVisibility(View.GONE);
+                clearAnimation();
+
+                mValueAnimator = null;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
     }
 
     public void setCarouselListener(OnCarouselListener listener)

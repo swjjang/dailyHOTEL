@@ -820,7 +820,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                startMessageLayoutCloseAnimation(mTextMessageLayout);
+                startLayoutCloseAnimation(mTextMessageLayout);
 
                 ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
             }
@@ -856,7 +856,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void run()
             {
-                startMessageLayoutShowAnimation(mTextMessageLayout);
+                startLayoutShowAnimation(mTextMessageLayout);
             }
         });
     }
@@ -931,7 +931,7 @@ public class HomeLayout extends BaseLayout
         mErrorPopupLayout.setVisibility(isShow == true ? View.VISIBLE : View.GONE);
     }
 
-    private void startMessageLayoutShowAnimation(final View view)
+    private void startLayoutShowAnimation(final View view)
     {
         if (view == null)
         {
@@ -990,7 +990,7 @@ public class HomeLayout extends BaseLayout
         valueAnimator.start();
     }
 
-    void startMessageLayoutCloseAnimation(final View view)
+    void startLayoutCloseAnimation(final View view)
     {
         if (view == null)
         {
