@@ -43,7 +43,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
 {
     MyDailyLayout mMyDailyLayout;
     MyDailyNetworkController mNetworkController;
-    private BroadcastReceiver mNewEventBroadcastReceiver;
+    private BroadcastReceiver mNewCouponBroadcastReceiver;
     boolean mIsAttach;
     private boolean mDontReload;
 
@@ -512,7 +512,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
     private void registerReceiver()
     {
-        if (mNewEventBroadcastReceiver != null)
+        if (mNewCouponBroadcastReceiver != null)
         {
             return;
         }
@@ -520,7 +520,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MainActivity.BROADCAST_EVENT_UPDATE);
 
-        mNewEventBroadcastReceiver = new BroadcastReceiver()
+        mNewCouponBroadcastReceiver = new BroadcastReceiver()
         {
             @Override
             public void onReceive(Context context, Intent intent)
@@ -536,18 +536,18 @@ public class MyDailyFragment extends BaseFragment implements Constants
             }
         };
 
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mNewEventBroadcastReceiver, intentFilter);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mNewCouponBroadcastReceiver, intentFilter);
     }
 
     private void unregisterReceiver()
     {
-        if (mNewEventBroadcastReceiver == null)
+        if (mNewCouponBroadcastReceiver == null)
         {
             return;
         }
 
-        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mNewEventBroadcastReceiver);
-        mNewEventBroadcastReceiver = null;
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mNewCouponBroadcastReceiver);
+        mNewCouponBroadcastReceiver = null;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
