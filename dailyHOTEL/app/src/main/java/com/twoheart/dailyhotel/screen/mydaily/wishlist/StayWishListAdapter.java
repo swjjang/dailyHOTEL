@@ -44,7 +44,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.list_row_wishlist_footer, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
                 return new FooterViewHolder(view);
             }
         }

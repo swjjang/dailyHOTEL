@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
 
     protected Context mContext;
     protected LayoutInflater mInflater;
-    private ArrayList<? extends Place> mList;
+    private ArrayList<PlaceViewItem> mList;
     protected OnRecentPlacesItemListener mListener;
 
     private Constants.SortType mSortType; // TODO : 추후 제거 필요!
@@ -39,7 +39,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         void onDeleteClick(View view, int position);
     }
 
-    public RecentPlacesListAdapter(Context context, ArrayList<? extends Place> list, OnRecentPlacesItemListener listener)
+    public RecentPlacesListAdapter(Context context, ArrayList<PlaceViewItem> list, OnRecentPlacesItemListener listener)
     {
         mContext = context;
 
@@ -56,17 +56,17 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         makeShaderFactory();
     }
 
-    public ArrayList<? extends Place> getList()
+    public ArrayList<PlaceViewItem> getList()
     {
         return mList != null ? mList : null;
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<PlaceViewItem> list)
     {
         mList = list;
     }
 
-    public Place getItem(int position)
+    public PlaceViewItem getItem(int position)
     {
         if (mList == null || mList.size() == 0)
         {
@@ -76,20 +76,37 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         return mList.get(position);
     }
 
-    public Place removeItem(int position)
+    public PlaceViewItem removeItem(int position)
     {
         if (mList == null || mList.size() == 0)
         {
             return null;
         }
 
-        return mList.remove(position);
+        PlaceViewItem removeItem = mList.remove(position);
+
+        if (mList.size() == 1)
+        {
+            PlaceViewItem checkItem = mList.get(0);
+            if (checkItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
+            {
+                mList.remove(0);
+            }
+        }
+
+        return removeItem;
     }
 
     @Override
     public int getItemCount()
     {
-        return mList != null ? mList.size() : 0;
+        return mList != null && mList.size() > 0 ? mList.size() : 0;
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        return mList.get(position).mType;
     }
 
     private void makeShaderFactory()

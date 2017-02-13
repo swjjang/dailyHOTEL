@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class RecentStayListAdapter extends RecentPlacesListAdapter
 {
 
-    public RecentStayListAdapter(Context context, ArrayList<? extends Place> list, OnRecentPlacesItemListener listener)
+    public RecentStayListAdapter(Context context, ArrayList<PlaceViewItem> list, OnRecentPlacesItemListener listener)
     {
         super(context, list, listener);
     }
@@ -32,24 +32,50 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
-        view.setLayoutParams(layoutParams);
+        switch (viewType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+            {
+                View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                view.setLayoutParams(layoutParams);
 
-        return new StayViewHolder(view);
+                return new StayViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
+                return new FooterViewHolder(view);
+            }
+        }
+
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
     {
-        Place item = getItem(position);
+        PlaceViewItem item = getItem(position);
         if (item == null)
         {
             return;
         }
 
-        final Stay stay = (Stay) item;
-        StayViewHolder holder = (StayViewHolder) viewHolder;
+        switch (item.mType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+                onBindViewHolder((StayViewHolder) viewHolder, item, position);
+                break;
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+                break;
+        }
+    }
+
+    private void onBindViewHolder(StayViewHolder holder, PlaceViewItem placeViewItem, int position)
+    {
+        final Stay stay = placeViewItem.getItem();
 
         String strPrice = Util.getPriceFormat(mContext, stay.price, false);
         String strDiscount = Util.getPriceFormat(mContext, stay.discountPrice, false);
@@ -155,6 +181,14 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                 }
             }
         });
+    }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
+        }
     }
 
     private class StayViewHolder extends RecyclerView.ViewHolder

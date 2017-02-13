@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
@@ -21,6 +22,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -91,7 +93,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             sortList(mRecentPlaceList, list);
 
-            mListLayout.setData(list);
+            ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
+            mListLayout.setData(viewItemList);
         }
 
         @Override
@@ -133,7 +136,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            Stay stay = (Stay) mListLayout.getItem(position);
+            PlaceViewItem placeViewItem = mListLayout.getItem(position);
+            Stay stay = placeViewItem.getItem();
 
             if (Util.isUsedMultiTransition() == true)
             {
@@ -175,7 +179,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            Place place = mListLayout.removeItem(position);
+
+            PlaceViewItem placeViewItem = mListLayout.removeItem(position);
+            Place place = placeViewItem.getItem();
             ExLog.d("isRemove : " + (place != null));
 
             Pair<Integer, String> deleteItem = new Pair<>(place.index, RecentPlaces.getServiceType(PlaceType.HOTEL));
@@ -203,7 +209,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }
 
         @Override
-        public void onRecordAnalyticsList(ArrayList<? extends Place> list)
+        public void onRecordAnalyticsList(ArrayList<PlaceViewItem> list)
         {
             if (list == null || list.isEmpty() == true || mSaleTime == null)
             {
@@ -223,7 +229,14 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 {
                     stringBuilder.append(",");
                 }
-                stringBuilder.append(list.get(i).index);
+
+                PlaceViewItem placeViewItem = list.get(i);
+                Place place = placeViewItem.getItem();
+
+                if (place != null)
+                {
+                    stringBuilder.append(place.index);
+                }
             }
 
             stringBuilder.append("]");

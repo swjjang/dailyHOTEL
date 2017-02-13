@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -89,7 +90,9 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             sortList(mRecentPlaceList, list);
 
-            mListLayout.setData(list);
+            ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
+
+            mListLayout.setData(viewItemList);
         }
 
         @Override
@@ -131,7 +134,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            Gourmet gourmet = (Gourmet) mListLayout.getItem(position);
+            PlaceViewItem placeViewItem = mListLayout.getItem(position);
+            Gourmet gourmet = placeViewItem.getItem();
 
             if (Util.isUsedMultiTransition() == true)
             {
@@ -172,7 +176,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            Place place = mListLayout.removeItem(position);
+            PlaceViewItem placeViewItem = mListLayout.removeItem(position);
+            Place place = placeViewItem.getItem();
             ExLog.d("isRemove : " + (place != null));
 
             Pair<Integer, String> deleteItem = new Pair<>(place.index, RecentPlaces.getServiceType(PlaceType.FNB));
@@ -200,7 +205,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         }
 
         @Override
-        public void onRecordAnalyticsList(ArrayList<? extends Place> list)
+        public void onRecordAnalyticsList(ArrayList<PlaceViewItem> list)
         {
             if (list == null || list.isEmpty() == true || mSaleTime == null)
             {
@@ -219,7 +224,14 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 {
                     stringBuilder.append(",");
                 }
-                stringBuilder.append(list.get(i).index);
+
+                PlaceViewItem placeViewItem = list.get(i);
+                Place place = placeViewItem.getItem();
+
+                if (place != null)
+                {
+                    stringBuilder.append(place.index);
+                }
             }
 
             stringBuilder.append("]");

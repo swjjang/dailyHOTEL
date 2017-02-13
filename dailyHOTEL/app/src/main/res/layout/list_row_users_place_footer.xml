@@ -13,7 +13,7 @@
         android:layout_marginBottom="52dp"
         android:background="@drawable/shape_wishlist_footer_textview_background"
         android:gravity="center"
-        android:text="@string/wishlist_list_bottom_notice_message"
+        android:text="@string/label_list_bottom_notice_message"
         android:textColor="@color/default_text_cc5c5c5"
         android:textSize="12dp"/>
 

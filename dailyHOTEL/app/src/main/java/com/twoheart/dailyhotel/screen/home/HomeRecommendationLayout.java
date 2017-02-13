@@ -214,7 +214,9 @@ public class HomeRecommendationLayout extends LinearLayout
             mValueAnimator = null;
         }
 
-        mValueAnimator = ValueAnimator.ofInt(0, getHeight());
+        final int height = getHeight();
+
+        mValueAnimator = ValueAnimator.ofInt(0, height);
         mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
         mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -243,6 +245,10 @@ public class HomeRecommendationLayout extends LinearLayout
                 setVisibility(View.VISIBLE);
                 clearAnimation();
 
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = height;
+                setLayoutParams(params);
+
                 mValueAnimator = null;
             }
 
@@ -251,6 +257,10 @@ public class HomeRecommendationLayout extends LinearLayout
             {
                 setVisibility(View.VISIBLE);
                 clearAnimation();
+
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = height;
+                setLayoutParams(params);
 
                 mValueAnimator = null;
             }
@@ -278,7 +288,9 @@ public class HomeRecommendationLayout extends LinearLayout
             mValueAnimator = null;
         }
 
-        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0);
+        final int height = getHeight();
+
+        mValueAnimator = ValueAnimator.ofInt(height, 0);
         mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
         mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -307,6 +319,10 @@ public class HomeRecommendationLayout extends LinearLayout
                 setVisibility(View.GONE);
                 clearAnimation();
 
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = height;
+                setLayoutParams(params);
+
                 mValueAnimator = null;
             }
 
@@ -315,6 +331,10 @@ public class HomeRecommendationLayout extends LinearLayout
             {
                 setVisibility(View.GONE);
                 clearAnimation();
+
+                ViewGroup.LayoutParams params = getLayoutParams();
+                params.height = height;
+                setLayoutParams(params);
 
                 mValueAnimator = null;
             }

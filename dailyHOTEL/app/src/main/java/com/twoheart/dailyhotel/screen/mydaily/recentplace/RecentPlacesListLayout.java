@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -36,7 +37,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
 
         void onEmptyButtonClick();
 
-        void onRecordAnalyticsList(ArrayList<? extends Place> list);
+        void onRecordAnalyticsList(ArrayList<PlaceViewItem> list);
 
         void onHomeClick();
     }
@@ -47,8 +48,10 @@ public abstract class RecentPlacesListLayout extends BaseLayout
 
     protected abstract int getEmptyButtonTextResId();
 
+    protected abstract ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<? extends Place> list);
+
     protected abstract RecentPlacesListAdapter getRecentPlacesListAdapter(Context context//
-        , ArrayList<? extends Place> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
+        , ArrayList<PlaceViewItem> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
 
     public RecentPlacesListLayout(Context context, OnBaseEventListener listener)
     {
@@ -104,7 +107,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<PlaceViewItem> list)
     {
         if (list == null || list.size() == 0)
         {
@@ -129,19 +132,36 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         ((RecentPlacesListLayout.OnEventListener) mOnEventListener).onRecordAnalyticsList(list);
     }
 
-    public ArrayList<? extends Place> getList()
+    public ArrayList<PlaceViewItem> getList()
     {
         return mListAdapter != null ? mListAdapter.getList() : null;
     }
 
-    public Place getItem(int position)
+    public int getRealItemCount()
+    {
+        int realCount = 0;
+        if (mListAdapter != null)
+        {
+            realCount = mListAdapter.getItemCount() - 1;
+            if (realCount < 0)
+            {
+                realCount = 0;
+            }
+        }
+
+        return realCount;
+    }
+
+    public PlaceViewItem getItem(int position)
     {
         return mListAdapter != null ? mListAdapter.getItem(position) : null;
     }
 
-    public Place removeItem(int position)
+    public PlaceViewItem removeItem(int position)
     {
-        return mListAdapter != null ? mListAdapter.removeItem(position) : null;
+        PlaceViewItem removeItem = mListAdapter != null ? mListAdapter.removeItem(position) : null;
+        setEmptyViewVisibility(getRealItemCount() <= 0 ? View.VISIBLE : View.GONE);
+        return removeItem;
     }
 
     public void notifyDataSetChanged()
