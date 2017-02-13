@@ -148,7 +148,7 @@
     <string name="grade_not_yet">미정</string>
 
     <!-- Actionbar Titles -->
-    <string name="actionbar_title_booking_list_frag">예약 내역</string>
+    <string name="actionbar_title_booking_list_frag">예약내역</string>
     <string name="actionbar_title_credit_frag">적립금</string>
     <string name="actionbar_title_invite_friends">친구 초대하기</string>
     <string name="actionbar_title_reg_creditcard">간편결제 카드 등록하기</string>

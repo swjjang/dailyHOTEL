@@ -1665,21 +1665,15 @@ public class Util implements Constants
 
         final char SEPARATE = '|';
 
-        String newValue = DailyPreference.getInstance(context).getNoticeNewList();
         String removeValue = DailyPreference.getInstance(context).getNoticeNewRemoveList();
         String indexString;
-
-        if (Util.isTextEmpty(newValue) == true)
-        {
-            newValue = "";
-        }
 
         if (Util.isTextEmpty(removeValue) == true)
         {
             removeValue = "";
         }
 
-        StringBuilder stringBuilder = new StringBuilder(newValue);
+        StringBuilder stringBuilder = new StringBuilder();
 
         for (Notice notice : noticeList)
         {
