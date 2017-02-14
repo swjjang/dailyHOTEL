@@ -113,7 +113,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 총금액
         TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-        totalPriceTextView.setText(Util.getPriceFormat(this, sellingPrice, true));
+        totalPriceTextView.setText(Util.getPriceFormat(this, sellingPrice, false));
 
         // 적립금 혹은 쿠폰 사용
         View discountLayout = paymentInfoLayout.findViewById(R.id.discountLayout);
@@ -132,7 +132,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             discountLayout.setVisibility(View.VISIBLE);
             TextView discountedTextView = (TextView) paymentInfoLayout.findViewById(R.id.discountedTextView);
-            discountedTextView.setText("- " + Util.getPriceFormat(this, bonus + coupon, true));
+            discountedTextView.setText("- " + Util.getPriceFormat(this, bonus + coupon, false));
         } else
         {
             discountLayout.setVisibility(View.GONE);
@@ -156,7 +156,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 총 입금 금액
         TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-        totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, true));
+        totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, false));
 
         // **공급자**
 
