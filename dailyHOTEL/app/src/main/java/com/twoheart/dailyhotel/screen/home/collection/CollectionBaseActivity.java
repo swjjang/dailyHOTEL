@@ -56,6 +56,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     protected abstract String getSectionTitle(int count);
 
+    protected abstract ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -275,34 +277,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
         mCollectionBaseLayout.setCalendarText(getCalendarDate());
 
         requestRecommendationPlaceList();
-    }
-
-    protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList)
-    {
-        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
-
-        // 빈공간
-        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
-
-        if (placeList == null || placeList.size() == 0)
-        {
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-        } else
-        {
-            // 개수 넣기
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
-
-            int entryPosition = 0;
-
-            for (RecommendationPlace place : placeList)
-            {
-                place.imageUrl = imageBaseUrl + place.imageUrl;
-                place.entryPosition = entryPosition++;
-                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-            }
-        }
-
-        return placeViewItemList;
     }
 
     protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list)

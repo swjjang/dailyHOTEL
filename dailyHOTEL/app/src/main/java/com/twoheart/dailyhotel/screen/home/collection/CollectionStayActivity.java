@@ -108,6 +108,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         return getString(R.string.label_count_stay, count);
     }
 
+    @Override
     protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
@@ -135,6 +136,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
             }
+
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW, null));
         }
 
         return placeViewItemList;

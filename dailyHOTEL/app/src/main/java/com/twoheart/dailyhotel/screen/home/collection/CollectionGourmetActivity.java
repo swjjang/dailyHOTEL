@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
+import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
@@ -18,6 +19,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -96,6 +98,37 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     protected String getSectionTitle(int count)
     {
         return getString(R.string.label_count_gourmet, count);
+    }
+
+    @Override
+    protected ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList)
+    {
+        ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
+
+        // 빈공간
+        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_HEADER_VIEW, null));
+
+        if (placeList == null || placeList.size() == 0)
+        {
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+        } else
+        {
+            // 개수 넣기
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
+
+            int entryPosition = 0;
+
+            for (RecommendationPlace place : placeList)
+            {
+                place.imageUrl = imageBaseUrl + place.imageUrl;
+                place.entryPosition = entryPosition++;
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+            }
+
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW, null));
+        }
+
+        return placeViewItemList;
     }
 
     private CollectionStayLayout.OnEventListener mOnEventListener = new CollectionBaseLayout.OnEventListener()

@@ -73,6 +73,12 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
                 return new FooterViewHolder(view);
             }
+
+            case PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
+                return new FooterGuideViewHolder(view);
+            }
         }
 
         return null;
@@ -261,6 +267,14 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
     private class HeaderViewHolder extends RecyclerView.ViewHolder
     {
         public HeaderViewHolder(View itemView)
+        {
+            super(itemView);
+        }
+    }
+
+    private class FooterGuideViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterGuideViewHolder(View itemView)
         {
             super(itemView);
         }
