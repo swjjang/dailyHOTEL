@@ -122,7 +122,7 @@ public class RecentPlaces
                 return;
             }
 
-            mPlaceList.add(0, new Pair<>(placeIndex, serviceType));
+            mPlaceList.add(0, expactedPair);
             return;
         }
 
@@ -136,27 +136,25 @@ public class RecentPlaces
         // 59일때 목은 29, 나머지는 1;
         int maxSearchSize = (size / 2) + (size % 2);
 
+        Pair<Integer, String> firstPair, secondPair;
+
         // value1 = 30, value2 = 60;
         for (int first = maxSearchSize - 1; first >= 0; first--)
         {
-            Pair<Integer, String> secondPair; // first 59; <-- outOfLength error;
-
             int second = first + maxSearchSize;
             if (second < size) // 2번째 인자가 리스트 사이즈보다 작을때
             {
-                secondPair = mPlaceList.get(first + maxSearchSize);
-
-                if (expactedPair.equals(secondPair) == true)
-                {
-                    // 기존 포함 여부 검사
-                    if (oldPlacePosition == -1)
-                    {
-                        oldPlacePosition = second;
-                    }
-                }
+                secondPair = mPlaceList.get(second); // first 59; <-- outOfLength error;
 
                 if (serviceType.equalsIgnoreCase(secondPair.second) == true)
                 {
+                    // 기존 포함 여부 검사
+                    if(expactedPair.first == secondPair.first && oldPlacePosition == -1)
+                    {
+                        oldPlacePosition = second;
+                        break;
+                    }
+
                     // 같은 서비스 타입의 마지막 포지션
                     if (second > lastSameTypePlacePosition)
                     {
@@ -167,19 +165,17 @@ public class RecentPlaces
                 }
             }
 
-            Pair<Integer, String> firstPair = mPlaceList.get(first); // first 29;
-
-            if (expactedPair.equals(firstPair) == true)
-            {
-                // 기존 포함 여부 검사
-                if (oldPlacePosition == -1)
-                {
-                    oldPlacePosition = first;
-                }
-            }
+            firstPair = mPlaceList.get(first); // first 29;
 
             if (serviceType.equalsIgnoreCase(firstPair.second) == true)
             {
+                // 기존 포함 여부 검사
+                if(expactedPair.first == firstPair.first && oldPlacePosition == -1)
+                {
+                    oldPlacePosition = first;
+                    break;
+                }
+
                 // 같은 서비스 타입의 마지막 포지션
                 if (first > lastSameTypePlacePosition)
                 {
@@ -193,7 +189,6 @@ public class RecentPlaces
         if (oldPlacePosition != -1)
         {
             mPlaceList.remove(oldPlacePosition);
-            sameTypeItemCount--;
         } else if (sameTypeItemCount == MAX_RECENT_PLACE_COUNT)
         {
             mPlaceList.remove(lastSameTypePlacePosition);

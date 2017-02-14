@@ -188,7 +188,8 @@ public class HomeCarouselLayout extends RelativeLayout
             return;
         }
 
-        if (mValueAnimator != null) {
+        if (mValueAnimator != null)
+        {
             mValueAnimator.cancel();
             mValueAnimator = null;
         }
@@ -261,7 +262,8 @@ public class HomeCarouselLayout extends RelativeLayout
             return;
         }
 
-        if (mValueAnimator != null) {
+        if (mValueAnimator != null)
+        {
             mValueAnimator.cancel();
             mValueAnimator = null;
         }
