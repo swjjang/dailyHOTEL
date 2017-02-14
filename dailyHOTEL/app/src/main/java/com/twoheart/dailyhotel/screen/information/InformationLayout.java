@@ -1,7 +1,9 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -96,7 +98,18 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             WebView webView = new WebView(mContext);
             String webViewVersion = webView.getSettings().getUserAgentString();
 
-            debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion);
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+
+            String dpiText = "\nldpi 120dpi\n" +
+                "mdpi 160dpi\n" +
+                "hdpi 240dpi\n" +
+                "xhdpi 320dpi\n" +
+                "xxhdpi 480dpi\n" +
+                "xxxhdpi 640dpi";
+
+            debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion + "\n\nDPI : " + displayMetrics.densityDpi + dpiText);
         }
     }
 

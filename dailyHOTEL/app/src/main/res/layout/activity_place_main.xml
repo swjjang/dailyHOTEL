@@ -35,7 +35,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/backImageView"
                 android:gravity="center_vertical"
-                android:text="@string/app_name"
+                android:text="@string/label_daily_hotel"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="18dp"/>
 
