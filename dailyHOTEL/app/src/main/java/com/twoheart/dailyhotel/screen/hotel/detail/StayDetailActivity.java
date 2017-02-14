@@ -228,7 +228,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         Intent intent = new Intent(context, StayDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, homePlace.idx);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, homePlace.index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 
         intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);

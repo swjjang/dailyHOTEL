@@ -16,8 +16,8 @@ import java.util.Map;
 @JsonObject
 public class HomePlace
 {
-    @JsonField
-    public int idx;
+    @JsonField(name = "idx")
+    public int index;
 
     @JsonField
     public String title;
@@ -45,6 +45,9 @@ public class HomePlace
 
     @JsonIgnore
     public Constants.PlaceType placeType;
+
+    @JsonField(name = "soldOut")
+    public boolean isSoldOut;
 
     @OnJsonParseComplete
     void onParseComplete()

@@ -717,7 +717,7 @@ public class HomeFragment extends BaseFragment
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_WISHLIST_CLICK,//
-                Integer.toString(wishItem.idx), null);
+                Integer.toString(wishItem.index), null);
         }
 
         @Override
@@ -742,7 +742,7 @@ public class HomeFragment extends BaseFragment
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
-                Integer.toString(recentItem.idx), null);
+                Integer.toString(recentItem.index), null);
         }
 
         @Override

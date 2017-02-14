@@ -221,7 +221,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.idx);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
 
         intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
         //        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
