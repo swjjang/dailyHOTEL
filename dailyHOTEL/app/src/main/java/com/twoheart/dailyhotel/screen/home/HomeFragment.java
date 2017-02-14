@@ -617,7 +617,7 @@ public class HomeFragment extends BaseFragment
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_EVENT_BANNER_CLICK,//
-                event.title, null);
+                Integer.toString(event.index), null);
         }
 
         @Override

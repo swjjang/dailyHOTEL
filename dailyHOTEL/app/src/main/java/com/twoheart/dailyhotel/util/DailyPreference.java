@@ -122,6 +122,7 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_CURRENT_VERSION = "314";
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_TITLE = "315";
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_URL = "316";
+    private static final String KEY_REMOTE_CONFIG_HOME_EVENT_INDEX = "317";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -1068,6 +1069,16 @@ public class DailyPreference
     public String getRemoteConfigHomeEventTitle()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_TITLE, null);
+    }
+
+    public void setRemoteConfigHomeEventIndex(int index)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_EVENT_INDEX, index);
+    }
+
+    public int getRemoteConfigHomeEventIndex()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_INDEX, -1);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

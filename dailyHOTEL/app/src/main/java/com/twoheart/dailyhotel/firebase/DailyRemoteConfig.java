@@ -299,22 +299,25 @@ public class DailyRemoteConfig
     {
         String title;
         String eventUrl;
+        int index;
         try
         {
             JSONObject eventJSONObject = new JSONObject(androidHomeEventDefaultLink);
 
             title = eventJSONObject.getString("title");
             eventUrl = eventJSONObject.getString("eventUrl");
-
+            index = eventJSONObject.getInt("idx");
         } catch (Exception e)
         {
             ExLog.e(e.toString());
             title = null;
             eventUrl = null;
+            index = -1;
         }
 
         final String eventTitle = title;
         final String eventLinkUrl = eventUrl;
+        final int eventIndex = index;
 
         final String clientHomeEventCurrentVersion = DailyPreference.getInstance(context).getRemoteConfigHomeEventCurrentVersion();
 
@@ -339,6 +342,7 @@ public class DailyRemoteConfig
                     DailyPreference.getInstance(context).setRemoteConfigHomeEventCurrentVersion(version);
                     DailyPreference.getInstance(context).setRemoteConfigHomeEventTitle(eventTitle);
                     DailyPreference.getInstance(context).setRemoteConfigHomeEventUrl(eventLinkUrl);
+                    DailyPreference.getInstance(context).setRemoteConfigHomeEventIndex(eventIndex);
                 }
             }
         });

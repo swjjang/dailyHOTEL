@@ -31,17 +31,21 @@ public class Event implements Parcelable
     @JsonField(name = "title")
     public String title;
 
+    @JsonField(name = "idx")
+    public int index;
+
     public Event()
     {
     }
 
     // 로컬 저장용 홈 이벤트 처리를 위한 생성자
-    public Event(String defaultImageUrl, String lowResolutionImageUrl, String title, String linkUrl)
+    public Event(String defaultImageUrl, String lowResolutionImageUrl, String title, String linkUrl, int index)
     {
         this.defaultImageUrl = defaultImageUrl;
         this.lowResolutionImageUrl = lowResolutionImageUrl;
         this.title = title;
         this.linkUrl = linkUrl;
+        this.index = index;
     }
 
     public Event(Parcel in)
@@ -59,6 +63,7 @@ public class Event implements Parcelable
         dest.writeString(lowResolutionImageUrl);
         dest.writeString(startedAt);
         dest.writeString(title);
+        dest.writeInt(index);
     }
 
     private void readFromParcel(Parcel in)
@@ -70,6 +75,7 @@ public class Event implements Parcelable
         lowResolutionImageUrl = in.readString();
         startedAt = in.readString();
         title = in.readString();
+        index = in.readInt();
     }
 
     @Override

@@ -598,11 +598,12 @@ public class HomeLayout extends BaseLayout
         String homeEventCurrentVersion = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventCurrentVersion();
         String homeEventUrl = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventUrl();
         String homeEventTitle = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventTitle();
+        int homeEventIndex = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventIndex();
 
         if (Util.isTextEmpty(homeEventCurrentVersion) == true)
         {
             return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
-                HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
+                HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
         } else
         {
             String fileName = Util.makeImageFileName(homeEventCurrentVersion);
@@ -611,7 +612,7 @@ public class HomeLayout extends BaseLayout
             if (file.exists() == false)
             {
                 return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
-                    HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
+                    HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
             } else
             {
                 String urlString = null;
@@ -628,10 +629,10 @@ public class HomeLayout extends BaseLayout
                 if (Util.isTextEmpty(urlString) == true)
                 {
                     return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
-                        HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null);
+                        HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
                 } else
                 {
-                    return new Event(urlString, urlString, homeEventTitle, homeEventUrl);
+                    return new Event(urlString, urlString, homeEventTitle, homeEventUrl, homeEventIndex);
                 }
             }
         }
