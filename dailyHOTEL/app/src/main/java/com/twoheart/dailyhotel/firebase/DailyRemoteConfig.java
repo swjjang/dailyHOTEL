@@ -306,7 +306,7 @@ public class DailyRemoteConfig
 
             title = eventJSONObject.getString("title");
             eventUrl = eventJSONObject.getString("eventUrl");
-            index = eventJSONObject.getInt("idx");
+            index = eventJSONObject.getInt("index");
         } catch (Exception e)
         {
             ExLog.e(e.toString());
