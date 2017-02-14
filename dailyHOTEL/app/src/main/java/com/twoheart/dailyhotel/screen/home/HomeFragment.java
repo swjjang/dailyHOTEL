@@ -62,6 +62,7 @@ public class HomeFragment extends BaseFragment
     private int mNights = 1;
     private boolean mIsAttach;
     private boolean mDontReload;
+    private boolean mIsLogin;
 
     private int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
@@ -75,6 +76,7 @@ public class HomeFragment extends BaseFragment
     {
         mBaseActivity = (BaseActivity) getActivity();
 
+        mIsLogin = DailyHotel.isLogin();
         mHomeLayout = new HomeLayout(mBaseActivity, mOnEventListener);
         mNetworkController = new HomeNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
         return mHomeLayout.onCreateView(R.layout.fragment_home_main, container);
@@ -151,25 +153,7 @@ public class HomeFragment extends BaseFragment
     {
         super.onResume();
 
-        if (mDontReload == true)
-        {
-            mDontReload = false;
-        } else
-        {
-            if (mNetworkController != null)
-            {
-                lockUI();
-
-                mNetworkRunState = IS_RUNNED_NONE;
-
-                mNetworkController.requestCommonDateTime();
-                requestMessageData();
-                mNetworkController.requestEventList();
-                mNetworkController.requestRecommendationList();
-                requestWishList();
-                requestRecentList();
-            }
-        }
+        refreshList(true);
     }
 
     @Override
@@ -238,7 +222,7 @@ public class HomeFragment extends BaseFragment
 
         HomeLayout.MessageType messageType = HomeLayout.MessageType.NONE;
 
-        if (DailyHotel.isLogin() == false)
+        if (mIsLogin == false)
         {
             boolean isLogoutAreaEnable = DailyPreference.getInstance(mBaseActivity).isRemoteConfigHomeMessageAreaLogoutEnabled();
             boolean isTextMessageAreaEnable = DailyPreference.getInstance(mBaseActivity).isHomeTextMessageAreaEnabled();
@@ -417,7 +401,7 @@ public class HomeFragment extends BaseFragment
 
         if (mNetworkRunState != IS_RUNNED_NONE && isRunWishList == true && isRunRecentList == true)
         {
-            String memberType = DailyHotel.isLogin() == true //
+            String memberType = mIsLogin == true //
                 ? AnalyticsManager.ValueType.MEMBER : AnalyticsManager.ValueType.GUEST;
 
             String viewScreen = AnalyticsManager.ValueType.NONE;
@@ -444,7 +428,7 @@ public class HomeFragment extends BaseFragment
 
     private void requestWishList()
     {
-        if (DailyHotel.isLogin() == false)
+        if (mIsLogin == false)
         {
             mNetworkControllerListener.onWishList(null, false);
             return;
@@ -469,6 +453,42 @@ public class HomeFragment extends BaseFragment
         lockUI(false);
 
         mHomeLayout.forceRefreshing(false);
+    }
+
+    public void refreshList(boolean isShowLockUi)
+    {
+        boolean newLoginState = DailyHotel.isLogin();
+        if (newLoginState != mIsLogin)
+        {
+            mIsLogin = newLoginState;
+            requestAllData(isShowLockUi);
+            return;
+        }
+
+        if (mDontReload == true)
+        {
+            mDontReload = false;
+        } else
+        {
+            requestAllData(isShowLockUi);
+        }
+    }
+
+    private void requestAllData(boolean isShowLockUi)
+    {
+        if (mNetworkController != null)
+        {
+            lockUI(isShowLockUi);
+
+            mNetworkRunState = IS_RUNNED_NONE;
+
+            mNetworkController.requestCommonDateTime();
+            requestMessageData();
+            mNetworkController.requestEventList();
+            mNetworkController.requestRecommendationList();
+            requestWishList();
+            requestRecentList();
+        }
     }
 
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
@@ -556,7 +576,7 @@ public class HomeFragment extends BaseFragment
         public void onRefreshAll(boolean isShowProgress)
         {
             mDontReload = false;
-            onResume();
+            refreshList(isShowProgress);
         }
 
         @Override
