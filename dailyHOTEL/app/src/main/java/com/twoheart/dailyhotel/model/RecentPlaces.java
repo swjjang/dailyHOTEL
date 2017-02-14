@@ -110,19 +110,19 @@ public class RecentPlaces
 
         int size = size();
 
-        Pair<Integer, String> expactedPair = new Pair<>(placeIndex, serviceType);
+        Pair<Integer, String> expectedPair = new Pair<>(placeIndex, serviceType);
 
         // 사이즈가 1 이하이면 for를 동작 하지 않음
         if (size == 1)
         {
             Pair<Integer, String> pair = mPlaceList.get(0);
 
-            if (expactedPair.equals(pair) == true)
+            if (expectedPair.equals(pair) == true)
             {
                 return;
             }
 
-            mPlaceList.add(0, expactedPair);
+            mPlaceList.add(0, expectedPair);
             return;
         }
 
@@ -149,7 +149,7 @@ public class RecentPlaces
                 if (serviceType.equalsIgnoreCase(secondPair.second) == true)
                 {
                     // 기존 포함 여부 검사
-                    if(expactedPair.first == secondPair.first && oldPlacePosition == -1)
+                    if (expectedPair.first.equals(secondPair.first) && oldPlacePosition == -1)
                     {
                         oldPlacePosition = second;
                         break;
@@ -170,7 +170,7 @@ public class RecentPlaces
             if (serviceType.equalsIgnoreCase(firstPair.second) == true)
             {
                 // 기존 포함 여부 검사
-                if(expactedPair.first == firstPair.first && oldPlacePosition == -1)
+                if (expectedPair.first.equals(firstPair.first) && oldPlacePosition == -1)
                 {
                     oldPlacePosition = first;
                     break;
@@ -194,7 +194,7 @@ public class RecentPlaces
             mPlaceList.remove(lastSameTypePlacePosition);
         }
 
-        mPlaceList.add(0, expactedPair);
+        mPlaceList.add(0, expectedPair);
     }
 
     public void remove(Pair<Integer, String> pair)

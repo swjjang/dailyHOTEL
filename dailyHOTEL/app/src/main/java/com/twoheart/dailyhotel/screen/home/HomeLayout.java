@@ -1186,8 +1186,6 @@ public class HomeLayout extends BaseLayout
                 return;
             }
 
-            ExLog.d("next position : " + (msg.arg1 + 1));
-
             eventViewPager.setCurrentItem(msg.arg1 + 1);
         }
     }
