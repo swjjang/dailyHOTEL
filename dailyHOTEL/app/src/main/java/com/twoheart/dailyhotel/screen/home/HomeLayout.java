@@ -801,7 +801,6 @@ public class HomeLayout extends BaseLayout
         View closeView = mTextMessageLayout.findViewById(R.id.closeImageView);
         DailyTextView titleView = (DailyTextView) mTextMessageLayout.findViewById(R.id.titleTextView);
         DailyTextView descriptionView = (DailyTextView) mTextMessageLayout.findViewById(R.id.descriptionTextView);
-        View descriptionArrowView = mTextMessageLayout.findViewById(R.id.descriptionArrowRightView);
 
         homeMessageLayout.setOnClickListener(new View.OnClickListener()
         {
@@ -827,7 +826,7 @@ public class HomeLayout extends BaseLayout
 
         if (Util.isTextEmpty(description) == true)
         {
-            descriptionArrowView.setVisibility(View.GONE);
+            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         } else
         {
             // 메세지에 '>'가 포함 되었을 경우 제거하고 trim!
@@ -841,7 +840,8 @@ public class HomeLayout extends BaseLayout
                 }
             }
 
-            descriptionArrowView.setVisibility(View.VISIBLE);
+            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.payment_ic_right, 0);
+            descriptionView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3d));
         }
 
         descriptionView.setText(description);
