@@ -298,10 +298,30 @@ public class MainActivity extends BaseActivity implements Constants
         {
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
                 mNetworkController.requestReviewGourmet();
+
+                if (mMainFragmentManager != null)
+                {
+                    Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                    if (fragment instanceof HomeFragment)
+                    {
+                        fragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
                 mNetworkController.requestNoticeAgreement();
+
+                if (mMainFragmentManager != null)
+                {
+                    Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                    if (fragment instanceof HomeFragment)
+                    {
+                        fragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
                 break;
 
             // 해당 go home 목록이 MainActivity 목록과 동일해야함.

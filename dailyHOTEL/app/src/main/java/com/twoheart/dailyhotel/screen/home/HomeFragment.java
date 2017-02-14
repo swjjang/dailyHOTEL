@@ -184,6 +184,16 @@ public class HomeFragment extends BaseFragment
                 break;
             }
 
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+            {
+                mDontReload = false;
+                mHomeLayout.setScrollTop();
+
+                forceRefreshing();
+                break;
+            }
+
             // 해당 go home 목록이 MainActivity 목록과 동일해야함.
             case Constants.CODE_REQUEST_ACTIVITY_STAY:
             case Constants.CODE_REQUEST_ACTIVITY_GOURMET:
