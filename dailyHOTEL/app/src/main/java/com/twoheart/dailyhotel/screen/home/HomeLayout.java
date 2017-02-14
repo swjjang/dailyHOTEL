@@ -64,7 +64,6 @@ public class HomeLayout extends BaseLayout
     int mScrollButtonTextMaxLeftMargin;
     int mScrollButtonTextMinLeftMargin;
 
-    private int mLastEventPosition;
     private Handler mEventHandler;
 
     private DailyLoopViewPager mEventViewPager;
@@ -344,7 +343,6 @@ public class HomeLayout extends BaseLayout
         }
 
         mWishListLayout = new HomeCarouselLayout(mContext);
-        //        mWishListLayout.setVisibility(View.GONE);
         layout.addView(mWishListLayout);
 
         mWishListLayout.setTitleText(R.string.label_wishlist);
@@ -684,15 +682,17 @@ public class HomeLayout extends BaseLayout
 
         mEventViewPagerAdapter.setData(list);
 
+        int defaultIndex = 0;
+
         if (defaultEvent == null //
             || HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultEvent.defaultImageUrl) == false)
         {
-            setEventCountView(0, mEventViewPagerAdapter.getCount());
+            setEventCountView(defaultIndex, mEventViewPagerAdapter.getCount());
         }
 
         mEventViewPager.setOnPageChangeListener(null);
         mEventViewPager.setAdapter(mEventViewPagerAdapter);
-        mEventViewPager.setCurrentItem(mLastEventPosition);
+        mEventViewPager.setCurrentItem(defaultIndex);
         mEventViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
@@ -703,10 +703,6 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onPageSelected(int position)
             {
-                ExLog.d("position : " + position);
-
-                mLastEventPosition = position;
-
                 int totalCount = mEventViewPagerAdapter.getCount();
                 setEventCountView(position, totalCount);
 
@@ -726,7 +722,7 @@ public class HomeLayout extends BaseLayout
             }
         });
 
-        moveNextEventPosition(mEventViewPager, mLastEventPosition);
+        moveNextEventPosition(mEventViewPager, defaultIndex);
     }
 
     void setEventCountView(int pageIndex, int totalCount)
