@@ -124,7 +124,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/label_saturday"
-                android:textColor="@color/default_text_c323232"
+                android:textColor="@color/default_text_c2284dc"
                 android:textSize="11dp"/>
         </LinearLayout>
 
