@@ -198,7 +198,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
             }
 
             AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, Integer.toString(mRecommendationIndex),//
+                AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
                 Integer.toString(recommendationStay.index), null);
         }
 

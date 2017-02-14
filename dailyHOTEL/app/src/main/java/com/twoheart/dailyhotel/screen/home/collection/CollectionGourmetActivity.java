@@ -182,7 +182,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             }
 
             AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION, Integer.toString(mRecommendationIndex),//
+                AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
                 Integer.toString(recommendationGourmet.index), null);
         }
 

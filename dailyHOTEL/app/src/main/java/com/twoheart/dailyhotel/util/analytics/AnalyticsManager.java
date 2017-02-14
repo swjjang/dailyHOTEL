@@ -884,6 +884,9 @@ public class AnalyticsManager
         public static final String HOME_RECOMMEND_LIST_CLICK = "home_recommend_list_click";
         public static final String HOME_WISHLIST_CLICK = "home_wishlist_click";
         public static final String HOME_RECENTVIEW_CLICK = "home_recentview_click";
+        public static final String HOME_MESSAGE_OPEN = "home_message_open";
+        public static final String MESSAGE_CLICK = "message_click";
+        public static final String MESSAGE_CLOSE = "message_close";
     }
 
     public static class Category
@@ -912,6 +915,8 @@ public class AnalyticsManager
         public static final String SHARE = "share";
         public static final String BOOKING = "booking";
         public static final String SEARCH = "search";
+
+        public static final String HOME_RECOMMEND = "home_recommend";
     }
 
     public static class Label
@@ -1032,6 +1037,7 @@ public class AnalyticsManager
         public static final String CLICK = "Click";
         //
         public static final String MENU_REGISTER_ACCOUNT = "Menu_RegisterAccount";
+        public static final String SIGNUP = "signup";
         public static final String SIGNUP_ON = "Signup_On";
         public static final String SIGNUP_OFF = "Signup_Off";
 

@@ -250,6 +250,13 @@ public class HomeFragment extends BaseFragment
         if (mHomeLayout != null)
         {
             mHomeLayout.setTextMessageData(title, description);
+
+            if (Util.isTextEmpty(title) == false || Util.isTextEmpty(description) == false)
+            {
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_MESSAGE_OPEN,//
+                    AnalyticsManager.Label.SIGNUP, null);
+            }
         }
     }
 
@@ -498,12 +505,20 @@ public class HomeFragment extends BaseFragment
         {
             // 회원가입으로 이동!
             startSignUp(null);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.MESSAGE_CLICK,//
+                AnalyticsManager.Label.SIGNUP, null);
         }
 
         @Override
         public void onMessageTextAreaCloseClick()
         {
             DailyPreference.getInstance(mBaseActivity).setHomeTextMessageAreaEnabled(false);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.MESSAGE_CLOSE,//
+                AnalyticsManager.Label.SIGNUP, null);
         }
 
         @Override
