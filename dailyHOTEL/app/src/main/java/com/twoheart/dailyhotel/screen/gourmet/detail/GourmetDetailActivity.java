@@ -230,7 +230,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
@@ -898,7 +897,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 boolean hasPrice = false;
 
-                if (listViewPrice == SKIP_CHECK_DISCOUNT_PRICE_VALUE) {
+                if (listViewPrice == SKIP_CHECK_DISCOUNT_PRICE_VALUE)
+                {
                     hasPrice = true;
                 } else
                 {

@@ -717,6 +717,10 @@ public class StayMainActivity extends PlaceMainActivity
                         break;
                     }
                 }
+            } else
+            {
+                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
+                AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, selectedProvince.name);
             }
 
             mStayCuration.setProvince(selectedProvince);
