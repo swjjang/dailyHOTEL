@@ -16,16 +16,16 @@
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fadingEdgeLength="0dp"
+            android:background="@color/actionbar_underline"
             android:fadingEdge="none"
-            android:background="@color/actionbar_underline">
+            android:fadingEdgeLength="0dp">
 
             <LinearLayout
                 android:id="@+id/homeContentLayout"
-                android:orientation="vertical"
-                android:descendantFocusability="blocksDescendants"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="vertical">
 
             </LinearLayout>
 
@@ -34,18 +34,23 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <RelativeLayout
-        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar">
+
         <include
             layout="@layout/list_row_home_product_layout"/>
     </RelativeLayout>
 
 
     <RelativeLayout
-        android:layout_alignParentBottom="true"
+        android:id="@+id/errorView"
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="90dp"
+        android:layout_alignParentBottom="true"
+        android:translationY="90dp"
+        android:background="@color/white">
+
         <include
             layout="@layout/list_row_home_content_server_error_layout"/>
     </RelativeLayout>
