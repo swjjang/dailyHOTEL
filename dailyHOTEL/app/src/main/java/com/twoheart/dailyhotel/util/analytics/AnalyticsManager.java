@@ -1187,7 +1187,8 @@ public class AnalyticsManager
         public static final String SEARCH = "search";
         public static final String SEARCH_RESULT = "searchResult";
         public static final String CHANGED = "Changed";
-        public static final String NONE = "None";
+        public static final String NONE_ = "None";
+        public static final String NONE = "none";
         public static final String MEMBER = "member";
         public static final String GUEST = "guest";
         public static final String DETAIL = "detailview";
