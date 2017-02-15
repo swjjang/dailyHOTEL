@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -51,10 +52,14 @@ public class HomeLayout extends BaseLayout
 {
     private static final int EVENT_VIEWPAGER_ANIMATION_DURATION = 5000;
     private static final int MESSAGE_ANIMATION_DURATION = 200;
+    private static final int ERROR_ANIMATION_DURATION = 200;
     private static final double BUTTON_LAYOUT_MIN_HEIGHT = 76d;
     private static final double BUTTON_LAYOUT_MAX_HEIGHT = 82d;
     private static final double BUTTON_TEXT_MIN_LEFT_MARGIN = 4d;
     private static final double BUTTON_TEXT_MAX_LEFT_MARGIN = 10d;
+
+    private float mErrorLayoutMinTranslationY;
+    private float mErrorLayoutMaxTranslationY;
 
     int mEventImageHeight;
     int mButtonGapHeight;
@@ -81,6 +86,8 @@ public class HomeLayout extends BaseLayout
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
+
+    private ObjectAnimator mErrorPopupAnimator;
 
     LinearLayout mProviderInfoView;
 
@@ -245,7 +252,49 @@ public class HomeLayout extends BaseLayout
         }
 
         mErrorPopupLayout = view.findViewById(R.id.errorView);
-        mErrorPopupLayout.setVisibility(View.GONE);
+        DailyTextView errorTextView1 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView1);
+        DailyTextView errorTextView2 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView2);
+        View retryButtonView = mErrorPopupLayout.findViewById(R.id.retryTextView);
+        View closeButtonView = mErrorPopupLayout.findViewById(R.id.closeImageView);
+
+        retryButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                forceRefreshing(false);
+            }
+        });
+
+        closeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setErrorPopupLayout(false);
+            }
+        });
+
+        String errorText = mContext.getResources().getString(R.string.label_home_server_error_text);
+
+        int index;
+
+        if (Util.getLCDWidth(mContext) < 720)
+        {
+            String findText = mContext.getResources().getString(R.string.label_home_server_error_low_display_split_text);
+            index = errorText.lastIndexOf(findText) + findText.length();
+        } else
+        {
+            index = errorText.lastIndexOf(". ") + 1;
+        }
+
+        errorTextView1.setText(errorText.substring(0, index).trim());
+        errorTextView2.setText(errorText.substring(index + 1).trim());
+
+
+        mErrorLayoutMinTranslationY = 0;
+        mErrorLayoutMaxTranslationY = Util.dpToPx(mContext, 90d) + 1;
+        mErrorPopupLayout.setTranslationY(mErrorLayoutMaxTranslationY);
     }
 
     private void initHomeContentLayout(View view)
@@ -349,7 +398,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                startLayoutCloseAnimation(mTextMessageLayout);
+                startTextLayoutCloseAnimation();
 
                 ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
             }
@@ -815,7 +864,7 @@ public class HomeLayout extends BaseLayout
         {
             if (mTextMessageLayout.getVisibility() != View.GONE)
             {
-                startLayoutCloseAnimation(mTextMessageLayout);
+                startTextLayoutCloseAnimation();
             }
             return;
         }
@@ -859,7 +908,7 @@ public class HomeLayout extends BaseLayout
             @Override
             public void run()
             {
-                startLayoutShowAnimation(mTextMessageLayout);
+                startTextLayoutShowAnimation();
             }
         });
     }
@@ -926,20 +975,70 @@ public class HomeLayout extends BaseLayout
 
     private void setErrorPopupLayout(boolean isShow)
     {
-        if (mErrorPopupLayout == null)
+        if (mErrorPopupLayout == null || mContext == null)
         {
             return;
         }
 
-        mErrorPopupLayout.setVisibility(isShow == true ? View.VISIBLE : View.GONE);
+        if (mErrorPopupAnimator != null)
+        {
+            mErrorPopupAnimator.cancel();
+            mErrorPopupAnimator = null;
+        }
+
+        float oldTranslationY = mErrorPopupLayout.getTranslationY();
+
+        if (isShow == true && oldTranslationY <= mErrorLayoutMinTranslationY)
+        {
+            return;
+        } else if (isShow == false && oldTranslationY >= mErrorLayoutMaxTranslationY)
+        {
+            return;
+        }
+
+        final float start = isShow == true ? mErrorLayoutMaxTranslationY : mErrorLayoutMinTranslationY;
+        final float end = isShow == true ? mErrorLayoutMinTranslationY : mErrorLayoutMaxTranslationY;
+
+        mErrorPopupAnimator = ObjectAnimator.ofFloat(mErrorPopupLayout, "translationY", start, end);
+        mErrorPopupAnimator.setDuration(ERROR_ANIMATION_DURATION);
+        mErrorPopupAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mErrorPopupLayout.setTranslationY(start);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mErrorPopupLayout.setTranslationY(end);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mErrorPopupLayout.setTranslationY(end);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mErrorPopupAnimator.start();
     }
 
-    private void startLayoutShowAnimation(final View view)
+    private void startTextLayoutShowAnimation()
     {
-        if (view == null)
+        if (mTextMessageLayout == null)
         {
             return;
         }
+
+        final View view = mTextMessageLayout;
 
         if (view.getVisibility() == View.VISIBLE)
         {
@@ -993,12 +1092,14 @@ public class HomeLayout extends BaseLayout
         valueAnimator.start();
     }
 
-    void startLayoutCloseAnimation(final View view)
+    void startTextLayoutCloseAnimation()
     {
-        if (view == null)
+        if (mTextMessageLayout == null)
         {
             return;
         }
+
+        final View view = mTextMessageLayout;
 
         if (view.getVisibility() == View.GONE)
         {

@@ -1,55 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/errorView"
-    android:background="@color/white"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/default_line_ce8e8e9"/>
+        android:background="@color/default_line_ce7e7e7"/>
 
-    <LinearLayout
+    <com.twoheart.dailyhotel.widget.DailyImageView
+        android:id="@+id/closeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        app:srcCompat="@drawable/ic_delete_grey_medium"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/errorTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="13dp"
+        android:layout_toLeftOf="@id/closeImageView"
+        android:gravity="center_vertical"
+        android:minHeight="19dp"
+        android:textColor="@color/default_text_c666666"
+        android:textSize="13dp"/>
 
-        <View
-            android:id="@+id/topMarginView"
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"/>
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/errorTextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/errorTextView1"
+        android:layout_below="@id/errorTextView1"
+        android:layout_marginTop="3dp"
+        android:gravity="center_vertical"
+        android:minHeight="19dp"
+        android:textColor="@color/default_text_c666666"
+        android:textSize="13dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/label_home_server_error_text"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="14dp"
-            />
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/retryTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="19dp"
+        android:text="@string/label_home_retry_button_text"
+        android:textColor="@color/default_text_cb70038"
+        android:textSize="13dp"
+        app:style="Medium"
+        android:layout_below="@+id/errorTextView2"
+        android:layout_alignLeft="@+id/errorTextView2"
+        android:layout_alignStart="@+id/errorTextView2"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
-            android:id="@+id/retryTextView"
-            android:layout_width="112dp"
-            android:layout_height="38dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/shape_dialog_button01"
-            android:gravity="center"
-            android:text="@string/frag_error_btn"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            app:style="Medium"/>
-
-        <View
-            android:id="@+id/bottomMarginView"
-            android:layout_width="wrap_content"
-            android:layout_height="68dp"
-            />
-
-
-    </LinearLayout>
-</RelativeLayout>
+</merge>
