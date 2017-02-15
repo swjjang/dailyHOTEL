@@ -332,6 +332,29 @@ public class HomeLayout extends BaseLayout
 
         mTextMessageLayout = messageLayout.findViewById(R.id.homeMessageLayout);
 
+        View homeMessageLayout = mTextMessageLayout.findViewById(R.id.homeMessageLayout);
+        View closeView = mTextMessageLayout.findViewById(R.id.closeImageView);
+
+        homeMessageLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaClick();
+            }
+        });
+
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                startLayoutCloseAnimation(mTextMessageLayout);
+
+                ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
+            }
+        });
+
         hideMessageLayout();
     }
 
@@ -788,39 +811,17 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        hideMessageLayout();
-
-        mTextMessageLayout.clearAnimation();
-
         if (Util.isTextEmpty(title) == true && Util.isTextEmpty(description) == true)
         {
+            if (mTextMessageLayout.getVisibility() != View.GONE)
+            {
+                startLayoutCloseAnimation(mTextMessageLayout);
+            }
             return;
         }
 
-        View homeMessageLayout = mTextMessageLayout.findViewById(R.id.homeMessageLayout);
-        View closeView = mTextMessageLayout.findViewById(R.id.closeImageView);
         DailyTextView titleView = (DailyTextView) mTextMessageLayout.findViewById(R.id.titleTextView);
         DailyTextView descriptionView = (DailyTextView) mTextMessageLayout.findViewById(R.id.descriptionTextView);
-
-        homeMessageLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaClick();
-            }
-        });
-
-        closeView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startLayoutCloseAnimation(mTextMessageLayout);
-
-                ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
-            }
-        });
 
         titleView.setText(title);
 
@@ -845,6 +846,11 @@ public class HomeLayout extends BaseLayout
         }
 
         descriptionView.setText(description);
+
+        if (mTextMessageLayout.getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
 
         setMessageLayoutVisibility(View.INVISIBLE);
 
