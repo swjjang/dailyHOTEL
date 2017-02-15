@@ -213,17 +213,17 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-            //        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screenName) == true)
-            //        {
-            //            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
-            //
-            //            event = getListEvent(EventToken.VIEW_LIST, params);
-            //            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
-            //
-            //            if (DEBUG == true)
-            //            {
-            //                ExLog.d(TAG + "Screen : " + screenName + params.toString());
-            //            }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screenName) == true)
+        {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
@@ -235,17 +235,17 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
-            //        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screenName) == true)
-            //        {
-            //            params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
-            //
-            //            event = getListEvent(EventToken.VIEW_LIST, params);
-            //            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
-            //
-            //            if (DEBUG == true)
-            //            {
-            //                ExLog.d(TAG + "Screen : " + screenName + params.toString());
-            //            }
+        } else if (AnalyticsManager.Screen.DAILYGOURMET_LIST_MAP.equalsIgnoreCase(screenName) == true)
+        {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
+            event = getListEvent(EventToken.VIEW_LIST, params);
+            event.addPartnerParameter(Key.VIEW, AnalyticsManager.ValueType.MAP);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
