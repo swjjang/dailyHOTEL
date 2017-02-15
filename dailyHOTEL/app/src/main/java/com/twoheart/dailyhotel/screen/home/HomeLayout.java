@@ -1091,9 +1091,6 @@ public class HomeLayout extends BaseLayout
             }
         }
 
-        mWishListLayout.clearAll();
-        mRecentListLayout.clearAll();
-        mHomeRecommendationLayout.clearAll();
         setErrorPopupLayout(false);
 
         ((HomeLayout.OnEventListener) mOnEventListener).onRefreshAll(false);
