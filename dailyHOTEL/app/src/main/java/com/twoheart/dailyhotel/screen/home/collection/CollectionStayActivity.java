@@ -220,15 +220,23 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 {
                     BaseDto<RecommendationPlaceList<RecommendationStay>> baseDto = response.body();
 
-                    if (baseDto.msgCode == 100)
+                    switch (baseDto.msgCode)
                     {
-                        ArrayList<RecommendationStay> stayList = new ArrayList<>();
-                        stayList.addAll(baseDto.data.items);
+                        case 100:
+                            ArrayList<RecommendationStay> stayList = new ArrayList<>();
+                            stayList.addAll(baseDto.data.items);
 
-                        onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList);
-                    } else
-                    {
-                        onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
+                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList);
+                            break;
+
+                        // 인트라넷에서 숨김처리가 된경우
+                        case 801:
+                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
+                            break;
+
+                        default:
+                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
+                            break;
                     }
                 } catch (Exception e)
                 {
