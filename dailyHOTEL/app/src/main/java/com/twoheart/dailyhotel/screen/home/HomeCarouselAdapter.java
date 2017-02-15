@@ -19,6 +19,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -112,20 +113,27 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         holder.titleView.setText(place.title);
 
-        String strPrice = Util.getPriceFormat(mContext, place.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, place.discountPrice, false);
+        Prices prices = place.prices;
 
-        holder.discountPriceView.setText(strDiscount);
-
-        if (place.price <= 0 || place.price <= place.discountPrice)
-        {
-            holder.originPriceView.setVisibility(View.INVISIBLE);
-            holder.originPriceView.setText(null);
+        if (prices == null) {
+            holder.originPriceView.setText("");
+            holder.discountPriceView.setText("");
+            holder.personView.setText("");
         } else
         {
-            holder.originPriceView.setVisibility(View.VISIBLE);
-            holder.originPriceView.setText(strPrice);
-            holder.originPriceView.setPaintFlags(holder.originPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            String strPrice = Util.getPriceFormat(mContext, prices.price, false);
+            String strDiscount = Util.getPriceFormat(mContext, prices.discountPrice, false);
+
+            holder.discountPriceView.setText(strDiscount);
+
+            if (prices.price <= 0 || prices.price <= prices.discountPrice)
+            {
+                holder.originPriceView.setText("");
+            } else
+            {
+                holder.originPriceView.setText(strPrice);
+                holder.originPriceView.setPaintFlags(holder.originPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
         }
 
         holder.provinceView.setText(place.regionName);
@@ -152,7 +160,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.gradeView.setText(place.details.category);
             }
 
-            if (place.details.persons > 0)
+            if (prices != null && place.details.persons > 0)
             {
                 holder.personView.setText(//
                     mContext.getString(R.string.label_home_person_format, place.details.persons));

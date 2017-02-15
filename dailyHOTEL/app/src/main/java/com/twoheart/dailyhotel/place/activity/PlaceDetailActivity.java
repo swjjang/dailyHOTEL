@@ -39,6 +39,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected static final int STATUS_INITIALIZE_DATA = 1; // 서버로 부터 데이터만 받은 상태
     protected static final int STATUS_INITIALIZE_LAYOUT = 2; // 데이터를 받아서 레이아웃을 만든 상태
     protected static final int STATUS_INITIALIZE_COMPLETE = -1; // 완료
+    protected static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = -999999;
 
     protected PlaceDetailLayout mPlaceDetailLayout;
     protected PlaceDetail mPlaceDetail;

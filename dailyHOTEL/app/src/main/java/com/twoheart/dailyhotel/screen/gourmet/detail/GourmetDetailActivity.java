@@ -229,21 +229,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, homePlace.price);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
-        String isShowOriginalPrice;
-        if (homePlace.price <= 0 || homePlace.price <= homePlace.discountPrice)
-        {
-            isShowOriginalPrice = "N";
-        } else
-        {
-            isShowOriginalPrice = "Y";
-        }
+        String isShowOriginalPrice = "N";
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
@@ -905,12 +898,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 boolean hasPrice = false;
 
-                for (TicketInformation ticketInformation : ticketInformationList)
+                if (listViewPrice == SKIP_CHECK_DISCOUNT_PRICE_VALUE) {
+                    hasPrice = true;
+                } else
                 {
-                    if (listViewPrice == ticketInformation.discountPrice)
+                    for (TicketInformation ticketInformation : ticketInformationList)
                     {
-                        hasPrice = true;
-                        break;
+                        if (listViewPrice == ticketInformation.discountPrice)
+                        {
+                            hasPrice = true;
+                            break;
+                        }
                     }
                 }
 

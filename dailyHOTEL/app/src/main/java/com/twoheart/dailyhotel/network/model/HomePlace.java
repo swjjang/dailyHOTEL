@@ -29,10 +29,7 @@ public class HomePlace
     public String regionName;
 
     @JsonField
-    public int price;
-
-    @JsonField
-    public int discountPrice;
+    public Prices prices;
 
     @JsonField
     public Map<String, Object> imgPathMain;
