@@ -237,20 +237,13 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME, homePlace.title);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.discountPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, homePlace.details.stayGrade.name());
 
-        String isShowOriginalPrice;
-        if (homePlace.price <= 0 || homePlace.price <= homePlace.discountPrice)
-        {
-            isShowOriginalPrice = "N";
-        } else
-        {
-            isShowOriginalPrice = "Y";
-        }
+        String isShowOriginalPrice = "N";
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE, isShowOriginalPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
@@ -928,12 +921,19 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 boolean hasPrice = false;
 
-                for (RoomInformation roomInformation : saleRoomList)
+                if (listViewPrice == SKIP_CHECK_DISCOUNT_PRICE_VALUE)
                 {
-                    if (listViewPrice == roomInformation.averageDiscount)
+                    // 홈 가격 정보 제거로 인한 처리 추가
+                    hasPrice = true;
+                } else
+                {
+                    for (RoomInformation roomInformation : saleRoomList)
                     {
-                        hasPrice = true;
-                        break;
+                        if (listViewPrice == roomInformation.averageDiscount)
+                        {
+                            hasPrice = true;
+                            break;
+                        }
                     }
                 }
 
