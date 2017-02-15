@@ -138,7 +138,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
         Intent intent = SearchActivity.newInstance(this, PlaceType.FNB, mSaleTime, 1);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
             , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);
     }
 

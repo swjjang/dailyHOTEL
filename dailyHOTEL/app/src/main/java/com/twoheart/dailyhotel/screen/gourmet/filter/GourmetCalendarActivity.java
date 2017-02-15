@@ -258,7 +258,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
             , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : //
-                AnalyticsManager.ValueType.NONE) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
+                AnalyticsManager.ValueType.NONE_) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
 
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
