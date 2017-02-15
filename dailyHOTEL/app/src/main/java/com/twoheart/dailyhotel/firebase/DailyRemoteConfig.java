@@ -361,10 +361,10 @@ public class DailyRemoteConfig
 
         if (densityDpi <= 480)
         {
-            dpi = "xhdpi";
+            dpi = "lowResolution";
         } else
         {
-            dpi = "xxxhdpi";
+            dpi = "highResolution";
         }
 
         if (Util.isTextEmpty(clientVersion) == true)

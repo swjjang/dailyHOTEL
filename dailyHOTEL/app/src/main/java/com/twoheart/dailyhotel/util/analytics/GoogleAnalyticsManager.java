@@ -87,7 +87,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
             mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
-        } else if (AnalyticsManager.Screen.MYDAILY.equalsIgnoreCase(screenName) == true)
+        } else if (AnalyticsManager.Screen.MYDAILY.equalsIgnoreCase(screenName) == true//
+            || AnalyticsManager.Screen.MENU.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
