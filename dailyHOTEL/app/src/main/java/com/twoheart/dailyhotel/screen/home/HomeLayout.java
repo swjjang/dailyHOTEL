@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
@@ -204,12 +203,8 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        mActionButtonLayout = view.findViewById(R.id.productLayout);
+        mActionButtonLayout = view.findViewById(R.id.actionButtonLayout);
         mActionButtonLayout.setVisibility(View.GONE);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mActionButtonLayout.getLayoutParams();
-        params.height = mScrollButtonMinHeight;
-        mActionButtonLayout.setLayoutParams(params);
 
         View stayButtonTextView = mActionButtonLayout.findViewById(R.id.stayButtonTextView);
         View gourmetButtonTextView = mActionButtonLayout.findViewById(R.id.gourmetButtonTextView);
