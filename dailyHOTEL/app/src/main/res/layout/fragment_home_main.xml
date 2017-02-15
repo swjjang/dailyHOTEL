@@ -34,12 +34,13 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <RelativeLayout
+        android:id="@+id/actionButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar">
 
         <include
-            layout="@layout/list_row_home_product_layout"/>
+            layout="@layout/list_row_home_action_button_layout"/>
     </RelativeLayout>
 
 
