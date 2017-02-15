@@ -115,7 +115,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         Prices prices = place.prices;
 
-        if (prices == null) {
+        if (prices == null)
+        {
             holder.originPriceView.setText("");
             holder.discountPriceView.setText("");
             holder.personView.setText("");
