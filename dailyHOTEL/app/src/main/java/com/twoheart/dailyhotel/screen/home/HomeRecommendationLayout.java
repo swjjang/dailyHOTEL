@@ -98,7 +98,7 @@ public class HomeRecommendationLayout extends LinearLayout
             return;
         }
 
-        if (mRecommendationList != null && mRecommendationList.size() > 0)
+        if (mRecommendationList != null)
         {
             int size = mRecommendationList.size();
             if (size > 0)
