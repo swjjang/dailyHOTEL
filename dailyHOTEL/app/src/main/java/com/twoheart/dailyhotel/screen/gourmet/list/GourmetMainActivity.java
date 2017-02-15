@@ -620,6 +620,10 @@ public class GourmetMainActivity extends PlaceMainActivity
                         break;
                     }
                 }
+            } else
+            {
+                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
+                AnalyticsManager.getInstance(GourmetMainActivity.this).onRegionChanged(country, selectedProvince.name);
             }
 
             mGourmetCuration.setProvince(selectedProvince);
