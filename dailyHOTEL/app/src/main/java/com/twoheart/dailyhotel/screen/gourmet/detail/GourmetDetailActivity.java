@@ -500,7 +500,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initLayout(String placeName, String imageUrl, boolean isFromMap)
     {
-        setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
+        setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_gourmet_detail));
 
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
@@ -1118,7 +1118,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void downloadCoupon()
+        public void onDownloadCouponClick()
         {
             GourmetDetailActivity.this.downloadCoupon();
         }
@@ -1189,7 +1189,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.showAnimationProductInformationLayout();
+                mPlaceDetailLayout.showAnimationProductInformationLayout(0);
                 mPlaceDetailLayout.hideWishButtonAnimation();
             }
 
@@ -1303,7 +1303,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onWishButtonClick()
+        public void onWishClick()
         {
             if (DailyHotel.isLogin() == false)
             {

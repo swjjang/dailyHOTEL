@@ -1302,7 +1302,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void downloadCoupon()
+        public void onDownloadCouponClick()
         {
             StayDetailActivity.this.downloadCoupon();
         }
@@ -1344,7 +1344,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onWishButtonClick()
+        public void onWishClick()
         {
             if (DailyHotel.isLogin() == false)
             {

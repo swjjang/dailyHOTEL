@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
@@ -27,7 +25,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
-        void doBooking(TicketInformation ticketInformation);
+        void onProductDetailClick(TicketInformation ticketInformation);
+
+        void onReservationClick(TicketInformation ticketInformation);
     }
 
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
@@ -123,7 +123,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                     switch (mBookingStatus)
                     {
                         case STATUS_BOOKING:
-                            ((GourmetDetailLayout.OnEventListener) mOnEventListener).doBooking(mSelectedTicketInformation);
+//                            ((GourmetDetailLayout.OnEventListener) mOnEventListener).doBooking(mSelectedTicketInformation);
                             break;
 
                         case STATUS_SELECT_PRODUCT:
@@ -158,51 +158,65 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         {
             mSelectedTicketInformation = ticketInformationList.get(0);
 
-            mTicketTypeListAdapter = new GourmetDetailTicketTypeListAdapter(mContext, ticketInformationList, new OnClickListener()
+            mTicketTypeListAdapter = new GourmetDetailTicketTypeListAdapter(mContext, ticketInformationList, new GourmetDetailTicketTypeListAdapter.OnTicketClickListener()
             {
                 @Override
-                public void onClick(View v)
+                public void onProductDetailClick(int position)
                 {
-                    int position = mProductTypeRecyclerView.getChildAdapterPosition(v);
+                    ((OnEventListener)mOnEventListener).onProductDetailClick(mTicketTypeListAdapter.getItem(position));
+                }
 
-                    if (position < 0)
-                    {
-                        return;
-                    }
-
-                    mSelectedTicketInformation = mTicketTypeListAdapter.getItem(position);
-                    mTicketTypeListAdapter.setSelected(position);
-                    mTicketTypeListAdapter.notifyDataSetChanged();
-
-                    AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                        , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, null);
+                @Override
+                public void onReservationClick(int position)
+                {
+                    ((OnEventListener)mOnEventListener).onReservationClick(mTicketTypeListAdapter.getItem(position));
                 }
             });
+
+
+            //                new OnClickListener()
+            //            {
+            //                @Override
+            //                public void onClick(View v)
+            //                {
+            //                    int position = mProductTypeRecyclerView.getChildAdapterPosition(v);
+            //
+            //                    if (position < 0)
+            //                    {
+            //                        return;
+            //                    }
+            //
+            //                    mSelectedTicketInformation = mTicketTypeListAdapter.getItem(position);
+            //                    mTicketTypeListAdapter.notifyDataSetChanged();
+            //
+            //                    AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            //                        , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, null);
+            //                }
+            //            });
         } else
         {
             // 재세팅 하는 경우
             mSelectedTicketInformation = ticketInformationList.get(0);
 
             mTicketTypeListAdapter.addAll(ticketInformationList);
-            mTicketTypeListAdapter.setSelected(0);
             mTicketTypeListAdapter.notifyDataSetChanged();
         }
 
         // 객실 개수로 높이를 재지정해준다.
-        int size = ticketInformationList.size();
-        int height = Util.dpToPx(mContext, 100) * size;
-        final int maxHeight = Util.dpToPx(mContext, 350);
-        ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
-
-        if (height > maxHeight)
-        {
-            layoutParams.height = maxHeight;
-        } else
-        {
-            layoutParams.height = height;
-        }
-
-        mProductTypeRecyclerView.setLayoutParams(layoutParams);
+        //        int size = ticketInformationList.size();
+        //        int height = Util.dpToPx(mContext, 100) * size;
+        //        final int maxHeight = Util.dpToPx(mContext, 350);
+        //        ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
+        //
+        //        if (height > maxHeight)
+        //        {
+        //            layoutParams.height = maxHeight;
+        //        } else
+        //        {
+        //            layoutParams.height = height;
+        //        }
+        //
+        //        mProductTypeRecyclerView.setLayoutParams(layoutParams);
         mProductTypeRecyclerView.setAdapter(mTicketTypeListAdapter);
     }
 
@@ -265,8 +279,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             return;
         }
 
-        int position = mTicketTypeListAdapter.setSelectIndex(index);
-        mProductTypeRecyclerView.scrollToPosition(position);
+        mProductTypeRecyclerView.scrollToPosition(index);
     }
 
     @Override

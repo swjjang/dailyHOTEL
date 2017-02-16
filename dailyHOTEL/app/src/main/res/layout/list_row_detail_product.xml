@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/contentsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simpleDraweeView"
+            android:layout_width="115dp"
+            android:layout_height="120dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:background="@color/black"
+            android:paddingBottom="20dp"
+            android:paddingLeft="15dp"
+            fresco:actualImageScaleType="centerCrop"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/productNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_toLeftOf="@id/simpleDraweeView"
+            android:textColor="@color/hoteldetail_title_text"
+            android:textSize="15dp"
+            dailyFont:style="Medium"/>
+
+        <LinearLayout
+            android:id="@+id/contentsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productNameTextView"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/footerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contentsLayout"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/discountPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/priceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/discountPriceTextView"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/detailView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/reservationView"
+            android:text="상세"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/reservationView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="예약하기"/>
+    </RelativeLayout>
+</RelativeLayout>

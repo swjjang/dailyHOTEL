@@ -165,7 +165,9 @@ public class GourmetDetail extends PlaceDetail
 
             for (int i = 0; i < ticketInformationLength; i++)
             {
-                mTicketInformationList.add(new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i)));
+                TicketInformation ticketInformation = new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i));
+                ticketInformation.thumbnailUrl = getImageInformationList().get(0).url;
+                mTicketInformationList.add(ticketInformation);
             }
         } else
         {

@@ -138,9 +138,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void doBooking();
 
-        void downloadCoupon();
+        void onDownloadCouponClick();
 
-        void onWishButtonClick();
+        void onWishClick();
 
         void releaseUiComponent();
     }
@@ -235,7 +235,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).onWishButtonClick();
+                ((OnEventListener) mOnEventListener).onWishClick();
             }
         });
 
@@ -517,6 +517,97 @@ public abstract class PlaceDetailLayout extends BaseLayout
             mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop() - height);
+            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
+
+            mObjectAnimator.addListener(new AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    if (mProductTypeLayout.getVisibility() != View.VISIBLE)
+                    {
+                        mProductTypeLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
+
+                        setProductInformationLayoutEnabled(true);
+
+                        setBookingStatus(STATUS_BOOKING);
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mObjectAnimator.start();
+        } else
+        {
+            if (mProductTypeLayout != null && mProductTypeLayout.getVisibility() != View.VISIBLE)
+            {
+                mProductTypeLayout.setVisibility(View.VISIBLE);
+
+                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                mAnimationState = Constants.ANIMATION_STATE.END;
+
+                setProductInformationLayoutEnabled(true);
+
+                setBookingStatus(STATUS_BOOKING);
+            }
+        }
+
+        showAnimationFadeOut();
+    }
+
+    public void showAnimationProductInformationLayout(float dy)
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        setBookingStatus(STATUS_NONE);
+
+        if (Util.isOverAPI12() == true)
+        {
+            final float y = mBottomLayout.getTop();
+
+            if (mObjectAnimator != null)
+            {
+                if (mObjectAnimator.isRunning() == true)
+                {
+                    mObjectAnimator.cancel();
+                    mObjectAnimator.removeAllListeners();
+                }
+
+                mObjectAnimator = null;
+            }
+
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mProductTypeLayout.getHeight();
+            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, dy);
             mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
 
             mObjectAnimator.addListener(new AnimatorListener()

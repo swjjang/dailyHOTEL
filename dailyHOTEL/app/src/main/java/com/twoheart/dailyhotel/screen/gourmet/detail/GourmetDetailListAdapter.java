@@ -271,7 +271,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    mOnEventListener.downloadCoupon();
+                    mOnEventListener.onDownloadCouponClick();
                 }
             });
         } else

@@ -1135,6 +1135,11 @@
     <string name="label_home_server_error_low_display_split_text">불러오지</string>
     <string name="label_home_retry_button_text">연결 재시도하기</string>
 
+
+    <!-- Gourmet Product Detail -->
+    <string name="label_gourmet_product_detail_reservation">예약하기</string>
+    <string name="label_gourmet_product_detail_menu_detail">메뉴상세</string>
+
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
         <item>호텔 쿠폰 보기</item>

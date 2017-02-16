@@ -14,6 +14,7 @@ public class TicketInformation implements Parcelable
     public int price;
     public int discountPrice;
     public String placeName;
+    public String thumbnailUrl;
 
     public TicketInformation(Parcel in)
     {
@@ -42,6 +43,7 @@ public class TicketInformation implements Parcelable
         dest.writeInt(price);
         dest.writeInt(discountPrice);
         dest.writeString(placeName);
+        dest.writeString(thumbnailUrl);
     }
 
     protected void readFromParcel(Parcel in)
@@ -53,6 +55,7 @@ public class TicketInformation implements Parcelable
         price = in.readInt();
         discountPrice = in.readInt();
         placeName = in.readString();
+        thumbnailUrl = in.readString();
     }
 
     @Override
