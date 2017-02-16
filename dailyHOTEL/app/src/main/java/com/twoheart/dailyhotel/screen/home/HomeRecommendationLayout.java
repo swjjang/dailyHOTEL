@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class HomeRecommendationLayout extends LinearLayout
 {
     private static final int LAYOUT_ANIMATION_DURATION = 200;
+    private static final int MAX_RECOMMENDATION_SIZE = 6;
 
     private Context mContext;
     private LinearLayout mContentLayout;
@@ -103,7 +104,9 @@ public class HomeRecommendationLayout extends LinearLayout
             int size = mRecommendationList.size();
             if (size > 0)
             {
-                for (int i = 0; i < size; i++)
+                int searchCount = Math.min(size, MAX_RECOMMENDATION_SIZE);
+
+                for (int i = 0; i < searchCount; i++)
                 {
                     Recommendation recommendation = mRecommendationList.get(i);
                     addRecommendationItemView(recommendation, i);

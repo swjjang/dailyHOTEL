@@ -322,7 +322,7 @@ public class HomeLayout extends BaseLayout
         ViewGroup.LayoutParams params = mEventViewPager.getLayoutParams();
         params.height = getEventImageHeight(mContext);
         mEventViewPager.setLayoutParams(params);
-        mEventViewPager.setSlideTime(4);
+//        mEventViewPager.setSlideTime(4);
 
         mEventHandler = new EventHandler(mEventAreaLayout);
     }
