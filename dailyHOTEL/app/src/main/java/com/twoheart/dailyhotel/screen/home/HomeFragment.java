@@ -154,6 +154,8 @@ public class HomeFragment extends BaseFragment
         super.onResume();
 
         refreshList(true);
+
+        sendHomeScreenAnalytics();
     }
 
     @Override
@@ -408,6 +410,24 @@ public class HomeFragment extends BaseFragment
 
     public void sendHomeScreenAnalytics()
     {
+        if (mBaseActivity == null)
+        {
+            return;
+        }
+
+        String memberType = mIsLogin == true //
+            ? AnalyticsManager.ValueType.MEMBER : AnalyticsManager.ValueType.GUEST;
+
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, memberType);
+
+        AnalyticsManager.getInstance(mBaseActivity).recordScreen(//
+            mBaseActivity, AnalyticsManager.Screen.HOME, null, params);
+    }
+
+    public void sendHomeBlockEventAnalytics()
+    {
         if (mHomeLayout == null || mBaseActivity == null)
         {
             return;
@@ -418,28 +438,21 @@ public class HomeFragment extends BaseFragment
 
         if (mNetworkRunState != IS_RUNNED_NONE && isRunWishList == true && isRunRecentList == true)
         {
-            String memberType = mIsLogin == true //
-                ? AnalyticsManager.ValueType.MEMBER : AnalyticsManager.ValueType.GUEST;
-
-            String viewScreen = AnalyticsManager.ValueType.NONE;
+            String label = AnalyticsManager.Label.NONE;
             if (mHomeLayout.hasWishListData() == true && mHomeLayout.hasRecentListData() == true)
             {
-                viewScreen = AnalyticsManager.ValueType.WISHLIST_RECENTVIEW;
+                label = AnalyticsManager.Label.WISHLIST_RECENTVIEW;
             } else if (mHomeLayout.hasWishListData() == true)
             {
-                viewScreen = AnalyticsManager.ValueType.WISHLIST;
+                label = AnalyticsManager.Label.WISHLIST;
             } else if (mHomeLayout.hasRecentListData() == true)
             {
-                viewScreen = AnalyticsManager.ValueType.RECENTVIEW;
+                label = AnalyticsManager.Label.RECENTVIEW;
             }
 
-            HashMap<String, String> params = new HashMap<>();
-
-            params.put(AnalyticsManager.KeyType.MEMBER_TYPE, memberType);
-            params.put(AnalyticsManager.KeyType.HOME_SCREEN, viewScreen);
-
-            AnalyticsManager.getInstance(mBaseActivity).recordScreen(//
-                mBaseActivity, AnalyticsManager.Screen.HOME, null, params);
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_BLOCK_SHOW,//
+                label, null);
         }
     }
 
@@ -826,7 +839,7 @@ public class HomeFragment extends BaseFragment
 
             mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
 
-            sendHomeScreenAnalytics();
+            sendHomeBlockEventAnalytics();
         }
 
         @Override
@@ -839,7 +852,7 @@ public class HomeFragment extends BaseFragment
 
             mNetworkRunState = mNetworkRunState | IS_RUNNED_RECENTLIST;
 
-            sendHomeScreenAnalytics();
+            sendHomeBlockEventAnalytics();
         }
 
         @Override

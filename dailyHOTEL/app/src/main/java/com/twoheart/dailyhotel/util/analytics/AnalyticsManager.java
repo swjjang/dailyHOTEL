@@ -885,6 +885,7 @@ public class AnalyticsManager
         public static final String HOME_WISHLIST_CLICK = "home_wishlist_click";
         public static final String HOME_RECENTVIEW_CLICK = "home_recentview_click";
         public static final String HOME_MESSAGE_OPEN = "home_message_open";
+        public static final String HOME_BLOCK_SHOW = "home_block_show";
         public static final String MESSAGE_CLICK = "message_click";
         public static final String MESSAGE_CLOSE = "message_close";
     }
@@ -1070,6 +1071,11 @@ public class AnalyticsManager
         public static final String GOURMET_LIST = "gourmet_list";
         public static final String GOURMET_LOCATION_LIST = "gourmet_location_list";
         public static final String GOURMET_MAP_VIEW = "gourmet_map_view";
+
+        public static final String WISHLIST = "wishlist";
+        public static final String RECENTVIEW = "recentview";
+        public static final String WISHLIST_RECENTVIEW = "wishlist_recentview";
+        public static final String NONE = "none";
     }
 
     public static class UserType
@@ -1211,8 +1217,5 @@ public class AnalyticsManager
         public static final String MESSAGE = "message";
         public static final String OVERSEAS = "overseas";
         public static final String DOMESTIC = "domestic";
-        public static final String WISHLIST = "wishlist";
-        public static final String RECENTVIEW = "recentview";
-        public static final String WISHLIST_RECENTVIEW = "wishlist_recentview";
     }
 }

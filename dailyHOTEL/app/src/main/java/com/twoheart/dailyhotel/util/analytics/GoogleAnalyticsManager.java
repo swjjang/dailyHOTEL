@@ -222,7 +222,6 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
             screenViewBuilder.setCustomDimension(5, params.get(AnalyticsManager.KeyType.MEMBER_TYPE));
-            screenViewBuilder.setCustomDimension(11, params.get(AnalyticsManager.KeyType.HOME_SCREEN));
 
             mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(screenViewBuilder.build());
