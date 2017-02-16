@@ -39,9 +39,10 @@ public class GourmetDetailParams implements Parcelable
 
     protected ArrayList<TicketInformation> mTicketInformationList;
 
+    public GourmetDetailParams()
+    {
 
-
-
+    }
 
     public GourmetDetailParams(Parcel in)
     {

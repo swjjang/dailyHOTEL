@@ -1082,7 +1082,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     GourmetDetailLayout.OnEventListener mOnEventListener = new GourmetDetailLayout.OnEventListener()
     {
         @Override
-        public void doBooking(TicketInformation ticketInformation)
+        public void onProductDetailClick(TicketInformation ticketInformation)
+        {
+            GourmetProductDetailActivity.newInstance(GourmetDetailActivity.this, mSaleTime, (GourmetDetail)mPlaceDetail, ticketInformation);
+        }
+
+        @Override
+        public void onReservationClick(TicketInformation ticketInformation)
         {
             if (ticketInformation == null)
             {
@@ -1114,7 +1120,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void doBooking()
         {
-            doBooking(mSelectedTicketInformation);
         }
 
         @Override

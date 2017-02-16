@@ -122,8 +122,10 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
         float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
 
         float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
-        Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 120));
+        Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
         int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
+
+        ticketInformationViewHolder.contentsList.removeAllViews();
 
         if (Util.isTextEmpty(ticketInformation.option) == false)
         {
