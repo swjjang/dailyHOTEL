@@ -118,6 +118,8 @@ public class HomeCarouselLayout extends RelativeLayout
 
     public void setData(ArrayList<HomePlace> list)
     {
+        mRecyclerView.scrollToPosition(0);
+
         setRecyclerAdapter(list);
 
         if (list == null || list.size() == 0)
