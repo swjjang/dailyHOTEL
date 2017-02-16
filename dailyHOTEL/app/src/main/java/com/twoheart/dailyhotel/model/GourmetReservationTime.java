@@ -10,11 +10,8 @@ import com.twoheart.dailyhotel.util.Util;
 import java.util.Calendar;
 import java.util.Date;
 
-public class GourmetReservationTime implements Parcelable
+public class GourmetReservationTime extends PlaceReservationTime
 {
-    private String mReservationTime;
-    private Calendar mReservationCalendar = DailyCalendar.getInstance();
-
     public GourmetReservationTime()
     {
     }

@@ -12,8 +12,8 @@ import java.util.Date;
 
 public abstract class PlaceReservationTime implements Parcelable
 {
-    private String mReservationTime;
-    private Calendar mReservationCalendar = DailyCalendar.getInstance();
+    protected String mReservationTime;
+    protected Calendar mReservationCalendar = DailyCalendar.getInstance();
 
     public PlaceReservationTime()
     {
