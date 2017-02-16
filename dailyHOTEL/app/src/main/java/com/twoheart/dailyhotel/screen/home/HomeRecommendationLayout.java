@@ -80,7 +80,9 @@ public class HomeRecommendationLayout extends LinearLayout
 
     private void initLayout()
     {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_layout, this);
+        LinearLayout view = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_layout, this);
+        view.setOrientation(LinearLayout.VERTICAL);
+        view.setBackgroundResource(R.color.white);
 
         mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
         setVisibility(View.GONE);
@@ -249,7 +251,7 @@ public class HomeRecommendationLayout extends LinearLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
@@ -262,7 +264,7 @@ public class HomeRecommendationLayout extends LinearLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
@@ -323,7 +325,7 @@ public class HomeRecommendationLayout extends LinearLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
@@ -336,7 +338,7 @@ public class HomeRecommendationLayout extends LinearLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
