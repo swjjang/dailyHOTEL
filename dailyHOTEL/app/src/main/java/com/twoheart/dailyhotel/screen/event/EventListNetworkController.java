@@ -71,11 +71,6 @@ public class EventListNetworkController extends BaseNetworkController
                             }
                             break;
 
-                        // 조회된 데이터가 없는 경우
-                        case -101:
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
-                            break;
-
                         default:
                             mOnNetworkControllerListener.onErrorPopupMessage(baseListDto.msgCode, baseListDto.msg);
                             break;
