@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.HomePlace;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 1. 16..
  */
 
-public class HomeCarouselLayout extends RelativeLayout
+public class HomeCarouselLayout extends LinearLayout
 {
     private static final int LAYOUT_ANIMATION_DURATION = 200;
 
@@ -77,7 +77,10 @@ public class HomeCarouselLayout extends RelativeLayout
 
     private void initLayout()
     {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
+        LinearLayout view = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
+
+        view.setOrientation(LinearLayout.VERTICAL);
+        view.setBackgroundResource(R.color.default_background);
         setVisibility(View.GONE);
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
@@ -228,7 +231,7 @@ public class HomeCarouselLayout extends RelativeLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
@@ -241,7 +244,7 @@ public class HomeCarouselLayout extends RelativeLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
@@ -302,7 +305,7 @@ public class HomeCarouselLayout extends RelativeLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
@@ -315,7 +318,7 @@ public class HomeCarouselLayout extends RelativeLayout
                 clearAnimation();
 
                 ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = height;
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 setLayoutParams(params);
 
                 mValueAnimator = null;
