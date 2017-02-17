@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.Province;
+import com.twoheart.dailyhotel.model.StayAmenities;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
@@ -218,9 +219,9 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             @Override
             public void onClick(View v)
             {
-                Integer flag = (Integer) v.getTag();
+                StayAmenities stayAmenities = (StayAmenities) v.getTag();
 
-                if (flag == null)
+                if (stayAmenities == null)
                 {
                     v.setSelected(false);
                     return;
@@ -231,14 +232,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 if (v.isSelected() == true)
                 {
                     v.setSelected(false);
-                    stayCurationOption.flagAmenitiesFilters ^= flag;
+                    stayCurationOption.flagAmenitiesFilters ^= stayAmenities.getFlag();
 
                     AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
-                    stayCurationOption.flagAmenitiesFilters |= flag;
+                    stayCurationOption.flagAmenitiesFilters |= stayAmenities.getFlag();
 
                     AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                         , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
@@ -248,62 +249,23 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         };
 
-        final String[] amenities = new String[]{getString(R.string.label_wifi)//
-            , getString(R.string.label_breakfast)//
-            , getString(R.string.label_cooking)//
-            , getString(R.string.label_bathtub)//
-            , getString(R.string.label_parking)//
-            , getString(R.string.label_pool)//
-            , getString(R.string.label_fitness)//
-            , getString(R.string.label_allowed_pet)//
-            , getString(R.string.label_allowed_barbecue)};
-
-        final String[] analytics = new String[]{AnalyticsManager.Label.SORTFILTER_WIFI//
-            , AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST//
-            , AnalyticsManager.Label.SORTFILTER_KITCHEN//
-            , AnalyticsManager.Label.SORTFILTER_BATHTUB//
-            , AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE//
-            , AnalyticsManager.Label.SORTFILTER_POOL//
-            , AnalyticsManager.Label.SORTFILTER_FITNESS//
-            , AnalyticsManager.Label.SORTFILTER_PET//
-            , AnalyticsManager.Label.SORTFILTER_BBQ};
-
-        final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_04_facilities_01//
-            , R.drawable.f_ic_hotel_04_facilities_02//
-            , R.drawable.f_ic_hotel_04_facilities_03//
-            , R.drawable.f_ic_hotel_04_facilities_04//
-            , R.drawable.f_ic_hotel_04_facilities_05//
-            , R.drawable.f_ic_hotel_04_facilities_06//
-            , R.drawable.f_ic_hotel_04_facilities_07//
-            , R.drawable.ic_detail_facilities_05_pet//
-            , R.drawable.ic_detail_facilities_06_bbq};
-
-        final int[] amenitiesFlag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET//
-            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ};
-
-        int length = amenities.length;
-
-        for (int i = 0; i < length; i++)
+        StayAmenities[] values = StayAmenities.values();
+        if (values != null && values.length > 0)
         {
-            DailyTextView amenitiesView = getGridLayoutItemView(amenities[i], amenitiesResId[i], false);
-            amenitiesView.setOnClickListener(onClickListener);
-            amenitiesView.setTag(amenitiesFlag[i]);
-            amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
-            amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
-
-            if ((stayCurationOption.flagAmenitiesFilters & amenitiesFlag[i]) == amenitiesFlag[i])
+            for (StayAmenities stayAmenities : values)
             {
-                amenitiesView.setSelected(true);
-            }
+                DailyTextView amenitiesView = getGridLayoutItemView(stayAmenities.getName(this), stayAmenities.getResId(), false);
+                amenitiesView.setOnClickListener(onClickListener);
+                amenitiesView.setTag(stayAmenities);
+                amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
-            mAmenitiesGridLayout.addView(amenitiesView);
+                if ((stayCurationOption.flagAmenitiesFilters & stayAmenities.getFlag()) == stayAmenities.getFlag())
+                {
+                    amenitiesView.setSelected(true);
+                }
+
+                mAmenitiesGridLayout.addView(amenitiesView);
+            }
         }
 
         mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
@@ -314,98 +276,98 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mInRoomAmenitiesGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.inRoomAmenitiesGridLayout);
 
         // TODO : 객실 내 시설
-//        View.OnClickListener onClickListener = new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                Integer flag = (Integer) v.getTag();
-//
-//                if (flag == null)
-//                {
-//                    v.setSelected(false);
-//                    return;
-//                }
-//
-//                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
-//
-//                if (v.isSelected() == true)
-//                {
-//                    v.setSelected(false);
-//                    stayCurationOption.flagAmenitiesFilters ^= flag;
-//
-//                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-//                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
-//                } else
-//                {
-//                    v.setSelected(true);
-//                    stayCurationOption.flagAmenitiesFilters |= flag;
-//
-//                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-//                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
-//                }
-//
-//                requestUpdateResultDelayed();
-//            }
-//        };
-//
-//        final String[] amenities = new String[]{getString(R.string.label_wifi)//
-//            , getString(R.string.label_breakfast)//
-//            , getString(R.string.label_cooking)//
-//            , getString(R.string.label_beth)//
-//            , getString(R.string.label_parking)//
-//            , getString(R.string.label_pool)//
-//            , getString(R.string.label_fitness)//
-//            , getString(R.string.label_allowed_pet)//
-//            , getString(R.string.label_allowed_barbecue)};
-//
-//        final String[] analytics = new String[]{AnalyticsManager.Label.SORTFILTER_WIFI//
-//            , AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST//
-//            , AnalyticsManager.Label.SORTFILTER_KITCHEN//
-//            , AnalyticsManager.Label.SORTFILTER_BATHTUB//
-//            , AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE//
-//            , AnalyticsManager.Label.SORTFILTER_POOL//
-//            , AnalyticsManager.Label.SORTFILTER_FITNESS//
-//            , AnalyticsManager.Label.SORTFILTER_PET//
-//            , AnalyticsManager.Label.SORTFILTER_BBQ};
-//
-//        final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_04_facilities_01//
-//            , R.drawable.f_ic_hotel_04_facilities_02//
-//            , R.drawable.f_ic_hotel_04_facilities_03//
-//            , R.drawable.f_ic_hotel_04_facilities_04//
-//            , R.drawable.f_ic_hotel_04_facilities_05//
-//            , R.drawable.f_ic_hotel_04_facilities_06//
-//            , R.drawable.f_ic_hotel_04_facilities_07//
-//            , R.drawable.ic_detail_facilities_05_pet//
-//            , R.drawable.ic_detail_facilities_06_bbq};
-//
-//        final int[] amenitiesFlag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET//
-//            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ};
-//
-//        int length = amenities.length;
-//
-//        for (int i = 0; i < length; i++)
-//        {
-//            DailyTextView amenitiesView = getGridLayoutItemView(amenities[i], amenitiesResId[i], false);
-//            amenitiesView.setOnClickListener(onClickListener);
-//            amenitiesView.setTag(amenitiesFlag[i]);
-//            amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
-//            amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
-//
-//            if ((stayCurationOption.flagAmenitiesFilters & amenitiesFlag[i]) == amenitiesFlag[i])
-//            {
-//                amenitiesView.setSelected(true);
-//            }
-//
-//            mInRoomAmenitiesGridLayout.addView(amenitiesView);
-//        }
+        //        View.OnClickListener onClickListener = new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                Integer flag = (Integer) v.getTag();
+        //
+        //                if (flag == null)
+        //                {
+        //                    v.setSelected(false);
+        //                    return;
+        //                }
+        //
+        //                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+        //
+        //                if (v.isSelected() == true)
+        //                {
+        //                    v.setSelected(false);
+        //                    stayCurationOption.flagAmenitiesFilters ^= flag;
+        //
+        //                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+        //                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
+        //                } else
+        //                {
+        //                    v.setSelected(true);
+        //                    stayCurationOption.flagAmenitiesFilters |= flag;
+        //
+        //                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+        //                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
+        //                }
+        //
+        //                requestUpdateResultDelayed();
+        //            }
+        //        };
+        //
+        //        final String[] amenities = new String[]{getString(R.string.label_wifi)//
+        //            , getString(R.string.label_breakfast)//
+        //            , getString(R.string.label_cooking)//
+        //            , getString(R.string.label_beth)//
+        //            , getString(R.string.label_parking)//
+        //            , getString(R.string.label_pool)//
+        //            , getString(R.string.label_fitness)//
+        //            , getString(R.string.label_allowed_pet)//
+        //            , getString(R.string.label_allowed_barbecue)};
+        //
+        //        final String[] analytics = new String[]{AnalyticsManager.Label.SORTFILTER_WIFI//
+        //            , AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST//
+        //            , AnalyticsManager.Label.SORTFILTER_KITCHEN//
+        //            , AnalyticsManager.Label.SORTFILTER_BATHTUB//
+        //            , AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE//
+        //            , AnalyticsManager.Label.SORTFILTER_POOL//
+        //            , AnalyticsManager.Label.SORTFILTER_FITNESS//
+        //            , AnalyticsManager.Label.SORTFILTER_PET//
+        //            , AnalyticsManager.Label.SORTFILTER_BBQ};
+        //
+        //        final int[] amenitiesResId = new int[]{R.drawable.f_ic_hotel_04_facilities_01//
+        //            , R.drawable.f_ic_hotel_04_facilities_02//
+        //            , R.drawable.f_ic_hotel_04_facilities_03//
+        //            , R.drawable.f_ic_hotel_04_facilities_04//
+        //            , R.drawable.f_ic_hotel_04_facilities_05//
+        //            , R.drawable.f_ic_hotel_04_facilities_06//
+        //            , R.drawable.f_ic_hotel_04_facilities_07//
+        //            , R.drawable.ic_detail_facilities_05_pet//
+        //            , R.drawable.ic_detail_facilities_06_bbq};
+        //
+        //        final int[] amenitiesFlag = new int[]{StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET//
+        //            , StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ};
+        //
+        //        int length = amenities.length;
+        //
+        //        for (int i = 0; i < length; i++)
+        //        {
+        //            DailyTextView amenitiesView = getGridLayoutItemView(amenities[i], amenitiesResId[i], false);
+        //            amenitiesView.setOnClickListener(onClickListener);
+        //            amenitiesView.setTag(amenitiesFlag[i]);
+        //            amenitiesView.setTag(amenitiesView.getId(), analytics[i]);
+        //            amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
+        //
+        //            if ((stayCurationOption.flagAmenitiesFilters & amenitiesFlag[i]) == amenitiesFlag[i])
+        //            {
+        //                amenitiesView.setSelected(true);
+        //            }
+        //
+        //            mInRoomAmenitiesGridLayout.addView(amenitiesView);
+        //        }
 
         mInRoomAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
     }
