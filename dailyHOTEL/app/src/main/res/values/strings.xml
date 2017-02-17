@@ -844,7 +844,7 @@
     <string name="label_wifi">무료WIFI</string>
     <string name="label_breakfast">조식포함</string>
     <string name="label_cooking">취사가능</string>
-    <string name="label_beth">욕조구비</string>
+    <string name="label_bathtub">욕조구비</string>
     <string name="label_pool">수영장</string>
     <string name="label_fitness">피트니스</string>
     <string name="label_settime">시간설정</string>

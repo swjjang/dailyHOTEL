@@ -251,7 +251,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         final String[] amenities = new String[]{getString(R.string.label_wifi)//
             , getString(R.string.label_breakfast)//
             , getString(R.string.label_cooking)//
-            , getString(R.string.label_beth)//
+            , getString(R.string.label_bathtub)//
             , getString(R.string.label_parking)//
             , getString(R.string.label_pool)//
             , getString(R.string.label_fitness)//
