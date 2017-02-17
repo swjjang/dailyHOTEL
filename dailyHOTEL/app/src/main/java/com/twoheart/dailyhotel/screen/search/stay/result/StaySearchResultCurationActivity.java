@@ -145,7 +145,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         updatePersonFilter(StayFilter.MIN_PERSON);
 
         resetLayout(mBedTypeLayout);
-        resetLayout(mGridLayout);
+        resetLayout(mAmenitiesGridLayout);
     }
 
     @Override

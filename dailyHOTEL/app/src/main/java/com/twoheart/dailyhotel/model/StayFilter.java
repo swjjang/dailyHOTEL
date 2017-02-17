@@ -22,4 +22,6 @@ public class StayFilter
     public static final int FLAG_HOTEL_FILTER_AMENITIES_NOPARKING = 0x80;
     public static final int FLAG_HOTEL_FILTER_AMENITIES_PET = 0x0100;
     public static final int FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ = 0x0200;
+    //
+    public static final int FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE = 0x00;
 }

@@ -840,6 +840,7 @@
     <string name="label_bedtype">베드타입</string>
     <string name="label_foodtype">음식종류</string>
     <string name="label_amenities">부대시설</string>
+    <string name="label_in_room_amenities">객실 내 시설</string>
     <string name="label_wifi">무료WIFI</string>
     <string name="label_breakfast">조식포함</string>
     <string name="label_cooking">취사가능</string>

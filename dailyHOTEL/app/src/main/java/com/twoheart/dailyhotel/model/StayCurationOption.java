@@ -9,6 +9,7 @@ public class StayCurationOption extends PlaceCurationOption
     public int person;
     public int flagBedTypeFilters;
     public int flagAmenitiesFilters; // luxuries
+    public int flagRoomAmenitiesFilters; // room luxuries
 
     public StayCurationOption()
     {
@@ -29,6 +30,7 @@ public class StayCurationOption extends PlaceCurationOption
         person = StayFilter.MIN_PERSON;
         flagBedTypeFilters = StayFilter.FLAG_HOTEL_FILTER_BED_NONE;
         flagAmenitiesFilters = StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
+        flagRoomAmenitiesFilters = StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE;
     }
 
     protected void setCurationOption(StayCurationOption stayCurationOption)
@@ -43,6 +45,7 @@ public class StayCurationOption extends PlaceCurationOption
         person = stayCurationOption.person;
         flagBedTypeFilters = stayCurationOption.flagBedTypeFilters;
         flagAmenitiesFilters = stayCurationOption.flagAmenitiesFilters;
+        flagRoomAmenitiesFilters = stayCurationOption.flagRoomAmenitiesFilters;
     }
 
     @Override
@@ -51,7 +54,8 @@ public class StayCurationOption extends PlaceCurationOption
         if (isDefaultSortType() == false//
             || person != StayFilter.MIN_PERSON//
             || flagBedTypeFilters != StayFilter.FLAG_HOTEL_FILTER_BED_NONE//
-            || flagAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+            || flagAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE
+            || flagRoomAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE)
         {
             return false;
         }
@@ -179,6 +183,30 @@ public class StayCurationOption extends PlaceCurationOption
             }
         }
 
+        // TODO : 객실 내 시설
+//        result.append('-');
+//
+//        if (flagRoomAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE)
+//        {
+//            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+//        } else
+//        {
+//            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+//            {
+//                result.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(',');
+//            }
+//
+//            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
+//            {
+//                result.append(AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST).append(',');
+//            }
+//
+//            if (result.charAt(result.length() - 1) == ',')
+//            {
+//                result.setLength(result.length() - 1);
+//            }
+//        }
+
         return result.toString();
     }
 
@@ -305,6 +333,30 @@ public class StayCurationOption extends PlaceCurationOption
             }
         }
 
+        // TODO : 객실 내 시설 -
+//        result.append(",facility:");
+//
+//        if (flagRoomAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
+//        {
+//            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
+//        } else
+//        {
+//            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+//            {
+//                result.append(AnalyticsManager.Label.SORTFILTER_WIFI).append('-');
+//            }
+//
+//            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
+//            {
+//                result.append(AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST).append('-');
+//            }
+//
+//            if (result.charAt(result.length() - 1) == '-')
+//            {
+//                result.setLength(result.length() - 1);
+//            }
+//        }
+
         result.append("]");
 
         return result.toString();
@@ -318,6 +370,7 @@ public class StayCurationOption extends PlaceCurationOption
         dest.writeInt(person);
         dest.writeInt(flagBedTypeFilters);
         dest.writeInt(flagAmenitiesFilters);
+        dest.writeInt(flagRoomAmenitiesFilters);
     }
 
     protected void readFromParcel(Parcel in)
@@ -327,6 +380,7 @@ public class StayCurationOption extends PlaceCurationOption
         person = in.readInt();
         flagBedTypeFilters = in.readInt();
         flagAmenitiesFilters = in.readInt();
+        flagRoomAmenitiesFilters = in.readInt();
     }
 
     public static final Creator CREATOR = new Creator()

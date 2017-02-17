@@ -59,6 +59,7 @@ public class StaySearchParams extends StayParams
 
             mBedTypeList = toParamListByBedTypes(stayCurationOption.flagBedTypeFilters);
             mLuxuryList = toParamListByAmenities(stayCurationOption.flagAmenitiesFilters);
+            mRoomLuxuryList = toParamListByRoomAmenities(stayCurationOption.flagRoomAmenitiesFilters);
         }
 
         mSort = stayCurationOption.getSortType();

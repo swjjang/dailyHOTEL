@@ -23,6 +23,7 @@ public class StayParams extends PlaceParams
 
     protected List<String> mBedTypeList;
     protected List<String> mLuxuryList;
+    protected List<String> mRoomLuxuryList;
 
     public StayParams(PlaceCuration placeCuration)
     {
@@ -77,6 +78,7 @@ public class StayParams extends PlaceParams
 
             mBedTypeList = toParamListByBedTypes(stayCurationOption.flagBedTypeFilters);
             mLuxuryList = toParamListByAmenities(stayCurationOption.flagAmenitiesFilters);
+            mRoomLuxuryList = toParamListByRoomAmenities(stayCurationOption.flagRoomAmenitiesFilters);
         }
 
         mSort = stayCurationOption.getSortType();
@@ -305,6 +307,30 @@ public class StayParams extends PlaceParams
         {
             arrayList.add("SharedBbq");
         }
+
+        return arrayList;
+    }
+
+    protected List<String> toParamListByRoomAmenities(int flagRoomAmenitiesFilters)
+    {
+        if (flagRoomAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE)
+        {
+            return null;
+        }
+
+        // TODO : 객실 내 시설
+
+        ArrayList<String> arrayList = new ArrayList();
+
+//        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI)
+//        {
+//            arrayList.add("Wifi");
+//        }
+//
+//        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST)
+//        {
+//            arrayList.add("Breakfast");
+//        }
 
         return arrayList;
     }
