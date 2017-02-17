@@ -95,6 +95,14 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
+    protected void startCalendarActivity()
+    {
+        Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
+            , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+    }
+
+    @Override
     protected String getSectionTitle(int count)
     {
         return getString(R.string.label_count_gourmet, count);
@@ -136,9 +144,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         @Override
         public void onCalendarClick()
         {
-            Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
-                , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            startCalendarActivity();
         }
 
         @Override

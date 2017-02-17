@@ -103,6 +103,16 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
+    protected void startCalendarActivity()
+    {
+        final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
+
+        Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
+            , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+    }
+
+    @Override
     protected String getSectionTitle(int count)
     {
         return getString(R.string.label_count_stay, count);
@@ -148,11 +158,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         @Override
         public void onCalendarClick()
         {
-            final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
-
-            Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
-                , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
+            startCalendarActivity();
         }
 
         @Override
