@@ -12,20 +12,6 @@ import java.util.List;
 
 public class DetailInformation implements Parcelable
 {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
-    {
-        public DetailInformation createFromParcel(Parcel in)
-        {
-            return new DetailInformation(in);
-        }
-
-        @Override
-        public DetailInformation[] newArray(int size)
-        {
-            return new DetailInformation[size];
-        }
-
-    };
     public String title;
     private List<String> mContentsList;
 
@@ -68,15 +54,13 @@ public class DetailInformation implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(title);
-        dest.writeList(mContentsList);
+        dest.writeStringList(mContentsList);
     }
 
     protected void readFromParcel(Parcel in)
     {
-        mContentsList = new ArrayList<>();
-
         title = in.readString();
-        in.readList(mContentsList, List.class.getClassLoader());
+        mContentsList = in.createStringArrayList();
     }
 
     @Override
@@ -84,4 +68,19 @@ public class DetailInformation implements Parcelable
     {
         return 0;
     }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public DetailInformation createFromParcel(Parcel in)
+        {
+            return new DetailInformation(in);
+        }
+
+        @Override
+        public DetailInformation[] newArray(int size)
+        {
+            return new DetailInformation[size];
+        }
+
+    };
 }

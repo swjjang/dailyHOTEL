@@ -1,13 +1,11 @@
 package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class GourmetReservationTime extends PlaceReservationTime

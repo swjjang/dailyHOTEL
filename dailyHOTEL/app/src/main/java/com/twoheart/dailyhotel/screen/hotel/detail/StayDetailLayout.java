@@ -14,11 +14,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -27,7 +27,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 호텔 상세 정보 화면
@@ -156,7 +156,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
         }
 
-        ArrayList<ImageInformation> imageInformationList = stayDetail.getImageInformationList();
+        List<ImageInformation> imageInformationList = stayDetail.getImageList();
         mImageAdapter.setData(imageInformationList);
         mViewPager.setAdapter(mImageAdapter);
 
@@ -179,9 +179,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         showWishButton();
 
         // SOLD OUT 판단 조건.
-        ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
+        List<RoomInformation> roomInformationList = stayDetail.getProductList();
 
-        if (saleRoomList == null || saleRoomList.size() == 0)
+        if (roomInformationList == null || roomInformationList.size() == 0)
         {
             mBookingTextView.setVisibility(View.GONE);
             mSoldoutTextView.setVisibility(View.VISIBLE);
@@ -212,7 +212,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
             setBookingStatus(STATUS_SELECT_PRODUCT);
 
-            updateRoomTypeInformationLayout(saleRoomList);
+            updateRoomTypeInformationLayout(roomInformationList);
         }
 
         if (stayDetail.nights > 1)
@@ -232,7 +232,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         mListAdapter.notifyDataSetChanged();
     }
 
-    private void updateRoomTypeInformationLayout(ArrayList<RoomInformation> roomInformationList)
+    private void updateRoomTypeInformationLayout(List<RoomInformation> roomInformationList)
     {
         if (roomInformationList == null || roomInformationList.size() == 0)
         {
@@ -718,7 +718,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         showWishButtonAnimation();
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
+            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, ((StayDetail) mPlaceDetail).name, null);
     }
 
     /**

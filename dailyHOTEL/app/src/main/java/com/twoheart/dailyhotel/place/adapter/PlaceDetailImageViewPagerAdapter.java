@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
             imageView.setTag(imageView.getId(), position);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).url);
+            Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).getImageUrl());
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
             container.addView(imageView, 0, layoutParams);

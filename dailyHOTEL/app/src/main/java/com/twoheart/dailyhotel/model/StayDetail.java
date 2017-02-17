@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -11,8 +12,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
-public class StayDetail extends PlaceDetail
+public class StayDetail extends PlaceDetail<RoomInformation>
 {
     public int nights;
     public Stay.Grade grade;
@@ -21,6 +23,21 @@ public class StayDetail extends PlaceDetail
     public String categoryCode;
     public boolean isSingleStay; // 연박 불가인지 아닌지
 
+    public String name;
+    public String address;
+    public boolean isOverseas; // 0 : 국내 , 1 : 해외
+    public String benefit;
+    public int ratingPersons;
+    public int ratingValue;
+    public double latitude;
+    public double longitude;
+    public boolean hasCoupon;
+    public boolean myWish; // 위시리스트 클릭 상태
+    public int wishCount; // 위시리스트 카운트
+
+    private ArrayList<ImageInformation> mImageInformationList;
+    private ArrayList<DetailInformation> mInformationList;
+    private ArrayList<String> mBenefitInformation;
     private ArrayList<Pictogram> mPictogramList;
 
     public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
@@ -33,7 +50,6 @@ public class StayDetail extends PlaceDetail
         this.isDailyChoice = isDailyChoice;
     }
 
-    @Override
     public void setData(JSONObject jsonObject) throws Exception
     {
         try
@@ -113,7 +129,7 @@ public class StayDetail extends PlaceDetail
 
         // Image Url
         String imageUrl = jsonObject.getString("imgUrl");
-        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
+        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPathMain");
 
         Iterator<String> iterator = pathUrlJSONObject.keys();
         while (iterator.hasNext())
@@ -131,9 +147,12 @@ public class StayDetail extends PlaceDetail
                 {
                     JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
 
-                    String description = imageInformationJSONObject.getString("description");
-                    String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
-                    mImageInformationList.add(new ImageInformation(imageFullUrl, description));
+                    ImageInformation imageInformation = new ImageInformation();
+                    imageInformation.description = imageInformationJSONObject.getString("description");
+                    imageInformation.name = imageInformationJSONObject.getString("name");
+                    imageInformation.setImageUrl(imageUrl + key + imageInformation.name);
+
+                    mImageInformationList.add(imageInformation);
                 }
                 break;
             } catch (JSONException e)
@@ -221,12 +240,25 @@ public class StayDetail extends PlaceDetail
         }
     }
 
-    public ArrayList<RoomInformation> getSaleRoomList()
+    @Override
+    public List<RoomInformation> getProductList()
     {
         return mSaleRoomList;
     }
 
-    public ArrayList<Pictogram> getPictogramList()
+    @Override
+    public RoomInformation getProduct(int index)
+    {
+        if (mSaleRoomList == null || mSaleRoomList.size() <= index)
+        {
+            return null;
+        }
+
+        return mSaleRoomList.get(index);
+    }
+
+    @Override
+    public List<Pictogram> getPictogramList()
     {
         if (mPictogramList == null)
         {
@@ -234,6 +266,24 @@ public class StayDetail extends PlaceDetail
         }
 
         return mPictogramList;
+    }
+
+    @Override
+    public List<ImageInformation> getImageList()
+    {
+        return mImageInformationList;
+    }
+
+    @Override
+    public List<DetailInformation> getDetailList()
+    {
+        return mInformationList;
+    }
+
+    @Override
+    public List<String> getBenefitList()
+    {
+        return mBenefitInformation;
     }
 
     public enum Pictogram

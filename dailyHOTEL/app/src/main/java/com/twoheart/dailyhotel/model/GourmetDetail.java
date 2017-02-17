@@ -1,25 +1,21 @@
 package com.twoheart.dailyhotel.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-public class GourmetDetail extends PlaceDetail
+public class GourmetDetail extends PlaceDetail<GourmetTicket> implements Parcelable
 {
-    public Gourmet.Grade grade;
-    public String category;
-    public String subCategory;
-    private ArrayList<Pictogram> mPictogramList;
+    private GourmetDetailParams mGourmetDetailParams;
 
-    protected ArrayList<TicketInformation> mTicketInformationList;
+    public boolean hasCoupon;
 
     public GourmetDetail(int index, int entryPosition, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
     {
@@ -30,175 +26,291 @@ public class GourmetDetail extends PlaceDetail
         this.isDailyChoice = isDailyChoice;
     }
 
+    public GourmetDetail(Parcel in)
+    {
+        readFromParcel(in);
+    }
+    //
+    //    @Override
+    //    public void setData(JSONObject jsonObject) throws Exception
+    //    {
+    //        grade = Gourmet.Grade.gourmet;
+    //
+    //        category = jsonObject.getString("category");
+    //
+    //        subCategory = jsonObject.getString("categorySub");
+    //
+    //        name = jsonObject.getString("name");
+    //        address = jsonObject.getString("address");
+    //
+    //        longitude = jsonObject.getDouble("longitude");
+    //        latitude = jsonObject.getDouble("latitude");
+    //
+    //        boolean ratingShow = jsonObject.getBoolean("ratingShow");
+    //
+    //        if (ratingShow == true)
+    //        {
+    //            ratingValue = jsonObject.getInt("ratingValue");
+    //            ratingPersons = jsonObject.getInt("ratingPersons");
+    //        }
+    //
+    //        if (mPictogramList == null)
+    //        {
+    //            mPictogramList = new ArrayList<>();
+    //        }
+    //
+    //        mPictogramList.clear();
+    //
+    //        // 주차가능
+    //        if (jsonObject.getBoolean("parking") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.parking);
+    //        }
+    //        // 발렛가능
+    //        if (jsonObject.getBoolean("valet") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.valet);
+    //        }
+    //        // 프라이빗룸
+    //        if (jsonObject.getBoolean("privateRoom") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.privateRoom);
+    //        }
+    //        // 단체예약
+    //        if (jsonObject.getBoolean("groupBooking") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.groupBooking);
+    //        }
+    //        // 베이비시트
+    //        if (jsonObject.getBoolean("babySeat") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.babySeat);
+    //        }
+    //        // 코르키지
+    //        if (jsonObject.getBoolean("corkage") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.corkage);
+    //        }
+    //
+    //        // Image Url
+    //        String imageUrl = jsonObject.getString("imgUrl");
+    //        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
+    //
+    //        Iterator<String> iterator = pathUrlJSONObject.keys();
+    //        while (iterator.hasNext())
+    //        {
+    //            String key = iterator.next();
+    //
+    //            try
+    //            {
+    //                JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
+    //
+    //                int length = pathJSONArray.length();
+    //                mImageInformationList = new ArrayList<>(pathJSONArray.length());
+    //
+    //                for (int i = 0; i < length; i++)
+    //                {
+    //                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
+    //
+    //                    String description = imageInformationJSONObject.getString("description");
+    //                    String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
+    //                    mImageInformationList.add(new ImageInformation(imageFullUrl, description));
+    //                }
+    //                break;
+    //            } catch (JSONException e)
+    //            {
+    //            }
+    //        }
+    //
+    //        //benefit
+    //        if (jsonObject.has("benefit") == true)
+    //        {
+    //            benefit = jsonObject.getString("benefit");
+    //
+    //            if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
+    //            {
+    //                JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
+    //
+    //                int length = benefitJSONArray.length();
+    //
+    //                if (length > 0)
+    //                {
+    //                    mBenefitInformation = new ArrayList<>(length);
+    //
+    //                    for (int i = 0; i < length; i++)
+    //                    {
+    //                        mBenefitInformation.add(benefitJSONArray.getString(i));
+    //                    }
+    //                }
+    //            }
+    //        }
+    //
+    //        // Detail
+    //        JSONArray detailJSONArray = jsonObject.getJSONArray("details");
+    //        int detailLength = detailJSONArray.length();
+    //
+    //        mInformationList = new ArrayList<>(detailLength);
+    //
+    //        for (int i = 0; i < detailLength; i++)
+    //        {
+    //            mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
+    //        }
+    //
+    //        // Ticket Information
+    //        if (jsonObject.has("tickets") == true && jsonObject.isNull("tickets") == false)
+    //        {
+    //            JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
+    //            int ticketInformationLength = ticketInformationJSONArray.length();
+    //
+    //            mTicketInformationList = new ArrayList<>(ticketInformationLength);
+    //
+    //            for (int i = 0; i < ticketInformationLength; i++)
+    //            {
+    //                TicketInformation ticketInformation = new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i));
+    //                ticketInformation.thumbnailUrl = getImageInformationList().get(0).url;
+    //                mTicketInformationList.add(ticketInformation);
+    //            }
+    //        } else
+    //        {
+    //            mTicketInformationList = new ArrayList<>();
+    //        }
+    //
+    //        if (jsonObject.has("myWish") == true)
+    //        {
+    //            myWish = jsonObject.getBoolean("myWish");
+    //        }
+    //
+    //        if (jsonObject.has("wishCount") == true)
+    //        {
+    //            wishCount = jsonObject.getInt("wishCount");
+    //        }
+    //    }
+
+    public GourmetDetailParams getGourmetDetailParmas()
+    {
+        return mGourmetDetailParams;
+    }
+
+    public void setGourmetDetailParmas(GourmetDetailParams gourmetDetailParmas)
+    {
+        mGourmetDetailParams = gourmetDetailParmas;
+    }
+
     @Override
-    public void setData(JSONObject jsonObject) throws Exception
+    public List<GourmetTicket> getProductList()
     {
-        grade = Gourmet.Grade.gourmet;
-
-        category = jsonObject.getString("category");
-
-        subCategory = jsonObject.getString("categorySub");
-
-        name = jsonObject.getString("name");
-        address = jsonObject.getString("address");
-
-        longitude = jsonObject.getDouble("longitude");
-        latitude = jsonObject.getDouble("latitude");
-
-        boolean ratingShow = jsonObject.getBoolean("ratingShow");
-
-        if (ratingShow == true)
+        if (mGourmetDetailParams == null)
         {
-            ratingValue = jsonObject.getInt("ratingValue");
-            ratingPersons = jsonObject.getInt("ratingPersons");
+            return null;
         }
 
-        if (mPictogramList == null)
-        {
-            mPictogramList = new ArrayList<>();
-        }
-
-        mPictogramList.clear();
-
-        // 주차가능
-        if (jsonObject.getBoolean("parking") == true)
-        {
-            mPictogramList.add(Pictogram.parking);
-        }
-        // 발렛가능
-        if (jsonObject.getBoolean("valet") == true)
-        {
-            mPictogramList.add(Pictogram.valet);
-        }
-        // 프라이빗룸
-        if (jsonObject.getBoolean("privateRoom") == true)
-        {
-            mPictogramList.add(Pictogram.privateRoom);
-        }
-        // 단체예약
-        if (jsonObject.getBoolean("groupBooking") == true)
-        {
-            mPictogramList.add(Pictogram.groupBooking);
-        }
-        // 베이비시트
-        if (jsonObject.getBoolean("babySeat") == true)
-        {
-            mPictogramList.add(Pictogram.babySeat);
-        }
-        // 코르키지
-        if (jsonObject.getBoolean("corkage") == true)
-        {
-            mPictogramList.add(Pictogram.corkage);
-        }
-
-        // Image Url
-        String imageUrl = jsonObject.getString("imgUrl");
-        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
-
-        Iterator<String> iterator = pathUrlJSONObject.keys();
-        while (iterator.hasNext())
-        {
-            String key = iterator.next();
-
-            try
-            {
-                JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
-
-                int length = pathJSONArray.length();
-                mImageInformationList = new ArrayList<>(pathJSONArray.length());
-
-                for (int i = 0; i < length; i++)
-                {
-                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
-
-                    String description = imageInformationJSONObject.getString("description");
-                    String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
-                    mImageInformationList.add(new ImageInformation(imageFullUrl, description));
-                }
-                break;
-            } catch (JSONException e)
-            {
-            }
-        }
-
-        //benefit
-        if (jsonObject.has("benefit") == true)
-        {
-            benefit = jsonObject.getString("benefit");
-
-            if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
-            {
-                JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
-
-                int length = benefitJSONArray.length();
-
-                if (length > 0)
-                {
-                    mBenefitInformation = new ArrayList<>(length);
-
-                    for (int i = 0; i < length; i++)
-                    {
-                        mBenefitInformation.add(benefitJSONArray.getString(i));
-                    }
-                }
-            }
-        }
-
-        // Detail
-        JSONArray detailJSONArray = jsonObject.getJSONArray("details");
-        int detailLength = detailJSONArray.length();
-
-        mInformationList = new ArrayList<>(detailLength);
-
-        for (int i = 0; i < detailLength; i++)
-        {
-            mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
-        }
-
-        // Ticket Information
-        if (jsonObject.has("tickets") == true && jsonObject.isNull("tickets") == false)
-        {
-            JSONArray ticketInformationJSONArray = jsonObject.getJSONArray("tickets");
-            int ticketInformationLength = ticketInformationJSONArray.length();
-
-            mTicketInformationList = new ArrayList<>(ticketInformationLength);
-
-            for (int i = 0; i < ticketInformationLength; i++)
-            {
-                TicketInformation ticketInformation = new TicketInformation(name, ticketInformationJSONArray.getJSONObject(i));
-                ticketInformation.thumbnailUrl = getImageInformationList().get(0).url;
-                mTicketInformationList.add(ticketInformation);
-            }
-        } else
-        {
-            mTicketInformationList = new ArrayList<>();
-        }
-
-        if (jsonObject.has("myWish") == true)
-        {
-            myWish = jsonObject.getBoolean("myWish");
-        }
-
-        if (jsonObject.has("wishCount") == true)
-        {
-            wishCount = jsonObject.getInt("wishCount");
-        }
+        return mGourmetDetailParams.getTicketList();
     }
 
-    public ArrayList<TicketInformation> getTicketInformation()
+    @Override
+    public GourmetTicket getProduct(int index)
     {
-        return mTicketInformationList;
-    }
-
-    public ArrayList<Pictogram> getPictogramList()
-    {
-        if (mPictogramList == null)
+        if (mGourmetDetailParams == null || index < 0)
         {
-            mPictogramList = new ArrayList<>();
+            return null;
         }
 
-        return mPictogramList;
+        List<GourmetTicket> gourmetTicketList = mGourmetDetailParams.getTicketList();
+
+        if (gourmetTicketList == null || gourmetTicketList.size() <= index)
+        {
+            return null;
+        }
+
+        return gourmetTicketList.get(index);
     }
+
+    @Override
+    public List<Pictogram> getPictogramList()
+    {
+        if (mGourmetDetailParams == null)
+        {
+            return null;
+        }
+
+        return mGourmetDetailParams.getPictogramList();
+    }
+
+    @Override
+    public List<ImageInformation> getImageList()
+    {
+        if (mGourmetDetailParams == null)
+        {
+            return null;
+        }
+
+        return mGourmetDetailParams.getImageList();
+    }
+
+    @Override
+    public List<DetailInformation> getDetailList()
+    {
+        if (mGourmetDetailParams == null)
+        {
+            return null;
+        }
+
+        return mGourmetDetailParams.getDetailList();
+    }
+
+    @Override
+    public List<String> getBenefitList()
+    {
+        if (mGourmetDetailParams == null)
+        {
+            return null;
+        }
+
+        return mGourmetDetailParams.getBenefitList();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeParcelable(mGourmetDetailParams, flags);
+        dest.writeInt(hasCoupon == true ? 1 : 0);
+        dest.writeInt(index);
+        dest.writeInt(listCount);
+        dest.writeInt(entryPosition);
+        dest.writeString(isShowOriginalPrice);
+        dest.writeInt(isDailyChoice == true ? 1 : 0);
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        mGourmetDetailParams = in.readParcelable(GourmetDetailParams.class.getClassLoader());
+        hasCoupon = in.readInt() == 1 ? true : false;
+        index = in.readInt();
+        listCount = in.readInt();
+        entryPosition = in.readInt();
+        isShowOriginalPrice = in.readString();
+        isDailyChoice = in.readInt() == 1 ? true : false;
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
+    {
+        public GourmetDetail createFromParcel(Parcel in)
+        {
+            return new GourmetDetail(in);
+        }
+
+        @Override
+        public GourmetDetail[] newArray(int size)
+        {
+            return new GourmetDetail[size];
+        }
+    };
 
     public enum Pictogram
     {

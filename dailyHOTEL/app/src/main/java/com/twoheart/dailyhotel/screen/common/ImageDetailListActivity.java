@@ -24,7 +24,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -49,12 +49,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
     PlaceType mPlaceType;
 
-    public static Intent newInstance(Context context, Constants.PlaceType placeType, String title, ArrayList<ImageInformation> arrayList, int position)
+    public static Intent newInstance(Context context, Constants.PlaceType placeType, String title, List<ImageInformation> arrayList, int position)
     {
         Intent intent = new Intent(context, ImageDetailListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, arrayList);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURLLIST, (ArrayList) arrayList);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SELECTED_POSOTION, position);
 
         return intent;
@@ -371,7 +371,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             View view;
 
-            Uri imageUri = Util.isTextEmpty(getItem(position).url) == true ? null : Uri.parse(getItem(position).url);
+            Uri imageUri = Util.isTextEmpty(getItem(position).getImageUrl()) == true ? null : Uri.parse(getItem(position).getImageUrl());
             String description = getItem(position).description;
 
             if (convertView == null)

@@ -9,8 +9,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
-import com.twoheart.dailyhotel.model.ImageInformation;
-import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -19,7 +18,7 @@ import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GourmetProductDetailLayout extends BaseLayout
 {
@@ -89,11 +88,10 @@ public class GourmetProductDetailLayout extends BaseLayout
         });
     }
 
-    public void setInformation(GourmetDetail gourmetDetail, TicketInformation ticketInformation)
+    public void setInformation(GourmetDetail gourmetDetail, int selectedTicketIndex)
     {
-
         // 이미지 정보
-        ArrayList<ImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
+        List<ImageInformation> imageInformationList = gourmetDetail.getImageList();
         mImageAdapter.setData(imageInformationList);
         mViewPager.setAdapter(mImageAdapter);
 

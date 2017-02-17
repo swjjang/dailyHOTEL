@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RecentPlaces;
@@ -29,6 +28,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.network.model.HomePlace;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -56,8 +56,8 @@ import com.twoheart.dailyhotel.widget.TextTransition;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -606,6 +606,11 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void shareKakao(PlaceDetail placeDetail, String imageUrl)
     {
+        if (placeDetail == null)
+        {
+            return;
+        }
+
         String name = DailyPreference.getInstance(StayDetailActivity.this).getUserName();
 
         if (Util.isTextEmpty(name) == true)
@@ -618,9 +623,14 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         StayDetail stayDetail = (StayDetail) placeDetail;
 
+        if (stayDetail == null)
+        {
+            return;
+        }
+
         KakaoLinkManager.newInstance(StayDetailActivity.this).shareHotel(name, stayDetail.name, stayDetail.address//
             , stayDetail.index//
-            , mDefaultImageUrl//
+            , imageUrl//
             , mSaleTime, stayDetail.nights);
 
         recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.KAKAO);
@@ -665,13 +675,13 @@ public class StayDetailActivity extends PlaceDetailActivity
         recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.MESSAGE);
     }
 
-    private void recordAnalyticsShared(PlaceDetail placeDetail, String label)
+    private void recordAnalyticsShared(StayDetail stayDetail, String label)
     {
         try
         {
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.COUNTRY, placeDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
 
             if (mProvince instanceof Area)
             {
@@ -712,8 +722,8 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
             params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
-            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(placeDetail.index));
-            params.put(AnalyticsManager.KeyType.VENDOR_NAME, placeDetail.name);
+            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(stayDetail.index));
+            params.put(AnalyticsManager.KeyType.VENDOR_NAME, stayDetail.name);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                 , Action.STAY_ITEM_SHARE, label, params);
@@ -751,11 +761,11 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         String imageUrl = null;
-        ArrayList<ImageInformation> mImageInformationList = stayDetail.getImageInformationList();
+        List<ImageInformation> imageInformationList = stayDetail.getImageList();
 
-        if (mImageInformationList != null && mImageInformationList.size() > 0)
+        if (imageInformationList != null && imageInformationList.size() > 0)
         {
-            imageUrl = mImageInformationList.get(0).url;
+            imageUrl = imageInformationList.get(0).getImageUrl();
         }
 
         roomInformation.categoryCode = stayDetail.categoryCode;
@@ -814,7 +824,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_COUPON_DOWNLOAD, mPlaceDetail.name, null);
+        StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, Action.HOTEL_COUPON_DOWNLOAD, stayDetail.name, null);
 
         if (DailyHotel.isLogin() == false)
         {
@@ -855,7 +867,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         } else
         {
             Intent intent = SelectStayCouponDialogActivity.newInstance(this, mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
-                ((StayDetail) mPlaceDetail).nights, ((StayDetail) mPlaceDetail).categoryCode, mPlaceDetail.name);
+                ((StayDetail) mPlaceDetail).nights, ((StayDetail) mPlaceDetail).categoryCode, stayDetail.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
     }
@@ -902,11 +914,11 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         // 딥링크로 메뉴 오픈 요청
-        if (mIsDeepLink == true && mOpenTicketIndex > 0 && stayDetail.getSaleRoomList().size() > 0)
+        if (mIsDeepLink == true && mOpenTicketIndex > 0 && stayDetail.getProductList().size() > 0)
         {
             if (mPlaceDetailLayout != null)
             {
-                ((StayDetailLayout)mPlaceDetailLayout).showProductInformationLayout(mOpenTicketIndex);
+                ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mOpenTicketIndex);
                 mPlaceDetailLayout.hideWishButton();
             }
         }
@@ -919,9 +931,9 @@ public class StayDetailActivity extends PlaceDetailActivity
     private void checkStayRoom(boolean isDeepLink, StayDetail stayDetail, int listViewPrice)
     {
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
-        ArrayList<RoomInformation> saleRoomList = stayDetail.getSaleRoomList();
+        List<RoomInformation> roomInformationList = stayDetail.getProductList();
 
-        if (saleRoomList == null || saleRoomList.size() == 0)
+        if (roomInformationList == null || roomInformationList.size() == 0)
         {
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
                 , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -954,7 +966,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     hasPrice = true;
                 } else
                 {
-                    for (RoomInformation roomInformation : saleRoomList)
+                    for (RoomInformation roomInformation : roomInformationList)
                     {
                         if (listViewPrice == roomInformation.averageDiscount)
                         {
@@ -1001,6 +1013,29 @@ public class StayDetailActivity extends PlaceDetailActivity
             , Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
+    private void onWishButtonClick(PlaceType placeType, StayDetail stayDetail)
+    {
+        if (isLockUiComponent() == true || isFinishing() == true || stayDetail == null)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        boolean isExpectSelected = !stayDetail.myWish;
+        int wishCount = isExpectSelected == true ? stayDetail.wishCount + 1 : stayDetail.wishCount - 1;
+        mPlaceDetailLayout.setWishButtonCount(wishCount);
+        mPlaceDetailLayout.setWishButtonSelected(isExpectSelected);
+
+        if (isExpectSelected == true)
+        {
+            mPlaceDetailNetworkController.requestAddWishList(placeType, stayDetail.index);
+        } else
+        {
+            mPlaceDetailNetworkController.requestRemoveWishList(placeType, stayDetail.index);
+        }
+    }
+
     void recordAnalyticsStayDetail(String screen, SaleTime saleTime, StayDetail stayDetail)
     {
         if (stayDetail == null)
@@ -1015,12 +1050,12 @@ public class StayDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(StayDetailActivity.this)); // 14
             params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetail.benefit) ? "no" : "yes"); // 3
 
-            if (stayDetail.getSaleRoomList() == null || stayDetail.getSaleRoomList().size() == 0)
+            if (stayDetail.getProductList() == null || stayDetail.getProductList().size() == 0)
             {
                 params.put(AnalyticsManager.KeyType.PRICE, "0");
             } else
             {
-                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayDetail.getSaleRoomList().get(0).averageDiscount));
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayDetail.getProductList().get(0).averageDiscount));
             }
 
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayDetail.nights));
@@ -1163,19 +1198,19 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            ArrayList<ImageInformation> imageInformationArrayList = placeDetail.getImageInformationList();
-            if (imageInformationArrayList.size() == 0)
+            List<ImageInformation> imageInformationList = placeDetail.getImageList();
+            if (imageInformationList.size() == 0)
             {
                 return;
             }
 
             lockUiComponent();
 
-            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, PlaceType.HOTEL, placeDetail.name, imageInformationArrayList, mCurrentImage);
+            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, PlaceType.HOTEL, ((StayDetail) placeDetail).name, imageInformationList, mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-                AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, placeDetail.name, null);
+                AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, ((StayDetail) placeDetail).name, null);
         }
 
         @Override
@@ -1209,7 +1244,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                ((StayDetailLayout)mPlaceDetailLayout).showAnimationProductInformationLayout();
+                ((StayDetailLayout) mPlaceDetailLayout).showAnimationProductInformationLayout();
                 mPlaceDetailLayout.hideWishButtonAnimation();
             }
 
@@ -1224,7 +1259,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL_ROOMTYPE, mSaleTime, (StayDetail) mPlaceDetail);
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , Action.ROOM_TYPE_CLICKED, mPlaceDetail.name, null);
+                , Action.ROOM_TYPE_CLICKED, ((StayDetail) mPlaceDetail).name, null);
         }
 
         @Override
@@ -1241,11 +1276,11 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 if (isAnimation == true)
                 {
-                    ((StayDetailLayout)mPlaceDetailLayout).hideAnimationProductInformationLayout();
+                    ((StayDetailLayout) mPlaceDetailLayout).hideAnimationProductInformationLayout();
                     mPlaceDetailLayout.showWishButtonAnimation();
                 } else
                 {
-                    ((StayDetailLayout)mPlaceDetailLayout).hideProductInformationLayout();
+                    ((StayDetailLayout) mPlaceDetailLayout).hideProductInformationLayout();
                     mPlaceDetailLayout.showWishButton();
                 }
             }
@@ -1270,14 +1305,16 @@ public class StayDetailActivity extends PlaceDetailActivity
                     return;
                 }
 
+                StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
                 Intent intent = ZoomMapActivity.newInstance(StayDetailActivity.this//
-                    , ZoomMapActivity.SourceType.HOTEL, mPlaceDetail.name, mPlaceDetail.address//
-                    , mPlaceDetail.latitude, mPlaceDetail.longitude, mPlaceDetail.isOverseas);
+                    , ZoomMapActivity.SourceType.HOTEL, stayDetail.name, stayDetail.address//
+                    , stayDetail.latitude, stayDetail.longitude, stayDetail.isOverseas);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-                    Action.HOTEL_DETAIL_MAP_CLICKED, mPlaceDetail.name, null);
+                    Action.HOTEL_DETAIL_MAP_CLICKED, stayDetail.name, null);
             } else
             {
                 Util.installGooglePlayService(StayDetailActivity.this);
@@ -1298,7 +1335,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             DailyToast.showToast(StayDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
-                Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, mPlaceDetail.name, null);
+                Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, ((StayDetail) mPlaceDetail).name, null);
         }
 
         @Override
@@ -1309,8 +1346,10 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            Util.showShareMapDialog(StayDetailActivity.this, mPlaceDetail.name//
-                , mPlaceDetail.latitude, mPlaceDetail.longitude, mPlaceDetail.isOverseas//
+            StayDetail stayDetail = ((StayDetail) mPlaceDetail);
+
+            Util.showShareMapDialog(StayDetailActivity.this, stayDetail.name//
+                , stayDetail.latitude, stayDetail.longitude, stayDetail.isOverseas//
                 , AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
                 , null);
@@ -1359,7 +1398,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mPlaceDetailNetworkController.requestProfile();
             }
 
-            String label = String.format("%s-%s", mPlaceDetail.name, mSelectedRoomInformation.roomName);
+            String label = String.format("%s-%s", ((StayDetail) mPlaceDetail).name, mSelectedRoomInformation.roomName);
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, (StayDetail) mPlaceDetail, roomInformation));
         }
@@ -1381,7 +1420,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
             } else
             {
-                StayDetailActivity.this.onWishButtonClick(PlaceType.HOTEL, mPlaceDetail);
+                StayDetailActivity.this.onWishButtonClick(PlaceType.HOTEL, (StayDetail) mPlaceDetail);
             }
         }
 
@@ -1468,7 +1507,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             try
             {
-                mPlaceDetail.setData(dataJSONObject);
+                StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
+                stayDetail.setData(dataJSONObject);
 
                 if (mInitializeStatus == STATUS_INITIALIZE_NONE)
                 {
@@ -1477,10 +1518,10 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 if (mIsTransitionEnd == true)
                 {
-                    updateDetailInformationLayout((StayDetail) mPlaceDetail);
+                    updateDetailInformationLayout(stayDetail);
                 }
 
-                recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, (StayDetail) mPlaceDetail);
+                recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, mSaleTime, stayDetail);
             } catch (Exception e)
             {
                 DailyToast.showToast(StayDetailActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
@@ -1494,10 +1535,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onHasCoupon(boolean hasCoupon)
         {
-            mPlaceDetail.hasCoupon = hasCoupon;
+            StayDetail stayDetail = (StayDetail) mPlaceDetail;
 
-            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(mPlaceDetail.index,//
-                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), ((StayDetail) mPlaceDetail).nights);
+            stayDetail.hasCoupon = hasCoupon;
+
+            ((StayDetailNetworkController) mPlaceDetailNetworkController).requestStayDetailInformation(stayDetail.index,//
+                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), stayDetail.nights);
         }
 
         @Override
@@ -1514,10 +1557,12 @@ public class StayDetailActivity extends PlaceDetailActivity
                 setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             }
 
+            StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
             if (isSuccess == true)
             {
-                mPlaceDetail.myWish = true;
-                int wishCount = ++mPlaceDetail.wishCount;
+                stayDetail.myWish = true;
+                int wishCount = ++stayDetail.wishCount;
                 mPlaceDetailLayout.setWishButtonCount(wishCount);
                 mPlaceDetailLayout.setWishButtonSelected(true);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.ADD);
@@ -1526,10 +1571,10 @@ public class StayDetailActivity extends PlaceDetailActivity
                 {
                     Map<String, String> params = new HashMap<>();
                     params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                    params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
+                    params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
                     params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                    params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                    params.put(AnalyticsManager.KeyType.CATEGORY, ((StayDetail) mPlaceDetail).categoryCode);
+                    params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                    params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.categoryCode);
 
                     if (mProvince == null)
                     {
@@ -1554,14 +1599,14 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     params.put(AnalyticsManager.KeyType.GRADE, ((StayDetail) mPlaceDetail).grade.name());
                     params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
-                    params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+                    params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
 
                     String listIndex = mPlaceDetail.entryPosition == -1 //
                         ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
 
                     params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                     params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                    params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+                    params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetail.benefit) ? "no" : "yes");
 
                     int nights = ((StayDetail) mPlaceDetail).nights;
                     SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights);
@@ -1573,15 +1618,15 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
                         AnalyticsManager.Category.NAVIGATION_,//
-                        Action.WISHLIST_ON, mPlaceDetail.name, params);
+                        Action.WISHLIST_ON, stayDetail.name, params);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
                 }
             } else
             {
-                mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);
-                mPlaceDetailLayout.setWishButtonSelected(mPlaceDetail.myWish);
+                mPlaceDetailLayout.setWishButtonCount(stayDetail.wishCount);
+                mPlaceDetailLayout.setWishButtonSelected(stayDetail.myWish);
 
                 if (Util.isTextEmpty(message) == true)
                 {
@@ -1609,20 +1654,22 @@ public class StayDetailActivity extends PlaceDetailActivity
                 setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             }
 
+            StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
             if (isSuccess == true)
             {
-                mPlaceDetail.myWish = false;
-                int wishCount = --mPlaceDetail.wishCount;
+                stayDetail.myWish = false;
+                int wishCount = --stayDetail.wishCount;
                 mPlaceDetailLayout.setWishButtonCount(wishCount);
                 mPlaceDetailLayout.setWishButtonSelected(false);
                 mPlaceDetailLayout.setUpdateWishPopup(PlaceDetailLayout.WishPopupState.DELETE);
 
                 Map<String, String> params = new HashMap<>();
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                params.put(AnalyticsManager.KeyType.NAME, mPlaceDetail.name);
+                params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
                 params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
-                params.put(AnalyticsManager.KeyType.COUNTRY, mPlaceDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.CATEGORY, ((StayDetail) mPlaceDetail).categoryCode);
+                params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.categoryCode);
 
                 if (mProvince == null)
                 {
@@ -1647,14 +1694,14 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 params.put(AnalyticsManager.KeyType.GRADE, ((StayDetail) mPlaceDetail).grade.name());
                 params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
-                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mPlaceDetail.ratingValue));
+                params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
 
                 String listIndex = mPlaceDetail.entryPosition == -1 //
                     ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mPlaceDetail.entryPosition);
 
                 params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                 params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(mPlaceDetail.benefit) ? "no" : "yes");
+                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetail.benefit) ? "no" : "yes");
 
                 int nights = ((StayDetail) mPlaceDetail).nights;
                 SaleTime checkOutSaleTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + nights);
@@ -1666,11 +1713,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION_,//
-                    Action.WISHLIST_OFF, mPlaceDetail.name, params);
+                    Action.WISHLIST_OFF, stayDetail.name, params);
             } else
             {
-                mPlaceDetailLayout.setWishButtonCount(mPlaceDetail.wishCount);
-                mPlaceDetailLayout.setWishButtonSelected(mPlaceDetail.myWish);
+                mPlaceDetailLayout.setWishButtonCount(stayDetail.wishCount);
+                mPlaceDetailLayout.setWishButtonSelected(stayDetail.myWish);
 
                 if (Util.isTextEmpty(message) == true)
                 {

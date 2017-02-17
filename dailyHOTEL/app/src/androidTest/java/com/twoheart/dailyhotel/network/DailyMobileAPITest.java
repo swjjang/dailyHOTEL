@@ -1741,7 +1741,7 @@ public class DailyMobileAPITest
                 String imageUrl = jsonObject.getString("imgUrl");
                 assertThat(imageUrl, isNotEmpty());
 
-                JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
+                JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPathMain");
                 assertThat(pathUrlJSONObject, notNullValue());
 
                 Iterator<String> iterator = pathUrlJSONObject.keys();
@@ -2783,7 +2783,7 @@ public class DailyMobileAPITest
                 String imageUrl = jsonObject.getString("imgUrl");
                 assertThat(imageUrl, isNotEmpty());
 
-                JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
+                JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPathMain");
                 assertThat(pathUrlJSONObject, notNullValue());
 
                 Iterator<String> iterator = pathUrlJSONObject.keys();

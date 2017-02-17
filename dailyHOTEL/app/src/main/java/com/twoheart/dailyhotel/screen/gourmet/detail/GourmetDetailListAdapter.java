@@ -17,12 +17,12 @@ import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GourmetDetailListAdapter extends BaseAdapter
@@ -104,6 +104,8 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         linearLayout.removeAllViews();
 
+        GourmetDetailParams gourmetDetailParams = mGourmetDetail.getGourmetDetailParmas();
+
         // 빈화면
         if (mDetailViews[0] == null)
         {
@@ -131,9 +133,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
         getAddressView(mDetailViews[2], mGourmetDetail);
         linearLayout.addView(mDetailViews[2]);
 
-        ArrayList<GourmetDetail.Pictogram> list = mGourmetDetail.getPictogramList();
+        List<GourmetDetail.Pictogram> pictogramList = mGourmetDetail.getPictogramList();
 
-        if (list != null && list.size() > 0)
+        if (pictogramList != null && pictogramList.size() > 0)
         {
             if (mDetailViews[3] == null)
             {
@@ -144,7 +146,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             linearLayout.addView(mDetailViews[3]);
         }
 
-        if (Util.isTextEmpty(mGourmetDetail.benefit) == false)
+        if (Util.isTextEmpty(gourmetDetailParams.benefit) == false)
         {
             // D Benefit
             if (mDetailViews[4] == null)
@@ -208,9 +210,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getTitleView(View view, final PlaceDetail placeDetail)
+    private View getTitleView(View view, final GourmetDetail gourmetDetail)
     {
-        GourmetDetail gourmetDetail = (GourmetDetail) placeDetail;
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
         mGourmetTitleLayout = view.findViewById(R.id.gourmetTitleLayout);
         mGourmetTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
@@ -218,35 +220,35 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 등급
         TextView gradeTextView = (TextView) view.findViewById(R.id.gourmetGradeTextView);
 
-        if (Util.isTextEmpty(gourmetDetail.category) == true)
+        if (Util.isTextEmpty(gourmetDetailParams.category) == true)
         {
             gradeTextView.setVisibility(View.GONE);
         } else
         {
             gradeTextView.setVisibility(View.VISIBLE);
-            gradeTextView.setText(gourmetDetail.category);
+            gradeTextView.setText(gourmetDetailParams.category);
         }
 
         // 소분류 등급
         TextView subGradeTextView = (TextView) view.findViewById(R.id.gourmetSubGradeTextView);
 
-        if (Util.isTextEmpty(gourmetDetail.subCategory) == true)
+        if (Util.isTextEmpty(gourmetDetailParams.categorySub) == true)
         {
             subGradeTextView.setVisibility(View.GONE);
         } else
         {
             subGradeTextView.setVisibility(View.VISIBLE);
-            subGradeTextView.setText(gourmetDetail.subCategory);
+            subGradeTextView.setText(gourmetDetailParams.categorySub);
         }
 
         // 호텔명
         TextView placeNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
-        placeNameTextView.setText(gourmetDetail.name);
+        placeNameTextView.setText(gourmetDetailParams.name);
 
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
         // 만족도
-        if (gourmetDetail.ratingValue == 0)
+        if (gourmetDetailParams.ratingShow == false)
         {
             satisfactionView.setVisibility(View.GONE);
         } else
@@ -254,13 +256,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
             satisfactionView.setVisibility(View.VISIBLE);
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             satisfactionView.setText(mContext.getString(R.string.label_gourmet_detail_satisfaction, //
-                gourmetDetail.ratingValue, decimalFormat.format(gourmetDetail.ratingPersons)));
+                gourmetDetailParams.ratingValue, decimalFormat.format(gourmetDetailParams.ratingPersons)));
         }
 
         // 할인 쿠폰
         View couponLayout = view.findViewById(R.id.couponLayout);
 
-        if (placeDetail.hasCoupon == true)
+        if (gourmetDetail.hasCoupon == true)
         {
             couponLayout.setVisibility(View.VISIBLE);
 
@@ -309,14 +311,16 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param placeDetail
      * @return
      */
-    private View getAddressView(final View view, PlaceDetail placeDetail)
+    private View getAddressView(final View view, GourmetDetail gourmetDetail)
     {
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
         // 주소지
         final TextView hotelAddressTextView = (TextView) view.findViewById(R.id.detailAddressTextView);
 
-        final String address = placeDetail.address;
+        final String address = gourmetDetailParams.address;
         hotelAddressTextView.setText(address);
 
         View clipAddress = view.findViewById(R.id.copyAddressView);
@@ -382,16 +386,16 @@ public class GourmetDetailListAdapter extends BaseAdapter
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
         gridLayout.removeAllViews();
 
-        ArrayList<GourmetDetail.Pictogram> list = gourmetDetail.getPictogramList();
+        List<GourmetDetail.Pictogram> pictogramList = gourmetDetail.getPictogramList();
 
-        boolean isSingleLine = list == null || list.size() <= GRID_COLUMN_COUNT ? true : false;
+        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT ? true : false;
 
-        for (GourmetDetail.Pictogram pictogram : list)
+        for (GourmetDetail.Pictogram pictogram : pictogramList)
         {
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int columnCount = list.size() % GRID_COLUMN_COUNT;
+        int columnCount = pictogramList.size() % GRID_COLUMN_COUNT;
 
         if (columnCount != 0)
         {
@@ -439,20 +443,22 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * @param view
      * @return
      */
-    private View getBenefitView(LayoutInflater layoutInflater, View view, PlaceDetail placeDetail)
+    private View getBenefitView(LayoutInflater layoutInflater, View view, GourmetDetail gourmetDetail)
     {
-        if (view == null || placeDetail == null)
+        if (view == null || gourmetDetail == null)
         {
             return view;
         }
 
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+
         final TextView benefitTitleTextView = (TextView) view.findViewById(R.id.benefitTitleTextView);
         final LinearLayout benefitMessagesLayout = (LinearLayout) view.findViewById(R.id.benefitMessagesLayout);
 
-        final String benefit = placeDetail.benefit;
+        final String benefit = gourmetDetailParams.benefit;
         benefitTitleTextView.setText(benefit);
 
-        List<String> mBenefitInformation = placeDetail.getBenefitInformation();
+        List<String> mBenefitInformation = gourmetDetail.getBenefitList();
 
         if (mBenefitInformation != null)
         {
@@ -483,17 +489,17 @@ public class GourmetDetailListAdapter extends BaseAdapter
             return viewGroup;
         }
 
-        ArrayList<DetailInformation> arrayList = placeDetail.getInformation();
+        List<DetailInformation> detailInformationList = placeDetail.getDetailList();
 
-        if (arrayList != null)
+        if (detailInformationList != null)
         {
             viewGroup.removeAllViews();
 
-            for (DetailInformation information : arrayList)
+            for (DetailInformation detailInformation : detailInformationList)
             {
                 ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 
-                makeInformationLayout(layoutInflater, childGroup, information);
+                makeInformationLayout(layoutInflater, childGroup, detailInformation);
 
                 viewGroup.addView(childGroup);
             }

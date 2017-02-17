@@ -18,12 +18,12 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
@@ -380,34 +380,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
         finish();
     }
 
-    protected void onWishButtonClick(PlaceType placeType, PlaceDetail placeDetail)
-    {
-        if (isLockUiComponent() == true || isFinishing() == true)
-        {
-            return;
-        }
-
-        if (placeDetail == null)
-        {
-            return;
-        }
-
-        lockUiComponent();
-
-        boolean isExpectSelected = !placeDetail.myWish;
-        int wishCount = isExpectSelected == true ? placeDetail.wishCount + 1 : placeDetail.wishCount - 1;
-        mPlaceDetailLayout.setWishButtonCount(wishCount);
-        mPlaceDetailLayout.setWishButtonSelected(isExpectSelected);
-
-        if (isExpectSelected == true)
-        {
-            mPlaceDetailNetworkController.requestAddWishList(placeType, placeDetail.index);
-        } else
-        {
-            mPlaceDetailNetworkController.requestRemoveWishList(placeType, placeDetail.index);
-        }
-    }
-
     protected void moveToAddSocialUserInformation(Customer user, String birthday)
     {
         Intent intent = AddProfileSocialActivity.newInstance(this, user, birthday);
@@ -569,9 +541,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (mDefaultImageUrl == null)
                     {
-                        if (mPlaceDetail.getImageInformationList() != null && mPlaceDetail.getImageInformationList().size() > 0)
+                        if (mPlaceDetail.getImageList() != null && mPlaceDetail.getImageList().size() > 0)
                         {
-                            mDefaultImageUrl = mPlaceDetail.getImageInformationList().get(0).url;
+                            ImageInformation imageInformation = (ImageInformation) mPlaceDetail.getImageList().get(0);
+                            mDefaultImageUrl = imageInformation.getImageUrl();
                         }
                     }
 
