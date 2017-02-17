@@ -500,7 +500,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initLayout(String placeName, String imageUrl, boolean isFromMap)
     {
-        setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
+        setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_gourmet_detail));
 
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
@@ -747,12 +747,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void hideProductInformationLayout(boolean isAnimation)
-    {
-        mOnEventListener.hideProductInformationLayout(isAnimation);
-    }
-
-    @Override
     protected void doBooking()
     {
         mOnEventListener.doBooking();
@@ -855,8 +849,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
-                mPlaceDetailLayout.hideWishButton();
+                // 딥링크 수정
+                GourmetProductListActivity.newInstance(this, mSaleTime, gourmetDetail, mOpenTicketIndex, null, null);
             }
         }
 
@@ -922,7 +916,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
-                                mOnEventListener.showProductInformationLayout();
+//                                mOnEventListener.showProductInformationLayout();
                             }
                         });
 
@@ -1082,43 +1076,52 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     GourmetDetailLayout.OnEventListener mOnEventListener = new GourmetDetailLayout.OnEventListener()
     {
         @Override
-        public void doBooking(TicketInformation ticketInformation)
+        public void onProductListClick()
         {
-            if (ticketInformation == null)
-            {
-                finish();
-                return;
-            }
+            GourmetProductListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, (GourmetDetail)mPlaceDetail, -1, mProvince, mArea);
 
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            mSelectedTicketInformation = ticketInformation;
-
-            if (DailyHotel.isLogin() == false)
-            {
-                startLoginActivity(AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
-            } else
-            {
-                lockUI();
-                mPlaceDetailNetworkController.requestProfile();
-            }
-
-            String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
+            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation));
+                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, null);
         }
+
+//        @Override
+//        public void onReservationClick(TicketInformation ticketInformation)
+//        {
+//            if (ticketInformation == null)
+//            {
+//                finish();
+//                return;
+//            }
+//
+//            if (lockUiComponentAndIsLockUiComponent() == true)
+//            {
+//                return;
+//            }
+//
+//            mSelectedTicketInformation = ticketInformation;
+//
+//            if (DailyHotel.isLogin() == false)
+//            {
+//                startLoginActivity(AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+//            } else
+//            {
+//                lockUI();
+//                mPlaceDetailNetworkController.requestProfile();
+//            }
+//
+//            String label = String.format("%s-%s", mPlaceDetail.name, mSelectedTicketInformation.name);
+//            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+//                , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketInformation));
+//        }
 
         @Override
         public void doBooking()
         {
-            doBooking(mSelectedTicketInformation);
         }
 
         @Override
-        public void downloadCoupon()
+        public void onDownloadCouponClick()
         {
             GourmetDetailActivity.this.downloadCoupon();
         }
@@ -1177,68 +1180,68 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             showCallDialog();
         }
 
-        @Override
-        public void showProductInformationLayout()
-        {
-            if (isLockUiComponent() == true || isFinishing() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            if (mPlaceDetailLayout != null)
-            {
-                mPlaceDetailLayout.showAnimationProductInformationLayout();
-                mPlaceDetailLayout.hideWishButtonAnimation();
-            }
-
-            if (Util.isOverAPI21() == true)
-            {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(getResources().getColor(R.color.textView_textColor_shadow_soldout));
-            }
-
-            releaseUiComponent();
-
-            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);
-            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, null);
-        }
-
-        @Override
-        public void hideProductInformationLayout(boolean isAnimation)
-        {
-            if (isLockUiComponent() == true || isFinishing() == true)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            if (mPlaceDetailLayout != null)
-            {
-                if (isAnimation == true)
-                {
-                    mPlaceDetailLayout.hideAnimationProductInformationLayout();
-                    mPlaceDetailLayout.showWishButtonAnimation();
-                } else
-                {
-                    mPlaceDetailLayout.hideProductInformationLayout();
-                    mPlaceDetailLayout.showWishButton();
-                }
-            }
-
-            if (Util.isOverAPI21() == true)
-            {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(getResources().getColor(R.color.white));
-            }
-
-            releaseUiComponent();
-        }
+//        @Override
+//        public void showProductInformationLayout()
+//        {
+//            if (isLockUiComponent() == true || isFinishing() == true)
+//            {
+//                return;
+//            }
+//
+//            lockUiComponent();
+//
+//            if (mPlaceDetailLayout != null)
+//            {
+//                mPlaceDetailLayout.showAnimationProductInformationLayout(0);
+//                mPlaceDetailLayout.hideWishButtonAnimation();
+//            }
+//
+//            if (Util.isOverAPI21() == true)
+//            {
+//                Window window = getWindow();
+//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//                window.setStatusBarColor(getResources().getColor(R.color.textView_textColor_shadow_soldout));
+//            }
+//
+//            releaseUiComponent();
+//
+//            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);
+//            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+//                , AnalyticsManager.Action.TICKET_TYPE_CLICKED, mPlaceDetail.name, null);
+//        }
+//
+//        @Override
+//        public void hideProductInformationLayout(boolean isAnimation)
+//        {
+//            if (isLockUiComponent() == true || isFinishing() == true)
+//            {
+//                return;
+//            }
+//
+//            lockUiComponent();
+//
+//            if (mPlaceDetailLayout != null)
+//            {
+//                if (isAnimation == true)
+//                {
+//                    mPlaceDetailLayout.hideAnimationProductInformationLayout();
+//                    mPlaceDetailLayout.showWishButtonAnimation();
+//                } else
+//                {
+//                    mPlaceDetailLayout.hideProductInformationLayout();
+//                    mPlaceDetailLayout.showWishButton();
+//                }
+//            }
+//
+//            if (Util.isOverAPI21() == true)
+//            {
+//                Window window = getWindow();
+//                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//                window.setStatusBarColor(getResources().getColor(R.color.white));
+//            }
+//
+//            releaseUiComponent();
+//        }
 
         @Override
         public void showMap()
@@ -1303,7 +1306,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onWishButtonClick()
+        public void onWishClick()
         {
             if (DailyHotel.isLogin() == false)
             {

@@ -413,6 +413,34 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
+    @Override
+    protected void onResume()
+    {
+        if (mPlaceDetailLayout != null)
+        {
+            hideProductInformationLayout(false);
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mPlaceDetailLayout != null)
+        {
+            switch (mPlaceDetailLayout.getBookingStatus())
+            {
+                case StayDetailLayout.STATUS_BOOKING:
+                case StayDetailLayout.STATUS_NONE:
+                    hideProductInformationLayout(true);
+                    return;
+            }
+        }
+
+        super.onBackPressed();
+    }
+
     private void initTransition()
     {
         if (mIsUsedMultiTransition == true)
@@ -767,7 +795,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    @Override
     protected void hideProductInformationLayout(boolean isAnimation)
     {
         mOnEventListener.hideProductInformationLayout(isAnimation);
@@ -879,7 +906,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.showProductInformationLayout(mOpenTicketIndex);
+                ((StayDetailLayout)mPlaceDetailLayout).showProductInformationLayout(mOpenTicketIndex);
                 mPlaceDetailLayout.hideWishButton();
             }
         }
@@ -1182,7 +1209,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             if (mPlaceDetailLayout != null)
             {
-                mPlaceDetailLayout.showAnimationProductInformationLayout();
+                ((StayDetailLayout)mPlaceDetailLayout).showAnimationProductInformationLayout();
                 mPlaceDetailLayout.hideWishButtonAnimation();
             }
 
@@ -1214,11 +1241,11 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 if (isAnimation == true)
                 {
-                    mPlaceDetailLayout.hideAnimationProductInformationLayout();
+                    ((StayDetailLayout)mPlaceDetailLayout).hideAnimationProductInformationLayout();
                     mPlaceDetailLayout.showWishButtonAnimation();
                 } else
                 {
-                    mPlaceDetailLayout.hideProductInformationLayout();
+                    ((StayDetailLayout)mPlaceDetailLayout).hideProductInformationLayout();
                     mPlaceDetailLayout.showWishButton();
                 }
             }
@@ -1302,7 +1329,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void downloadCoupon()
+        public void onDownloadCouponClick()
         {
             StayDetailActivity.this.downloadCoupon();
         }
@@ -1344,7 +1371,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onWishButtonClick()
+        public void onWishClick()
         {
             if (DailyHotel.isLogin() == false)
             {

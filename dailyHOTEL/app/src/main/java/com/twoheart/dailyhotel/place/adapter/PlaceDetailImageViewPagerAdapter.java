@@ -69,6 +69,16 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
         return POSITION_NONE;
     }
 
+    public ImageInformation getImageInformation(int position)
+    {
+        if (mImageInformationList == null)
+        {
+            return null;
+        }
+
+        return mImageInformationList.get(position);
+    }
+
     @Override
     public int getCount()
     {

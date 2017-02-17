@@ -476,7 +476,7 @@ public class HomeLayout extends BaseLayout
             }
         });
 
-        layout.addView(mHomeRecommendationLayout);
+        layout.addView(mHomeRecommendationLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         setRecommendationData(null, false);
     }

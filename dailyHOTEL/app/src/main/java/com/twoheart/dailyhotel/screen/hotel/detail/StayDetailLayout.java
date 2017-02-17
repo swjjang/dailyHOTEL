@@ -1,10 +1,17 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ImageInformation;
@@ -15,6 +22,8 @@ import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -27,6 +36,8 @@ import java.util.ArrayList;
  */
 public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.OnCheckedChangeListener
 {
+    private static final int PRODUCT_VIEW_DURATION = 250;
+
     public static final int VIEW_AVERAGE_PRICE = 0;
     public static final int VIEW_TOTAL_PRICE = 1;
 
@@ -34,18 +45,66 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     RoomInformation mSelectedRoomInformation;
 
     StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
+    protected RecyclerView mProductTypeRecyclerView;
+    protected View mProductTypeLayout;
+    protected View mProductTypeBackgroundView;
+
+    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
+    private ObjectAnimator mObjectAnimator;
+    private AlphaAnimation mAlphaAnimation;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
         void doBooking(RoomInformation roomInformation);
 
         void onChangedViewPrice(int type);
+
+        void showProductInformationLayout();
+
+        void hideProductInformationLayout(boolean isAnimation);
     }
 
     public StayDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
+
+    @Override
+    protected void initLayout(View view)
+    {
+        super.initLayout(view);
+
+        mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
+
+        TextView productTypeTextView = (TextView) mProductTypeLayout.findViewById(R.id.productTypeTextView);
+
+        productTypeTextView.setText(getProductTypeTitle());
+        productTypeTextView.setClickable(true);
+
+        mPriceOptionLayout = mProductTypeLayout.findViewById(R.id.priceOptionLayout);
+        mPriceRadioGroup = (RadioGroup) mPriceOptionLayout.findViewById(R.id.priceRadioGroup);
+
+        mPriceOptionLayout.setVisibility(View.GONE);
+
+        mProductTypeRecyclerView = (RecyclerView) mProductTypeLayout.findViewById(R.id.productTypeRecyclerView);
+        mProductTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        EdgeEffectColor.setEdgeGlowColor(mProductTypeRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        mProductTypeLayout.setVisibility(View.INVISIBLE);
+
+        mProductTypeBackgroundView = view.findViewById(R.id.productTypeBackgroundView);
+        mProductTypeBackgroundView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).hideProductInformationLayout(true);
+            }
+        });
+
+        hideProductInformationLayout();
+    }
+
 
     @Override
     protected String getProductTypeTitle()
@@ -287,7 +346,6 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         }
     }
 
-    @Override
     public void setSelectProduct(int index)
     {
         if (mRoomTypeListAdapter == null)
@@ -297,16 +355,6 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         int position = mRoomTypeListAdapter.setSelectIndex(index);
         mProductTypeRecyclerView.scrollToPosition(position);
-    }
-
-    @Override
-    public void hideAnimationProductInformationLayout()
-    {
-        super.hideAnimationProductInformationLayout();
-        showWishButtonAnimation();
-
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
     }
 
     @Override
@@ -333,5 +381,435 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         mRoomTypeListAdapter.setChangedViewPrice(type);
         mRoomTypeListAdapter.notifyDataSetChanged();
+    }
+
+    void setProductInformationLayoutEnabled(boolean enabled)
+    {
+        mProductTypeLayout.setEnabled(enabled);
+        mProductTypeRecyclerView.setEnabled(enabled);
+        mProductTypeBackgroundView.setEnabled(enabled);
+    }
+
+    public void showProductInformationLayout(int index)
+    {
+        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        if (mObjectAnimator != null)
+        {
+            if (mObjectAnimator.isRunning() == true)
+            {
+                mObjectAnimator.cancel();
+                mObjectAnimator.removeAllListeners();
+            }
+
+            mObjectAnimator = null;
+        }
+
+        mProductTypeBackgroundView.setAnimation(null);
+        mProductTypeLayout.setAnimation(null);
+
+        mProductTypeBackgroundView.setVisibility(View.VISIBLE);
+
+        mProductTypeLayout.setVisibility(View.VISIBLE);
+
+        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+        mAnimationState = Constants.ANIMATION_STATE.END;
+
+        setProductInformationLayoutEnabled(true);
+
+        setBookingStatus(STATUS_BOOKING);
+
+        setSelectProduct(index);
+    }
+
+    public void hideProductInformationLayout()
+    {
+        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        if (mObjectAnimator != null)
+        {
+            if (mObjectAnimator.isRunning() == true)
+            {
+                mObjectAnimator.cancel();
+                mObjectAnimator.removeAllListeners();
+            }
+
+            mObjectAnimator = null;
+        }
+
+        mProductTypeBackgroundView.setAnimation(null);
+        mProductTypeLayout.setAnimation(null);
+
+        mProductTypeBackgroundView.setVisibility(View.GONE);
+
+        if (Util.isOverAPI12() == true)
+        {
+            mProductTypeLayout.setVisibility(View.INVISIBLE);
+        } else
+        {
+            mProductTypeLayout.setVisibility(View.GONE);
+        }
+
+        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+        mAnimationState = Constants.ANIMATION_STATE.END;
+    }
+
+    public void showAnimationProductInformationLayout()
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        setBookingStatus(STATUS_NONE);
+
+        if (Util.isOverAPI12() == true)
+        {
+            final float y = mBottomLayout.getTop();
+
+            if (mObjectAnimator != null)
+            {
+                if (mObjectAnimator.isRunning() == true)
+                {
+                    mObjectAnimator.cancel();
+                    mObjectAnimator.removeAllListeners();
+                }
+
+                mObjectAnimator = null;
+            }
+
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mProductTypeLayout.getHeight();
+            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop() - height);
+            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
+
+            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    if (mProductTypeLayout.getVisibility() != View.VISIBLE)
+                    {
+                        mProductTypeLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
+
+                        setProductInformationLayoutEnabled(true);
+
+                        setBookingStatus(STATUS_BOOKING);
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mObjectAnimator.start();
+        } else
+        {
+            if (mProductTypeLayout != null && mProductTypeLayout.getVisibility() != View.VISIBLE)
+            {
+                mProductTypeLayout.setVisibility(View.VISIBLE);
+
+                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                mAnimationState = Constants.ANIMATION_STATE.END;
+
+                setProductInformationLayoutEnabled(true);
+
+                setBookingStatus(STATUS_BOOKING);
+            }
+        }
+
+        showAnimationFadeOut();
+    }
+
+    public void showAnimationProductInformationLayout(float dy)
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        {
+            return;
+        }
+
+        setBookingStatus(STATUS_NONE);
+
+        if (Util.isOverAPI12() == true)
+        {
+            final float y = mBottomLayout.getTop();
+
+            if (mObjectAnimator != null)
+            {
+                if (mObjectAnimator.isRunning() == true)
+                {
+                    mObjectAnimator.cancel();
+                    mObjectAnimator.removeAllListeners();
+                }
+
+                mObjectAnimator = null;
+            }
+
+            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
+            int height = mProductTypeLayout.getHeight();
+            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, dy);
+            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
+
+            mObjectAnimator.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+                    if (mProductTypeLayout.getVisibility() != View.VISIBLE)
+                    {
+                        mProductTypeLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    mAnimationState = Constants.ANIMATION_STATE.START;
+                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                    {
+                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                        mAnimationState = Constants.ANIMATION_STATE.END;
+
+                        setProductInformationLayoutEnabled(true);
+
+                        setBookingStatus(STATUS_BOOKING);
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
+            mObjectAnimator.start();
+        } else
+        {
+            if (mProductTypeLayout != null && mProductTypeLayout.getVisibility() != View.VISIBLE)
+            {
+                mProductTypeLayout.setVisibility(View.VISIBLE);
+
+                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
+                mAnimationState = Constants.ANIMATION_STATE.END;
+
+                setProductInformationLayoutEnabled(true);
+
+                setBookingStatus(STATUS_BOOKING);
+            }
+        }
+
+        showAnimationFadeOut();
+    }
+
+    public void hideAnimationProductInformationLayout()
+    {
+        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
+        {
+            return;
+        }
+
+        if (mPlaceDetail == null)
+        {
+            Util.restartApp(mContext);
+            return;
+        }
+
+        setBookingStatus(STATUS_NONE);
+
+        final float y = mProductTypeLayout.getY();
+
+        if (mObjectAnimator != null)
+        {
+            if (mObjectAnimator.isRunning() == true)
+            {
+                mObjectAnimator.cancel();
+                mObjectAnimator.removeAllListeners();
+            }
+
+            mObjectAnimator = null;
+        }
+
+        mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
+        mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
+
+        mObjectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.START;
+                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
+
+                setProductInformationLayoutEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
+                {
+                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
+                    mAnimationState = Constants.ANIMATION_STATE.END;
+
+                    ((OnEventListener) mOnEventListener).hideProductInformationLayout(false);
+
+                    setBookingStatus(STATUS_SELECT_PRODUCT);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+
+        mObjectAnimator.start();
+
+        showAnimationFadeIn();
+        showWishButtonAnimation();
+
+        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
+    }
+
+    /**
+     * 점점 밝아짐.
+     */
+    private void showAnimationFadeIn()
+    {
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        if (mProductTypeBackgroundView != null)
+        {
+            mProductTypeBackgroundView.startAnimation(mAlphaAnimation);
+        }
+    }
+
+    /**
+     * 점점 어두워짐.
+     */
+    private void showAnimationFadeOut()
+    {
+        if (mAlphaAnimation != null)
+        {
+            if (mAlphaAnimation.hasEnded() == false)
+            {
+                mAlphaAnimation.cancel();
+            }
+
+            mAlphaAnimation = null;
+        }
+
+        mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        mAlphaAnimation.setDuration(300);
+        mAlphaAnimation.setFillBefore(true);
+        mAlphaAnimation.setFillAfter(true);
+
+        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        {
+            @Override
+            public void onAnimationStart(Animation animation)
+            {
+                if (mProductTypeBackgroundView.getVisibility() != View.VISIBLE)
+                {
+                    mProductTypeBackgroundView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation)
+            {
+            }
+        });
+
+        if (mProductTypeBackgroundView != null)
+        {
+            mProductTypeBackgroundView.startAnimation(mAlphaAnimation);
+        }
     }
 }

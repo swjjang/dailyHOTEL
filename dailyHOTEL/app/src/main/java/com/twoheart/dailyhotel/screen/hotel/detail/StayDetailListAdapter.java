@@ -254,7 +254,7 @@ public class StayDetailListAdapter extends BaseAdapter
                 @Override
                 public void onClick(View v)
                 {
-                    mOnEventListener.downloadCoupon();
+                    mOnEventListener.onDownloadCouponClick();
                 }
             });
         } else

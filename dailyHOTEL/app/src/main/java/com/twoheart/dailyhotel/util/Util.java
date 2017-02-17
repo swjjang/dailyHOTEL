@@ -1610,6 +1610,21 @@ public class Util implements Constants
         return width;
     }
 
+    /**
+     * textView에 텍스트가 들어가 있어야 한다.
+     *
+     * @param textView
+     * @param textViewWidth
+     * @return
+     */
+    public static float getTextViewHeight(TextView textView, int textViewWidth)
+    {
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.AT_MOST);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        textView.measure(widthMeasureSpec, heightMeasureSpec);
+        return textView.getMeasuredHeight();
+    }
+
     public static String makeIntroImageFileName(String version)
     {
         if (Util.isTextEmpty(version) == true)

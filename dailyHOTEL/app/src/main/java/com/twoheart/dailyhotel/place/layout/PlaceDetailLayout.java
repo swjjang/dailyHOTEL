@@ -64,7 +64,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     private static final int VIEW_COUNT = 4;
 
     private static final int BOOKING_TEXT_VIEW_DURATION = 150;
-    private static final int PRODUCT_VIEW_DURATION = 250;
+
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
@@ -82,14 +82,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected int mImageHeight;
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
 
-    protected RecyclerView mProductTypeRecyclerView;
-    protected View mProductTypeLayout;
-    private View mBottomLayout;
-    protected View mProductTypeBackgroundView;
-    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    private ObjectAnimator mObjectAnimator;
-    private AlphaAnimation mAlphaAnimation;
+    protected View mBottomLayout;
+
+
     private AnimatorSet mWishPopupAnimatorSet;
     int mStatusBarHeight;
 
@@ -122,10 +117,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void onConciergeClick();
 
-        void showProductInformationLayout();
-
-        void hideProductInformationLayout(boolean isAnimation);
-
         void showMap();
 
         void finish();
@@ -138,9 +129,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void doBooking();
 
-        void downloadCoupon();
+        void onDownloadCouponClick();
 
-        void onWishButtonClick();
+        void onWishClick();
 
         void releaseUiComponent();
     }
@@ -150,8 +141,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected abstract View getTitleLayout();
 
     public abstract void setBookingStatus(int status);
-
-    public abstract void setSelectProduct(int index);
 
     public PlaceDetailLayout(Context context, OnBaseEventListener listener)
     {
@@ -180,6 +169,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
 
+        mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
         mDailyLineIndicator.setViewPager(mViewPager);
 
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
@@ -191,37 +181,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = view.findViewById(R.id.moreIconView);
-
-        mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
-
-        mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
-
-        TextView productTypeTextView = (TextView) mProductTypeLayout.findViewById(R.id.productTypeTextView);
-
-        productTypeTextView.setText(getProductTypeTitle());
-        productTypeTextView.setClickable(true);
-
-        mPriceOptionLayout = mProductTypeLayout.findViewById(R.id.priceOptionLayout);
-        mPriceRadioGroup = (RadioGroup) mPriceOptionLayout.findViewById(R.id.priceRadioGroup);
-
-        mPriceOptionLayout.setVisibility(View.GONE);
-
-        mProductTypeRecyclerView = (RecyclerView) mProductTypeLayout.findViewById(R.id.productTypeRecyclerView);
-        mProductTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        EdgeEffectColor.setEdgeGlowColor(mProductTypeRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-        mProductTypeLayout.setVisibility(View.INVISIBLE);
-
         mBottomLayout = view.findViewById(R.id.bottomLayout);
-
-        mProductTypeBackgroundView = view.findViewById(R.id.productTypeBackgroundView);
-        mProductTypeBackgroundView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).hideProductInformationLayout(true);
-            }
-        });
 
         mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
         mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
@@ -235,12 +195,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onClick(View v)
             {
-                ((OnEventListener) mOnEventListener).onWishButtonClick();
+                ((OnEventListener) mOnEventListener).onWishClick();
             }
         });
 
         setBookingStatus(STATUS_NONE);
-        hideProductInformationLayout();
         showWishButton();
         setUpdateWishPopup(WishPopupState.GONE);
     }
@@ -409,340 +368,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         return 0;
     }
 
-    void setProductInformationLayoutEnabled(boolean enabled)
-    {
-        mProductTypeLayout.setEnabled(enabled);
-        mProductTypeRecyclerView.setEnabled(enabled);
-        mProductTypeBackgroundView.setEnabled(enabled);
-    }
 
-    public void showProductInformationLayout(int index)
-    {
-        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        if (mObjectAnimator != null)
-        {
-            if (mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-                mObjectAnimator.removeAllListeners();
-            }
-
-            mObjectAnimator = null;
-        }
-
-        mProductTypeBackgroundView.setAnimation(null);
-        mProductTypeLayout.setAnimation(null);
-
-        mProductTypeBackgroundView.setVisibility(View.VISIBLE);
-
-        mProductTypeLayout.setVisibility(View.VISIBLE);
-
-        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-        mAnimationState = Constants.ANIMATION_STATE.END;
-
-        setProductInformationLayoutEnabled(true);
-
-        setBookingStatus(STATUS_BOOKING);
-
-        setSelectProduct(index);
-    }
-
-    public void hideProductInformationLayout()
-    {
-        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        if (mObjectAnimator != null)
-        {
-            if (mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-                mObjectAnimator.removeAllListeners();
-            }
-
-            mObjectAnimator = null;
-        }
-
-        mProductTypeBackgroundView.setAnimation(null);
-        mProductTypeLayout.setAnimation(null);
-
-        mProductTypeBackgroundView.setVisibility(View.GONE);
-
-        if (Util.isOverAPI12() == true)
-        {
-            mProductTypeLayout.setVisibility(View.INVISIBLE);
-        } else
-        {
-            mProductTypeLayout.setVisibility(View.GONE);
-        }
-
-        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-        mAnimationState = Constants.ANIMATION_STATE.END;
-    }
-
-    public void showAnimationProductInformationLayout()
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-        {
-            return;
-        }
-
-        setBookingStatus(STATUS_NONE);
-
-        if (Util.isOverAPI12() == true)
-        {
-            final float y = mBottomLayout.getTop();
-
-            if (mObjectAnimator != null)
-            {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
-                }
-
-                mObjectAnimator = null;
-            }
-
-            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-            int height = mProductTypeLayout.getHeight();
-            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
-
-            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop() - height);
-            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
-
-            mObjectAnimator.addListener(new AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    if (mProductTypeLayout.getVisibility() != View.VISIBLE)
-                    {
-                        mProductTypeLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-
-                        setProductInformationLayoutEnabled(true);
-
-                        setBookingStatus(STATUS_BOOKING);
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mObjectAnimator.start();
-        } else
-        {
-            if (mProductTypeLayout != null && mProductTypeLayout.getVisibility() != View.VISIBLE)
-            {
-                mProductTypeLayout.setVisibility(View.VISIBLE);
-
-                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                mAnimationState = Constants.ANIMATION_STATE.END;
-
-                setProductInformationLayoutEnabled(true);
-
-                setBookingStatus(STATUS_BOOKING);
-            }
-        }
-
-        showAnimationFadeOut();
-    }
-
-    public void hideAnimationProductInformationLayout()
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
-        {
-            return;
-        }
-
-        if (mPlaceDetail == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        setBookingStatus(STATUS_NONE);
-
-        final float y = mProductTypeLayout.getY();
-
-        if (mObjectAnimator != null)
-        {
-            if (mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-                mObjectAnimator.removeAllListeners();
-            }
-
-            mObjectAnimator = null;
-        }
-
-        mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
-        mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
-
-        mObjectAnimator.addListener(new AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                mAnimationState = Constants.ANIMATION_STATE.START;
-                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                setProductInformationLayoutEnabled(false);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                {
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                    mAnimationState = Constants.ANIMATION_STATE.END;
-
-                    ((OnEventListener) mOnEventListener).hideProductInformationLayout(false);
-
-                    setBookingStatus(STATUS_SELECT_PRODUCT);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-            }
-        });
-
-        mObjectAnimator.start();
-
-        showAnimationFadeIn();
-    }
-
-    /**
-     * 점점 밝아짐.
-     */
-    private void showAnimationFadeIn()
-    {
-        if (mAlphaAnimation != null)
-        {
-            if (mAlphaAnimation.hasEnded() == false)
-            {
-                mAlphaAnimation.cancel();
-            }
-
-            mAlphaAnimation = null;
-        }
-
-        mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(300);
-        mAlphaAnimation.setFillBefore(true);
-        mAlphaAnimation.setFillAfter(true);
-
-        mAlphaAnimation.setAnimationListener(new AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-            }
-        });
-
-        if (mProductTypeBackgroundView != null)
-        {
-            mProductTypeBackgroundView.startAnimation(mAlphaAnimation);
-        }
-    }
-
-    /**
-     * 점점 어두워짐.
-     */
-    private void showAnimationFadeOut()
-    {
-        if (mAlphaAnimation != null)
-        {
-            if (mAlphaAnimation.hasEnded() == false)
-            {
-                mAlphaAnimation.cancel();
-            }
-
-            mAlphaAnimation = null;
-        }
-
-        mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        mAlphaAnimation.setDuration(300);
-        mAlphaAnimation.setFillBefore(true);
-        mAlphaAnimation.setFillAfter(true);
-
-        mAlphaAnimation.setAnimationListener(new AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(Animation animation)
-            {
-                if (mProductTypeBackgroundView.getVisibility() != View.VISIBLE)
-                {
-                    mProductTypeBackgroundView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-            }
-        });
-
-        if (mProductTypeBackgroundView != null)
-        {
-            mProductTypeBackgroundView.startAnimation(mAlphaAnimation);
-        }
-    }
 
     public void setImageInformation(String description)
     {

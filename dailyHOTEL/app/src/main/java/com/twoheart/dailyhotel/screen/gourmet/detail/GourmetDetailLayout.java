@@ -2,8 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
@@ -14,7 +12,6 @@ import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -23,11 +20,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     private GourmetDetailListAdapter mListAdapter;
     TicketInformation mSelectedTicketInformation;
 
-    GourmetDetailTicketTypeListAdapter mTicketTypeListAdapter;
-
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
-        void doBooking(TicketInformation ticketInformation);
+        void onProductListClick();
     }
 
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
@@ -99,8 +94,6 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
 
         setCurrentImage(imagePosition);
-
-        hideProductInformationLayout();
         showWishButton();
 
         // SOLD OUT 판단 조건.
@@ -120,90 +113,19 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 @Override
                 public void onClick(View v)
                 {
-                    switch (mBookingStatus)
-                    {
-                        case STATUS_BOOKING:
-                            ((GourmetDetailLayout.OnEventListener) mOnEventListener).doBooking(mSelectedTicketInformation);
-                            break;
-
-                        case STATUS_SELECT_PRODUCT:
-                            ((OnEventListener) mOnEventListener).showProductInformationLayout();
-                            break;
-                    }
+                    ((OnEventListener) mOnEventListener).onProductListClick();
                 }
             });
 
             mSoldoutTextView.setVisibility(View.GONE);
 
             setBookingStatus(STATUS_SELECT_PRODUCT);
-
-            updateTicketInformationLayout(ticketInformationList);
         }
 
         setWishButtonSelected(gourmetDetail.myWish);
         setWishButtonCount(gourmetDetail.wishCount);
 
         mListAdapter.notifyDataSetChanged();
-    }
-
-    protected void updateTicketInformationLayout(ArrayList<TicketInformation> ticketInformationList)
-    {
-        if (ticketInformationList == null || ticketInformationList.size() == 0)
-        {
-            return;
-        }
-
-        // 처음 세팅하는 경우 객실 타입 세팅
-        if (mTicketTypeListAdapter == null)
-        {
-            mSelectedTicketInformation = ticketInformationList.get(0);
-
-            mTicketTypeListAdapter = new GourmetDetailTicketTypeListAdapter(mContext, ticketInformationList, new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    int position = mProductTypeRecyclerView.getChildAdapterPosition(v);
-
-                    if (position < 0)
-                    {
-                        return;
-                    }
-
-                    mSelectedTicketInformation = mTicketTypeListAdapter.getItem(position);
-                    mTicketTypeListAdapter.setSelected(position);
-                    mTicketTypeListAdapter.notifyDataSetChanged();
-
-                    AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                        , AnalyticsManager.Action.TICKET_TYPE_ITEM_CLICKED, mSelectedTicketInformation.name, null);
-                }
-            });
-        } else
-        {
-            // 재세팅 하는 경우
-            mSelectedTicketInformation = ticketInformationList.get(0);
-
-            mTicketTypeListAdapter.addAll(ticketInformationList);
-            mTicketTypeListAdapter.setSelected(0);
-            mTicketTypeListAdapter.notifyDataSetChanged();
-        }
-
-        // 객실 개수로 높이를 재지정해준다.
-        int size = ticketInformationList.size();
-        int height = Util.dpToPx(mContext, 100) * size;
-        final int maxHeight = Util.dpToPx(mContext, 350);
-        ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
-
-        if (height > maxHeight)
-        {
-            layoutParams.height = maxHeight;
-        } else
-        {
-            layoutParams.height = height;
-        }
-
-        mProductTypeRecyclerView.setLayoutParams(layoutParams);
-        mProductTypeRecyclerView.setAdapter(mTicketTypeListAdapter);
     }
 
     @Override
@@ -255,27 +177,5 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 break;
             }
         }
-    }
-
-    @Override
-    public void setSelectProduct(int index)
-    {
-        if (mTicketTypeListAdapter == null)
-        {
-            return;
-        }
-
-        int position = mTicketTypeListAdapter.setSelectIndex(index);
-        mProductTypeRecyclerView.scrollToPosition(position);
-    }
-
-    @Override
-    public void hideAnimationProductInformationLayout()
-    {
-        super.hideAnimationProductInformationLayout();
-        showWishButtonAnimation();
-
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-            , AnalyticsManager.Action.TICKET_TYPE_CANCEL_CLICKED, mPlaceDetail.name, null);
     }
 }
