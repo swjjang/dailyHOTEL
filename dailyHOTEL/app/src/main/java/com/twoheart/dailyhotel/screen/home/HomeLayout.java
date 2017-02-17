@@ -647,37 +647,8 @@ public class HomeLayout extends BaseLayout
         mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
         mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNestedScrollView.setOnScrollChangeListener(mOnScrollChangeListener);
-        mNestedScrollView.addOnLayoutChangeListener(new View.OnLayoutChangeListener()
-        {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
-            {
-                if (mTopButtonLayout == null) {
-                    return;
-                }
-
-                boolean isCanScroll = false;
-
-                View child = ((NestedScrollView) v).getChildAt(0);
-                if (child != null)
-                {
-                    int childHeight = child.getHeight();
-                    int topButtonHeight = mTopButtonLayout.getHeight();
-
-                    isCanScroll = v.getHeight() < childHeight + v.getPaddingTop() + v.getPaddingBottom() - topButtonHeight;
-                }
-
-                ExLog.d("isCanScroll : " + isCanScroll);
-
-                if (isCanScroll == true)
-                {
-                    mTopButtonLayout.setVisibility(View.VISIBLE);
-                } else
-                {
-                    mTopButtonLayout.setVisibility(View.GONE);
-                }
-            }
-        });
+        mNestedScrollView.removeOnLayoutChangeListener(mOnLayoutChangeListener);
+        mNestedScrollView.addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     // Event area
@@ -1392,6 +1363,39 @@ public class HomeLayout extends BaseLayout
             } else
             {
                 mSwipeRefreshLayout.setEnabled(false);
+            }
+        }
+    };
+
+    private View.OnLayoutChangeListener mOnLayoutChangeListener = new View.OnLayoutChangeListener()
+    {
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
+        {
+            if (mTopButtonLayout == null)
+            {
+                return;
+            }
+
+            boolean isCanScroll = false;
+
+            View child = ((NestedScrollView) v).getChildAt(0);
+            if (child != null)
+            {
+                int childHeight = child.getHeight();
+                int topButtonHeight = mTopButtonLayout.getHeight();
+
+                isCanScroll = v.getHeight() < childHeight + v.getPaddingTop() + v.getPaddingBottom() - topButtonHeight;
+            }
+
+            ExLog.d("isCanScroll : " + isCanScroll);
+
+            if (isCanScroll == true)
+            {
+                mTopButtonLayout.setVisibility(View.VISIBLE);
+            } else
+            {
+                mTopButtonLayout.setVisibility(View.GONE);
             }
         }
     };
