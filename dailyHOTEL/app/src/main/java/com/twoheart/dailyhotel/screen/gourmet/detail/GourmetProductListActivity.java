@@ -41,7 +41,7 @@ public class GourmetProductListActivity extends BaseActivity
     private Province mProvince;
     private String mArea;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, TicketInformation ticketInformation, Province province, String area)
+    public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex, Province province, String area)
     {
         Intent intent = new Intent(context, GourmetProductDetailActivity.class);
 

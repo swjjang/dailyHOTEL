@@ -22,9 +22,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
-        void onProductDetailClick(TicketInformation ticketInformation);
-
-        void onReservationClick(TicketInformation ticketInformation);
+        void onProductListClick();
     }
 
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
@@ -115,24 +113,13 @@ public class GourmetDetailLayout extends PlaceDetailLayout
                 @Override
                 public void onClick(View v)
                 {
-                    switch (mBookingStatus)
-                    {
-                        case STATUS_BOOKING:
-                            //                            ((GourmetDetailLayout.OnEventListener) mOnEventListener).doBooking(mSelectedTicketInformation);
-                            break;
-
-                        case STATUS_SELECT_PRODUCT:
-                            ((OnEventListener) mOnEventListener).showProductInformationLayout();
-                            break;
-                    }
+                    ((OnEventListener) mOnEventListener).onProductListClick();
                 }
             });
 
             mSoldoutTextView.setVisibility(View.GONE);
 
             setBookingStatus(STATUS_SELECT_PRODUCT);
-
-            updateTicketInformationLayout(ticketInformationList);
         }
 
         setWishButtonSelected(gourmetDetail.myWish);

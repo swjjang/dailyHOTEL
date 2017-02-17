@@ -59,6 +59,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         void doBooking(RoomInformation roomInformation);
 
         void onChangedViewPrice(int type);
+
+        void showProductInformationLayout();
+
+        void hideProductInformationLayout(boolean isAnimation);
     }
 
     public StayDetailLayout(Context context, OnBaseEventListener listener)
@@ -70,8 +74,6 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
     protected void initLayout(View view)
     {
         super.initLayout(view);
-
-        mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
 
         mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
 
@@ -344,7 +346,6 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         }
     }
 
-    @Override
     public void setSelectProduct(int index)
     {
         if (mRoomTypeListAdapter == null)

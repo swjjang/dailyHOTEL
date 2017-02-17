@@ -117,10 +117,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void onConciergeClick();
 
-        void showProductInformationLayout();
-
-        void hideProductInformationLayout(boolean isAnimation);
-
         void showMap();
 
         void finish();
@@ -173,6 +169,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
 
+        mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
         mDailyLineIndicator.setViewPager(mViewPager);
 
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
@@ -184,7 +181,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = view.findViewById(R.id.moreIconView);
-
         mBottomLayout = view.findViewById(R.id.bottomLayout);
 
         mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);

@@ -79,8 +79,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void hideProductInformationLayout(boolean isAnimation);
-
     protected abstract void doBooking();
 
     protected abstract void downloadCoupon();
@@ -157,8 +155,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mPlaceDetailLayout != null)
         {
-            hideProductInformationLayout(false);
-
             if (mPlaceDetailLayout.getBookingStatus() != PlaceDetailLayout.STATUS_SOLD_OUT)
             {
                 mPlaceDetailLayout.setBookingStatus(PlaceDetailLayout.STATUS_SELECT_PRODUCT);
@@ -243,14 +239,6 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mPlaceDetailLayout != null)
         {
-            switch (mPlaceDetailLayout.getBookingStatus())
-            {
-                case StayDetailLayout.STATUS_BOOKING:
-                case StayDetailLayout.STATUS_NONE:
-                    hideProductInformationLayout(true);
-                    return;
-            }
-
             if (mIsUsedMultiTransition == true)
             {
                 if (mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
