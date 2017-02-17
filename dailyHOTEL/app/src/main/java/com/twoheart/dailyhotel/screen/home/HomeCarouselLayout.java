@@ -29,7 +29,6 @@ public class HomeCarouselLayout extends LinearLayout
 
     private Context mContext;
     private DailyTextView mTitleTextView;
-    private DailyTextView mCountTextView;
     private DailyTextView mViewAllTextView;
     OnCarouselListener mCarouselListenter;
     private RecyclerView mRecyclerView;
@@ -84,7 +83,6 @@ public class HomeCarouselLayout extends LinearLayout
         setVisibility(View.GONE);
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
-        mCountTextView = (DailyTextView) view.findViewById(R.id.countTextView);
         mViewAllTextView = (DailyTextView) view.findViewById(R.id.viewAllTextView);
 
         mViewAllTextView.setOnClickListener(new OnClickListener()
