@@ -755,6 +755,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
             Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, saleTime, 1, mPlaceBookingDetail.placeIndex, 0, false, false);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
         @Override

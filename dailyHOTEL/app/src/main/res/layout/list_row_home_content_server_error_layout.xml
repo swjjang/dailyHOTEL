@@ -5,7 +5,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="1dp"
         android:background="@color/default_line_ce7e7e7"/>
 
     <com.twoheart.dailyhotel.widget.DailyImageView
@@ -46,14 +46,15 @@
         android:id="@+id/retryTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/errorTextView2"
+        android:layout_alignStart="@+id/errorTextView2"
+        android:layout_below="@+id/errorTextView2"
+        android:layout_marginTop="3dp"
         android:gravity="center_vertical"
         android:minHeight="19dp"
         android:text="@string/label_home_retry_button_text"
         android:textColor="@color/default_text_cb70038"
         android:textSize="13dp"
-        app:style="Medium"
-        android:layout_below="@+id/errorTextView2"
-        android:layout_alignLeft="@+id/errorTextView2"
-        android:layout_alignStart="@+id/errorTextView2"/>
+        app:style="Medium"/>
 
 </merge>

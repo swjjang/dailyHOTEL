@@ -544,6 +544,8 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
             Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, saleTime, mPlaceBookingDetail.placeIndex, 0, false, false);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
         @Override
