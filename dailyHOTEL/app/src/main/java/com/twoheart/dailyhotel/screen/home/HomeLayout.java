@@ -647,7 +647,6 @@ public class HomeLayout extends BaseLayout
         mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
         mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNestedScrollView.setOnScrollChangeListener(mOnScrollChangeListener);
-        mNestedScrollView.removeOnLayoutChangeListener(mOnLayoutChangeListener);
         mNestedScrollView.addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
@@ -1232,6 +1231,16 @@ public class HomeLayout extends BaseLayout
                 }
             }, 50);
         }
+    }
+
+    public void removeOnLayoutChangeListener()
+    {
+        if (mNestedScrollView == null)
+        {
+            return;
+        }
+
+        mNestedScrollView.removeOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     Drawable getRotateDrawable(Drawable drawable, final float degrees)
