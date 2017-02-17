@@ -167,6 +167,17 @@ public class HomeFragment extends BaseFragment
     }
 
     @Override
+    public void onDestroy()
+    {
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.removeOnLayoutChangeListener();
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);

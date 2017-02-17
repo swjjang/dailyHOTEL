@@ -82,6 +82,7 @@ public class HomeLayout extends BaseLayout
     private View mEventAreaLayout;
     View mScrollButtonLayout;
     View mTextMessageLayout;
+    private View mTopButtonLayout;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -322,7 +323,7 @@ public class HomeLayout extends BaseLayout
         ViewGroup.LayoutParams params = mEventViewPager.getLayoutParams();
         params.height = getEventImageHeight(mContext);
         mEventViewPager.setLayoutParams(params);
-//        mEventViewPager.setSlideTime(4);
+        //        mEventViewPager.setSlideTime(4);
 
         mEventHandler = new EventHandler(mEventAreaLayout);
     }
@@ -572,7 +573,7 @@ public class HomeLayout extends BaseLayout
                 } else
                 {
                     mProviderInfoView.setVisibility(View.GONE);
-                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_ic_v, 0);
+                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_m_ic_v_gray, 0);
                 }
             }
         });
@@ -626,10 +627,11 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        View topButtonLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_top_button_layout, null);
-        layout.addView(topButtonLayout);
+        mTopButtonLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_top_button_layout, null);
+        layout.addView(mTopButtonLayout);
+        mTopButtonLayout.setVisibility(View.GONE);
 
-        View topButton = topButtonLayout.findViewById(R.id.topButtonView);
+        View topButton = mTopButtonLayout.findViewById(R.id.topButtonView);
         topButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -645,6 +647,7 @@ public class HomeLayout extends BaseLayout
         mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
         mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNestedScrollView.setOnScrollChangeListener(mOnScrollChangeListener);
+        mNestedScrollView.addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     // Event area
@@ -1230,6 +1233,16 @@ public class HomeLayout extends BaseLayout
         }
     }
 
+    public void removeOnLayoutChangeListener()
+    {
+        if (mNestedScrollView == null)
+        {
+            return;
+        }
+
+        mNestedScrollView.removeOnLayoutChangeListener(mOnLayoutChangeListener);
+    }
+
     Drawable getRotateDrawable(Drawable drawable, final float degrees)
     {
         final Drawable[] drawables = {drawable};
@@ -1359,6 +1372,39 @@ public class HomeLayout extends BaseLayout
             } else
             {
                 mSwipeRefreshLayout.setEnabled(false);
+            }
+        }
+    };
+
+    private View.OnLayoutChangeListener mOnLayoutChangeListener = new View.OnLayoutChangeListener()
+    {
+        @Override
+        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom)
+        {
+            if (mTopButtonLayout == null)
+            {
+                return;
+            }
+
+            boolean isCanScroll = false;
+
+            View child = ((NestedScrollView) v).getChildAt(0);
+            if (child != null)
+            {
+                int childHeight = child.getHeight();
+                int topButtonHeight = mTopButtonLayout.getHeight();
+
+                isCanScroll = v.getHeight() < childHeight + v.getPaddingTop() + v.getPaddingBottom() - topButtonHeight;
+            }
+
+            ExLog.d("isCanScroll : " + isCanScroll);
+
+            if (isCanScroll == true)
+            {
+                mTopButtonLayout.setVisibility(View.VISIBLE);
+            } else
+            {
+                mTopButtonLayout.setVisibility(View.GONE);
             }
         }
     };
