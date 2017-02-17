@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Transition;
 import android.transition.TransitionSet;
+import android.view.View;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -43,6 +44,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected SaleTime mStartSaleTime, mEndSaleTime;
     int mRecommendationIndex;
     CollectionBaseLayout mCollectionBaseLayout;
+    private boolean checkRequestCollection; // 추천 목록 진입시에만 노출 하도록 한다.
 
     private Handler mHandler = new Handler();
 
@@ -53,6 +55,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected abstract String getCalendarDate();
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
+
+    protected abstract void startCalendarActivity();
 
     protected abstract String getSectionTitle(int count);
 
@@ -322,6 +326,23 @@ public abstract class CollectionBaseActivity extends BaseActivity
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list);
 
             mCollectionBaseLayout.setData(placeViewItems);
+
+            if ((list == null || list.size() == 0) && checkRequestCollection == false)
+            {
+                showSimpleDialog(null, getString(R.string.message_collection_empty_popup_message)//
+                    , getString(R.string.dialog_btn_text_yes)//
+                    , getString(R.string.dialog_btn_text_no)//
+                    , new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            startCalendarActivity();
+                        }
+                    }, null);
+            }
         }
+
+        checkRequestCollection = true;
     }
 }
