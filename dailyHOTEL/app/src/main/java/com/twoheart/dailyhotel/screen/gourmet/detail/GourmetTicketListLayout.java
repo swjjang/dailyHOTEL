@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -8,13 +9,14 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.GourmetTicket;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class GourmetProductListLayout extends BaseLayout
+public class GourmetTicketListLayout extends BaseLayout
 {
-    private GourmetDetailTicketTypeListAdapter mTicketTypeListAdapter;
+    private GourmetTicketListAdapter mTicketTypeListAdapter;
     private RecyclerView mRecyclerView;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -30,6 +32,8 @@ public class GourmetProductListLayout extends BaseLayout
         initToolbar(view, mContext.getString(R.string.label_select_product));
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     private void initToolbar(View view, String title)
@@ -46,7 +50,7 @@ public class GourmetProductListLayout extends BaseLayout
         }, false);
     }
 
-    public GourmetProductListLayout(Context context, OnBaseEventListener listener)
+    public GourmetTicketListLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -58,8 +62,8 @@ public class GourmetProductListLayout extends BaseLayout
             return;
         }
 
-        // 처음 세팅하는 경우 객실 타입 세팅
-        mTicketTypeListAdapter = new GourmetDetailTicketTypeListAdapter(mContext, gourmetTicketList, new GourmetDetailTicketTypeListAdapter.OnTicketClickListener()
+        // 처음 세팅하는 경우 객실 타입 세팅setProductInformationLayout
+        mTicketTypeListAdapter = new GourmetTicketListAdapter(mContext, gourmetTicketList, new GourmetTicketListAdapter.OnTicketClickListener()
         {
             @Override
             public void onProductDetailClick(int position)
@@ -73,6 +77,9 @@ public class GourmetProductListLayout extends BaseLayout
                 ((OnEventListener) mOnEventListener).onReservationClick(position);
             }
         });
+
+
+        mRecyclerView.setAdapter(mTicketTypeListAdapter);
 
         //                new OnClickListener()
         //            {

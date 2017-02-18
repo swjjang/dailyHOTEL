@@ -890,7 +890,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             if (mPlaceDetailLayout != null)
             {
                 // 딥링크 수정
-                GourmetProductListActivity.newInstance(this, mSaleTime, gourmetDetail, mOpenTicketIndex, null, null);
+                GourmetTicketListActivity.newInstance(this, mSaleTime, gourmetDetail, mOpenTicketIndex, null, null);
             }
         }
 
@@ -1155,7 +1155,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
 
-            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, (GourmetDetail) mPlaceDetail, -1, mProvince, mArea);
+            Intent intent = GourmetTicketListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, (GourmetDetail) mPlaceDetail, -1, mProvince, mArea);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
 
             recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);

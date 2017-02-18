@@ -129,7 +129,7 @@ public class StayDetail extends PlaceDetail<RoomInformation>
 
         // Image Url
         String imageUrl = jsonObject.getString("imgUrl");
-        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPathMain");
+        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
 
         Iterator<String> iterator = pathUrlJSONObject.keys();
         while (iterator.hasNext())

@@ -216,6 +216,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT = "reviewComment";
     String NAME_INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
     String NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN = "isUsedMultiTransition";
+    String NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL = "gourmetDetail";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

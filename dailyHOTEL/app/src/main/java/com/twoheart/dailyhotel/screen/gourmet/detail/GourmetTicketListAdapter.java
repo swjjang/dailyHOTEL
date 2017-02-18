@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     private LayoutInflater mInflater;
@@ -35,7 +35,7 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
         void onReservationClick(int position);
     }
 
-    public GourmetDetailTicketTypeListAdapter(Context context, List<GourmetTicket> arrayList, OnTicketClickListener listener)
+    public GourmetTicketListAdapter(Context context, List<GourmetTicket> arrayList, OnTicketClickListener listener)
     {
         mContext = context;
         mOnTicketClickListener = listener;
@@ -116,30 +116,58 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
 
         TicketInformationViewHolder ticketInformationViewHolder = (TicketInformationViewHolder) holder;
 
+        boolean hasThumbnail = true;
+
         ProductImageInformation productImageInformation = gourmetTicket.getPrimaryImage();
-        if (productImageInformation != null)
+        if (productImageInformation == null)
+        {
+            hasThumbnail = false;
+        } else
         {
             ticketInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl));
-            ticketInformationViewHolder.productNameTextView.setText(productImageInformation.imageDescription);
         }
 
-        int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 115);
-        float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
+        ticketInformationViewHolder.productNameTextView.setText(gourmetTicket.ticketName);
 
-        float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
-        Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
-        int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
-
-        ticketInformationViewHolder.contentsList.removeAllViews();
-
-        if (Util.isTextEmpty(gourmetTicket.option) == false)
+        if (hasThumbnail == false)
         {
-            startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, startY, textViewWidth, rect);
-        }
+            ticketInformationViewHolder.simpleDraweeView.setVisibility(View.GONE);
 
-        if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+            Rect rect = new Rect(0, 0, 0, 0);
+
+            ticketInformationViewHolder.contentsList.removeAllViews();
+
+            if (Util.isTextEmpty(gourmetTicket.option) == false)
+            {
+                addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, 0, -1, rect);
+            }
+
+            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+            {
+                addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, 0, -1, rect);
+            }
+        } else
         {
-            startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, startY, textViewWidth, rect);
+            ticketInformationViewHolder.simpleDraweeView.setVisibility(View.VISIBLE);
+
+            int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 115);
+            float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
+
+            float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
+            Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
+            int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
+
+            ticketInformationViewHolder.contentsList.removeAllViews();
+
+            if (Util.isTextEmpty(gourmetTicket.option) == false)
+            {
+                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, startY, textViewWidth, rect);
+            }
+
+            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+            {
+                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, startY, textViewWidth, rect);
+            }
         }
 
         String price = Util.getPriceFormat(mContext, gourmetTicket.price, false);
@@ -206,12 +234,18 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
         viewGroup.addView(textLayout);
         TextView textView = (TextView) textLayout.findViewById(R.id.textView);
 
+        if (textViewWidth <= 0)
+        {
+            textView.setText(contentText);
+            return 0;
+        }
+
         return measureText(textView, contentText, startY, textViewWidth, rect);
     }
 
     protected float measureText(TextView textView, String text, float viewY, int viewWidth, Rect rect)
     {
-        if (textView == null || viewWidth == 0 || Util.isTextEmpty(text) == true)
+        if (textView == null || viewWidth <= 0 || Util.isTextEmpty(text) == true)
         {
             return 0;
         }
