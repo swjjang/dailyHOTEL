@@ -33,8 +33,8 @@ import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.model.GourmetTicket;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
@@ -76,15 +76,16 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     private String mArea; // Analytics용 소지역
     Dialog mTimeDialog;
 
-    public static Intent newInstance(Context context, TicketInformation ticketInformation, SaleTime checkInSaleTime//
+    public static Intent newInstance(Context context, String placeName, GourmetTicket gourmetTicket, SaleTime saleTime//
         , String imageUrl, String category, int gourmetIndex, boolean isDBenefit//
         , Province province, String area, String isShowOriginalPrice, int entryPosition//
         , boolean isDailyChoice, int ratingValue)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION, ticketInformation);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCT, gourmetTicket);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, category);
@@ -130,7 +131,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         mPaymentInformation = new GourmetPaymentInformation();
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
 
-        gourmetPaymentInformation.setTicketInformation((TicketInformation) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TICKETINFORMATION));
+        gourmetPaymentInformation.placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
+        gourmetPaymentInformation.setTicket((GourmetTicket) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PRODUCT));
         mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         gourmetPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GOURMETIDX, -1);
@@ -143,7 +145,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         gourmetPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         gourmetPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
-        if (gourmetPaymentInformation.getTicketInformation() == null)
+        if (gourmetPaymentInformation.getTicket() == null)
         {
             return false;
         } else
@@ -216,12 +218,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
-        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
         Map<String, String> params = new HashMap<>();
-        params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
+        params.put("sale_reco_idx", Integer.toString(gourmetTicket.saleIdx));
         params.put("billkey", mSelectedCreditCard.billingkey);
-        params.put("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
+        params.put("ticket_count", Integer.toString(gourmetPaymentInformation.ticketCount));
 
         switch (paymentInformation.discountType)
         {
@@ -237,7 +239,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_name", guest.name);
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
-        params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime));
         params.put("customer_msg", "");
 
         if (DEBUG == false)
@@ -259,12 +261,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
      * 전액 결제는 아직 사용하지 않는데 대기중.
      *
      * @param paymentInformation
-     * @param checkInSaleTime
+     * @param saleTime
      */
     @Override
-    protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
     {
-        if (paymentInformation == null || checkInSaleTime == null)
+        if (paymentInformation == null || saleTime == null)
         {
             Util.restartApp(this);
             return;
@@ -284,12 +286,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
-        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
         Map<String, String> params = new HashMap<>();
-        params.put("sale_reco_idx", String.valueOf(ticketInformation.index));
+        params.put("sale_reco_idx", Integer.toString(gourmetTicket.saleIdx));
         params.put("billkey", mSelectedCreditCard.billingkey);
-        params.put("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
+        params.put("ticket_count", Integer.toString(gourmetPaymentInformation.ticketCount));
 
         switch (paymentInformation.discountType)
         {
@@ -305,7 +307,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_name", guest.name);
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
-        params.put("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime));
         params.put("customer_msg", "");
 
         if (DEBUG == false)
@@ -324,16 +326,26 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime saleTime)
     {
+        if (paymentInformation == null || saleTime == null)
+        {
+            return;
+        }
+
         DailyMobileAPI.getInstance(this).requestGourmetPaymentInformation(mNetworkTag, //
-            ((GourmetPaymentInformation) paymentInformation).getTicketInformation().index, //
+            ((GourmetPaymentInformation) paymentInformation).getTicket().saleIdx, //
             mGourmetPaymentInformationCallback);
     }
 
     @Override
     protected void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
+        if (paymentInformation == null || selectedCreditCard == null)
+        {
+            return;
+        }
+
         mGourmetPaymentLayout.setPaymentInformation((GourmetPaymentInformation) paymentInformation, selectedCreditCard);
     }
 
@@ -395,7 +407,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         });
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
-            AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().placeName, null);
+            AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, ((GourmetPaymentInformation) mPaymentInformation).placeName, null);
     }
 
     @Override
@@ -404,7 +416,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         showChangedValueDialog(R.string.dialog_msg_gourmet_stop_onsale, null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
-            AnalyticsManager.Action.SOLDOUT, ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().placeName, null);
+            AnalyticsManager.Action.SOLDOUT, ((GourmetPaymentInformation) mPaymentInformation).placeName, null);
     }
 
     @Override
@@ -432,7 +444,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
-        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
         String discountType = AnalyticsManager.Label.FULL_PAYMENT;
 
@@ -446,8 +458,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
-        String placeName = ticketInformation.placeName;
-        String placeType = ticketInformation.name;
+        String placeName = gourmetPaymentInformation.placeName;
+        String placeType = gourmetTicket.ticketName;
         int productCount = gourmetPaymentInformation.ticketCount;
 
         String date = gourmetPaymentInformation.dateTime;
@@ -461,7 +473,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             try
             {
                 String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
-                    + ",ticketIndex:" + ticketInformation.index + ",checkIn:" + date//
+                    + ",ticketIndex:" + gourmetTicket.saleIdx + ",checkIn:" + date//
                     + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType + ",userIndex:" + userIndex;
                 Crashlytics.logException(new NullPointerException(message));
             } catch (Exception e)
@@ -929,7 +941,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         DailyPreference.getInstance(GourmetPaymentActivity.this)//
             .setPaymentInformation(PlaceType.FNB,//
-                gourmetPaymentInformation.getTicketInformation().placeName,//
+                gourmetPaymentInformation.placeName,//
                 gourmetPaymentInformation.paymentType,//
                 gourmetPaymentInformation.dateTime);
     }
@@ -1006,7 +1018,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         }
 
         DailyMobileAPI.getInstance(this).requestGourmetCheckTicket(mNetworkTag//
-            , gourmetPaymentInformation.getTicketInformation().index//
+            , gourmetPaymentInformation.getTicket().saleIdx//
             , saleTime.getDayOfDaysDateFormat("yyMMdd")//
             , gourmetPaymentInformation.ticketCount//
             , Long.toString(gourmetPaymentInformation.ticketTime), mCheckAvailableTicketCallback);
@@ -1042,12 +1054,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         try
         {
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, gourmetPaymentInformation.getTicketInformation().placeName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetPaymentInformation.getTicketInformation().discountPrice));
+            params.put(AnalyticsManager.KeyType.NAME, gourmetPaymentInformation.placeName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetPaymentInformation.getTicket().discountPrice));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, gourmetPaymentInformation.getTicketInformation().name);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(gourmetPaymentInformation.getTicketInformation().index));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, gourmetPaymentInformation.getTicket().ticketName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(gourmetPaymentInformation.getTicket().saleIdx));
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
@@ -1095,15 +1107,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         try
         {
-            TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+            GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
-            params.put(AnalyticsManager.KeyType.NAME, ticketInformation.placeName);
-            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(ticketInformation.discountPrice));
+            params.put(AnalyticsManager.KeyType.NAME, gourmetPaymentInformation.placeName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetTicket.discountPrice));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(gourmetPaymentInformation.ticketCount));
-            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(ticketInformation.discountPrice * gourmetPaymentInformation.ticketCount));
+            params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(gourmetTicket.discountPrice * gourmetPaymentInformation.ticketCount));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetPaymentInformation.placeIndex));
-            params.put(AnalyticsManager.KeyType.TICKET_NAME, ticketInformation.name);
-            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(ticketInformation.index));
+            params.put(AnalyticsManager.KeyType.TICKET_NAME, gourmetTicket.ticketName);
+            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(gourmetTicket.saleIdx));
             params.put(AnalyticsManager.KeyType.DATE, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
@@ -1332,14 +1344,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
     void startCouponPopup(GourmetPaymentInformation gourmetPaymentInformation)
     {
-        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
         int placeIndex = gourmetPaymentInformation.placeIndex;
-        int ticketIndex = ticketInformation.index;
+        int ticketIndex = gourmetTicket.saleIdx;
 
         String dateTime = gourmetPaymentInformation.dateTime;
 
-        String placeName = ticketInformation.placeName;
+        String placeName = gourmetPaymentInformation.placeName;
         int ticketCount = gourmetPaymentInformation.ticketCount;
 
         Intent intent = SelectGourmetCouponDialogActivity.newInstance(GourmetPaymentActivity.this, placeIndex, //
@@ -1581,7 +1593,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             gourmetPaymentInformation.setGuest(guest);
             processAgreeTermDialog();
 
-            String label = String.format("%s-%s", gourmetPaymentInformation.getTicketInformation().placeName, gourmetPaymentInformation.getTicketInformation().name);
+            String label = String.format("%s-%s", gourmetPaymentInformation.placeName, gourmetPaymentInformation.getTicket().ticketName);
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                 , AnalyticsManager.Action.PAYMENT_CLICKED, label, null);
         }
@@ -1720,7 +1732,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     // 2. 화면 정보 얻기
                     DailyMobileAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag//
-                        , gourmetPaymentInformation.getTicketInformation().index//
+                        , gourmetPaymentInformation.getTicket().saleIdx//
                         , mGourmetPaymentInformationCallback);
 
                     if (DEBUG == false)
@@ -1809,14 +1821,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
 
                         gourmetPaymentInformation.ticketTimes = times;
+                        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
                         // 가격이 변동 되었다.
-                        if (gourmetPaymentInformation.getTicketInformation().discountPrice != discountPrice)
+                        if (gourmetTicket.discountPrice != discountPrice)
                         {
                             mIsChangedPrice = true;
                         }
 
-                        gourmetPaymentInformation.getTicketInformation().discountPrice = discountPrice;
+                        gourmetTicket.discountPrice = discountPrice;
                         gourmetPaymentInformation.ticketMaxCount = maxCount;
                         gourmetPaymentInformation.dateTime = DailyCalendar.format(sday, "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"));
 
@@ -1888,7 +1901,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         }
 
                         DailyMobileAPI.getInstance(GourmetPaymentActivity.this).requestGourmetPaymentInformation(mNetworkTag, //
-                            ((GourmetPaymentInformation) mPaymentInformation).getTicketInformation().index, //
+                            ((GourmetPaymentInformation) mPaymentInformation).getTicket().saleIdx, //
                             mFinalCheckPayCallback);
                     } else
                     {
@@ -1973,15 +1986,15 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                         gourmetPaymentInformation.ticketTimes = times;
 
-                        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+                        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
                         // 가격이 변동 되었다.
-                        if (ticketInformation.discountPrice != discountPrice)
+                        if (gourmetTicket.discountPrice != discountPrice)
                         {
                             mIsChangedPrice = true;
                         }
 
-                        ticketInformation.discountPrice = discountPrice;
+                        gourmetTicket.discountPrice = discountPrice;
 
                         if (mIsChangedPrice == true)
                         {

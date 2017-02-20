@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StayDetailListAdapter extends BaseAdapter
@@ -128,9 +127,9 @@ public class StayDetailListAdapter extends BaseAdapter
         getAddressView(mDetailViews[2], mStayDetail);
         linearLayout.addView(mDetailViews[2]);
 
-        ArrayList<StayDetail.Pictogram> list = mStayDetail.getPictogramList();
+        List<StayDetail.Pictogram> pictogramList = mStayDetail.getPictogramList();
 
-        if (list != null && list.size() > 0)
+        if (pictogramList != null && pictogramList.size() > 0)
         {
             if (mDetailViews[3] == null)
             {
@@ -374,16 +373,16 @@ public class StayDetailListAdapter extends BaseAdapter
         android.support.v7.widget.GridLayout gridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
         gridLayout.removeAllViews();
 
-        ArrayList<StayDetail.Pictogram> list = stayDetail.getPictogramList();
+        List<StayDetail.Pictogram> pictogramList = stayDetail.getPictogramList();
 
-        boolean isSingleLine = list == null || list.size() <= GRID_COLUMN_COUNT ? true : false;
+        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT ? true : false;
 
-        for (StayDetail.Pictogram pictogram : list)
+        for (StayDetail.Pictogram pictogram : pictogramList)
         {
             gridLayout.addView(getGridLayoutItemView(mContext, pictogram, isSingleLine));
         }
 
-        int columnCount = list.size() % GRID_COLUMN_COUNT;
+        int columnCount = pictogramList.size() % GRID_COLUMN_COUNT;
 
         if (columnCount != 0)
         {
@@ -445,13 +444,13 @@ public class StayDetailListAdapter extends BaseAdapter
         final String benefit = stayDetail.benefit;
         benefitTitleTextView.setText(benefit);
 
-        List<String> mBenefitInformation = stayDetail.getBenefitInformation();
+        List<String> benefitList = stayDetail.getBenefitList();
 
-        if (mBenefitInformation != null)
+        if (benefitList != null)
         {
             benefitMessagesLayout.removeAllViews();
 
-            for (String information : mBenefitInformation)
+            for (String information : benefitList)
             {
                 ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail_benefit_text, benefitMessagesLayout, false);
                 TextView textView = (TextView) childGroup.findViewById(R.id.textView);
@@ -480,7 +479,7 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         boolean hasNRD = false;
-        for (RoomInformation roomInformation : stayDetail.getSaleRoomList())
+        for (RoomInformation roomInformation : stayDetail.getProductList())
         {
             if (roomInformation.isNRD == true)
             {
@@ -489,14 +488,14 @@ public class StayDetailListAdapter extends BaseAdapter
             }
         }
 
-        ArrayList<DetailInformation> arrayList = stayDetail.getInformation();
+        List<DetailInformation> detailInformationList = stayDetail.getDetailList();
 
-        if (arrayList != null)
+        if (detailInformationList != null)
         {
             viewGroup.removeAllViews();
             boolean hasRefundPolicy = false;
 
-            for (DetailInformation information : arrayList)
+            for (DetailInformation information : detailInformationList)
             {
                 ViewGroup childGroup = (ViewGroup) layoutInflater.inflate(R.layout.list_row_detail05, viewGroup, false);
 

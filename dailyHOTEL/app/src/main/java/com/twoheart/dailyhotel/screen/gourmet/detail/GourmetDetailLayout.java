@@ -5,20 +5,20 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
-import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GourmetDetailLayout extends PlaceDetailLayout
 {
     private GourmetDetailListAdapter mListAdapter;
-    TicketInformation mSelectedTicketInformation;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
@@ -60,7 +60,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
     public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
     {
-        if (gourmetDetail == null)
+        if (gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
         {
             setLineIndicatorVisible(false);
             setWishButtonSelected(false);
@@ -75,7 +75,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
         }
 
-        ArrayList<ImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
+        List<ImageInformation> imageInformationList = gourmetDetail.getImageList();
         mImageAdapter.setData(imageInformationList);
         mViewPager.setAdapter(mImageAdapter);
 
@@ -97,9 +97,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         showWishButton();
 
         // SOLD OUT 판단 조건.
-        ArrayList<TicketInformation> ticketInformationList = gourmetDetail.getTicketInformation();
+        List<GourmetTicket> gourmetTicketList = gourmetDetail.getProductList();
 
-        if (ticketInformationList == null || ticketInformationList.size() == 0)
+        if (gourmetTicketList == null || gourmetTicketList.size() == 0)
         {
             mBookingTextView.setVisibility(View.GONE);
             mSoldoutTextView.setVisibility(View.VISIBLE);
@@ -122,8 +122,10 @@ public class GourmetDetailLayout extends PlaceDetailLayout
             setBookingStatus(STATUS_SELECT_PRODUCT);
         }
 
-        setWishButtonSelected(gourmetDetail.myWish);
-        setWishButtonCount(gourmetDetail.wishCount);
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
+
+        setWishButtonSelected(gourmetDetailParams.myWish);
+        setWishButtonCount(gourmetDetailParams.wishCount);
 
         mListAdapter.notifyDataSetChanged();
     }

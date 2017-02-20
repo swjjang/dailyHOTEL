@@ -27,8 +27,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.TicketInformation;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
+import com.twoheart.dailyhotel.network.model.GourmetTicket;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -79,14 +79,14 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
 
         mGourmetPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
 
-        if (mGourmetPaymentInformation == null)
+        if (mGourmetPaymentInformation == null || mGourmetPaymentInformation.getTicket() == null)
         {
             DailyToast.showToast(GourmetPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
 
-        if (mGourmetPaymentInformation.getTicketInformation().index == 0)
+        if (mGourmetPaymentInformation.getTicket().saleIdx == 0)
         {
             // 세션이 만료되어 재시작 요청.
             restartExpiredSession();
@@ -179,10 +179,10 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        TicketInformation ticketInformation = gourmetPaymentInformation.getTicketInformation();
+        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
 
         FormBody.Builder builder = new FormBody.Builder();
-        builder.add("sale_reco_idx", String.valueOf(ticketInformation.index));
+        builder.add("sale_reco_idx", String.valueOf(gourmetTicket.saleIdx));
         builder.add("payment_type", gourmetPaymentInformation.paymentType.name());
         builder.add("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
         builder.add("customer_name", name);

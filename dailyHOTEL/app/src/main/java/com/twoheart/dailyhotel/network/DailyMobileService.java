@@ -4,6 +4,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
+import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
@@ -150,7 +151,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<JSONObject> requestGourmetDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateSale") String date);
+    Call<BaseDto<GourmetDetailParams>> requestGourmetDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateSale") String date);
 
     @GET("{mobileAPI}")
     Call<JSONObject> requestGourmetPaymentInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("sale_reco_idx") int index);

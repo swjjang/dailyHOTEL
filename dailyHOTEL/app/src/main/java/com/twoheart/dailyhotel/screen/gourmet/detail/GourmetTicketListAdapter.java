@@ -13,18 +13,19 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.TicketInformation;
+import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<TicketInformation> mTicketInformationList;
+    private List<GourmetTicket> mGourmetTicketList;
     private OnTicketClickListener mOnTicketClickListener;
 
     public interface OnTicketClickListener
@@ -34,26 +35,26 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
         void onReservationClick(int position);
     }
 
-    public GourmetDetailTicketTypeListAdapter(Context context, ArrayList<TicketInformation> arrayList, OnTicketClickListener listener)
+    public GourmetTicketListAdapter(Context context, List<GourmetTicket> arrayList, OnTicketClickListener listener)
     {
         mContext = context;
         mOnTicketClickListener = listener;
 
-        mTicketInformationList = new ArrayList<>();
-        mTicketInformationList.addAll(arrayList);
+        mGourmetTicketList = new ArrayList<>();
+        mGourmetTicketList.addAll(arrayList);
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addAll(Collection<? extends TicketInformation> collection)
+    public void addAll(Collection<GourmetTicket> collection)
     {
         if (collection == null)
         {
             return;
         }
 
-        mTicketInformationList.clear();
-        mTicketInformationList.addAll(collection);
+        mGourmetTicketList.clear();
+        mGourmetTicketList.addAll(collection);
     }
 
     //    public void setSelected(int position)
@@ -85,14 +86,14 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
     //        return 0;
     //    }
 
-    public TicketInformation getItem(int position)
+    public GourmetTicket getItem(int position)
     {
-        if (mTicketInformationList.size() <= position)
+        if (mGourmetTicketList.size() <= position)
         {
             return null;
         }
 
-        return mTicketInformationList.get(position);
+        return mGourmetTicketList.get(position);
     }
 
     @Override
@@ -106,41 +107,73 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        TicketInformation ticketInformation = getItem(position);
+        GourmetTicket gourmetTicket = getItem(position);
 
-        if (ticketInformation == null)
+        if (gourmetTicket == null)
         {
             return;
         }
 
         TicketInformationViewHolder ticketInformationViewHolder = (TicketInformationViewHolder) holder;
 
-        ticketInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(ticketInformation.thumbnailUrl));
-        ticketInformationViewHolder.productNameTextView.setText(ticketInformation.name);
+        boolean hasThumbnail = true;
 
-        int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 115);
-        float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
-
-        float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
-        Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
-        int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
-
-        ticketInformationViewHolder.contentsList.removeAllViews();
-
-        if (Util.isTextEmpty(ticketInformation.option) == false)
+        ProductImageInformation productImageInformation = gourmetTicket.getPrimaryImage();
+        if (productImageInformation == null)
         {
-            startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, ticketInformation.option, startY, textViewWidth, rect);
+            hasThumbnail = false;
+        } else
+        {
+            ticketInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl));
         }
 
-        if (Util.isTextEmpty(ticketInformation.benefit) == false)
+        ticketInformationViewHolder.productNameTextView.setText(gourmetTicket.ticketName);
+
+        if (hasThumbnail == false)
         {
-            startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, ticketInformation.benefit, startY, textViewWidth, rect);
+            ticketInformationViewHolder.simpleDraweeView.setVisibility(View.GONE);
+
+            Rect rect = new Rect(0, 0, 0, 0);
+
+            ticketInformationViewHolder.contentsList.removeAllViews();
+
+            if (Util.isTextEmpty(gourmetTicket.option) == false)
+            {
+                addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, 0, -1, rect);
+            }
+
+            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+            {
+                addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, 0, -1, rect);
+            }
+        } else
+        {
+            ticketInformationViewHolder.simpleDraweeView.setVisibility(View.VISIBLE);
+
+            int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 115);
+            float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
+
+            float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
+            Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
+            int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
+
+            ticketInformationViewHolder.contentsList.removeAllViews();
+
+            if (Util.isTextEmpty(gourmetTicket.option) == false)
+            {
+                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, startY, textViewWidth, rect);
+            }
+
+            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+            {
+                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, startY, textViewWidth, rect);
+            }
         }
 
-        String price = Util.getPriceFormat(mContext, ticketInformation.price, false);
-        String discountPrice = Util.getPriceFormat(mContext, ticketInformation.discountPrice, false);
+        String price = Util.getPriceFormat(mContext, gourmetTicket.price, false);
+        String discountPrice = Util.getPriceFormat(mContext, gourmetTicket.discountPrice, false);
 
-        if (ticketInformation.price <= 0 || ticketInformation.price <= ticketInformation.discountPrice)
+        if (gourmetTicket.price <= 0 || gourmetTicket.price <= gourmetTicket.discountPrice)
         {
             ticketInformationViewHolder.priceTextView.setVisibility(View.GONE);
             ticketInformationViewHolder.priceTextView.setText(null);
@@ -182,12 +215,12 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
     @Override
     public int getItemCount()
     {
-        if (mTicketInformationList == null)
+        if (mGourmetTicketList == null)
         {
             return 0;
         }
 
-        return mTicketInformationList.size();
+        return mGourmetTicketList.size();
     }
 
     private float addTicketSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, float startY, int textViewWidth, Rect rect)
@@ -201,12 +234,18 @@ public class GourmetDetailTicketTypeListAdapter extends RecyclerView.Adapter<Rec
         viewGroup.addView(textLayout);
         TextView textView = (TextView) textLayout.findViewById(R.id.textView);
 
+        if (textViewWidth <= 0)
+        {
+            textView.setText(contentText);
+            return 0;
+        }
+
         return measureText(textView, contentText, startY, textViewWidth, rect);
     }
 
     protected float measureText(TextView textView, String text, float viewY, int viewWidth, Rect rect)
     {
-        if (textView == null || viewWidth == 0 || Util.isTextEmpty(text) == true)
+        if (textView == null || viewWidth <= 0 || Util.isTextEmpty(text) == true)
         {
             return 0;
         }

@@ -426,7 +426,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             {
                 case LIST:
                     AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.GOURMET_LIST_, null);
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.GOURMET_LIST, null);
                     break;
 
                 case MAP:

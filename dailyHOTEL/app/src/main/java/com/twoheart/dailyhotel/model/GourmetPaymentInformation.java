@@ -2,19 +2,21 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
+import com.twoheart.dailyhotel.network.model.GourmetTicket;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.TimeZone;
 
 public class GourmetPaymentInformation extends PlacePaymentInformation
 {
+    public String placeName;
     public String dateTime;
     public int ticketCount;
     public int ticketMaxCount; // 최대 결제 가능한 티켓 개수
     public long ticketTime;
     public long[] ticketTimes;
     public String category;
-    private TicketInformation mTicketInformation;
+    private GourmetTicket mGourmetTicket;
 
     public GourmetPaymentInformation()
     {
@@ -35,12 +37,13 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
     {
         super.writeToParcel(dest, flags);
 
+        dest.writeString(placeName);
         dest.writeString(dateTime);
         dest.writeInt(ticketCount);
         dest.writeInt(ticketMaxCount);
         dest.writeLong(ticketTime);
         dest.writeLongArray(ticketTimes);
-        dest.writeParcelable(mTicketInformation, flags);
+        dest.writeParcelable(mGourmetTicket, flags);
         dest.writeString(category);
     }
 
@@ -49,23 +52,24 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
     {
         super.readFromParcel(in);
 
+        placeName = in.readString();
         dateTime = in.readString();
         ticketCount = in.readInt();
         ticketMaxCount = in.readInt();
         ticketTime = in.readLong();
         ticketTimes = in.createLongArray();
-        mTicketInformation = in.readParcelable(TicketInformation.class.getClassLoader());
+        mGourmetTicket = in.readParcelable(GourmetTicket.class.getClassLoader());
         category = in.readString();
     }
 
-    public TicketInformation getTicketInformation()
+    public GourmetTicket getTicket()
     {
-        return mTicketInformation;
+        return mGourmetTicket;
     }
 
-    public void setTicketInformation(TicketInformation information)
+    public void setTicket(GourmetTicket gourmetTicket)
     {
-        mTicketInformation = information;
+        mGourmetTicket = gourmetTicket;
     }
 
     public String[] getTicketTimes()
@@ -96,7 +100,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
 
     public int getPaymentToPay()
     {
-        return mTicketInformation.discountPrice * ticketCount;
+        return mGourmetTicket.discountPrice * ticketCount;
     }
 
     @Override

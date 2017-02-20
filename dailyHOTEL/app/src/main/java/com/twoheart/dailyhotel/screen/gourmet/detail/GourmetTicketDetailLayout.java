@@ -9,9 +9,8 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
-import com.twoheart.dailyhotel.model.ImageInformation;
-import com.twoheart.dailyhotel.model.TicketInformation;
-import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
+import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Util;
@@ -19,18 +18,18 @@ import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class GourmetProductDetailLayout extends BaseLayout
+public class GourmetTicketDetailLayout extends BaseLayout
 {
     private NestedScrollView mNestedScrollView;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
     protected View mMoreIconView;
-    protected PlaceDetailImageViewPagerAdapter mImageAdapter;
+    protected GourmetTicketDetailImagePagerAdapter mImageAdapter;
 
     private TextView mDescriptionTextView;
-    private View mBottomBarLayout;
+    private View mDefaultImageLayout, mBottomBarLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -39,7 +38,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         void onReservationClick();
     }
 
-    public GourmetProductDetailLayout(Context context, OnBaseEventListener listener)
+    public GourmetTicketDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -51,12 +50,23 @@ public class GourmetProductDetailLayout extends BaseLayout
 
         mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
 
+        initImageLayout(view);
+
+
+
+        mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
+    }
+
+    private void initImageLayout(View view)
+    {
+        mDefaultImageLayout = view.findViewById(R.id.defaultImageLayout);
+
         // 이미지 ViewPage 넣기.
-        mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
+        mDailyLineIndicator = (DailyLineIndicator) mDefaultImageLayout.findViewById(R.id.viewpagerIndicator);
 
-        mViewPager = (DailyLoopViewPager) view.findViewById(R.id.defaulLoopViewPager);
+        mViewPager = (DailyLoopViewPager) mDefaultImageLayout.findViewById(R.id.defaulLoopViewPager);
 
-        mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
+        mImageAdapter = new GourmetTicketDetailImagePagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
 
         mDailyLineIndicator.setViewPager(mViewPager);
@@ -68,11 +78,9 @@ public class GourmetProductDetailLayout extends BaseLayout
         layoutParams.height = Util.getLCDWidth(mContext);
         mViewPager.setLayoutParams(layoutParams);
 
-        mMoreIconView = view.findViewById(R.id.moreIconView);
+        mMoreIconView = mDefaultImageLayout.findViewById(R.id.moreIconView);
 
-        mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
-
-        mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
+        mDescriptionTextView = (TextView) mDefaultImageLayout.findViewById(R.id.descriptionTextView);
     }
 
     private void initToolbar(View view, String title)
@@ -89,17 +97,39 @@ public class GourmetProductDetailLayout extends BaseLayout
         });
     }
 
-    public void setInformation(GourmetDetail gourmetDetail, TicketInformation ticketInformation)
+    public void setInformation(GourmetDetail gourmetDetail, int ticketIndex)
     {
+        GourmetTicket gourmetTicket = gourmetDetail.getProduct(ticketIndex);
+
 
         // 이미지 정보
-        ArrayList<ImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
-        mImageAdapter.setData(imageInformationList);
-        mViewPager.setAdapter(mImageAdapter);
+        List<ProductImageInformation> imageInformationList = gourmetTicket.getImageList();
 
-        mDailyLineIndicator.setViewPager(mViewPager);
-        setLineIndicatorVisible(imageInformationList.size() > 0);
-        setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
+        if(imageInformationList == null || imageInformationList.size() == 0)
+        {
+            mDefaultImageLayout.setVisibility(View.GONE);
+        } else
+        {
+            mDefaultImageLayout.setVisibility(View.VISIBLE);
+
+            mImageAdapter.setData(imageInformationList);
+            mViewPager.setAdapter(mImageAdapter);
+
+            mDailyLineIndicator.setViewPager(mViewPager);
+            setLineIndicatorVisible(imageInformationList.size() > 0);
+            setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).imageDescription : null);
+        }
+
+        // 메뉴 제목
+        TextView productNameTextView = (TextView)mNestedScrollView.findViewById(R.id.productNameTextView);
+
+        productNameTextView.setText(gourmetTicket.ticketName);
+
+
+
+
+
+
     }
 
     public void setImageInformation(String description)
@@ -130,14 +160,14 @@ public class GourmetProductDetailLayout extends BaseLayout
                 return;
             }
 
-            ImageInformation imageInformation = mImageAdapter.getImageInformation(position);
+            ProductImageInformation imageInformation = mImageAdapter.getImageInformation(position);
 
             if (imageInformation == null)
             {
                 return;
             }
 
-            setImageInformation(imageInformation.description);
+            setImageInformation(imageInformation.imageDescription);
         }
 
         @Override

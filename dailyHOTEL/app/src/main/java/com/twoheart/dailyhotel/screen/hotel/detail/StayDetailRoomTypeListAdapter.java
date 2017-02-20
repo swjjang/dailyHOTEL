@@ -25,7 +25,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
     private int mSelectedPosition;
     private int mViewPriceType;
 
-    public StayDetailRoomTypeListAdapter(Context context, ArrayList<RoomInformation> arrayList, View.OnClickListener listener)
+    public StayDetailRoomTypeListAdapter(Context context, List<RoomInformation> arrayList, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;

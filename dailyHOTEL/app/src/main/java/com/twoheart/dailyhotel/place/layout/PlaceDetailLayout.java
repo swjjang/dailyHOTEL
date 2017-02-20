@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.place.layout;
 
 import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -18,8 +17,6 @@ import android.graphics.drawable.shapes.RectShape;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,9 +24,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -38,13 +32,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.ImageInformation;
 import com.twoheart.dailyhotel.model.PlaceDetail;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
@@ -61,10 +53,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     public static final int STATUS_BOOKING = 2;
     public static final int STATUS_SOLD_OUT = 3;
 
-    private static final int VIEW_COUNT = 4;
-
     private static final int BOOKING_TEXT_VIEW_DURATION = 150;
-
 
     protected PlaceDetail mPlaceDetail;
     protected DailyLoopViewPager mViewPager;
@@ -83,8 +72,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
 
     protected View mBottomLayout;
-
-
     private AnimatorSet mWishPopupAnimatorSet;
     int mStatusBarHeight;
 
@@ -308,7 +295,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
         }
 
         ArrayList<ImageInformation> arrayList = new ArrayList<>();
-        arrayList.add(new ImageInformation(url, null));
+        ImageInformation imageInformation = new ImageInformation();
+        imageInformation.setImageUrl(url);
+        arrayList.add(imageInformation);
 
         mImageAdapter.setData(arrayList);
         mViewPager.setAdapter(mImageAdapter);
@@ -367,7 +356,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         return 0;
     }
-
 
 
     public void setImageInformation(String description)
@@ -626,7 +614,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
         public void onPageSelected(int position)
         {
             ((OnEventListener) mOnEventListener).onSelectedImagePosition(position);
-            setImageInformation(mPlaceDetail.getImageInformationList().get(position).description);
+
+            ImageInformation imageInformation = (ImageInformation) mPlaceDetail.getImageList().get(position);
+            setImageInformation(imageInformation.description);
         }
 
         @Override

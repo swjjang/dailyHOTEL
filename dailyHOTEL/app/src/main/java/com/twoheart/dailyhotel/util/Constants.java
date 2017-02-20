@@ -173,7 +173,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_LONGITUDE = "longitude";
     String NAME_INTENT_EXTRA_DATA_ISOVERSEAS = "isOverseas";
     String NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION = "saleRoomInformation";
-    String NAME_INTENT_EXTRA_DATA_TICKETINFORMATION = "ticketInformation";
+    String NAME_INTENT_EXTRA_DATA_PRODUCT = "product"; // 상품으로 스테이는 객실, 고메는 티켓을 의미한다.
     String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";
     String NAME_INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
     String NAME_INTENT_EXTRA_DATA_CATEGORY = "category";
@@ -216,6 +216,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT = "reviewComment";
     String NAME_INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
     String NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN = "isUsedMultiTransition";
+    String NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL = "gourmetDetail";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;
@@ -273,6 +274,9 @@ public interface Constants
 
     int CODE_REQUEST_ACTIVITY_STAY = 58;
     int CODE_REQUEST_ACTIVITY_GOURMET = 59;
+    int CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST = 60;
+    int CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL = 61;
+
 
     // Android Activity의 Result Code들이다.
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

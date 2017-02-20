@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.place.adapter;
+package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -8,21 +8,22 @@ import android.view.ViewGroup;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 
-public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
+public class GourmetTicketDetailImagePagerAdapter extends PagerAdapter
 {
     private Context mContext;
-    private List<ImageInformation> mImageInformationList;
+    private List<ProductImageInformation> mImageInformationList;
 
-    public PlaceDetailImageViewPagerAdapter(Context context)
+    public GourmetTicketDetailImagePagerAdapter(Context context)
     {
         mContext = context;
     }
 
-    public void setData(List<ImageInformation> list)
+    public void setData(List<ProductImageInformation> list)
     {
         mImageInformationList = list;
     }
@@ -51,7 +52,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
             imageView.setTag(imageView.getId(), position);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).getImageUrl());
+            Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).imageUrl);
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
             container.addView(imageView, 0, layoutParams);
@@ -69,7 +70,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
         return POSITION_NONE;
     }
 
-    public ImageInformation getImageInformation(int position)
+    public ProductImageInformation getImageInformation(int position)
     {
         if (mImageInformationList == null)
         {
