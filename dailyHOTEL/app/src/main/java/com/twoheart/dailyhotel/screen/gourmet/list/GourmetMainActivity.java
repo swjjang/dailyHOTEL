@@ -836,6 +836,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                             mGourmetCuration.getSaleTime(), province, gourmet, listCount, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     }
 
                     if (mViewType == ViewType.LIST)
@@ -1082,10 +1084,14 @@ public class GourmetMainActivity extends PlaceMainActivity
             {
                 Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             mIsDeepLink = true;

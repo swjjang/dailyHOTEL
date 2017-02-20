@@ -327,19 +327,21 @@ public class HomeFragment extends BaseFragment
             case "gourmet":
                 intent = CollectionGourmetActivity.newInstance(mBaseActivity, index//
                     , null//
-                    , null, null);
+                    , null, null, false);
                 break;
 
             case "stay":
             default:
                 intent = CollectionStayActivity.newInstance(mBaseActivity, index//
                     , null//
-                    , null, null);
+                    , null, null, false);
                 break;
 
         }
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+
+        mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
     }
 
     void startWishList(PlaceType placeType)
@@ -396,6 +398,8 @@ public class HomeFragment extends BaseFragment
                 Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
 
                 mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         } else if (place.placeType == PlaceType.FNB)
         {
@@ -414,6 +418,8 @@ public class HomeFragment extends BaseFragment
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         }
 
@@ -659,24 +665,24 @@ public class HomeFragment extends BaseFragment
         {
             Intent intent;
 
-            switch (recommendation.serviceType)
-            {
-                case "GOURMET":
-                    intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
-                        , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                        , recommendation.title, recommendation.subtitle);
-                    break;
-
-                case "HOTEL":
-                default:
-                    intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
-                        , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
-                        , recommendation.title, recommendation.subtitle);
-                    break;
-            }
-
             if (Util.isUsedMultiTransition() == true)
             {
+                switch (recommendation.serviceType)
+                {
+                    case "GOURMET":
+                        intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
+                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , recommendation.title, recommendation.subtitle, true);
+                        break;
+
+                    case "HOTEL":
+                    default:
+                        intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
+                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , recommendation.title, recommendation.subtitle, true);
+                        break;
+                }
+
                 View simpleDraweeView = view.findViewById(R.id.contentImageView);
                 View contentTextLayout = view.findViewById(R.id.contentTextLayout);
                 View titleTextView = contentTextLayout.findViewById(R.id.contentTextView);
@@ -691,7 +697,25 @@ public class HomeFragment extends BaseFragment
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION, options.toBundle());
             } else
             {
+                switch (recommendation.serviceType)
+                {
+                    case "GOURMET":
+                        intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
+                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , recommendation.title, recommendation.subtitle, false);
+                        break;
+
+                    case "HOTEL":
+                    default:
+                        intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
+                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , recommendation.title, recommendation.subtitle, false);
+                        break;
+                }
+
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION);
+
+                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//

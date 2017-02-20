@@ -26,16 +26,17 @@ import retrofit2.Response;
 
 public class CollectionGourmetActivity extends CollectionBaseActivity
 {
-    public static Intent newInstance(Context context, int index)
+    public static Intent newInstance(Context context, int index, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle)
+    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, CollectionGourmetActivity.class);
 
@@ -43,6 +44,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
         intent.putExtra(INTENT_EXTRA_DATA_SUBTITLE, subTitle);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -157,7 +159,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
-            if (Util.isUsedMultiTransition() == true)
+            if (mIsUsedMultiTransition == true)
             {
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, recommendationGourmet, null, null, count, true);
 
@@ -185,6 +187,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, recommendationGourmet, null, null, count, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(//

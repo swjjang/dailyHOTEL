@@ -753,6 +753,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     mStaySearchCuration.getCheckInSaleTime(), stay, listCount, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         }
 

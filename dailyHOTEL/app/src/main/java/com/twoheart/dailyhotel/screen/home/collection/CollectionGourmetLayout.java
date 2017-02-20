@@ -21,4 +21,15 @@ public class CollectionGourmetLayout extends CollectionBaseLayout
     {
         return new CollectionGourmetAdapter(mContext, new ArrayList<PlaceViewItem>(), listener);
     }
+
+    @Override
+    protected void setUsedMultiTransition(boolean isUsedMultiTransition)
+    {
+        mIsUsedMultiTransition = isUsedMultiTransition;
+
+        if (mPlaceListAdapter != null)
+        {
+            ((CollectionGourmetAdapter) mPlaceListAdapter).setUsedMultiTransition(isUsedMultiTransition);
+        }
+    }
 }
