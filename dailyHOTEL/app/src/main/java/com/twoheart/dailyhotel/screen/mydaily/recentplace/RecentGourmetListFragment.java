@@ -160,6 +160,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                     mSaleTime, gourmet, 0, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//

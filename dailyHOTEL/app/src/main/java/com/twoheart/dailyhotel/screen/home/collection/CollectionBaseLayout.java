@@ -31,8 +31,11 @@ public abstract class CollectionBaseLayout extends BaseLayout
     int mTitleLayoutHeight;
     int mTitleLayoutTopPaddingHeight;
     int mScrollState;
+    boolean mIsUsedMultiTransition;
 
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
+
+    protected abstract void setUsedMultiTransition(boolean isUsedMultiTransition);
 
     public interface OnEventListener extends OnBaseEventListener
     {

@@ -161,6 +161,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//

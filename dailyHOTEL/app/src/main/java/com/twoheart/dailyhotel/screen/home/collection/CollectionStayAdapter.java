@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class CollectionStayAdapter extends PlaceListAdapter
 {
+    private boolean mIsUsedMultiTransition;
     View.OnClickListener mOnClickListener;
 
     public CollectionStayAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
@@ -30,6 +31,11 @@ public class CollectionStayAdapter extends PlaceListAdapter
         mOnClickListener = listener;
 
         setSortType(Constants.SortType.DEFAULT);
+    }
+
+    public void setUsedMultiTransition(boolean isUsedMultiTransition)
+    {
+        mIsUsedMultiTransition = isUsedMultiTransition;
     }
 
     @Override
@@ -176,7 +182,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         holder.hotelGradeView.setText(grade.getName(mContext));
         holder.hotelGradeView.setBackgroundResource(grade.getColorResId());
 
-        if (Util.isUsedMultiTransition() == true)
+        if (mIsUsedMultiTransition == true)
         {
             holder.hotelImageView.setTransitionName(null);
         }

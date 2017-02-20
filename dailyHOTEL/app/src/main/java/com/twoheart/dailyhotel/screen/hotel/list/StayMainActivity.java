@@ -936,6 +936,8 @@ public class StayMainActivity extends PlaceMainActivity
                             mStayCuration.getCheckInSaleTime(), province, stay, listCount, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     }
 
                     if (mViewType == ViewType.LIST)
@@ -1188,10 +1190,14 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 Intent intent = StayDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             } else
             {
                 Intent intent = StayDetailActivity.newInstance(baseActivity, changedSaleTime, nights, hotelIndex, ticketIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             mIsDeepLink = true;

@@ -21,4 +21,15 @@ public class CollectionStayLayout extends CollectionBaseLayout
     {
         return new CollectionStayAdapter(mContext, new ArrayList<PlaceViewItem>(), listener);
     }
+
+    @Override
+    protected void setUsedMultiTransition(boolean isUsedMultiTransition)
+    {
+        mIsUsedMultiTransition = isUsedMultiTransition;
+
+        if (mPlaceListAdapter != null)
+        {
+            ((CollectionStayAdapter) mPlaceListAdapter).setUsedMultiTransition(isUsedMultiTransition);
+        }
+    }
 }

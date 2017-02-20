@@ -45,6 +45,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     int mRecommendationIndex;
     CollectionBaseLayout mCollectionBaseLayout;
     private boolean checkRequestCollection; // 추천 목록 진입시에만 노출 하도록 한다.
+    protected boolean mIsUsedMultiTransition;
 
     private Handler mHandler = new Handler();
 
@@ -79,6 +80,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
         String subTitle = intent.getStringExtra(INTENT_EXTRA_DATA_SUBTITLE);
         String imageUrl = intent.getStringExtra(INTENT_EXTRA_DATA_IMAGE_URL);
+        mIsUsedMultiTransition = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, false);
 
         if (mRecommendationIndex <= 0)
         {
@@ -92,7 +94,9 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         boolean isDeepLink = Util.isTextEmpty(title, subTitle, imageUrl);
 
-        if (isDeepLink == false && Util.isUsedMultiTransition() == true)
+        mCollectionBaseLayout.setUsedMultiTransition(mIsUsedMultiTransition);
+
+        if (isDeepLink == false && mIsUsedMultiTransition == true)
         {
             mCollectionBaseLayout.setTitleLayout(title, subTitle, imageUrl);
 
@@ -164,7 +168,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
-        if (Util.isUsedMultiTransition() == true)
+        if (mIsUsedMultiTransition == true)
         {
             mCollectionBaseLayout.setListScrollTop();
 
@@ -183,9 +187,20 @@ public abstract class CollectionBaseActivity extends BaseActivity
         super.onBackPressed();
     }
 
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        if(mIsUsedMultiTransition == false)
+        {
+            overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        }
+    }
+
     private void initTransition()
     {
-        if (Util.isUsedMultiTransition() == true)
+        if (mIsUsedMultiTransition == true)
         {
             TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
 

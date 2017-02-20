@@ -22,8 +22,6 @@ import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
-import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
@@ -218,17 +216,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
     @Override
     public void finish()
     {
-        boolean isCallReservationDetailActivity = false;
-
-        if (isSameCallingActivity(StayReservationDetailActivity.class.getName()) == true //
-            || isSameCallingActivity(GourmetReservationDetailActivity.class.getName()) == true)
-        {
-            isCallReservationDetailActivity = true;
-        }
-
         super.finish();
 
-        if (isCallReservationDetailActivity == true)
+        if (mIsUsedMultiTransition == false)
         {
             overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
         }

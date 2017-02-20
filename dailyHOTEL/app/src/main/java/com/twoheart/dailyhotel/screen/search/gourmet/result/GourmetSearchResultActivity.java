@@ -723,6 +723,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     mGourmetSearchCuration.getSaleTime(), gourmet, listCount, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
         }
 

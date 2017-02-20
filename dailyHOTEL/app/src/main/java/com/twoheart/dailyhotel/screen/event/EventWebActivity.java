@@ -400,10 +400,14 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, startSaleTime, endSaleTime, hotelIndex, ticketIndex, isShowCalendar, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             } else
             {
                 Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, saleTime, nights, hotelIndex, ticketIndex, isShowCalendar, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             if (isShowCalendar == true)
@@ -470,12 +474,16 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
                     saleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             if (isShowCalendar == true)

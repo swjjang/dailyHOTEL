@@ -26,16 +26,17 @@ import retrofit2.Response;
 
 public class CollectionStayActivity extends CollectionBaseActivity
 {
-    public static Intent newInstance(Context context, int index)
+    public static Intent newInstance(Context context, int index, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle)
+    public static Intent newInstance(Context context, int index, String imageUrl, String title, String subTitle, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, CollectionStayActivity.class);
 
@@ -43,6 +44,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
         intent.putExtra(INTENT_EXTRA_DATA_SUBTITLE, subTitle);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
 
         return intent;
     }
@@ -171,7 +173,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             RecommendationStay recommendationStay = placeViewItem.getItem();
 
-            if (Util.isUsedMultiTransition() == true)
+            if (mIsUsedMultiTransition == true)
             {
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count, true);
 
@@ -201,6 +203,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
 
             AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(//

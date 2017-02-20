@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 public class CollectionGourmetAdapter extends PlaceListAdapter
 {
+    private boolean mIsUsedMultiTransition;
     View.OnClickListener mOnClickListener;
 
     public CollectionGourmetAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
@@ -29,6 +30,11 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         mOnClickListener = listener;
 
         setSortType(Constants.SortType.DEFAULT);
+    }
+
+    public void setUsedMultiTransition(boolean isUsedMultiTransition)
+    {
+        mIsUsedMultiTransition = isUsedMultiTransition;
     }
 
     @Override
@@ -191,7 +197,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.gradeView.setText(displayCategory);
         }
 
-        if (Util.isUsedMultiTransition() == true)
+        if (mIsUsedMultiTransition == true)
         {
             holder.gourmetImageView.setTransitionName(null);
         }
