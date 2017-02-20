@@ -11,15 +11,14 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public enum StayAmenities
 {
-    WIFI(R.string.label_wifi, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_WIFI, AnalyticsManager.Label.SORTFILTER_WIFI),
-    FREE_BREAKFAST(R.string.label_breakfast, R.drawable.f_ic_hotel_04_facilities_02, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BREAKFAST, AnalyticsManager.Label.SORTFILTER_FREEBREAKFAST),
-    COOKING(R.string.label_cooking, R.drawable.f_ic_hotel_04_facilities_03, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_COOKING, AnalyticsManager.Label.SORTFILTER_KITCHEN),
-    BATHTUB(R.string.label_bathtub, R.drawable.f_ic_hotel_04_facilities_04, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BATH, AnalyticsManager.Label.SORTFILTER_BATHTUB),
     PARKING(R.string.label_parking, R.drawable.f_ic_hotel_04_facilities_05, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING, AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE),
+    BBQ(R.string.label_allowed_barbecue, R.drawable.ic_detail_facilities_06_bbq, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ, AnalyticsManager.Label.SORTFILTER_BBQ),
     POOL(R.string.label_pool, R.drawable.f_ic_hotel_04_facilities_06, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL, AnalyticsManager.Label.SORTFILTER_POOL),
+    BUSINESS_CENTER(R.string.label_business_center, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BUSINESS_CENTER, AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER),
     FITNESS(R.string.label_fitness, R.drawable.f_ic_hotel_04_facilities_07, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS, AnalyticsManager.Label.SORTFILTER_FITNESS),
+    SAUNA(R.string.label_sauna, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SAUNA, AnalyticsManager.Label.SORTFILTER_SAUNA),
     PET(R.string.label_allowed_pet, R.drawable.ic_detail_facilities_05_pet, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET, AnalyticsManager.Label.SORTFILTER_PET),
-    BBQ(R.string.label_allowed_barbecue, R.drawable.ic_detail_facilities_06_bbq, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHAREDBBQ, AnalyticsManager.Label.SORTFILTER_BBQ);
+    KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_AMENITIES_KIDS_PLAY_ROOM, AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM);
 
     private int nameResId;
     private int resId;

@@ -968,7 +968,7 @@ public class AnalyticsManager
         //
         public static final String SORTFILTER_NONE = "None";
         public static final String SORTFILTER_WIFI = "Wifi";
-        public static final String SORTFILTER_FREEBREAKFAST = "FreeBreakfast";
+        public static final String SORTFILTER_FREE_BREAKFAST = "FreeBreakfast";
         public static final String SORTFILTER_KITCHEN = "Kitchen";
         public static final String SORTFILTER_BATHTUB = "Bathtub";
         public static final String SORTFILTER_PARKINGAVAILABLE = "ParkingAvailable";
@@ -982,6 +982,15 @@ public class AnalyticsManager
         public static final String SORTFILTER_PRIVATEROOM = "PrivateRoom";
         public static final String SORTFILTER_GROUP = "Group";
         public static final String SORTFILTER_CORKAGE = "Corkage";
+        public static final String SORTFILTER_BUSINESS_CENTER = "BusinessCenter";
+        public static final String SORTFILTER_SAUNA = "Sauna";
+        public static final String SORTFILTER_KIDS_PLAY_ROOM = "KidsPlayRoom";
+        public static final String SORTFILTER_PC = "PC";
+        public static final String SORTFILTER_TV = "TV";
+        public static final String SORTFILTER_WHIRLPOOL = "whirlpool";
+        public static final String SORTFILTER_PRIVATE_BBQ = "PrivateBBQ";
+        public static final String SORTFILTER_KARAOKE = "Karaoke";
+        public static final String SORTFILTER_PARTYROOM = "PartyRoom";
         //
         public static final String SORTFILTER_0611 = "0611";
         public static final String SORTFILTER_1115 = "1115";
