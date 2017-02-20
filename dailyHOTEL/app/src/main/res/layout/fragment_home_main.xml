@@ -6,6 +6,33 @@
 
     <include layout="@layout/layout_home_toolbar"/>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/default_background"
+            android:fadingEdge="none"
+            android:fadingEdgeLength="0dp">
+
+            <LinearLayout
+                android:id="@+id/homeContentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <RelativeLayout
         android:id="@+id/actionButtonLayout"
         android:layout_width="match_parent"
@@ -28,34 +55,5 @@
         <include
             layout="@layout/list_row_home_content_server_error_layout"/>
     </RelativeLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
-
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/default_background"
-            android:fadingEdge="none"
-            android:fadingEdgeLength="0dp">
-
-            <LinearLayout
-                android:id="@+id/homeContentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:descendantFocusability="blocksDescendants"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-        </android.support.v4.widget.NestedScrollView>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
