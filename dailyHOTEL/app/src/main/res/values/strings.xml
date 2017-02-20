@@ -75,6 +75,7 @@
     <string name="label_daily_hotel">데일리호텔</string>
     <string name="label_detail">상세</string>
     <string name="label_select_product">상품 선택하기</string>
+    <string name="label_product_detail">상품 상세</string>
 
     <string name="label_count_stay">%1$d개 호텔</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -1144,7 +1145,6 @@
 
     <!-- Gourmet Product Detail -->
     <string name="label_gourmet_product_detail_reservation">예약하기</string>
-    <string name="label_gourmet_product_detail_menu_detail">메뉴상세</string>
 
 
     <string-array name="coupon_sort_array">

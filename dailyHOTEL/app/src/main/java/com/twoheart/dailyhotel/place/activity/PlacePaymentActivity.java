@@ -173,6 +173,22 @@ public abstract class PlacePaymentActivity extends BaseActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mPaymentInformation = savedInstanceState.getParcelable(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+    }
+
+    @Override
     public void onErrorResponse(Call call, Response response)
     {
         super.onErrorResponse(call, response);

@@ -409,9 +409,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST:
-                if (resultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                setResultCode(resultCode);
+
+                switch (resultCode)
                 {
-                    mDontReloadAtOnResume = false;
+                    case RESULT_OK:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                        finish();
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                        mDontReloadAtOnResume = false;
+                        break;
+
+                    default:
+                        mDontReloadAtOnResume = true;
+                        break;
                 }
                 break;
         }
@@ -1153,9 +1167,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onProductListClick()
         {
-            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+            GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
+            GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
-            Intent intent = GourmetTicketListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, (GourmetDetail) mPlaceDetail, -1, mProvince, mArea);
+            Intent intent = GourmetTicketListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, gourmetDetail, -1, mProvince, mArea);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
 
             recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);

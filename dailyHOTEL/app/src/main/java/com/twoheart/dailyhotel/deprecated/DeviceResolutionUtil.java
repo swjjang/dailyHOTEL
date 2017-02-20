@@ -3,8 +3,6 @@ package com.twoheart.dailyhotel.deprecated;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 
-import com.twoheart.dailyhotel.util.ExLog;
-
 import java.util.HashMap;
 
 public class DeviceResolutionUtil
@@ -43,23 +41,23 @@ public class DeviceResolutionUtil
 
         if (height >= 1920 && width >= 1080)
         {
-            ExLog.e("RESOLUTION : XXHDPI");
+            //            ExLog.e("RESOLUTION : XXHDPI");
             resolution = RESOLUTION_XXHDPI;
         } else if (height >= 1280 && width >= 720)
         {
-            ExLog.e("RESOLUTION : XHDPI");
+            //            ExLog.e("RESOLUTION : XHDPI");
             resolution = RESOLUTION_XHDPI;
         } else if (height >= 800 && width >= 480)
         {
-            ExLog.e("RESOLUTION : HDPI");
+            //            ExLog.e("RESOLUTION : HDPI");
             resolution = RESOLUTION_HDPI;
         } else if (height >= 480 && width >= 320)
         {
-            ExLog.e("RESOLUTION : MDPI");
+            //            ExLog.e("RESOLUTION : MDPI");
             resolution = RESOLUTION_MDPI;
         } else
         {
-            ExLog.e("RESOLUTION : LDPI");
+            //            ExLog.e("RESOLUTION : LDPI");
             resolution = RESOLUTION_LDPI;
         }
         return resolution;

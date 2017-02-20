@@ -34,10 +34,37 @@ public class GourmetTicket implements Parcelable
     public String option;
 
     @JsonField
+    public String checkList;
+
+//    @JsonField
+//    public String startEatingTime;
+//
+//    @JsonField
+//    public String endEatingTime;
+//
+//    @JsonField
+//    public int timeInterval;
+//
+//    @JsonField
+//    public String openTime;
+//
+//    @JsonField
+//    public String closeTime;
+//
+//    @JsonField
+//    public String lastOrderTime;
+//
+//    @JsonField
+//    public String expiryTime;
+
+    @JsonField
     public List<ProductImageInformation> images;
 
     @JsonField
-    public GourmetTicketDetail menuDetail;
+    public String menuSummary;
+
+    @JsonField
+    public String menuDetail;
 
     private int mDefaultImageIndex;
 
@@ -93,8 +120,16 @@ public class GourmetTicket implements Parcelable
         dest.writeInt(discountPrice);
         dest.writeString(benefit);
         dest.writeString(option);
+//        dest.writeString(startEatingTime);
+//        dest.writeString(endEatingTime);
+//        dest.writeInt(timeInterval);
+//        dest.writeString(openTime);
+//        dest.writeString(closeTime);
+//        dest.writeString(lastOrderTime);
+//        dest.writeString(expiryTime);
         dest.writeTypedList(images);
-        dest.writeParcelable(menuDetail, flags);
+        dest.writeString(menuSummary);
+        dest.writeString(menuDetail);
     }
 
     protected void readFromParcel(Parcel in)
@@ -106,8 +141,16 @@ public class GourmetTicket implements Parcelable
         discountPrice = in.readInt();
         benefit = in.readString();
         option = in.readString();
+//        startEatingTime = in.readString();
+//        endEatingTime = in.readString();
+//        timeInterval = in.readInt();
+//        openTime = in.readString();
+//        closeTime = in.readString();
+//        lastOrderTime = in.readString();
+//        expiryTime = in.readString();
         images = in.createTypedArrayList(ProductImageInformation.CREATOR);
-        menuDetail = in.readParcelable(GourmetTicketDetail.class.getClassLoader());
+        menuSummary = in.readString();
+        menuDetail = in.readString();
     }
 
     @Override

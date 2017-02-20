@@ -116,6 +116,16 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         TicketInformationViewHolder ticketInformationViewHolder = (TicketInformationViewHolder) holder;
 
+        ticketInformationViewHolder.contentsLayout.setTag(position);
+        ticketInformationViewHolder.contentsLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnTicketClickListener.onProductDetailClick((int) v.getTag());
+            }
+        });
+
         boolean hasThumbnail = true;
 
         ProductImageInformation productImageInformation = gourmetTicket.getPrimaryImage();
@@ -296,6 +306,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private class TicketInformationViewHolder extends RecyclerView.ViewHolder
     {
+        View contentsLayout;
         SimpleDraweeView simpleDraweeView;
         TextView productNameTextView;
         TextView discountPriceTextView;
@@ -308,6 +319,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         {
             super(itemView);
 
+            contentsLayout = itemView.findViewById(R.id.contentsLayout);
             simpleDraweeView = (SimpleDraweeView) itemView.findViewById(R.id.simpleDraweeView);
             productNameTextView = (TextView) itemView.findViewById(R.id.productNameTextView);
             priceTextView = (TextView) itemView.findViewById(R.id.priceTextView);

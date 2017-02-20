@@ -76,7 +76,7 @@ public class GourmetTicketListActivity extends BaseActivity
         mGourmetDetail = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL);
         int ticketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, -1);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
         setContentView(mGourmetTicketListLayout.onCreateView(R.layout.activity_gourmet_product_list));
 
@@ -200,8 +200,9 @@ public class GourmetTicketListActivity extends BaseActivity
 
     private void processBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex)
     {
-        if (saleTime == null || gourmetDetail == null || ticketIndex <= 0)
+        if (saleTime == null || gourmetDetail == null || ticketIndex < 0)
         {
+            unLockUI();
             return;
         }
 
@@ -210,6 +211,7 @@ public class GourmetTicketListActivity extends BaseActivity
 
         if (gourmetTicket == null || gourmetDetailParams == null)
         {
+            unLockUI();
             return;
         }
 
@@ -315,7 +317,8 @@ public class GourmetTicketListActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = GourmetTicketDetailActivity.newInstance(GourmetTicketListActivity.this, mSaleTime, mGourmetDetail, position, mProvince, mArea);
+            Intent intent = GourmetTicketDetailActivity.newInstance(GourmetTicketListActivity.this//
+                , mSaleTime, mGourmetDetail, position, mProvince, mArea);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
         }
 
