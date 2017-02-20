@@ -966,14 +966,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
                     showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                //                                mOnEventListener.showProductInformationLayout();
-                            }
-                        });
+                        , getString(R.string.dialog_btn_text_confirm), null);
 
                     AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
                         AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, gourmetDetailParams.name, null);
