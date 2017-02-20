@@ -181,7 +181,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             @Override
             public void onClick(View v)
             {
-                dailyWebView.setScrollY(0);
+                smoothScrollTop(dailyWebView);
             }
         });
 
@@ -873,13 +873,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
 
             }
-        }
-
-        @JavascriptInterface
-        public void interlLink(String uri)
-        {
-            // 오타로 인해서 만들어 놓은 메소드로 추후 시간이 지나면 삭제 하도록 한다.
-            internalLink(uri);
         }
 
         @JavascriptInterface

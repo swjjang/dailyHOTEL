@@ -117,7 +117,7 @@ public class CouponTermActivity extends WebViewActivity
             @Override
             public void onClick(View v)
             {
-                dailyWebView.setScrollY(0);
+                smoothScrollTop(dailyWebView);
             }
         });
 

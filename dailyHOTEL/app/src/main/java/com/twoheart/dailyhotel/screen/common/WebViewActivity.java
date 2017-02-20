@@ -12,6 +12,8 @@
  */
 package com.twoheart.dailyhotel.screen.common;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -110,6 +113,48 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     public void setEnabledProgress(boolean enabled)
     {
         mEnabledPorgoress = enabled;
+    }
+
+    protected void smoothScrollTop(WebView webView)
+    {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(webView, "scrollY", webView.getScrollY(), 0);
+        objectAnimator.setDuration(webView.getScrollY() * 30 / Util.getLCDHeight(this));
+        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        webView.flingScroll(0, 0);
+
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                releaseUiComponent();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
     }
 
     public class DailyHotelWebViewClient extends WebViewClient
