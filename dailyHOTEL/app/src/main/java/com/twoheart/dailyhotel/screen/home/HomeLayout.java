@@ -289,7 +289,7 @@ public class HomeLayout extends BaseLayout
 
 
         mErrorLayoutMinTranslationY = 0;
-        mErrorLayoutMaxTranslationY = Util.dpToPx(mContext, 90d) + 1;
+        mErrorLayoutMaxTranslationY = Util.dpToPx(mContext, 93d) + 1;
         mErrorPopupLayout.setTranslationY(mErrorLayoutMaxTranslationY);
     }
 
