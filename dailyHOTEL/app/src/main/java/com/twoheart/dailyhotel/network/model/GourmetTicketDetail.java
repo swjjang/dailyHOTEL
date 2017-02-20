@@ -10,15 +10,6 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class GourmetTicketDetail implements Parcelable
 {
     @JsonField
-    public String menuSummary;
-
-    @JsonField
-    public String openTime;
-
-    @JsonField
-    public String closeTime;
-
-    @JsonField
     public String primaryTicketImageDescription;
 
     @JsonField
@@ -36,18 +27,12 @@ public class GourmetTicketDetail implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(menuSummary);
-        dest.writeString(openTime);
-        dest.writeString(closeTime);
         dest.writeString(primaryTicketImageDescription);
         dest.writeString(primaryTicketImageUrl);
     }
 
     protected void readFromParcel(Parcel in)
     {
-        menuSummary = in.readString();
-        openTime = in.readString();
-        closeTime = in.readString();
         primaryTicketImageDescription = in.readString();
         primaryTicketImageUrl = in.readString();
     }

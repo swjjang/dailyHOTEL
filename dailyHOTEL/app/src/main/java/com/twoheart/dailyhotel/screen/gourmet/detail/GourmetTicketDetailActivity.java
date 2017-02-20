@@ -4,26 +4,37 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetTicket;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class GourmetTicketDetailActivity extends BaseActivity
 {
@@ -34,7 +45,8 @@ public class GourmetTicketDetailActivity extends BaseActivity
     private String mArea;
     private int mSelectedTicketIndex;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex, Province province, String area)
+    public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail//
+        , int ticketIndex, Province province, String area)
     {
         Intent intent = new Intent(context, GourmetTicketDetailActivity.class);
 
@@ -56,7 +68,7 @@ public class GourmetTicketDetailActivity extends BaseActivity
 
         Intent intent = getIntent();
 
-        if(intent == null)
+        if (intent == null)
         {
             finish();
             return;
@@ -66,14 +78,13 @@ public class GourmetTicketDetailActivity extends BaseActivity
 
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mGourmetDetail = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL);
-        int ticketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, -1);
+        mSelectedTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, -1);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
         setContentView(mGourmetTicketDetailLayout.onCreateView(R.layout.activity_gourmet_product_detail));
 
-        mGourmetTicketDetailLayout.setInformation(mGourmetDetail, ticketIndex);
-
+        mGourmetTicketDetailLayout.setInformation(mGourmetDetail, mSelectedTicketIndex);
     }
 
     private void initLayout()
@@ -280,19 +291,139 @@ public class GourmetTicketDetailActivity extends BaseActivity
         @Override
         public void onImageClick(int position)
         {
+            if (isLockUiComponent() == true)
+            {
+                return;
+            }
 
+            GourmetTicket gourmetTicket = mGourmetDetail.getProduct(mSelectedTicketIndex);
+
+            List<ProductImageInformation> productImageInformationList = mGourmetDetail.getProduct(mSelectedTicketIndex).getImageList();
+            if (productImageInformationList.size() == 0)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            // ProductImageInformation -> ImageInformation 로 수정
+            List<ImageInformation> imageInformationList = new ArrayList<>();
+
+            for (ProductImageInformation productImageInformation : productImageInformationList)
+            {
+                ImageInformation imageInformation = new ImageInformation();
+                imageInformation.description = productImageInformation.imageDescription;
+                imageInformation.setImageUrl(productImageInformation.imageUrl);
+
+                imageInformationList.add(imageInformation);
+            }
+
+            Intent intent = ImageDetailListActivity.newInstance(GourmetTicketDetailActivity.this, PlaceType.FNB, gourmetTicket.ticketName, imageInformationList, position);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
+
+            AnalyticsManager.getInstance(GourmetTicketDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+                AnalyticsManager.Action.GOURMET_IMAGE_CLICKED, gourmetTicket.ticketName, null);
         }
 
         @Override
         public void onReservationClick()
         {
+            GourmetTicket gourmetTicket = mGourmetDetail.getProduct(mSelectedTicketIndex);
 
+            if (gourmetTicket == null)
+            {
+                setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                finish();
+                return;
+            }
+
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            if (DailyHotel.isLogin() == false)
+            {
+                startLoginActivity(AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+            } else
+            {
+                lockUI();
+                DailyMobileAPI.getInstance(GourmetTicketDetailActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
+            }
+
+            GourmetDetailParams gourmetDetailParams = mGourmetDetail.getGourmetDetailParmas();
+
+            if (gourmetDetailParams != null)
+            {
+                String label = String.format("%s-%s", gourmetDetailParams.name, gourmetTicket.ticketName);
+                AnalyticsManager.getInstance(GourmetTicketDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                    , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, mGourmetDetail, mSelectedTicketIndex));
+            }
         }
 
         @Override
         public void finish()
         {
             GourmetTicketDetailActivity.this.finish();
+        }
+    };
+
+    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                        Customer user = new Customer();
+                        user.setEmail(jsonObject.getString("email"));
+                        user.setName(jsonObject.getString("name"));
+                        user.setPhone(jsonObject.getString("phone"));
+                        user.setUserIdx(jsonObject.getString("userIdx"));
+
+                        String birthday = null;
+
+                        if (jsonObject.has("birthday") == true && jsonObject.isNull("birthday") == false)
+                        {
+                            birthday = jsonObject.getString("birthday");
+                        }
+
+                        String userType = jsonObject.getString("userType");
+                        boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(userType);
+
+                        boolean isVerified = jsonObject.getBoolean("verified");
+                        boolean isPhoneVerified = jsonObject.getBoolean("phoneVerified");
+
+                        onUserProfile(user, birthday, isDailyUser, isVerified, isPhoneVerified);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        onErrorToastMessage(msg);
+                    }
+                } catch (Exception e)
+                {
+                    onError(e);
+                }
+            } else
+            {
+                onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            onError(t);
         }
     };
 }

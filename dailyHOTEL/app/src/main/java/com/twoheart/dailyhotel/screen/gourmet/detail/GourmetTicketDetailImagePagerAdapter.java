@@ -17,15 +17,17 @@ public class GourmetTicketDetailImagePagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<ProductImageInformation> mImageInformationList;
+    private View.OnClickListener mOnClickListener;
 
     public GourmetTicketDetailImagePagerAdapter(Context context)
     {
         mContext = context;
     }
 
-    public void setData(List<ProductImageInformation> list)
+    public void setData(List<ProductImageInformation> list, View.OnClickListener listener)
     {
         mImageInformationList = list;
+        mOnClickListener = listener;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class GourmetTicketDetailImagePagerAdapter extends PagerAdapter
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             imageView.setTag(imageView.getId(), position);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+            imageView.setOnClickListener(null);
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
             container.addView(imageView, 0, layoutParams);
@@ -56,6 +59,8 @@ public class GourmetTicketDetailImagePagerAdapter extends PagerAdapter
 
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
             container.addView(imageView, 0, layoutParams);
+
+            imageView.setOnClickListener(mOnClickListener);
         } else
         {
             Util.restartApp(mContext);
