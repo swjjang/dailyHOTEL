@@ -44,16 +44,16 @@
     </RelativeLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/errorView"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:translationY="90dp"
-        android:background="@color/white">
+        android:translationY="94dp">
 
         <include
             layout="@layout/list_row_home_content_server_error_layout"/>
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

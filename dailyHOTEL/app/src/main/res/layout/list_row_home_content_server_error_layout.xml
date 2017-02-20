@@ -5,56 +5,64 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/default_line_ce7e7e7"/>
+        android:layout_height="3dp"
+        android:background="@drawable/shape_home_action_button_layout_gradient"
+        android:rotation="180"/>
 
-    <com.twoheart.dailyhotel.widget.DailyImageView
-        android:id="@+id/closeImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="10dp"
-        android:padding="5dp"
-        app:srcCompat="@drawable/ic_delete_grey_medium"/>
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/errorTextView1"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="13dp"
-        android:layout_toLeftOf="@id/closeImageView"
-        android:gravity="center_vertical"
-        android:minHeight="19dp"
-        android:textColor="@color/default_text_c666666"
-        android:textSize="13dp"/>
+        android:layout_height="90dp"
+        android:background="@color/white">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/errorTextView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/errorTextView1"
-        android:layout_below="@id/errorTextView1"
-        android:layout_marginTop="3dp"
-        android:gravity="center_vertical"
-        android:minHeight="19dp"
-        android:textColor="@color/default_text_c666666"
-        android:textSize="13dp"/>
+        <com.twoheart.dailyhotel.widget.DailyImageView
+            android:id="@+id/closeImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/ic_delete_grey_medium"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/retryTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/errorTextView2"
-        android:layout_alignStart="@+id/errorTextView2"
-        android:layout_below="@+id/errorTextView2"
-        android:layout_marginTop="3dp"
-        android:gravity="center_vertical"
-        android:minHeight="19dp"
-        android:text="@string/label_home_retry_button_text"
-        android:textColor="@color/default_text_cb70038"
-        android:textSize="13dp"
-        app:style="Medium"/>
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/errorTextView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="13dp"
+            android:layout_toLeftOf="@id/closeImageView"
+            android:gravity="center_vertical"
+            android:minHeight="19dp"
+            android:textColor="@color/default_text_c666666"
+            android:textSize="13dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/errorTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/errorTextView1"
+            android:layout_below="@id/errorTextView1"
+            android:layout_marginTop="3dp"
+            android:gravity="center_vertical"
+            android:minHeight="19dp"
+            android:textColor="@color/default_text_c666666"
+            android:textSize="13dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/retryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/errorTextView2"
+            android:layout_alignStart="@+id/errorTextView2"
+            android:layout_below="@+id/errorTextView2"
+            android:layout_marginTop="3dp"
+            android:gravity="center_vertical"
+            android:minHeight="19dp"
+            android:text="@string/label_home_retry_button_text"
+            android:textColor="@color/default_text_cb70038"
+            android:textSize="13dp"
+            app:style="Medium"/>
+
+    </RelativeLayout>
 
 </merge>
