@@ -124,7 +124,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         } else
         {
             // 개수 넣기
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
+            //            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
             int entryPosition = 0;
 
