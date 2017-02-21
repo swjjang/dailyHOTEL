@@ -120,7 +120,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public void onBindViewHolder(TicketInformationViewHolder holder, int position, PlaceViewItem placeViewItem)
+    private void onBindViewHolder(TicketInformationViewHolder ticketInformationViewHolder, int position, PlaceViewItem placeViewItem)
     {
         GourmetTicket gourmetTicket = placeViewItem.getItem();
 
@@ -128,8 +128,6 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         {
             return;
         }
-
-        TicketInformationViewHolder ticketInformationViewHolder = (TicketInformationViewHolder) holder;
 
         ticketInformationViewHolder.contentsLayout.setTag(position);
         ticketInformationViewHolder.contentsLayout.setOnClickListener(new View.OnClickListener()

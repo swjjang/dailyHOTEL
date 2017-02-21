@@ -87,7 +87,7 @@
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/detailView"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/reservationView"
@@ -101,7 +101,7 @@
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/reservationView"
-            android:layout_width="86dp"
+            android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_alignParentRight="true"
             android:background="@drawable/shape_fillrect_bb70038_r2"
