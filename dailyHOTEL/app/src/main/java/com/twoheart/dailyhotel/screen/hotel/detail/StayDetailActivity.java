@@ -1739,17 +1739,39 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorPopupMessage(int msgCode, String message)
+        public void onErrorPopupMessage(final int msgCode, final String message)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
-            // 판매 마감시
-            if (msgCode == 5)
+            if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {
-                StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                mTransitionEndRunnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mTransitionEndRunnable = null;
+
+                        // 판매 마감시
+                        if (msgCode == 5)
+                        {
+                            StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                        } else
+                        {
+                            StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                        }
+                    }
+                };
             } else
             {
-                StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                // 판매 마감시
+                if (msgCode == 5)
+                {
+                    StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                } else
+                {
+                    StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                }
             }
         }
 
@@ -1762,11 +1784,27 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorResponse(Call call, Response response)
+        public void onErrorResponse(final Call call, final Response response)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onErrorResponse(call, response);
-            finish();
+
+            if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
+            {
+                mTransitionEndRunnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mTransitionEndRunnable = null;
+                        StayDetailActivity.this.onErrorResponse(call, response);
+                        finish();
+                    }
+                };
+            } else
+            {
+                StayDetailActivity.this.onErrorResponse(call, response);
+                finish();
+            }
         }
     };
 }
