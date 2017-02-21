@@ -31,9 +31,6 @@ public class GourmetProduct implements Parcelable
     public String benefit;
 
     @JsonField
-    public String option;
-
-    @JsonField
     public String checkList;
 
     //    @JsonField
@@ -45,14 +42,15 @@ public class GourmetProduct implements Parcelable
     //    @JsonField
     //    public int timeInterval;
     //
-    //    @JsonField
-    //    public String openTime;
-    //
-    //    @JsonField
-    //    public String closeTime;
-    //
-    //    @JsonField
-    //    public String lastOrderTime;
+    @JsonField
+    public String openTime;
+
+    @JsonField
+    public String closeTime;
+
+    @JsonField
+    public String lastOrderTime;
+
     //
     //    @JsonField
     //    public String expiryTime;
@@ -119,13 +117,13 @@ public class GourmetProduct implements Parcelable
         dest.writeInt(price);
         dest.writeInt(discountPrice);
         dest.writeString(benefit);
-        dest.writeString(option);
+        dest.writeString(checkList);
         //        dest.writeString(startEatingTime);
         //        dest.writeString(endEatingTime);
         //        dest.writeInt(timeInterval);
-        //        dest.writeString(openTime);
-        //        dest.writeString(closeTime);
-        //        dest.writeString(lastOrderTime);
+        dest.writeString(openTime);
+        dest.writeString(closeTime);
+        dest.writeString(lastOrderTime);
         //        dest.writeString(expiryTime);
         dest.writeTypedList(images);
         dest.writeString(menuSummary);
@@ -140,13 +138,13 @@ public class GourmetProduct implements Parcelable
         price = in.readInt();
         discountPrice = in.readInt();
         benefit = in.readString();
-        option = in.readString();
+        checkList = in.readString();
         //        startEatingTime = in.readString();
         //        endEatingTime = in.readString();
         //        timeInterval = in.readInt();
-        //        openTime = in.readString();
-        //        closeTime = in.readString();
-        //        lastOrderTime = in.readString();
+        openTime = in.readString();
+        closeTime = in.readString();
+        lastOrderTime = in.readString();
         //        expiryTime = in.readString();
         images = in.createTypedArrayList(ProductImageInformation.CREATOR);
         menuSummary = in.readString();

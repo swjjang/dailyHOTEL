@@ -98,85 +98,131 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_toLeftOf="@id/simpleDraweeView"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:minHeight="59dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 android:textColor="@color/default_text_c323232"
-                android:textSize="15dp"
+                android:textSize="18dp"
                 dailyFont:style="Medium"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/default_line_cf0f0f0"/>
 
             <LinearLayout
                 android:id="@+id/benefitLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="15dp"
+                android:minHeight="40dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="19dp"
-                    android:layout_marginTop="5dp"
-                    app:srcCompat="@drawable/info_ic_text_dot_black"/>
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_detail_item_02_benefit_02"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/benefitTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="12dp"
                     android:freezesText="true"
-                    android:lineSpacingExtra="-2dp"
-                    android:textColor="@color/default_background_section_c323232"
+                    android:textColor="@color/default_text_cb70038"
                     android:textSize="13dp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/default_line_cdcdcdd"/>
 
             <LinearLayout
                 android:id="@+id/timeLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="19dp"
-                    android:layout_marginTop="5dp"
-                    app:srcCompat="@drawable/info_ic_text_dot_black"/>
+                    android:drawablePadding="6dp"
+                    android:freezesText="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_office_hours"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/ic_detail_item_03_time"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/timeTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="26dp"
                     android:freezesText="true"
-                    android:lineSpacingExtra="-2dp"
-                    android:textColor="@color/default_background_section_c323232"
+                    android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/checkLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="19dp"
-                    android:layout_marginTop="5dp"
-                    app:srcCompat="@drawable/info_ic_text_dot_black"/>
+                    android:freezesText="true"
+                    android:drawablePadding="6dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_checklist"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/ic_detail_item_01_info"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:id="@+id/checkTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="26dp"
                     android:freezesText="true"
-                    android:lineSpacingExtra="-2dp"
-                    android:textColor="@color/default_background_section_c323232"
+                    android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/default_line_cf0f0f0"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/menuTextView"
@@ -217,9 +263,9 @@
         android:id="@+id/bottomBarLayout"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:padding="10dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:padding="10dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/discountPriceTextView"

@@ -151,7 +151,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 이용시간
         View timeLayout = mNestedScrollView.findViewById(R.id.timeLayout);
 
-        if (Util.isTextEmpty(gourmetProduct.option) == true)
+        if (Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
         {
             timeLayout.setVisibility(View.GONE);
         } else
@@ -159,7 +159,15 @@ public class GourmetProductDetailLayout extends BaseLayout
             timeLayout.setVisibility(View.VISIBLE);
 
             TextView timeTextView = (TextView) timeLayout.findViewById(R.id.timeTextView);
-            timeTextView.setText(gourmetProduct.option);
+
+            String timeFormat = String.format("%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
+
+            if (Util.isTextEmpty(gourmetProduct.lastOrderTime) == false)
+            {
+                timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
+            }
+
+            timeTextView.setText(timeFormat);
         }
 
         // 확인사항

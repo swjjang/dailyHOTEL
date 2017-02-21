@@ -184,13 +184,13 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         // 베네핏
         if (Util.isTextEmpty(gourmetProduct.benefit) == false)
         {
-            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.benefit, R.drawable.ic_detail_item_01_info, false);
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.benefit, R.drawable.ic_detail_item_02_benefit, false);
         }
 
         // 확인 사항
-        if (Util.isTextEmpty(gourmetProduct.option) == false)
+        if (Util.isTextEmpty(gourmetProduct.checkList) == false)
         {
-            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.option, R.drawable.ic_detail_item_02_benefit, true);
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.checkList, R.drawable.ic_detail_item_01_info, true);
         }
 
         String price = Util.getPriceFormat(mContext, gourmetProduct.price, false);

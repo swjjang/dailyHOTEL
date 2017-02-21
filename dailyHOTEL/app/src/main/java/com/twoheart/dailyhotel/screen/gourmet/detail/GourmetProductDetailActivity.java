@@ -87,14 +87,6 @@ public class GourmetProductDetailActivity extends BaseActivity
         mGourmetProductDetailLayout.setInformation(mGourmetDetail, mSelectedProductPosition);
     }
 
-    private void initLayout()
-    {
-        setContentView(mGourmetProductDetailLayout.onCreateView(R.layout.activity_gourmet_product_detail));
-
-
-    }
-
-
     @Override
     public void finish()
     {

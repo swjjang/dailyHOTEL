@@ -976,9 +976,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 stayBookingDetail.setData(jsonObject);
 
-                long checkOutDateTime = DailyCalendar.getTimeGMT9(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
-
-
                 if(stayBookingDetail.readyForRefund == true)
                 {
                     stayBookingDetail.isVisibleRefundPolicy = true;
@@ -987,6 +984,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
                 } else
                 {
+                    long checkOutDateTime = DailyCalendar.getTimeGMT9(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+
                     if (stayBookingDetail.currentDateTime < checkOutDateTime)
                     {
                         stayBookingDetail.isVisibleRefundPolicy = true;
