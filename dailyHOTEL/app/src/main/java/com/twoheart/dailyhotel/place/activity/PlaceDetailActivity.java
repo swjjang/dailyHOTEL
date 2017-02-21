@@ -66,6 +66,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     private int mResultCode;
     protected Intent mResultIntent;
     protected boolean mIsUsedMultiTransition;
+    protected Runnable mTransitionEndRunnable; // 트렌지션 중에 에러가 난경우 팝업을 띄워야 하는데 트렌지션으로 이슈가 발생하여 트레진션 끝나고 동작.
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 

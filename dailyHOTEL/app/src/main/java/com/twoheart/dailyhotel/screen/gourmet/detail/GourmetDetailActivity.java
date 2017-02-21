@@ -495,6 +495,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                                 updateDetailInformationLayout((GourmetDetail) mPlaceDetail);
                             }
                         });
+
+                        if (mTransitionEndRunnable != null)
+                        {
+                            mHandler.post(mTransitionEndRunnable);
+                        }
                     } else
                     {
                         // 애니메이션이 끝났으나 아직 데이터가 로드 되지 않은 경우에는 프로그래스 바를 그리도록 한다.
@@ -1707,19 +1712,40 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorPopupMessage(int msgCode, String message)
+        public void onErrorPopupMessage(final int msgCode, final String message)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
-            // 판매 마감시
-            if (msgCode == 5)
+            if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {
-                GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                mTransitionEndRunnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mTransitionEndRunnable = null;
+
+                        // 판매 마감시
+                        if (msgCode == 5)
+                        {
+                            GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                        } else
+                        {
+                            GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                        }
+                    }
+                };
             } else
             {
-                GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                // 판매 마감시
+                if (msgCode == 5)
+                {
+                    GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                } else
+                {
+                    GourmetDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                }
             }
-
         }
 
         @Override
@@ -1731,11 +1757,27 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorResponse(Call call, Response response)
+        public void onErrorResponse(final Call call, final Response response)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            GourmetDetailActivity.this.onErrorResponse(call, response);
-            finish();
+
+            if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
+            {
+                mTransitionEndRunnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mTransitionEndRunnable = null;
+                        GourmetDetailActivity.this.onErrorResponse(call, response);
+                        finish();
+                    }
+                };
+            } else
+            {
+                GourmetDetailActivity.this.onErrorResponse(call, response);
+                finish();
+            }
         }
     };
 }
