@@ -132,7 +132,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         } else
         {
             // 개수 넣기
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
+            //            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
             int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
             int entryPosition = 0;
