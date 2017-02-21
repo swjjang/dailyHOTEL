@@ -193,7 +193,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
                 mEventListAdapter.clear();
             }
 
-            if (eventList == null)
+            if (eventList == null || eventList.size() == 0)
             {
                 mListView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.VISIBLE);
