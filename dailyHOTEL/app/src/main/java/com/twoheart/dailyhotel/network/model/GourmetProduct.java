@@ -36,26 +36,26 @@ public class GourmetProduct implements Parcelable
     @JsonField
     public String checkList;
 
-//    @JsonField
-//    public String startEatingTime;
-//
-//    @JsonField
-//    public String endEatingTime;
-//
-//    @JsonField
-//    public int timeInterval;
-//
-//    @JsonField
-//    public String openTime;
-//
-//    @JsonField
-//    public String closeTime;
-//
-//    @JsonField
-//    public String lastOrderTime;
-//
-//    @JsonField
-//    public String expiryTime;
+    //    @JsonField
+    //    public String startEatingTime;
+    //
+    //    @JsonField
+    //    public String endEatingTime;
+    //
+    //    @JsonField
+    //    public int timeInterval;
+    //
+    //    @JsonField
+    //    public String openTime;
+    //
+    //    @JsonField
+    //    public String closeTime;
+    //
+    //    @JsonField
+    //    public String lastOrderTime;
+    //
+    //    @JsonField
+    //    public String expiryTime;
 
     @JsonField
     public List<ProductImageInformation> images;
@@ -120,13 +120,13 @@ public class GourmetProduct implements Parcelable
         dest.writeInt(discountPrice);
         dest.writeString(benefit);
         dest.writeString(option);
-//        dest.writeString(startEatingTime);
-//        dest.writeString(endEatingTime);
-//        dest.writeInt(timeInterval);
-//        dest.writeString(openTime);
-//        dest.writeString(closeTime);
-//        dest.writeString(lastOrderTime);
-//        dest.writeString(expiryTime);
+        //        dest.writeString(startEatingTime);
+        //        dest.writeString(endEatingTime);
+        //        dest.writeInt(timeInterval);
+        //        dest.writeString(openTime);
+        //        dest.writeString(closeTime);
+        //        dest.writeString(lastOrderTime);
+        //        dest.writeString(expiryTime);
         dest.writeTypedList(images);
         dest.writeString(menuSummary);
         dest.writeString(menuDetail);
@@ -141,13 +141,13 @@ public class GourmetProduct implements Parcelable
         discountPrice = in.readInt();
         benefit = in.readString();
         option = in.readString();
-//        startEatingTime = in.readString();
-//        endEatingTime = in.readString();
-//        timeInterval = in.readInt();
-//        openTime = in.readString();
-//        closeTime = in.readString();
-//        lastOrderTime = in.readString();
-//        expiryTime = in.readString();
+        //        startEatingTime = in.readString();
+        //        endEatingTime = in.readString();
+        //        timeInterval = in.readInt();
+        //        openTime = in.readString();
+        //        closeTime = in.readString();
+        //        lastOrderTime = in.readString();
+        //        expiryTime = in.readString();
         images = in.createTypedArrayList(ProductImageInformation.CREATOR);
         menuSummary = in.readString();
         menuDetail = in.readString();

@@ -353,7 +353,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mDontReloadAtOnResume = false;
             mIsTransitionEnd = true;
 
-            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, 0);
+            mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, 0);
 
             initLayout(null, null, false);
 
@@ -904,16 +904,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         // 딥링크로 메뉴 오픈 요청
-        if (mIsDeepLink == true && mOpenTicketIndex > 0 && gourmetDetail.getProductList().size() > 0)
+        if (mIsDeepLink == true && mProductDetailIndex > 0 && gourmetDetail.getProductList().size() > 0)
         {
             if (mPlaceDetailLayout != null)
             {
-                // 딥링크 수정
-                GourmetProductListActivity.newInstance(this, mSaleTime, gourmetDetail, mOpenTicketIndex, null, null);
+                Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, gourmetDetail, mProductDetailIndex, null, null);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
             }
         }
 
-        mOpenTicketIndex = 0;
+        mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }

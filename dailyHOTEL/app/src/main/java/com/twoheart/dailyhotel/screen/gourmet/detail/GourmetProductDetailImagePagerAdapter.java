@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 
