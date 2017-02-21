@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -232,7 +233,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             if (mIsUsedMultiTransition == true)
             {
-                if (mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                if (mResultCode == CODE_RESULT_ACTIVITY_REFRESH && isSameCallingActivity(MainActivity.class.getName()) == false)
                 {
                     finish();
                     return;
@@ -250,6 +251,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         @Override
                         public void run()
                         {
+                            mPlaceDetailLayout.setTransImageVisibility(true);
                             PlaceDetailActivity.super.onBackPressed();
                         }
                     }, 100);
