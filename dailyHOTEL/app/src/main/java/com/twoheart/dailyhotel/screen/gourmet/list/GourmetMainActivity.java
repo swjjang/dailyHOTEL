@@ -1050,7 +1050,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
-            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
+            int productIndex = DailyDeepLink.getInstance().getProductIndex();
 
             String startDate = DailyDeepLink.getInstance().getStartDate();
             String endDate = DailyDeepLink.getInstance().getEndDate();
