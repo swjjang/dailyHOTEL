@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -23,13 +23,13 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GourmetTicketDetailLayout extends BaseLayout
+public class GourmetProductDetailLayout extends BaseLayout
 {
     private NestedScrollView mNestedScrollView;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
     protected View mMoreIconView;
-    protected GourmetTicketDetailImagePagerAdapter mImageAdapter;
+    protected GourmetProductDetailImagePagerAdapter mImageAdapter;
 
     private TextView mDescriptionTextView;
     private View mDefaultImageLayout, mBottomBarLayout;
@@ -41,7 +41,7 @@ public class GourmetTicketDetailLayout extends BaseLayout
         void onReservationClick();
     }
 
-    public GourmetTicketDetailLayout(Context context, OnBaseEventListener listener)
+    public GourmetProductDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
@@ -67,7 +67,7 @@ public class GourmetTicketDetailLayout extends BaseLayout
 
         mViewPager = (DailyLoopViewPager) mDefaultImageLayout.findViewById(R.id.defaulLoopViewPager);
 
-        mImageAdapter = new GourmetTicketDetailImagePagerAdapter(mContext);
+        mImageAdapter = new GourmetProductDetailImagePagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
 
         mDailyLineIndicator.setViewPager(mViewPager);
@@ -98,13 +98,13 @@ public class GourmetTicketDetailLayout extends BaseLayout
         });
     }
 
-    public void setInformation(GourmetDetail gourmetDetail, int ticketIndex)
+    public void setInformation(GourmetDetail gourmetDetail, int productIndex)
     {
-        GourmetTicket gourmetTicket = gourmetDetail.getProduct(ticketIndex);
+        GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);
 
 
         // 이미지 정보
-        List<ProductImageInformation> imageInformationList = gourmetTicket.getImageList();
+        List<ProductImageInformation> imageInformationList = gourmetProduct.getImageList();
 
         if (imageInformationList == null || imageInformationList.size() == 0)
         {
@@ -132,12 +132,12 @@ public class GourmetTicketDetailLayout extends BaseLayout
         // 메뉴 제목
         TextView productNameTextView = (TextView) mNestedScrollView.findViewById(R.id.productNameTextView);
 
-        productNameTextView.setText(gourmetTicket.ticketName);
+        productNameTextView.setText(gourmetProduct.ticketName);
 
         // 베네핏
         View benefitLayout = mNestedScrollView.findViewById(R.id.benefitLayout);
 
-        if (Util.isTextEmpty(gourmetTicket.benefit) == true)
+        if (Util.isTextEmpty(gourmetProduct.benefit) == true)
         {
             benefitLayout.setVisibility(View.GONE);
         } else
@@ -145,13 +145,13 @@ public class GourmetTicketDetailLayout extends BaseLayout
             benefitLayout.setVisibility(View.VISIBLE);
 
             TextView benefitTextView = (TextView) benefitLayout.findViewById(R.id.benefitTextView);
-            benefitTextView.setText(gourmetTicket.benefit);
+            benefitTextView.setText(gourmetProduct.benefit);
         }
 
         // 이용시간
         View timeLayout = mNestedScrollView.findViewById(R.id.timeLayout);
 
-        if (Util.isTextEmpty(gourmetTicket.option) == true)
+        if (Util.isTextEmpty(gourmetProduct.option) == true)
         {
             timeLayout.setVisibility(View.GONE);
         } else
@@ -159,13 +159,13 @@ public class GourmetTicketDetailLayout extends BaseLayout
             timeLayout.setVisibility(View.VISIBLE);
 
             TextView timeTextView = (TextView) timeLayout.findViewById(R.id.timeTextView);
-            timeTextView.setText(gourmetTicket.option);
+            timeTextView.setText(gourmetProduct.option);
         }
 
         // 확인사항
         View checkLayout = mNestedScrollView.findViewById(R.id.checkLayout);
 
-        if (Util.isTextEmpty(gourmetTicket.checkList) == true)
+        if (Util.isTextEmpty(gourmetProduct.checkList) == true)
         {
             checkLayout.setVisibility(View.GONE);
         } else
@@ -173,7 +173,7 @@ public class GourmetTicketDetailLayout extends BaseLayout
             checkLayout.setVisibility(View.VISIBLE);
 
             TextView checkTextView = (TextView) checkLayout.findViewById(R.id.checkTextView);
-            checkTextView.setText(gourmetTicket.checkList);
+            checkTextView.setText(gourmetProduct.checkList);
         }
 
         // 메뉴 설명
@@ -181,21 +181,21 @@ public class GourmetTicketDetailLayout extends BaseLayout
 
         TextView menuSummaryTextView = (TextView) mNestedScrollView.findViewById(R.id.menuSummaryTextView);
 
-        if (Util.isTextEmpty(gourmetTicket.menuSummary) == true)
+        if (Util.isTextEmpty(gourmetProduct.menuSummary) == true)
         {
             menuSummaryTextView.setVisibility(View.GONE);
         } else
         {
             menuSummaryTextView.setVisibility(View.VISIBLE);
-            menuSummaryTextView.setText(gourmetTicket.menuSummary);
+            menuSummaryTextView.setText(gourmetProduct.menuSummary);
         }
 
         ViewGroup menuDetailLayout = (ViewGroup) mNestedScrollView.findViewById(R.id.menuDetailLayout);
 
         List<String> menuDetail = new ArrayList<>();
-        menuDetail.add(gourmetTicket.menuDetail);
+        menuDetail.add(gourmetProduct.menuDetail);
 
-        if (gourmetTicket.menuDetail == null || menuDetail.size() == 0)
+        if (gourmetProduct.menuDetail == null || menuDetail.size() == 0)
         {
             menuDetailLayout.setVisibility(View.GONE);
         } else
@@ -217,10 +217,10 @@ public class GourmetTicketDetailLayout extends BaseLayout
         TextView priceTextView = (TextView) mBottomBarLayout.findViewById(R.id.priceTextView);
         priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-        String price = Util.getPriceFormat(mContext, gourmetTicket.price, false);
-        String discountPrice = Util.getPriceFormat(mContext, gourmetTicket.discountPrice, false);
+        String price = Util.getPriceFormat(mContext, gourmetProduct.price, false);
+        String discountPrice = Util.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
 
-        if (gourmetTicket.price <= 0 || gourmetTicket.price <= gourmetTicket.discountPrice)
+        if (gourmetProduct.price <= 0 || gourmetProduct.price <= gourmetProduct.discountPrice)
         {
             priceTextView.setVisibility(View.GONE);
             priceTextView.setText(null);

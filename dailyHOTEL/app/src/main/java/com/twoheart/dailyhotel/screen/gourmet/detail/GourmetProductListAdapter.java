@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyImageView;
@@ -23,28 +23,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<PlaceViewItem> mGourmetTicketList;
-    private OnTicketClickListener mOnTicketClickListener;
+    private List<PlaceViewItem> mGourmetProductList;
+    private OnProductClickListener mOnProductClickListener;
 
 
-    public interface OnTicketClickListener
+    public interface OnProductClickListener
     {
         void onProductDetailClick(int position);
 
         void onReservationClick(int position);
     }
 
-    public GourmetTicketListAdapter(Context context, List<PlaceViewItem> arrayList, OnTicketClickListener listener)
+    public GourmetProductListAdapter(Context context, List<PlaceViewItem> arrayList, OnProductClickListener listener)
     {
         mContext = context;
-        mOnTicketClickListener = listener;
+        mOnProductClickListener = listener;
 
-        mGourmetTicketList = new ArrayList<>();
-        mGourmetTicketList.addAll(arrayList);
+        mGourmetProductList = new ArrayList<>();
+        mGourmetProductList.addAll(arrayList);
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -56,24 +56,24 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
             return;
         }
 
-        mGourmetTicketList.clear();
-        mGourmetTicketList.addAll(collection);
+        mGourmetProductList.clear();
+        mGourmetProductList.addAll(collection);
     }
 
     public PlaceViewItem getItem(int position)
     {
-        if (position < 0 || mGourmetTicketList.size() <= position)
+        if (position < 0 || mGourmetProductList.size() <= position)
         {
             return null;
         }
 
-        return mGourmetTicketList.get(position);
+        return mGourmetProductList.get(position);
     }
 
     @Override
     public int getItemViewType(int position)
     {
-        return mGourmetTicketList.get(position).mType;
+        return mGourmetProductList.get(position).mType;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
             {
                 View view = mInflater.inflate(R.layout.list_row_detail_product, parent, false);
 
-                return new TicketInformationViewHolder(view);
+                return new ProductInformationViewHolder(view);
             }
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
@@ -112,7 +112,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         switch (item.mType)
         {
             case PlaceViewItem.TYPE_ENTRY:
-                onBindViewHolder((TicketInformationViewHolder) holder, position, item);
+                onBindViewHolder((ProductInformationViewHolder) holder, position, item);
                 break;
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
@@ -120,116 +120,116 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    private void onBindViewHolder(TicketInformationViewHolder ticketInformationViewHolder, int position, PlaceViewItem placeViewItem)
+    private void onBindViewHolder(ProductInformationViewHolder productInformationViewHolder, int position, PlaceViewItem placeViewItem)
     {
-        GourmetTicket gourmetTicket = placeViewItem.getItem();
+        GourmetProduct gourmetProduct = placeViewItem.getItem();
 
-        if (gourmetTicket == null)
+        if (gourmetProduct == null)
         {
             return;
         }
 
-        ticketInformationViewHolder.contentsLayout.setTag(position);
-        ticketInformationViewHolder.contentsLayout.setOnClickListener(new View.OnClickListener()
+        productInformationViewHolder.contentsLayout.setTag(position);
+        productInformationViewHolder.contentsLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                mOnTicketClickListener.onProductDetailClick((int) v.getTag());
+                mOnProductClickListener.onProductDetailClick((int) v.getTag());
             }
         });
 
         boolean hasThumbnail = true;
 
-        ProductImageInformation productImageInformation = gourmetTicket.getPrimaryImage();
+        ProductImageInformation productImageInformation = gourmetProduct.getPrimaryImage();
         if (productImageInformation == null)
         {
             hasThumbnail = false;
         } else
         {
-            ticketInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl));
+            productInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl));
         }
 
-        ticketInformationViewHolder.productNameTextView.setText(gourmetTicket.ticketName);
+        productInformationViewHolder.productNameTextView.setText(gourmetProduct.ticketName);
 
         if (hasThumbnail == false)
         {
-            ticketInformationViewHolder.simpleDraweeView.setVisibility(View.GONE);
+            productInformationViewHolder.simpleDraweeView.setVisibility(View.GONE);
         } else
         {
-            ticketInformationViewHolder.simpleDraweeView.setVisibility(View.VISIBLE);
+            productInformationViewHolder.simpleDraweeView.setVisibility(View.VISIBLE);
 
             //            int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 115);
-            //            float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
+            //            float titleTextViewHeight = Util.getTextViewHeight(productInformationViewHolder.productNameTextView, titleTextViewWidth);
             //
             //            float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
             //            Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
             //            int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
             //
-            //            ticketInformationViewHolder.contentsList.removeAllViews();
+            //            productInformationViewHolder.contentsList.removeAllViews();
             //
-            //            if (Util.isTextEmpty(gourmetTicket.option) == false)
+            //            if (Util.isTextEmpty(gourmetProduct.option) == false)
             //            {
-            //                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, startY, textViewWidth, rect);
+            //                startY += addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.option, startY, textViewWidth, rect);
             //            }
             //
-            //            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+            //            if (Util.isTextEmpty(gourmetProduct.benefit) == false)
             //            {
-            //                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, startY, textViewWidth, rect);
+            //                startY += addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.benefit, startY, textViewWidth, rect);
             //            }
         }
 
-        ticketInformationViewHolder.contentsList.removeAllViews();
+        productInformationViewHolder.contentsList.removeAllViews();
 
         // 베네핏
-        if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+        if (Util.isTextEmpty(gourmetProduct.benefit) == false)
         {
-            addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, R.drawable.ic_detail_item_01_info, false);
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.benefit, R.drawable.ic_detail_item_01_info, false);
         }
 
         // 확인 사항
-        if (Util.isTextEmpty(gourmetTicket.option) == false)
+        if (Util.isTextEmpty(gourmetProduct.option) == false)
         {
-            addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, R.drawable.ic_detail_item_02_benefit, true);
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.option, R.drawable.ic_detail_item_02_benefit, true);
         }
 
-        String price = Util.getPriceFormat(mContext, gourmetTicket.price, false);
-        String discountPrice = Util.getPriceFormat(mContext, gourmetTicket.discountPrice, false);
+        String price = Util.getPriceFormat(mContext, gourmetProduct.price, false);
+        String discountPrice = Util.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
 
-        if (gourmetTicket.price <= 0 || gourmetTicket.price <= gourmetTicket.discountPrice)
+        if (gourmetProduct.price <= 0 || gourmetProduct.price <= gourmetProduct.discountPrice)
         {
-            ticketInformationViewHolder.priceTextView.setVisibility(View.GONE);
-            ticketInformationViewHolder.priceTextView.setText(null);
+            productInformationViewHolder.priceTextView.setVisibility(View.GONE);
+            productInformationViewHolder.priceTextView.setText(null);
         } else
         {
-            ticketInformationViewHolder.priceTextView.setVisibility(View.VISIBLE);
-            ticketInformationViewHolder.priceTextView.setText(price);
+            productInformationViewHolder.priceTextView.setVisibility(View.VISIBLE);
+            productInformationViewHolder.priceTextView.setText(price);
         }
 
-        ticketInformationViewHolder.discountPriceTextView.setText(discountPrice);
+        productInformationViewHolder.discountPriceTextView.setText(discountPrice);
 
-        ticketInformationViewHolder.detailView.setTag(position);
-        ticketInformationViewHolder.detailView.setOnClickListener(new View.OnClickListener()
+        productInformationViewHolder.detailView.setTag(position);
+        productInformationViewHolder.detailView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (mOnTicketClickListener != null)
+                if (mOnProductClickListener != null)
                 {
-                    mOnTicketClickListener.onProductDetailClick((int) v.getTag());
+                    mOnProductClickListener.onProductDetailClick((int) v.getTag());
                 }
             }
         });
 
-        ticketInformationViewHolder.reservationView.setTag(position);
-        ticketInformationViewHolder.reservationView.setOnClickListener(new View.OnClickListener()
+        productInformationViewHolder.reservationView.setTag(position);
+        productInformationViewHolder.reservationView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (mOnTicketClickListener != null)
+                if (mOnProductClickListener != null)
                 {
-                    mOnTicketClickListener.onReservationClick((int) v.getTag());
+                    mOnProductClickListener.onReservationClick((int) v.getTag());
                 }
             }
         });
@@ -238,15 +238,15 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
     @Override
     public int getItemCount()
     {
-        if (mGourmetTicketList == null)
+        if (mGourmetProductList == null)
         {
             return 0;
         }
 
-        return mGourmetTicketList.size();
+        return mGourmetProductList.size();
     }
 
-    private void addTicketSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, boolean hasTopMargin)
+    private void addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, boolean hasTopMargin)
     {
         if (layoutInflater == null || viewGroup == null || Util.isTextEmpty(contentText) == true)
         {
@@ -270,7 +270,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         textView.setText(contentText);
     }
 
-    private float addTicketSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, float startY, int textViewWidth, Rect rect)
+    private float addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, float startY, int textViewWidth, Rect rect)
     {
         if (layoutInflater == null || viewGroup == null || Util.isTextEmpty(contentText) == true)
         {
@@ -341,7 +341,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         return Util.getTextViewHeight(textView, viewWidth) + Util.dpToPx(mContext, 10);
     }
 
-    private class TicketInformationViewHolder extends RecyclerView.ViewHolder
+    private class ProductInformationViewHolder extends RecyclerView.ViewHolder
     {
         View contentsLayout;
         SimpleDraweeView simpleDraweeView;
@@ -352,7 +352,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         View detailView;
         View reservationView;
 
-        public TicketInformationViewHolder(View itemView)
+        public ProductInformationViewHolder(View itemView)
         {
             super(itemView);
 

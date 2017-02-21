@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
@@ -33,22 +33,22 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class GourmetTicketListActivity extends BaseActivity
+public class GourmetProductListActivity extends BaseActivity
 {
-    private GourmetTicketListLayout mGourmetTicketListLayout;
+    private GourmetProductListLayout mGourmetProductListLayout;
     private SaleTime mSaleTime;
     private GourmetDetail mGourmetDetail;
     private Province mProvince;
     private String mArea;
-    private int mSelectedTicketIndex;
+    private int mSelectedProductIndex;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex, Province province, String area)
+    public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, int productIndex, Province province, String area)
     {
-        Intent intent = new Intent(context, GourmetTicketListActivity.class);
+        Intent intent = new Intent(context, GourmetProductListActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL, gourmetDetail);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, ticketIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
 
@@ -70,17 +70,17 @@ public class GourmetTicketListActivity extends BaseActivity
             return;
         }
 
-        mGourmetTicketListLayout = new GourmetTicketListLayout(this, mOnEventListener);
+        mGourmetProductListLayout = new GourmetProductListLayout(this, mOnEventListener);
 
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mGourmetDetail = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL);
-        int ticketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_TICKETINDEX, -1);
+        int productIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, -1);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
-        setContentView(mGourmetTicketListLayout.onCreateView(R.layout.activity_gourmet_product_list));
+        setContentView(mGourmetProductListLayout.onCreateView(R.layout.activity_gourmet_product_list));
 
-        mGourmetTicketListLayout.setProductInformationLayout(mGourmetDetail.getProductList());
+        mGourmetProductListLayout.setProductInformationLayout(mGourmetDetail.getProductList());
     }
 
     @Override
@@ -116,7 +116,7 @@ public class GourmetTicketListActivity extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    mOnEventListener.onReservationClick(mSelectedTicketIndex);
+                    mOnEventListener.onReservationClick(mSelectedProductIndex);
                 }
                 break;
             }
@@ -179,7 +179,7 @@ public class GourmetTicketListActivity extends BaseActivity
                     moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                 } else
                 {
-                    processBooking(mSaleTime, mGourmetDetail, mSelectedTicketIndex);
+                    processBooking(mSaleTime, mGourmetDetail, mSelectedProductIndex);
                 }
             }
         } else
@@ -193,23 +193,23 @@ public class GourmetTicketListActivity extends BaseActivity
                 moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.getPhone());
             } else
             {
-                processBooking(mSaleTime, mGourmetDetail, mSelectedTicketIndex);
+                processBooking(mSaleTime, mGourmetDetail, mSelectedProductIndex);
             }
         }
     }
 
-    private void processBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex)
+    private void processBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int productIndex)
     {
-        if (saleTime == null || gourmetDetail == null || ticketIndex < 0)
+        if (saleTime == null || gourmetDetail == null || productIndex < 0)
         {
             unLockUI();
             return;
         }
 
-        GourmetTicket gourmetTicket = gourmetDetail.getProduct(ticketIndex);
+        GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);
         GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
-        if (gourmetTicket == null || gourmetDetailParams == null)
+        if (gourmetProduct == null || gourmetDetailParams == null)
         {
             unLockUI();
             return;
@@ -225,7 +225,7 @@ public class GourmetTicketListActivity extends BaseActivity
 
         boolean isBenefit = Util.isTextEmpty(gourmetDetailParams.benefit) == false;
 
-        Intent intent = GourmetPaymentActivity.newInstance(GourmetTicketListActivity.this, gourmetDetailParams.name, gourmetTicket//
+        Intent intent = GourmetPaymentActivity.newInstance(GourmetProductListActivity.this, gourmetDetailParams.name, gourmetProduct//
             , saleTime, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
             , mProvince, mArea, gourmetDetail.isShowOriginalPrice, gourmetDetail.entryPosition //
             , gourmetDetail.isDailyChoice, gourmetDetailParams.ratingValue);
@@ -233,9 +233,9 @@ public class GourmetTicketListActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
 
-    protected Map<String, String> recordAnalyticsBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex)
+    protected Map<String, String> recordAnalyticsBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int productIndex)
     {
-        if (saleTime == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null || ticketIndex <= 0)
+        if (saleTime == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null || productIndex <= 0)
         {
             return null;
         }
@@ -274,11 +274,11 @@ public class GourmetTicketListActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            GourmetTicket gourmetTicket = gourmetDetail.getProduct(ticketIndex);
+            GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);
 
-            if (gourmetTicket != null)
+            if (gourmetProduct != null)
             {
-                params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(gourmetTicket.discountPrice));
+                params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(gourmetProduct.discountPrice));
             }
 
             params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
@@ -292,20 +292,20 @@ public class GourmetTicketListActivity extends BaseActivity
         return null;
     }
 
-    private GourmetTicketListLayout.OnEventListener mOnEventListener = new GourmetTicketListLayout.OnEventListener()
+    private GourmetProductListLayout.OnEventListener mOnEventListener = new GourmetProductListLayout.OnEventListener()
     {
         @Override
         public void finish()
         {
-            GourmetTicketListActivity.this.finish();
+            GourmetProductListActivity.this.finish();
         }
 
         @Override
         public void onProductDetailClick(int position)
         {
-            GourmetTicket gourmetTicket = mGourmetDetail.getProduct(position);
+            GourmetProduct gourmetProduct = mGourmetDetail.getProduct(position);
 
-            if (gourmetTicket == null)
+            if (gourmetProduct == null)
             {
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
@@ -317,7 +317,7 @@ public class GourmetTicketListActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = GourmetTicketDetailActivity.newInstance(GourmetTicketListActivity.this//
+            Intent intent = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
                 , mSaleTime, mGourmetDetail, position, mProvince, mArea);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
         }
@@ -325,9 +325,9 @@ public class GourmetTicketListActivity extends BaseActivity
         @Override
         public void onReservationClick(int position)
         {
-            GourmetTicket gourmetTicket = mGourmetDetail.getProduct(position);
+            GourmetProduct gourmetProduct = mGourmetDetail.getProduct(position);
 
-            if (gourmetTicket == null)
+            if (gourmetProduct == null)
             {
                 setResult(CODE_RESULT_ACTIVITY_REFRESH);
                 finish();
@@ -339,7 +339,7 @@ public class GourmetTicketListActivity extends BaseActivity
                 return;
             }
 
-            mSelectedTicketIndex = position;
+            mSelectedProductIndex = position;
 
             if (DailyHotel.isLogin() == false)
             {
@@ -347,15 +347,15 @@ public class GourmetTicketListActivity extends BaseActivity
             } else
             {
                 lockUI();
-                DailyMobileAPI.getInstance(GourmetTicketListActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
+                DailyMobileAPI.getInstance(GourmetProductListActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
             }
 
             GourmetDetailParams gourmetDetailParams = mGourmetDetail.getGourmetDetailParmas();
 
             if (gourmetDetailParams != null)
             {
-                String label = String.format("%s-%s", gourmetDetailParams.name, gourmetTicket.ticketName);
-                AnalyticsManager.getInstance(GourmetTicketListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+                String label = String.format("%s-%s", gourmetDetailParams.name, gourmetProduct.ticketName);
+                AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, mGourmetDetail, position));
             }
         }

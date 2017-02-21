@@ -10,7 +10,7 @@ import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import java.util.List;
 
 @JsonObject
-public class GourmetTicket implements Parcelable
+public class GourmetProduct implements Parcelable
 {
     //    @JsonField(name = "idx")
     //    public int index;
@@ -68,11 +68,11 @@ public class GourmetTicket implements Parcelable
 
     private int mDefaultImageIndex;
 
-    public GourmetTicket()
+    public GourmetProduct()
     {
     }
 
-    public GourmetTicket(Parcel in)
+    public GourmetProduct(Parcel in)
     {
         readFromParcel(in);
     }
@@ -161,15 +161,15 @@ public class GourmetTicket implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public GourmetTicket createFromParcel(Parcel in)
+        public GourmetProduct createFromParcel(Parcel in)
         {
-            return new GourmetTicket(in);
+            return new GourmetProduct(in);
         }
 
         @Override
-        public GourmetTicket[] newArray(int size)
+        public GourmetProduct[] newArray(int size)
         {
-            return new GourmetTicket[size];
+            return new GourmetProduct[size];
         }
     };
 }

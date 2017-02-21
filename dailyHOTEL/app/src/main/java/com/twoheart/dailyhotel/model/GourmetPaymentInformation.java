@@ -2,7 +2,7 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.TimeZone;
@@ -16,7 +16,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
     public long ticketTime;
     public long[] ticketTimes;
     public String category;
-    private GourmetTicket mGourmetTicket;
+    private GourmetProduct mGourmetProduct;
 
     public GourmetPaymentInformation()
     {
@@ -43,7 +43,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         dest.writeInt(ticketMaxCount);
         dest.writeLong(ticketTime);
         dest.writeLongArray(ticketTimes);
-        dest.writeParcelable(mGourmetTicket, flags);
+        dest.writeParcelable(mGourmetProduct, flags);
         dest.writeString(category);
     }
 
@@ -58,18 +58,18 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         ticketMaxCount = in.readInt();
         ticketTime = in.readLong();
         ticketTimes = in.createLongArray();
-        mGourmetTicket = in.readParcelable(GourmetTicket.class.getClassLoader());
+        mGourmetProduct = in.readParcelable(GourmetProduct.class.getClassLoader());
         category = in.readString();
     }
 
-    public GourmetTicket getTicket()
+    public GourmetProduct getTicket()
     {
-        return mGourmetTicket;
+        return mGourmetProduct;
     }
 
-    public void setTicket(GourmetTicket gourmetTicket)
+    public void setTicket(GourmetProduct gourmetProduct)
     {
-        mGourmetTicket = gourmetTicket;
+        mGourmetProduct = gourmetProduct;
     }
 
     public String[] getTicketTimes()
@@ -100,7 +100,7 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
 
     public int getPaymentToPay()
     {
-        return mGourmetTicket.discountPrice * ticketCount;
+        return mGourmetProduct.discountPrice * ticketCount;
     }
 
     @Override

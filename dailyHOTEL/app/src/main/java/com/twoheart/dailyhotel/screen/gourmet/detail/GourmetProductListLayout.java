@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -16,9 +16,9 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GourmetTicketListLayout extends BaseLayout
+public class GourmetProductListLayout extends BaseLayout
 {
-    private GourmetTicketListAdapter mTicketTypeListAdapter;
+    private GourmetProductListAdapter mProductTypeListAdapter;
     private RecyclerView mRecyclerView;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -52,29 +52,29 @@ public class GourmetTicketListLayout extends BaseLayout
         }, false);
     }
 
-    public GourmetTicketListLayout(Context context, OnBaseEventListener listener)
+    public GourmetProductListLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
     }
 
-    public void setProductInformationLayout(List<GourmetTicket> gourmetTicketList)
+    public void setProductInformationLayout(List<GourmetProduct> gourmetProductList)
     {
-        if (gourmetTicketList == null || gourmetTicketList.size() == 0)
+        if (gourmetProductList == null || gourmetProductList.size() == 0)
         {
             return;
         }
 
-        List<PlaceViewItem> placeViewItemList = new ArrayList<>(gourmetTicketList.size() + 1);
+        List<PlaceViewItem> placeViewItemList = new ArrayList<>(gourmetProductList.size() + 1);
 
-        for(GourmetTicket gourmetTicket : gourmetTicketList)
+        for(GourmetProduct gourmetProduct : gourmetProductList)
         {
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmetTicket));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmetProduct));
         }
 
         placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
 
         // 처음 세팅하는 경우 객실 타입 세팅setProductInformationLayout
-        mTicketTypeListAdapter = new GourmetTicketListAdapter(mContext, placeViewItemList, new GourmetTicketListAdapter.OnTicketClickListener()
+        mProductTypeListAdapter = new GourmetProductListAdapter(mContext, placeViewItemList, new GourmetProductListAdapter.OnProductClickListener()
         {
             @Override
             public void onProductDetailClick(int position)
@@ -90,7 +90,7 @@ public class GourmetTicketListLayout extends BaseLayout
         });
 
 
-        mRecyclerView.setAdapter(mTicketTypeListAdapter);
+        mRecyclerView.setAdapter(mProductTypeListAdapter);
 
         //                new OnClickListener()
         //            {

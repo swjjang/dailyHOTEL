@@ -28,7 +28,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -179,10 +179,10 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
+        GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
 
         FormBody.Builder builder = new FormBody.Builder();
-        builder.add("sale_reco_idx", String.valueOf(gourmetTicket.saleIdx));
+        builder.add("sale_reco_idx", String.valueOf(gourmetProduct.saleIdx));
         builder.add("payment_type", gourmetPaymentInformation.paymentType.name());
         builder.add("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
         builder.add("customer_name", name);
