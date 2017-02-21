@@ -248,7 +248,9 @@
                 android:id="@+id/menuSummaryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/shape_fillrect_ld1d1d1_bfafafb_r1"
                 android:paddingBottom="16dp"
                 android:paddingLeft="10dp"
@@ -261,6 +263,7 @@
                 android:id="@+id/menuDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:orientation="vertical"/>
 
         </LinearLayout>
