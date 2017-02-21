@@ -76,22 +76,24 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         switch (mMainFragmentManager.getLastIndexFragment())
         {
             case MainFragmentManager.INDEX_HOME_FRAGMENT:
+                dailyToolbarLayout.initToolbar(R.drawable.img_gnb_logo, null, false);
                 break;
 
             case MainFragmentManager.INDEX_BOOKING_FRAGMENT:
                 title = getString(R.string.menu_item_title_bookings);
+                dailyToolbarLayout.initToolbar(title, null, false);
                 break;
 
             case MainFragmentManager.INDEX_MYDAILY_FRAGMENT:
                 title = getString(R.string.menu_item_title_mydaily);
+                dailyToolbarLayout.initToolbar(title, null, false);
                 break;
 
             case MainFragmentManager.INDEX_INFORMATION_FRAGMENT:
                 title = getString(R.string.menu_item_title_information);
+                dailyToolbarLayout.initToolbar(title, null, false);
                 break;
         }
-
-        dailyToolbarLayout.initToolbar(title, null, false);
     }
 
     @Override

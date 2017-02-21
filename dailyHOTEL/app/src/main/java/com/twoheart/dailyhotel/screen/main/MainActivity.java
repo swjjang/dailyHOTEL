@@ -88,7 +88,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                 case 2:
                 {
-                    if (mSplashLayout.getVisibility() == View.VISIBLE)
+                    if (mSplashLayout != null && mSplashLayout.getVisibility() == View.VISIBLE)
                     {
                         Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
                         animation.setDuration(400);

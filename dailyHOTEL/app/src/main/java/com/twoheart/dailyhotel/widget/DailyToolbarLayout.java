@@ -25,9 +25,9 @@ public class DailyToolbarLayout
         mToolbar = toolbar;
     }
 
-    private TextView getTitleTextView(Context context)
+    private DailyTextView getTitleTextView(Context context)
     {
-        TextView textView = (TextView) mToolbar.findViewById(R.id.titleTextView);
+        DailyTextView textView = (DailyTextView) mToolbar.findViewById(R.id.titleTextView);
 
         if (Util.getLCDWidth(context) <= 480)
         {
@@ -50,6 +50,30 @@ public class DailyToolbarLayout
 
         TextView textView = getTitleTextView(mContext);
         textView.setText(title);
+
+        View backView = mToolbar.findViewById(R.id.backImageView);
+
+        if (backPressedListener == null)
+        {
+            backView.setVisibility(View.GONE);
+            textView.setPadding(Util.dpToPx(mContext, 15), 0, 0, 0);
+        } else
+        {
+            backView.setVisibility(View.VISIBLE);
+            backView.setOnClickListener(backPressedListener);
+            textView.setPadding(0, 0, 0, 0);
+        }
+    }
+
+    public void initToolbar(int titleResId, View.OnClickListener backPressedListener, boolean isTransparent)
+    {
+        setToolbarTransparent(isTransparent);
+
+        FontManager.apply(mToolbar, FontManager.getInstance(mContext).getRegularTypeface());
+
+        DailyTextView textView = getTitleTextView(mContext);
+        textView.setText(null);
+        textView.setCompoundDrawablesWithIntrinsicBounds(titleResId, 0, 0, 0);
 
         View backView = mToolbar.findViewById(R.id.backImageView);
 
