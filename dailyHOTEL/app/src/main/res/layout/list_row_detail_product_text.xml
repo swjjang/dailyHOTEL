@@ -4,22 +4,19 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <ImageView
+    <com.twoheart.dailyhotel.widget.DailyImageView
+        android:id="@+id/iconImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="19dp"
-        android:layout_marginTop="5dp"
-        app:srcCompat="@drawable/info_ic_text_dot_black"/>
+        app:srcCompat="@drawable/ic_detail_item_01_info"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="2dp"
         android:freezesText="true"
-        android:lineSpacingExtra="-2dp"
-        android:textColor="@color/default_background_section_c323232"
+        android:textColor="@color/default_text_c929292"
         android:textSize="13dp"/>
 </LinearLayout>

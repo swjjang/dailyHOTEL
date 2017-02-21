@@ -13,9 +13,11 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.model.GourmetTicket;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyImageView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,8 +27,9 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
 {
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<GourmetTicket> mGourmetTicketList;
+    private List<PlaceViewItem> mGourmetTicketList;
     private OnTicketClickListener mOnTicketClickListener;
+
 
     public interface OnTicketClickListener
     {
@@ -35,7 +38,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         void onReservationClick(int position);
     }
 
-    public GourmetTicketListAdapter(Context context, List<GourmetTicket> arrayList, OnTicketClickListener listener)
+    public GourmetTicketListAdapter(Context context, List<PlaceViewItem> arrayList, OnTicketClickListener listener)
     {
         mContext = context;
         mOnTicketClickListener = listener;
@@ -46,7 +49,7 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addAll(Collection<GourmetTicket> collection)
+    public void addAll(Collection<PlaceViewItem> collection)
     {
         if (collection == null)
         {
@@ -57,38 +60,9 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         mGourmetTicketList.addAll(collection);
     }
 
-    //    public void setSelected(int position)
-    //    {
-    //        mSelectedPosition = position;
-    //    }
-    //
-    //    public int setSelectIndex(int index)
-    //    {
-    //        if (mTicketInformationList == null)
-    //        {
-    //            return 0;
-    //        }
-    //
-    //        int size = mTicketInformationList.size();
-    //
-    //        for (int i = 0; i < size; i++)
-    //        {
-    //            TicketInformation roomInformation = mTicketInformationList.get(i);
-    //
-    //            if (roomInformation.index == index)
-    //            {
-    //                setSelected(i);
-    //                notifyDataSetChanged();
-    //                return i;
-    //            }
-    //        }
-    //
-    //        return 0;
-    //    }
-
-    public GourmetTicket getItem(int position)
+    public PlaceViewItem getItem(int position)
     {
-        if (mGourmetTicketList.size() <= position)
+        if (position < 0 || mGourmetTicketList.size() <= position)
         {
             return null;
         }
@@ -97,17 +71,58 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
+    public int getItemViewType(int position)
+    {
+        return mGourmetTicketList.get(position).mType;
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = mInflater.inflate(R.layout.list_row_detail_product, parent, false);
+        switch (viewType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+            {
+                View view = mInflater.inflate(R.layout.list_row_detail_product, parent, false);
 
-        return new TicketInformationViewHolder(view);
+                return new TicketInformationViewHolder(view);
+            }
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            {
+                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+
+                return new FooterViewHolder(view);
+            }
+        }
+
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        GourmetTicket gourmetTicket = getItem(position);
+        PlaceViewItem item = getItem(position);
+
+        if (item == null)
+        {
+            return;
+        }
+
+        switch (item.mType)
+        {
+            case PlaceViewItem.TYPE_ENTRY:
+                onBindViewHolder((TicketInformationViewHolder) holder, position, item);
+                break;
+
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
+                break;
+        }
+    }
+
+    public void onBindViewHolder(TicketInformationViewHolder holder, int position, PlaceViewItem placeViewItem)
+    {
+        GourmetTicket gourmetTicket = placeViewItem.getItem();
 
         if (gourmetTicket == null)
         {
@@ -142,42 +157,42 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         if (hasThumbnail == false)
         {
             ticketInformationViewHolder.simpleDraweeView.setVisibility(View.GONE);
-
-            Rect rect = new Rect(0, 0, 0, 0);
-
-            ticketInformationViewHolder.contentsList.removeAllViews();
-
-            if (Util.isTextEmpty(gourmetTicket.option) == false)
-            {
-                addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, 0, -1, rect);
-            }
-
-            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
-            {
-                addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, 0, -1, rect);
-            }
         } else
         {
             ticketInformationViewHolder.simpleDraweeView.setVisibility(View.VISIBLE);
 
-            int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 115);
-            float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
+            //            int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 115);
+            //            float titleTextViewHeight = Util.getTextViewHeight(ticketInformationViewHolder.productNameTextView, titleTextViewWidth);
+            //
+            //            float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
+            //            Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
+            //            int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
+            //
+            //            ticketInformationViewHolder.contentsList.removeAllViews();
+            //
+            //            if (Util.isTextEmpty(gourmetTicket.option) == false)
+            //            {
+            //                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, startY, textViewWidth, rect);
+            //            }
+            //
+            //            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+            //            {
+            //                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, startY, textViewWidth, rect);
+            //            }
+        }
 
-            float startY = titleTextViewHeight + Util.dpToPx(mContext, 15);
-            Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 115), Util.dpToPx(mContext, 115));
-            int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 28) - Util.dpToPx(mContext, 15);
+        ticketInformationViewHolder.contentsList.removeAllViews();
 
-            ticketInformationViewHolder.contentsList.removeAllViews();
+        // 베네핏
+        if (Util.isTextEmpty(gourmetTicket.benefit) == false)
+        {
+            addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, R.drawable.ic_detail_item_01_info, false);
+        }
 
-            if (Util.isTextEmpty(gourmetTicket.option) == false)
-            {
-                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, startY, textViewWidth, rect);
-            }
-
-            if (Util.isTextEmpty(gourmetTicket.benefit) == false)
-            {
-                startY += addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.benefit, startY, textViewWidth, rect);
-            }
+        // 확인 사항
+        if (Util.isTextEmpty(gourmetTicket.option) == false)
+        {
+            addTicketSubInformation(mInflater, ticketInformationViewHolder.contentsList, gourmetTicket.option, R.drawable.ic_detail_item_02_benefit, true);
         }
 
         String price = Util.getPriceFormat(mContext, gourmetTicket.price, false);
@@ -231,6 +246,30 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         return mGourmetTicketList.size();
+    }
+
+    private void addTicketSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, boolean hasTopMargin)
+    {
+        if (layoutInflater == null || viewGroup == null || Util.isTextEmpty(contentText) == true)
+        {
+            return;
+        }
+
+        View textLayout = layoutInflater.inflate(R.layout.list_row_detail_product_text, viewGroup, false);
+        viewGroup.addView(textLayout);
+
+        if (hasTopMargin == true)
+        {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.topMargin = Util.dpToPx(mContext, 6);
+            textLayout.setLayoutParams(layoutParams);
+        }
+
+        DailyImageView iconImageView = (DailyImageView) textLayout.findViewById(R.id.iconImageView);
+        iconImageView.setVectorImageResource(iconResId);
+
+        TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+        textView.setText(contentText);
     }
 
     private float addTicketSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, float startY, int textViewWidth, Rect rect)
@@ -328,6 +367,14 @@ public class GourmetTicketListAdapter extends RecyclerView.Adapter<RecyclerView.
             contentsList = (LinearLayout) itemView.findViewById(R.id.contentsList);
             detailView = itemView.findViewById(R.id.detailView);
             reservationView = itemView.findViewById(R.id.reservationView);
+        }
+    }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View itemView)
+        {
+            super(itemView);
         }
     }
 }

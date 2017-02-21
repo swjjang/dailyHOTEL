@@ -6,12 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.model.GourmetTicket;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GourmetTicketListLayout extends BaseLayout
@@ -62,8 +64,17 @@ public class GourmetTicketListLayout extends BaseLayout
             return;
         }
 
+        List<PlaceViewItem> placeViewItemList = new ArrayList<>(gourmetTicketList.size() + 1);
+
+        for(GourmetTicket gourmetTicket : gourmetTicketList)
+        {
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmetTicket));
+        }
+
+        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
         // 처음 세팅하는 경우 객실 타입 세팅setProductInformationLayout
-        mTicketTypeListAdapter = new GourmetTicketListAdapter(mContext, gourmetTicketList, new GourmetTicketListAdapter.OnTicketClickListener()
+        mTicketTypeListAdapter = new GourmetTicketListAdapter(mContext, placeViewItemList, new GourmetTicketListAdapter.OnTicketClickListener()
         {
             @Override
             public void onProductDetailClick(int position)
