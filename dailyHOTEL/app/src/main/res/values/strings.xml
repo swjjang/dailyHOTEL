@@ -1146,6 +1146,7 @@
 
     <!-- Gourmet Product Detail -->
     <string name="label_gourmet_product_detail_reservation">예약하기</string>
+    <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
 
 

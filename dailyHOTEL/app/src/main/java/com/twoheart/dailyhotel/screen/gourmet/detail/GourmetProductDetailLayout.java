@@ -15,12 +15,12 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GourmetProductDetailLayout extends BaseLayout
@@ -52,6 +52,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         initToolbar(view, mContext.getString(R.string.label_product_detail));
 
         mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
+        EdgeEffectColor.setEdgeGlowColor(mNestedScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         initImageLayout(view);
 
@@ -200,16 +201,15 @@ public class GourmetProductDetailLayout extends BaseLayout
 
         ViewGroup menuDetailLayout = (ViewGroup) mNestedScrollView.findViewById(R.id.menuDetailLayout);
 
-        List<String> menuDetail = new ArrayList<>();
-        menuDetail.add(gourmetProduct.menuDetail);
+        List<String> menuDetailList = gourmetProduct.getMenuDetailList();
 
-        if (gourmetProduct.menuDetail == null || menuDetail.size() == 0)
+        if (menuDetailList == null || menuDetailList.size() == 0)
         {
             menuDetailLayout.setVisibility(View.GONE);
         } else
         {
             menuDetailLayout.setVisibility(View.VISIBLE);
-            setMenuDetail(mContext, menuDetailLayout, menuDetail);
+            setMenuDetail(mContext, menuDetailLayout, menuDetailList);
         }
 
         if (menuSummaryTextView.getVisibility() == View.GONE && menuDetailLayout.getVisibility() == View.GONE)

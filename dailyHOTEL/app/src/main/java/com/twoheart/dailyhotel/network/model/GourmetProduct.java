@@ -6,7 +6,12 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonObject
@@ -66,6 +71,8 @@ public class GourmetProduct implements Parcelable
 
     private int mDefaultImageIndex;
 
+    private List<String> mMenuDetailList;
+
     public GourmetProduct()
     {
     }
@@ -91,6 +98,26 @@ public class GourmetProduct implements Parcelable
                 }
             }
         }
+
+        if (Util.isTextEmpty(menuDetail) == false)
+        {
+            try
+            {
+                JSONArray jsonArray = new JSONArray(menuDetail);
+
+                int length = jsonArray.length();
+
+                mMenuDetailList = new ArrayList<>(length);
+
+                for (int i = 0; i < length; i++)
+                {
+                    mMenuDetailList.add(jsonArray.getString(i));
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
     }
 
     public List<ProductImageInformation> getImageList()
@@ -106,6 +133,11 @@ public class GourmetProduct implements Parcelable
         }
 
         return images.get(mDefaultImageIndex);
+    }
+
+    public List<String> getMenuDetailList()
+    {
+        return mMenuDetailList;
     }
 
     @Override
@@ -128,6 +160,7 @@ public class GourmetProduct implements Parcelable
         dest.writeTypedList(images);
         dest.writeString(menuSummary);
         dest.writeString(menuDetail);
+        dest.writeStringList(mMenuDetailList);
     }
 
     protected void readFromParcel(Parcel in)
@@ -149,6 +182,7 @@ public class GourmetProduct implements Parcelable
         images = in.createTypedArrayList(ProductImageInformation.CREATOR);
         menuSummary = in.readString();
         menuDetail = in.readString();
+        mMenuDetailList = in.createStringArrayList();
     }
 
     @Override
