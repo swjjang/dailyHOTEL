@@ -446,7 +446,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         unLockUI();
 
         //        showSimpleDialog(null, String.format("%s(%d)", message, msgCode), getString(R.string.dialog_btn_text_confirm), null, listener, null, false);
-        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, listener, null, false);
+        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, listener, null, true);
     }
 
     public void onErrorToastMessage(final String message)

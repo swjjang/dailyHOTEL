@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class NoticeListActivity extends BaseActivity implements AdapterView.OnItemClickListener
 {
-    View mEmptyView;
+    View mEmptyView, mListLayout;
     ListView mListView;
     NoticeListAdapter mNoticeListAdapter;
 
@@ -66,6 +66,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
 
     private void initLayout()
     {
+        mListLayout = findViewById(R.id.listLayout);
         mEmptyView = findViewById(R.id.emptyLayout);
         mListView = (ListView) findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
@@ -213,7 +214,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
                                 mNoticeListAdapter.clear();
                             }
 
-                            mListView.setVisibility(View.VISIBLE);
+                            mListLayout.setVisibility(View.VISIBLE);
                             mEmptyView.setVisibility(View.GONE);
 
                             Notice notice;
@@ -230,7 +231,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
                             mListView.setAdapter(mNoticeListAdapter);
                         } else
                         {
-                            mListView.setVisibility(View.GONE);
+                            mListLayout.setVisibility(View.GONE);
                             mEmptyView.setVisibility(View.VISIBLE);
                         }
                     } else
