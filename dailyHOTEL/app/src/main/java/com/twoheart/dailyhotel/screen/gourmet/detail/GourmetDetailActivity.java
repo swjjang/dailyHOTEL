@@ -119,7 +119,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, int ticketIndex//
+    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, int productIndex//
         , boolean isShowCalendar, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
@@ -127,7 +127,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, ticketIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
@@ -141,7 +141,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * 딥링크로 호출
      */
     public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
-        , int gourmetIndex, int ticketIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
+        , int gourmetIndex, int productIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -149,7 +149,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, ticketIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
@@ -353,7 +353,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mDontReloadAtOnResume = false;
             mIsTransitionEnd = true;
 
-            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, 0);
+            mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, 0);
 
             initLayout(null, null, false);
 
@@ -904,16 +904,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         // 딥링크로 메뉴 오픈 요청
-        if (mIsDeepLink == true && mOpenTicketIndex > 0 && gourmetDetail.getProductList().size() > 0)
+        if (mIsDeepLink == true && mProductDetailIndex > 0 && gourmetDetail.getProductList().size() > 0)
         {
             if (mPlaceDetailLayout != null)
             {
-                // 딥링크 수정
-                GourmetProductListActivity.newInstance(this, mSaleTime, gourmetDetail, mOpenTicketIndex, null, null);
+                Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, gourmetDetail, mProductDetailIndex, null, null);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
             }
         }
 
-        mOpenTicketIndex = 0;
+        mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }

@@ -43,16 +43,16 @@ public class GourmetProductDetailActivity extends BaseActivity
     private GourmetDetail mGourmetDetail;
     private Province mProvince;
     private String mArea;
-    private int mSelectedProductIndex;
+    private int mSelectedProductPosition;
 
     public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail//
-        , int productIndex, Province province, String area)
+        , int productPosition, Province province, String area)
     {
         Intent intent = new Intent(context, GourmetProductDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL, gourmetDetail);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_AREA, area);
 
@@ -78,13 +78,13 @@ public class GourmetProductDetailActivity extends BaseActivity
 
         mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
         mGourmetDetail = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL);
-        mSelectedProductIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, -1);
+        mSelectedProductPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, -1);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
 
         setContentView(mGourmetProductDetailLayout.onCreateView(R.layout.activity_gourmet_product_detail));
 
-        mGourmetProductDetailLayout.setInformation(mGourmetDetail, mSelectedProductIndex);
+        mGourmetProductDetailLayout.setInformation(mGourmetDetail, mSelectedProductPosition);
     }
 
     private void initLayout()
@@ -175,7 +175,7 @@ public class GourmetProductDetailActivity extends BaseActivity
                     moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                 } else
                 {
-                    processBooking(mSaleTime, mGourmetDetail, mSelectedProductIndex);
+                    processBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition);
                 }
             }
         } else
@@ -189,7 +189,7 @@ public class GourmetProductDetailActivity extends BaseActivity
                 moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.getPhone());
             } else
             {
-                processBooking(mSaleTime, mGourmetDetail, mSelectedProductIndex);
+                processBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition);
             }
         }
     }
@@ -296,9 +296,9 @@ public class GourmetProductDetailActivity extends BaseActivity
                 return;
             }
 
-            GourmetProduct gourmetProduct = mGourmetDetail.getProduct(mSelectedProductIndex);
+            GourmetProduct gourmetProduct = mGourmetDetail.getProduct(mSelectedProductPosition);
 
-            List<ProductImageInformation> productImageInformationList = mGourmetDetail.getProduct(mSelectedProductIndex).getImageList();
+            List<ProductImageInformation> productImageInformationList = mGourmetDetail.getProduct(mSelectedProductPosition).getImageList();
             if (productImageInformationList.size() == 0)
             {
                 return;
@@ -328,7 +328,7 @@ public class GourmetProductDetailActivity extends BaseActivity
         @Override
         public void onReservationClick()
         {
-            GourmetProduct gourmetProduct = mGourmetDetail.getProduct(mSelectedProductIndex);
+            GourmetProduct gourmetProduct = mGourmetDetail.getProduct(mSelectedProductPosition);
 
             if (gourmetProduct == null)
             {
@@ -357,7 +357,7 @@ public class GourmetProductDetailActivity extends BaseActivity
             {
                 String label = String.format("%s-%s", gourmetDetailParams.name, gourmetProduct.ticketName);
                 AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                    , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, mGourmetDetail, mSelectedProductIndex));
+                    , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition));
             }
         }
 

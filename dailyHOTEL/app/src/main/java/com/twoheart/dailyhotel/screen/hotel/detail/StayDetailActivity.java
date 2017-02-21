@@ -365,7 +365,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             mIsTransitionEnd = true;
             mIsUsedMultiTransition = false;
 
-            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
+            mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
             initLayout(null, null, null, false);
 
@@ -914,16 +914,16 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         // 딥링크로 메뉴 오픈 요청
-        if (mIsDeepLink == true && mOpenTicketIndex > 0 && stayDetail.getProductList().size() > 0)
+        if (mIsDeepLink == true && mProductDetailIndex > 0 && stayDetail.getProductList().size() > 0)
         {
             if (mPlaceDetailLayout != null)
             {
-                ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mOpenTicketIndex);
+                ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mProductDetailIndex);
                 mPlaceDetailLayout.hideWishButton();
             }
         }
 
-        mOpenTicketIndex = 0;
+        mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }

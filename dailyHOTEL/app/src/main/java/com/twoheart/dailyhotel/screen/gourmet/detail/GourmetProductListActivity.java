@@ -40,7 +40,7 @@ public class GourmetProductListActivity extends BaseActivity
     private GourmetDetail mGourmetDetail;
     private Province mProvince;
     private String mArea;
-    private int mSelectedProductIndex;
+    private int mSelectedProductPosition;
 
     public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, int productIndex, Province province, String area)
     {
@@ -64,7 +64,7 @@ public class GourmetProductListActivity extends BaseActivity
 
         Intent intent = getIntent();
 
-        if(intent == null)
+        if (intent == null)
         {
             finish();
             return;
@@ -81,6 +81,23 @@ public class GourmetProductListActivity extends BaseActivity
         setContentView(mGourmetProductListLayout.onCreateView(R.layout.activity_gourmet_product_list));
 
         mGourmetProductListLayout.setProductInformationLayout(mGourmetDetail.getProductList());
+
+        // 메뉴 상세화면 진입
+        if (productIndex > 0)
+        {
+            List<GourmetProduct> gourmetProductList = mGourmetDetail.getProductList();
+            int size = gourmetProductList.size();
+            for (int i = 0; i < size; i++)
+            {
+                if (gourmetProductList.get(i).saleIdx == productIndex)
+                {
+                    Intent intentProductDetail = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
+                        , mSaleTime, mGourmetDetail, i, mProvince, mArea);
+                    startActivityForResult(intentProductDetail, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -116,7 +133,7 @@ public class GourmetProductListActivity extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    mOnEventListener.onReservationClick(mSelectedProductIndex);
+                    mOnEventListener.onReservationClick(mSelectedProductPosition);
                 }
                 break;
             }
@@ -179,7 +196,7 @@ public class GourmetProductListActivity extends BaseActivity
                     moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                 } else
                 {
-                    processBooking(mSaleTime, mGourmetDetail, mSelectedProductIndex);
+                    processBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition);
                 }
             }
         } else
@@ -193,7 +210,7 @@ public class GourmetProductListActivity extends BaseActivity
                 moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.getPhone());
             } else
             {
-                processBooking(mSaleTime, mGourmetDetail, mSelectedProductIndex);
+                processBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition);
             }
         }
     }
@@ -339,7 +356,7 @@ public class GourmetProductListActivity extends BaseActivity
                 return;
             }
 
-            mSelectedProductIndex = position;
+            mSelectedProductPosition = position;
 
             if (DailyHotel.isLogin() == false)
             {

@@ -66,7 +66,7 @@ public class GourmetProductListLayout extends BaseLayout
 
         List<PlaceViewItem> placeViewItemList = new ArrayList<>(gourmetProductList.size() + 1);
 
-        for(GourmetProduct gourmetProduct : gourmetProductList)
+        for (GourmetProduct gourmetProduct : gourmetProductList)
         {
             placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmetProduct));
         }

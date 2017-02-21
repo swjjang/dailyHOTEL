@@ -118,7 +118,7 @@ public class GourmetProductDetailLayout extends BaseLayout
                 @Override
                 public void onClick(View v)
                 {
-                    ((OnEventListener)mOnEventListener).onImageClick(mViewPager.getCurrentItem());
+                    ((OnEventListener) mOnEventListener).onImageClick(mViewPager.getCurrentItem());
                 }
             });
 
