@@ -9,6 +9,12 @@ android {
         targetSdkVersion 25
     }
 
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        ignoreWarnings true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
