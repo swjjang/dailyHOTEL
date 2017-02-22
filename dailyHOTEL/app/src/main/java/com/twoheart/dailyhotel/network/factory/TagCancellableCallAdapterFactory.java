@@ -44,7 +44,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
     }
 
     @Override
-    public CallAdapter<?> get(Type returnType, Annotation[] annotations, Retrofit retrofit)
+    public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit)
     {
         if (getRawType(returnType) != Call.class)
         {
@@ -54,7 +54,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         final Executor callbackExecutor = retrofit.callbackExecutor();
         final Type responseType = getCallResponseType(returnType);
 
-        return new CallAdapter<Object>()
+        return new CallAdapter<Object, Call<?>>()
         {
             @Override
             public Type responseType()
@@ -63,7 +63,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
             }
 
             @Override
-            public <R> Object adapt(Call<R> call)
+            public Call<Object> adapt(Call<Object> call)
             {
                 return new ExecutorCallbackCall<>(callbackExecutor, call, null, mQueuedCalls);
             }
