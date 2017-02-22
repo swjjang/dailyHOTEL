@@ -1397,8 +1397,6 @@ public class HomeLayout extends BaseLayout
                 isCanScroll = v.getHeight() < childHeight + v.getPaddingTop() + v.getPaddingBottom() - topButtonHeight;
             }
 
-            ExLog.d("isCanScroll : " + isCanScroll);
-
             if (isCanScroll == true)
             {
                 mTopButtonLayout.setVisibility(View.VISIBLE);
