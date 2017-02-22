@@ -95,6 +95,7 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_TEXT_LOGINTEXT01 = "101";
     private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT01 = "102";
     private static final String KEY_REMOTE_CONFIG_TEXT_SIGNUPTEXT02 = "103";
+    private static final String KEY_REMOTE_CONFIG_TEXT = "110";
 
     private static final String KEY_REMOTE_CONFIG_COMPANY_NAME = "200";
     private static final String KEY_REMOTE_CONFIG_COMPANY_CEO = "201";
@@ -818,6 +819,16 @@ public class DailyPreference
     public void setRemoteConfigIntroImageNewUrl(String value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_INTRO_NEW_URL, value);
+    }
+
+    public void setRemoteConfigText(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_TEXT, value);
+    }
+
+    public String getRemoteConfigText()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_TEXT, null);
     }
 
     public void setRemoteConfigTextVersion(String value)

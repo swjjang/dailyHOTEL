@@ -33,7 +33,7 @@ public class GourmetProduct implements Parcelable
     public int discountPrice;
 
     @JsonField
-    public String benefit;
+    public String worth;
 
     @JsonField
     public String checkList;
@@ -118,6 +118,22 @@ public class GourmetProduct implements Parcelable
                 ExLog.e(e.toString());
             }
         }
+
+        // 기본 포맷은 HH:mm:ss
+        if (Util.isTextEmpty(openTime) == false)
+        {
+            openTime = openTime.substring(0, openTime.length() - 3);
+        }
+
+        if (Util.isTextEmpty(closeTime) == false)
+        {
+            closeTime = closeTime.substring(0, closeTime.length() - 3);
+        }
+
+        if (Util.isTextEmpty(lastOrderTime) == false)
+        {
+            lastOrderTime = lastOrderTime.substring(0, lastOrderTime.length() - 3);
+        }
     }
 
     public List<ProductImageInformation> getImageList()
@@ -148,7 +164,7 @@ public class GourmetProduct implements Parcelable
         dest.writeString(ticketName);
         dest.writeInt(price);
         dest.writeInt(discountPrice);
-        dest.writeString(benefit);
+        dest.writeString(worth);
         dest.writeString(checkList);
         //        dest.writeString(startEatingTime);
         //        dest.writeString(endEatingTime);
@@ -170,7 +186,7 @@ public class GourmetProduct implements Parcelable
         ticketName = in.readString();
         price = in.readInt();
         discountPrice = in.readInt();
-        benefit = in.readString();
+        worth = in.readString();
         checkList = in.readString();
         //        startEatingTime = in.readString();
         //        endEatingTime = in.readString();

@@ -138,7 +138,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 베네핏
         View benefitLayout = mNestedScrollView.findViewById(R.id.benefitLayout);
 
-        if (Util.isTextEmpty(gourmetProduct.benefit) == true)
+        if (Util.isTextEmpty(gourmetProduct.worth) == true)
         {
             benefitLayout.setVisibility(View.GONE);
         } else
@@ -146,7 +146,7 @@ public class GourmetProductDetailLayout extends BaseLayout
             benefitLayout.setVisibility(View.VISIBLE);
 
             TextView benefitTextView = (TextView) benefitLayout.findViewById(R.id.benefitTextView);
-            benefitTextView.setText(gourmetProduct.benefit);
+            benefitTextView.setText(gourmetProduct.worth);
         }
 
         // 이용시간

@@ -181,10 +181,18 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
         productInformationViewHolder.contentsList.removeAllViews();
 
-        // 베네핏
-        if (Util.isTextEmpty(gourmetProduct.benefit) == false)
+        if (Util.isTextEmpty(gourmetProduct.worth, gourmetProduct.checkList) == true)
         {
-            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.benefit, R.drawable.ic_detail_item_02_benefit, false);
+            productInformationViewHolder.contentsList.setVisibility(View.GONE);
+        } else
+        {
+            productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
+        }
+
+        // 베네핏
+        if (Util.isTextEmpty(gourmetProduct.worth) == false)
+        {
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.worth, R.drawable.ic_detail_item_02_benefit, false);
         }
 
         // 확인 사항
