@@ -128,7 +128,10 @@ public class DailyRemoteConfig
 
                 writeCompanyInformation(mContext, companyInfo);
                 writePaymentType(mContext, androidPaymentType);
-                writeText(mContext, androidText);
+
+                //
+                DailyPreference.getInstance(mContext).setRemoteConfigText(androidText);
+                writeTextFiled(mContext, androidText);
 
                 // 이미지 로딩 관련(추후 진행)
                 processSplashImage(mContext, androidSplashImageUpdateTime, androidSplashImageUrl);
@@ -157,6 +160,8 @@ public class DailyRemoteConfig
                     ExLog.e(e.toString());
                 }
 
+                // 버전이 업데이트 되는 경우 텍스트의 내용을 다시 넣는 것을 수행한다.
+                writeTextFiled(mContext, DailyPreference.getInstance(mContext).getRemoteConfigText());
                 listener.onComplete(null, null);
             }
         });
@@ -262,34 +267,35 @@ public class DailyRemoteConfig
         }
     }
 
-    void writeText(Context context, String textInfo)
+    void writeTextFiled(Context context, String textInformation)
     {
+        if (context == null || Util.isTextEmpty(textInformation) == true)
+        {
+            return;
+        }
+
         try
         {
-            JSONObject jsonObject = new JSONObject(textInfo);
+            JSONObject jsonObject = new JSONObject(textInformation);
 
             String version = jsonObject.getString("version");
 
-            if (Util.isTextEmpty(version) == false //
-                && version.equalsIgnoreCase(DailyPreference.getInstance(context).getRemoteConfigTextVersion()) == false)
-            {
-                DailyPreference.getInstance(context).setRemoteConfigTextVersion(version);
-                DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(jsonObject.getString("loginText01"));
-                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(jsonObject.getString("signupText01"));
-                DailyPreference.getInstance(context).setRemoteConfigTextSignUpText02(jsonObject.getString("signupText02"));
+            DailyPreference.getInstance(context).setRemoteConfigTextVersion(version);
+            DailyPreference.getInstance(context).setRemoteConfigTextLoginText01(jsonObject.getString("loginText01"));
+            DailyPreference.getInstance(context).setRemoteConfigTextSignUpText01(jsonObject.getString("signupText01"));
+            DailyPreference.getInstance(context).setRemoteConfigTextSignUpText02(jsonObject.getString("signupText02"));
 
-                // 홈 메시지 추가 영역
-                JSONObject homeJSONObject = jsonObject.getJSONObject("home");
-                JSONObject messageAreaJSONObject = homeJSONObject.getJSONObject("messageArea");
-                JSONObject loginJSONObject = messageAreaJSONObject.getJSONObject("login");
-                JSONObject logoutJSONObject = messageAreaJSONObject.getJSONObject("logout");
+            // 홈 메시지 추가 영역
+            JSONObject homeJSONObject = jsonObject.getJSONObject("home");
+            JSONObject messageAreaJSONObject = homeJSONObject.getJSONObject("messageArea");
+            JSONObject loginJSONObject = messageAreaJSONObject.getJSONObject("login");
+            JSONObject logoutJSONObject = messageAreaJSONObject.getJSONObject("logout");
 
-                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLoginEnabled(loginJSONObject.getBoolean("enabled"));
+            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLoginEnabled(loginJSONObject.getBoolean("enabled"));
 
-                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutEnabled(logoutJSONObject.getBoolean("enabled"));
-                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutTitle(logoutJSONObject.getString("title"));
-                DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutCallToAction(logoutJSONObject.getString("callToAction"));
-            }
+            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutEnabled(logoutJSONObject.getBoolean("enabled"));
+            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutTitle(logoutJSONObject.getString("title"));
+            DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutCallToAction(logoutJSONObject.getString("callToAction"));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
