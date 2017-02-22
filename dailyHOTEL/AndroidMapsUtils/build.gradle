@@ -6,13 +6,12 @@ archivesBaseName = 'android-maps-utils'
 group = 'com.google.maps.android'
 
 dependencies {
-    compile 'com.google.android.gms:play-services-maps:10.0.1'
+    compile 'com.google.android.gms:play-services-maps:10.2.0'
 }
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
-
     resourcePrefix 'amu_'
 
     sourceSets {
@@ -21,6 +20,10 @@ android {
             java.srcDirs = ['src']
             res.srcDirs = ['res']
         }
+    }
+
+    defaultConfig {
+        minSdkVersion 15
     }
 
     // This enables long timeouts required on slow environments, e.g. Travis
