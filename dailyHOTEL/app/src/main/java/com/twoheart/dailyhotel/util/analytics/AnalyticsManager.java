@@ -987,7 +987,7 @@ public class AnalyticsManager
         public static final String SORTFILTER_KIDS_PLAY_ROOM = "KidsPlayRoom";
         public static final String SORTFILTER_PC = "PC";
         public static final String SORTFILTER_TV = "TV";
-        public static final String SORTFILTER_WHIRLPOOL = "whirlpool";
+        public static final String SORTFILTER_SPA_WHIRLPOOL = "whirlpool";
         public static final String SORTFILTER_PRIVATE_BBQ = "PrivateBBQ";
         public static final String SORTFILTER_KARAOKE = "Karaoke";
         public static final String SORTFILTER_PARTYROOM = "PartyRoom";

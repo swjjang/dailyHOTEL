@@ -16,7 +16,7 @@ public enum StayRoomAmenities
     PC(R.string.label_computer, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC, AnalyticsManager.Label.SORTFILTER_PC),
     BATHTUB(R.string.label_bathtub, R.drawable.f_ic_hotel_04_facilities_04, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB, AnalyticsManager.Label.SORTFILTER_BATHTUB),
     TV(R.string.label_television, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV, AnalyticsManager.Label.SORTFILTER_TV),
-    WHIRLPOOL(R.string.label_whirlpool, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WHIRLPOOL, AnalyticsManager.Label.SORTFILTER_WHIRLPOOL),
+    SPA_WHIRLPOOL(R.string.label_whirlpool, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL, AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL),
     PRIVATE_BBQ(R.string.label_private_bbq, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ, AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ),
     FREE_BREAKFAST(R.string.label_breakfast, R.drawable.f_ic_hotel_04_facilities_02, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST, AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST),
     KARAOKE(R.string.label_karaoke, R.drawable.f_ic_hotel_04_facilities_01, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE, AnalyticsManager.Label.SORTFILTER_KARAOKE),
