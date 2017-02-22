@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
@@ -247,7 +248,7 @@ public class SignupStep1Activity extends BaseActivity
                 mSignupParams.put("birthday", birthday);
             }
 
-            mSignupParams.put("market_type", RELEASE_STORE.getName());
+            mSignupParams.put("market_type", Setting.RELEASE_STORE.getName());
             mSignupParams.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
             DailyMobileAPI.getInstance(SignupStep1Activity.this).requestSignupValidation(mNetworkTag, mSignupParams, mSignupValidationCallback);

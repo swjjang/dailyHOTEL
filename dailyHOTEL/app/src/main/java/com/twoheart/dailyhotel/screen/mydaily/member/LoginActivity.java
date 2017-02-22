@@ -32,6 +32,7 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -344,7 +345,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             mStoreParams.put("gender", gender);
         }
 
-        mStoreParams.put("market_type", RELEASE_STORE.getName());
+        mStoreParams.put("market_type", Setting.RELEASE_STORE.getName());
 
         DailyMobileAPI.getInstance(this).requestFacebookUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }
@@ -370,7 +371,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         params.put("user_type", Constants.KAKAO_USER);
 
         mStoreParams.putAll(params);
-        mStoreParams.put("market_type", RELEASE_STORE.getName());
+        mStoreParams.put("market_type", Setting.RELEASE_STORE.getName());
 
         DailyMobileAPI.getInstance(this).requestKakaoUserLogin(mNetworkTag, params, mSocialUserLoginCallback);
     }

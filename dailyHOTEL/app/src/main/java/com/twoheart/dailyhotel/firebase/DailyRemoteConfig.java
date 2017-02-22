@@ -10,6 +10,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -102,7 +103,7 @@ public class DailyRemoteConfig
                     JSONObject versionJSONObject = new JSONObject(androidUpdateVersion);
                     JSONObject versionCode = versionJSONObject.getJSONObject("versionCode");
 
-                    switch (Constants.RELEASE_STORE)
+                    switch (Setting.RELEASE_STORE)
                     {
                         case PLAY_STORE:
                         {

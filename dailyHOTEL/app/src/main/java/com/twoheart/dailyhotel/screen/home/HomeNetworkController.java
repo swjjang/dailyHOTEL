@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
 
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -59,7 +60,7 @@ public class HomeNetworkController extends BaseNetworkController
     {
         String store;
 
-        if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE)
+        if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
         {
             store = "GOOGLE";
         } else

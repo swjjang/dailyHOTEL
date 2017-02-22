@@ -51,6 +51,7 @@ import com.skp.Tmap.TMapTapi;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
@@ -159,7 +160,7 @@ public class Util implements Constants
 
     public static String storeReleaseAddress()
     {
-        if (RELEASE_STORE == Stores.PLAY_STORE)
+        if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
         {
             return URL_STORE_GOOGLE_DAILYHOTEL;
         } else

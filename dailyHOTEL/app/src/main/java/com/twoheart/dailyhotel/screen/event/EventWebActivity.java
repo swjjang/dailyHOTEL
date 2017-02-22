@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -867,7 +868,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 String marketUrl;
 
-                if (RELEASE_STORE == Stores.PLAY_STORE)
+                if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
                 {
                     marketUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
                     marketLaunch.setData(Uri.parse(marketUrl));

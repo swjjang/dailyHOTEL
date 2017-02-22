@@ -7,6 +7,7 @@ import android.support.test.filters.RequiresDevice;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.twoheart.dailyhotel.Const;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Category;
@@ -527,7 +528,7 @@ public class DailyMobileAPITest
                         String maxVersionName;
                         String minVersionName;
 
-                        switch (Const.RELEASE_STORE)
+                        switch (Setting.RELEASE_STORE)
                         {
                             case T_STORE:
                                 maxVersionName = dataJSONObject.getString("tstoreMax");
@@ -541,8 +542,8 @@ public class DailyMobileAPITest
                                 break;
                         }
 
-                        assertThat(Const.RELEASE_STORE.getName(), minVersionName, notNullValue());
-                        assertThat(Const.RELEASE_STORE.getName(), maxVersionName, notNullValue());
+                        assertThat(Setting.RELEASE_STORE.getName(), minVersionName, notNullValue());
+                        assertThat(Setting.RELEASE_STORE.getName(), maxVersionName, notNullValue());
                     } else
                     {
                         String message = responseJSONObject.getString("msg");
@@ -3548,7 +3549,7 @@ public class DailyMobileAPITest
         };
 
         String store;
-        if (Const.RELEASE_STORE == Constants.Stores.PLAY_STORE)
+        if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
         {
             store = "google";
         } else
@@ -3826,7 +3827,7 @@ public class DailyMobileAPITest
         //        }
 
         signUpParams.put("birthday", Const.TEST_USER_BIRTHDAY);
-        signUpParams.put("market_type", Const.RELEASE_STORE.getName());
+        signUpParams.put("market_type", Setting.RELEASE_STORE.getName());
         signUpParams.put("isAgreedBenefit", Boolean.toString(Const.TEST_IS_AGREED_BENEFIT));
 
         DailyMobileAPI.getInstance(mContext).requestSignupValidation(mNetworkTag, signUpParams, networkCallback);
