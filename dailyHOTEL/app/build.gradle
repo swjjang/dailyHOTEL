@@ -137,7 +137,11 @@ android {
         } else if(currentFlavor == "onestore") {
             apkName += "-Tstore";
         } else {
-            apkName += '-None';
+            if (variant.buildType.name == "release") {
+                apkName += '-None';
+            } else {
+                apkName += '-QA-00';
+            }
         }
 
         apkName += "-v" + defaultConfig.versionName;
@@ -160,6 +164,9 @@ android {
         } else if(gitName == 'android_sam')
         {
             apkName += "-Sam";
+        } else
+        {
+            apkName += "-" + gitName;
         }
 
         apkName += "-" + simpleDateFormat.format(new Date());
