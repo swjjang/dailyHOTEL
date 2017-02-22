@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.main;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -211,7 +212,7 @@ public class MainNetworkController extends BaseNetworkController
                         String maxVersionName;
                         String minVersionName;
 
-                        switch (Constants.RELEASE_STORE)
+                        switch (Setting.RELEASE_STORE)
                         {
                             case T_STORE:
                                 maxVersionName = dataJSONObject.getString("tstoreMax");

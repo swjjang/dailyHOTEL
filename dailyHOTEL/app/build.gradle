@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 
 buildscript {
@@ -76,6 +78,13 @@ android {
         javaMaxHeapSize "4g"
         preDexLibraries false
     }
+
+//    applicationVariants.all { variant ->
+//        def simpleDateFormat = new SimpleDateFormat("yyMMdd")
+//        simpleDateFormat.setTimeZone(TimeZone.getDefault())
+//
+//        variant.outputFile = new File(variant.outputFile.parent,  "DH-${variant.buildType.name}-Play-v${defaultConfig.versionName}-Sheldon-${simpleDateFormat.format(new Date())}.apk");
+//    }
 }
 
 dependencies {
