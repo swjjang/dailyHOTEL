@@ -118,6 +118,22 @@ public class GourmetProduct implements Parcelable
                 ExLog.e(e.toString());
             }
         }
+
+        // 기본 포맷은 HH:mm:ss
+        if (Util.isTextEmpty(openTime) == false)
+        {
+            openTime = openTime.substring(0, openTime.length() - 3);
+        }
+
+        if (Util.isTextEmpty(closeTime) == false)
+        {
+            closeTime = closeTime.substring(0, closeTime.length() - 3);
+        }
+
+        if (Util.isTextEmpty(lastOrderTime) == false)
+        {
+            lastOrderTime = lastOrderTime.substring(0, lastOrderTime.length() - 3);
+        }
     }
 
     public List<ProductImageInformation> getImageList()
