@@ -132,9 +132,9 @@ android {
         //  Flavor 결과는 전부 소문자로 넘어온다. 유의 사항.
         def currentFlavor = getCurrentFlavor();
 
-        if(currentFlavor == "googleplaystore") {
+        if(currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
             apkName += "-Play";
-        } else if(currentFlavor == "onestore") {
+        } else if(currentFlavor.equalsIgnoreCase("onestore") == true) {
             apkName += "-Tstore";
         } else {
             if (variant.buildType.name == "release") {
