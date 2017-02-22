@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -59,13 +60,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected Province mProvince;
     protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
-    protected int mOpenTicketIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
+    protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
 
     protected Handler mHandler = new Handler();
 
     private int mResultCode;
     protected Intent mResultIntent;
     protected boolean mIsUsedMultiTransition;
+    protected Runnable mTransitionEndRunnable; // 트렌지션 중에 에러가 난경우 팝업을 띄워야 하는데 트렌지션으로 이슈가 발생하여 트레진션 끝나고 동작.
 
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
@@ -231,7 +233,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             if (mIsUsedMultiTransition == true)
             {
-                if (mResultCode == CODE_RESULT_ACTIVITY_REFRESH)
+                if (mResultCode == CODE_RESULT_ACTIVITY_REFRESH && isSameCallingActivity(MainActivity.class.getName()) == false)
                 {
                     finish();
                     return;
@@ -249,6 +251,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         @Override
                         public void run()
                         {
+                            mPlaceDetailLayout.setTransImageVisibility(true);
                             PlaceDetailActivity.super.onBackPressed();
                         }
                     }, 100);

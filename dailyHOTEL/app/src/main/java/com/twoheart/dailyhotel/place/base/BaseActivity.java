@@ -441,12 +441,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         });
     }
 
-    public void onErrorPopupMessage(int msgCode, String message, View.OnClickListener listener)
+    public void onErrorPopupMessage(int msgCode, String message, final View.OnClickListener listener)
     {
         unLockUI();
 
         //        showSimpleDialog(null, String.format("%s(%d)", message, msgCode), getString(R.string.dialog_btn_text_confirm), null, listener, null, false);
-        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, listener, null, false);
+        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null, listener, null, null, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                if (listener != null)
+                {
+                    listener.onClick(null);
+                }
+            }
+        }, true);
     }
 
     public void onErrorToastMessage(final String message)

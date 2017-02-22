@@ -82,6 +82,7 @@
                 android:layout_marginLeft="77dp"
                 android:layout_marginRight="77dp"
                 android:layout_weight="1"
+                android:gravity="bottom"
                 android:orientation="vertical"
                 android:visibility="gone">
 

@@ -62,7 +62,7 @@ public class EventListNetworkController extends BaseNetworkController
                         case 100:
                             ArrayList<Event> arrayList = (ArrayList<Event>) baseListDto.data;
 
-                            if (arrayList == null && arrayList.size() == 0)
+                            if (arrayList == null || arrayList.size() == 0)
                             {
                                 ((OnNetworkControllerListener) mOnNetworkControllerListener).onEventListResponse(null);
                             } else

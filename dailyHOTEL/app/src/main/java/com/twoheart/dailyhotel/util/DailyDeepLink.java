@@ -116,8 +116,11 @@ public class DailyDeepLink
     private static final String HOME_V12_RECOMMENDATION_PLACE_LIST = "hrpl"; // 홈의 데일리 추천 -> 상세 리스트
 
 
+    private static final String PARAM_V13_PRODUCT_INDEX = "pdi"; // 상품 인덱스.
+
+
     private static final int MINIMUM_VERSION_CODE = 2;
-    private static final int MAXIMUM_VERSION_CODE = 12;
+    private static final int MAXIMUM_VERSION_CODE = 13;
 
     private static DailyDeepLink mInstance;
 
@@ -182,6 +185,33 @@ public class DailyDeepLink
         mVersionCode = 0;
         mDeepLinkUri = null;
         mParams.clear();
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 13
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public int getProductIndex()
+    {
+        int index = 0;
+
+        if (mVersionCode >= 9)
+        {
+            String value = mParams.get(PARAM_V13_PRODUCT_INDEX);
+
+            if (Util.isTextEmpty(value) == false)
+            {
+                try
+                {
+                    index = Integer.parseInt(value);
+                } catch (NumberFormatException e)
+                {
+                }
+            }
+        }
+
+        return index;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -912,7 +942,7 @@ public class DailyDeepLink
                 //                || GOURMET_V3_REGION_LIST.equalsIgnoreCase(view) //
                 //                || GOURMET_V3_EVENT_BANNER_WEB.equalsIgnoreCase(view) //
                 || GOURMET_V6_SEARCH.equalsIgnoreCase(view) //
-                || GOURMET_V6_SEARCH_RESULT.equalsIgnoreCase(view); //
+                || GOURMET_V6_SEARCH_RESULT.equalsIgnoreCase(view);
         } else
         {
             return GOURMET_V2_LIST.equalsIgnoreCase(view);

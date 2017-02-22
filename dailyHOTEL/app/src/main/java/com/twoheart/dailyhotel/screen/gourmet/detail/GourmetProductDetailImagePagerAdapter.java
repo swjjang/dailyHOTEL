@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 
-public class GourmetTicketDetailImagePagerAdapter extends PagerAdapter
+public class GourmetProductDetailImagePagerAdapter extends PagerAdapter
 {
     private Context mContext;
     private List<ProductImageInformation> mImageInformationList;
     private View.OnClickListener mOnClickListener;
 
-    public GourmetTicketDetailImagePagerAdapter(Context context)
+    public GourmetProductDetailImagePagerAdapter(Context context)
     {
         mContext = context;
     }

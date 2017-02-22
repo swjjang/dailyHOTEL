@@ -6,12 +6,12 @@ import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 
 import java.util.List;
 
-public class GourmetDetail extends PlaceDetail<GourmetTicket> implements Parcelable
+public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcelable
 {
     private GourmetDetailParams mGourmetDetailParams;
 
@@ -197,7 +197,7 @@ public class GourmetDetail extends PlaceDetail<GourmetTicket> implements Parcela
     }
 
     @Override
-    public List<GourmetTicket> getProductList()
+    public List<GourmetProduct> getProductList()
     {
         if (mGourmetDetailParams == null)
         {
@@ -208,21 +208,21 @@ public class GourmetDetail extends PlaceDetail<GourmetTicket> implements Parcela
     }
 
     @Override
-    public GourmetTicket getProduct(int index)
+    public GourmetProduct getProduct(int index)
     {
         if (mGourmetDetailParams == null || index < 0)
         {
             return null;
         }
 
-        List<GourmetTicket> gourmetTicketList = mGourmetDetailParams.getTicketList();
+        List<GourmetProduct> gourmetProductList = mGourmetDetailParams.getTicketList();
 
-        if (gourmetTicketList == null || gourmetTicketList.size() <= index)
+        if (gourmetProductList == null || gourmetProductList.size() <= index)
         {
             return null;
         }
 
-        return gourmetTicketList.get(index);
+        return gourmetProductList.get(index);
     }
 
     @Override

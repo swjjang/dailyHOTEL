@@ -89,7 +89,7 @@ public class GourmetDetailParams implements Parcelable
 
     // 직접 접근 금지
     @JsonField
-    public List<GourmetTicket> tickets;
+    public List<GourmetProduct> tickets;
 
     // 직접 접근 금지
     // 주의 : Parcelable 후에 해당 값은 사라집니다.
@@ -249,7 +249,7 @@ public class GourmetDetailParams implements Parcelable
         return benefitContents;
     }
 
-    public List<GourmetTicket> getTicketList()
+    public List<GourmetProduct> getTicketList()
     {
         return tickets;
     }
@@ -308,7 +308,7 @@ public class GourmetDetailParams implements Parcelable
         privateRoom = in.readInt() == 1 ? true : false;
         groupBooking = in.readInt() == 1 ? true : false;
         corkage = in.readInt() == 1 ? true : false;
-        tickets = in.createTypedArrayList(GourmetTicket.CREATOR);
+        tickets = in.createTypedArrayList(GourmetProduct.CREATOR);
         mDetailList = in.createTypedArrayList(DetailInformation.CREATOR);
         imgUrl = in.readString();
         benefit = in.readString();

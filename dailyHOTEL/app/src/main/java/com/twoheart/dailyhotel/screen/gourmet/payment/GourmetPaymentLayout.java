@@ -21,7 +21,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -408,15 +408,15 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        GourmetTicket gourmetTicket = gourmetPaymentInformation.getTicket();
+        GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
 
-        if (gourmetTicket == null)
+        if (gourmetProduct == null)
         {
             return;
         }
 
         // 타입
-        mTicketTypeTextView.setText(gourmetTicket.ticketName);
+        mTicketTypeTextView.setText(gourmetProduct.ticketName);
 
         // 날짜
         mTicketDateTextView.setText(gourmetPaymentInformation.dateTime);

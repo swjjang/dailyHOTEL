@@ -976,25 +976,27 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 stayBookingDetail.setData(jsonObject);
 
-                long checkOutDateTime = DailyCalendar.getTimeGMT9(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
-
-                if (stayBookingDetail.currentDateTime < checkOutDateTime)
+                if(stayBookingDetail.readyForRefund == true)
                 {
                     stayBookingDetail.isVisibleRefundPolicy = true;
 
-                    if (stayBookingDetail.readyForRefund == true)
-                    {
-                        // 환불 대기 인 상태에서는 문구가 고정이다.
-                        mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
-                    } else
-                    {
-                        mNetworkController.requestPolicyRefund(stayBookingDetail.reservationIndex, stayBookingDetail.transactionType);
-                    }
+                    // 환불 대기 인 상태에서는 문구가 고정이다.
+                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
                 } else
                 {
-                    stayBookingDetail.isVisibleRefundPolicy = false;
+                    long checkOutDateTime = DailyCalendar.getTimeGMT9(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
 
-                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
+                    if (stayBookingDetail.currentDateTime < checkOutDateTime)
+                    {
+                        stayBookingDetail.isVisibleRefundPolicy = true;
+
+                        mNetworkController.requestPolicyRefund(stayBookingDetail.reservationIndex, stayBookingDetail.transactionType);
+                    } else
+                    {
+                        stayBookingDetail.isVisibleRefundPolicy = false;
+
+                        mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
+                    }
                 }
             } catch (Exception e)
             {

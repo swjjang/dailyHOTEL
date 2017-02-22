@@ -192,7 +192,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     {
         super.finish();
 
-        if(mIsUsedMultiTransition == false)
+        if (mIsUsedMultiTransition == false)
         {
             overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
         }

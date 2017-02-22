@@ -1050,7 +1050,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             String date = DailyDeepLink.getInstance().getDate();
             int datePlus = DailyDeepLink.getInstance().getDatePlus();
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
-            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
+            int productIndex = DailyDeepLink.getInstance().getProductIndex();
 
             String startDate = DailyDeepLink.getInstance().getStartDate();
             String endDate = DailyDeepLink.getInstance().getEndDate();
@@ -1082,13 +1082,13 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             if (Util.isTextEmpty(startDate, endDate) == false)
             {
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, productIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             } else
             {
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, ticketIndex, isShowCalendar, false);
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, productIndex, isShowCalendar, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

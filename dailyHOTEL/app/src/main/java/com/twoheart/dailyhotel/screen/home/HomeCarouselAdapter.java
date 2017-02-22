@@ -122,12 +122,12 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.personView.setText("");
         } else
         {
-            String strPrice = Util.getPriceFormat(mContext, prices.price, false);
+            String strPrice = Util.getPriceFormat(mContext, prices.normalPrice, false);
             String strDiscount = Util.getPriceFormat(mContext, prices.discountPrice, false);
 
             holder.discountPriceView.setText(strDiscount);
 
-            if (prices.price <= 0 || prices.price <= prices.discountPrice)
+            if (prices.normalPrice <= 0 || prices.normalPrice <= prices.discountPrice)
             {
                 holder.originPriceView.setText("");
             } else

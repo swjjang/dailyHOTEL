@@ -6,11 +6,16 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonObject
-public class GourmetTicket implements Parcelable
+public class GourmetProduct implements Parcelable
 {
     //    @JsonField(name = "idx")
     //    public int index;
@@ -31,31 +36,29 @@ public class GourmetTicket implements Parcelable
     public String benefit;
 
     @JsonField
-    public String option;
-
-    @JsonField
     public String checkList;
 
-//    @JsonField
-//    public String startEatingTime;
-//
-//    @JsonField
-//    public String endEatingTime;
-//
-//    @JsonField
-//    public int timeInterval;
-//
-//    @JsonField
-//    public String openTime;
-//
-//    @JsonField
-//    public String closeTime;
-//
-//    @JsonField
-//    public String lastOrderTime;
-//
-//    @JsonField
-//    public String expiryTime;
+    //    @JsonField
+    //    public String startEatingTime;
+    //
+    //    @JsonField
+    //    public String endEatingTime;
+    //
+    //    @JsonField
+    //    public int timeInterval;
+    //
+    @JsonField
+    public String openTime;
+
+    @JsonField
+    public String closeTime;
+
+    @JsonField
+    public String lastOrderTime;
+
+    //
+    //    @JsonField
+    //    public String expiryTime;
 
     @JsonField
     public List<ProductImageInformation> images;
@@ -68,11 +71,13 @@ public class GourmetTicket implements Parcelable
 
     private int mDefaultImageIndex;
 
-    public GourmetTicket()
+    private List<String> mMenuDetailList;
+
+    public GourmetProduct()
     {
     }
 
-    public GourmetTicket(Parcel in)
+    public GourmetProduct(Parcel in)
     {
         readFromParcel(in);
     }
@@ -93,6 +98,26 @@ public class GourmetTicket implements Parcelable
                 }
             }
         }
+
+        if (Util.isTextEmpty(menuDetail) == false)
+        {
+            try
+            {
+                JSONArray jsonArray = new JSONArray(menuDetail);
+
+                int length = jsonArray.length();
+
+                mMenuDetailList = new ArrayList<>(length);
+
+                for (int i = 0; i < length; i++)
+                {
+                    mMenuDetailList.add(jsonArray.getString(i));
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
     }
 
     public List<ProductImageInformation> getImageList()
@@ -110,6 +135,11 @@ public class GourmetTicket implements Parcelable
         return images.get(mDefaultImageIndex);
     }
 
+    public List<String> getMenuDetailList()
+    {
+        return mMenuDetailList;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -119,17 +149,18 @@ public class GourmetTicket implements Parcelable
         dest.writeInt(price);
         dest.writeInt(discountPrice);
         dest.writeString(benefit);
-        dest.writeString(option);
-//        dest.writeString(startEatingTime);
-//        dest.writeString(endEatingTime);
-//        dest.writeInt(timeInterval);
-//        dest.writeString(openTime);
-//        dest.writeString(closeTime);
-//        dest.writeString(lastOrderTime);
-//        dest.writeString(expiryTime);
+        dest.writeString(checkList);
+        //        dest.writeString(startEatingTime);
+        //        dest.writeString(endEatingTime);
+        //        dest.writeInt(timeInterval);
+        dest.writeString(openTime);
+        dest.writeString(closeTime);
+        dest.writeString(lastOrderTime);
+        //        dest.writeString(expiryTime);
         dest.writeTypedList(images);
         dest.writeString(menuSummary);
         dest.writeString(menuDetail);
+        dest.writeStringList(mMenuDetailList);
     }
 
     protected void readFromParcel(Parcel in)
@@ -140,17 +171,18 @@ public class GourmetTicket implements Parcelable
         price = in.readInt();
         discountPrice = in.readInt();
         benefit = in.readString();
-        option = in.readString();
-//        startEatingTime = in.readString();
-//        endEatingTime = in.readString();
-//        timeInterval = in.readInt();
-//        openTime = in.readString();
-//        closeTime = in.readString();
-//        lastOrderTime = in.readString();
-//        expiryTime = in.readString();
+        checkList = in.readString();
+        //        startEatingTime = in.readString();
+        //        endEatingTime = in.readString();
+        //        timeInterval = in.readInt();
+        openTime = in.readString();
+        closeTime = in.readString();
+        lastOrderTime = in.readString();
+        //        expiryTime = in.readString();
         images = in.createTypedArrayList(ProductImageInformation.CREATOR);
         menuSummary = in.readString();
         menuDetail = in.readString();
+        mMenuDetailList = in.createStringArrayList();
     }
 
     @Override
@@ -161,15 +193,15 @@ public class GourmetTicket implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public GourmetTicket createFromParcel(Parcel in)
+        public GourmetProduct createFromParcel(Parcel in)
         {
-            return new GourmetTicket(in);
+            return new GourmetProduct(in);
         }
 
         @Override
-        public GourmetTicket[] newArray(int size)
+        public GourmetProduct[] newArray(int size)
         {
-            return new GourmetTicket[size];
+            return new GourmetProduct[size];
         }
     };
 }

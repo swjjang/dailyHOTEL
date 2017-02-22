@@ -365,7 +365,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             mIsTransitionEnd = true;
             mIsUsedMultiTransition = false;
 
-            mOpenTicketIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
+            mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
             initLayout(null, null, null, false);
 
@@ -914,16 +914,16 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         // 딥링크로 메뉴 오픈 요청
-        if (mIsDeepLink == true && mOpenTicketIndex > 0 && stayDetail.getProductList().size() > 0)
+        if (mIsDeepLink == true && mProductDetailIndex > 0 && stayDetail.getProductList().size() > 0)
         {
             if (mPlaceDetailLayout != null)
             {
-                ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mOpenTicketIndex);
+                ((StayDetailLayout) mPlaceDetailLayout).showProductInformationLayout(mProductDetailIndex);
                 mPlaceDetailLayout.hideWishButton();
             }
         }
 
-        mOpenTicketIndex = 0;
+        mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }
@@ -1739,17 +1739,39 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorPopupMessage(int msgCode, String message)
+        public void onErrorPopupMessage(final int msgCode, final String message)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
 
-            // 판매 마감시
-            if (msgCode == 5)
+            if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {
-                StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                mTransitionEndRunnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mTransitionEndRunnable = null;
+
+                        // 판매 마감시
+                        if (msgCode == 5)
+                        {
+                            StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                        } else
+                        {
+                            StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                        }
+                    }
+                };
             } else
             {
-                StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                // 판매 마감시
+                if (msgCode == 5)
+                {
+                    StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                } else
+                {
+                    StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                }
             }
         }
 
@@ -1762,11 +1784,27 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onErrorResponse(Call call, Response response)
+        public void onErrorResponse(final Call call, final Response response)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onErrorResponse(call, response);
-            finish();
+
+            if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
+            {
+                mTransitionEndRunnable = new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mTransitionEndRunnable = null;
+                        StayDetailActivity.this.onErrorResponse(call, response);
+                        finish();
+                    }
+                };
+            } else
+            {
+                StayDetailActivity.this.onErrorResponse(call, response);
+                finish();
+            }
         }
     };
 }

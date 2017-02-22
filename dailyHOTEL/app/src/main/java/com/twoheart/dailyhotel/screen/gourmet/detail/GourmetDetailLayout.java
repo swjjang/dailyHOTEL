@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
-import com.twoheart.dailyhotel.network.model.GourmetTicket;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -97,9 +97,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         showWishButton();
 
         // SOLD OUT 판단 조건.
-        List<GourmetTicket> gourmetTicketList = gourmetDetail.getProductList();
+        List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
 
-        if (gourmetTicketList == null || gourmetTicketList.size() == 0)
+        if (gourmetProductList == null || gourmetProductList.size() == 0)
         {
             mBookingTextView.setVisibility(View.GONE);
             mSoldoutTextView.setVisibility(View.VISIBLE);
