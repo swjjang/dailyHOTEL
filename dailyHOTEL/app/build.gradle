@@ -73,21 +73,21 @@ android {
             zipAlignEnabled true
 //            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-fresco.pro'
-
-            productFlavors {
-                googlePlayStore {
-                    applicationId "com.twoheart.dailyhotel"
-                    buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
-                }
-                oneStore {
-                    applicationId "com.twoheart.dailyhotel"
-                    buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.T_STORE'
-                }
-            }
         }
 
         debug {
             buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+        }
+    }
+
+    productFlavors {
+        googlePlayStore {
+            applicationId "com.twoheart.dailyhotel"
+            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+        }
+        oneStore {
+            applicationId "com.twoheart.dailyhotel"
+            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.T_STORE'
         }
     }
 
@@ -108,38 +108,19 @@ android {
             apkName += "-Dev";
         }
 
-        def getCurrentFlavor = { ->
-            Gradle gradle = getGradle()
-            String  tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+        //  Flavor 결과는 전부 소문자로 넘어온다. 유의 사항.
+        def currentFlavor = variant.flavorName;
 
-            Pattern pattern;
-
-            if( tskReqStr.contains( "assemble" ) )
-                pattern = Pattern.compile("assemble(\\w+)(Release|Debug)")
-            else
-                pattern = Pattern.compile("generate(\\w+)(Release|Debug)")
-
-            Matcher matcher = pattern.matcher( tskReqStr )
-
-            if( matcher.find() )
-                return matcher.group(1).toLowerCase()
-            else
-            {
-                return "";
-            }
+        if(currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
+            apkName += "-Play";
+        } else if(currentFlavor.equalsIgnoreCase("onestore") == true) {
+            apkName += "-Tstore";
+        } else {
+            apkName += "-" + variant.flavorName;
         }
 
-        //  Flavor 결과는 전부 소문자로 넘어온다. 유의 사항.
-        def currentFlavor = getCurrentFlavor();
-
         if (variant.buildType.name == "release") {
-            if(currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
-                apkName += "-Play";
-            } else if(currentFlavor.equalsIgnoreCase("onestore") == true) {
-                apkName += "-Tstore";
-            } else {
-                apkName += '-None';
-            }
+
         } else {
             apkName += '-QA-00';
         }
