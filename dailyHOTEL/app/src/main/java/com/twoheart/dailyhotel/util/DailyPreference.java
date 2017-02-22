@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
 /**
@@ -754,7 +755,7 @@ public class DailyPreference
 
     public String getBaseUrl()
     {
-        return getValue(mPreferences, KEY_BASE_URL, Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT));
+        return getValue(mPreferences, KEY_BASE_URL, Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT));
     }
 
     public void setBaseUrl(String value)

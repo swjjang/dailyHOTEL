@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.event;
 
 import android.content.Context;
 
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -31,7 +32,7 @@ public class EventListNetworkController extends BaseNetworkController
     {
         String store;
 
-        if (Constants.RELEASE_STORE == Constants.Stores.PLAY_STORE)
+        if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
         {
             store = "GOOGLE";
         } else

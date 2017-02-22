@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -61,7 +62,7 @@ public class DailyMobileAPI implements IDailyNetwork
     {
         final String URL;
 
-        if (Crypto.getUrlDecoderEx(Constants.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
+        if (Crypto.getUrlDecoderEx(Setting.URL_DAILYHOTEL_SERVER_DEFAULT).startsWith("http://dev-") == false)
         {
             URL = Constants.UNENCRYPTED_URL ? "https://status.dailyhotel.me/prod"//
                 : "ODIkMTA0JDU5JDEyJDE3JDY5JDEzMCQxMzEkMTA4JDckMzAkMCQzNCQxMSQyMyQxMDkk$IMjVCNzRWFNLTVDMRTA0ARTXRFMDBGQUNGEMYDMxNzlFNDA4N0U1RUQ3MkIyQTUwRDNACNUREQjHlDQTNDQ0Y4QUVFRkWVGNTJCRDU3QTdGMEIM4QjFYTCREJBODIzRjRCOUVBMEJFSYQkMy$";

@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.network;
 
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 public interface IDailyNetwork
 {
-    String URL_DAILYHOTEL_SERVER = Constants.URL_DAILYHOTEL_SERVER_DEFAULT;
+    String URL_DAILYHOTEL_SERVER = Setting.URL_DAILYHOTEL_SERVER_DEFAULT;
 
     // DailyHOTEL Reservation Controller WebAPI URL
     // api/hotel/v1/payment/session/common
