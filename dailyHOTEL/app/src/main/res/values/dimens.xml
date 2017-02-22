@@ -31,4 +31,7 @@
 
     <dimen name="detail_button_min_left_margin">10dp</dimen>
     <dimen name="detail_button_max_left_margin">68dp</dimen>
+    
+    <dimen name="home_carousel_min_height">0dp</dimen>
+    <dimen name="home_carousel_max_height">299.5dp</dimen>
 </resources>

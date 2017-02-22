@@ -34,6 +34,11 @@ public class HomeRecommendationLayout extends LinearLayout
     private HomeRecommendationListener mListener;
     private ValueAnimator mValueAnimator;
 
+    private int mImageWidth = ViewGroup.LayoutParams.MATCH_PARENT;
+    private int mImageHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int mExpectedItemHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int mTitleLayoutHeight = 0;
+
     private ArrayList<Recommendation> mRecommendationList;
 
     public interface HomeRecommendationListener
@@ -83,9 +88,16 @@ public class HomeRecommendationLayout extends LinearLayout
         LinearLayout view = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_layout, this);
         view.setOrientation(LinearLayout.VERTICAL);
         view.setBackgroundResource(R.color.white);
+        setVisibility(View.VISIBLE);
+
+        mTitleLayoutHeight = Util.dpToPx(mContext, (21 + 15 + 15 + 1)); // title height(반올림) + title top margin + title + bottom margin + bottom divider height
+        mImageWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
+        mImageHeight = Util.getRatioHeightType21x9(mImageWidth);
+        mExpectedItemHeight = mImageHeight + Util.dpToPx(mContext, 78d);
 
         mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
-        setVisibility(View.GONE);
+
+        setHeight(0);
 
         clearAll();
     }
@@ -101,36 +113,23 @@ public class HomeRecommendationLayout extends LinearLayout
             return;
         }
 
+        int itemCount = 0;
+
         if (mRecommendationList != null)
         {
             int size = mRecommendationList.size();
             if (size > 0)
             {
-                int searchCount = Math.min(size, MAX_RECOMMENDATION_SIZE);
+                itemCount = Math.min(size, MAX_RECOMMENDATION_SIZE);
 
-                for (int i = 0; i < searchCount; i++)
+                for (int i = 0; i < itemCount; i++)
                 {
                     Recommendation recommendation = mRecommendationList.get(i);
                     addRecommendationItemView(recommendation, i);
                 }
-
-                if (getVisibility() != View.VISIBLE)
-                {
-                    setVisibility(View.INVISIBLE);
-
-                    this.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            startLayoutShowAnimation();
-                        }
-                    }, 100);
-                }
-            } else
-            {
-                startLayoutCloseAnimation();
             }
+
+            startLayoutHeightAnimation(itemCount);
         }
     }
 
@@ -154,15 +153,12 @@ public class HomeRecommendationLayout extends LinearLayout
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_item_layout, null);
         view.setTag(recommendation);
 
-        int width = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
-        int height = Util.getRatioHeightType21x9(width);
-
         SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.contentImageView);
         imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
         imageView.setTag(imageView.getId(), position);
         imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(mImageWidth, mImageHeight);
         imageView.setLayoutParams(layoutParams);
 
         if (Util.getLCDWidth(mContext) < 1440)
@@ -206,83 +202,36 @@ public class HomeRecommendationLayout extends LinearLayout
         return mRecommendationList.size();
     }
 
-    private void startLayoutShowAnimation()
+    private void setHeight(int height)
     {
-        if (getVisibility() == View.VISIBLE)
+        ViewGroup.LayoutParams params = getLayoutParams();
+        if (params == null)
         {
-            return;
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        } else
+        {
+            params.height = height;
         }
 
-        if (mValueAnimator != null)
-        {
-            mValueAnimator.cancel();
-            mValueAnimator = null;
-        }
-
-        final int height = getHeight();
-
-        mValueAnimator = ValueAnimator.ofInt(0, height);
-        mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
-        mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-        {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (int) animation.getAnimatedValue();
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = value;
-                setLayoutParams(params);
-            }
-        });
-
-        mValueAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                setVisibility(View.VISIBLE);
-                clearAnimation();
-
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
-
-                mValueAnimator = null;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-                setVisibility(View.VISIBLE);
-                clearAnimation();
-
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
-
-                mValueAnimator = null;
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
-
-        mValueAnimator.start();
+        setLayoutParams(params);
     }
 
-    void startLayoutCloseAnimation()
+    private int getExpectedHeight(int itemCount)
     {
-        if (getVisibility() == View.GONE)
+        if (itemCount < 1)
+        {
+            return 0;
+        }
+
+        return mTitleLayoutHeight + (mExpectedItemHeight * itemCount);
+    }
+
+    private void startLayoutHeightAnimation(int itemCount)
+    {
+        int height = getHeight();
+        final int expectedHeight = getExpectedHeight(itemCount);
+
+        if (height == expectedHeight)
         {
             return;
         }
@@ -293,9 +242,9 @@ public class HomeRecommendationLayout extends LinearLayout
             mValueAnimator = null;
         }
 
-        final int height = getHeight();
+        final int alphaGap = height != 0 && expectedHeight != 0 ? 0 : Math.abs(expectedHeight - height);
 
-        mValueAnimator = ValueAnimator.ofInt(height, 0);
+        mValueAnimator = ValueAnimator.ofInt(height, expectedHeight);
         mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
         mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -307,6 +256,12 @@ public class HomeRecommendationLayout extends LinearLayout
                 ViewGroup.LayoutParams params = getLayoutParams();
                 params.height = value;
                 setLayoutParams(params);
+
+                if (alphaGap != 0)
+                {
+                    float alpha = (float) ((double) value / (double) alphaGap);
+                    setAlpha(alpha);
+                }
             }
         });
 
@@ -321,12 +276,9 @@ public class HomeRecommendationLayout extends LinearLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                setVisibility(View.GONE);
                 clearAnimation();
 
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
+                setHeight(expectedHeight);
 
                 mValueAnimator = null;
             }
@@ -334,12 +286,9 @@ public class HomeRecommendationLayout extends LinearLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                setVisibility(View.GONE);
                 clearAnimation();
 
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
+                setHeight(expectedHeight);
 
                 mValueAnimator = null;
             }

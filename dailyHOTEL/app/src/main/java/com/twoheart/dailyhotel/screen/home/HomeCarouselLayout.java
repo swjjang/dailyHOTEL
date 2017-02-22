@@ -35,6 +35,9 @@ public class HomeCarouselLayout extends LinearLayout
     private HomeCarouselAdapter mRecyclerAdapter;
     private ValueAnimator mValueAnimator;
 
+    private int mMinHeight;
+    private int mMaxHeight;
+
     public interface OnCarouselListener
     {
         void onViewAllClick();
@@ -77,10 +80,15 @@ public class HomeCarouselLayout extends LinearLayout
     private void initLayout()
     {
         LinearLayout view = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.list_row_home_carousel_layout, this);
+        setVisibility(View.VISIBLE);
+
+        mMinHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.home_carousel_min_height);
+        mMaxHeight = mContext.getResources().getDimensionPixelOffset(R.dimen.home_carousel_max_height);
 
         view.setOrientation(LinearLayout.VERTICAL);
         view.setBackgroundResource(R.color.default_background);
-        setVisibility(View.GONE);
+
+        setHeight(mMinHeight);
 
         mTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
         mViewAllTextView = (DailyTextView) view.findViewById(R.id.viewAllTextView);
@@ -128,12 +136,10 @@ public class HomeCarouselLayout extends LinearLayout
             startLayoutCloseAnimation();
         } else
         {
-            if (getVisibility() == View.VISIBLE)
+            if (getHeight() >= mMaxHeight)
             {
                 return;
             }
-
-            setVisibility(View.INVISIBLE);
 
             this.postDelayed(new Runnable()
             {
@@ -184,9 +190,23 @@ public class HomeCarouselLayout extends LinearLayout
         return mRecyclerAdapter.getItem(position);
     }
 
+    private void setHeight(int height)
+    {
+        ViewGroup.LayoutParams params = getLayoutParams();
+        if (params == null)
+        {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        } else
+        {
+            params.height = height;
+        }
+
+        setLayoutParams(params);
+    }
+
     private void startLayoutShowAnimation()
     {
-        if (getVisibility() == View.VISIBLE)
+        if (getHeight() >= mMaxHeight)
         {
             return;
         }
@@ -197,9 +217,8 @@ public class HomeCarouselLayout extends LinearLayout
             mValueAnimator = null;
         }
 
-        final int height = getHeight();
-
-        mValueAnimator = ValueAnimator.ofInt(0, height);
+        final int gap = mMaxHeight - mMinHeight;
+        mValueAnimator = ValueAnimator.ofInt(mMinHeight, mMaxHeight);
         mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
         mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -211,6 +230,9 @@ public class HomeCarouselLayout extends LinearLayout
                 ViewGroup.LayoutParams params = getLayoutParams();
                 params.height = value;
                 setLayoutParams(params);
+
+                float alpha = (float) ((double) value / (double) gap);
+                setAlpha(alpha);
             }
         });
 
@@ -219,18 +241,15 @@ public class HomeCarouselLayout extends LinearLayout
             @Override
             public void onAnimationStart(Animator animation)
             {
-                setVisibility(View.VISIBLE);
+                setHeight(mMinHeight);
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                setVisibility(View.VISIBLE);
                 clearAnimation();
 
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
+                setHeight(mMaxHeight);
 
                 mValueAnimator = null;
             }
@@ -238,12 +257,9 @@ public class HomeCarouselLayout extends LinearLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                setVisibility(View.VISIBLE);
                 clearAnimation();
 
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
+                setHeight(mMaxHeight);
 
                 mValueAnimator = null;
             }
@@ -260,7 +276,7 @@ public class HomeCarouselLayout extends LinearLayout
 
     void startLayoutCloseAnimation()
     {
-        if (getVisibility() == View.GONE)
+        if (getHeight() == mMinHeight)
         {
             return;
         }
@@ -273,7 +289,7 @@ public class HomeCarouselLayout extends LinearLayout
 
         final int height = getHeight();
 
-        mValueAnimator = ValueAnimator.ofInt(height, 0);
+        mValueAnimator = ValueAnimator.ofInt(height, mMinHeight);
         mValueAnimator.setDuration(LAYOUT_ANIMATION_DURATION);
         mValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -299,12 +315,9 @@ public class HomeCarouselLayout extends LinearLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                setVisibility(View.GONE);
                 clearAnimation();
 
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
+                setHeight(mMinHeight);
 
                 mValueAnimator = null;
             }
@@ -312,12 +325,9 @@ public class HomeCarouselLayout extends LinearLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                setVisibility(View.GONE);
                 clearAnimation();
 
-                ViewGroup.LayoutParams params = getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                setLayoutParams(params);
+                setHeight(mMinHeight);
 
                 mValueAnimator = null;
             }
