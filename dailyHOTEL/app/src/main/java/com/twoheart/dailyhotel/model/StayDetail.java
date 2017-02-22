@@ -94,37 +94,48 @@ public class StayDetail extends PlaceDetail<RoomInformation>
         // 주차
         if (jsonObject.getBoolean("parking") == true)
         {
-            mPictogramList.add(Pictogram.parking);
+            mPictogramList.add(Pictogram.PARKING);
         }
 
         // 주차금지
         if (jsonObject.getBoolean("noParking") == true)
         {
-            mPictogramList.add(Pictogram.noParking);
+            mPictogramList.add(Pictogram.NO_PARKING);
         }
 
         // 수영장
         if (jsonObject.getBoolean("pool") == true)
         {
-            mPictogramList.add(Pictogram.pool);
+            mPictogramList.add(Pictogram.POOL);
+        }
+
+        // TODO : business center
+        if (jsonObject.getBoolean("businessCenter") == true)
+        {
+            mPictogramList.add(Pictogram.BUSINESS_CENTER);
         }
 
         // 피트니스
         if (jsonObject.getBoolean("fitness") == true)
         {
-            mPictogramList.add(Pictogram.fitness);
+            mPictogramList.add(Pictogram.FITNESS);
+        }
+
+        // TODO : 사우나
+        if (jsonObject.getBoolean("sauna") == true)
+        {
+            mPictogramList.add(Pictogram.SAUNA);
         }
 
         // 애완동물
         if (jsonObject.getBoolean("pet") == true)
         {
-            mPictogramList.add(Pictogram.pet);
+            mPictogramList.add(Pictogram.PET);
         }
 
-        // 바베큐
-        if (jsonObject.getBoolean("sharedBbq") == true)
-        {
-            mPictogramList.add(Pictogram.sharedBbq);
+        // TODO : kids_play_room
+        if (jsonObject.getBoolean("kidsPlayRoom") == true) {
+            mPictogramList.add(Pictogram.KIDS_PLAY_ROOM);
         }
 
         // Image Url
@@ -288,13 +299,16 @@ public class StayDetail extends PlaceDetail<RoomInformation>
 
     public enum Pictogram
     {
-        parking(R.string.label_parking, R.drawable.ic_detail_facilities_01_parking),
-        noParking(R.string.label_unabled_parking, R.drawable.ic_detail_facilities_02_no_parking),
-        pool(R.string.label_pool, R.drawable.ic_detail_facilities_03_pool),
-        fitness(R.string.label_fitness, R.drawable.ic_detail_facilities_04_fitness),
-        pet(R.string.label_allowed_pet, R.drawable.ic_detail_facilities_05_pet),
-        sharedBbq(R.string.label_allowed_barbecue, R.drawable.ic_detail_facilities_06_bbq),
-        none(0, 0);
+        PARKING(R.string.label_parking, R.drawable.ic_detail_facilities_01_parking),
+        NO_PARKING(R.string.label_unabled_parking, R.drawable.ic_detail_facilities_02_no_parking),
+        POOL(R.string.label_pool, R.drawable.ic_detail_facilities_03_pool),
+        BUSINESS_CENTER(R.string.label_business_center, R.drawable.ic_detail_facilities_01_parking),
+        FITNESS(R.string.label_fitness, R.drawable.ic_detail_facilities_04_fitness),
+        SAUNA(R.string.label_sauna, R.drawable.ic_detail_facilities_01_parking),
+        PET(R.string.label_allowed_pet, R.drawable.ic_detail_facilities_05_pet),
+//        SHARED_BBQ(R.string.label_allowed_barbecue, R.drawable.ic_detail_facilities_06_bbq),
+        KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.ic_detail_facilities_01_parking),
+        NONE(0, 0);
 
         private int mNameResId;
         private int mImageResId;
