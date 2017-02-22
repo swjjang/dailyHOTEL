@@ -181,6 +181,14 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
         productInformationViewHolder.contentsList.removeAllViews();
 
+        if (Util.isTextEmpty(gourmetProduct.benefit, gourmetProduct.checkList) == true)
+        {
+            productInformationViewHolder.contentsList.setVisibility(View.GONE);
+        } else
+        {
+            productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
+        }
+
         // 베네핏
         if (Util.isTextEmpty(gourmetProduct.benefit) == false)
         {
