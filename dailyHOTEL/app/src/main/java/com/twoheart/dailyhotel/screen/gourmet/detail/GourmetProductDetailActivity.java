@@ -115,6 +115,7 @@ public class GourmetProductDetailActivity extends BaseActivity
 
                     case CODE_RESULT_ACTIVITY_REFRESH:
                     case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                        finish();
                         break;
 
                     default:

@@ -181,7 +181,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
         productInformationViewHolder.contentsList.removeAllViews();
 
-        if (Util.isTextEmpty(gourmetProduct.benefit, gourmetProduct.checkList) == true)
+        if (Util.isTextEmpty(gourmetProduct.worth, gourmetProduct.checkList) == true)
         {
             productInformationViewHolder.contentsList.setVisibility(View.GONE);
         } else
@@ -190,9 +190,9 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         // 베네핏
-        if (Util.isTextEmpty(gourmetProduct.benefit) == false)
+        if (Util.isTextEmpty(gourmetProduct.worth) == false)
         {
-            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.benefit, R.drawable.ic_detail_item_02_benefit, false);
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.worth, R.drawable.ic_detail_item_02_benefit, false);
         }
 
         // 확인 사항

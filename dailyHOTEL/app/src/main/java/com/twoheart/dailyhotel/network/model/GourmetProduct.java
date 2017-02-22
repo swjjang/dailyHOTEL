@@ -33,7 +33,7 @@ public class GourmetProduct implements Parcelable
     public int discountPrice;
 
     @JsonField
-    public String benefit;
+    public String worth;
 
     @JsonField
     public String checkList;
@@ -164,7 +164,7 @@ public class GourmetProduct implements Parcelable
         dest.writeString(ticketName);
         dest.writeInt(price);
         dest.writeInt(discountPrice);
-        dest.writeString(benefit);
+        dest.writeString(worth);
         dest.writeString(checkList);
         //        dest.writeString(startEatingTime);
         //        dest.writeString(endEatingTime);
@@ -186,7 +186,7 @@ public class GourmetProduct implements Parcelable
         ticketName = in.readString();
         price = in.readInt();
         discountPrice = in.readInt();
-        benefit = in.readString();
+        worth = in.readString();
         checkList = in.readString();
         //        startEatingTime = in.readString();
         //        endEatingTime = in.readString();
