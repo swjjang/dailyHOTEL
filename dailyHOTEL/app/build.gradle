@@ -160,6 +160,9 @@ android {
         } else if(gitName == 'android_sam')
         {
             apkName += "-Sam";
+        } else
+        {
+            apkName += "-" + gitName;
         }
 
         apkName += "-" + simpleDateFormat.format(new Date());
