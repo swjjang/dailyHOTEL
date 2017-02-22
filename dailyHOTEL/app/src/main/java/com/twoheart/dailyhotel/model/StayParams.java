@@ -155,7 +155,19 @@ public class StayParams extends PlaceParams
 
     public List<String> getLuxuryList()
     {
-        return mLuxuryList;
+        List<String> allLuxuryList = new ArrayList<>();
+
+        if (mLuxuryList != null && mLuxuryList.size() != 0)
+        {
+            allLuxuryList.addAll(mLuxuryList);
+        }
+
+        if (mRoomLuxuryList != null && mRoomLuxuryList.size() != 0)
+        {
+            allLuxuryList.addAll(mRoomLuxuryList);
+        }
+
+        return allLuxuryList.size() == 0 ? null : allLuxuryList;
     }
 
     public Map<String, Object> toParamsMap()
@@ -258,39 +270,9 @@ public class StayParams extends PlaceParams
 
         ArrayList<String> arrayList = new ArrayList();
 
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI)
-        {
-            arrayList.add("Wifi");
-        }
-
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST)
-        {
-            arrayList.add("Breakfast");
-        }
-
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING)
-        {
-            arrayList.add("Cooking");
-        }
-
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB)
-        {
-            arrayList.add("Bath");
-        }
-
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
         {
             arrayList.add("Parking");
-        }
-
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
-        {
-            arrayList.add("Pool");
-        }
-
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
-        {
-            arrayList.add("Fitness");
         }
 
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING)
@@ -298,14 +280,39 @@ public class StayParams extends PlaceParams
             arrayList.add("NoParking");
         }
 
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ)
+        {
+            arrayList.add("SharedBbq");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
+        {
+            arrayList.add("Pool");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BUSINESS_CENTER)
+        {
+            arrayList.add("BusinessCenter");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
+        {
+            arrayList.add("Fitness");
+        }
+
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SAUNA) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SAUNA)
+        {
+            arrayList.add("Sauna");
+        }
+
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET)
         {
             arrayList.add("Pet");
         }
 
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ)
+        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_KIDS_PLAY_ROOM)
         {
-            arrayList.add("SharedBbq");
+            arrayList.add("KidsPlayroom");
         }
 
         return arrayList;
@@ -318,19 +325,58 @@ public class StayParams extends PlaceParams
             return null;
         }
 
-        // TODO : 객실 내 시설
-
         ArrayList<String> arrayList = new ArrayList();
 
-//        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI)
-//        {
-//            arrayList.add("Wifi");
-//        }
-//
-//        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST)
-//        {
-//            arrayList.add("Breakfast");
-//        }
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI)
+        {
+            arrayList.add("WiFi");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING)
+        {
+            arrayList.add("Cooking");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC)
+        {
+            arrayList.add("Pc");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB)
+        {
+            arrayList.add("Bath");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV)
+        {
+            arrayList.add("Tv");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL)
+        {
+            arrayList.add("SpaWallpool");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ)
+        {
+            arrayList.add("PrivateBbq");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST)
+        {
+            arrayList.add("Breakfast");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE)
+        {
+            arrayList.add("Karaoke");
+        }
+
+        if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PARTY_ROOM)
+        {
+            arrayList.add("PartyRoom");
+        }
+
 
         return arrayList;
     }
