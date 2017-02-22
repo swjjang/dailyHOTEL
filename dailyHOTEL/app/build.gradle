@@ -198,24 +198,34 @@ dependencies {
     compile 'com.android.support:gridlayout-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
     compile 'com.android.support:multidex:1.0.1'
+
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+
     compile 'com.facebook.fresco:fresco:1.1.0'
     compile 'com.facebook.fresco:drawee:1.1.0'
     compile 'com.facebook.fresco:imagepipeline-okhttp3:1.1.0'
+
     compile 'com.kakao.sdk:kakaolink:1.1.32'
     compile 'com.kakao.sdk:kakaotalk:1.1.32'
-    compile 'com.appboy:android-sdk-ui:1.17.+'
+
+    compile 'com.appboy:android-sdk-ui:1.18.+'
+
     compile 'com.adjust.sdk:adjust-android:4.11.0'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.6.6@aar') {
         transitive = true;
     }
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
     compile project(':keyframes')
+
     compile files('libs/com.skp.Tmap_1.0.44.jar')
+
     compile 'com.google.android.gms:play-services-base:10.2.0'
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.google.android.gms:play-services-location:10.2.0'
