@@ -1,4 +1,6 @@
 import java.text.SimpleDateFormat
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 apply plugin: 'com.android.application'
 
@@ -71,6 +73,21 @@ android {
             zipAlignEnabled true
 //            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-fresco.pro'
+
+            productFlavors {
+                googlePlayStore {
+                    applicationId "com.twoheart.dailyhotel"
+                    buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
+                }
+                oneStore {
+                    applicationId "com.twoheart.dailyhotel"
+                    buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.T_STORE'
+                }
+            }
+        }
+
+        debug {
+            buildConfigField 'com.twoheart.dailyhotel.Setting.Stores', 'RELEASE_STORE', 'com.twoheart.dailyhotel.Setting.Stores.PLAY_STORE'
         }
     }
 
@@ -86,16 +103,78 @@ android {
         def apkName = "DH";
 
         if (variant.buildType.name == "release") {
-            apkName += "-Prod-Play";
+            apkName += "-Prod";
         } else {
-            apkName += "-Dev-Play";
+            apkName += "-Dev";
+        }
+
+        def getCurrentFlavor = { ->
+            Gradle gradle = getGradle()
+            String  tskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+
+            Pattern pattern;
+
+            if( tskReqStr.contains( "assemble" ) )
+                pattern = Pattern.compile("assemble(\\w+)(Release|Debug)")
+            else
+                pattern = Pattern.compile("generate(\\w+)(Release|Debug)")
+
+            Matcher matcher = pattern.matcher( tskReqStr )
+
+            if( matcher.find() )
+                return matcher.group(1).toLowerCase()
+            else
+            {
+                return "";
+            }
+        }
+
+        //  Flavor 결과는 전부 소문자로 넘어온다. 유의 사항.
+        def currentFlavor = getCurrentFlavor();
+
+        if(currentFlavor == "googleplaystore") {
+            apkName += "-Play";
+        } else if(currentFlavor == "onestore") {
+            apkName += "-Tstore";
+        } else {
+            apkName += '-None';
         }
 
         apkName += "-v" + defaultConfig.versionName;
 
-        apkName += "-Sheldon";
+        def getGitName = { ->
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'config', 'user.name'
+                standardOutput = stdout
+            }
+
+            return stdout.toString().trim();
+        }
+
+        def gitName = getGitName();
+
+        if(gitName == 'pinkred')
+        {
+            apkName += "-Sheldon";
+        } else if(gitName == 'android_sam')
+        {
+            apkName += "-Sam";
+        }
 
         apkName += "-" + simpleDateFormat.format(new Date());
+
+        def getGitHash = { ->
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'rev-parse', '--short', 'HEAD'
+                standardOutput = stdout
+            }
+
+            return stdout.toString().trim();
+        }
+
+        apkName += "-" + getGitHash();
 
         apkName += ".apk";
 

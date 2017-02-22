@@ -4,7 +4,7 @@ import com.twoheart.dailyhotel.util.Constants;
 
 public class Setting
 {
-    public static Stores RELEASE_STORE = Stores.PLAY_STORE;
+    public static Stores RELEASE_STORE = BuildConfig.RELEASE_STORE;
 
     // 스토어 선택.
     public enum Stores
