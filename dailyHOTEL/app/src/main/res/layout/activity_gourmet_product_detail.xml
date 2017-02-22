@@ -123,7 +123,7 @@
                 android:layout_height="1dp"
                 android:background="@color/default_line_cf0f0f0"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/benefitLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -132,6 +132,7 @@
                 android:minHeight="40dp">
 
                 <ImageView
+                    android:id="@+id/benefitImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -141,21 +142,22 @@
                     android:id="@+id/benefitTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/benefitImageView"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="12dp"
                     android:freezesText="true"
                     android:textColor="@color/default_text_cb70038"
                     android:textSize="13dp"/>
-            </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/default_line_cdcdcdd"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="1dp"
+                    android:background="@color/default_line_cdcdcdd"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/timeLayout"
@@ -251,6 +253,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/shape_fillrect_ld1d1d1_bfafafb_r1"
                 android:paddingBottom="16dp"
                 android:paddingLeft="10dp"
@@ -263,7 +266,7 @@
                 android:id="@+id/menuDetailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"/>
 
         </LinearLayout>
