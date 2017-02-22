@@ -79,12 +79,30 @@ android {
         preDexLibraries false
     }
 
-//    applicationVariants.all { variant ->
-//        def simpleDateFormat = new SimpleDateFormat("yyMMdd")
-//        simpleDateFormat.setTimeZone(TimeZone.getDefault())
-//
-//        variant.outputFile = new File(variant.outputFile.parent,  "DH-${variant.buildType.name}-Play-v${defaultConfig.versionName}-Sheldon-${simpleDateFormat.format(new Date())}.apk");
-//    }
+    applicationVariants.all { variant ->
+        def simpleDateFormat = new SimpleDateFormat("yyMMdd");
+        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+
+        def apkName = "DH";
+
+        if (variant.buildType.name == "release") {
+            apkName += "-Prod-Play";
+        } else {
+            apkName += "-Dev-Play";
+        }
+
+        apkName += "-v" + defaultConfig.versionName;
+
+        apkName += "-Sheldon";
+
+        apkName += "-" + simpleDateFormat.format(new Date());
+
+        apkName += ".apk";
+
+        variant.outputs.each { output ->
+            output.outputFile = new File(output.outputFile.parent, apkName);
+        }
+    }
 }
 
 dependencies {
