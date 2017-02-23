@@ -156,9 +156,6 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                     LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     convertView = layoutInflater.inflate(R.layout.list_row_booking, parent, false);
                     convertView.setTag(Booking.TYPE_ENTRY);
-
-                    ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
-                    layoutParams.height = Util.getListRowHeight(mContext);
                 }
 
                 convertView = getEntryView(convertView, booking, isLastPosition);
@@ -189,6 +186,12 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             return view;
         }
 
+        View listItemLayout = view.findViewById(R.id.listItemLayout);
+
+        ViewGroup.LayoutParams layoutParams = listItemLayout.getLayoutParams();
+        layoutParams.height = Util.getListRowHeight(mContext);
+        listItemLayout.setLayoutParams(layoutParams);
+
         // 호텔 이미지
         com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.hotelImage);
         Util.requestImageResize(mContext, hotelImageView, booking.hotelImageUrl);
@@ -198,11 +201,8 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         TextView day = (TextView) view.findViewById(R.id.bookingDateTextView);
         TextView nights = (TextView) view.findViewById(R.id.bookingNightsTextView);
         View deleteView = view.findViewById(R.id.deleteView);
-        View bottomDivider = view.findViewById(R.id.bottomDivider);
 
         name.setText(booking.placeName);
-
-        bottomDivider.setVisibility(isLastPosition == false ? View.VISIBLE : View.GONE);
 
         switch (booking.placeType)
         {

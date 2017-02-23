@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="202dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/listItemLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="202dp">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/hotelImage"
@@ -36,8 +37,8 @@
                 android:layout_marginTop="6dp"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:singleLine="true"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="@color/white"
                 android:textSize="18dp"
                 dailyFont:style="Medium"/>
@@ -89,13 +90,11 @@
             android:scaleType="center"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_delete"/>
-
     </RelativeLayout>
 
     <View
         android:id="@+id/bottomDivider"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_below="@id/listItemLayout"/>
+        android:layout_height="10dp"/>
 
-</RelativeLayout>
+</LinearLayout>
