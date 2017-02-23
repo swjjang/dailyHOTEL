@@ -62,6 +62,8 @@ public abstract class PlaceMainActivity extends BaseActivity
     @Override
     public void onResume()
     {
+        mPlaceMainLayout.showAppBarLayout(false);
+
         super.onResume();
 
         if (isFinishing() == true)
