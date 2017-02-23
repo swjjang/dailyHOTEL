@@ -28,7 +28,7 @@ public class GourmetProductDetailLayout extends BaseLayout
     private NestedScrollView mNestedScrollView;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
-    protected View mMoreIconView;
+    protected View mMoreIconView, mDefaultInformationTopLine, mMenuInformationTopLine;
     protected GourmetProductDetailImagePagerAdapter mImageAdapter;
 
     private TextView mDescriptionTextView;
@@ -56,6 +56,8 @@ public class GourmetProductDetailLayout extends BaseLayout
 
         initImageLayout(view);
 
+        mDefaultInformationTopLine = view.findViewById(R.id.defaultInformationTopLine);
+        mMenuInformationTopLine = view.findViewById(R.id.menuInformationTopLine);
         mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
     }
 
@@ -102,7 +104,6 @@ public class GourmetProductDetailLayout extends BaseLayout
     public void setInformation(GourmetDetail gourmetDetail, int productIndex)
     {
         GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);
-
 
         // 이미지 정보
         List<ProductImageInformation> imageInformationList = gourmetProduct.getImageList();
@@ -185,6 +186,14 @@ public class GourmetProductDetailLayout extends BaseLayout
             checkTextView.setText(gourmetProduct.checkList);
         }
 
+        if (benefitLayout.getVisibility() == View.GONE && timeLayout.getVisibility() == View.GONE && checkLayout.getVisibility() == View.GONE)
+        {
+            mDefaultInformationTopLine.setVisibility(View.GONE);
+        } else
+        {
+            mDefaultInformationTopLine.setVisibility(View.VISIBLE);
+        }
+
         // 메뉴 설명
         View menuTextView = mNestedScrollView.findViewById(R.id.menuTextView);
 
@@ -215,9 +224,11 @@ public class GourmetProductDetailLayout extends BaseLayout
         if (menuSummaryTextView.getVisibility() == View.GONE && menuDetailLayout.getVisibility() == View.GONE)
         {
             menuTextView.setVisibility(View.GONE);
+            mMenuInformationTopLine.setVisibility(View.GONE);
         } else
         {
             menuTextView.setVisibility(View.VISIBLE);
+            mMenuInformationTopLine.setVisibility(View.VISIBLE);
         }
 
         // bottom bar

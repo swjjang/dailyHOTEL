@@ -108,20 +108,27 @@
                 android:textSize="18dp"
                 dailyFont:style="Medium"/>
 
-            <View
+            <LinearLayout
+                android:id="@+id/defaultInformationTopLine"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/default_background"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_line_cf0f0f0"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/default_background"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/benefitLayout"
@@ -142,10 +149,10 @@
                     android:id="@+id/benefitTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/benefitImageView"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="12dp"
+                    android:layout_toRightOf="@id/benefitImageView"
                     android:freezesText="true"
                     android:textColor="@color/default_text_cb70038"
                     android:textSize="13dp"/>
@@ -219,21 +226,28 @@
                     android:textSize="13dp"/>
             </LinearLayout>
 
-            <View
+            <LinearLayout
+                android:id="@+id/menuInformationTopLine"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/default_line_cf0f0f0"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/default_background"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/default_line_cf0f0f0"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/default_background"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_line_cf0f0f0"/>
+            </LinearLayout>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/menuTextView"
@@ -250,10 +264,10 @@
                 android:id="@+id/menuSummaryTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
                 android:background="@drawable/shape_fillrect_ld1d1d1_bfafafb_r1"
                 android:paddingBottom="16dp"
                 android:paddingLeft="10dp"
