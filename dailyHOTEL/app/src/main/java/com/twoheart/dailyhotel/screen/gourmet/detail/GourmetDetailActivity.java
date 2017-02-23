@@ -61,7 +61,7 @@ import retrofit2.Response;
 
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
-    private int mSelectedTicketIndex;
+    int mSelectedTicketIndex;
     private boolean mCheckPrice;
 
     /**
@@ -1004,7 +1004,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
-    private void onWishButtonClick(PlaceType placeType, GourmetDetail gourmetDetail)
+    void onWishButtonClick(PlaceType placeType, GourmetDetail gourmetDetail)
     {
         if (isLockUiComponent() == true || isFinishing() == true || gourmetDetail == null)
         {

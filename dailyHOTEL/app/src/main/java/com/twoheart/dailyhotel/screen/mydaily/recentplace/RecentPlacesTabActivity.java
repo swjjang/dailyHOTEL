@@ -34,11 +34,11 @@ import retrofit2.Response;
 
 public class RecentPlacesTabActivity extends BaseActivity
 {
-    private RecentPlaces mAllRecentPlaces;
-    private ArrayList<Pair<Integer, String>> mRecentStayList;
-    private ArrayList<Pair<Integer, String>> mRecentGourmetList;
+    RecentPlaces mAllRecentPlaces;
+    ArrayList<Pair<Integer, String>> mRecentStayList;
+    ArrayList<Pair<Integer, String>> mRecentGourmetList;
 
-    private ArrayList<RecentPlacesListFragment> mFragmentList;
+    ArrayList<RecentPlacesListFragment> mFragmentList;
 
     private RecentStayListFragment mRecentStayListFragment;
     private RecentGourmetListFragment mRecentGourmetListFragment;
@@ -47,7 +47,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private RecentPlacesNetworkController mNetworkController;
 
-    private DailyViewPager mViewPager;
+    DailyViewPager mViewPager;
     private TabLayout mTabLayout;
     private View mEmptyView;
 

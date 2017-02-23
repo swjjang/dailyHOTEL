@@ -28,7 +28,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
     private Context mContext;
     private LayoutInflater mInflater;
     private List<PlaceViewItem> mGourmetProductList;
-    private OnProductClickListener mOnProductClickListener;
+    OnProductClickListener mOnProductClickListener;
 
 
     public interface OnProductClickListener

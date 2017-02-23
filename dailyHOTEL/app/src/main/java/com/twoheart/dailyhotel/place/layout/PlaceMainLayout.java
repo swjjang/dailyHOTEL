@@ -376,7 +376,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                     {
                         case ViewPager.SCROLL_STATE_DRAGGING:
                             isScrolling = true;
-//                            hideBottomLayout();
+                            //                            hideBottomLayout();
                             break;
 
                         case ViewPager.SCROLL_STATE_IDLE:

@@ -32,206 +32,206 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
         readFromParcel(in);
     }
 
-//    public void setData(JSONObject jsonObject) throws Exception
-//    {
-//        try
-//        {
-//            grade = Stay.Grade.valueOf(jsonObject.getString("grade"));
-//        } catch (Exception e)
-//        {
-//            grade = Stay.Grade.etc;
-//        }
-//
-//        name = jsonObject.getString("name");
-//        address = jsonObject.getString("address");
-//
-//        longitude = jsonObject.getDouble("longitude");
-//        latitude = jsonObject.getDouble("latitude");
-//        isOverseas = jsonObject.getBoolean("overseas");
-//
-//        boolean ratingShow = jsonObject.getBoolean("ratingShow");
-//
-//        if (ratingShow == true)
-//        {
-//            ratingValue = jsonObject.getInt("ratingValue");
-//            ratingPersons = jsonObject.getInt("ratingPersons");
-//        }
-//
-//        if (jsonObject.has("singleStay") == true)
-//        {
-//            isSingleStay = jsonObject.getBoolean("singleStay");
-//        } else
-//        {
-//            isSingleStay = false;
-//        }
-//
-//        // Pictogram
-//        if (mPictogramList == null)
-//        {
-//            mPictogramList = new ArrayList<>();
-//        }
-//
-//        mPictogramList.clear();
-//
-//        // 주차
-//        if (jsonObject.getBoolean("parking") == true)
-//        {
-//            mPictogramList.add(Pictogram.PARKING);
-//        }
-//
-//        // 주차금지
-//        if (jsonObject.getBoolean("noParking") == true)
-//        {
-//            mPictogramList.add(Pictogram.NO_PARKING);
-//        }
-//
-//        // 수영장
-//        if (jsonObject.getBoolean("pool") == true)
-//        {
-//            mPictogramList.add(Pictogram.POOL);
-//        }
-//
-//        // TODO : business center
-//        if (jsonObject.getBoolean("businessCenter") == true)
-//        {
-//            mPictogramList.add(Pictogram.BUSINESS_CENTER);
-//        }
-//
-//        // 피트니스
-//        if (jsonObject.getBoolean("fitness") == true)
-//        {
-//            mPictogramList.add(Pictogram.FITNESS);
-//        }
-//
-//        // TODO : 사우나
-//        if (jsonObject.getBoolean("sauna") == true)
-//        {
-//            mPictogramList.add(Pictogram.SAUNA);
-//        }
-//
-//        // 애완동물
-//        if (jsonObject.getBoolean("pet") == true)
-//        {
-//            mPictogramList.add(Pictogram.PET);
-//        }
-//
-//        // TODO : kids_play_room
-//        if (jsonObject.getBoolean("kidsPlayRoom") == true) {
-//            mPictogramList.add(Pictogram.KIDS_PLAY_ROOM);
-//        }
-//
-//        // Image Url
-//        String imageUrl = jsonObject.getString("imgUrl");
-//        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
-//
-//        Iterator<String> iterator = pathUrlJSONObject.keys();
-//        while (iterator.hasNext())
-//        {
-//            String key = iterator.next();
-//
-//            try
-//            {
-//                JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
-//
-//                int length = pathJSONArray.length();
-//                mImageInformationList = new ArrayList<>(pathJSONArray.length());
-//
-//                for (int i = 0; i < length; i++)
-//                {
-//                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
-//
-//                    ImageInformation imageInformation = new ImageInformation();
-//                    imageInformation.description = imageInformationJSONObject.getString("description");
-//                    imageInformation.name = imageInformationJSONObject.getString("name");
-//                    imageInformation.setImageUrl(imageUrl + key + imageInformation.name);
-//
-//                    mImageInformationList.add(imageInformation);
-//                }
-//                break;
-//            } catch (JSONException e)
-//            {
-//            }
-//        }
-//
-//        // benefit
-//        if (jsonObject.has("benefit") == true)
-//        {
-//            benefit = jsonObject.getString("benefit");
-//
-//            if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
-//            {
-//                JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
-//
-//                int length = benefitJSONArray.length();
-//
-//                if (length > 0)
-//                {
-//                    mBenefitInformation = new ArrayList<>(length);
-//
-//                    for (int i = 0; i < length; i++)
-//                    {
-//                        mBenefitInformation.add(benefitJSONArray.getString(i));
-//                    }
-//                } else
-//                {
-//                    mBenefitInformation = new ArrayList<>();
-//                }
-//
-//                if (jsonObject.has("benefitWarning") == true && jsonObject.isNull("benefitWarning") == false)
-//                {
-//                    String benefitWarning = jsonObject.getString("benefitWarning");
-//
-//                    if (Util.isTextEmpty(benefitWarning) == false)
-//                    {
-//                        mBenefitInformation.add(benefitWarning);
-//                    }
-//                }
-//            }
-//        }
-//
-//        // Detail
-//        JSONArray detailJSONArray = jsonObject.getJSONArray("details");
-//        int detailLength = detailJSONArray.length();
-//
-//        mInformationList = new ArrayList<>(detailLength);
-//
-//        for (int i = 0; i < detailLength; i++)
-//        {
-//            mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
-//        }
-//
-//        // Room Sale Info
-//
-//        if (jsonObject.has("rooms") == true && jsonObject.isNull("rooms") == false)
-//        {
-//            JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
-//
-//            int saleRoomLength = saleRoomJSONArray.length();
-//
-//            mSaleRoomList = new ArrayList<>(saleRoomLength);
-//
-//            for (int i = 0; i < saleRoomLength; i++)
-//            {
-//                RoomInformation roomInformation = new RoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
-//                roomInformation.grade = grade;
-//                roomInformation.address = address;
-//                mSaleRoomList.add(roomInformation);
-//            }
-//        } else
-//        {
-//            mSaleRoomList = new ArrayList<>();
-//        }
-//
-//        if (jsonObject.has("myWish") == true)
-//        {
-//            myWish = jsonObject.getBoolean("myWish");
-//        }
-//
-//        if (jsonObject.has("wishCount") == true)
-//        {
-//            wishCount = jsonObject.getInt("wishCount");
-//        }
-//    }
+    //    public void setData(JSONObject jsonObject) throws Exception
+    //    {
+    //        try
+    //        {
+    //            grade = Stay.Grade.valueOf(jsonObject.getString("grade"));
+    //        } catch (Exception e)
+    //        {
+    //            grade = Stay.Grade.etc;
+    //        }
+    //
+    //        name = jsonObject.getString("name");
+    //        address = jsonObject.getString("address");
+    //
+    //        longitude = jsonObject.getDouble("longitude");
+    //        latitude = jsonObject.getDouble("latitude");
+    //        isOverseas = jsonObject.getBoolean("overseas");
+    //
+    //        boolean ratingShow = jsonObject.getBoolean("ratingShow");
+    //
+    //        if (ratingShow == true)
+    //        {
+    //            ratingValue = jsonObject.getInt("ratingValue");
+    //            ratingPersons = jsonObject.getInt("ratingPersons");
+    //        }
+    //
+    //        if (jsonObject.has("singleStay") == true)
+    //        {
+    //            isSingleStay = jsonObject.getBoolean("singleStay");
+    //        } else
+    //        {
+    //            isSingleStay = false;
+    //        }
+    //
+    //        // Pictogram
+    //        if (mPictogramList == null)
+    //        {
+    //            mPictogramList = new ArrayList<>();
+    //        }
+    //
+    //        mPictogramList.clear();
+    //
+    //        // 주차
+    //        if (jsonObject.getBoolean("parking") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.PARKING);
+    //        }
+    //
+    //        // 주차금지
+    //        if (jsonObject.getBoolean("noParking") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.NO_PARKING);
+    //        }
+    //
+    //        // 수영장
+    //        if (jsonObject.getBoolean("pool") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.POOL);
+    //        }
+    //
+    //        // TODO : business center
+    //        if (jsonObject.getBoolean("businessCenter") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.BUSINESS_CENTER);
+    //        }
+    //
+    //        // 피트니스
+    //        if (jsonObject.getBoolean("fitness") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.FITNESS);
+    //        }
+    //
+    //        // TODO : 사우나
+    //        if (jsonObject.getBoolean("sauna") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.SAUNA);
+    //        }
+    //
+    //        // 애완동물
+    //        if (jsonObject.getBoolean("pet") == true)
+    //        {
+    //            mPictogramList.add(Pictogram.PET);
+    //        }
+    //
+    //        // TODO : kids_play_room
+    //        if (jsonObject.getBoolean("kidsPlayRoom") == true) {
+    //            mPictogramList.add(Pictogram.KIDS_PLAY_ROOM);
+    //        }
+    //
+    //        // Image Url
+    //        String imageUrl = jsonObject.getString("imgUrl");
+    //        JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPath");
+    //
+    //        Iterator<String> iterator = pathUrlJSONObject.keys();
+    //        while (iterator.hasNext())
+    //        {
+    //            String key = iterator.next();
+    //
+    //            try
+    //            {
+    //                JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
+    //
+    //                int length = pathJSONArray.length();
+    //                mImageInformationList = new ArrayList<>(pathJSONArray.length());
+    //
+    //                for (int i = 0; i < length; i++)
+    //                {
+    //                    JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
+    //
+    //                    ImageInformation imageInformation = new ImageInformation();
+    //                    imageInformation.description = imageInformationJSONObject.getString("description");
+    //                    imageInformation.name = imageInformationJSONObject.getString("name");
+    //                    imageInformation.setImageUrl(imageUrl + key + imageInformation.name);
+    //
+    //                    mImageInformationList.add(imageInformation);
+    //                }
+    //                break;
+    //            } catch (JSONException e)
+    //            {
+    //            }
+    //        }
+    //
+    //        // benefit
+    //        if (jsonObject.has("benefit") == true)
+    //        {
+    //            benefit = jsonObject.getString("benefit");
+    //
+    //            if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
+    //            {
+    //                JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
+    //
+    //                int length = benefitJSONArray.length();
+    //
+    //                if (length > 0)
+    //                {
+    //                    mBenefitInformation = new ArrayList<>(length);
+    //
+    //                    for (int i = 0; i < length; i++)
+    //                    {
+    //                        mBenefitInformation.add(benefitJSONArray.getString(i));
+    //                    }
+    //                } else
+    //                {
+    //                    mBenefitInformation = new ArrayList<>();
+    //                }
+    //
+    //                if (jsonObject.has("benefitWarning") == true && jsonObject.isNull("benefitWarning") == false)
+    //                {
+    //                    String benefitWarning = jsonObject.getString("benefitWarning");
+    //
+    //                    if (Util.isTextEmpty(benefitWarning) == false)
+    //                    {
+    //                        mBenefitInformation.add(benefitWarning);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //
+    //        // Detail
+    //        JSONArray detailJSONArray = jsonObject.getJSONArray("details");
+    //        int detailLength = detailJSONArray.length();
+    //
+    //        mInformationList = new ArrayList<>(detailLength);
+    //
+    //        for (int i = 0; i < detailLength; i++)
+    //        {
+    //            mInformationList.add(new DetailInformation(detailJSONArray.getJSONObject(i)));
+    //        }
+    //
+    //        // Room Sale Info
+    //
+    //        if (jsonObject.has("rooms") == true && jsonObject.isNull("rooms") == false)
+    //        {
+    //            JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
+    //
+    //            int saleRoomLength = saleRoomJSONArray.length();
+    //
+    //            mSaleRoomList = new ArrayList<>(saleRoomLength);
+    //
+    //            for (int i = 0; i < saleRoomLength; i++)
+    //            {
+    //                RoomInformation roomInformation = new RoomInformation(name, saleRoomJSONArray.getJSONObject(i), isOverseas, nights);
+    //                roomInformation.grade = grade;
+    //                roomInformation.address = address;
+    //                mSaleRoomList.add(roomInformation);
+    //            }
+    //        } else
+    //        {
+    //            mSaleRoomList = new ArrayList<>();
+    //        }
+    //
+    //        if (jsonObject.has("myWish") == true)
+    //        {
+    //            myWish = jsonObject.getBoolean("myWish");
+    //        }
+    //
+    //        if (jsonObject.has("wishCount") == true)
+    //        {
+    //            wishCount = jsonObject.getInt("wishCount");
+    //        }
+    //    }
 
     public StayDetailParams getStayDetailParams()
     {
@@ -285,7 +285,8 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
     @Override
     public List<ImageInformation> getImageList()
     {
-        if (mStayDetailParams == null) {
+        if (mStayDetailParams == null)
+        {
             return null;
         }
 
@@ -306,7 +307,8 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
     @Override
     public List<String> getBenefitList()
     {
-        if (mStayDetailParams == null) {
+        if (mStayDetailParams == null)
+        {
             return null;
         }
 

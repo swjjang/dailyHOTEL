@@ -976,7 +976,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 stayBookingDetail.setData(jsonObject);
 
-                if(stayBookingDetail.readyForRefund == true)
+                if (stayBookingDetail.readyForRefund == true)
                 {
                     stayBookingDetail.isVisibleRefundPolicy = true;
 

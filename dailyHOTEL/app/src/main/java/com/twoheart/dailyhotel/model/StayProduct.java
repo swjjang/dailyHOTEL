@@ -68,7 +68,8 @@ public class StayProduct implements Parcelable
     //
     public String categoryCode; // GA를 위해서 payment로 진행시에 값을 넣는다
 
-    public StayProduct() {
+    public StayProduct()
+    {
 
     }
 

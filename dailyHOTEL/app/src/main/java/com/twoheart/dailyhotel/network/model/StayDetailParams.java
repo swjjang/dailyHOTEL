@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.model.StayProduct;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -365,7 +364,6 @@ public class StayDetailParams implements Parcelable
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(address);
-        dest.writeMap(imgPath);
         dest.writeString(gradeString);
         dest.writeInt(ratingPersons);
         dest.writeInt(ratingValue);
@@ -404,7 +402,6 @@ public class StayDetailParams implements Parcelable
         latitude = in.readDouble();
         longitude = in.readDouble();
         address = in.readString();
-        imgPath = in.readHashMap(new HashMap<String, List<ImageInformation>>().getClass().getClassLoader());
         gradeString = in.readString();
         ratingPersons = in.readInt();
         ratingValue = in.readInt();

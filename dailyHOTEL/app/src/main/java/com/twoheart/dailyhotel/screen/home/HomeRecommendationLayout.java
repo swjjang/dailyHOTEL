@@ -31,8 +31,8 @@ public class HomeRecommendationLayout extends LinearLayout
 
     private Context mContext;
     private LinearLayout mContentLayout;
-    private HomeRecommendationListener mListener;
-    private ValueAnimator mValueAnimator;
+    HomeRecommendationListener mListener;
+    ValueAnimator mValueAnimator;
 
     private int mImageWidth = ViewGroup.LayoutParams.MATCH_PARENT;
     private int mImageHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -202,7 +202,7 @@ public class HomeRecommendationLayout extends LinearLayout
         return mRecommendationList.size();
     }
 
-    private void setHeight(int height)
+    void setHeight(int height)
     {
         ViewGroup.LayoutParams params = getLayoutParams();
         if (params == null)

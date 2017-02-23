@@ -37,7 +37,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     Context mContext;
     protected LayoutInflater mInflater;
     private ArrayList<HomePlace> mList;
-    private ItemClickListener mItemClickListener;
+    ItemClickListener mItemClickListener;
     protected PaintDrawable mPaintDrawable;
 
     public interface ItemClickListener

@@ -33,10 +33,10 @@ public class HomeCarouselLayout extends LinearLayout
     OnCarouselListener mCarouselListenter;
     private RecyclerView mRecyclerView;
     private HomeCarouselAdapter mRecyclerAdapter;
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
 
-    private int mMinHeight;
-    private int mMaxHeight;
+    int mMinHeight;
+    int mMaxHeight;
 
     public interface OnCarouselListener
     {
@@ -190,7 +190,7 @@ public class HomeCarouselLayout extends LinearLayout
         return mRecyclerAdapter.getItem(position);
     }
 
-    private void setHeight(int height)
+    void setHeight(int height)
     {
         ViewGroup.LayoutParams params = getLayoutParams();
         if (params == null)
@@ -204,7 +204,7 @@ public class HomeCarouselLayout extends LinearLayout
         setLayoutParams(params);
     }
 
-    private void startLayoutShowAnimation()
+    void startLayoutShowAnimation()
     {
         if (getHeight() >= mMaxHeight)
         {

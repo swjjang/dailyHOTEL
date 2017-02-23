@@ -789,9 +789,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
 
-//        stayProduct.categoryCode = stayDetailParams.categoryCode;
+        //        stayProduct.categoryCode = stayDetailParams.categoryCode;
         boolean isBenefit = Util.isTextEmpty(stayDetailParams.benefit) == false;
-//        stayProduct.nights = stayDetailParams.nights;
+        //        stayProduct.nights = stayDetailParams.nights;
 
         Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, stayProduct//
             , saleTime, imageUrl, stayDetail.index, isBenefit //
@@ -1040,7 +1040,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             , Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
-    private void onWishButtonClick(PlaceType placeType, StayDetail stayDetail)
+    void onWishButtonClick(PlaceType placeType, StayDetail stayDetail)
     {
         if (isLockUiComponent() == true || isFinishing() == true || stayDetail == null)
         {

@@ -68,21 +68,21 @@ public class HomeLayout extends BaseLayout
     int mScrollButtonTextMaxLeftMargin;
     int mScrollButtonTextMinLeftMargin;
 
-    private Handler mEventHandler;
+    Handler mEventHandler;
 
-    private DailyLoopViewPager mEventViewPager;
+    DailyLoopViewPager mEventViewPager;
     private DailyTextView mEventCountTextView;
     HomeEventImageViewPagerAdapter mEventViewPagerAdapter;
 
     private View mActionButtonLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;
     NestedScrollView mNestedScrollView;
-    private View mErrorPopupLayout;
+    View mErrorPopupLayout;
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
     View mScrollButtonLayout;
     View mTextMessageLayout;
-    private View mTopButtonLayout;
+    View mTopButtonLayout;
     HomeCarouselLayout mRecentListLayout;
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
@@ -971,7 +971,7 @@ public class HomeLayout extends BaseLayout
         return mRecentListLayout.getItem(position);
     }
 
-    private void setErrorPopupLayout(boolean isShow)
+    void setErrorPopupLayout(boolean isShow)
     {
         if (mErrorPopupLayout == null || mContext == null)
         {
@@ -1029,7 +1029,7 @@ public class HomeLayout extends BaseLayout
         mErrorPopupAnimator.start();
     }
 
-    private void startTextLayoutShowAnimation()
+    void startTextLayoutShowAnimation()
     {
         if (mTextMessageLayout == null)
         {
@@ -1259,7 +1259,7 @@ public class HomeLayout extends BaseLayout
         };
     }
 
-    private void moveNextEventPosition(DailyLoopViewPager eventViewPager, int currentPosition)
+    void moveNextEventPosition(DailyLoopViewPager eventViewPager, int currentPosition)
     {
         if (mEventHandler == null)
         {

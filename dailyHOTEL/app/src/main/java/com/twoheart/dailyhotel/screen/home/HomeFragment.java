@@ -54,17 +54,17 @@ public class HomeFragment extends BaseFragment
 {
     private static final int MAX_REQUEST_SIZE = 10;
 
-    private HomeLayout mHomeLayout;
-    private BaseActivity mBaseActivity;
-    private PlaceType mPlaceType = PlaceType.HOTEL;
+    HomeLayout mHomeLayout;
+    BaseActivity mBaseActivity;
+    PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
-    private SaleTime mSaleTime;
-    private int mNights = 1;
-    private boolean mIsAttach;
-    private boolean mDontReload;
+    SaleTime mSaleTime;
+    int mNights = 1;
+    boolean mIsAttach;
+    boolean mDontReload;
     private boolean mIsLogin;
 
-    private int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
+    int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
     private static final int IS_RUNNED_NONE = 0;
     private static final int IS_RUNNED_WISHLIST = 1 << 1;

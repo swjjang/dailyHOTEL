@@ -39,11 +39,11 @@ import retrofit2.Response;
 public class GourmetProductDetailActivity extends BaseActivity
 {
     private GourmetProductDetailLayout mGourmetProductDetailLayout;
-    private SaleTime mSaleTime;
-    private GourmetDetail mGourmetDetail;
+    SaleTime mSaleTime;
+    GourmetDetail mGourmetDetail;
     private Province mProvince;
     private String mArea;
-    private int mSelectedProductPosition;
+    int mSelectedProductPosition;
 
     public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail//
         , int productPosition, Province province, String area)
@@ -153,7 +153,7 @@ public class GourmetProductDetailActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 
-    private void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
+    void onUserProfile(Customer user, String birthday, boolean isDailyUser, boolean isVerified, boolean isPhoneVerified)
     {
         if (isDailyUser == true)
         {
@@ -361,7 +361,7 @@ public class GourmetProductDetailActivity extends BaseActivity
         }
     };
 
-    private retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserProfileCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)

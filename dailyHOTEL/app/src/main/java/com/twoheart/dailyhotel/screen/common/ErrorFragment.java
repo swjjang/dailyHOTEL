@@ -93,6 +93,10 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
                 title = getString(R.string.menu_item_title_information);
                 dailyToolbarLayout.initToolbar(title, null, false);
                 break;
+
+            default:
+                dailyToolbarLayout.initToolbar(title, null, false);
+                break;
         }
     }
 
