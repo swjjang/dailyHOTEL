@@ -226,11 +226,6 @@ public class GourmetDetailParams implements Parcelable
 
     public List<GourmetDetail.Pictogram> getPictogramList()
     {
-        if (mPictogramList == null)
-        {
-            mPictogramList = new ArrayList<>();
-        }
-
         return mPictogramList;
     }
 
