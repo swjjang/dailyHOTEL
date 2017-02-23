@@ -1108,6 +1108,8 @@
     <string name="message_review_answer_question">%1$d개의 질문에 대답해주세요!</string>
     <string name="message_review_remain_n_count">이제 %1$d개 남았어요!</string>
     <string name="message_review_send_feedback">이제 여기를 눌러 의견을 보내주세요.</string>
+    <string name="message_review_toast_satisfied">만족하셨다니 기쁘네요!\n이제 상세한 경험을 공유해주세요.</string>
+    <string name="message_review_toast_dissatisfied">솔직한 의견 감사합니다!\n이제 상세한 경험을 공유해주세요.</string>
 
     <!-- Review Write -->
     <string name="label_write_review_comment_complete">완료</string>
