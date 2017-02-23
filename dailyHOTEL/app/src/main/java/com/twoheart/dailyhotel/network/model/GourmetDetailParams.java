@@ -244,7 +244,7 @@ public class GourmetDetailParams implements Parcelable
         return benefitContents;
     }
 
-    public List<GourmetProduct> getTicketList()
+    public List<GourmetProduct> getProductList()
     {
         return tickets;
     }

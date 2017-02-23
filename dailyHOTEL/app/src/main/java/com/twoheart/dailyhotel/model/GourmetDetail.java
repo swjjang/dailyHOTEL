@@ -204,7 +204,7 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
             return null;
         }
 
-        return mGourmetDetailParams.getTicketList();
+        return mGourmetDetailParams.getProductList();
     }
 
     @Override
@@ -215,7 +215,7 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
             return null;
         }
 
-        List<GourmetProduct> gourmetProductList = mGourmetDetailParams.getTicketList();
+        List<GourmetProduct> gourmetProductList = mGourmetDetailParams.getProductList();
 
         if (gourmetProductList == null || gourmetProductList.size() <= index)
         {

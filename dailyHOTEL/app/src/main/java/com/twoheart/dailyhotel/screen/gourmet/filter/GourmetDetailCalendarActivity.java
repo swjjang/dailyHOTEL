@@ -7,14 +7,15 @@ import android.os.Bundle;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -130,10 +131,10 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mGourmetDetailInformationCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mGourmetDetailInformationCallback = new retrofit2.Callback<BaseDto<GourmetDetailParams>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<GourmetDetailParams>> call, Response<BaseDto<GourmetDetailParams>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
@@ -141,29 +142,21 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<GourmetDetailParams> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    JSONObject dataJSONObject = null;
-
-                    if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
-                    {
-                        dataJSONObject = responseJSONObject.getJSONObject("data");
-                    }
-
-                    if (msgCode != 100 || dataJSONObject == null)
+                    if (baseDto.msgCode != 100 || baseDto.data == null)
                     {
                         saleTicketCount = 0;
                     } else
                     {
-                        JSONArray ticketInfoJSONArray = dataJSONObject.getJSONArray("tickets");
-                        if (ticketInfoJSONArray == null)
+                        List<GourmetProduct> gourmetProductList = baseDto.data.getProductList();
+
+                        if (gourmetProductList == null)
                         {
                             saleTicketCount = 0;
                         } else
                         {
-                            saleTicketCount = ticketInfoJSONArray.length();
+                            saleTicketCount = gourmetProductList.size();
                         }
                     }
                 } catch (Exception e)
@@ -181,7 +174,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<GourmetDetailParams>> call, Throwable t)
         {
             GourmetDetailCalendarActivity.this.onError(t);
         }
