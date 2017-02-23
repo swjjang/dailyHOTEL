@@ -108,7 +108,6 @@ android {
             apkName += "-Dev";
         }
 
-        //  Flavor 결과는 전부 소문자로 넘어온다. 유의 사항.
         def currentFlavor = variant.flavorName;
 
         if(currentFlavor.equalsIgnoreCase("googleplaystore") == true) {
