@@ -265,7 +265,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayDetailInformation(Crypto.getUrlDecoderEx(URL, urlParams), date, nights);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<StayDetailParams>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<StayDetailParams>>) listener);
     }
 
     @Override

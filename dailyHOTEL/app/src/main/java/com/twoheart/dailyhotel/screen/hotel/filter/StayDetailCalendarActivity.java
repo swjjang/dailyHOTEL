@@ -8,17 +8,18 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayProduct;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -196,10 +197,10 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mStayDetailInformationCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mStayDetailInformationCallback = new retrofit2.Callback<BaseDto<StayDetailParams>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<StayDetailParams>> call, Response<BaseDto<StayDetailParams>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
@@ -208,36 +209,28 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<StayDetailParams> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    JSONObject dataJSONObject = null;
-
-                    if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
+                    if (baseDto.msgCode == 100)
                     {
-                        dataJSONObject = responseJSONObject.getJSONObject("data");
-                    }
-
-                    if (msgCode == 100)
-                    {
-                        if (dataJSONObject == null)
+                        if (baseDto.data == null)
                         {
                             saleRoomCount = 0;
                         } else
                         {
-                            JSONArray saleRoomJSONArray = dataJSONObject.getJSONArray("rooms");
-                            if (saleRoomJSONArray == null)
+                            List<StayProduct> stayProductList = baseDto.data.getProductList();
+
+                            if (stayProductList == null)
                             {
                                 saleRoomCount = 0;
                             } else
                             {
-                                saleRoomCount = saleRoomJSONArray.length();
+                                saleRoomCount = stayProductList.size();
                             }
                         }
                     } else
                     {
-                        message = responseJSONObject.getString("msg");
+                        message = baseDto.msg;
                     }
                 } catch (Exception e)
                 {
@@ -254,7 +247,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<StayDetailParams>> call, Throwable t)
         {
             StayDetailCalendarActivity.this.onError(t);
         }
