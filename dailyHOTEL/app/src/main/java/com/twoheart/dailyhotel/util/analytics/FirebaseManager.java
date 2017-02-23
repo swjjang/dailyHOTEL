@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Map;
 
@@ -38,20 +39,33 @@ public class FirebaseManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (AnalyticsManager.Category.SHARE.equals(category) == true)
-        {
-            if (AnalyticsManager.Action.STAY_ITEM_SHARE.equalsIgnoreCase(action) == true//
-                || AnalyticsManager.Action.GOURMET_ITEM_SHARE.equalsIgnoreCase(action) == true)
-            {
-                Bundle bundle = new Bundle();
-                for (Map.Entry<String, String> entry : params.entrySet())
-                {
-                    bundle.putString(entry.getKey(), entry.getValue());
-                }
+        Bundle bundle = new Bundle();
 
-                mFirebaseAnalytics.logEvent(category, bundle);
+        if (Util.isTextEmpty(action) == false)
+        {
+            bundle.putString("action", action);
+        } else
+        {
+            bundle.putString("action", AnalyticsManager.ValueType.EMPTY);
+        }
+
+        if (Util.isTextEmpty(label) == false)
+        {
+            bundle.putString("label", label);
+        } else
+        {
+            bundle.putString("label", AnalyticsManager.ValueType.EMPTY);
+        }
+
+        if (params != null)
+        {
+            for (Map.Entry<String, String> entry : params.entrySet())
+            {
+                bundle.putString(entry.getKey(), entry.getValue());
             }
         }
+
+        mFirebaseAnalytics.logEvent(category, bundle);
     }
 
     @Override

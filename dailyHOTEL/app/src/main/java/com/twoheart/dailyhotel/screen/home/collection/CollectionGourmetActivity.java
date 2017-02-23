@@ -98,6 +98,11 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     @Override
     protected void startCalendarActivity()
     {
+        if (mStartSaleTime == null || mSaleTIme == null)
+        {
+            return;
+        }
+
         Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
             , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);

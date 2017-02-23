@@ -28,11 +28,12 @@ public class GourmetProductDetailLayout extends BaseLayout
     private NestedScrollView mNestedScrollView;
     protected DailyLoopViewPager mViewPager;
     protected DailyLineIndicator mDailyLineIndicator;
-    protected View mMoreIconView;
+    protected View mMoreIconView, mDefaultInformationTopLine, mMenuInformationTopLine;
     protected GourmetProductDetailImagePagerAdapter mImageAdapter;
 
     private TextView mDescriptionTextView;
     private View mDefaultImageLayout, mBottomBarLayout;
+    private View mDescriptionLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -56,12 +57,16 @@ public class GourmetProductDetailLayout extends BaseLayout
 
         initImageLayout(view);
 
+        mDefaultInformationTopLine = view.findViewById(R.id.defaultInformationTopLine);
+        mMenuInformationTopLine = view.findViewById(R.id.menuInformationTopLine);
         mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
     }
 
     private void initImageLayout(View view)
     {
         mDefaultImageLayout = view.findViewById(R.id.defaultImageLayout);
+
+        mDescriptionLayout = view.findViewById(R.id.descriptionLayout);
 
         // 이미지 ViewPage 넣기.
         mDailyLineIndicator = (DailyLineIndicator) mDefaultImageLayout.findViewById(R.id.viewpagerIndicator);
@@ -103,7 +108,6 @@ public class GourmetProductDetailLayout extends BaseLayout
     {
         GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);
 
-
         // 이미지 정보
         List<ProductImageInformation> imageInformationList = gourmetProduct.getImageList();
 
@@ -126,7 +130,7 @@ public class GourmetProductDetailLayout extends BaseLayout
             mViewPager.setAdapter(mImageAdapter);
 
             mDailyLineIndicator.setViewPager(mViewPager);
-            setLineIndicatorVisible(imageInformationList.size() > 0);
+            setLineIndicatorVisible(imageInformationList.size());
             setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).imageDescription : null);
         }
 
@@ -185,6 +189,14 @@ public class GourmetProductDetailLayout extends BaseLayout
             checkTextView.setText(gourmetProduct.checkList);
         }
 
+        if (benefitLayout.getVisibility() == View.GONE && timeLayout.getVisibility() == View.GONE && checkLayout.getVisibility() == View.GONE)
+        {
+            mDefaultInformationTopLine.setVisibility(View.GONE);
+        } else
+        {
+            mDefaultInformationTopLine.setVisibility(View.VISIBLE);
+        }
+
         // 메뉴 설명
         View menuTextView = mNestedScrollView.findViewById(R.id.menuTextView);
 
@@ -215,9 +227,11 @@ public class GourmetProductDetailLayout extends BaseLayout
         if (menuSummaryTextView.getVisibility() == View.GONE && menuDetailLayout.getVisibility() == View.GONE)
         {
             menuTextView.setVisibility(View.GONE);
+            mMenuInformationTopLine.setVisibility(View.GONE);
         } else
         {
             menuTextView.setVisibility(View.VISIBLE);
+            mMenuInformationTopLine.setVisibility(View.VISIBLE);
         }
 
         // bottom bar
@@ -263,10 +277,25 @@ public class GourmetProductDetailLayout extends BaseLayout
         }
     }
 
-    public void setLineIndicatorVisible(boolean isShow)
+    public void setLineIndicatorVisible(int count)
     {
-        mMoreIconView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
-        mDailyLineIndicator.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
+        if (count > 1)
+        {
+            mMoreIconView.setVisibility(View.VISIBLE);
+            mDailyLineIndicator.setVisibility(View.VISIBLE);
+
+            mDescriptionLayout.setPadding(0, 0, 0, 0);
+        } else if (count == 1)
+        {
+            mMoreIconView.setVisibility(View.VISIBLE);
+            mDailyLineIndicator.setVisibility(View.GONE);
+
+            mDescriptionLayout.setPadding(0, 0, 0, Util.dpToPx(mContext, 5));
+        } else
+        {
+            mMoreIconView.setVisibility(View.GONE);
+            mDailyLineIndicator.setVisibility(View.GONE);
+        }
     }
 
     private void setMenuDetail(Context context, ViewGroup viewGroup, List<String> menuDetailList)

@@ -106,6 +106,11 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void startCalendarActivity()
     {
+        if (mStartSaleTime == null || mEndSaleTime == null || mSaleTIme == null)
+        {
+            return;
+        }
+
         final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
 
         Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
