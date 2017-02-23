@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.model.CreditCard;
+import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -22,7 +23,11 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.twoheart.dailyhotel.model.StayProduct;
 import com.twoheart.dailyhotel.model.User;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.CouponUtil;
@@ -48,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
@@ -1664,31 +1670,31 @@ public class DailyMobileAPITest
     {
         mLock = new CountDownLatch(1);
 
-        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        retrofit2.Callback networkCallback = new retrofit2.Callback<BaseDto<StayDetailParams>>()
         {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            public void onResponse(Call<BaseDto<StayDetailParams>> call, Response<BaseDto<StayDetailParams>> response)
             {
                 try
                 {
                     assertThat(response, notNullValue());
                     assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+                    assertThat(response.body(), allOf(notNullValue(), isA(BaseDto.class)));
 
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<StayDetailParams> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    String message = responseJSONObject.getString("msg");
+                    int msgCode = baseDto.msgCode;
+                    String message = baseDto.msg;
                     assertThat(message, isNotEmpty());
                     assertThat(message, msgCode, anyOf(is(100), is(5)));
 
-                    assertThat(responseJSONObject.get("data"), allOf(notNullValue(), instanceOf(JSONObject.class)));
+                    assertThat(baseDto.data, allOf(notNullValue(), instanceOf(StayDetailParams.class)));
 
                     // 100	성공
                     // 4	데이터가 없을시
                     // 5	판매 마감시
-                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                    checkStayDetail(dataJSONObject);
+                    StayDetailParams stayDetailParams = baseDto.data;
+                    checkStayDetail(stayDetailParams);
                 } catch (Throwable t)
                 {
                     addException(call, response, t);
@@ -1700,165 +1706,123 @@ public class DailyMobileAPITest
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
+            public void onFailure(Call<BaseDto<StayDetailParams>> call, Throwable t)
             {
                 addException(call, null, t);
                 mLock.countDown();
             }
 
-            private void checkStayDetail(JSONObject jsonObject) throws Throwable
+            private void checkStayDetail(StayDetailParams stayDetailParams) throws Throwable
             {
-                Stay.Grade grade = Stay.Grade.valueOf(jsonObject.getString("grade"));
+                Stay.Grade grade = Stay.Grade.valueOf(stayDetailParams.gradeString);
                 assertThat(grade, notNullValue());
 
-                assertThat(jsonObject.getString("name"), isNotEmpty());
-                assertThat(jsonObject.getString("address"), isNotEmpty());
+                assertThat(stayDetailParams.name, isNotEmpty());
+                assertThat(stayDetailParams.address, isNotEmpty());
 
-                assertThat(jsonObject.getDouble("longitude"), allOf(notNullValue(), not(0d)));
-                assertThat(jsonObject.get("overseas"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.longitude, allOf(notNullValue(), not(0d)));
+                assertThat(stayDetailParams.isOverseas, allOf(notNullValue(), instanceOf(Boolean.class)));
 
-                boolean ratingShow = jsonObject.getBoolean("ratingShow");
+                boolean ratingShow = stayDetailParams.ratingShow;
                 if (ratingShow == true)
                 {
-                    assertThat(jsonObject.getInt("ratingValue"), allOf(notNullValue(), moreThan(0)));
-                    assertThat(jsonObject.getInt("ratingPersons"), allOf(notNullValue(), moreThan(Const.TEST_MIN_RATING_PERSONS)));
+                    assertThat(stayDetailParams.ratingValue, allOf(notNullValue(), moreThan(0)));
+                    assertThat(stayDetailParams.ratingPersons, allOf(notNullValue(), moreThan(Const.TEST_MIN_RATING_PERSONS)));
                 }
 
                 // Pictrogram
                 // 주차
-                assertThat(jsonObject.get("parking"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.parking, allOf(notNullValue(), instanceOf(Boolean.class)));
                 // 주차금지
-                assertThat(jsonObject.get("noParking"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.noParking, allOf(notNullValue(), instanceOf(Boolean.class)));
                 // 수영장
-                assertThat(jsonObject.get("pool"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.pool, allOf(notNullValue(), instanceOf(Boolean.class)));
                 // 피트니스
-                assertThat(jsonObject.get("fitness"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.fitness, allOf(notNullValue(), instanceOf(Boolean.class)));
                 // 애완동물
-                assertThat(jsonObject.get("pet"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.pet, allOf(notNullValue(), instanceOf(Boolean.class)));
                 // 바베큐
-                assertThat(jsonObject.get("sharedBbq"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.sharedBBQ, allOf(notNullValue(), instanceOf(Boolean.class)));
 
                 // Image Url
-                String imageUrl = jsonObject.getString("imgUrl");
+                String imageUrl = stayDetailParams.imgUrl;
                 assertThat(imageUrl, isNotEmpty());
 
-                JSONObject pathUrlJSONObject = jsonObject.getJSONObject("imgPathMain");
-                assertThat(pathUrlJSONObject, notNullValue());
+                List<ImageInformation> imageInformationList = stayDetailParams.getImageList();
+                assertThat(imageInformationList, notNullValue());
 
-                Iterator<String> iterator = pathUrlJSONObject.keys();
-                while (iterator.hasNext())
+                for (ImageInformation imageInformation : imageInformationList)
                 {
-                    String key = iterator.next();
-
-                    try
-                    {
-                        JSONArray pathJSONArray = pathUrlJSONObject.getJSONArray(key);
-
-                        int length = pathJSONArray.length();
-                        for (int i = 0; i < length; i++)
-                        {
-                            JSONObject imageInformationJSONObject = pathJSONArray.getJSONObject(i);
-
-                            String description = imageInformationJSONObject.getString("description");
-                            assertThat(description, notNullValue());
-
-                            String imageFullUrl = imageUrl + key + imageInformationJSONObject.getString("name");
-                            assertThat(imageFullUrl, isNotEmpty());
-                        }
-                        break;
-                    } catch (JSONException e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
+                    assertThat(imageInformation.description, notNullValue());
+                    assertThat(imageInformation.getImageUrl(), isNotEmpty());
                 }
 
                 // benefit
-                if (jsonObject.has("benefit") == true)
+                if (Util.isTextEmpty(stayDetailParams.benefit) == false)
                 {
-                    String benefit = jsonObject.getString("benefit");
-                    assertThat(benefit, isNotEmpty());
-                    assertThat(jsonObject.get("benefitContents"), allOf(notNullValue(), instanceOf(JSONArray.class)));
+                    assertThat(stayDetailParams.benefit, isNotEmpty());
+                    assertThat(stayDetailParams.getBenefitList(), allOf(notNullValue(), instanceOf(List.class)));
 
-                    JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
-                    assertThat(benefitJSONArray, notNullValue());
-
-                    int length = benefitJSONArray.length();
-                    if (length > 0)
+                    for (String text : stayDetailParams.getBenefitList())
                     {
-                        for (int i = 0; i < length; i++)
-                        {
-                            assertThat(benefitJSONArray.getString(i), isNotEmpty());
-                        }
+                        assertThat(text, isNotEmpty());
                     }
 
-                    if (jsonObject.has("benefitWarning") == true && jsonObject.isNull("benefitWarning") == false)
+                    if (Util.isTextEmpty(stayDetailParams.benefitWarning) == false)
                     {
-                        String benefitWarning = jsonObject.getString("benefitWarning");
-                        assertThat(benefitWarning, isNotEmpty());
+                        assertThat(stayDetailParams.benefitWarning, isNotEmpty());
                     }
                 }
 
                 // Detail
-                JSONArray detailJSONArray = jsonObject.getJSONArray("details");
-                assertThat(detailJSONArray, notNullValue());
+                List<DetailInformation> detailInformationList = stayDetailParams.getDetailInformationList();
+                assertThat(detailInformationList, notNullValue());
 
-                int detailLength = detailJSONArray.length();
-                for (int i = 0; i < detailLength; i++)
+                for (DetailInformation detailInformation : detailInformationList)
                 {
-                    JSONObject detailJsonObject = detailJSONArray.getJSONObject(i);
-                    assertThat(detailJsonObject, notNullValue());
+                    assertThat(detailInformation, notNullValue());
 
-                    Iterator<String> detailIterator = detailJsonObject.keys();
-                    if (detailIterator.hasNext() == true)
+                    assertThat(detailInformation.title, isNotEmpty());
+
+                    List<String> contentList = detailInformation.getContentsList();
+                    assertThat(contentList, notNullValue());
+
+                    for (String content : contentList)
                     {
-                        String detailTitle = detailIterator.next();
-                        assertThat(detailTitle, isNotEmpty());
-
-                        JSONArray detailJsonArray = detailJsonObject.getJSONArray(detailTitle);
-                        assertThat(detailJsonArray, notNullValue());
-
-                        int length = detailJsonArray.length();
-                        for (int j = 0; j < length; j++)
-                        {
-                            assertThat(detailJsonArray.getString(j), isNotEmpty());
-                        }
+                        assertThat(content, isNotEmpty());
                     }
                 }
 
                 // Room Sale Info
-                if (jsonObject.has("rooms") == true && jsonObject.isNull("rooms") == false)
+                List<StayProduct> stayProductList = stayDetailParams.getProductList();
+                if (stayProductList != null)
                 {
-                    JSONArray saleRoomJSONArray = jsonObject.getJSONArray("rooms");
-                    assertThat(saleRoomJSONArray, notNullValue());
-
-                    int saleRoomLength = saleRoomJSONArray.length();
-                    for (int i = 0; i < saleRoomLength; i++)
+                    for (StayProduct stayProduct : stayProductList)
                     {
-                        JSONObject saleRoomJsonObject = saleRoomJSONArray.getJSONObject(i);
-                        assertThat(saleRoomJsonObject, notNullValue());
+                        assertThat(stayProduct, notNullValue());
 
-                        assertThat(saleRoomJsonObject.getInt("roomIdx"), moreThan(0));
-                        assertThat(saleRoomJsonObject.getInt("discountAverage"), moreThan(0));
-                        assertThat(saleRoomJsonObject.getInt("discountTotal"), moreThan(0));
-                        assertThat(saleRoomJsonObject.getInt("price"), moreThan(0));
-                        assertThat(saleRoomJsonObject.getString("roomName"), isNotEmpty());
-                        assertThat(saleRoomJsonObject.getString("description1"), isNotEmpty());
-                        assertThat(saleRoomJsonObject.getString("description2"), isNotEmpty());
+                        assertThat(stayProduct.roomIndex, moreThan(0));
+                        assertThat(stayProduct.averageDiscount, moreThan(0));
+                        assertThat(stayProduct.totalDiscount, moreThan(0));
+                        assertThat(stayProduct.price, moreThan(0));
+                        assertThat(stayProduct.roomName, isNotEmpty());
+                        assertThat(stayProduct.option, isNotEmpty());
+                        assertThat(stayProduct.amenities, isNotEmpty());
 
-                        if (saleRoomJsonObject.has("roomBenefit") == true)
+                        if (stayProduct.roomBenefit != null)
                         {
-                            assertThat(saleRoomJsonObject.getString("roomBenefit"), isNotEmpty());
+                            assertThat(stayProduct.roomBenefit, isNotEmpty());
                         }
 
-                        if (jsonObject.has("refundType") == true)
+                        if (stayProduct.refundType != null)
                         {
-                            assertThat(saleRoomJsonObject.getString("refundType"), isNotEmpty());
+                            assertThat(stayProduct.refundType, isNotEmpty());
                         }
                     }
                 }
 
-                assertThat(jsonObject.get("myWish"), allOf(notNullValue(), instanceOf(Boolean.class)));
-                assertThat(jsonObject.get("wishCount"), allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.myWish, allOf(notNullValue(), instanceOf(Boolean.class)));
+                assertThat(stayDetailParams.wishCount, allOf(notNullValue(), instanceOf(Boolean.class)));
             }
         };
 
