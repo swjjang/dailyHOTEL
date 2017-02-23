@@ -33,6 +33,7 @@ public class GourmetProductDetailLayout extends BaseLayout
 
     private TextView mDescriptionTextView;
     private View mDefaultImageLayout, mBottomBarLayout;
+    private View mDescriptionLayout;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -64,6 +65,8 @@ public class GourmetProductDetailLayout extends BaseLayout
     private void initImageLayout(View view)
     {
         mDefaultImageLayout = view.findViewById(R.id.defaultImageLayout);
+
+        mDescriptionLayout = view.findViewById(R.id.descriptionLayout);
 
         // 이미지 ViewPage 넣기.
         mDailyLineIndicator = (DailyLineIndicator) mDefaultImageLayout.findViewById(R.id.viewpagerIndicator);
@@ -127,7 +130,7 @@ public class GourmetProductDetailLayout extends BaseLayout
             mViewPager.setAdapter(mImageAdapter);
 
             mDailyLineIndicator.setViewPager(mViewPager);
-            setLineIndicatorVisible(imageInformationList.size() > 0);
+            setLineIndicatorVisible(imageInformationList.size());
             setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).imageDescription : null);
         }
 
@@ -274,10 +277,25 @@ public class GourmetProductDetailLayout extends BaseLayout
         }
     }
 
-    public void setLineIndicatorVisible(boolean isShow)
+    public void setLineIndicatorVisible(int count)
     {
-        mMoreIconView.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
-        mDailyLineIndicator.setVisibility(isShow ? View.VISIBLE : View.INVISIBLE);
+        if (count > 1)
+        {
+            mMoreIconView.setVisibility(View.VISIBLE);
+            mDailyLineIndicator.setVisibility(View.VISIBLE);
+
+            mDescriptionLayout.setPadding(0, 0, 0, 0);
+        } else if (count == 1)
+        {
+            mMoreIconView.setVisibility(View.VISIBLE);
+            mDailyLineIndicator.setVisibility(View.GONE);
+
+            mDescriptionLayout.setPadding(0, 0, 0, Util.dpToPx(mContext, 5));
+        } else
+        {
+            mMoreIconView.setVisibility(View.GONE);
+            mDailyLineIndicator.setVisibility(View.GONE);
+        }
     }
 
     private void setMenuDetail(Context context, ViewGroup viewGroup, List<String> menuDetailList)
