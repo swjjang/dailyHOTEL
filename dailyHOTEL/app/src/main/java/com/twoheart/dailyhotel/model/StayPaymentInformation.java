@@ -9,7 +9,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
     public static final String VISIT_TYPE_PARKING = "PARKING"; // 도보/주차 표시
     public static final String VISIT_TYPE_NO_PARKING = "NO_PARKING"; // 주차 불가능
 
-    private RoomInformation mRoomInformation;
+    private StayProduct mStayProduct;
     // Thankyou에 넘기기 위한 데이터 저장
     public long checkInDate;
     public long checkOutDate;
@@ -37,7 +37,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeParcelable(mRoomInformation, flags);
+        dest.writeParcelable(mStayProduct, flags);
         dest.writeLong(checkInDate);
         dest.writeLong(checkOutDate);
         dest.writeInt(nights);
@@ -52,7 +52,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
     {
         super.readFromParcel(in);
 
-        mRoomInformation = in.readParcelable(RoomInformation.class.getClassLoader());
+        mStayProduct = in.readParcelable(StayProduct.class.getClassLoader());
         checkInDate = in.readLong();
         checkOutDate = in.readLong();
         nights = in.readInt();
@@ -62,14 +62,14 @@ public class StayPaymentInformation extends PlacePaymentInformation
         isVisitWalking = in.readInt() == 1;
     }
 
-    public RoomInformation getSaleRoomInformation()
+    public StayProduct getSaleRoomInformation()
     {
-        return mRoomInformation;
+        return mStayProduct;
     }
 
-    public void setSaleRoomInformation(RoomInformation information)
+    public void setSaleRoomInformation(StayProduct information)
     {
-        mRoomInformation = information;
+        mStayProduct = information;
     }
 
     @Override

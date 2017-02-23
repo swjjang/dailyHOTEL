@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Status;
+import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -264,7 +265,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayDetailInformation(Crypto.getUrlDecoderEx(URL, urlParams), date, nights);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<StayDetailParams>) listener);
     }
 
     @Override

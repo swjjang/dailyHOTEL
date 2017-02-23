@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.RoomInformation;
+import com.twoheart.dailyhotel.model.StayProduct;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -20,32 +20,32 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 {
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<RoomInformation> mRoomInformationList;
+    private List<StayProduct> mStayProductList;
     View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
     private int mViewPriceType;
 
-    public StayDetailRoomTypeListAdapter(Context context, List<RoomInformation> arrayList, View.OnClickListener listener)
+    public StayDetailRoomTypeListAdapter(Context context, List<StayProduct> arrayList, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;
 
-        mRoomInformationList = new ArrayList<>();
-        mRoomInformationList.addAll(arrayList);
+        mStayProductList = new ArrayList<>();
+        mStayProductList.addAll(arrayList);
         mViewPriceType = StayDetailLayout.VIEW_AVERAGE_PRICE;
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addAll(Collection<? extends RoomInformation> collection)
+    public void addAll(Collection<? extends StayProduct> collection)
     {
         if (collection == null)
         {
             return;
         }
 
-        mRoomInformationList.clear();
-        mRoomInformationList.addAll(collection);
+        mStayProductList.clear();
+        mStayProductList.addAll(collection);
     }
 
     public void setSelected(int position)
@@ -55,18 +55,18 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
     public int setSelectIndex(int index)
     {
-        if (mRoomInformationList == null)
+        if (mStayProductList == null)
         {
             return 0;
         }
 
-        int size = mRoomInformationList.size();
+        int size = mStayProductList.size();
 
         for (int i = 0; i < size; i++)
         {
-            RoomInformation roomInformation = mRoomInformationList.get(i);
+            StayProduct stayProduct = mStayProductList.get(i);
 
-            if (roomInformation.roomIndex == index)
+            if (stayProduct.roomIndex == index)
             {
                 setSelected(i);
                 notifyDataSetChanged();
@@ -77,14 +77,14 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         return 0;
     }
 
-    public RoomInformation getItem(int position)
+    public StayProduct getItem(int position)
     {
-        if (mRoomInformationList.size() <= position)
+        if (mStayProductList.size() <= position)
         {
             return null;
         }
 
-        return mRoomInformationList.get(position);
+        return mStayProductList.get(position);
     }
 
     public void setChangedViewPrice(int type)
@@ -103,9 +103,9 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        RoomInformation roomInformation = getItem(position);
+        StayProduct stayProduct = getItem(position);
 
-        if (roomInformation == null)
+        if (stayProduct == null)
         {
             return;
         }
@@ -122,21 +122,21 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.viewRoot.setSelected(false);
         }
 
-        saleRoomInformationViewHolder.roomTypeTextView.setText(roomInformation.roomName);
+        saleRoomInformationViewHolder.roomTypeTextView.setText(stayProduct.roomName);
 
         String price, discountPrice;
 
         if (mViewPriceType == StayDetailLayout.VIEW_TOTAL_PRICE)
         {
-            price = Util.getPriceFormat(mContext, roomInformation.price * roomInformation.nights, false);
-            discountPrice = Util.getPriceFormat(mContext, roomInformation.totalDiscount, false);
+            price = Util.getPriceFormat(mContext, stayProduct.price * stayProduct.nights, false);
+            discountPrice = Util.getPriceFormat(mContext, stayProduct.totalDiscount, false);
         } else
         {
-            price = Util.getPriceFormat(mContext, roomInformation.price, false);
-            discountPrice = Util.getPriceFormat(mContext, roomInformation.averageDiscount, false);
+            price = Util.getPriceFormat(mContext, stayProduct.price, false);
+            discountPrice = Util.getPriceFormat(mContext, stayProduct.averageDiscount, false);
         }
 
-        if (roomInformation.price <= 0 || roomInformation.price <= roomInformation.averageDiscount)
+        if (stayProduct.price <= 0 || stayProduct.price <= stayProduct.averageDiscount)
         {
             saleRoomInformationViewHolder.priceTextView.setVisibility(View.GONE);
             saleRoomInformationViewHolder.priceTextView.setText(null);
@@ -148,34 +148,34 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         saleRoomInformationViewHolder.discountPriceTextView.setText(discountPrice);
 
-        if (Util.isTextEmpty(roomInformation.option) == true)
+        if (Util.isTextEmpty(stayProduct.option) == true)
         {
             saleRoomInformationViewHolder.optionTextView.setVisibility(View.GONE);
         } else
         {
             saleRoomInformationViewHolder.optionTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.optionTextView.setText(roomInformation.option);
+            saleRoomInformationViewHolder.optionTextView.setText(stayProduct.option);
         }
 
-        if (Util.isTextEmpty(roomInformation.amenities) == true)
+        if (Util.isTextEmpty(stayProduct.amenities) == true)
         {
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.GONE);
         } else
         {
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.amenitiesTextView.setText(roomInformation.amenities);
+            saleRoomInformationViewHolder.amenitiesTextView.setText(stayProduct.amenities);
         }
 
-        if (Util.isTextEmpty(roomInformation.roomBenefit) == true)
+        if (Util.isTextEmpty(stayProduct.roomBenefit) == true)
         {
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.GONE);
         } else
         {
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.VISIBLE);
-            saleRoomInformationViewHolder.benefitTextView.setText(roomInformation.roomBenefit);
+            saleRoomInformationViewHolder.benefitTextView.setText(stayProduct.roomBenefit);
         }
 
-        if (roomInformation.isNRD == false)
+        if (stayProduct.isNRD == false)
         {
             saleRoomInformationViewHolder.nrdTextView.setVisibility(View.GONE);
         } else
@@ -187,12 +187,12 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
     @Override
     public int getItemCount()
     {
-        if (mRoomInformationList == null)
+        if (mStayProductList == null)
         {
             return 0;
         }
 
-        return mRoomInformationList.size();
+        return mStayProductList.size();
     }
 
     private class SaleRoomInformationViewHolder extends RecyclerView.ViewHolder

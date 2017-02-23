@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Status;
+import com.twoheart.dailyhotel.network.model.StayDetailParams;
 
 import org.json.JSONObject;
 
@@ -110,7 +111,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<JSONObject> requestStayDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateCheckIn") String date, @Query("stays") int nights);
+    Call<BaseDto<StayDetailParams>> requestStayDetailInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateCheckIn") String date, @Query("stays") int nights);
 
     @FormUrlEncoded
     @POST("{mobileAPI}")

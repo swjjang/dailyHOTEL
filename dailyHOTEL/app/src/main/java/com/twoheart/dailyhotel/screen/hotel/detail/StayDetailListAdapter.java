@@ -15,9 +15,10 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.RoomInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
+import com.twoheart.dailyhotel.model.StayProduct;
+import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -100,6 +101,8 @@ public class StayDetailListAdapter extends BaseAdapter
 
         linearLayout.removeAllViews();
 
+        StayDetailParams stayDetailParams = mStayDetail.getStayDetailParams();
+
         // 빈화면
         if (mDetailViews[0] == null)
         {
@@ -141,7 +144,7 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         // D Benefit
-        if (Util.isTextEmpty(mStayDetail.benefit) == false)
+        if (Util.isTextEmpty(stayDetailParams.benefit) == false)
         {
             if (mDetailViews[4] == null)
             {
@@ -212,23 +215,25 @@ public class StayDetailListAdapter extends BaseAdapter
      */
     private View getTitleView(View view, StayDetail stayDetail)
     {
+        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
 
         // 등급
         TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
         hotelGradeTextView.setVisibility(View.VISIBLE);
 
-        hotelGradeTextView.setText(stayDetail.grade.getName(mContext));
-        hotelGradeTextView.setBackgroundResource(stayDetail.grade.getColorResId());
+        hotelGradeTextView.setText(stayDetailParams.grade.getName(mContext));
+        hotelGradeTextView.setBackgroundResource(stayDetailParams.grade.getColorResId());
 
         // 호텔명
         TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-        hotelNameTextView.setText(stayDetail.name);
+        hotelNameTextView.setText(stayDetailParams.name);
 
         // 만족도
         TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
 
-        if (stayDetail.ratingValue == 0)
+        if (stayDetailParams.ratingValue == 0)
         {
             satisfactionView.setVisibility(View.GONE);
         } else
@@ -236,7 +241,7 @@ public class StayDetailListAdapter extends BaseAdapter
             satisfactionView.setVisibility(View.VISIBLE);
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             satisfactionView.setText(mContext.getString(R.string.label_stay_detail_satisfaction, //
-                stayDetail.ratingValue, decimalFormat.format(stayDetail.ratingPersons)));
+                stayDetailParams.ratingValue, decimalFormat.format(stayDetailParams.ratingPersons)));
         }
 
         // 할인 쿠폰
@@ -302,12 +307,14 @@ public class StayDetailListAdapter extends BaseAdapter
      */
     private View getAddressView(final View view, StayDetail stayDetail)
     {
+        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
         view.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         // 주소지
         final TextView hotelAddressTextView = (TextView) view.findViewById(R.id.detailAddressTextView);
 
-        final String address = stayDetail.address;
+        final String address = stayDetailParams.address;
         hotelAddressTextView.setText(address);
 
         View clipAddress = view.findViewById(R.id.copyAddressView);
@@ -438,10 +445,12 @@ public class StayDetailListAdapter extends BaseAdapter
             return view;
         }
 
+        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
         final TextView benefitTitleTextView = (TextView) view.findViewById(R.id.benefitTitleTextView);
         final LinearLayout benefitMessagesLayout = (LinearLayout) view.findViewById(R.id.benefitMessagesLayout);
 
-        final String benefit = stayDetail.benefit;
+        final String benefit = stayDetailParams.benefit;
         benefitTitleTextView.setText(benefit);
 
         List<String> benefitList = stayDetail.getBenefitList();
@@ -479,9 +488,9 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         boolean hasNRD = false;
-        for (RoomInformation roomInformation : stayDetail.getProductList())
+        for (StayProduct stayProduct : stayDetail.getProductList())
         {
-            if (roomInformation.isNRD == true)
+            if (stayProduct.isNRD == true)
             {
                 hasNRD = true;
                 break;

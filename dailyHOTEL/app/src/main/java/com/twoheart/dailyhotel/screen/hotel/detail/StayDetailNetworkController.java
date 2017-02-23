@@ -4,9 +4,13 @@ import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -17,7 +21,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
 {
     public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
     {
-        void onStayDetailInformation(JSONObject dataJSONObject);
+        void onStayDetailInformation(StayDetailParams stayDetailParams);
 
         void onHasCoupon(boolean hasCoupon);
     }
@@ -38,27 +42,35 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
         DailyMobileAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, nights, mHasCouponCallback);
     }
 
-    private retrofit2.Callback mStayDetailInformationCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mStayDetailInformationCallback = new retrofit2.Callback<BaseDto<StayDetailParams>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<StayDetailParams>> call, Response<BaseDto<StayDetailParams>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    String nightsString = call.request().url().queryParameter("stays");
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
+                    BaseDto<StayDetailParams> baseDto = response.body();
 
-                    JSONObject dataJSONObject = null;
+                    int msgCode = baseDto.msgCode;
 
-                    if (responseJSONObject.has("data") == true && responseJSONObject.isNull("data") == false)
+                    StayDetailParams stayDetailParams = baseDto.data;
+                    if (stayDetailParams != null && Util.isTextEmpty(nightsString) == false)
                     {
-                        dataJSONObject = responseJSONObject.getJSONObject("data");
+                        try
+                        {
+                            int nights = Integer.parseInt(nightsString);
+                            stayDetailParams.setNights(nights);
+                        } catch (Exception e)
+                        {
+                            ExLog.w(e.getMessage());
+                        }
                     }
 
-                    if (msgCode == 100 && dataJSONObject == null)
+                    if (msgCode == 100 && stayDetailParams == null)
                     {
                         msgCode = 4;
                     }
@@ -69,17 +81,16 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                     switch (msgCode)
                     {
                         case 100:
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(dataJSONObject);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(stayDetailParams);
                             break;
 
                         case 5:
                         {
-                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(dataJSONObject);
+                            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(stayDetailParams);
 
-                            if (responseJSONObject.has("msg") == true)
+                            if (Util.isTextEmpty(baseDto.msg) == false)
                             {
-                                String msg = responseJSONObject.getString("msg");
-                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, msg);
+                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, baseDto.msg);
                             } else
                             {
                                 throw new NullPointerException("response == null");
@@ -90,10 +101,9 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                         case 4:
                         default:
                         {
-                            if (responseJSONObject.has("msg") == true)
+                            if (Util.isTextEmpty(baseDto.msg) == false)
                             {
-                                String msg = responseJSONObject.getString("msg");
-                                mOnNetworkControllerListener.onErrorToastMessage(msg);
+                                mOnNetworkControllerListener.onErrorToastMessage(baseDto.msg);
                             } else
                             {
                                 throw new NullPointerException("response == null");
@@ -117,7 +127,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<StayDetailParams>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
         }

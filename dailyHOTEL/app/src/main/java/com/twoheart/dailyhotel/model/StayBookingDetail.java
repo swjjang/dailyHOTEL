@@ -104,7 +104,8 @@ public class StayBookingDetail extends PlaceBookingDetail
         paymentPrice = jsonObject.getInt("priceTotal");
         paymentDate = jsonObject.getString("paidAt");
 
-        if (jsonObject.has("refundType") == true && RoomInformation.NRD.equalsIgnoreCase(jsonObject.getString("refundType")) == true)
+        if (jsonObject.has("refundType") == true //
+            && StayProduct.NRD.equalsIgnoreCase(jsonObject.getString("refundType")) == true)
         {
             isNRD = true;
         } else

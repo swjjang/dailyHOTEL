@@ -26,7 +26,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.RoomInformation;
+import com.twoheart.dailyhotel.model.StayProduct;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayPaymentInformation;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
@@ -189,13 +189,13 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        RoomInformation roomInformation = stayPaymentInformation.getSaleRoomInformation();
+        StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
         FormBody.Builder builder = new FormBody.Builder();
-        builder.add("room_idx", String.valueOf(roomInformation.roomIndex));
+        builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
         builder.add("payment_type", stayPaymentInformation.paymentType.name());
         builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        builder.add("nights", String.valueOf(roomInformation.nights));
+        builder.add("nights", String.valueOf(stayProduct.nights));
 
         switch (stayPaymentInformation.discountType)
         {
