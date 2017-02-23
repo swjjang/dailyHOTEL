@@ -609,8 +609,7 @@ public class ReviewActivity extends BaseActivity
                         break;
                 }
 
-                // 테스트 코드
-                //                mOnNetworkControllerListener.onAddReviewInformation(Review.GRADE_GOOD);
+                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_satisfied, Toast.LENGTH_LONG);
             }
         });
 
@@ -684,6 +683,8 @@ public class ReviewActivity extends BaseActivity
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_DISSATISFACTION, params);
                         break;
                 }
+
+                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_dissatisfied, Toast.LENGTH_LONG);
             }
         });
 
