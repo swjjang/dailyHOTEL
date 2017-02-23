@@ -376,7 +376,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                     {
                         case ViewPager.SCROLL_STATE_DRAGGING:
                             isScrolling = true;
-                            hideBottomLayout();
+//                            hideBottomLayout();
                             break;
 
                         case ViewPager.SCROLL_STATE_IDLE:
@@ -445,14 +445,14 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         mFilterOptionImageView.setEnabled(enabled);
     }
 
-    public synchronized void showAppBarLayout()
+    public synchronized void showAppBarLayout(boolean animate)
     {
         if (mAppBarLayout == null)
         {
             return;
         }
 
-        mAppBarLayout.setExpanded(true, true);
+        mAppBarLayout.setExpanded(true, animate);
     }
 
     public synchronized void showBottomLayout()
