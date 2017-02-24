@@ -894,6 +894,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         @Override
         public void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message)
         {
+            if (isFinishing() == true || (Util.isOverAPI17() == true && isDestroyed() == true))
+            {
+                finish();
+                return;
+            }
+
             StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
 
             if (isSuccess == true)

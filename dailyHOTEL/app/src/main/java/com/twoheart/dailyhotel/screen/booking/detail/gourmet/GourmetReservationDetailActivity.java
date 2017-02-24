@@ -660,7 +660,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         {
             unLockUI();
 
-            if (jsonObject == null)
+            if (jsonObject == null || isFinishing() == true || (Util.isOverAPI17() == true && isDestroyed() == true))
             {
                 finish();
                 return;
