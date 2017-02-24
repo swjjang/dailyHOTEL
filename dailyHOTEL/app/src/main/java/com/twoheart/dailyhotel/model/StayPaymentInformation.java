@@ -25,6 +25,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
     // Stay 정보 - 추후 제거 필요함
     public Stay.Grade grade;
     public String address;
+    public boolean isOverSeas;
 
     public StayPaymentInformation()
     {
@@ -51,6 +52,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
         dest.writeInt(isVisitWalking ? 1 : 0);
         dest.writeString(grade.name());
         dest.writeString(address);
+        dest.writeInt(isOverSeas ? 1 : 0);
     }
 
     @Override
@@ -75,6 +77,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
             grade = Stay.Grade.etc;
         }
         address = in.readString();
+        isOverSeas = in.readInt() == 1;
     }
 
     public StayProduct getSaleRoomInformation()

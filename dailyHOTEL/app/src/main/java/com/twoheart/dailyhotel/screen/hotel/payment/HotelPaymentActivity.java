@@ -93,7 +93,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     public static Intent newInstance(Context context, StayProduct stayProduct//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
-        , boolean isDailyChoice, int ratingValue, String gradeName, String address)
+        , boolean isDailyChoice, int ratingValue, String gradeName, String address, boolean isOverSeas)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -111,6 +111,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         //
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, gradeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ADDRESS, address);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverSeas);
 
         return intent;
     }
@@ -158,6 +159,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         stayPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
         stayPaymentInformation.address = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_ADDRESS);
+        stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
 
         Stay.Grade grade;
         try
@@ -1785,7 +1787,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     mHotelPaymentLayout.requestGuestInformationFocus(Constants.UserInformationType.NAME);
 
-                    if (stayPaymentInformation.getSaleRoomInformation().isOverseas == true)
+                    if (stayPaymentInformation.isOverSeas == true)
                     {
                         DailyToast.showToast(HotelPaymentActivity.this, R.string.toast_msg_please_input_guest_typeoverseas, Toast.LENGTH_SHORT);
                     } else
@@ -1819,7 +1821,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     return;
                 }
 
-                if (stayPaymentInformation.getSaleRoomInformation().isOverseas == true)
+                if (stayPaymentInformation.isOverSeas == true)
                 {
                     DailyPreference.getInstance(HotelPaymentActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
                 }
@@ -2054,7 +2056,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     Guest guest = stayPaymentInformation.getGuest();
 
                     // 해외 호텔인 경우.
-                    boolean isOverseas = stayPaymentInformation.getSaleRoomInformation().isOverseas;
+                    boolean isOverseas = stayPaymentInformation.isOverSeas;
 
                     if (isOverseas == true)
                     {

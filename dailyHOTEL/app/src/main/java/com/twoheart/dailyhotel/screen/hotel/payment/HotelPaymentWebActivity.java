@@ -158,7 +158,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         String phone;
         String email;
 
-        boolean isOverseas = stayPaymentInformation.getSaleRoomInformation().isOverseas;
+        boolean isOverseas = stayPaymentInformation.isOverSeas;
         Guest guest = stayPaymentInformation.getGuest();
 
         if (isOverseas == true)

@@ -797,7 +797,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             , saleTime, imageUrl, stayDetail.index, isBenefit //
             , mProvince, mArea, stayDetail.isShowOriginalPrice, stayDetail.entryPosition //
             , stayDetail.isDailyChoice, stayDetailParams.ratingValue //
-            , stayDetailParams.getGrade().name(), stayDetailParams.address);
+            , stayDetailParams.getGrade().name(), stayDetailParams.address, stayDetailParams.isOverseas);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
