@@ -303,7 +303,6 @@ public class StayDetailParams implements Parcelable
                 stayProduct.hotelName = name;
                 stayProduct.isOverseas = isOverseas;
                 stayProduct.nights = nights;
-                stayProduct.address = address;
                 stayProduct.categoryCode = categoryCode;
             }
         } else

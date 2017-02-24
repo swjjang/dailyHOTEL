@@ -61,7 +61,6 @@ public class StayProduct implements Parcelable
     //
     public boolean isNRD;
     //
-    public String address;
     public boolean isOverseas;
     public String hotelName;
     public int nights;
@@ -113,7 +112,6 @@ public class StayProduct implements Parcelable
         dest.writeString(roomName);
         dest.writeInt(hasSpaWhirlpool ? 1 : 0);
         dest.writeInt(hasTV ? 1 : 0);
-        dest.writeString(address);
         dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(hotelName);
         dest.writeInt(nights);
@@ -139,7 +137,6 @@ public class StayProduct implements Parcelable
         hasSpaWhirlpool = in.readInt() == 1;
         hasTV = in.readInt() == 1;
 
-        address = in.readString();
         isOverseas = in.readInt() == 1;
         hotelName = in.readString();
         nights = in.readInt();

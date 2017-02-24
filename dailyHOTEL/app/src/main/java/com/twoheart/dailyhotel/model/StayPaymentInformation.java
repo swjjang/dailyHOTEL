@@ -22,7 +22,9 @@ public class StayPaymentInformation extends PlacePaymentInformation
     public String visitType = VISIT_TYPE_NONE; // 방문 형태로
     public boolean isVisitWalking = true; // 방문 방법 : 기본이 도보(visitType == "NONE", "NO_PARKING" 이면 서버로 아무것도 전송하지 않음)
 
+    // Stay 정보 - 추후 제거 필요함
     public Stay.Grade grade;
+    public String address;
 
     public StayPaymentInformation()
     {
@@ -48,6 +50,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
         dest.writeString(visitType);
         dest.writeInt(isVisitWalking ? 1 : 0);
         dest.writeString(grade.name());
+        dest.writeString(address);
     }
 
     @Override
@@ -71,6 +74,7 @@ public class StayPaymentInformation extends PlacePaymentInformation
         {
             grade = Stay.Grade.etc;
         }
+        address = in.readString();
     }
 
     public StayProduct getSaleRoomInformation()

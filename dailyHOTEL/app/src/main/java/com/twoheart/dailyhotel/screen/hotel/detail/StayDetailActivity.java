@@ -796,7 +796,8 @@ public class StayDetailActivity extends PlaceDetailActivity
         Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, stayProduct//
             , saleTime, imageUrl, stayDetail.index, isBenefit //
             , mProvince, mArea, stayDetail.isShowOriginalPrice, stayDetail.entryPosition //
-            , stayDetail.isDailyChoice, stayDetailParams.ratingValue, stayDetailParams.getGrade().name());
+            , stayDetail.isDailyChoice, stayDetailParams.ratingValue //
+            , stayDetailParams.getGrade().name(), stayDetailParams.address);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }

@@ -93,7 +93,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     public static Intent newInstance(Context context, StayProduct stayProduct//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
-        , boolean isDailyChoice, int ratingValue, String gradeName)
+        , boolean isDailyChoice, int ratingValue, String gradeName, String address)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -108,7 +108,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, isDailyChoice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, ratingValue);
+        //
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, gradeName);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_ADDRESS, address);
 
         return intent;
     }
@@ -155,6 +157,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
         stayPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         stayPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+        stayPaymentInformation.address = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_ADDRESS);
 
         Stay.Grade grade;
         try
@@ -1220,7 +1223,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(stayPaymentInformation.getSaleRoomInformation().roomIndex));
             params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(HotelPaymentActivity.this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
-            params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.getSaleRoomInformation().address);
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
@@ -1353,7 +1356,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             }
 
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, stayPaymentInformation.paymentType.getName());
-            params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.getSaleRoomInformation().address);
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
             params.put(AnalyticsManager.KeyType.CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
 
