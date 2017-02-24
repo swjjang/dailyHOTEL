@@ -42,7 +42,7 @@ public class WishListTabActivity extends BaseActivity
     DailyViewPager mViewPager;
     private TabLayout mTabLayout;
     private View mLoginView;
-    private View mLoginButtonView;
+    private View mBottomDescriptionView;
 
     private SourceType mSourceType;
     private PlaceType mPlaceType;
@@ -96,9 +96,11 @@ public class WishListTabActivity extends BaseActivity
         if (DailyHotel.isLogin() == false)
         {
             setLoginViewVisibility(View.VISIBLE);
+            setBottomViewVisibility(View.GONE);
         } else
         {
             setLoginViewVisibility(View.GONE);
+            setBottomViewVisibility(View.VISIBLE);
 
             if (mDontReloadAtOnResume == true)
             {
@@ -177,8 +179,9 @@ public class WishListTabActivity extends BaseActivity
         initTabLayout();
 
         mLoginView = findViewById(R.id.loginLayout);
-        mLoginButtonView = findViewById(R.id.loginButtonView);
+        View mLoginButtonView = findViewById(R.id.loginButtonView);
         mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+        mBottomDescriptionView = findViewById(R.id.bottomMessageTextView);
 
         mFragmentList = new ArrayList<>();
 
@@ -211,7 +214,7 @@ public class WishListTabActivity extends BaseActivity
         });
     }
 
-    protected void initTabLayout()
+    private void initTabLayout()
     {
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
@@ -306,6 +309,14 @@ public class WishListTabActivity extends BaseActivity
         }
     }
 
+    private void setBottomViewVisibility(int visibility)
+    {
+        if (mBottomDescriptionView != null)
+        {
+            mBottomDescriptionView.setVisibility(visibility);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -379,7 +390,7 @@ public class WishListTabActivity extends BaseActivity
             AnalyticsManager.Action.WISHLIST_LOGIN_CLICKED, null, null);
     }
 
-    private View.OnClickListener mLoginButtonClickListener = new View.OnClickListener()
+    private final View.OnClickListener mLoginButtonClickListener = new View.OnClickListener()
     {
         @Override
         public void onClick(View v)
@@ -388,7 +399,7 @@ public class WishListTabActivity extends BaseActivity
         }
     };
 
-    private TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
+    private final TabLayout.OnTabSelectedListener mOnTabSelectedListener = new TabLayout.OnTabSelectedListener()
     {
         @Override
         public void onTabSelected(TabLayout.Tab tab)
@@ -417,7 +428,7 @@ public class WishListTabActivity extends BaseActivity
         }
     };
 
-    private PlaceWishListFragment.OnWishListFragmentListener mWishListFragmentListener = new PlaceWishListFragment.OnWishListFragmentListener()
+    private final PlaceWishListFragment.OnWishListFragmentListener mWishListFragmentListener = new PlaceWishListFragment.OnWishListFragmentListener()
     {
         @Override
         public void onRemoveItemClick(PlaceType placeType, int position)
@@ -445,7 +456,7 @@ public class WishListTabActivity extends BaseActivity
         }
     };
 
-    private WishListTabNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new WishListTabNetworkController.OnNetworkControllerListener()
+    private final WishListTabNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new WishListTabNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onCommonDateTime(long currentDateTime, long dailyDateTime)
