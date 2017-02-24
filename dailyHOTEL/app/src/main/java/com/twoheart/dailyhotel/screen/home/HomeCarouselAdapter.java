@@ -161,7 +161,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.gradeView.setText(place.details.category);
             }
 
-            if (prices != null && place.details.persons > 0)
+            if (prices != null && place.details.persons > 1)
             {
                 holder.personView.setText(//
                     mContext.getString(R.string.label_home_person_format, place.details.persons));
