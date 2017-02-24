@@ -59,13 +59,12 @@ public class StayProduct implements Parcelable
     @JsonField(name = "tv")
     public boolean hasTV;
     //
-    public Stay.Grade grade;
+    public boolean isNRD;
+    //
     public String address;
     public boolean isOverseas;
     public String hotelName;
     public int nights;
-    public boolean isNRD;
-    //
     public String categoryCode; // GA를 위해서 payment로 진행시에 값을 넣는다
 
     public StayProduct()
@@ -114,7 +113,6 @@ public class StayProduct implements Parcelable
         dest.writeString(roomName);
         dest.writeInt(hasSpaWhirlpool ? 1 : 0);
         dest.writeInt(hasTV ? 1 : 0);
-        dest.writeString(grade.name());
         dest.writeString(address);
         dest.writeInt(isOverseas ? 1 : 0);
         dest.writeString(hotelName);
@@ -140,14 +138,6 @@ public class StayProduct implements Parcelable
         roomName = in.readString();
         hasSpaWhirlpool = in.readInt() == 1;
         hasTV = in.readInt() == 1;
-
-        try
-        {
-            grade = Stay.Grade.valueOf(in.readString());
-        } catch (Exception e)
-        {
-            grade = Stay.Grade.etc;
-        }
 
         address = in.readString();
         isOverseas = in.readInt() == 1;

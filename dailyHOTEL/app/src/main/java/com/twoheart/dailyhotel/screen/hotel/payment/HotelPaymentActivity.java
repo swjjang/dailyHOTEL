@@ -93,7 +93,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     public static Intent newInstance(Context context, StayProduct stayProduct//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
-        , boolean isDailyChoice, int ratingValue)
+        , boolean isDailyChoice, int ratingValue, String gradeName)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -108,6 +108,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, entryPosition);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, isDailyChoice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_RATING_VALUE, ratingValue);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, gradeName);
 
         return intent;
     }
@@ -154,6 +155,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.isShowOriginalPrice = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IS_SHOW_ORIGINALPRICE);
         stayPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         stayPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
+
+        Stay.Grade grade;
+        try
+        {
+            grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
+        } catch (Exception e)
+        {
+            grade = Stay.Grade.etc;
+        }
+
+        stayPaymentInformation.grade = grade;
 
         if (stayPaymentInformation.getSaleRoomInformation() == null)
         {
@@ -1206,7 +1218,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, stayPaymentInformation.getSaleRoomInformation().roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(stayPaymentInformation.getSaleRoomInformation().roomIndex));
-            params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.getSaleRoomInformation().grade.getName(HotelPaymentActivity.this));
+            params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(HotelPaymentActivity.this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.getSaleRoomInformation().address);
             params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
@@ -1267,7 +1279,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayProduct.totalDiscount));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, stayProduct.roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(stayProduct.roomIndex));
-            params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.getSaleRoomInformation().grade.getName(this));
+            params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
 
             SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + stayPaymentInformation.getSaleRoomInformation().nights);
@@ -1826,7 +1838,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 releaseUiComponent();
             } else
             {
-                Stay.Grade hotelGrade = stayPaymentInformation.getSaleRoomInformation().grade;
+                Stay.Grade hotelGrade = stayPaymentInformation.grade;
                 if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
                 {
                     lockUI();
