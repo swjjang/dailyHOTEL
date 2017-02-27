@@ -300,7 +300,6 @@ public class StayDetailParams implements Parcelable
         {
             for (StayProduct stayProduct : rooms)
             {
-                stayProduct.hotelName = name;
                 stayProduct.nights = nights;
                 stayProduct.categoryCode = categoryCode;
             }

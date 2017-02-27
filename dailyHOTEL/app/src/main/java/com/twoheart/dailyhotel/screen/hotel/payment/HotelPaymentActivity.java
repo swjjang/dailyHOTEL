@@ -86,6 +86,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     String mWarningDialogMessage;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
+    private String mPlaceName;
 
     // GA용 스크린 정의
     String mScreenAnalytics;
@@ -93,7 +94,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     public static Intent newInstance(Context context, StayProduct stayProduct//
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
-        , boolean isDailyChoice, int ratingValue, String gradeName, String address, boolean isOverSeas)
+        , boolean isDailyChoice, int ratingValue, String gradeName, String address //
+        , boolean isOverSeas, String placeName)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -112,6 +114,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, gradeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ADDRESS, address);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverSeas);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
 
         return intent;
     }
@@ -160,6 +163,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
         stayPaymentInformation.address = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_ADDRESS);
         stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
+        mPlaceName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
 
         Stay.Grade grade;
         try
@@ -446,7 +450,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         });
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
-            Action.SOLDOUT_CHANGEPRICE, ((StayPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+            Action.SOLDOUT_CHANGEPRICE, mPlaceName, null);
     }
 
     @Override
@@ -455,7 +459,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         showChangedValueDialog(R.string.dialog_msg_stay_stop_onsale, null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
-            Action.SOLDOUT, ((StayPaymentInformation) mPaymentInformation).getSaleRoomInformation().hotelName, null);
+            Action.SOLDOUT, mPlaceName, null);
     }
 
     @Override
@@ -513,7 +517,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 break;
         }
 
-        String placeName = stayProduct.hotelName;
+        String placeName = mPlaceName;
         String placeType = stayProduct.roomName;
         String checkInDate = DailyCalendar.format(stayPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
         String checkOutDate = DailyCalendar.format(stayPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
@@ -881,7 +885,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                         DailyPreference.getInstance(HotelPaymentActivity.this)//
                             .setPaymentInformation(PlaceType.HOTEL,//
-                                stayPaymentInformation.getSaleRoomInformation().hotelName,//
+                                mPlaceName,//
                                 stayPaymentInformation.paymentType,//
                                 stayPaymentInformation.checkInDateFormat,//
                                 stayPaymentInformation.checkOutDateFormat);
@@ -1098,7 +1102,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         DailyPreference.getInstance(this)//
             .setPaymentInformation(PlaceType.HOTEL,//
-                stayPaymentInformation.getSaleRoomInformation().hotelName,//
+                mPlaceName,//
                 stayPaymentInformation.paymentType,//
                 stayPaymentInformation.checkInDateFormat,//
                 stayPaymentInformation.checkOutDateFormat);
@@ -1174,7 +1178,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        String label = String.format("%s-%s", stayPaymentInformation.getSaleRoomInformation().hotelName, stayPaymentInformation.getSaleRoomInformation().roomName);
+        String label = String.format("%s-%s", mPlaceName, stayPaymentInformation.getSaleRoomInformation().roomName);
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
     }
@@ -1210,7 +1214,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         try
         {
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.NAME, stayPaymentInformation.getSaleRoomInformation().hotelName);
+            params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().averageDiscount));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().totalDiscount));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayPaymentInformation.getSaleRoomInformation().nights));
@@ -1276,7 +1280,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
-            params.put(AnalyticsManager.KeyType.NAME, stayProduct.hotelName);
+            params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayProduct.averageDiscount));
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayProduct.nights));
@@ -1616,7 +1620,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String checkOutDate = stayPaymentInformation.checkOutDateFormat;
 
         String categoryCode = stayProduct.categoryCode;
-        String hotelName = stayProduct.hotelName;
+        String hotelName = mPlaceName;
         String roomPrice = Integer.toString(stayProduct.averageDiscount);
 
         Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
@@ -1712,7 +1716,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.checkOutDate = checkOutDate;
         stayPaymentInformation.nights = nights;
 
-        mHotelPaymentLayout.setReservationInformation(stayPaymentInformation);
+        mHotelPaymentLayout.setReservationInformation(stayPaymentInformation, mPlaceName);
 
         // Check In
         Calendar calendarCheckin = DailyCalendar.getInstance();

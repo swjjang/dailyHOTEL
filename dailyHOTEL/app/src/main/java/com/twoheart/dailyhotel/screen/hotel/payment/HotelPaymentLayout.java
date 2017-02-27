@@ -454,10 +454,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setReservationInformation(StayPaymentInformation stayPaymentInformation)
+    public void setReservationInformation(StayPaymentInformation stayPaymentInformation, String placeName)
     {
         // 예약 장소
-        mPlaceNameTextView.setText(stayPaymentInformation.getSaleRoomInformation().hotelName);
+        mPlaceNameTextView.setText(placeName);
 
         // 객실 타입
         mRoomTypeTextView.setText(stayPaymentInformation.getSaleRoomInformation().roomName);
