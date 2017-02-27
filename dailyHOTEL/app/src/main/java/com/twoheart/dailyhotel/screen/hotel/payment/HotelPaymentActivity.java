@@ -96,7 +96,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
         , boolean isDailyChoice, int ratingValue, String gradeName, String address //
-        , boolean isOverSeas, String placeName, String categoryCode)
+        , boolean isOverSeas, String placeName, String categoryCode, int nights)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -117,6 +117,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverSeas);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, categoryCode);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
 
         return intent;
     }
@@ -167,6 +168,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
         mPlaceName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
         mCategoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
+        mNights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 
         Stay.Grade grade;
         try
@@ -245,7 +247,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         Map<String, String> params = new HashMap<>();
         params.put("room_idx", String.valueOf(stayProduct.roomIndex));
         params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        params.put("nights", String.valueOf(stayProduct.nights));
+        params.put("nights", String.valueOf(mNights));
         params.put("billkey", mSelectedCreditCard.billingkey);
 
         switch (paymentInformation.discountType)
@@ -324,7 +326,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         Map<String, String> params = new HashMap<>();
         params.put("room_idx", String.valueOf(stayProduct.roomIndex));
         params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        params.put("nights", String.valueOf(stayProduct.nights));
+        params.put("nights", Integer.toString(mNights));
         params.put("billkey", mSelectedCreditCard.billingkey);
 
         switch (paymentInformation.discountType)
@@ -378,7 +380,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         DailyMobileAPI.getInstance(this).requestStayPaymentInformation(mNetworkTag//
             , stayProduct.roomIndex//
             , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-            , stayProduct.nights, mHotelPaymentInformationCallback);
+            , mNights, mHotelPaymentInformationCallback);
     }
 
     @Override
@@ -483,6 +485,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         Intent intent = new Intent(this, HotelPaymentWebActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, mNights);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
     }
@@ -1220,11 +1224,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().averageDiscount));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().totalDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayPaymentInformation.getSaleRoomInformation().nights));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayPaymentInformation.getSaleRoomInformation().nights));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mNights));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mNights));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayPaymentInformation.placeIndex));
 
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + stayPaymentInformation.getSaleRoomInformation().nights);
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mNights);
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
@@ -1286,15 +1290,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayProduct.averageDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayProduct.nights));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayProduct.nights));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mNights));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mNights));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayProduct.totalDiscount));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, stayProduct.roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(stayProduct.roomIndex));
             params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
 
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + stayPaymentInformation.getSaleRoomInformation().nights);
+            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mNights);
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
@@ -1407,7 +1411,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             return;
         }
 
-        int nights = stayPaymentInformation.getSaleRoomInformation().nights;
+        int nights = mNights;
         int originalPrice = stayPaymentInformation.getSaleRoomInformation().totalDiscount;
         int payPrice = originalPrice;
 
@@ -2121,7 +2125,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
                         , stayPaymentInformation.getSaleRoomInformation().roomIndex//
                         , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                        , stayPaymentInformation.getSaleRoomInformation().nights, mHotelPaymentInformationCallback);
+                        , mNights, mHotelPaymentInformationCallback);
                 } catch (Exception e)
                 {
                     onError(e);
@@ -2216,7 +2220,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 return;
                             }
 
-                            setReservationInformation(checkInDate, checkOutDate, stayProduct.nights);
+                            setReservationInformation(checkInDate, checkOutDate, mNights);
 
                             if (provideTransportation == true)
                             {
@@ -2556,7 +2560,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
                         , stayPaymentInformation.getSaleRoomInformation().roomIndex//
                         , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                        , stayPaymentInformation.getSaleRoomInformation().nights, mFinalCheckPayCallback);
+                        , mNights, mFinalCheckPayCallback);
                 } catch (Exception e)
                 {
                     onError(e);

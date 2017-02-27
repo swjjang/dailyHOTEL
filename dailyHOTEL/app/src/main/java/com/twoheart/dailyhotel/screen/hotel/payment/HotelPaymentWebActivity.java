@@ -79,6 +79,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
         mStayPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
         SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 
         if (mStayPaymentInformation == null)
         {
@@ -149,10 +150,11 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        requestPostPaymentWebView(mWebView, mStayPaymentInformation, saleTime);
+        requestPostPaymentWebView(mWebView, mStayPaymentInformation, saleTime, nights);
     }
 
-    private void requestPostPaymentWebView(WebView webView, StayPaymentInformation stayPaymentInformation, SaleTime saleTime)
+    private void requestPostPaymentWebView(WebView webView //
+        , StayPaymentInformation stayPaymentInformation, SaleTime saleTime, int nights)
     {
         String name;
         String phone;
@@ -195,7 +197,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
         builder.add("payment_type", stayPaymentInformation.paymentType.name());
         builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        builder.add("nights", String.valueOf(stayProduct.nights));
+        builder.add("nights", Integer.toString(nights));
 
         switch (stayPaymentInformation.discountType)
         {

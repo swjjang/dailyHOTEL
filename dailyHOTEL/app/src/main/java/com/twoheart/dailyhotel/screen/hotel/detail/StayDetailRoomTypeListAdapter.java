@@ -24,8 +24,9 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
     View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
     private int mViewPriceType;
+    private int mNights;
 
-    public StayDetailRoomTypeListAdapter(Context context, List<StayProduct> arrayList, View.OnClickListener listener)
+    public StayDetailRoomTypeListAdapter(Context context, List<StayProduct> arrayList, int nights, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;
@@ -34,10 +35,12 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         mStayProductList.addAll(arrayList);
         mViewPriceType = StayDetailLayout.VIEW_AVERAGE_PRICE;
 
+        mNights = nights;
+
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void addAll(Collection<? extends StayProduct> collection)
+    public void addAll(Collection<? extends StayProduct> collection, int nights)
     {
         if (collection == null)
         {
@@ -46,6 +49,8 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         mStayProductList.clear();
         mStayProductList.addAll(collection);
+
+        mNights = nights;
     }
 
     public void setSelected(int position)
@@ -128,7 +133,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         if (mViewPriceType == StayDetailLayout.VIEW_TOTAL_PRICE)
         {
-            price = Util.getPriceFormat(mContext, stayProduct.price * stayProduct.nights, false);
+            price = Util.getPriceFormat(mContext, stayProduct.price * mNights, false);
             discountPrice = Util.getPriceFormat(mContext, stayProduct.totalDiscount, false);
         } else
         {

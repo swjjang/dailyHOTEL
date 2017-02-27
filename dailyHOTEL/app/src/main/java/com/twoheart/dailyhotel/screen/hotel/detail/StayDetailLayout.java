@@ -222,7 +222,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
             setBookingStatus(STATUS_SELECT_PRODUCT);
 
-            updateRoomTypeInformationLayout(stayProductList);
+            updateRoomTypeInformationLayout(stayProductList, stayDetail.nights);
         }
 
         if (stayDetail.nights > 1)
@@ -242,7 +242,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         mListAdapter.notifyDataSetChanged();
     }
 
-    private void updateRoomTypeInformationLayout(List<StayProduct> stayProductList)
+    private void updateRoomTypeInformationLayout(List<StayProduct> stayProductList, int nights)
     {
         if (stayProductList == null || stayProductList.size() == 0)
         {
@@ -254,7 +254,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         {
             mSelectedStayProduct = stayProductList.get(0);
 
-            mRoomTypeListAdapter = new StayDetailRoomTypeListAdapter(mContext, stayProductList, new OnClickListener()
+            mRoomTypeListAdapter = new StayDetailRoomTypeListAdapter(mContext, stayProductList, nights, new OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -279,14 +279,14 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             // 재세팅 하는 경우
             mSelectedStayProduct = stayProductList.get(0);
 
-            mRoomTypeListAdapter.addAll(stayProductList);
+            mRoomTypeListAdapter.addAll(stayProductList, nights);
             mRoomTypeListAdapter.setSelected(0);
             mRoomTypeListAdapter.notifyDataSetChanged();
         }
 
         // 객실 개수로 높이를 재지정해준다.
         int size = stayProductList.size();
-        int productTitleBarHeight = Util.dpToPx(mContext, 52) + (mSelectedStayProduct.nights > 1 ? Util.dpToPx(mContext, 40) : 0);
+        int productTitleBarHeight = Util.dpToPx(mContext, 52) + (nights > 1 ? Util.dpToPx(mContext, 40) : 0);
         int productLayoutHeight = Util.dpToPx(mContext, 122) * size + productTitleBarHeight;
 
         // 화면 높이 - 상단 타이틀 - 하단 버튼

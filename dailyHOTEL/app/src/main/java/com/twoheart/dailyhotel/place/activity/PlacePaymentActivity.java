@@ -58,6 +58,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     protected CreditCard mSelectedCreditCard;
     protected Dialog mFinalCheckDialog;
     protected SaleTime mCheckInSaleTime;
+    protected int mNights;
 
     private ProgressDialog mProgressDialog;
 

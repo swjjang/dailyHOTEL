@@ -294,18 +294,6 @@ public class StayDetailParams implements Parcelable
                 }
             }
         }
-
-        // Room Sale Info
-        if (rooms != null && rooms.size() > 0)
-        {
-            for (StayProduct stayProduct : rooms)
-            {
-                stayProduct.nights = nights;
-            }
-        } else
-        {
-            rooms = new ArrayList<>();
-        }
     }
 
     public Stay.Grade getGrade()
@@ -341,14 +329,6 @@ public class StayDetailParams implements Parcelable
     public void setNights(int nights)
     {
         this.nights = nights;
-
-        if (rooms != null && rooms.size() > 0)
-        {
-            for (StayProduct stayProduct : rooms)
-            {
-                stayProduct.nights = nights;
-            }
-        }
     }
 
     @Override
