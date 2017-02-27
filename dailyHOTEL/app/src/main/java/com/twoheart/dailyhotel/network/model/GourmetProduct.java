@@ -6,12 +6,8 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonObject

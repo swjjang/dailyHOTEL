@@ -26,11 +26,11 @@ import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
-import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
+import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
@@ -798,8 +798,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             , mProvince, mArea, stayDetail.isShowOriginalPrice, stayDetail.entryPosition //
             , stayDetail.isDailyChoice, stayDetailParams.ratingValue //
             , stayDetailParams.getGrade().name(), stayDetailParams.address //
-            , stayDetailParams.isOverseas, stayDetailParams.name, stayDetailParams.category
-            , stayDetail.nights);
+            , stayDetailParams.isOverseas, stayDetailParams.name, stayDetailParams.category, stayDetail.nights);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
