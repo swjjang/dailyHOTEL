@@ -84,18 +84,18 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
         mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
 
+        if (saleTime == null || mStartSaleTime == null)
+        {
+            Util.restartApp(this);
+            return;
+        }
+
         if (mEndSaleTime == null)
         {
             mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX - 1);
         } else if (mEndSaleTime.getOffsetDailyDay() > ENABLE_DAYCOUNT_OF_MAX)
         {
             mEndSaleTime.setOffsetDailyDay(ENABLE_DAYCOUNT_OF_MAX - 1);
-        }
-
-        if (saleTime == null || mStartSaleTime == null)
-        {
-            Util.restartApp(this);
-            return;
         }
 
         // startSaleTime, endSaleTime 안에 기간을 요청해야 한다
