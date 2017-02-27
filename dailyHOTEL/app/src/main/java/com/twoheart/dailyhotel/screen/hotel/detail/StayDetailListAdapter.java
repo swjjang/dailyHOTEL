@@ -223,8 +223,8 @@ public class StayDetailListAdapter extends BaseAdapter
         TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
         hotelGradeTextView.setVisibility(View.VISIBLE);
 
-        hotelGradeTextView.setText(stayDetailParams.grade.getName(mContext));
-        hotelGradeTextView.setBackgroundResource(stayDetailParams.grade.getColorResId());
+        hotelGradeTextView.setText(stayDetailParams.getGrade().getName(mContext));
+        hotelGradeTextView.setBackgroundResource(stayDetailParams.getGrade().getColorResId());
 
         // 호텔명
         TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);

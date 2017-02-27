@@ -16,52 +16,52 @@ import java.util.List;
 import java.util.Map;
 
 @JsonObject
-public class GourmetDetailParams implements Parcelable
+public class GourmetDetailParams extends PlaceDetailParams implements Parcelable
 {
-    @JsonField(name = "idx")
-    public int index;
-
-    @JsonField
-    public String name;
-
-    @JsonField
-    public double latitude;
-
-    @JsonField
-    public double longitude;
-
-    @JsonField
-    public String address;
-
-    @JsonField
-    public String category;
+//    @JsonField(name = "idx")
+//    public int index;
+//
+//    @JsonField
+//    public String name;
+//
+//    @JsonField
+//    public double latitude;
+//
+//    @JsonField
+//    public double longitude;
+//
+//    @JsonField
+//    public String address;
+//
+//    @JsonField
+//    public String category;
 
     @JsonField
     public String categorySub;
-
-    // 직접 접근 금지
-    @JsonField
-    public String grade;
-
-    // 직접 접근 금지
-    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    @JsonField
-    public Map<String, List<ImageInformation>> imgPath;
-
-    @JsonField
-    public int price;
-
-    @JsonField
-    public int discount;
-
-    @JsonField
-    public int ratingPersons;
-
-    @JsonField
-    public int ratingValue;
-
-    @JsonField
-    public boolean ratingShow;
+//
+//    // 직접 접근 금지
+//    @JsonField
+//    public String grade;
+//
+//    // 직접 접근 금지
+//    // 주의 : Parcelable 후에 해당 값은 사라집니다.
+//    @JsonField
+//    public Map<String, List<ImageInformation>> imgPath;
+//
+//    @JsonField
+//    public int price;
+//
+//    @JsonField
+//    public int discount;
+//
+//    @JsonField
+//    public int ratingPersons;
+//
+//    @JsonField
+//    public int ratingValue;
+//
+//    @JsonField
+//    public boolean ratingShow;
 
     // 직접 접근 금지
     @JsonField
@@ -90,30 +90,30 @@ public class GourmetDetailParams implements Parcelable
     // 직접 접근 금지
     @JsonField
     public List<GourmetProduct> tickets;
+//
+//    // 직접 접근 금지
+//    // 주의 : Parcelable 후에 해당 값은 사라집니다.
+//    @JsonField
+//    public List<Map<String, List<String>>> details;
+//
+//    @JsonField
+//    public String imgUrl;
+//
+//    @JsonField
+//    public String benefit;
+//
+//    @JsonField
+//    public List<String> benefitContents;
+//
+//    @JsonField
+//    public int wishCount;
+//
+//    @JsonField
+//    public boolean myWish;
 
-    // 직접 접근 금지
-    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    @JsonField
-    public List<Map<String, List<String>>> details;
-
-    @JsonField
-    public String imgUrl;
-
-    @JsonField
-    public String benefit;
-
-    @JsonField
-    public List<String> benefitContents;
-
-    @JsonField
-    public int wishCount;
-
-    @JsonField
-    public boolean myWish;
-
-    protected ArrayList<DetailInformation> mDetailList;
+//    protected ArrayList<DetailInformation> mDetailList;
     private ArrayList<GourmetDetail.Pictogram> mPictogramList;
-    private ArrayList<ImageInformation> mImageList;
+//    private ArrayList<ImageInformation> mImageList;
 
 
     public GourmetDetailParams()
@@ -228,16 +228,16 @@ public class GourmetDetailParams implements Parcelable
     {
         return mPictogramList;
     }
-
-    public List<ImageInformation> getImageList()
-    {
-        return mImageList;
-    }
-
-    public List<DetailInformation> getDetailList()
-    {
-        return mDetailList;
-    }
+//
+//    public List<ImageInformation> getImageList()
+//    {
+//        return mImageList;
+//    }
+//
+//    public List<DetailInformation> getDetailList()
+//    {
+//        return mDetailList;
+//    }
 
     public List<String> getBenefitList()
     {
@@ -261,8 +261,8 @@ public class GourmetDetailParams implements Parcelable
         dest.writeString(categorySub);
         dest.writeString(grade);
         dest.writeTypedList(mImageList);
-        dest.writeInt(price);
-        dest.writeInt(discount);
+//        dest.writeInt(price);
+//        dest.writeInt(discount);
         dest.writeInt(ratingPersons);
         dest.writeInt(ratingValue);
         dest.writeInt(ratingShow == true ? 1 : 0);
@@ -292,8 +292,8 @@ public class GourmetDetailParams implements Parcelable
         categorySub = in.readString();
         grade = in.readString();
         mImageList = in.createTypedArrayList(ImageInformation.CREATOR);
-        price = in.readInt();
-        discount = in.readInt();
+//        price = in.readInt();
+//        discount = in.readInt();
         ratingPersons = in.readInt();
         ratingValue = in.readInt();
         ratingShow = in.readInt() == 1 ? true : false;

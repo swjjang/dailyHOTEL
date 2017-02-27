@@ -302,7 +302,7 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
             return null;
         }
 
-        return mStayDetailParams.getDetailInformationList();
+        return mStayDetailParams.getDetailList();
     }
 
     @Override

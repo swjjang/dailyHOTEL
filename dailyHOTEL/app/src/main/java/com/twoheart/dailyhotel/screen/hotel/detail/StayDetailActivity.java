@@ -798,7 +798,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             , mProvince, mArea, stayDetail.isShowOriginalPrice, stayDetail.entryPosition //
             , stayDetail.isDailyChoice, stayDetailParams.ratingValue //
             , stayDetailParams.getGrade().name(), stayDetailParams.address //
-            , stayDetailParams.isOverseas, stayDetailParams.name, stayDetailParams.categoryCode
+            , stayDetailParams.isOverseas, stayDetailParams.name, stayDetailParams.category
             , stayDetail.nights);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
@@ -894,7 +894,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         } else
         {
             Intent intent = SelectStayCouponDialogActivity.newInstance(this, mPlaceDetail.index, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
-                ((StayDetail) mPlaceDetail).nights, stayDetailParams.categoryCode, stayDetailParams.name);
+                ((StayDetail) mPlaceDetail).nights, stayDetailParams.category, stayDetailParams.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
     }
@@ -926,7 +926,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (mIsDeepLink == true)
         {
             // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
-            stayDetailParams.categoryCode = stayDetailParams.grade.getName(StayDetailActivity.this);
+            stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
 
             mDailyToolbarLayout.setToolbarText(stayDetailParams.name);
         }
@@ -1085,7 +1085,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, stayDetailParams.name);
-            params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.grade.getName(StayDetailActivity.this)); // 14
+            params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().getName(StayDetailActivity.this)); // 14
             params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes"); // 3
 
             if (stayDetail.getProductList() == null || stayDetail.getProductList().size() == 0)
@@ -1106,14 +1106,14 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.ADDRESS, stayDetailParams.address);
 
-            if (Util.isTextEmpty(stayDetailParams.categoryCode) == true) //
+            if (Util.isTextEmpty(stayDetailParams.category) == true) //
             {
                 params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, AnalyticsManager.ValueType.EMPTY);
                 params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
             } else
             {
-                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayDetailParams.categoryCode);
-                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.categoryCode);
+                params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayDetailParams.category);
+                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
             }
 
             if (mProvince == null)
@@ -1177,7 +1177,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.NAME, stayDetailParams.name);
             params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayDetail.nights));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index));
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayDetailParams.categoryCode);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayDetailParams.category);
 
             if (mProvince == null)
             {
@@ -1635,7 +1635,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.NAME, stayDetailParams.name);
                     params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
                     params.put(AnalyticsManager.KeyType.COUNTRY, stayDetailParams.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                    params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.categoryCode);
+                    params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
 
                     if (mProvince == null)
                     {
@@ -1658,7 +1658,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                         params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                     }
 
-                    params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.grade.name());
+                    params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().name());
                     params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
                     params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetailParams.ratingValue));
 
@@ -1731,7 +1731,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.NAME, stayDetailParams.name);
                 params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(mViewPrice));
                 params.put(AnalyticsManager.KeyType.COUNTRY, stayDetailParams.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.categoryCode);
+                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
 
                 if (mProvince == null)
                 {
@@ -1754,7 +1754,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                 }
 
-                params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.grade.name());
+                params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().name());
                 params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mPlaceDetail.index));
                 params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetailParams.ratingValue));
 

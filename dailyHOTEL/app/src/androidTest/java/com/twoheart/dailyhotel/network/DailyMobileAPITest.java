@@ -1714,7 +1714,7 @@ public class DailyMobileAPITest
 
             private void checkStayDetail(StayDetailParams stayDetailParams) throws Throwable
             {
-                Stay.Grade grade = Stay.Grade.valueOf(stayDetailParams.gradeString);
+                Stay.Grade grade = stayDetailParams.getGrade();
                 assertThat(grade, notNullValue());
 
                 assertThat(stayDetailParams.name, isNotEmpty());
@@ -1775,7 +1775,7 @@ public class DailyMobileAPITest
                 }
 
                 // Detail
-                List<DetailInformation> detailInformationList = stayDetailParams.getDetailInformationList();
+                List<DetailInformation> detailInformationList = stayDetailParams.getDetailList();
                 assertThat(detailInformationList, notNullValue());
 
                 for (DetailInformation detailInformation : detailInformationList)

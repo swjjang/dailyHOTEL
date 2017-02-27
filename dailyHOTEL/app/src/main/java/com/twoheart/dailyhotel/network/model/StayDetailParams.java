@@ -20,42 +20,42 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 20..
  */
 @JsonObject
-public class StayDetailParams implements Parcelable
+public class StayDetailParams extends PlaceDetailParams implements Parcelable
 {
-    @JsonField(name = "idx")
-    public int index;
-
-    @JsonField
-    public String name;
-
-    @JsonField
-    public double latitude;
-
-    @JsonField
-    public double longitude;
-
-    @JsonField
-    public String address;
-
-    // 직접 접근 금지
-    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    @JsonField
-    public Map<String, List<ImageInformation>> imgPath;
-
-    @JsonField(name = "grade")
-    public String gradeString;
-
-    @JsonField
-    public int ratingPersons;
-
-    @JsonField
-    public int ratingValue;
-
-    @JsonField
-    public boolean ratingShow;
-
-    @JsonField(name = "category")
-    public String categoryCode;
+//    @JsonField(name = "idx")
+//    public int index;
+//
+//    @JsonField
+//    public String name;
+//
+//    @JsonField
+//    public double latitude;
+//
+//    @JsonField
+//    public double longitude;
+//
+//    @JsonField
+//    public String address;
+//
+//    // 직접 접근 금지
+//    // 주의 : Parcelable 후에 해당 값은 사라집니다.
+//    @JsonField
+//    public Map<String, List<ImageInformation>> imgPath;
+//
+//    @JsonField
+//    public String grade;
+//
+//    @JsonField
+//    public int ratingPersons;
+//
+//    @JsonField
+//    public int ratingValue;
+//
+//    @JsonField
+//    public boolean ratingShow;
+//
+//    @JsonField
+//    public String category;
 
     // 직접 접근 금지
     @JsonField
@@ -92,48 +92,46 @@ public class StayDetailParams implements Parcelable
     // 직접 접근 금지
     @JsonField
     public boolean kidsPlayRoom;
-
-    // 직접 접근 금지
-    @JsonField
-    public String benefit;
-
-    @JsonField
-    public List<String> benefitContents;
+//
+//    @JsonField
+//    public String benefit;
+//
+//    @JsonField
+//    public List<String> benefitContents;
 
     @JsonField
     public String benefitWarning;
-
-    // 직접 접근 금지
-    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    @JsonField
-    public List<Map<String, List<String>>> details;
+//
+//    // 직접 접근 금지
+//    // 주의 : Parcelable 후에 해당 값은 사라집니다.
+//    @JsonField
+//    public List<Map<String, List<String>>> details;
 
     // 직접 접근 금지
     @JsonField
     public List<StayProduct> rooms;
-
-    @JsonField
-    public String imgUrl;
-
-    @JsonField
-    public int wishCount; // 위시리스트 카운트
-
-    @JsonField
-    public boolean myWish; // 위시리스트 클릭 상태
+//
+//    @JsonField
+//    public String imgUrl;
+//
+//    @JsonField
+//    public int wishCount; // 위시리스트 카운트
+//
+//    @JsonField
+//    public boolean myWish; // 위시리스트 클릭 상태
 
     @JsonField(name = "singleStay")
     public boolean isSingleStay; // 연박 불가 여부
 
     @JsonField(name = "overseas")
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
-    //
-    public Stay.Grade grade;
+
     // 결제 전 해당 값을 조회하여 stayProduct에 넣어 줄 수 있도록 해야 함
     public int nights;
 
-    protected ArrayList<DetailInformation> mDetailInformationList;
+//    protected ArrayList<DetailInformation> mDetailList;
     private ArrayList<StayDetail.Pictogram> mPictogramList;
-    private ArrayList<ImageInformation> mImageInformationList;
+//    private ArrayList<ImageInformation> mImageList;
     private ArrayList<String> mBenefitInformation;
 
     public StayDetailParams()
@@ -149,15 +147,6 @@ public class StayDetailParams implements Parcelable
     @OnJsonParseComplete
     void onParseComplete()
     {
-        // 등급
-        try
-        {
-            grade = Stay.Grade.valueOf(gradeString);
-        } catch (Exception e)
-        {
-            grade = Stay.Grade.etc;
-        }
-
         // Pictogram
         if (mPictogramList == null)
         {
@@ -220,12 +209,12 @@ public class StayDetailParams implements Parcelable
             mPictogramList.add(StayDetail.Pictogram.KIDS_PLAY_ROOM);
         }
 
-        if (mImageInformationList == null)
+        if (mImageList == null)
         {
-            mImageInformationList = new ArrayList<>();
+            mImageList = new ArrayList<>();
         }
 
-        mImageInformationList.clear();
+        mImageList.clear();
 
         if (imgPath != null && imgPath.size() > 0)
         {
@@ -241,7 +230,7 @@ public class StayDetailParams implements Parcelable
                     for (ImageInformation imageInformation : imageInformationList)
                     {
                         imageInformation.setImageUrl(imgUrl + key + imageInformation.name);
-                        mImageInformationList.add(imageInformation);
+                        mImageList.add(imageInformation);
                     }
                 }
             }
@@ -271,12 +260,12 @@ public class StayDetailParams implements Parcelable
         }
 
         // Detail
-        if (mDetailInformationList == null)
+        if (mDetailList == null)
         {
-            mDetailInformationList = new ArrayList<>();
+            mDetailList = new ArrayList<>();
         }
 
-        mDetailInformationList.clear();
+        mDetailList.clear();
 
         for (Map<String, List<String>> detail : details)
         {
@@ -289,7 +278,7 @@ public class StayDetailParams implements Parcelable
 
                 if (contentsList != null)
                 {
-                    mDetailInformationList.add(new DetailInformation(key, contentsList));
+                    mDetailList.add(new DetailInformation(key, contentsList));
                 }
             }
         }
@@ -297,22 +286,22 @@ public class StayDetailParams implements Parcelable
 
     public Stay.Grade getGrade()
     {
-        return grade;
+        Stay.Grade stayGrade;
+        // 등급
+        try
+        {
+            stayGrade = Stay.Grade.valueOf(grade);
+        } catch (Exception e)
+        {
+            stayGrade = Stay.Grade.etc;
+        }
+
+        return stayGrade;
     }
 
     public List<StayDetail.Pictogram> getPictogramList()
     {
         return mPictogramList;
-    }
-
-    public List<ImageInformation> getImageList()
-    {
-        return mImageInformationList;
-    }
-
-    public List<DetailInformation> getDetailInformationList()
-    {
-        return mDetailInformationList;
     }
 
     public List<String> getBenefitList()
@@ -338,11 +327,11 @@ public class StayDetailParams implements Parcelable
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeString(address);
-        dest.writeString(gradeString);
+        dest.writeString(grade);
         dest.writeInt(ratingPersons);
         dest.writeInt(ratingValue);
         dest.writeInt(ratingShow == true ? 1 : 0);
-        dest.writeString(categoryCode);
+        dest.writeString(category);
         dest.writeInt(parking == true ? 1 : 0);
         dest.writeInt(noParking == true ? 1 : 0);
         dest.writeInt(pool == true ? 1 : 0);
@@ -361,11 +350,10 @@ public class StayDetailParams implements Parcelable
         dest.writeInt(myWish == true ? 1 : 0);
         dest.writeInt(isSingleStay == true ? 1 : 0);
         dest.writeInt(isOverseas == true ? 1 : 0);
-        dest.writeString(grade.name());
         dest.writeInt(nights);
-        dest.writeTypedList(mDetailInformationList);
+        dest.writeTypedList(mDetailList);
         dest.writeTypedList(mPictogramList);
-        dest.writeTypedList(mImageInformationList);
+        dest.writeTypedList(mImageList);
         dest.writeStringList(mBenefitInformation);
     }
 
@@ -376,11 +364,11 @@ public class StayDetailParams implements Parcelable
         latitude = in.readDouble();
         longitude = in.readDouble();
         address = in.readString();
-        gradeString = in.readString();
+        grade = in.readString();
         ratingPersons = in.readInt();
         ratingValue = in.readInt();
         ratingShow = in.readInt() == 1;
-        categoryCode = in.readString();
+        category = in.readString();
         parking = in.readInt() == 1;
         noParking = in.readInt() == 1;
         pool = in.readInt() == 1;
@@ -400,18 +388,10 @@ public class StayDetailParams implements Parcelable
         isSingleStay = in.readInt() == 1;
         isOverseas = in.readInt() == 1;
 
-        try
-        {
-            grade = Stay.Grade.valueOf(in.readString());
-        } catch (Exception e)
-        {
-            grade = Stay.Grade.etc;
-        }
-
         nights = in.readInt();
-        mDetailInformationList = in.createTypedArrayList(DetailInformation.CREATOR);
+        mDetailList = in.createTypedArrayList(DetailInformation.CREATOR);
         mPictogramList = in.createTypedArrayList(StayDetail.Pictogram.CREATOR);
-        mImageInformationList = in.createTypedArrayList(ImageInformation.CREATOR);
+        mImageList = in.createTypedArrayList(ImageInformation.CREATOR);
         mBenefitInformation = in.createStringArrayList();
     }
 
