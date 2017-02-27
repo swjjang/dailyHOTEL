@@ -87,6 +87,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     private Province mProvince;
     private String mArea; // Analytics용 소지역
     private String mPlaceName;
+    private String mCategoryCode;
 
     // GA용 스크린 정의
     String mScreenAnalytics;
@@ -95,7 +96,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
         , boolean isDailyChoice, int ratingValue, String gradeName, String address //
-        , boolean isOverSeas, String placeName)
+        , boolean isOverSeas, String placeName, String categoryCode)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
@@ -115,6 +116,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ADDRESS, address);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverSeas);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, categoryCode);
 
         return intent;
     }
@@ -164,6 +166,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.address = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_ADDRESS);
         stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
         mPlaceName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
+        mCategoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
 
         Stay.Grade grade;
         try
@@ -1230,8 +1233,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(HotelPaymentActivity.this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.address);
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
-            params.put(AnalyticsManager.KeyType.CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mCategoryCode);
+            params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, stayPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayPaymentInformation.ratingValue));
@@ -1363,8 +1366,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, stayPaymentInformation.paymentType.getName());
             params.put(AnalyticsManager.KeyType.ADDRESS, stayPaymentInformation.address);
-            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
-            params.put(AnalyticsManager.KeyType.CATEGORY, stayPaymentInformation.getSaleRoomInformation().categoryCode);
+            params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, mCategoryCode);
+            params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
 
             if (mProvince == null)
             {
@@ -1619,7 +1622,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         String checkInDate = stayPaymentInformation.checkInDateFormat;
         String checkOutDate = stayPaymentInformation.checkOutDateFormat;
 
-        String categoryCode = stayProduct.categoryCode;
+        String categoryCode = mCategoryCode;
         String hotelName = mPlaceName;
         String roomPrice = Integer.toString(stayProduct.averageDiscount);
 

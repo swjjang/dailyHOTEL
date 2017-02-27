@@ -301,7 +301,6 @@ public class StayDetailParams implements Parcelable
             for (StayProduct stayProduct : rooms)
             {
                 stayProduct.nights = nights;
-                stayProduct.categoryCode = categoryCode;
             }
         } else
         {

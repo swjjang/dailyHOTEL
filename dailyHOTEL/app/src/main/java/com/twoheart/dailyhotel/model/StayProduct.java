@@ -62,7 +62,6 @@ public class StayProduct implements Parcelable
     //
 
     public int nights;
-    public String categoryCode; // GA를 위해서 payment로 진행시에 값을 넣는다
 
     public StayProduct()
     {
@@ -112,7 +111,6 @@ public class StayProduct implements Parcelable
         dest.writeInt(hasTV ? 1 : 0);
         dest.writeInt(nights);
         dest.writeInt(isNRD ? 1 : 0);
-        dest.writeString(categoryCode);
     }
 
     protected void readFromParcel(Parcel in)
@@ -135,7 +133,6 @@ public class StayProduct implements Parcelable
 
         nights = in.readInt();
         isNRD = in.readInt() == 1;
-        categoryCode = in.readString();
     }
 
     @Override
