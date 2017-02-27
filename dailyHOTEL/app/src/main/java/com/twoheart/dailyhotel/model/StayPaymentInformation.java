@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.network.model.StayProduct;
+
 public class StayPaymentInformation extends PlacePaymentInformation
 {
     public static final String VISIT_TYPE_NONE = "NONE"; // 아무것도 표시하지 않음

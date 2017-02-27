@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.model;
+package com.twoheart.dailyhotel.network.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

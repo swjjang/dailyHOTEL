@@ -9,7 +9,6 @@ import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
-import com.twoheart.dailyhotel.model.StayProduct;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;

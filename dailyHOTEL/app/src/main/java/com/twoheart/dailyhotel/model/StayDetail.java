@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
+import com.twoheart.dailyhotel.network.model.StayProduct;
 
 import java.util.List;
 
