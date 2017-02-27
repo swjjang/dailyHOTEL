@@ -314,14 +314,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         StayRoomAmenities[] values = StayRoomAmenities.values();
         if (values != null && values.length > 0)
         {
-            for (StayRoomAmenities stayAmenities : values)
+            for (StayRoomAmenities stayRoomAmenities : values)
             {
-                DailyTextView amenitiesView = getGridLayoutItemView(stayAmenities.getName(this), stayAmenities.getResId(), false);
+                DailyTextView amenitiesView = getGridLayoutItemView(stayRoomAmenities.getName(this), stayRoomAmenities.getResId(), false);
                 amenitiesView.setOnClickListener(onClickListener);
-                amenitiesView.setTag(stayAmenities);
+                amenitiesView.setTag(stayRoomAmenities);
                 amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
-                if ((stayCurationOption.flagAmenitiesFilters & stayAmenities.getFlag()) == stayAmenities.getFlag())
+                if ((stayCurationOption.flagRoomAmenitiesFilters & stayRoomAmenities.getFlag()) == stayRoomAmenities.getFlag())
                 {
                     amenitiesView.setSelected(true);
                 }
