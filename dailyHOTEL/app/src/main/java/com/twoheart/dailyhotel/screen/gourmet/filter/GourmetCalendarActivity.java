@@ -78,15 +78,15 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
         mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
 
-        if (mEndSaleTime == null)
-        {
-            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
-        }
-
         if (saleTime == null || mStartSaleTime == null)
         {
             Util.restartApp(this);
             return;
+        }
+
+        if (mEndSaleTime == null)
+        {
+            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
         }
 
         // 예외 처리 추가

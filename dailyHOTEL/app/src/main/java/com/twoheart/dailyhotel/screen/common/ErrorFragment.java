@@ -73,30 +73,36 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(baseActivity, toolbar);
 
-        switch (mMainFragmentManager.getLastIndexFragment())
+        if (mMainFragmentManager == null)
         {
-            case MainFragmentManager.INDEX_HOME_FRAGMENT:
-                dailyToolbarLayout.initToolbar(R.drawable.img_gnb_logo, null, false);
-                break;
+            dailyToolbarLayout.initToolbar(title, null, false);
+        } else
+        {
+            switch (mMainFragmentManager.getLastIndexFragment())
+            {
+                case MainFragmentManager.INDEX_HOME_FRAGMENT:
+                    dailyToolbarLayout.initToolbar(R.drawable.img_gnb_logo, null, false);
+                    break;
 
-            case MainFragmentManager.INDEX_BOOKING_FRAGMENT:
-                title = getString(R.string.menu_item_title_bookings);
-                dailyToolbarLayout.initToolbar(title, null, false);
-                break;
+                case MainFragmentManager.INDEX_BOOKING_FRAGMENT:
+                    title = getString(R.string.menu_item_title_bookings);
+                    dailyToolbarLayout.initToolbar(title, null, false);
+                    break;
 
-            case MainFragmentManager.INDEX_MYDAILY_FRAGMENT:
-                title = getString(R.string.menu_item_title_mydaily);
-                dailyToolbarLayout.initToolbar(title, null, false);
-                break;
+                case MainFragmentManager.INDEX_MYDAILY_FRAGMENT:
+                    title = getString(R.string.menu_item_title_mydaily);
+                    dailyToolbarLayout.initToolbar(title, null, false);
+                    break;
 
-            case MainFragmentManager.INDEX_INFORMATION_FRAGMENT:
-                title = getString(R.string.menu_item_title_information);
-                dailyToolbarLayout.initToolbar(title, null, false);
-                break;
+                case MainFragmentManager.INDEX_INFORMATION_FRAGMENT:
+                    title = getString(R.string.menu_item_title_information);
+                    dailyToolbarLayout.initToolbar(title, null, false);
+                    break;
 
-            default:
-                dailyToolbarLayout.initToolbar(title, null, false);
-                break;
+                default:
+                    dailyToolbarLayout.initToolbar(title, null, false);
+                    break;
+            }
         }
     }
 
@@ -119,6 +125,9 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
             if (mMainFragmentManager != null)
             {
                 mMainFragmentManager.select(mMainFragmentManager.getLastIndexFragment(), true);
+            } else
+            {
+                Util.restartApp(baseActivity);
             }
         }
     }

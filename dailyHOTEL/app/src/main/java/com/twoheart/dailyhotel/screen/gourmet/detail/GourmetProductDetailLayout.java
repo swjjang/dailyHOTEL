@@ -142,7 +142,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 베네핏
         View benefitLayout = mNestedScrollView.findViewById(R.id.benefitLayout);
 
-        if (Util.isTextEmpty(gourmetProduct.worth) == true)
+        if (Util.isTextEmpty(gourmetProduct.menuBenefit) == true)
         {
             benefitLayout.setVisibility(View.GONE);
         } else
@@ -150,7 +150,7 @@ public class GourmetProductDetailLayout extends BaseLayout
             benefitLayout.setVisibility(View.VISIBLE);
 
             TextView benefitTextView = (TextView) benefitLayout.findViewById(R.id.benefitTextView);
-            benefitTextView.setText(gourmetProduct.worth);
+            benefitTextView.setText(gourmetProduct.menuBenefit);
         }
 
         // 이용시간
@@ -178,7 +178,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 확인사항
         View checkLayout = mNestedScrollView.findViewById(R.id.checkLayout);
 
-        if (Util.isTextEmpty(gourmetProduct.checkList) == true)
+        if (Util.isTextEmpty(gourmetProduct.needToKnow) == true)
         {
             checkLayout.setVisibility(View.GONE);
         } else
@@ -186,7 +186,7 @@ public class GourmetProductDetailLayout extends BaseLayout
             checkLayout.setVisibility(View.VISIBLE);
 
             TextView checkTextView = (TextView) checkLayout.findViewById(R.id.checkTextView);
-            checkTextView.setText(gourmetProduct.checkList);
+            checkTextView.setText(gourmetProduct.needToKnow);
         }
 
         if (benefitLayout.getVisibility() == View.GONE && timeLayout.getVisibility() == View.GONE && checkLayout.getVisibility() == View.GONE)

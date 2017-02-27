@@ -33,10 +33,10 @@ public class GourmetProduct implements Parcelable
     public int discountPrice;
 
     @JsonField
-    public String worth;
+    public String menuBenefit;
 
     @JsonField
-    public String checkList;
+    public String needToKnow;
 
     //    @JsonField
     //    public String startEatingTime;
@@ -67,11 +67,9 @@ public class GourmetProduct implements Parcelable
     public String menuSummary;
 
     @JsonField
-    public String menuDetail;
+    public List<String> menuDetail;
 
     private int mDefaultImageIndex;
-
-    private List<String> mMenuDetailList;
 
     public GourmetProduct()
     {
@@ -96,26 +94,6 @@ public class GourmetProduct implements Parcelable
                     mDefaultImageIndex = i;
                     break;
                 }
-            }
-        }
-
-        if (Util.isTextEmpty(menuDetail) == false)
-        {
-            try
-            {
-                JSONArray jsonArray = new JSONArray(menuDetail);
-
-                int length = jsonArray.length();
-
-                mMenuDetailList = new ArrayList<>(length);
-
-                for (int i = 0; i < length; i++)
-                {
-                    mMenuDetailList.add(jsonArray.getString(i));
-                }
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
             }
         }
 
@@ -153,7 +131,7 @@ public class GourmetProduct implements Parcelable
 
     public List<String> getMenuDetailList()
     {
-        return mMenuDetailList;
+        return menuDetail;
     }
 
     @Override
@@ -164,8 +142,8 @@ public class GourmetProduct implements Parcelable
         dest.writeString(ticketName);
         dest.writeInt(price);
         dest.writeInt(discountPrice);
-        dest.writeString(worth);
-        dest.writeString(checkList);
+        dest.writeString(menuBenefit);
+        dest.writeString(needToKnow);
         //        dest.writeString(startEatingTime);
         //        dest.writeString(endEatingTime);
         //        dest.writeInt(timeInterval);
@@ -175,8 +153,7 @@ public class GourmetProduct implements Parcelable
         //        dest.writeString(expiryTime);
         dest.writeTypedList(images);
         dest.writeString(menuSummary);
-        dest.writeString(menuDetail);
-        dest.writeStringList(mMenuDetailList);
+        dest.writeStringList(menuDetail);
     }
 
     protected void readFromParcel(Parcel in)
@@ -186,8 +163,8 @@ public class GourmetProduct implements Parcelable
         ticketName = in.readString();
         price = in.readInt();
         discountPrice = in.readInt();
-        worth = in.readString();
-        checkList = in.readString();
+        menuBenefit = in.readString();
+        needToKnow = in.readString();
         //        startEatingTime = in.readString();
         //        endEatingTime = in.readString();
         //        timeInterval = in.readInt();
@@ -197,8 +174,7 @@ public class GourmetProduct implements Parcelable
         //        expiryTime = in.readString();
         images = in.createTypedArrayList(ProductImageInformation.CREATOR);
         menuSummary = in.readString();
-        menuDetail = in.readString();
-        mMenuDetailList = in.createStringArrayList();
+        menuDetail = in.createStringArrayList();
     }
 
     @Override

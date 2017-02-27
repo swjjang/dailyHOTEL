@@ -181,7 +181,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
         productInformationViewHolder.contentsList.removeAllViews();
 
-        if (Util.isTextEmpty(gourmetProduct.worth, gourmetProduct.checkList) == true)
+        if (Util.isTextEmpty(gourmetProduct.menuBenefit, gourmetProduct.needToKnow) == true)
         {
             productInformationViewHolder.contentsList.setVisibility(View.GONE);
         } else
@@ -190,15 +190,15 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         // 베네핏
-        if (Util.isTextEmpty(gourmetProduct.worth) == false)
+        if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
         {
-            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.worth, R.drawable.ic_detail_item_02_benefit, false);
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
         }
 
         // 확인 사항
-        if (Util.isTextEmpty(gourmetProduct.checkList) == false)
+        if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
         {
-            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.checkList, R.drawable.ic_detail_item_01_info, true);
+            addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
         }
 
         String price = Util.getPriceFormat(mContext, gourmetProduct.price, false);
