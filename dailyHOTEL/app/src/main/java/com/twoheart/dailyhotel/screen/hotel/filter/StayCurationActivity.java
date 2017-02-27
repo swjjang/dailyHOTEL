@@ -399,6 +399,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
             resetLayout(mBedTypeLayout);
             resetLayout(mAmenitiesGridLayout);
+            resetLayout(mInRoomAmenitiesGridLayout);
         }
 
         requestUpdateResultDelayed();

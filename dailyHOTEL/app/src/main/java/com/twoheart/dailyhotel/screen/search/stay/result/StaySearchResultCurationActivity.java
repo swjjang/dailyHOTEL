@@ -146,6 +146,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
 
         resetLayout(mBedTypeLayout);
         resetLayout(mAmenitiesGridLayout);
+        resetLayout(mInRoomAmenitiesGridLayout);
     }
 
     @Override
