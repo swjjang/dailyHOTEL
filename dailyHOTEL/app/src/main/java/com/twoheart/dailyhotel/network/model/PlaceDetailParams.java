@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 27..
  */
 @JsonObject
-public abstract class PlaceDetailParams implements Parcelable
+public abstract class PlaceDetailParams<E> implements Parcelable
 {
     @JsonField(name = "idx")
     public int index;
@@ -76,6 +76,7 @@ public abstract class PlaceDetailParams implements Parcelable
     protected ArrayList<ImageInformation> mImageList;
     protected ArrayList<DetailInformation> mDetailList;
 
+    public abstract List<E> getProductList();
 
     public List<ImageInformation> getImageList()
     {

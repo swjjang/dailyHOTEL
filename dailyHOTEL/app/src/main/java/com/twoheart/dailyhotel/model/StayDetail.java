@@ -396,16 +396,6 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
             return mImageResId;
         }
 
-        public void setNameResId(int nameResId)
-        {
-            mNameResId = nameResId;
-        }
-
-        public void setImageResId(int imageResId)
-        {
-            mImageResId = imageResId;
-        }
-
         @Override
         public int describeContents()
         {
@@ -415,9 +405,7 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
         @Override
         public void writeToParcel(Parcel dest, int flags)
         {
-            dest.writeInt(ordinal());
-            dest.writeInt(mNameResId);
-            dest.writeInt(mImageResId);
+            dest.writeString(name());
         }
 
         public static final Parcelable.Creator<Pictogram> CREATOR = new Creator<Pictogram>()
@@ -425,10 +413,7 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
             @Override
             public Pictogram createFromParcel(Parcel in)
             {
-                Pictogram pictogram = Pictogram.values()[in.readInt()];
-                pictogram.setNameResId(in.readInt());
-                pictogram.setImageResId(in.readInt());
-                return pictogram;
+                return Pictogram.valueOf(in.readString());
             }
 
             @Override

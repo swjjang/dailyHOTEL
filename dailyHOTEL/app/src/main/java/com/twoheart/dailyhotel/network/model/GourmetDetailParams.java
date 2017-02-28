@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonObject
-public class GourmetDetailParams extends PlaceDetailParams
+public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
 {
     //    @JsonField(name = "idx")
     //    public int index;
@@ -244,6 +244,7 @@ public class GourmetDetailParams extends PlaceDetailParams
         return benefitContents;
     }
 
+    @Override
     public List<GourmetProduct> getProductList()
     {
         return tickets;
@@ -262,6 +263,7 @@ public class GourmetDetailParams extends PlaceDetailParams
         dest.writeInt(groupBooking == true ? 1 : 0);
         dest.writeInt(corkage == true ? 1 : 0);
         dest.writeTypedList(tickets);
+        dest.writeTypedList(mPictogramList);
     }
 
     protected void readFromParcel(Parcel in)
@@ -276,6 +278,7 @@ public class GourmetDetailParams extends PlaceDetailParams
         groupBooking = in.readInt() == 1;
         corkage = in.readInt() == 1;
         tickets = in.createTypedArrayList(GourmetProduct.CREATOR);
+        mPictogramList = in.createTypedArrayList(GourmetDetail.Pictogram.CREATOR);
     }
 
     @Override

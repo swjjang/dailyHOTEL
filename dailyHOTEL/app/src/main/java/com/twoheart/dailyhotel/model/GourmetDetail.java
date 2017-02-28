@@ -312,7 +312,7 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
         }
     };
 
-    public enum Pictogram
+    public enum Pictogram implements Parcelable
     {
         parking(R.string.label_parking, R.drawable.ic_detail_facilities_01_parking),
         valet(R.string.label_valet_available, R.drawable.ic_detail_facilities_06_valet),
@@ -322,27 +322,54 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
         corkage(R.string.label_corkage, R.drawable.ic_detail_facilities_10_corkage),
         none(0, 0);
 
-        private int nameResId;
-        private int imageResId;
+        private int mNameResId;
+        private int mImageResId;
 
         Pictogram(int nameResId, int imageResId)
         {
-            this.nameResId = nameResId;
-            this.imageResId = imageResId;
+            this.mNameResId = nameResId;
+            this.mImageResId = imageResId;
         }
 
         public String getName(Context context)
         {
-            if (nameResId <= 0)
+            if (mNameResId <= 0)
             {
                 return "";
             }
-            return context.getString(nameResId);
+            return context.getString(mNameResId);
         }
 
         public int getImageResId()
         {
-            return imageResId;
+            return mImageResId;
         }
+
+        @Override
+        public int describeContents()
+        {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags)
+        {
+            dest.writeString(name());
+        }
+
+        public static final Parcelable.Creator<Pictogram> CREATOR = new Creator<Pictogram>()
+        {
+            @Override
+            public Pictogram createFromParcel(Parcel in)
+            {
+                return Pictogram.valueOf(in.readString());
+            }
+
+            @Override
+            public Pictogram[] newArray(int size)
+            {
+                return new Pictogram[size];
+            }
+        };
     }
 }

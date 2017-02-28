@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 20..
  */
 @JsonObject
-public class StayDetailParams extends PlaceDetailParams
+public class StayDetailParams extends PlaceDetailParams<StayProduct>
 {
     //    @JsonField(name = "idx")
     //    public int index;
@@ -309,6 +309,7 @@ public class StayDetailParams extends PlaceDetailParams
         return benefitContents;
     }
 
+    @Override
     public List<StayProduct> getProductList()
     {
         return rooms;
