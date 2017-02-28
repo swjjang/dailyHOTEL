@@ -40,7 +40,7 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:layout_marginTop="16dp">-->
 
-    <com.twoheart.dailyhotel.widget.DailySpinner
+    <com.twoheart.dailyhotel.widget.DailyHintSpinner
         android:id="@+id/mainCategorySpinner"
         android:layout_width="match_parent"
         android:layout_height="38dp"
@@ -74,7 +74,7 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:layout_marginTop="16dp">-->
 
-    <com.twoheart.dailyhotel.widget.DailySpinner
+    <com.twoheart.dailyhotel.widget.DailyHintSpinner
         android:id="@+id/subCategorySpinner"
         android:layout_width="match_parent"
         android:layout_height="38dp"
@@ -121,7 +121,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/selector_dialog_button02"
                 android:gravity="center"
-                android:text="@string/dialog_btn_text_no"
+                android:text="@string/dialog_btn_text_cancel"
                 android:textColor="@drawable/selector_dialog_text_color02"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
@@ -137,7 +137,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/selector_dialog_button01"
                 android:gravity="center"
-                android:text="@string/dialog_btn_text_yes"
+                android:text="@string/label_consulting"
                 android:textColor="@drawable/selector_dialog_text_color01"
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>

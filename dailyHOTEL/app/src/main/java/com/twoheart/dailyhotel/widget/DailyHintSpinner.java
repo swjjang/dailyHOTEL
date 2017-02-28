@@ -14,26 +14,26 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class DailySpinner extends Spinner
+public class DailyHintSpinner extends Spinner
 {
     private int mResourceId;
 
-    public DailySpinner(Context context)
+    public DailyHintSpinner(Context context)
     {
         super(context);
     }
 
-    public DailySpinner(Context context, AttributeSet attrs)
+    public DailyHintSpinner(Context context, AttributeSet attrs)
     {
         super(context, attrs);
     }
 
-    public DailySpinner(Context context, AttributeSet attrs, int defStyle)
+    public DailyHintSpinner(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
     }
 
-    public void setLayout(int resourceId)
+    public void setHintLayout(int resourceId)
     {
         mResourceId = resourceId;
     }

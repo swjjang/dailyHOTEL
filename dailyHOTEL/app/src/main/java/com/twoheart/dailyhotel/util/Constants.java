@@ -249,6 +249,7 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_GOURMET = 59;
     int CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST = 60;
     int CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL = 61;
+    int CODE_REQUEST_ACTIVITY_HAPPY_TALK = 62;
 
 
     // Android Activity의 Result Code들이다.
