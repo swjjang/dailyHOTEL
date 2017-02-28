@@ -675,6 +675,8 @@ public class AnalyticsManager
         public static final String TERMS_AND_CONDITION = "terms_and_condition";
         public static final String MENU = "menu";
         public static final String HOME = "home";
+
+        public static final String GOURMET_MENU_DETAIL = "gourmet_menu_detail";
     }
 
     public static class Action
@@ -888,6 +890,9 @@ public class AnalyticsManager
         public static final String HOME_BLOCK_SHOW = "home_block_show";
         public static final String MESSAGE_CLICK = "message_click";
         public static final String MESSAGE_CLOSE = "message_close";
+
+        public static final String GOURMET_MENU_DETAIL_CLICK = "gourmet_menu_detail_click";
+        public static final String GOURMET_MENU_BACK_CLICK = "gourmet_menu_back_click";
     }
 
     public static class Category
@@ -1085,6 +1090,9 @@ public class AnalyticsManager
         public static final String RECENTVIEW = "recentview";
         public static final String WISHLIST_RECENTVIEW = "wishlist_recentview";
         public static final String NONE = "none";
+
+        public static final String MENU_LIST = "menu_list";
+        public static final String MENU_DETAIL = "menu_detail";
     }
 
     public static class UserType
