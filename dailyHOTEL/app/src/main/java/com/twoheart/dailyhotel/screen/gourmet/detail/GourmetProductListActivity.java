@@ -89,7 +89,7 @@ public class GourmetProductListActivity extends BaseActivity
             int size = gourmetProductList.size();
             for (int i = 0; i < size; i++)
             {
-                if (gourmetProductList.get(i).saleIdx == productIndex)
+                if (gourmetProductList.get(i).index == productIndex)
                 {
                     Intent intentProductDetail = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
                         , mSaleTime, mGourmetDetail, i, mProvince, mArea);
