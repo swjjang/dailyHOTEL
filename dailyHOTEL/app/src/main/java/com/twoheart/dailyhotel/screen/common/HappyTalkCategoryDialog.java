@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -23,6 +21,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailySpinner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,12 +39,10 @@ public class HappyTalkCategoryDialog extends BaseActivity
     private LinkedHashMap<String, String> mMainCategoryMap;
     private LinkedHashMap<String, List<Pair<String, String>>> mSubCategoryMap;
 
-    private Spinner mMainCategorySpinner;
-    private Spinner mSubCategorySpinner;
+    private DailySpinner mMainCategorySpinner;
+    private DailySpinner mSubCategorySpinner;
 
-    private CategoryArrayAdapter mEmptyMainCategoryArrayAdapter;
     private CategoryArrayAdapter mMainCategoryArrayAdapter;
-    private CategoryArrayAdapter mEmptySubCategoryArrayAdapter;
     private CategoryArrayAdapter mSubCategoryArrayAdapter;
 
     public static Intent newInstance(Context context)
@@ -108,7 +105,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
                         {
                             JSONObject jsonObjectData = response.body();
 
-                            if("success".equalsIgnoreCase(jsonObjectData.getString("code")) == true)
+                            if ("success".equalsIgnoreCase(jsonObjectData.getString("code")) == true)
                             {
                                 JSONObject jsonObjectResults = jsonObjectData.getJSONObject("results");
                                 JSONArray jsonArray = jsonObjectResults.getJSONArray("assign");
@@ -121,7 +118,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
                                 initCategoryLayout();
                             }
 
-                        }catch (Exception e)
+                        } catch (Exception e)
                         {
                             ExLog.d(e.toString());
                         }
@@ -149,63 +146,63 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
     private void initCategoryLayout()
     {
-        mMainCategorySpinner = (Spinner) findViewById(R.id.mainCategorySpinner);
-        mSubCategorySpinner = (Spinner) findViewById(R.id.subCategorySpinner);
+        mMainCategorySpinner = (DailySpinner) findViewById(R.id.mainCategorySpinner);
+        mSubCategorySpinner = (DailySpinner) findViewById(R.id.subCategorySpinner);
 
-        ArrayList<String> mainCategoryList = new ArrayList<>();
-        mainCategoryList.add(getString(R.string.label_select_main_category));
-        mEmptyMainCategoryArrayAdapter = new CategoryArrayAdapter(this, R.layout.list_row_coupon_spinner, mainCategoryList);
+        mMainCategorySpinner.setLayout(R.layout.list_row_coupon_spinner);
+        mSubCategorySpinner.setLayout(R.layout.list_row_coupon_spinner);
+
         mMainCategoryArrayAdapter = new CategoryArrayAdapter(this, R.layout.list_row_coupon_spinner, new ArrayList<>(mMainCategoryMap.values()));
+        mMainCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        mMainCategorySpinner.setAdapter(mMainCategoryArrayAdapter);
+        mMainCategorySpinner.setLayout(R.layout.list_row_coupon_spinner);
 
         ArrayList<String> subCategoryList = new ArrayList<>();
-        subCategoryList.add(getString(R.string.label_select_sub_category));
-        mEmptySubCategoryArrayAdapter = new CategoryArrayAdapter(this, R.layout.list_row_coupon_spinner, subCategoryList);
-
-        mMainCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        subCategoryList.add(0, getString(R.string.label_select_sub_category));
+        mSubCategoryArrayAdapter = new CategoryArrayAdapter(HappyTalkCategoryDialog.this, R.layout.list_row_coupon_spinner, subCategoryList);
         mSubCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
-
-        mMainCategorySpinner.setAdapter(mEmptyMainCategoryArrayAdapter);
-        mSubCategorySpinner.setAdapter(mEmptySubCategoryArrayAdapter);
-
-        mMainCategorySpinner.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mMainCategorySpinner.setAdapter(mMainCategoryArrayAdapter);
-                mMainCategorySpinner.performClick();
-            }
-        });
-
+        mSubCategorySpinner.setAdapter(mSubCategoryArrayAdapter);
+        mSubCategorySpinner.setEnabled(false);
 
         mMainCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
+                if (mMainCategoryArrayAdapter.getSelectedPosition() == position)
+                {
+                    return;
+                }
 
+                mMainCategoryArrayAdapter.setSelectedPosition(position);
+
+                ArrayList<String> setArrayList = new ArrayList<>(mMainCategoryMap.keySet());
+                List<Pair<String, String>> pairList = mSubCategoryMap.get(setArrayList.get(position));
+
+                mSubCategoryArrayAdapter = new CategoryArrayAdapter(HappyTalkCategoryDialog.this, R.layout.list_row_coupon_spinner, new ArrayList(pairList));
+                mSubCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+                mSubCategorySpinner.setAdapter(mSubCategoryArrayAdapter);
+                mSubCategorySpinner.setEnabled(true);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent)
             {
-
             }
         });
 
-        mSubCategorySpinner.setEnabled(false);
         mSubCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
 
+                mSubCategoryArrayAdapter.setSelectedPosition(position);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent)
             {
-
             }
         });
     }
@@ -255,19 +252,44 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
     }
 
-    private class CategoryArrayAdapter extends ArrayAdapter<String>
+    private class CategoryArrayAdapter extends ArrayAdapter
     {
         private int mSelectedPosition;
-        private List mArrayList;
 
         public CategoryArrayAdapter(Context context, int resourceId, ArrayList arrayList)
         {
             super(context, resourceId, arrayList);
+
+            mSelectedPosition = -1;
         }
 
-        public void setSelection(int position)
+        private void setSelectedPosition(int position)
         {
             mSelectedPosition = position;
+        }
+
+        private int getSelectedPosition()
+        {
+            return mSelectedPosition;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            View view = super.getView(position, convertView, parent);
+
+            Object item = getItem(position);
+
+            if (item instanceof Pair)
+            {
+                Pair<String, String> pair = (Pair<String, String>) item;
+
+                TextView textView = (TextView) view;
+                textView.setText(pair.second);
+            }
+
+            return view;
         }
 
         @Override
@@ -275,18 +297,18 @@ public class HappyTalkCategoryDialog extends BaseActivity
         {
             View view = super.getDropDownView(position, convertView, parent);
 
-//            if (convertView == null)
-//            {
-//                view = LayoutInflater.from(HappyTalkCategoryDialog.this).inflate(R.layout.list_row_coupon_spinner, parent, false);
-//            } else
-//            {
-//                view = convertView;
-//            }
-
             TextView textView = (TextView) view;
-            String categoryName = getItem(position);
+            Object item = getItem(position);
 
-            textView.setText(categoryName);
+            if (item instanceof String)
+            {
+                textView.setText((String) item);
+            } else if (item instanceof Pair)
+            {
+                Pair<String, String> pair = (Pair<String, String>) item;
+                textView.setText(pair.second);
+            }
+
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
             textView.setSelected(mSelectedPosition == position);
 
