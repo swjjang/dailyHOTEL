@@ -90,7 +90,7 @@ public class StayDetailParams extends PlaceDetailParams implements Parcelable
     public boolean sauna;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "kidsPlayroom")
     public boolean kidsPlayRoom;
 //
 //    @JsonField
