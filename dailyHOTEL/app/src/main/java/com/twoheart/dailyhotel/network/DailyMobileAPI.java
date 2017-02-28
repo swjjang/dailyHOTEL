@@ -79,6 +79,17 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
+    public void requestHappyTalkCategory(String tag, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://customer.happytalk.io/public_v1/chat_v4/get_category/?site_id="//
+            : "MTg0JDE0NSQxNzYkNTIkMTU0JDg2JDE1MSQxNjckMTI5JDIwMSQ0NyQ5NCQ5MyQxNzgkMTQ3JDk1JA==$QzhGNjA2QTU5QkU1RkVFNUFFMkY5RkYxMzgxMzlCMjg3NDhQGMTEyLQjUxMkMyRTIzN0U4NTc2NTU1RTk3RkU5MQTI5MzCUNCzODFBOEVCNUVGQ0MwQTUxRDUyRDc0NDk2NzcY4MTREQTczMkJENLkU4QEkEyKQUVFZMTNEMUU3RkKNEN0FBPQjdGMUZQFNjFGQ0U2BQjYxRDFGFMjNCQkE2RjU4N0UwQTA1Qw==$";
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHappyTalkCategory(Crypto.getUrlDecoderEx(URL) + "4000000120");
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    @Override
     public void requestCommonVersion(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/version"//

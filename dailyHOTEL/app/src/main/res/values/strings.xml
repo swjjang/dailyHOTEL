@@ -1161,7 +1161,9 @@
     <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
 
-
+    <!-- Happy Talk -->
+    <string name="label_select_main_category">대분류 항목 선택</string>
+    <string name="label_select_sub_category">중분류 항목 선택</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

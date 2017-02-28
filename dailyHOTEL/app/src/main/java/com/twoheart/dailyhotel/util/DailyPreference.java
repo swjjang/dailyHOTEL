@@ -79,6 +79,7 @@ public class DailyPreference
 
     private static final String KEY_CALENDAR_HOLIDAYS = "1012";
     private static final String KEY_CHECK_CALENDAR_HOLIDAYS_STARTDAY = "1013";
+    private static final String KEY_HAPPY_TALK_CATEGORY = "1014"; // 해피톡 상담유형 저장하기
 
     private static final String KEY_BACKGROUND_APP_TIME = "2000";
 
@@ -785,6 +786,16 @@ public class DailyPreference
     public String getCheckCalendarHolidays()
     {
         return getValue(mPreferences, KEY_CHECK_CALENDAR_HOLIDAYS_STARTDAY, null);
+    }
+
+    public void setHappyTalkCategory(String value)
+    {
+        setValue(mEditor, KEY_HAPPY_TALK_CATEGORY, value);
+    }
+
+    public String getHappyTalkCategory()
+    {
+        return getValue(mPreferences, KEY_HAPPY_TALK_CATEGORY, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
