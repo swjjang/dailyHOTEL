@@ -82,7 +82,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         // right view 생성
         int size = getItemCount();
-        boolean isLast = size > 0 ? (position == size - 1) : true;
+        boolean isLast = size <= 0 || (position == size - 1);
 
         ViewGroup.LayoutParams rightViewParam = holder.rightView.getLayoutParams();
         int rightViewWidth = Util.dpToPx(mContext, isLast == true ? 15 : 12);

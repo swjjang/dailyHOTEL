@@ -206,13 +206,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
 
         String callingClassName = callingActivity.getClassName();
-        if (checkClassName.equalsIgnoreCase(callingClassName) == true)
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
+        return checkClassName.equalsIgnoreCase(callingClassName) == true;
     }
 
     @Override

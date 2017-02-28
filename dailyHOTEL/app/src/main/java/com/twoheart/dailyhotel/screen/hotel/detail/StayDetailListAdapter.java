@@ -382,7 +382,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
         List<StayDetail.Pictogram> pictogramList = stayDetail.getPictogramList();
 
-        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT ? true : false;
+        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT;
 
         for (StayDetail.Pictogram pictogram : pictogramList)
         {

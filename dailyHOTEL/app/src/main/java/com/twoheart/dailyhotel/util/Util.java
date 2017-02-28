@@ -1183,7 +1183,7 @@ public class Util implements Constants
             {
                 Uri marketUri = null;
 
-                boolean isCheck = isSktNetwork(activity) ? false : true;
+                boolean isCheck = isSktNetwork(activity) == false;
 
                 if (downUrlList.size() > 1)
                 {
@@ -1657,12 +1657,8 @@ public class Util implements Constants
 
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-        if ("SKTelecom".equalsIgnoreCase(telephonyManager.getNetworkOperatorName()) == false)
-        {
-            return false;
-        }
+        return "SKTelecom".equalsIgnoreCase(telephonyManager.getNetworkOperatorName()) != false;
 
-        return true;
     }
 
     public static boolean hasNoticeNewList(Context context)
@@ -1672,7 +1668,7 @@ public class Util implements Constants
         return (Util.isTextEmpty(value) == false);
     }
 
-    public static ArrayList<Notice> chekckNoticeNewList(Context context, ArrayList<Notice> noticeList)
+    public static ArrayList<Notice> checkNoticeNewList(Context context, ArrayList<Notice> noticeList)
     {
         if (context == null || noticeList == null || noticeList.size() == 0)
         {

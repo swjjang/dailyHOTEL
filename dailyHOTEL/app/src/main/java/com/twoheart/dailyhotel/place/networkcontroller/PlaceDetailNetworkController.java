@@ -173,7 +173,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
                     JSONObject responseJSONObject = response.body();
 
                     int msgCode = responseJSONObject.getInt("msgCode");
-                    boolean isSuccess = msgCode == 100 ? true : false;
+                    boolean isSuccess = msgCode == 100;
 
                     String message = null;
                     if (responseJSONObject.has("msg") == true)
@@ -211,7 +211,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
                     JSONObject responseJSONObject = response.body();
 
                     int msgCode = responseJSONObject.getInt("msgCode");
-                    boolean isSuccess = msgCode == 100 ? true : false;
+                    boolean isSuccess = msgCode == 100;
 
                     String message = null;
                     if (responseJSONObject.has("msg") == true)

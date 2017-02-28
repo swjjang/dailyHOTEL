@@ -145,13 +145,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         gourmetPaymentInformation.entryPosition = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         gourmetPaymentInformation.isDailyChoice = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
 
-        if (gourmetPaymentInformation.getTicket() == null)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return gourmetPaymentInformation.getTicket() != null;
     }
 
     @Override

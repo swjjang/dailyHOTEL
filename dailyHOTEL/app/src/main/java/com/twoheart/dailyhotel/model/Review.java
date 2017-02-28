@@ -134,7 +134,7 @@ public class Review implements Parcelable
         mReviewItem = in.readParcelable(ReviewItem.class.getClassLoader());
         mReviewPickQuestionList = in.readArrayList(ReviewPickQuestion.class.getClassLoader());
         mReviewScoreQuestionList = in.readArrayList(ReviewScoreQuestion.class.getClassLoader());
-        requiredCommentReview = in.readInt() == 1 ? true : false;
+        requiredCommentReview = in.readInt() == 1;
     }
 
     @Override

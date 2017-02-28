@@ -52,7 +52,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
                     JSONObject responseJSONObject = response.body();
 
                     int msgCode = responseJSONObject.getInt("msgCode");
-                    boolean isSuccess = msgCode == 100 ? true : false;
+                    boolean isSuccess = msgCode == 100;
                     String message = responseJSONObject.getString("msg");
 
                     ((OnNetworkControllerListener) mOnNetworkControllerListener).onRegisterCoupon(isSuccess, msgCode, message);

@@ -86,7 +86,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     String mWarningDialogMessage;
     private Province mProvince;
     private String mArea; // Analytics용 소지역
-    private String mPlaceName;
+    String mPlaceName;
     private String mCategoryCode;
 
     // GA용 스크린 정의
@@ -181,13 +181,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         stayPaymentInformation.grade = grade;
 
-        if (stayPaymentInformation.getSaleRoomInformation() == null)
-        {
-            return false;
-        } else
-        {
-            return true;
-        }
+        return stayPaymentInformation.getSaleRoomInformation() != null;
     }
 
     @Override

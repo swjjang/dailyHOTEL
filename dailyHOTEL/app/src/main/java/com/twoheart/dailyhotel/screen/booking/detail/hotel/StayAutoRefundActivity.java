@@ -170,7 +170,7 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         //        ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
-        boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
+        boolean isInMultiWindowMode = Util.isOverAPI24() == true && isInMultiWindowMode();
         setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
 
@@ -483,7 +483,7 @@ public class StayAutoRefundActivity extends BaseActivity
                 orientation = Configuration.ORIENTATION_PORTRAIT;
             }
 
-            boolean isInMultiWindowMode = Util.isOverAPI24() == true ? isInMultiWindowMode() : false;
+            boolean isInMultiWindowMode = Util.isOverAPI24() == true && isInMultiWindowMode();
             setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
 
             WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);

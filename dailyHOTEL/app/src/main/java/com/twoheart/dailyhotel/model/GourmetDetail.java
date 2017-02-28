@@ -284,12 +284,12 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
     protected void readFromParcel(Parcel in)
     {
         mGourmetDetailParams = in.readParcelable(GourmetDetailParams.class.getClassLoader());
-        hasCoupon = in.readInt() == 1 ? true : false;
+        hasCoupon = in.readInt() == 1;
         index = in.readInt();
         listCount = in.readInt();
         entryPosition = in.readInt();
         isShowOriginalPrice = in.readString();
-        isDailyChoice = in.readInt() == 1 ? true : false;
+        isDailyChoice = in.readInt() == 1;
     }
 
     @Override

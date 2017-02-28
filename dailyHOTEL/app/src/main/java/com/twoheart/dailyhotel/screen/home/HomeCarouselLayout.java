@@ -177,7 +177,7 @@ public class HomeCarouselLayout extends LinearLayout
             return false;
         }
 
-        return mRecyclerAdapter.getItemCount() > 0 ? true : false;
+        return mRecyclerAdapter.getItemCount() > 0;
     }
 
     public HomePlace getItem(int position)

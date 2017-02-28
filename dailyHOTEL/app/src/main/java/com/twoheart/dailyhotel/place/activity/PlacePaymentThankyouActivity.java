@@ -280,8 +280,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         @Override
         public void onUserTracking(int hotelPaymentCompletedCount, int gourmetPaymentCompletedCount)
         {
-            boolean isFirstStayPurchase = hotelPaymentCompletedCount == 1 ? true : false;
-            boolean isFirstGourmetPurchase = gourmetPaymentCompletedCount == 1 ? true : false;
+            boolean isFirstStayPurchase = hotelPaymentCompletedCount == 1;
+            boolean isFirstGourmetPurchase = gourmetPaymentCompletedCount == 1;
             boolean isCouponUsed = false;
 
             if (mParams != null && mParams.containsKey(AnalyticsManager.KeyType.COUPON_REDEEM) == true)

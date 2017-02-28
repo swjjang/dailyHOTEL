@@ -308,7 +308,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * 주소 및 맵
      *
      * @param view
-     * @param placeDetail
+     * @param GourmetDetail
      * @return
      */
     private View getAddressView(final View view, GourmetDetail gourmetDetail)
@@ -388,7 +388,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         List<GourmetDetail.Pictogram> pictogramList = gourmetDetail.getPictogramList();
 
-        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT ? true : false;
+        boolean isSingleLine = pictogramList == null || pictogramList.size() <= GRID_COLUMN_COUNT;
 
         for (GourmetDetail.Pictogram pictogram : pictogramList)
         {

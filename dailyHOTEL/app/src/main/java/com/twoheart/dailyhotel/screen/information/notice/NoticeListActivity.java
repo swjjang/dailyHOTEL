@@ -225,7 +225,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
                                 noticeList.add(notice);
                             }
 
-                            noticeList = Util.chekckNoticeNewList(NoticeListActivity.this, noticeList);
+                            noticeList = Util.checkNoticeNewList(NoticeListActivity.this, noticeList);
 
                             mNoticeListAdapter.addAll(noticeList);
                             mListView.setAdapter(mNoticeListAdapter);

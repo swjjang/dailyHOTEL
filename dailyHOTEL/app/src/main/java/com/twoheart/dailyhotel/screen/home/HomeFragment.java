@@ -114,11 +114,6 @@ public class HomeFragment extends BaseFragment
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
-                } finally
-                {
-                    DailyDeepLink.getInstance().clear();
-                    return;
-
                 }
             } else if (DailyDeepLink.getInstance().isHotelView() == true)
             {

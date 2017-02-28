@@ -70,7 +70,7 @@ public class Event implements Parcelable
     {
         defaultImageUrl = in.readString();
         endedAt = in.readString();
-        exposeHome = in.readInt() == 1 ? true : false;
+        exposeHome = in.readInt() == 1;
         linkUrl = in.readString();
         lowResolutionImageUrl = in.readString();
         startedAt = in.readString();

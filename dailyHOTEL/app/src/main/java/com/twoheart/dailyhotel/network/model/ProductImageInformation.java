@@ -53,7 +53,7 @@ public class ProductImageInformation implements Parcelable
         index = in.readInt();
         imageDescription = in.readString();
         imageUrl = in.readString();
-        isPrimary = in.readInt() == 1 ? true : false;
+        isPrimary = in.readInt() == 1;
         restaurantTicketIdx = in.readInt();
         seq = in.readInt();
     }

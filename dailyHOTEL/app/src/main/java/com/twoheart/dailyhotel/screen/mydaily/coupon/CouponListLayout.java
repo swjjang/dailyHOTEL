@@ -296,7 +296,7 @@ public class CouponListLayout extends BaseLayout
             {
                 TextView textView = (TextView) view;
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                textView.setSelected(mSelectedPosition == position ? true : false);
+                textView.setSelected(mSelectedPosition == position);
 
                 if (mSelectedPosition == position)
                 {

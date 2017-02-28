@@ -269,12 +269,12 @@ public class GourmetDetailParams extends PlaceDetailParams
         super.readFromParcel(in);
 
         categorySub = in.readString();
-        parking = in.readInt() == 1 ? true : false;
-        valet = in.readInt() == 1 ? true : false;
-        babySeat = in.readInt() == 1 ? true : false;
-        privateRoom = in.readInt() == 1 ? true : false;
-        groupBooking = in.readInt() == 1 ? true : false;
-        corkage = in.readInt() == 1 ? true : false;
+        parking = in.readInt() == 1;
+        valet = in.readInt() == 1;
+        babySeat = in.readInt() == 1;
+        privateRoom = in.readInt() == 1;
+        groupBooking = in.readInt() == 1;
+        corkage = in.readInt() == 1;
         tickets = in.createTypedArrayList(GourmetProduct.CREATOR);
     }
 

@@ -136,7 +136,7 @@ public class WriteReviewCommentLayout extends BaseLayout
         }
 
         int remainder = DEFAULT_TEXT_COUNT - text.length();
-        mCompleteView.setEnabled(remainder <= 0 ? true : false);
+        mCompleteView.setEnabled(remainder <= 0);
         mCompleteView.setOnClickListener(remainder <= 0 ? new View.OnClickListener()
         {
             @Override
@@ -381,7 +381,7 @@ public class WriteReviewCommentLayout extends BaseLayout
                     }
                 }
 
-                setToolbarTitleVisibility((mBodyTitleBottom <= t ? true : false), true);
+                setToolbarTitleVisibility((mBodyTitleBottom <= t), true);
             }
         }
     };

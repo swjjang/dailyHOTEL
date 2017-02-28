@@ -137,7 +137,7 @@ public class AdjustManager extends BaseAnalyticsManager
         config.setSendInBackground(true);
 
         // enable event buffering
-        config.setEventBufferingEnabled(DEBUG == true ? false : true);
+        config.setEventBufferingEnabled(DEBUG != true);
 
         Adjust.onCreate(config);
 
