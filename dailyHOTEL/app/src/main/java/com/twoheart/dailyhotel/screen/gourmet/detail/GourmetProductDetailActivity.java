@@ -88,11 +88,28 @@ public class GourmetProductDetailActivity extends BaseActivity
     }
 
     @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.GOURMET_MENU_DETAIL, null);
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+            AnalyticsManager.Action.GOURMET_MENU_BACK_CLICK, AnalyticsManager.Label.MENU_DETAIL, null);
+
+        super.onBackPressed();
     }
 
     @Override

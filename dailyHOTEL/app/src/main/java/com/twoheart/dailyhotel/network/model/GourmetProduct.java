@@ -6,19 +6,15 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONArray;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonObject
 public class GourmetProduct implements Parcelable
 {
-    //    @JsonField(name = "idx")
-    //    public int index;
+    @JsonField(name = "idx")
+    public int index;
 
     @JsonField
     public int saleIdx;
@@ -137,7 +133,7 @@ public class GourmetProduct implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        //        dest.writeInt(index);
+        dest.writeInt(index);
         dest.writeInt(saleIdx);
         dest.writeString(ticketName);
         dest.writeInt(price);
@@ -158,7 +154,7 @@ public class GourmetProduct implements Parcelable
 
     protected void readFromParcel(Parcel in)
     {
-        //        index = in.readInt();
+        index = in.readInt();
         saleIdx = in.readInt();
         ticketName = in.readString();
         price = in.readInt();

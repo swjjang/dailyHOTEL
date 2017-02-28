@@ -160,6 +160,15 @@ public class GourmetProductListActivity extends BaseActivity
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+            AnalyticsManager.Action.GOURMET_MENU_BACK_CLICK, AnalyticsManager.Label.MENU_LIST, null);
+
+        super.onBackPressed();
+    }
+
     private void moveToUpdateUserPhoneNumber(Customer user, EditProfilePhoneActivity.Type type, String phoneNumber)
     {
         Intent intent = EditProfilePhoneActivity.newInstance(this, user.getUserIdx(), type, phoneNumber);
@@ -305,7 +314,7 @@ public class GourmetProductListActivity extends BaseActivity
         @Override
         public void finish()
         {
-            GourmetProductListActivity.this.finish();
+            GourmetProductListActivity.this.onBackPressed();
         }
 
         @Override
@@ -328,6 +337,9 @@ public class GourmetProductListActivity extends BaseActivity
             Intent intent = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
                 , mSaleTime, mGourmetDetail, position, mProvince, mArea);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
+
+            AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+                AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK, Integer.toString(gourmetProduct.index), null);
         }
 
         @Override

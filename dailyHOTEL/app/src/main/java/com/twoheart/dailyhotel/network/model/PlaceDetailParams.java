@@ -1,5 +1,8 @@
 package com.twoheart.dailyhotel.network.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.twoheart.dailyhotel.model.DetailInformation;
@@ -12,7 +15,7 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 27..
  */
 @JsonObject
-public abstract class PlaceDetailParams
+public abstract class PlaceDetailParams implements Parcelable
 {
     @JsonField(name = "idx")
     public int index;
@@ -82,5 +85,48 @@ public abstract class PlaceDetailParams
     public List<DetailInformation> getDetailList()
     {
         return mDetailList;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        dest.writeInt(index);
+        dest.writeString(name);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeString(address);
+        dest.writeString(grade);
+        dest.writeInt(ratingPersons);
+        dest.writeInt(ratingValue);
+        dest.writeInt(ratingShow == true ? 1 : 0);
+        dest.writeString(category);
+        dest.writeString(benefit);
+        dest.writeStringList(benefitContents);
+        dest.writeString(imgUrl);
+        dest.writeInt(wishCount); // 위시리스트 카운트
+        dest.writeInt(myWish == true ? 1 : 0);
+        dest.writeTypedList(mDetailList);
+        dest.writeTypedList(mImageList);
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        index = in.readInt();
+        name = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        address = in.readString();
+        grade = in.readString();
+        ratingPersons = in.readInt();
+        ratingValue = in.readInt();
+        ratingShow = in.readInt() == 1;
+        category = in.readString();
+        benefit = in.readString();
+        benefitContents = in.createStringArrayList();
+        imgUrl = in.readString();
+        wishCount = in.readInt();
+        myWish = in.readInt() == 1;
+        mDetailList = in.createTypedArrayList(DetailInformation.CREATOR);
+        mImageList = in.createTypedArrayList(ImageInformation.CREATOR);
     }
 }

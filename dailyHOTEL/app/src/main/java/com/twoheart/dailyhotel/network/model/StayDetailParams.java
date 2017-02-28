@@ -20,42 +20,42 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 20..
  */
 @JsonObject
-public class StayDetailParams extends PlaceDetailParams implements Parcelable
+public class StayDetailParams extends PlaceDetailParams
 {
-//    @JsonField(name = "idx")
-//    public int index;
-//
-//    @JsonField
-//    public String name;
-//
-//    @JsonField
-//    public double latitude;
-//
-//    @JsonField
-//    public double longitude;
-//
-//    @JsonField
-//    public String address;
-//
-//    // 직접 접근 금지
-//    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-//    @JsonField
-//    public Map<String, List<ImageInformation>> imgPath;
-//
-//    @JsonField
-//    public String grade;
-//
-//    @JsonField
-//    public int ratingPersons;
-//
-//    @JsonField
-//    public int ratingValue;
-//
-//    @JsonField
-//    public boolean ratingShow;
-//
-//    @JsonField
-//    public String category;
+    //    @JsonField(name = "idx")
+    //    public int index;
+    //
+    //    @JsonField
+    //    public String name;
+    //
+    //    @JsonField
+    //    public double latitude;
+    //
+    //    @JsonField
+    //    public double longitude;
+    //
+    //    @JsonField
+    //    public String address;
+    //
+    //    // 직접 접근 금지
+    //    // 주의 : Parcelable 후에 해당 값은 사라집니다.
+    //    @JsonField
+    //    public Map<String, List<ImageInformation>> imgPath;
+    //
+    //    @JsonField
+    //    public String grade;
+    //
+    //    @JsonField
+    //    public int ratingPersons;
+    //
+    //    @JsonField
+    //    public int ratingValue;
+    //
+    //    @JsonField
+    //    public boolean ratingShow;
+    //
+    //    @JsonField
+    //    public String category;
 
     // 직접 접근 금지
     @JsonField
@@ -92,33 +92,33 @@ public class StayDetailParams extends PlaceDetailParams implements Parcelable
     // 직접 접근 금지
     @JsonField(name = "kidsPlayroom")
     public boolean kidsPlayRoom;
-//
-//    @JsonField
-//    public String benefit;
-//
-//    @JsonField
-//    public List<String> benefitContents;
+    //
+    //    @JsonField
+    //    public String benefit;
+    //
+    //    @JsonField
+    //    public List<String> benefitContents;
 
     @JsonField
     public String benefitWarning;
-//
-//    // 직접 접근 금지
-//    // 주의 : Parcelable 후에 해당 값은 사라집니다.
-//    @JsonField
-//    public List<Map<String, List<String>>> details;
+    //
+    //    // 직접 접근 금지
+    //    // 주의 : Parcelable 후에 해당 값은 사라집니다.
+    //    @JsonField
+    //    public List<Map<String, List<String>>> details;
 
     // 직접 접근 금지
     @JsonField
     public List<StayProduct> rooms;
-//
-//    @JsonField
-//    public String imgUrl;
-//
-//    @JsonField
-//    public int wishCount; // 위시리스트 카운트
-//
-//    @JsonField
-//    public boolean myWish; // 위시리스트 클릭 상태
+    //
+    //    @JsonField
+    //    public String imgUrl;
+    //
+    //    @JsonField
+    //    public int wishCount; // 위시리스트 카운트
+    //
+    //    @JsonField
+    //    public boolean myWish; // 위시리스트 클릭 상태
 
     @JsonField(name = "singleStay")
     public boolean isSingleStay; // 연박 불가 여부
@@ -129,9 +129,9 @@ public class StayDetailParams extends PlaceDetailParams implements Parcelable
     // 결제 전 해당 값을 조회하여 stayProduct에 넣어 줄 수 있도록 해야 함
     public int nights;
 
-//    protected ArrayList<DetailInformation> mDetailList;
+    //    protected ArrayList<DetailInformation> mDetailList;
     private ArrayList<StayDetail.Pictogram> mPictogramList;
-//    private ArrayList<ImageInformation> mImageList;
+    //    private ArrayList<ImageInformation> mImageList;
     private ArrayList<String> mBenefitInformation;
 
     public StayDetailParams()
@@ -322,16 +322,8 @@ public class StayDetailParams extends PlaceDetailParams implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(index);
-        dest.writeString(name);
-        dest.writeDouble(latitude);
-        dest.writeDouble(longitude);
-        dest.writeString(address);
-        dest.writeString(grade);
-        dest.writeInt(ratingPersons);
-        dest.writeInt(ratingValue);
-        dest.writeInt(ratingShow == true ? 1 : 0);
-        dest.writeString(category);
+        super.writeToParcel(dest, flags);
+
         dest.writeInt(parking == true ? 1 : 0);
         dest.writeInt(noParking == true ? 1 : 0);
         dest.writeInt(pool == true ? 1 : 0);
@@ -341,34 +333,19 @@ public class StayDetailParams extends PlaceDetailParams implements Parcelable
         dest.writeInt(businessCenter == true ? 1 : 0);
         dest.writeInt(sauna == true ? 1 : 0);
         dest.writeInt(kidsPlayRoom == true ? 1 : 0);
-        dest.writeString(benefit);
-        dest.writeStringList(benefitContents);
         dest.writeString(benefitWarning);
         dest.writeTypedList(rooms);
-        dest.writeString(imgUrl);
-        dest.writeInt(wishCount); // 위시리스트 카운트
-        dest.writeInt(myWish == true ? 1 : 0);
         dest.writeInt(isSingleStay == true ? 1 : 0);
         dest.writeInt(isOverseas == true ? 1 : 0);
         dest.writeInt(nights);
-        dest.writeTypedList(mDetailList);
         dest.writeTypedList(mPictogramList);
-        dest.writeTypedList(mImageList);
         dest.writeStringList(mBenefitInformation);
     }
 
     protected void readFromParcel(Parcel in)
     {
-        index = in.readInt();
-        name = in.readString();
-        latitude = in.readDouble();
-        longitude = in.readDouble();
-        address = in.readString();
-        grade = in.readString();
-        ratingPersons = in.readInt();
-        ratingValue = in.readInt();
-        ratingShow = in.readInt() == 1;
-        category = in.readString();
+        super.readFromParcel(in);
+
         parking = in.readInt() == 1;
         noParking = in.readInt() == 1;
         pool = in.readInt() == 1;
@@ -378,20 +355,12 @@ public class StayDetailParams extends PlaceDetailParams implements Parcelable
         businessCenter = in.readInt() == 1;
         sauna = in.readInt() == 1;
         kidsPlayRoom = in.readInt() == 1;
-        benefit = in.readString();
-        benefitContents = in.createStringArrayList();
         benefitWarning = in.readString();
         rooms = in.createTypedArrayList(StayProduct.CREATOR);
-        imgUrl = in.readString();
-        wishCount = in.readInt();
-        myWish = in.readInt() == 1;
         isSingleStay = in.readInt() == 1;
         isOverseas = in.readInt() == 1;
-
         nights = in.readInt();
-        mDetailList = in.createTypedArrayList(DetailInformation.CREATOR);
         mPictogramList = in.createTypedArrayList(StayDetail.Pictogram.CREATOR);
-        mImageList = in.createTypedArrayList(ImageInformation.CREATOR);
         mBenefitInformation = in.createStringArrayList();
     }
 
