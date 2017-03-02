@@ -65,6 +65,8 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         contentLayout.addView(filterLayout);
 
         initAmenitiesLayout(filterLayout, stayCurationOption);
+
+        initInRoomAmenitiesLayout(filterLayout, stayCurationOption);
     }
 
 
