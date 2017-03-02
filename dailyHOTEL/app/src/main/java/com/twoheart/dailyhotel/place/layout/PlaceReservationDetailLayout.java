@@ -311,13 +311,6 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
         mFakeMapLayout = view.findViewById(R.id.fakeMapLayout);
 
-        //        RelativeLayout.LayoutParams mapLayoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
-        //        mapLayoutParams.width = width;
-        //        mapLayoutParams.height = height;
-        //
-        //        mMapLayout.setLayoutParams(mapLayoutParams);
-        //        mMapLayout.setTag(height);
-
         RelativeLayout.LayoutParams fakeMapLayoutParams = (RelativeLayout.LayoutParams) mFakeMapLayout.getLayoutParams();
         fakeMapLayoutParams.width = width;
         fakeMapLayoutParams.height = height;
@@ -330,7 +323,6 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             @Override
             public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
             {
-                //                mMapLayout.setTranslationY(-t);
                 mFakeMapLayout.setTranslationY(-t);
             }
         });
@@ -518,16 +510,6 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
                 float value = (Float) animation.getAnimatedValue();
 
                 int height = (int) mFakeMapLayout.getTag();
-
-                //                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mFakeMapLayout.getLayoutParams();
-                //                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
-                //
-                //                mFakeMapLayout.setLayoutParams(layoutParams);
-
-                //
-                //                Projection projection = mGoogleMap.getProjection();
-                //                LatLng latLng = projection .fromScreenLocation(new Point(mMapLayout.getWidth() / 2, mMapLayout.getHeight() * 3 / 4));
-                //                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mCenterLatLng));
 
                 mFakeMapLayout.setPadding(0, 0, 0, (int) ((mAddressLayout.getY() - height) * value));
 
