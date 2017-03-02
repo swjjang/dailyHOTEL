@@ -179,7 +179,7 @@
             android:text="@string/label_parking"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_hotel_04_facilities_05"
+            app:drawableCompatTop="@drawable/f_ic_facilities_05"
             app:layout_columnWeight="1"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -191,7 +191,7 @@
             android:text="@string/label_valet_available"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/ic_detail_facilities_06_valet"
+            app:drawableCompatTop="@drawable/f_ic_facilities_10"
             app:layout_columnWeight="1"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -203,7 +203,7 @@
             android:text="@string/label_private_room"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/ic_detail_facilities_07_private"
+            app:drawableCompatTop="@drawable/f_ic_facilities_11"
             app:layout_columnWeight="1"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -215,7 +215,7 @@
             android:text="@string/label_group_booking"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/ic_detail_facilities_08_group"
+            app:drawableCompatTop="@drawable/f_ic_facilities_12"
             app:layout_columnWeight="1"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -227,7 +227,7 @@
             android:text="@string/label_baby_seat"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/ic_detail_facilities_09_babyseat"
+            app:drawableCompatTop="@drawable/f_ic_facilities_13"
             app:layout_columnWeight="1"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
@@ -239,7 +239,7 @@
             android:text="@string/label_corkage"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/ic_detail_facilities_10_corkage"
+            app:drawableCompatTop="@drawable/f_ic_facilities_14"
             app:layout_columnWeight="1"/>
     </android.support.v7.widget.GridLayout>
 </LinearLayout>
