@@ -737,7 +737,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 startActivity(intent);
             } else
             {
-                mPlaceReservationDetailLayout.expandMap();
+                mPlaceReservationDetailLayout.expandMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
             }
         }
 

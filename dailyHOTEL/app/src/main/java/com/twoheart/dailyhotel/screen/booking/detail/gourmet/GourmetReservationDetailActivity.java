@@ -526,7 +526,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 startActivity(intent);
             } else
             {
-                mPlaceReservationDetailLayout.expandMap();
+                mPlaceReservationDetailLayout.expandMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
             }
         }
 
