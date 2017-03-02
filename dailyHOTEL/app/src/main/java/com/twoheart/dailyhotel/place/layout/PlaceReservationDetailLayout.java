@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.place.layout;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.location.Location;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -53,11 +55,13 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
     private RelativeLayout mGoogleMapLayout;
     FrameLayout mMapLayout;
     GoogleMap mGoogleMap;
-    View mMyLocationView, mZoomControl;
+    View mFakeMapLayout, mMyLocationView, mZoomControl;
     MarkerOptions mMyLocationMarkerOptions;
     Marker mMyLocationMarker, mPlaceLocationMarker;
 
     View mAddressLayout, mSearchMapsLayout;
+
+    LatLng mCenterLatLng;
 
     protected abstract void initPlaceInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
 
@@ -305,20 +309,29 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         });
 
         mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
+        mFakeMapLayout = view.findViewById(R.id.fakeMapLayout);
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
-        layoutParams.width = width;
-        layoutParams.height = height;
+        //        RelativeLayout.LayoutParams mapLayoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
+        //        mapLayoutParams.width = width;
+        //        mapLayoutParams.height = height;
+        //
+        //        mMapLayout.setLayoutParams(mapLayoutParams);
+        //        mMapLayout.setTag(height);
 
-        mMapLayout.setLayoutParams(layoutParams);
-        mMapLayout.setTag(height);
+        RelativeLayout.LayoutParams fakeMapLayoutParams = (RelativeLayout.LayoutParams) mFakeMapLayout.getLayoutParams();
+        fakeMapLayoutParams.width = width;
+        fakeMapLayoutParams.height = height;
+
+        mFakeMapLayout.setLayoutParams(fakeMapLayoutParams);
+        mFakeMapLayout.setTag(height);
 
         mScrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
         {
             @Override
             public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
             {
-                mMapLayout.setTranslationY(-t);
+                //                mMapLayout.setTranslationY(-t);
+                mFakeMapLayout.setTranslationY(-t);
             }
         });
 
@@ -352,6 +365,14 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
                     public void onMapLoaded()
                     {
                         mIsReadyMap = true;
+
+                        Projection projection = mGoogleMap.getProjection();
+
+                        Point point = projection.toScreenLocation(new LatLng(placeBookingDetail.latitude, placeBookingDetail.longitude));
+                        point.y += (point.y - mFakeMapLayout.getHeight() / 2);
+
+                        mCenterLatLng = projection.fromScreenLocation(point);
+                        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mCenterLatLng), 200, null);
                     }
                 });
             }
@@ -472,7 +493,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         return mSearchMapsLayout != null && mSearchMapsLayout.getVisibility() != View.GONE;
     }
 
-    public void expandMap()
+    public void expandMap(double latitude, double longitude)
     {
         setReservationMapToolbar();
 
@@ -496,12 +517,19 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
 
                 float value = (Float) animation.getAnimatedValue();
 
-                int height = (int) mMapLayout.getTag();
+                int height = (int) mFakeMapLayout.getTag();
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
-                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
+                //                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mFakeMapLayout.getLayoutParams();
+                //                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
+                //
+                //                mFakeMapLayout.setLayoutParams(layoutParams);
 
-                mMapLayout.setLayoutParams(layoutParams);
+                //
+                //                Projection projection = mGoogleMap.getProjection();
+                //                LatLng latLng = projection .fromScreenLocation(new Point(mMapLayout.getWidth() / 2, mMapLayout.getHeight() * 3 / 4));
+                //                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(mCenterLatLng));
+
+                mFakeMapLayout.setPadding(0, 0, 0, (int) ((mAddressLayout.getY() - height) * value));
 
                 mScrollLayout.setTranslationY(((int) mAddressLayout.getY() - height) * value);
                 mScrollLayout.setAlpha(1.0f - value);
@@ -516,7 +544,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             @Override
             public void onAnimationStart(Animator animation)
             {
-                mMapLayout.setTranslationY(0.0f);
+                mFakeMapLayout.setTranslationY(0.0f);
 
                 mMapExpandedView.setVisibility(View.GONE);
                 mSearchMapsLayout.setVisibility(View.VISIBLE);
@@ -526,6 +554,9 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                int height = (int) mFakeMapLayout.getTag();
+                mFakeMapLayout.setPadding(0, 0, 0, (int) (mAddressLayout.getY() - height));
+
                 mZoomControl.setVisibility(View.VISIBLE);
                 mMyLocationView.setVisibility(View.VISIBLE);
 
@@ -549,12 +580,16 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             }
         });
 
-        valueAnimator.setDuration(500);
+        valueAnimator.setDuration(300);
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         valueAnimator.start();
+
+        LatLng latLng = new LatLng(latitude, longitude);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target((latLng)).zoom(15).build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 200, null);
     }
 
-    public void collapseMap(double latitude, double longitude)
+    public void collapseMap()
     {
         setReservationDetailToolbar();
 
@@ -572,12 +607,9 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
 
                 float value = (Float) animation.getAnimatedValue();
 
-                int height = (int) mMapLayout.getTag();
+                int height = (int) mFakeMapLayout.getTag();
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mMapLayout.getLayoutParams();
-                layoutParams.height = (int) (height + ((int) mAddressLayout.getY() - height) * value);
-
-                mMapLayout.setLayoutParams(layoutParams);
+                mFakeMapLayout.setPadding(0, 0, 0, (int) ((mAddressLayout.getY() - height) * value));
 
                 mScrollLayout.setTranslationY(((int) mAddressLayout.getY() - height) * value);
                 mScrollLayout.setAlpha(1.0f - value);
@@ -605,7 +637,10 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             {
                 mScrollLayout.scrollTo(0, 0);
                 mScrollLayout.setScrollingEnabled(true);
-                mMapLayout.setTranslationY(0.0f);
+                mFakeMapLayout.setTranslationY(0.0f);
+
+                int height = (int) mFakeMapLayout.getTag();
+                mFakeMapLayout.setPadding(0, 0, 0, (int) ((mAddressLayout.getY() - height)));
 
                 mSearchMapsLayout.setVisibility(View.GONE);
                 mAddressLayout.setVisibility(View.GONE);
@@ -631,9 +666,8 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         valueAnimator.reverse();
 
-        LatLng latLng = new LatLng(latitude, longitude);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target((latLng)).zoom(15).build();
-        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 500, null);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target((mCenterLatLng)).zoom(15).build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 300, null);
     }
 
     public void changeLocation(Location location)

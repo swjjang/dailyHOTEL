@@ -193,7 +193,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                 return;
             }
 
-            mPlaceReservationDetailLayout.collapseMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
+            mPlaceReservationDetailLayout.collapseMap();
         } else
         {
             super.onBackPressed();
