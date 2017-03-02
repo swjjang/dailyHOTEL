@@ -17,6 +17,13 @@
         <FrameLayout
             android:id="@+id/mapLayout"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="138dp"
+            android:visibility="visible"/>
+
+        <View
+            android:id="@+id/fakeMapLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
 

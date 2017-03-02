@@ -50,7 +50,7 @@
     <color name="grade_guesthouse">#cb8e64</color>
     <color name="grade_not_yet">#aca69c</color>
 
-    <color name="white">#ffffff</color>
+    <color name="white">#FFFFFF</color>
     <color name="white_a80">#ccffffff</color>
     <color name="white_a70">#B3ffffff</color>
     <color name="white_a60">#99ffffff</color>
@@ -271,14 +271,14 @@
     <color name="default_background_cf1f2f3">#f1f2f3</color>
     <color name="default_background_c929292">#929292</color>
     <color name="default_background_ca9a9a9">#a9a9a9</color>
-    <color name="default_background_ceaeaea">#eaeaea</color>
+    <color name="default_background_ceaeaea">#EAEAEA</color>
     <color name="default_background_c454545">#454545</color>
     <color name="default_background_c454545_alpha_20">#33454545</color>
     <color name="default_background_cf6f6f8">#f6f6f8</color>
     <color name="default_background_cffcd5b">#ffcd5b</color>
     <color name="default_background_cfedf72">#fedf72</color>
     <color name="default_background_cdb2453_alpha_80">#ccdb2453</color>
-    <color name="default_background_cababab">#ababab</color>
+    <color name="default_background_cababab">#ABABAB</color>
     <color name="default_background_cefeff0">#efeff0</color>
     <color name="default_background_ce6e6e7">#e6e6e7</color>
     <color name="default_placeholder">#dfdfe0</color>

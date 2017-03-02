@@ -52,7 +52,7 @@
             android:text="@string/label_sort_by_area"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_01"/>
+            app:drawableCompatTop="@drawable/f_ic_sort_01"/>
 
         <com.twoheart.dailyhotel.widget.DailyRadioButton
             android:id="@+id/distanceCheckView"
@@ -67,7 +67,7 @@
             android:text="@string/label_sort_by_distance"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_02"/>
+            app:drawableCompatTop="@drawable/f_ic_sort_02"/>
 
         <com.twoheart.dailyhotel.widget.DailyRadioButton
             android:id="@+id/lowPriceCheckView"
@@ -82,7 +82,7 @@
             android:text="@string/label_sort_by_low_price"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_03"/>
+            app:drawableCompatTop="@drawable/f_ic_sort_03"/>
 
         <com.twoheart.dailyhotel.widget.DailyRadioButton
             android:id="@+id/highPriceCheckView"
@@ -97,7 +97,7 @@
             android:text="@string/label_sort_by_high_price"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_04"/>
+            app:drawableCompatTop="@drawable/f_ic_sort_04"/>
 
         <com.twoheart.dailyhotel.widget.DailyRadioButton
             android:id="@+id/satisfactionCheckView"
@@ -112,7 +112,7 @@
             android:text="@string/label_sort_by_satisfaction"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
-            app:drawableCompatTop="@drawable/f_ic_hotel_01_sort_05"/>
+            app:drawableCompatTop="@drawable/f_ic_sort_05"/>
 
         <com.twoheart.dailyhotel.widget.DailyRadioButton
             android:id="@+id/emptyCheckView"
