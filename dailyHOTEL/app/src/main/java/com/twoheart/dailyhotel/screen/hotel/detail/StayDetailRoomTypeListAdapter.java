@@ -127,6 +127,8 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.viewRoot.setSelected(false);
         }
 
+        boolean isMaxLine = true;
+
         saleRoomInformationViewHolder.roomTypeTextView.setText(stayProduct.roomName);
 
         String price, discountPrice;
@@ -156,6 +158,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         if (Util.isTextEmpty(stayProduct.option) == true)
         {
             saleRoomInformationViewHolder.optionTextView.setVisibility(View.GONE);
+            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.optionTextView.setVisibility(View.VISIBLE);
@@ -165,15 +168,30 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         if (Util.isTextEmpty(stayProduct.amenities) == true)
         {
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.GONE);
+            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.VISIBLE);
             saleRoomInformationViewHolder.amenitiesTextView.setText(stayProduct.amenities);
+
+            float width = Util.getTextWidth(mContext, stayProduct.amenities //
+                , saleRoomInformationViewHolder.amenitiesTextView.getTextSize() //
+                , saleRoomInformationViewHolder.amenitiesTextView.getTypeface());
+
+            int viewWidth = saleRoomInformationViewHolder.amenitiesTextView.getWidth() //
+                - saleRoomInformationViewHolder.amenitiesTextView.getPaddingLeft() //
+                - saleRoomInformationViewHolder.amenitiesTextView.getPaddingRight();
+
+            if (width <= viewWidth)
+            {
+                isMaxLine = false;
+            }
         }
 
         if (Util.isTextEmpty(stayProduct.roomBenefit) == true)
         {
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.GONE);
+            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.VISIBLE);
@@ -183,10 +201,31 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         if (stayProduct.isNRD == false)
         {
             saleRoomInformationViewHolder.nrdTextView.setVisibility(View.GONE);
+            isMaxLine = false;
         } else
         {
             saleRoomInformationViewHolder.nrdTextView.setVisibility(View.VISIBLE);
         }
+
+        int layoutHeight;
+        if (isMaxLine == true)
+        {
+            layoutHeight = mContext.getResources().getDimensionPixelSize(R.dimen.stay_detail_room_type_expand_height);
+        } else
+        {
+            layoutHeight = mContext.getResources().getDimensionPixelSize(R.dimen.stay_detail_room_type_default_height);
+        }
+
+        ViewGroup.LayoutParams params = saleRoomInformationViewHolder.viewRoot.getLayoutParams();
+        if (params == null)
+        {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
+        } else
+        {
+            params.height = layoutHeight;
+        }
+
+        saleRoomInformationViewHolder.viewRoot.setLayoutParams(params);
     }
 
     @Override
@@ -200,7 +239,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
         return mStayProductList.size();
     }
 
-    private class SaleRoomInformationViewHolder extends RecyclerView.ViewHolder
+    public class SaleRoomInformationViewHolder extends RecyclerView.ViewHolder
     {
         View viewRoot;
         TextView roomTypeTextView;
