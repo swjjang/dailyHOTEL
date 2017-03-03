@@ -38,11 +38,9 @@
         android:id="@+id/mainCategorySpinner"
         android:layout_width="match_parent"
         android:layout_height="38dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="16dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:paddingLeft="1px"
+        android:paddingRight="1px"
         android:prompt="@string/label_select_main_category"
         android:spinnerMode="dropdown"/>
 
@@ -50,11 +48,9 @@
         android:id="@+id/subCategorySpinner"
         android:layout_width="match_parent"
         android:layout_height="38dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginTop="16dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
+        android:paddingLeft="1px"
+        android:paddingRight="1px"
         android:prompt="@string/label_select_sub_category"
         android:spinnerMode="dropdown"/>
 
