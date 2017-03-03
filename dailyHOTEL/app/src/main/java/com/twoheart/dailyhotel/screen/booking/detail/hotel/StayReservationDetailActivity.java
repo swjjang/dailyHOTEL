@@ -649,10 +649,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
         if (isRefund == true)
         {
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_STAY_REFUND), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_STAY_REFUND, mPlaceBookingDetail.placeIndex, mReservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
         } else
         {
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_STAY_BOOKING), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_STAY_BOOKING, mPlaceBookingDetail.placeIndex, mReservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
         }
 
 

@@ -2,13 +2,17 @@ package com.twoheart.dailyhotel.screen.common;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -35,11 +39,14 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
     private HappyTalkCategoryDialogLayout mHappyTalkCategoryDialogLayout;
     private int mCallScreen;
+    private int mPlaceIndex, mBookingIndex;
 
-    public static Intent newInstance(Context context, int callScreen)
+    public static Intent newInstance(Context context, int callScreen, int placeIndex, int bookingIndex)
     {
         Intent intent = new Intent(context, HappyTalkCategoryDialog.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, callScreen);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, bookingIndex);
 
         return intent;
     }
@@ -54,6 +61,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
         if (intent != null)
         {
             mCallScreen = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, 0);
+            mPlaceIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, 0);
+            mBookingIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, 0);
         } else
         {
             finish();
@@ -63,7 +72,60 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         setContentView(mHappyTalkCategoryDialogLayout.onCreateView(R.layout.activity_happytalk_category_dialog));
 
-        initCategoryData();
+        if (DailyHotel.isLogin() == true)
+        {
+            initCategoryData();
+        } else
+        {
+            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_happytalk_login), //
+                getString(R.string.frag_login), getString(R.string.dialog_btn_text_close), //
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = LoginActivity.newInstance(HappyTalkCategoryDialog.this, null);
+                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+                    }
+                }, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        onBackPressed();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        onBackPressed();
+                    }
+                }, null, true);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_LOGIN:
+            {
+                if (resultCode == RESULT_OK)
+                {
+                    initCategoryData();
+                } else
+                {
+                    finish();
+                }
+                break;
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initCategoryData()
