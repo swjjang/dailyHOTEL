@@ -492,7 +492,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private int getCategoryResourceId(int index)
     {
-        final int[] resourceIndex = new int[]{R.drawable.f_ic_gourmet_02_food_etc//
+        final int[] resourceIndex = new int[]{0//
             , R.drawable.f_ic_gourmet_02_food_01//
             , R.drawable.f_ic_gourmet_02_food_02//
             , R.drawable.f_ic_gourmet_02_food_03//
@@ -500,13 +500,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             , R.drawable.f_ic_gourmet_02_food_05//
             , R.drawable.f_ic_gourmet_02_food_06//
             , R.drawable.f_ic_gourmet_02_food_07//
-            , R.drawable.f_ic_gourmet_02_food_08//
-            , R.drawable.f_ic_gourmet_02_food_09//
-            , R.drawable.f_ic_gourmet_02_food_10//
-            , R.drawable.f_ic_gourmet_02_food_11//
-            , R.drawable.f_ic_hotel_04_facilities_02//
-            , R.drawable.f_ic_gourmet_02_food_13//
-            , R.drawable.f_ic_gourmet_02_food_14};
+            , R.drawable.f_ic_gourmet_02_food_08};
 
         if (index < 1 || index >= resourceIndex.length)
         {

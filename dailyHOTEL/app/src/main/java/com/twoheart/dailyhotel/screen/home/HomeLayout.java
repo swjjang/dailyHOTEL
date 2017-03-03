@@ -300,8 +300,8 @@ public class HomeLayout extends BaseLayout
         initEventLayout(mHomeContentLayout);
         initScrollButtonLayout(mHomeContentLayout);
         initTextMessageLayout(mHomeContentLayout);
-        initWishListLayout(mHomeContentLayout);
         initRecentListLayout(mHomeContentLayout);
+        initWishListLayout(mHomeContentLayout);
         initRecommendationLayout(mHomeContentLayout);
         initProviderInfoLayout(mHomeContentLayout);
         initTopButtonLayout(mHomeContentLayout);

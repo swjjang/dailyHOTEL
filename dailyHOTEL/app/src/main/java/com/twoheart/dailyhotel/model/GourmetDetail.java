@@ -314,12 +314,12 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
 
     public enum Pictogram implements Parcelable
     {
-        parking(R.string.label_parking, R.drawable.ic_detail_facilities_01_parking),
-        valet(R.string.label_valet_available, R.drawable.ic_detail_facilities_06_valet),
-        privateRoom(R.string.label_private_room, R.drawable.ic_detail_facilities_07_private),
-        groupBooking(R.string.label_group_booking, R.drawable.ic_detail_facilities_08_group),
-        babySeat(R.string.label_baby_seat, R.drawable.ic_detail_facilities_09_babyseat),
-        corkage(R.string.label_corkage, R.drawable.ic_detail_facilities_10_corkage),
+        parking(R.string.label_parking, R.drawable.f_ic_facilities_05),
+        valet(R.string.label_valet_available, R.drawable.f_ic_facilities_10),
+        privateRoom(R.string.label_private_room, R.drawable.f_ic_facilities_11),
+        groupBooking(R.string.label_group_booking, R.drawable.f_ic_facilities_12),
+        babySeat(R.string.label_baby_seat, R.drawable.f_ic_facilities_13),
+        corkage(R.string.label_corkage, R.drawable.f_ic_facilities_14),
         none(0, 0);
 
         private int mNameResId;

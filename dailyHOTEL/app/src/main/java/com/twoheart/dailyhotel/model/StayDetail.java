@@ -361,15 +361,15 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
 
     public enum Pictogram implements Parcelable
     {
-        PARKING(R.string.label_parking, R.drawable.ic_detail_facilities_01_parking),
-        NO_PARKING(R.string.label_unabled_parking, R.drawable.ic_detail_facilities_02_no_parking),
-        SHARED_BBQ(R.string.label_allowed_barbecue, R.drawable.ic_detail_facilities_06_bbq),
-        POOL(R.string.label_pool, R.drawable.ic_detail_facilities_03_pool),
-        BUSINESS_CENTER(R.string.label_business_center, R.drawable.ic_detail_facilities_01_parking),
-        FITNESS(R.string.label_fitness, R.drawable.ic_detail_facilities_04_fitness),
-        SAUNA(R.string.label_sauna, R.drawable.ic_detail_facilities_01_parking),
-        PET(R.string.label_allowed_pet, R.drawable.ic_detail_facilities_05_pet),
-        KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.ic_detail_facilities_01_parking),
+        PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),
+        NO_PARKING(R.string.label_unabled_parking, R.drawable.f_ic_facilities_05),
+        SHARED_BBQ(R.string.label_allowed_barbecue, R.drawable.f_ic_facilities_09),
+        POOL(R.string.label_pool, R.drawable.f_ic_facilities_06),
+        BUSINESS_CENTER(R.string.label_business_center, R.drawable.f_ic_facilities_15),
+        FITNESS(R.string.label_fitness, R.drawable.f_ic_facilities_07),
+        SAUNA(R.string.label_sauna, R.drawable.f_ic_facilities_16),
+        PET(R.string.label_allowed_pet, R.drawable.f_ic_facilities_08),
+        KIDS_PLAY_ROOM(R.string.label_kids_play_room, R.drawable.f_ic_facilities_17),
         NONE(0, 0);
 
         private int mNameResId;

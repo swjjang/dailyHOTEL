@@ -145,11 +145,6 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
         {
             mPictogramList.add(GourmetDetail.Pictogram.valet);
         }
-        // 베이비시트
-        if (babySeat == true)
-        {
-            mPictogramList.add(GourmetDetail.Pictogram.babySeat);
-        }
         // 프라이빗룸
         if (privateRoom == true)
         {
@@ -159,6 +154,11 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
         if (groupBooking == true)
         {
             mPictogramList.add(GourmetDetail.Pictogram.groupBooking);
+        }
+        // 베이비시트
+        if (babySeat == true)
+        {
+            mPictogramList.add(GourmetDetail.Pictogram.babySeat);
         }
         // 코르키지
         if (corkage == true)
