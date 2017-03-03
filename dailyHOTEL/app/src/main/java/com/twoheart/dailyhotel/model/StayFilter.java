@@ -2,7 +2,8 @@ package com.twoheart.dailyhotel.model;
 
 public class StayFilter
 {
-    public static final int MIN_PERSON = 2;
+    public static final int MIN_PERSON = 1;
+    public static final int DEFAULT_PERSON = 2;
     public static final int MAX_PERSON = 10;
 
     public static final int FLAG_HOTEL_FILTER_BED_NONE = 0x00;

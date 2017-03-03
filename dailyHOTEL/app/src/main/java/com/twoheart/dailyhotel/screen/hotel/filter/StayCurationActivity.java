@@ -118,7 +118,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
             initAmenitiesLayout(filterLayout, stayCurationOption);
 
-            // TODO : 객실 내 시설
             initInRoomAmenitiesLayout(filterLayout, stayCurationOption);
 
             contentLayout.addView(filterLayout);
@@ -395,7 +394,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         if (mStayCuration.getProvince().isOverseas == false)
         {
-            updatePersonFilter(StayFilter.MIN_PERSON);
+            updatePersonFilter(StayFilter.DEFAULT_PERSON);
 
             resetLayout(mBedTypeLayout);
             resetLayout(mAmenitiesGridLayout);

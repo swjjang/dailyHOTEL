@@ -144,7 +144,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
             mSortRadioGroup.setOnCheckedChangeListener(this);
         }
 
-        updatePersonFilter(StayFilter.MIN_PERSON);
+        updatePersonFilter(StayFilter.DEFAULT_PERSON);
 
         resetLayout(mBedTypeLayout);
         resetLayout(mAmenitiesGridLayout);
