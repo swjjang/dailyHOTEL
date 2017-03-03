@@ -1,8 +1,10 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
@@ -57,9 +59,9 @@ public class GourmetProductListLayout extends BaseLayout
         super(context, listener);
     }
 
-    public void setProductInformationLayout(List<GourmetProduct> gourmetProductList)
+    public void setProductInformationLayout(Activity activity, List<GourmetProduct> gourmetProductList)
     {
-        if (gourmetProductList == null || gourmetProductList.size() == 0)
+        if (activity == null || gourmetProductList == null || gourmetProductList.size() == 0)
         {
             return;
         }
@@ -89,6 +91,9 @@ public class GourmetProductListLayout extends BaseLayout
             }
         });
 
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        mProductTypeListAdapter.setDpi(displayMetrics.densityDpi);
 
         mRecyclerView.setAdapter(mProductTypeListAdapter);
 

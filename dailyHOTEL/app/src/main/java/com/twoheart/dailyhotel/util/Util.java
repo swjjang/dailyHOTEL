@@ -1874,7 +1874,7 @@ public class Util implements Constants
      * 일단은 테블릿으로 정의하지만 실제로는 화면 크기이기 때문에 폰이 테블릿이 되는 경우도
      * 반대의 경우도 발생하나 스크린 사이즈로 결정되기 때문에 이상없을 것이라고 판단됨
      *
-     * @param context
+     * @param activity
      * @return
      */
     public static boolean isTabletDevice(Activity activity)

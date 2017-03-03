@@ -30,6 +30,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
     private List<PlaceViewItem> mGourmetProductList;
     OnProductClickListener mOnProductClickListener;
 
+    private int mDpi;
 
     public interface OnProductClickListener
     {
@@ -68,6 +69,11 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return mGourmetProductList.get(position);
+    }
+
+    public void setDpi(int dpi)
+    {
+        mDpi = dpi;
     }
 
     @Override
@@ -147,7 +153,19 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             hasThumbnail = false;
         } else
         {
-            productInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl));
+            String url;
+            if (mDpi <= 240)
+            {
+                url = "android_gourmet_product_hdpi";
+            } else if (mDpi <= 480)
+            {
+                url = "android_gourmet_product_xhdpi";
+            } else
+            {
+                url = "android_gourmet_product_xxxhdpi";
+            }
+
+            productInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl + "?impolicy=" + url));
         }
 
         productInformationViewHolder.productNameTextView.setText(gourmetProduct.ticketName);
@@ -190,24 +208,36 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             {
                 productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
 
-                int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 98);
-                float titleTextViewHeight = Util.getTextViewHeight(productInformationViewHolder.productNameTextView, titleTextViewWidth);
-
-                float startY = titleTextViewHeight + Util.dpToPx(mContext, 8);
-                Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 98), Util.dpToPx(mContext, 98));
-                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 39) - Util.dpToPx(mContext, 15);
-
                 // 베네핏
                 if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
                 {
-                    startY = addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, startY, textViewWidth, rect, false);
+                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
                 }
 
                 // 확인 사항
                 if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
                 {
-                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, startY, textViewWidth, rect, true);
+                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
                 }
+
+                //                int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 98);
+                //                float titleTextViewHeight = Util.getTextViewHeight(productInformationViewHolder.productNameTextView, titleTextViewWidth);
+                //
+                //                float startY = titleTextViewHeight + Util.dpToPx(mContext, 8);
+                //                Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 98), Util.dpToPx(mContext, 98));
+                //                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 39) - Util.dpToPx(mContext, 15);
+                //
+                //                // 베네핏
+                //                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
+                //                {
+                //                    startY = addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, startY, textViewWidth, rect, false);
+                //                }
+                //
+                //                // 확인 사항
+                //                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
+                //                {
+                //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, startY, textViewWidth, rect, true);
+                //                }
             }
         }
 
