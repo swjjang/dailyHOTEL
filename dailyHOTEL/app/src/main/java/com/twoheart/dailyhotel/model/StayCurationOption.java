@@ -27,7 +27,7 @@ public class StayCurationOption extends PlaceCurationOption
     {
         super.clear();
 
-        person = StayFilter.MIN_PERSON;
+        person = StayFilter.DEFAULT_PERSON;
         flagBedTypeFilters = StayFilter.FLAG_HOTEL_FILTER_BED_NONE;
         flagAmenitiesFilters = StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE;
         flagRoomAmenitiesFilters = StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE;
@@ -52,7 +52,7 @@ public class StayCurationOption extends PlaceCurationOption
     public boolean isDefaultFilter()
     {
         if (isDefaultSortType() == false//
-            || person != StayFilter.MIN_PERSON//
+            || person != StayFilter.DEFAULT_PERSON//
             || flagBedTypeFilters != StayFilter.FLAG_HOTEL_FILTER_BED_NONE//
             || flagAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE//
             || flagRoomAmenitiesFilters != StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE)
