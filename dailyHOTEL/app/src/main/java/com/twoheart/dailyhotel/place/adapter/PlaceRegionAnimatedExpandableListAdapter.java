@@ -24,6 +24,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
     private LayoutInflater mInflater;
     private List<RegionViewItem> items;
     private View.OnClickListener mOnItemClickListener;
+    private boolean mIsTable;
 
     public PlaceRegionAnimatedExpandableListAdapter(Context context)
     {
@@ -55,6 +56,11 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
     public RegionViewItem getAreaItem(int groupPosition)
     {
         return items.get(groupPosition);
+    }
+
+    public void setIsTablet(boolean isTablet)
+    {
+        mIsTable = isTablet;
     }
 
     @Override
@@ -168,7 +174,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
             }
         }
 
-        if (Util.isTabletDevice(mContext) == true)
+        if (mIsTable == true)
         {
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             layoutParams.height = Util.getLCDWidth(mContext) * 10 / 36;
