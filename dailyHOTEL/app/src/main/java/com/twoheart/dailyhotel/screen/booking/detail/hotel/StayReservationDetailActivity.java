@@ -647,7 +647,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
         }
 
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, PlaceType.HOTEL), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        if (isRefund == true)
+        {
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_STAY_REFUND), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        } else
+        {
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_STAY_BOOKING), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        }
+
 
         //        try
         //        {

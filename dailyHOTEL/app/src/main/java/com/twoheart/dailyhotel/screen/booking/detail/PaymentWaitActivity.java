@@ -471,7 +471,16 @@ public class PaymentWaitActivity extends BaseActivity
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, mBooking.placeType), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        switch (mBooking.placeType)
+        {
+            case HOTEL:
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_STAY_PAMENT_WAIT), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                break;
+
+            case FNB:
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_GOURMET_PAMENT_WAIT), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                break;
+        }
 
         //        try
         //        {

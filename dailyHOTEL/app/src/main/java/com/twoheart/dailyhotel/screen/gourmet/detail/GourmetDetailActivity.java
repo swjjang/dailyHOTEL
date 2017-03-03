@@ -732,7 +732,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, PlaceType.FNB), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_GOURMET_DETAIL), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
 
         //        try

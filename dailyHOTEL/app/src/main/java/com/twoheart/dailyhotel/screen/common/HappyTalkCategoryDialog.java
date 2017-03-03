@@ -23,13 +23,23 @@ import retrofit2.Response;
 
 public class HappyTalkCategoryDialog extends BaseActivity
 {
-    private HappyTalkCategoryDialogLayout mHappyTalkCategoryDialogLayout;
-    private Constants.PlaceType mPlaceType;
+    public static final int SCREEN_STAY_DETAIL = 1; // 스테이 상세
+    public static final int SCREEN_GOURMET_DETAIL = 2;// 고메 상세
+    public static final int SCREEN_STAY_PAMENT_WAIT = 3; // 계좌이체 결제 대기
+    public static final int SCREEN_GOURMET_PAMENT_WAIT = 4; // 계좌이체 결제 대기
+    public static final int SCREEN_STAY_BOOKING = 5; // 스테이 예약화면
+    public static final int SCREEN_GOURMET_BOOKING = 6; // 고메 예약 화면
+    public static final int SCREEN_FAQ = 7; // 더보기 FAQ
+    public static final int SCREEN_CONTACT_US = 8; // 더보기 문의하기
+    public static final int SCREEN_STAY_REFUND = 9; // 환불 문의하기
 
-    public static Intent newInstance(Context context, Constants.PlaceType placeType)
+    private HappyTalkCategoryDialogLayout mHappyTalkCategoryDialogLayout;
+    private int mCallScreen;
+
+    public static Intent newInstance(Context context, int callScreen)
     {
         Intent intent = new Intent(context, HappyTalkCategoryDialog.class);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, callScreen);
 
         return intent;
     }
@@ -43,7 +53,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         if (intent != null)
         {
-            mPlaceType = Constants.PlaceType.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE));
+            mCallScreen = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, 0);
         } else
         {
             finish();
@@ -84,7 +94,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
                                 String happyTalkCategory = jsonArray.toString();
                                 DailyPreference.getInstance(HappyTalkCategoryDialog.this).setHappyTalkCategory(happyTalkCategory);
 
-                                onHappyTalkCategory(happyTalkCategory);
+                                onHappyTalkCategory(mCallScreen, happyTalkCategory);
                             }
 
                         } catch (Exception e)
@@ -107,13 +117,13 @@ public class HappyTalkCategoryDialog extends BaseActivity
             });
         } else
         {
-            onHappyTalkCategory(happyTalkCategory);
+            onHappyTalkCategory(mCallScreen, happyTalkCategory);
         }
     }
 
-    private void onHappyTalkCategory(String category)
+    private void onHappyTalkCategory(int callScreen, String category)
     {
-        mHappyTalkCategoryDialogLayout.setCategory(category);
+        mHappyTalkCategoryDialogLayout.setCategory(callScreen, category);
     }
 
     @Override
@@ -131,27 +141,16 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
 
         @Override
-        public void onHappyTalk(String mainId, String subId)
+        public void onHappyTalk(String placeType, String mainId)
         {
             StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
-
-            switch (mPlaceType)
-            {
-                case HOTEL:
-                    urlStringBuilder.append("?yid=@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"); // 호텔 고객사 옐로우 아이디
-                    break;
-
-                case FNB:
-                    urlStringBuilder.append("?yid=@%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94"); // 고메 고객사 옐로우 아이디
-                    break;
-            }
-
+            urlStringBuilder.append("?yid=%40hailey099"); // 객사 옐로우 아이디
             urlStringBuilder.append("&category_id=" + mainId); // 대분류
-            urlStringBuilder.append("&division_id=" + subId); // 중분류
+            //            urlStringBuilder.append("&division_id=" + subId); // 중분류
             urlStringBuilder.append("&title="); // 상담제목
             urlStringBuilder.append("&order_number="); // 주문번호
             urlStringBuilder.append("&product_number="); // 상품번호
-            urlStringBuilder.append("&parameter1="); // 커스텀 파라미터1
+            urlStringBuilder.append("&parameter1=" + placeType); // 커스텀 파라미터1
             urlStringBuilder.append("&parameter2="); // 커스텀 파라미터2
             urlStringBuilder.append("&parameter3="); // 커스텀 파라미터3
             urlStringBuilder.append("&parameter4="); // 커스텀 파라미터4
@@ -169,8 +168,10 @@ public class HappyTalkCategoryDialog extends BaseActivity
             } catch (ActivityNotFoundException e)
             {
                 // 연결 가능한 웹 브라우저가 없습니다.
-                finish();
+
             }
+
+            finish();
         }
     };
 }

@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Pair;
@@ -36,11 +37,11 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
     private CategoryArrayAdapter mMainCategoryArrayAdapter;
     private CategoryArrayAdapter mSubCategoryArrayAdapter;
 
-    private String mSelectedMainCategoryId, mSelectedSubCategoryId;
+    private String mSelectedPlaceType, mSelectedMainCategoryId;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onHappyTalk(String mainId, String subId);
+        void onHappyTalk(String placeType, String mainId);
     }
 
     public HappyTalkCategoryDialogLayout(Context context, OnBaseEventListener listener)
@@ -53,12 +54,12 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
     {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (Util.isTabletDevice(mContext) == false)
-        {
-            layoutParams.width = Util.getLCDWidth(mContext) * 13 / 15;
-        } else
+        if (mContext instanceof Activity && Util.isTabletDevice((Activity) mContext) == true)
         {
             layoutParams.width = Util.getLCDWidth(mContext) * 10 / 15;
+        } else
+        {
+            layoutParams.width = Util.getLCDWidth(mContext) * 13 / 15;
         }
 
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -68,15 +69,15 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
     }
 
-    public void setCategory(String category)
+    public void setCategory(int callScreen, String category)
     {
         parseCategory(category);
 
         setVisibility(View.VISIBLE);
-        initCategoryLayout(mRootView);
+        initCategoryLayout(mRootView, callScreen);
     }
 
-    private void initCategoryLayout(View view)
+    private void initCategoryLayout(View view, int callScreen)
     {
         mMainCategorySpinner = (DailyHintSpinner) view.findViewById(R.id.mainCategorySpinner);
         mSubCategorySpinner = (DailyHintSpinner) view.findViewById(R.id.subCategorySpinner);
@@ -90,6 +91,8 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
         mMainCategorySpinner.setHintLayout(R.layout.list_row_coupon_spinner);
         mSubCategorySpinner.setHintLayout(R.layout.list_row_coupon_spinner);
+
+        mMainCategorySpinner.setPromptId(R.string.label_select_main_category);
 
         mMainCategoryArrayAdapter = new CategoryArrayAdapter(mContext, R.layout.list_row_coupon_spinner, new ArrayList<>(mMainCategoryMap.values()));
         mMainCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
@@ -117,8 +120,8 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
                 Pair<String, String> pair = mMainCategoryArrayAdapter.getItem(position);
 
-                mSelectedMainCategoryId = pair.first;
-                List<Pair<String, String>> pairList = mSubCategoryMap.get(mSelectedMainCategoryId);
+                mSelectedPlaceType = pair.first;
+                List<Pair<String, String>> pairList = mSubCategoryMap.get(mSelectedPlaceType);
 
                 mSubCategoryArrayAdapter.clear();
                 mSubCategoryArrayAdapter.addAll(new ArrayList(pairList));
@@ -149,7 +152,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
                 Pair<String, String> pair = mSubCategoryArrayAdapter.getItem(position);
 
-                mSelectedSubCategoryId = pair.first;
+                mSelectedMainCategoryId = pair.first;
 
                 positiveTextView.setEnabled(true);
             }
@@ -159,6 +162,28 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
             {
             }
         });
+
+        switch (callScreen)
+        {
+            case HappyTalkCategoryDialog.SCREEN_STAY_DETAIL:
+            case HappyTalkCategoryDialog.SCREEN_STAY_BOOKING:
+            case HappyTalkCategoryDialog.SCREEN_STAY_PAMENT_WAIT:
+                mMainCategorySpinner.setSelection(0);
+                break;
+
+            case HappyTalkCategoryDialog.SCREEN_GOURMET_DETAIL:
+            case HappyTalkCategoryDialog.SCREEN_GOURMET_BOOKING:
+            case HappyTalkCategoryDialog.SCREEN_GOURMET_PAMENT_WAIT:
+                mMainCategorySpinner.setSelection(1);
+                break;
+
+            case HappyTalkCategoryDialog.SCREEN_FAQ:
+            case HappyTalkCategoryDialog.SCREEN_CONTACT_US:
+            case HappyTalkCategoryDialog.SCREEN_STAY_REFUND:
+            default:
+
+                break;
+        }
     }
 
     @Override
@@ -171,7 +196,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
                 break;
 
             case R.id.positiveTextView:
-                ((OnEventListener) mOnEventListener).onHappyTalk(mSelectedMainCategoryId, mSelectedSubCategoryId);
+                ((OnEventListener) mOnEventListener).onHappyTalk(mSelectedPlaceType, mSelectedMainCategoryId);
                 break;
         }
     }
@@ -199,19 +224,41 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
             mMainCategoryMap.clear();
             mSubCategoryMap.clear();
 
+            final String STAY_PREFIX = "호텔";
+            final String GOURMET_PREFIX = "고메";
+
+            mMainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, STAY_PREFIX));
+            mMainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, GOURMET_PREFIX));
+
+            List<Pair<String, String>> subStayCategoryList = new ArrayList<>();
+            mSubCategoryMap.put(STAY_PREFIX, subStayCategoryList);
+
+            List<Pair<String, String>> subGourmetCategoryList = new ArrayList<>();
+            mSubCategoryMap.put(GOURMET_PREFIX, subGourmetCategoryList);
+
+
+            LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap<>();
+
             for (HappyTalkCategory happyTalkCategory : happyTalkCategoryList)
             {
-                mMainCategoryMap.put(happyTalkCategory.id, new Pair(happyTalkCategory.id, happyTalkCategory.name));
+                String value = linkedHashMap.get(happyTalkCategory.id);
 
-                List<Pair<String, String>> subCategoryList = mSubCategoryMap.get(happyTalkCategory.id);
-
-                if (subCategoryList == null)
+                if (Util.isTextEmpty(value) == true)
                 {
-                    subCategoryList = new ArrayList<>();
-                    mSubCategoryMap.put(happyTalkCategory.id, subCategoryList);
-                }
+                    linkedHashMap.put(happyTalkCategory.id, happyTalkCategory.name);
 
-                subCategoryList.add(new Pair(happyTalkCategory.id2, happyTalkCategory.name2));
+                    if (happyTalkCategory.name.startsWith(STAY_PREFIX) == true)
+                    {
+                        subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(STAY_PREFIX.length())));
+                    } else if (happyTalkCategory.name.startsWith(GOURMET_PREFIX) == true)
+                    {
+                        subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(GOURMET_PREFIX.length())));
+                    } else
+                    {
+                        subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));
+                        subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));
+                    }
+                }
             }
 
         } catch (Exception e)
