@@ -242,18 +242,18 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         mListAdapter.notifyDataSetChanged();
     }
 
-    private void updateRoomTypeInformationLayout(List<StayProduct> stayProductList, int nights)
+    private void updateRoomTypeInformationLayout(List<StayProduct> stayProductList, final int nights)
     {
         if (stayProductList == null || stayProductList.size() == 0)
         {
             return;
         }
 
+        mSelectedStayProduct = stayProductList.get(0);
+
         // 처음 세팅하는 경우 객실 타입 세팅
         if (mRoomTypeListAdapter == null)
         {
-            mSelectedStayProduct = stayProductList.get(0);
-
             mRoomTypeListAdapter = new StayDetailRoomTypeListAdapter(mContext, stayProductList, nights, new OnClickListener()
             {
                 @Override
@@ -277,32 +277,36 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         } else
         {
             // 재세팅 하는 경우
-            mSelectedStayProduct = stayProductList.get(0);
-
             mRoomTypeListAdapter.addAll(stayProductList, nights);
             mRoomTypeListAdapter.setSelected(0);
             mRoomTypeListAdapter.notifyDataSetChanged();
         }
 
-        // 객실 개수로 높이를 재지정해준다.
-        int size = stayProductList.size();
-        int productTitleBarHeight = Util.dpToPx(mContext, 52) + (nights > 1 ? Util.dpToPx(mContext, 40) : 0);
-        int productLayoutHeight = Util.dpToPx(mContext, 122) * size + productTitleBarHeight;
-
-        // 화면 높이 - 상단 타이틀 - 하단 버튼
-        final int maxHeight = ((View) mProductTypeLayout.getParent()).getHeight() - Util.dpToPx(mContext, 52) - Util.dpToPx(mContext, 64);
-        ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
-
-        if (productLayoutHeight > maxHeight)
-        {
-            layoutParams.height = maxHeight - productTitleBarHeight;
-        } else
-        {
-            layoutParams.height = productLayoutHeight - productTitleBarHeight;
-        }
-
-        mProductTypeRecyclerView.setLayoutParams(layoutParams);
         mProductTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
+
+        mProductTypeRecyclerView.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // 객실 개수로 높이를 재지정해준다.
+                int productTitleBarHeight = Util.dpToPx(mContext, 52) //
+                    + (nights > 1 ? Util.dpToPx(mContext, 40) : 0);
+
+                // 화면 높이 - 상단 타이틀 - 하단 버튼
+                final int maxHeight = ((View) mProductTypeLayout.getParent()).getHeight() //
+                    - Util.dpToPx(mContext, 52) - Util.dpToPx(mContext, 64);
+
+                ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
+
+                /* mProductTypeRecyclerView.getHeight() 를 사용하는 이유 - layoutParams.height 를 사용할 경우
+                   속성 값을 리턴 하여 WRAP_CONTENT 등의 값인 -2 등이 리턴 됨 */
+                int productLayoutHeight = mProductTypeRecyclerView.getHeight() + productTitleBarHeight;
+
+                layoutParams.height = Math.min(maxHeight, productLayoutHeight) - productTitleBarHeight;
+                mProductTypeRecyclerView.setLayoutParams(layoutParams);
+            }
+        }, 100);
     }
 
     @Override

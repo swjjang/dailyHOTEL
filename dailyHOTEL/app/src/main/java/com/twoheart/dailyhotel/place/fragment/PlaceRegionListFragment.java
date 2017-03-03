@@ -116,6 +116,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         if (mAdapter == null)
         {
             mAdapter = new PlaceRegionAnimatedExpandableListAdapter(baseActivity);
+            mAdapter.setIsTablet(Util.isTabletDevice(baseActivity));
             mAdapter.setOnChildClickListener(mOnChildClickListener);
         }
 

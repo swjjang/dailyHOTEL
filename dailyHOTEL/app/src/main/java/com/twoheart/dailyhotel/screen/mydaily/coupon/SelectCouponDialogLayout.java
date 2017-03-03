@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.mydaily.coupon;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,7 +59,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
         mDialogLayout = view.findViewById(R.id.dialogLayout);
 
-        if (Util.isTabletDevice(mContext) == true)
+        if (mContext instanceof Activity && Util.isTabletDevice((Activity) mContext) == true)
         {
             ViewGroup.LayoutParams layoutParams = mDialogLayout.getLayoutParams();
             layoutParams.width = Util.getLCDWidth(mContext) * 10 / 15;
