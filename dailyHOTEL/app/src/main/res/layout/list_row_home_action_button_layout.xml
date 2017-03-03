@@ -33,7 +33,7 @@
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="20dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/ic_home_category_01_hotel"
+                android:src="@drawable/ic_home_category_01_hotel"
                 />
 
             <LinearLayout
@@ -78,7 +78,7 @@
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="20dp"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/ic_home_category_02_gourmet"/>
+                android:src="@drawable/ic_home_category_02_gourmet"/>
 
             <LinearLayout
                 android:id="@+id/gourmetButtonTextView"
