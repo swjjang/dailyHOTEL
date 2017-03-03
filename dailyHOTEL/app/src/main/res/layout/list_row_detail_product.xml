@@ -26,22 +26,12 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp">
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/simpleDraweeView"
-            android:layout_width="86dp"
-            android:layout_height="86dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/shape_fillrect_l000000_a10"
-            android:padding="1px"
-            fresco:actualImageScaleType="centerCrop"/>
-
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/productNameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
-            android:layout_toRightOf="@id/simpleDraweeView"
+            android:layout_toLeftOf="@id/simpleDraweeView"
             android:textColor="@color/default_text_c323232"
             android:textSize="15dp"
             dailyFont:style="Medium"/>
@@ -52,8 +42,17 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/productNameTextView"
             android:layout_marginTop="8dp"
-            android:layout_toRightOf="@id/simpleDraweeView"
             android:orientation="vertical"/>
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simpleDraweeView"
+            android:layout_width="86dp"
+            android:layout_height="86dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="12dp"
+            android:background="@drawable/shape_fillrect_l000000_a10"
+            android:padding="1px"
+            fresco:actualImageScaleType="centerCrop"/>
     </RelativeLayout>
 
     <View
