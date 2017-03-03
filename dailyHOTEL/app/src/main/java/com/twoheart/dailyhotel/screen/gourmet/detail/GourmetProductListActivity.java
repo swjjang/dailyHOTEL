@@ -80,7 +80,7 @@ public class GourmetProductListActivity extends BaseActivity
 
         setContentView(mGourmetProductListLayout.onCreateView(R.layout.activity_gourmet_product_list));
 
-        mGourmetProductListLayout.setProductInformationLayout(mGourmetDetail.getProductList());
+        mGourmetProductListLayout.setProductInformationLayout(this, mGourmetDetail.getProductList());
 
         // 메뉴 상세화면 진입
         if (productIndex > 0)
