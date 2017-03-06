@@ -233,16 +233,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 {
                     v.setSelected(false);
                     stayCurationOption.flagAmenitiesFilters ^= stayAmenities.getFlag();
-
-                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
                     stayCurationOption.flagAmenitiesFilters |= stayAmenities.getFlag();
-
-                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
                 }
 
                 requestUpdateResultDelayed();
@@ -294,16 +288,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 {
                     v.setSelected(false);
                     stayCurationOption.flagRoomAmenitiesFilters ^= stayRoomAmenities.getFlag();
-
-                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED, (String) v.getTag(v.getId()), null);
                 } else
                 {
                     v.setSelected(true);
                     stayCurationOption.flagRoomAmenitiesFilters |= stayRoomAmenities.getFlag();
-
-                    AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, (String) v.getTag(v.getId()), null);
                 }
 
                 requestUpdateResultDelayed();
@@ -548,8 +536,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             return;
         }
 
-        String label;
-
         boolean isChecked = radioButton.isChecked();
 
         if (isChecked == false)
@@ -563,7 +549,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             case R.id.regionCheckView:
                 stayCurationOption.setSortType(SortType.DEFAULT);
-                label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
 
             case R.id.distanceCheckView:
@@ -572,49 +557,18 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
             case R.id.lowPriceCheckView:
                 stayCurationOption.setSortType(SortType.LOW_PRICE);
-                label = AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE;
                 break;
 
             case R.id.highPriceCheckView:
                 stayCurationOption.setSortType(SortType.HIGH_PRICE);
-                label = AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE;
                 break;
 
             case R.id.satisfactionCheckView:
                 stayCurationOption.setSortType(SortType.SATISFACTION);
-                label = AnalyticsManager.Label.SORTFILTER_RATING;
                 break;
 
             default:
                 return;
-        }
-
-        try
-        {
-            Province province = mStayCuration.getProvince();
-            Map<String, String> eventParams = new HashMap<>();
-
-            if (province != null)
-            {
-                if (province instanceof Area)
-                {
-                    Area area = (Area) province;
-                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                } else
-                {
-                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-                }
-            }
-
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
         }
     }
 
@@ -637,26 +591,14 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
             case R.id.doubleCheckView:
                 updateBedTypeFilter(v, StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
-                    , AnalyticsManager.Label.SORTFILTER_DOUBLE, null);
                 break;
 
             case R.id.twinCheckView:
                 updateBedTypeFilter(v, StayFilter.FLAG_HOTEL_FILTER_BED_TWIN);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
-                    , AnalyticsManager.Label.SORTFILTER_TWIN, null);
                 break;
 
             case R.id.heatedFloorsCheckView:
                 updateBedTypeFilter(v, StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS);
-
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , v.isSelected() ? AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED : AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_UNCLICKED//
-                    , AnalyticsManager.Label.SORTFILTER_ONDOL, null);
                 break;
         }
     }
@@ -751,29 +693,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
         stayCurationOption.setSortType(SortType.DISTANCE);
-
-        Province province = mStayCuration.getProvince();
-        Map<String, String> eventParams = new HashMap<>();
-        String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
-
-        if (province != null)
-        {
-            if (province instanceof Area)
-            {
-                Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-            } else
-            {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-            }
-        }
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
 
     private StayCurationNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayCurationNetworkController.OnNetworkControllerListener()

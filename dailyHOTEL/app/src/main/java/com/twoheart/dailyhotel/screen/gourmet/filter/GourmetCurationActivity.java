@@ -367,16 +367,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             view.setSelected(false);
             gourmetCurationOption.flagAmenitiesFilters ^= flag;
-
-            AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, (String) view.getTag(view.getId()), null);
         } else
         {
             view.setSelected(true);
             gourmetCurationOption.flagAmenitiesFilters |= flag;
-
-            AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, (String) view.getTag(view.getId()), null);
         }
 
         requestUpdateResultDelayed();
@@ -390,16 +384,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             view.setSelected(false);
             gourmetCurationOption.flagTimeFilter ^= flag;
-
-            AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, (String) view.getTag(), null);
         } else
         {
             view.setSelected(true);
             gourmetCurationOption.flagTimeFilter |= flag;
-
-            AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, (String) view.getTag(), null);
         }
 
         requestUpdateResultDelayed();
@@ -591,8 +579,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             return;
         }
 
-        String label;
-
         boolean isChecked = radioButton.isChecked();
 
         if (isChecked == false)
@@ -606,7 +592,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         {
             case R.id.regionCheckView:
                 gourmetCurationOption.setSortType(SortType.DEFAULT);
-                label = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
 
             case R.id.distanceCheckView:
@@ -615,44 +600,19 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
             case R.id.lowPriceCheckView:
                 gourmetCurationOption.setSortType(SortType.LOW_PRICE);
-                label = AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE;
                 break;
 
             case R.id.highPriceCheckView:
                 gourmetCurationOption.setSortType(SortType.HIGH_PRICE);
-                label = AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE;
                 break;
 
             case R.id.satisfactionCheckView:
                 gourmetCurationOption.setSortType(SortType.SATISFACTION);
-                label = AnalyticsManager.Label.SORTFILTER_RATING;
                 break;
 
             default:
                 return;
         }
-
-        Province province = mGourmetCuration.getProvince();
-        Map<String, String> eventParams = new HashMap<>();
-
-        if (province != null)
-        {
-            if (province instanceof Area)
-            {
-                Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-            } else
-            {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-            }
-        }
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
 
     @Override
@@ -798,29 +758,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     {
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
         gourmetCurationOption.setSortType(SortType.DISTANCE);
-
-        Province province = mGourmetCuration.getProvince();
-        Map<String, String> eventParams = new HashMap<>();
-        String label = AnalyticsManager.Label.SORTFILTER_DISTANCE;
-
-        if (province != null)
-        {
-            if (province instanceof Area)
-            {
-                Area area = (Area) province;
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-            } else
-            {
-                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-            }
-        }
-
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-            , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, label, eventParams);
     }
 
 
@@ -839,16 +776,10 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             {
                 dailyTextView.setSelected(false);
                 filterMap.remove(key);
-
-                AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_UNCLICKED, key, null);
             } else
             {
                 dailyTextView.setSelected(true);
                 filterMap.put(key, gourmetCurationOption.getCategoryCoderMap().get(key));
-
-                AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, key, null);
             }
 
             requestUpdateResultDelayed();
