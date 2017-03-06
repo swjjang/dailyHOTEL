@@ -186,6 +186,11 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     public boolean hasSalesPlace()
     {
+        if (mPlaceListLayout == null)
+        {
+            return false;
+        }
+
         return mPlaceListLayout.hasSalesPlace();
     }
 
