@@ -155,7 +155,13 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                 if (mMyLocationMarkerOptions != null)
                 {
-                    mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+                    try
+                    {
+                        mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
             }
         });
