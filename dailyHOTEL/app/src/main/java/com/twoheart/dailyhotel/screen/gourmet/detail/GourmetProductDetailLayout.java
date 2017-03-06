@@ -132,6 +132,15 @@ public class GourmetProductDetailLayout extends BaseLayout
             mDailyLineIndicator.setViewPager(mViewPager);
             setLineIndicatorVisible(imageInformationList.size());
             setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).imageDescription : null);
+
+            mDefaultImageLayout.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mDailyLineIndicator.notifyDataSetChanged();
+                }
+            });
         }
 
         // 메뉴 제목
