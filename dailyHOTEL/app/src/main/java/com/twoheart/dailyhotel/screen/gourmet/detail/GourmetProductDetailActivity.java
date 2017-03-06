@@ -369,6 +369,16 @@ public class GourmetProductDetailActivity extends BaseActivity
                 AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition));
             }
+
+            if (gourmetProduct.getPrimaryImage() == null)
+            {
+                AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+                    AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK_PHOTO, "n", null);
+            } else
+            {
+                AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+                    AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK_PHOTO, "y", null);
+            }
         }
 
         @Override
