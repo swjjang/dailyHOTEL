@@ -221,6 +221,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
     public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace, boolean isUsedMultiTransition)
     {
+        if (saleTime == null || homePlace == null)
+        {
+            return null;
+        }
+
         SaleTime startSaleTime = saleTime.getClone(0);
 
         Intent intent = new Intent(context, StayDetailActivity.class);

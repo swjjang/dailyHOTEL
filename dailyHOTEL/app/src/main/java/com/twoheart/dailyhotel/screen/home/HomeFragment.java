@@ -376,48 +376,78 @@ public class HomeFragment extends BaseFragment
             return;
         }
 
-        if (place.placeType == PlaceType.HOTEL)
+        switch (place.placeType)
         {
-            if (Util.isUsedMultiTransition() == true)
+            case HOTEL:
             {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
+                if (Util.isUsedMultiTransition() == true)
+                {
+                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
 
-                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                    if (intent == null)
+                    {
+                        Util.restartApp(mBaseActivity);
+                        return;
+                    }
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                    View simpleDraweeView = view.findViewById(R.id.contentImageView);
 
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
-            } else
-            {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                        android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
-                mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+                } else
+                {
+                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
 
-                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    if (intent == null)
+                    {
+                        Util.restartApp(mBaseActivity);
+                        return;
+                    }
+
+                    mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                    mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                }
+                break;
             }
-        } else if (place.placeType == PlaceType.FNB)
-        {
-            if (Util.isUsedMultiTransition() == true)
+
+            case FNB:
             {
-                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
+                if (Util.isUsedMultiTransition() == true)
+                {
+                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
 
-                View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                    if (intent == null)
+                    {
+                        Util.restartApp(mBaseActivity);
+                        return;
+                    }
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                    View simpleDraweeView = view.findViewById(R.id.contentImageView);
 
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
-            } else
-            {
-                Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                        android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+                } else
+                {
+                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
 
-                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    if (intent == null)
+                    {
+                        Util.restartApp(mBaseActivity);
+                        return;
+                    }
+
+                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                    mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                }
+                break;
             }
         }
-
     }
 
     public void sendHomeScreenAnalytics()
