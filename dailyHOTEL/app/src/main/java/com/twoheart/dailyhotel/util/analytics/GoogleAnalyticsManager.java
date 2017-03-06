@@ -248,6 +248,21 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED.equalsIgnoreCase(action) == true))
         {
             label = params.get(AnalyticsManager.KeyType.SCREEN) + '-' + label;
+        } else if (AnalyticsManager.Category.POPUP_BOXES.equalsIgnoreCase(category) == true//
+            && (AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true //
+            || AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true))
+        {
+            String countString = params.get(AnalyticsManager.KeyType.SEARCH_COUNT);
+            if (Util.isTextEmpty(countString) == false)
+            {
+                try
+                {
+                    value = Long.parseLong(countString);
+                } catch (Exception e)
+                {
+                    value = 0L;
+                }
+            }
         }
 
         mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//

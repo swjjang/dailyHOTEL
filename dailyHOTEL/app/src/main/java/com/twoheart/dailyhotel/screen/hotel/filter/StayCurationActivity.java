@@ -618,6 +618,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         Map<String, String> eventParams = new HashMap<>();
 
         eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
+        eventParams.put(AnalyticsManager.KeyType.SEARCH_COUNT, String.valueOf(getConfirmCount()));
 
         if (province != null)
         {

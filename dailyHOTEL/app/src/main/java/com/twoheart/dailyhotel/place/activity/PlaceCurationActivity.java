@@ -146,6 +146,33 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         mConfirmView.setOnClickListener(listener);
     }
 
+    protected int getConfirmCount()
+    {
+        if (mConfirmView == null)
+        {
+            return 0;
+        }
+
+        String text = mConfirmView.getText().toString();
+        if (Util.isTextEmpty(text) == true)
+        {
+            return 0;
+        }
+
+        text = text.replaceAll("\\D", "");
+
+        int count;
+        try
+        {
+            count = Integer.parseInt(text);
+        } catch (Exception e)
+        {
+            count = 0;
+        }
+
+        return count;
+    }
+
     protected void requestUpdateResult()
     {
         mHandler.removeMessages(HANDLE_MESSAGE_RESULT);

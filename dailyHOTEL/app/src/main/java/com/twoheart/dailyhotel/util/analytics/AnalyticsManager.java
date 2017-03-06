@@ -987,15 +987,15 @@ public class AnalyticsManager
         public static final String SORTFILTER_PRIVATEROOM = "PrivateRoom";
         public static final String SORTFILTER_GROUP = "Group";
         public static final String SORTFILTER_CORKAGE = "Corkage";
-        public static final String SORTFILTER_BUSINESS_CENTER = "BusinessCenter";
-        public static final String SORTFILTER_SAUNA = "Sauna";
-        public static final String SORTFILTER_KIDS_PLAY_ROOM = "KidsPlayRoom";
-        public static final String SORTFILTER_PC = "PC";
-        public static final String SORTFILTER_TV = "TV";
-        public static final String SORTFILTER_SPA_WHIRLPOOL = "whirlpool";
-        public static final String SORTFILTER_PRIVATE_BBQ = "PrivateBBQ";
-        public static final String SORTFILTER_KARAOKE = "Karaoke";
-        public static final String SORTFILTER_PARTYROOM = "PartyRoom";
+        public static final String SORTFILTER_BUSINESS_CENTER = "business_center";
+        public static final String SORTFILTER_SAUNA = "sauna";
+        public static final String SORTFILTER_KIDS_PLAY_ROOM = "kids_playroom";
+        public static final String SORTFILTER_PC = "pc";
+        public static final String SORTFILTER_TV = "tv";
+        public static final String SORTFILTER_SPA_WHIRLPOOL = "spa";
+        public static final String SORTFILTER_PRIVATE_BBQ = "bbq_room";
+        public static final String SORTFILTER_KARAOKE = "karaoke";
+        public static final String SORTFILTER_PARTYROOM = "partyroom";
         //
         public static final String SORTFILTER_0611 = "0611";
         public static final String SORTFILTER_1115 = "1115";

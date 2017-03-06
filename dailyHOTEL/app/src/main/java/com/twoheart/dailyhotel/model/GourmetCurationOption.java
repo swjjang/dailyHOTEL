@@ -213,11 +213,6 @@ public class GourmetCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_VALET).append(',');
             }
 
-            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT).append(',');
-            }
-
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_PRIVATEROOM).append(',');
@@ -226,6 +221,11 @@ public class GourmetCurationOption extends PlaceCurationOption
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_GROUP).append(',');
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT).append(',');
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)
@@ -350,11 +350,6 @@ public class GourmetCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_VALET).append('-');
             }
 
-            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT).append('-');
-            }
-
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_PRIVATEROOM) == GourmetFilter.Amenities.FLAG_PRIVATEROOM)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_PRIVATEROOM).append('-');
@@ -363,6 +358,11 @@ public class GourmetCurationOption extends PlaceCurationOption
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_GROUPBOOKING) == GourmetFilter.Amenities.FLAG_GROUPBOOKING)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_GROUP).append('-');
+            }
+
+            if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_BABYSEAT) == GourmetFilter.Amenities.FLAG_BABYSEAT)
+            {
+                result.append(AnalyticsManager.Label.SORTFILTER_BABYSEAT).append('-');
             }
 
             if ((flagAmenitiesFilters & GourmetFilter.Amenities.FLAG_CORKAGE) == GourmetFilter.Amenities.FLAG_CORKAGE)

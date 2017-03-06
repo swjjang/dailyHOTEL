@@ -683,6 +683,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
         Map<String, String> eventParams = new HashMap<>();
         eventParams.put(AnalyticsManager.KeyType.SORTING, gourmetCurationOption.getSortType().name());
+        eventParams.put(AnalyticsManager.KeyType.SEARCH_COUNT, String.valueOf(getConfirmCount()));
 
         if (province != null)
         {
