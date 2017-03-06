@@ -13,12 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.HappyTalkCategory;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyHintSpinner;
 
@@ -64,16 +61,28 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
         view.setLayoutParams(layoutParams);
-
-        setVisibility(View.INVISIBLE);
-
     }
 
-    public void setCategory(HappyTalkCategoryDialog.CallScreen callScreen, String category)
+    public void setCategory(HappyTalkCategoryDialog.CallScreen callScreen, LinkedHashMap<String, Pair<String, String>> mainCategoryMap, LinkedHashMap<String, List<Pair<String, String>>> subCategoryMap)
     {
-        parseCategory(category);
+        // 대분류
+        if (mMainCategoryMap == null)
+        {
+            mMainCategoryMap = new LinkedHashMap<>();
+        }
 
-        setVisibility(View.VISIBLE);
+        // 중분류
+        if (mSubCategoryMap == null)
+        {
+            mSubCategoryMap = new LinkedHashMap<>();
+        }
+
+        mMainCategoryMap.clear();
+        mSubCategoryMap.clear();
+
+        mMainCategoryMap.putAll(mainCategoryMap);
+        mSubCategoryMap.putAll(subCategoryMap);
+
         initCategoryLayout(mRootView, callScreen);
     }
 
@@ -198,73 +207,6 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
             case R.id.positiveTextView:
                 ((OnEventListener) mOnEventListener).onHappyTalk(mSelectedPlaceType, mSelectedMainCategoryId);
                 break;
-        }
-    }
-
-    private void parseCategory(String categoryData)
-    {
-        try
-        {
-            List<HappyTalkCategory> happyTalkCategoryList = LoganSquare.parseList(categoryData, HappyTalkCategory.class);
-
-            int size = happyTalkCategoryList.size();
-
-            // 대분류
-            if (mMainCategoryMap == null)
-            {
-                mMainCategoryMap = new LinkedHashMap<>();
-            }
-
-            // 중분류
-            if (mSubCategoryMap == null)
-            {
-                mSubCategoryMap = new LinkedHashMap<>();
-            }
-
-            mMainCategoryMap.clear();
-            mSubCategoryMap.clear();
-
-            final String STAY_PREFIX = "호텔";
-            final String GOURMET_PREFIX = "고메";
-
-            mMainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, STAY_PREFIX));
-            mMainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, GOURMET_PREFIX));
-
-            List<Pair<String, String>> subStayCategoryList = new ArrayList<>();
-            mSubCategoryMap.put(STAY_PREFIX, subStayCategoryList);
-
-            List<Pair<String, String>> subGourmetCategoryList = new ArrayList<>();
-            mSubCategoryMap.put(GOURMET_PREFIX, subGourmetCategoryList);
-
-
-            LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap<>();
-
-            for (HappyTalkCategory happyTalkCategory : happyTalkCategoryList)
-            {
-                String value = linkedHashMap.get(happyTalkCategory.id);
-
-                if (Util.isTextEmpty(value) == true)
-                {
-                    linkedHashMap.put(happyTalkCategory.id, happyTalkCategory.name);
-
-                    if (happyTalkCategory.name.startsWith(STAY_PREFIX) == true)
-                    {
-                        subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(STAY_PREFIX.length())));
-                    } else if (happyTalkCategory.name.startsWith(GOURMET_PREFIX) == true)
-                    {
-                        subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(GOURMET_PREFIX.length())));
-                    } else
-                    {
-                        subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));
-                        subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));
-                    }
-                }
-            }
-
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-            // 에러가 나면 특정 유형으로 상담이 되도로 하는 것이 필요할것 같음.
         }
     }
 

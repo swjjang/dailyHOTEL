@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.model.HappyTalkCategory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -18,11 +20,11 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HappyTalkCategoryDialog extends BaseActivity
@@ -52,9 +54,11 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
     }
 
-    private HappyTalkCategoryDialogLayout mHappyTalkCategoryDialogLayout;
+    private HappyTalkCategoryDialogLayout mLayout;
+    private HappyTalkCategoryDialogNetworkController mNetworkController;
     private CallScreen mCallScreen;
     private int mPlaceIndex, mBookingIndex;
+    private String mPlaceType, mMainCategoryId;
 
     public static Intent newInstance(Context context, CallScreen callScreen, int placeIndex, int bookingIndex)
     {
@@ -83,13 +87,15 @@ public class HappyTalkCategoryDialog extends BaseActivity
             finish();
         }
 
-        mHappyTalkCategoryDialogLayout = new HappyTalkCategoryDialogLayout(this, mOnEventListener);
+        mLayout = new HappyTalkCategoryDialogLayout(this, mOnEventListener);
+        mNetworkController = new HappyTalkCategoryDialogNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        setContentView(mHappyTalkCategoryDialogLayout.onCreateView(R.layout.activity_happytalk_category_dialog));
+        setContentView(mLayout.onCreateView(R.layout.activity_happytalk_category_dialog));
+        mLayout.setVisibility(View.INVISIBLE);
 
         if (DailyHotel.isLogin() == true)
         {
-            initCategoryData();
+            initCategory();
         } else
         {
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_happytalk_login), //
@@ -131,7 +137,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
             {
                 if (resultCode == RESULT_OK)
                 {
-                    initCategoryData();
+                    initCategory();
                 } else
                 {
                     finish();
@@ -143,7 +149,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void initCategoryData()
+    private void initCategory()
     {
         String happyTalkCategory = DailyPreference.getInstance(this).getHappyTalkCategory();
 
@@ -152,46 +158,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         {
             lockUI();
 
-            DailyMobileAPI.getInstance(this).requestHappyTalkCategory(mNetworkTag, new Callback<JSONObject>()
-            {
-                @Override
-                public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-                {
-                    if (response != null && response.isSuccessful() && response.body() != null)
-                    {
-                        try
-                        {
-                            JSONObject jsonObjectData = response.body();
-
-                            if ("success".equalsIgnoreCase(jsonObjectData.getString("code")) == true)
-                            {
-                                JSONObject jsonObjectResults = jsonObjectData.getJSONObject("results");
-                                JSONArray jsonArray = jsonObjectResults.getJSONArray("assign");
-
-                                String happyTalkCategory = jsonArray.toString();
-                                DailyPreference.getInstance(HappyTalkCategoryDialog.this).setHappyTalkCategory(happyTalkCategory);
-
-                                onHappyTalkCategory(mCallScreen, happyTalkCategory);
-                            }
-
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        }
-
-                        unLockUI();
-                    } else
-                    {
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JSONObject> call, Throwable t)
-                {
-
-                }
-            });
+            mNetworkController.requestHappyTalkCategory();
         } else
         {
             onHappyTalkCategory(mCallScreen, happyTalkCategory);
@@ -200,7 +167,13 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
     private void onHappyTalkCategory(CallScreen callScreen, String category)
     {
-        mHappyTalkCategoryDialogLayout.setCategory(callScreen, category);
+        LinkedHashMap<String, Pair<String, String>> mainCategoryMap = new LinkedHashMap<>();
+        LinkedHashMap<String, List<Pair<String, String>>> subCategoryMap = new LinkedHashMap<>();
+
+        parseCategory(category, mainCategoryMap, subCategoryMap);
+
+        mLayout.setVisibility(View.VISIBLE);
+        mLayout.setCategory(callScreen, mainCategoryMap, subCategoryMap);
     }
 
     @Override
@@ -231,7 +204,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         urlStringBuilder.append("&parameter2=" + userIndex); // 커스텀 파라미터2
         urlStringBuilder.append("&parameter3=" + mCallScreen.getName()); // 커스텀 파라미터3
 
-        urlStringBuilder.append("&parameter4=" + mPlaceIndex); // 커스텀 파라미터4
+        urlStringBuilder.append("&parameter4="); // 커스텀 파라미터4
         urlStringBuilder.append("&parameter5="); // 커스텀 파라미터5
         urlStringBuilder.append("&parameter6="); // 커스텀 파라미터6
         urlStringBuilder.append("&parameter7="); // 커스텀 파라미터7
@@ -252,6 +225,66 @@ public class HappyTalkCategoryDialog extends BaseActivity
         finish();
     }
 
+    /**
+     * @param categoryData
+     * @param mainCategoryMap get Data
+     * @param subCategoryMap  get Data
+     */
+    private void parseCategory(String categoryData, LinkedHashMap<String, Pair<String, String>> mainCategoryMap, LinkedHashMap<String, List<Pair<String, String>>> subCategoryMap)
+    {
+        if (mainCategoryMap == null || subCategoryMap == null)
+        {
+            return;
+        }
+
+        try
+        {
+            List<HappyTalkCategory> happyTalkCategoryList = LoganSquare.parseList(categoryData, HappyTalkCategory.class);
+
+            int size = happyTalkCategoryList.size();
+
+            final String STAY_PREFIX = "호텔";
+            final String GOURMET_PREFIX = "고메";
+
+            mainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, STAY_PREFIX));
+            mainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, GOURMET_PREFIX));
+
+            List<Pair<String, String>> subStayCategoryList = new ArrayList<>();
+            subCategoryMap.put(STAY_PREFIX, subStayCategoryList);
+
+            List<Pair<String, String>> subGourmetCategoryList = new ArrayList<>();
+            subCategoryMap.put(GOURMET_PREFIX, subGourmetCategoryList);
+
+            LinkedHashMap<String, String> linkedHashMap = new LinkedHashMap<>();
+
+            for (HappyTalkCategory happyTalkCategory : happyTalkCategoryList)
+            {
+                String value = linkedHashMap.get(happyTalkCategory.id);
+
+                if (Util.isTextEmpty(value) == true)
+                {
+                    linkedHashMap.put(happyTalkCategory.id, happyTalkCategory.name);
+
+                    if (happyTalkCategory.name.startsWith(STAY_PREFIX) == true)
+                    {
+                        subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(STAY_PREFIX.length())));
+                    } else if (happyTalkCategory.name.startsWith(GOURMET_PREFIX) == true)
+                    {
+                        subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(GOURMET_PREFIX.length())));
+                    } else
+                    {
+                        subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));
+                        subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));
+                    }
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+            // 에러가 나면 특정 유형으로 상담이 되도로 하는 것이 필요할것 같음.
+        }
+    }
+
     private HappyTalkCategoryDialogLayout.OnEventListener mOnEventListener = new HappyTalkCategoryDialogLayout.OnEventListener()
     {
         @Override
@@ -261,52 +294,58 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
 
         @Override
-        public void onHappyTalk(final String placeType, final String mainId)
+        public void onHappyTalk(String placeType, String mainId)
         {
-            DailyMobileAPI.getInstance(HappyTalkCategoryDialog.this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
-            {
+            mPlaceType = placeType;
+            mMainCategoryId = mainId;
 
-                @Override
-                public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-                {
-                    if (response != null && response.isSuccessful() && response.body() != null)
-                    {
-                        try
-                        {
-                            JSONObject responseJSONObject = response.body();
+            mNetworkController.requestUserProfie();
+        }
+    };
 
-                            int msgCode = responseJSONObject.getInt("msgCode");
+    private HappyTalkCategoryDialogNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HappyTalkCategoryDialogNetworkController.OnNetworkControllerListener()
+    {
+        @Override
+        public void onHappyTalkCategory(String happyTalkCategory)
+        {
+            DailyPreference.getInstance(HappyTalkCategoryDialog.this).setHappyTalkCategory(happyTalkCategory);
 
-                            if (msgCode == 100)
-                            {
-                                JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+            HappyTalkCategoryDialog.this.onHappyTalkCategory(mCallScreen, happyTalkCategory);
 
-                                String userIndex = jsonObject.getString("userIdx");
+            unLockUI();
+        }
 
-                                startHappyTalk(userIndex, placeType, mainId);
-                            } else
-                            {
-                                String message = responseJSONObject.getString("msg");
-                                HappyTalkCategoryDialog.this.onErrorPopupMessage(msgCode, message);
-                            }
-                        } catch (Exception e)
-                        {
-                            ExLog.d(e.toString());
-                        }
-                    } else
-                    {
-                        HappyTalkCategoryDialog.this.onErrorResponse(call, response);
-                        finish();
-                    }
-                }
+        @Override
+        public void onUserProfile(String userIndex)
+        {
+            startHappyTalk(userIndex, mPlaceType, mMainCategoryId);
+        }
 
-                @Override
-                public void onFailure(Call<JSONObject> call, Throwable t)
-                {
-                    HappyTalkCategoryDialog.this.onError(t);
-                    finish();
-                }
-            });
+        @Override
+        public void onError(Throwable e)
+        {
+            HappyTalkCategoryDialog.this.onError(e);
+            finish();
+        }
+
+        @Override
+        public void onErrorPopupMessage(int msgCode, String message)
+        {
+            HappyTalkCategoryDialog.this.onErrorPopupMessage(msgCode, message);
+        }
+
+        @Override
+        public void onErrorToastMessage(String message)
+        {
+            HappyTalkCategoryDialog.this.onErrorToastMessage(message);
+            finish();
+        }
+
+        @Override
+        public void onErrorResponse(Call call, Response response)
+        {
+            HappyTalkCategoryDialog.this.onErrorResponse(call, response);
+            finish();
         }
     };
 }
