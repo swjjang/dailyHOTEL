@@ -27,24 +27,39 @@ import retrofit2.Response;
 
 public class HappyTalkCategoryDialog extends BaseActivity
 {
-    public static final int SCREEN_STAY_DETAIL = 1; // 스테이 상세
-    public static final int SCREEN_GOURMET_DETAIL = 2;// 고메 상세
-    public static final int SCREEN_STAY_PAMENT_WAIT = 3; // 계좌이체 결제 대기
-    public static final int SCREEN_GOURMET_PAMENT_WAIT = 4; // 계좌이체 결제 대기
-    public static final int SCREEN_STAY_BOOKING = 5; // 스테이 예약화면
-    public static final int SCREEN_GOURMET_BOOKING = 6; // 고메 예약 화면
-    public static final int SCREEN_FAQ = 7; // 더보기 FAQ
-    public static final int SCREEN_CONTACT_US = 8; // 더보기 문의하기
-    public static final int SCREEN_STAY_REFUND = 9; // 환불 문의하기
+    public enum CallScreen
+    {
+        SCREEN_STAY_DETAIL("스테이상세화면"),
+        SCREEN_GOURMET_DETAIL("고메상세화면"),
+        SCREEN_STAY_PAMENT_WAIT("스테이계좌이체결제대기"),
+        SCREEN_GOURMET_PAMENT_WAIT("고메계좌이체결제대기"),
+        SCREEN_STAY_BOOKING("스테이예약화면"),
+        SCREEN_GOURMET_BOOKING("고메예약화면"),
+        SCREEN_FAQ("자주묻는질문화면"),
+        SCREEN_CONTACT_US("문의하기화면"),
+        SCREEN_STAY_REFUND("스테이예약환불문의");
+
+        private String mName;
+
+        CallScreen(String name)
+        {
+            mName = name;
+        }
+
+        public String getName()
+        {
+            return mName;
+        }
+    }
 
     private HappyTalkCategoryDialogLayout mHappyTalkCategoryDialogLayout;
-    private int mCallScreen;
+    private CallScreen mCallScreen;
     private int mPlaceIndex, mBookingIndex;
 
-    public static Intent newInstance(Context context, int callScreen, int placeIndex, int bookingIndex)
+    public static Intent newInstance(Context context, CallScreen callScreen, int placeIndex, int bookingIndex)
     {
         Intent intent = new Intent(context, HappyTalkCategoryDialog.class);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, callScreen);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, callScreen.name());
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, bookingIndex);
 
@@ -60,7 +75,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         if (intent != null)
         {
-            mCallScreen = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, 0);
+            mCallScreen = CallScreen.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN));
             mPlaceIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, 0);
             mBookingIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, 0);
         } else
@@ -183,7 +198,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
     }
 
-    private void onHappyTalkCategory(int callScreen, String category)
+    private void onHappyTalkCategory(CallScreen callScreen, String category)
     {
         mHappyTalkCategoryDialogLayout.setCategory(callScreen, category);
     }
@@ -192,6 +207,49 @@ public class HappyTalkCategoryDialog extends BaseActivity
     public void onBackPressed()
     {
         super.onBackPressed();
+    }
+
+    private void startHappyTalk(String userIndex, String placeType, String mainId)
+    {
+        StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
+        urlStringBuilder.append("?yid=%40hailey099"); // 객사 옐로우 아이디
+        urlStringBuilder.append("&category_id=" + mainId); // 대분류
+        //            urlStringBuilder.append("&division_id=" + subId); // 중분류
+        urlStringBuilder.append("&title="); // 상담제목
+
+        if (mBookingIndex > 0)
+        {
+            urlStringBuilder.append("&order_number=" + mBookingIndex); // 주문번호
+        }
+
+        if (mPlaceIndex > 0)
+        {
+            urlStringBuilder.append("&product_number=" + mPlaceIndex); // 상품번호
+        }
+
+        urlStringBuilder.append("&parameter1=" + placeType); // 커스텀 파라미터1
+        urlStringBuilder.append("&parameter2=" + userIndex); // 커스텀 파라미터2
+        urlStringBuilder.append("&parameter3=" + mCallScreen.getName()); // 커스텀 파라미터3
+
+        urlStringBuilder.append("&parameter4=" + mPlaceIndex); // 커스텀 파라미터4
+        urlStringBuilder.append("&parameter5="); // 커스텀 파라미터5
+        urlStringBuilder.append("&parameter6="); // 커스텀 파라미터6
+        urlStringBuilder.append("&parameter7="); // 커스텀 파라미터7
+        urlStringBuilder.append("&parameter8="); // 커스텀 파라미터8
+        urlStringBuilder.append("&parameter9="); // 커스텀 파라미터9
+        urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
+
+        try
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlStringBuilder.toString()));
+            startActivity(intent);
+        } catch (ActivityNotFoundException e)
+        {
+            // 연결 가능한 웹 브라우저가 없습니다.
+
+        }
+
+        finish();
     }
 
     private HappyTalkCategoryDialogLayout.OnEventListener mOnEventListener = new HappyTalkCategoryDialogLayout.OnEventListener()
@@ -203,37 +261,52 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
 
         @Override
-        public void onHappyTalk(String placeType, String mainId)
+        public void onHappyTalk(final String placeType, final String mainId)
         {
-            StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
-            urlStringBuilder.append("?yid=%40hailey099"); // 객사 옐로우 아이디
-            urlStringBuilder.append("&category_id=" + mainId); // 대분류
-            //            urlStringBuilder.append("&division_id=" + subId); // 중분류
-            urlStringBuilder.append("&title="); // 상담제목
-            urlStringBuilder.append("&order_number="); // 주문번호
-            urlStringBuilder.append("&product_number="); // 상품번호
-            urlStringBuilder.append("&parameter1=" + placeType); // 커스텀 파라미터1
-            urlStringBuilder.append("&parameter2="); // 커스텀 파라미터2
-            urlStringBuilder.append("&parameter3="); // 커스텀 파라미터3
-            urlStringBuilder.append("&parameter4="); // 커스텀 파라미터4
-            urlStringBuilder.append("&parameter5="); // 커스텀 파라미터5
-            urlStringBuilder.append("&parameter6="); // 커스텀 파라미터6
-            urlStringBuilder.append("&parameter7="); // 커스텀 파라미터7
-            urlStringBuilder.append("&parameter8="); // 커스텀 파라미터8
-            urlStringBuilder.append("&parameter9="); // 커스텀 파라미터9
-            urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
-
-            try
+            DailyMobileAPI.getInstance(HappyTalkCategoryDialog.this).requestUserProfile(mNetworkTag, new retrofit2.Callback<JSONObject>()
             {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlStringBuilder.toString()));
-                startActivity(intent);
-            } catch (ActivityNotFoundException e)
-            {
-                // 연결 가능한 웹 브라우저가 없습니다.
 
-            }
+                @Override
+                public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+                {
+                    if (response != null && response.isSuccessful() && response.body() != null)
+                    {
+                        try
+                        {
+                            JSONObject responseJSONObject = response.body();
 
-            finish();
+                            int msgCode = responseJSONObject.getInt("msgCode");
+
+                            if (msgCode == 100)
+                            {
+                                JSONObject jsonObject = responseJSONObject.getJSONObject("data");
+
+                                String userIndex = jsonObject.getString("userIdx");
+
+                                startHappyTalk(userIndex, placeType, mainId);
+                            } else
+                            {
+                                String message = responseJSONObject.getString("msg");
+                                HappyTalkCategoryDialog.this.onErrorPopupMessage(msgCode, message);
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+                    } else
+                    {
+                        HappyTalkCategoryDialog.this.onErrorResponse(call, response);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JSONObject> call, Throwable t)
+                {
+                    HappyTalkCategoryDialog.this.onError(t);
+                    finish();
+                }
+            });
         }
     };
 }

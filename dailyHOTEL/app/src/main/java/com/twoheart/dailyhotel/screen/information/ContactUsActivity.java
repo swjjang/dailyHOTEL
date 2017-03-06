@@ -125,7 +125,7 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
 
     private void startKakaoTalkConsult()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.SCREEN_CONTACT_US, 0, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_CONTACT_US, 0, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
         //        Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"));
         //        if (intent.resolveActivity(getPackageManager()) == null)

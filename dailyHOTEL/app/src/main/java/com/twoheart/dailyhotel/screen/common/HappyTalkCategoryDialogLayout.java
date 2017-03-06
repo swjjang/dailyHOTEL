@@ -69,7 +69,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
     }
 
-    public void setCategory(int callScreen, String category)
+    public void setCategory(HappyTalkCategoryDialog.CallScreen callScreen, String category)
     {
         parseCategory(category);
 
@@ -77,7 +77,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
         initCategoryLayout(mRootView, callScreen);
     }
 
-    private void initCategoryLayout(View view, int callScreen)
+    private void initCategoryLayout(View view, HappyTalkCategoryDialog.CallScreen callScreen)
     {
         mMainCategorySpinner = (DailyHintSpinner) view.findViewById(R.id.mainCategorySpinner);
         mSubCategorySpinner = (DailyHintSpinner) view.findViewById(R.id.subCategorySpinner);
@@ -165,21 +165,21 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
         switch (callScreen)
         {
-            case HappyTalkCategoryDialog.SCREEN_STAY_DETAIL:
-            case HappyTalkCategoryDialog.SCREEN_STAY_BOOKING:
-            case HappyTalkCategoryDialog.SCREEN_STAY_PAMENT_WAIT:
+            case SCREEN_STAY_DETAIL:
+            case SCREEN_STAY_BOOKING:
+            case SCREEN_STAY_PAMENT_WAIT:
                 mMainCategorySpinner.setSelection(0);
                 break;
 
-            case HappyTalkCategoryDialog.SCREEN_GOURMET_DETAIL:
-            case HappyTalkCategoryDialog.SCREEN_GOURMET_BOOKING:
-            case HappyTalkCategoryDialog.SCREEN_GOURMET_PAMENT_WAIT:
+            case SCREEN_GOURMET_DETAIL:
+            case SCREEN_GOURMET_BOOKING:
+            case SCREEN_GOURMET_PAMENT_WAIT:
                 mMainCategorySpinner.setSelection(1);
                 break;
 
-            case HappyTalkCategoryDialog.SCREEN_FAQ:
-            case HappyTalkCategoryDialog.SCREEN_CONTACT_US:
-            case HappyTalkCategoryDialog.SCREEN_STAY_REFUND:
+            case SCREEN_FAQ:
+            case SCREEN_CONTACT_US:
+            case SCREEN_STAY_REFUND:
             default:
 
                 break;
