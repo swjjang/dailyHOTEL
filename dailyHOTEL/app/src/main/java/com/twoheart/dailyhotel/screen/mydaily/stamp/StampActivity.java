@@ -9,16 +9,8 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.information.terms.BonusTermActivity;
-import com.twoheart.dailyhotel.screen.mydaily.bonus.BonusLayout;
-import com.twoheart.dailyhotel.screen.mydaily.bonus.BonusNetworkController;
-import com.twoheart.dailyhotel.screen.mydaily.bonus.InviteFriendsActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -26,7 +18,7 @@ import retrofit2.Response;
 public class StampActivity extends BaseActivity
 {
     StampLayout mStampLayout;
-    private BonusNetworkController mNetworkController;
+    private StampNetworkController mNetworkController;
 
     public static Intent newInstance(Context context)
     {
@@ -44,7 +36,7 @@ public class StampActivity extends BaseActivity
         mStampLayout = new StampLayout(this, mOnEventListener);
         mNetworkController = new StampNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
-        setContentView(mStampLayout.onCreateView(R.layout.activity_bonus));
+        setContentView(mStampLayout.onCreateView(R.layout.activity_stamp));
     }
 
     @Override
@@ -52,7 +44,7 @@ public class StampActivity extends BaseActivity
     {
         super.onStart();
 
-        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.BONUS, null);
+        //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
 
         if (DailyHotel.isLogin() == false)
         {
@@ -60,7 +52,7 @@ public class StampActivity extends BaseActivity
         } else
         {
             lockUI();
-            mNetworkController.requestProfileBenefit();
+            mNetworkController.requestStamp();
         }
     }
 
@@ -95,7 +87,7 @@ public class StampActivity extends BaseActivity
         }
     }
 
-    void startLogin()
+    private void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
@@ -124,7 +116,7 @@ public class StampActivity extends BaseActivity
         };
 
         String title = this.getResources().getString(R.string.dialog_notice2);
-        String message = this.getResources().getString(R.string.message_you_can_check_the_bonus_after_login);
+        String message = this.getResources().getString(R.string.message_stamp_you_can_check_the_stamp_after_login);
         String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
         String negative = this.getResources().getString(R.string.dialog_btn_text_no);
 
@@ -138,34 +130,8 @@ public class StampActivity extends BaseActivity
         }, null, true);
     }
 
-    private BonusLayout.OnEventListener mOnEventListener = new BonusLayout.OnEventListener()
+    private StampLayout.OnEventListener mOnEventListener = new StampLayout.OnEventListener()
     {
-        @Override
-        public void onInviteFriends()
-        {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Intent intent = InviteFriendsActivity.newInstance(StampActivity.this, mRecommendCode, mName);
-            startActivityForResult(intent, REQUEST_ACTIVITY_INVITE_FRIENDS);
-
-            AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
-                AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);
-        }
-
-        @Override
-        public void onBonusGuide()
-        {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Intent intent = new Intent(StampActivity.this, BonusTermActivity.class);
-            startActivityForResult(intent, REQUEST_ACTIVITY_TERMS);
-        }
 
         @Override
         public void finish()
@@ -174,34 +140,8 @@ public class StampActivity extends BaseActivity
         }
     };
 
-    private BonusNetworkController.OnNetworkControllerListener mNetworkControllerListener = new BonusNetworkController.OnNetworkControllerListener()
+    private StampNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StampNetworkController.OnNetworkControllerListener()
     {
-        @Override
-        public void onUserInformation(String recommendCode, String name, boolean isExceedBonus)
-        {
-            mName = name;
-            mRecommendCode = recommendCode;
-            mBonusLayout.setBottomLayoutVisible(isExceedBonus == false);
-        }
-
-        @Override
-        public void onBonusHistoryList(List<Bonus> list)
-        {
-            mBonusLayout.setData(list);
-
-            unLockUI();
-        }
-
-        @Override
-        public void onBonus(int bonus)
-        {
-            if (bonus < 0)
-            {
-                bonus = 0;
-            }
-
-            mBonusLayout.setBonus(bonus);
-        }
 
         @Override
         public void onError(Throwable e)
