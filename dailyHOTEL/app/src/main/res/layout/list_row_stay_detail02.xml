@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -90,9 +91,9 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:background="@drawable/img_detail_coupon_down"
+            android:gravity="center"
             android:orientation="vertical"
-            android:paddingRight="26dp"
-            android:gravity="center">
+            android:paddingRight="26dp">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="wrap_content"
@@ -132,6 +133,53 @@
         android:layout_height="1dp"
         android:background="@color/default_line_cf0f0f0"/>
 
+    <LinearLayout
+        android:id="@+id/stampLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/stampSimpleDraweeView"
+                android:layout_width="match_parent"
+                android:layout_height="101dp"
+                android:adjustViewBounds="true"
+                fresco:actualImageScaleType="centerCrop"
+                fresco:overlayImage="@color/black_a40"/>
+
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/stampMessageTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:textSize="15dp"/>
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
+            android:background="@color/default_background"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/dateInformationLayout"
         android:layout_width="match_parent"
@@ -163,9 +211,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="9dp"
                     android:drawablePadding="4dp"
-                    app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"
                     android:textColor="@color/default_text_cb70038"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp"
+                    app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
             </LinearLayout>
 
             <View
@@ -193,9 +241,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="9dp"
                     android:drawablePadding="4dp"
-                    app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"
                     android:textColor="@color/default_text_cb70038"
-                    android:textSize="15dp"/>
+                    android:textSize="15dp"
+                    app:drawableCompatRight="@drawable/navibar_m_burg_ic_v"/>
             </LinearLayout>
         </LinearLayout>
 
