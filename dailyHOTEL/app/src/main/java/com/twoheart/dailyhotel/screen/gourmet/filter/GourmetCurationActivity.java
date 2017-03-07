@@ -704,6 +704,19 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED, gourmetCurationOption.toString(), eventParams);
 
+        // 추가 항목
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.GOURMET_SORT, gourmetCurationOption.toSortString(), null);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.GOURMET_CATEGORY, String.valueOf(gourmetCurationOption.toCategoryString(GourmetCurationOption.GA_DELIMITER)), null);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.GOURMET_TIME, gourmetCurationOption.toReservationTimeString(GourmetCurationOption.GA_DELIMITER), null);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.GOURMET_AMENITIES, gourmetCurationOption.toAmenitiesString(GourmetCurationOption.GA_DELIMITER), null);
+
         if (Constants.DEBUG == true)
         {
             ExLog.d(gourmetCurationOption.toString());
@@ -823,6 +836,11 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             if (totalCount <= 0)
             {
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));
+
+                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+
+                AnalyticsManager.getInstance(GourmetCurationActivity.this).recordEvent(AnalyticsManager.Category.SORT_FLITER //
+                    , AnalyticsManager.Action.GOURMET_NO_RESULT, gourmetCurationOption.toString(), null);
             } else
             {
                 setResultMessage(getString(R.string.label_gourmet_filter_result_count, totalCount));

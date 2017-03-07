@@ -63,36 +63,52 @@ public class StayCurationOption extends PlaceCurationOption
         return true;
     }
 
-    public String toString()
+    public String toSortString()
     {
-        StringBuilder result = new StringBuilder();
+        String result;
 
         switch (getSortType())
         {
             case DEFAULT:
-                result.append(AnalyticsManager.Label.SORTFILTER_DISTRICT);
+                result = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
 
             case DISTANCE:
-                result.append(AnalyticsManager.Label.SORTFILTER_DISTANCE);
+                result = AnalyticsManager.Label.SORTFILTER_DISTANCE;
                 break;
 
             case LOW_PRICE:
-                result.append(AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE);
+                result = AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE;
                 break;
 
             case HIGH_PRICE:
-                result.append(AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE);
+                result = AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE;
                 break;
 
             case SATISFACTION:
-                result.append(AnalyticsManager.Label.SORTFILTER_RATING);
+                result = AnalyticsManager.Label.SORTFILTER_RATING;
+                break;
+
+            default:
+                result = AnalyticsManager.Label.SORTFILTER_DISTRICT;
                 break;
         }
 
-        result.append('-');
-        result.append(person);
-        result.append('-');
+        return result;
+    }
+
+    /**
+     * @param delimiter GA_DELIMITER or ADJUST_DELIMITER, default GA_DELIMITER;
+     * @return
+     */
+    public String toBedTypeString(char delimiter)
+    {
+        if (ADJUST_DELIMITER != delimiter)
+        {
+            delimiter = GA_DELIMITER;
+        }
+
+        StringBuilder result = new StringBuilder();
 
         if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
         {
@@ -101,26 +117,40 @@ public class StayCurationOption extends PlaceCurationOption
         {
             if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append(delimiter);
             }
 
             if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_TWIN).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_TWIN).append(delimiter);
             }
 
             if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append(delimiter);
             }
 
-            if (result.charAt(result.length() - 1) == ',')
+            if (result.charAt(result.length() - 1) == delimiter)
             {
                 result.setLength(result.length() - 1);
             }
         }
 
-        result.append('-');
+        return result.toString();
+    }
+
+    /**
+     * @param delimiter GA_DELIMITER or ADJUST_DELIMITER, default GA_DELIMITER;
+     * @return
+     */
+    public String toAmenitiesString(char delimiter)
+    {
+        if (ADJUST_DELIMITER != delimiter)
+        {
+            delimiter = GA_DELIMITER;
+        }
+
+        StringBuilder result = new StringBuilder();
 
         if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
         {
@@ -129,56 +159,70 @@ public class StayCurationOption extends PlaceCurationOption
         {
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_BBQ).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_POOL).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_POOL).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BUSINESS_CENTER)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SAUNA) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SAUNA)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PET).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_PET).append(delimiter);
             }
 
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_KIDS_PLAY_ROOM)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append(delimiter);
             }
 
-            if (result.charAt(result.length() - 1) == ',')
+            if (result.charAt(result.length() - 1) == delimiter)
             {
                 result.setLength(result.length() - 1);
             }
         }
 
-        result.append('-');
+        return result.toString();
+    }
+
+    /**
+     * @param delimiter GA_DELIMITER or ADJUST_DELIMITER, default GA_DELIMITER;
+     * @return
+     */
+    public String toRoomAmenitiesString(char delimiter)
+    {
+        if (ADJUST_DELIMITER != delimiter)
+        {
+            delimiter = GA_DELIMITER;
+        }
+
+        StringBuilder result = new StringBuilder();
 
         if (flagRoomAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE)
         {
@@ -187,59 +231,76 @@ public class StayCurationOption extends PlaceCurationOption
         {
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_WIFI).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PC).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_PC).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_TV).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_TV).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append(delimiter);
             }
 
             if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PARTY_ROOM)
             {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(',');
+                result.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append(delimiter);
             }
 
-            if (result.charAt(result.length() - 1) == ',')
+            if (result.charAt(result.length() - 1) == delimiter)
             {
                 result.setLength(result.length() - 1);
             }
         }
+
+        return result.toString();
+    }
+
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+
+        result.append(toSortString());
+        result.append('-');
+        result.append(person);
+        result.append('-');
+        result.append(toBedTypeString(GA_DELIMITER));
+        result.append('-');
+        result.append(toAmenitiesString(GA_DELIMITER));
+        result.append('-');
+        result.append(toRoomAmenitiesString(GA_DELIMITER));
 
         return result.toString();
     }
@@ -250,182 +311,15 @@ public class StayCurationOption extends PlaceCurationOption
         StringBuilder result = new StringBuilder();
 
         result.append("[sort:");
-
-        switch (getSortType())
-        {
-            case DEFAULT:
-                result.append(AnalyticsManager.Label.SORTFILTER_DISTRICT);
-                break;
-
-            case DISTANCE:
-                result.append(AnalyticsManager.Label.SORTFILTER_DISTANCE);
-                break;
-
-            case LOW_PRICE:
-                result.append(AnalyticsManager.Label.SORTFILTER_LOWTOHIGHPRICE);
-                break;
-
-            case HIGH_PRICE:
-                result.append(AnalyticsManager.Label.SORTFILTER_HIGHTOLOWPRICE);
-                break;
-
-            case SATISFACTION:
-                result.append(AnalyticsManager.Label.SORTFILTER_RATING);
-                break;
-        }
-
+        result.append(toSortString());
         result.append(",persons:");
         result.append(person);
         result.append(",type:");
-
-        if (flagBedTypeFilters == StayFilter.FLAG_HOTEL_FILTER_BED_NONE)
-        {
-            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
-        } else
-        {
-            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE) == StayFilter.FLAG_HOTEL_FILTER_BED_DOUBLE)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_DOUBLE).append('-');
-            }
-
-            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_TWIN) == StayFilter.FLAG_HOTEL_FILTER_BED_TWIN)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_TWIN).append('-');
-            }
-
-            if ((flagBedTypeFilters & StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS) == StayFilter.FLAG_HOTEL_FILTER_BED_HEATEDFLOORS)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_ONDOL).append('-');
-            }
-
-            if (result.charAt(result.length() - 1) == '-')
-            {
-                result.setLength(result.length() - 1);
-            }
-        }
-
+        result.append(toBedTypeString(ADJUST_DELIMITER));
         result.append(",facility:");
-
-        if (flagAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NONE)
-        {
-            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
-        } else
-        {
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PARKING)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_BBQ).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_POOL).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_BUSINESS_CENTER)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_BUSINESS_CENTER).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_FITNESS)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_FITNESS).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SAUNA) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SAUNA)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_SAUNA).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_PET)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_PET).append('-');
-            }
-
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_KIDS_PLAY_ROOM)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_KIDS_PLAY_ROOM).append('-');
-            }
-
-            if (result.charAt(result.length() - 1) == '-')
-            {
-                result.setLength(result.length() - 1);
-            }
-        }
-
-        // TODO : ROOM Amenities
+        result.append(toAmenitiesString(ADJUST_DELIMITER));
         result.append(",Room facility:");
-
-        if (flagRoomAmenitiesFilters == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_NONE)
-        {
-            result.append(AnalyticsManager.Label.SORTFILTER_NONE);
-        } else
-        {
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_WIFI).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_KITCHEN).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_PC).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BATHTUB)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_BATHTUB).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_TV).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_KARAOKE).append('-');
-            }
-
-            if ((flagRoomAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PARTY_ROOM)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARTYROOM).append('-');
-            }
-
-            if (result.charAt(result.length() - 1) == '-')
-            {
-                result.setLength(result.length() - 1);
-            }
-        }
-
+        result.append(toRoomAmenitiesString(ADJUST_DELIMITER));
         result.append("]");
 
         return result.toString();

@@ -7,6 +7,9 @@ import com.twoheart.dailyhotel.util.Constants;
 
 public abstract class PlaceCurationOption implements Parcelable
 {
+    public static final char GA_DELIMITER = ',';
+    public static final char ADJUST_DELIMITER = '-';
+
     private Constants.SortType mDefaultSortType = Constants.SortType.DEFAULT;
     private Constants.SortType mSortType = mDefaultSortType;
 

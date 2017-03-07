@@ -893,6 +893,18 @@ public class AnalyticsManager
 
         public static final String GOURMET_MENU_DETAIL_CLICK = "gourmet_menu_detail_click";
         public static final String GOURMET_MENU_BACK_CLICK = "gourmet_menu_back_click";
+
+        public static final String STAY_SORT = "stay_sort";
+        public static final String STAY_PERSON = "stay_person";
+        public static final String STAY_BEDTYPE = "stay_bedtype";
+        public static final String STAY_AMENITIES = "stay_amenities";
+        public static final String STAY_ROOM_AMENITIES = "stay_room_amenities";
+        public static final String STAY_NO_RESULT = "stay_no_result";
+        public static final String GOURMET_SORT = "gourmet_sort";
+        public static final String GOURMET_CATEGORY = "gourmet_category";
+        public static final String GOURMET_TIME = "gourmet_time";
+        public static final String GOURMET_AMENITIES = "gourmet_amenities";
+        public static final String GOURMET_NO_RESULT = "gourmet_no_result";
     }
 
     public static class Category
@@ -923,6 +935,8 @@ public class AnalyticsManager
         public static final String SEARCH = "search";
 
         public static final String HOME_RECOMMEND = "home_recommend";
+
+        public static final String SORT_FLITER = "sort_fliter";
     }
 
     public static class Label

@@ -639,6 +639,22 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stayCurationOption.toString(), eventParams);
 
+        // 추가 항목
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.STAY_SORT, stayCurationOption.toSortString(), null);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.STAY_PERSON, String.valueOf(stayCurationOption.person), null);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.STAY_BEDTYPE, stayCurationOption.toBedTypeString(StayCurationOption.GA_DELIMITER), null);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.STAY_AMENITIES, stayCurationOption.toAmenitiesString(StayCurationOption.GA_DELIMITER), null);
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SORT_FLITER//
+            , AnalyticsManager.Action.STAY_ROOM_AMENITIES, stayCurationOption.toRoomAmenitiesString(StayCurationOption.GA_DELIMITER), null);
+
         if (Constants.DEBUG == true)
         {
             ExLog.d(stayCurationOption.toString());
@@ -731,6 +747,11 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             if (hotelSaleCount <= 0)
             {
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));
+
+                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+                AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.SORT_FLITER //
+                , AnalyticsManager.Action.STAY_NO_RESULT, stayCurationOption.toString(), null);
             } else
             {
                 setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));
