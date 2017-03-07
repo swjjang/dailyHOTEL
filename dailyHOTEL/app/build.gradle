@@ -96,6 +96,7 @@ android {
 
     applicationVariants.all { variant ->
 
+        // ./gradlew assembleDebug -Pqa
         if (project.hasProperty('qa') == false) {
             return
         }
@@ -124,7 +125,11 @@ android {
         if (variant.buildType.name == "release") {
 
         } else {
-            apkName += '-QA-00';
+            if ("$qa" == null || "$qa".length() == 0) {
+                apkName += '-QA-00';
+            } else {
+                apkName += '-QA-' + "$qa";
+            }
         }
 
         apkName += "-v" + defaultConfig.versionName;
