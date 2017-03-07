@@ -198,6 +198,14 @@ public class GourmetProductDetailLayout extends BaseLayout
             checkTextView.setText(gourmetProduct.needToKnow);
         }
 
+        if (timeLayout.getVisibility() == View.VISIBLE)
+        {
+            timeLayout.setPadding(0, Util.dpToPx(mContext, 10), 0, 0);
+        } else if (checkLayout.getVisibility() == View.VISIBLE)
+        {
+            checkLayout.setPadding(0, Util.dpToPx(mContext, 10), 0, 0);
+        }
+
         if (benefitLayout.getVisibility() == View.GONE && timeLayout.getVisibility() == View.GONE && checkLayout.getVisibility() == View.GONE)
         {
             mDefaultInformationTopLine.setVisibility(View.GONE);
