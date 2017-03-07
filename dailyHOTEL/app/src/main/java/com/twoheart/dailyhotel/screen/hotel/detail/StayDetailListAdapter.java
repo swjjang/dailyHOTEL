@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -264,6 +265,34 @@ public class StayDetailListAdapter extends BaseAdapter
         } else
         {
             couponLayout.setVisibility(View.GONE);
+        }
+
+        // Stamp
+        View stampLayout = view.findViewById(R.id.stampLayout);
+
+        if (DailyPreference.getInstance(mContext).getRemoteConfigStampEnabled() == true)
+        {
+            // 테블릿 높이 수정 필요한지 확인
+            stampLayout.setVisibility(View.VISIBLE);
+
+            SimpleDraweeView stampSimpleDraweeView = (SimpleDraweeView) stampLayout.findViewById(R.id.stampSimpleDraweeView);
+            TextView stampMessageTextView = (TextView) stampLayout.findViewById(R.id.stampMessageTextView);
+
+            String imageUrl = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailImageUrl();
+            String message = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage();
+
+            if (Util.isTextEmpty(imageUrl) == true)
+            {
+                stampSimpleDraweeView.setImageURI((String) null);
+            } else
+            {
+                stampSimpleDraweeView.setImageURI(imageUrl);
+            }
+
+            stampMessageTextView.setText(message);
+        } else
+        {
+            stampLayout.setVisibility(View.GONE);
         }
 
         // 날짜
