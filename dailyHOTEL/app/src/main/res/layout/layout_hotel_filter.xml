@@ -33,7 +33,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="74dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
@@ -113,7 +113,7 @@
     <LinearLayout
         android:id="@+id/bedTypeLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="74dp"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
@@ -124,7 +124,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:paddingTop="10dp"
+            android:paddingTop="12dp"
             android:text="@string/label_double"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
@@ -136,7 +136,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:paddingTop="10dp"
+            android:paddingTop="12dp"
             android:text="@string/label_twin"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"
@@ -148,7 +148,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:paddingTop="10dp"
+            android:paddingTop="12dp"
             android:text="@string/label_heatedfloors"
             android:textColor="@color/selector_curation_textcolor"
             android:textSize="11dp"

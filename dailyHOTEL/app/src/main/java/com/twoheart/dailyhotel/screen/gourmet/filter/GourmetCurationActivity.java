@@ -190,11 +190,9 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         HashMap<String, Integer> categoryCodeMap = gourmetCurationOption.getCategoryCoderMap();
         HashMap<String, Integer> filterMap = gourmetCurationOption.getFilterMap();
 
-        boolean isSingleLine = keyList.size() <= GOURMET_CATEGORY_COLUMN;
-
         for (String key : keyList)
         {
-            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categoryCodeMap.get(key)), isSingleLine);
+            DailyTextView categoryView = getGridLayoutItemView(key, getCategoryResourceId(categoryCodeMap.get(key)));
             categoryView.setOnClickListener(mOnCategoryClickListener);
 
             if (filterMap.containsKey(key) == true)
@@ -212,16 +210,13 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
             for (int i = 0; i < addViewCount; i++)
             {
-                DailyTextView categoryView = getGridLayoutItemView(null, 0, isSingleLine);
+                DailyTextView categoryView = getGridLayoutItemView(null, 0);
 
                 mGridLayout.addView(categoryView);
             }
         }
 
-        if (isSingleLine == false)
-        {
-            mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
-        }
+        mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), 0);
 
         requestUpdateResultDelayed();
     }
@@ -289,6 +284,8 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         groupBookingCheckView.setOnClickListener(this);
         babySeatCheckView.setOnClickListener(this);
         corkageCheckView.setOnClickListener(this);
+
+        mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 5d));
     }
 
     private void initTimeRangeFilterLayout(View view, GourmetCurationOption gourmetCurationOption)

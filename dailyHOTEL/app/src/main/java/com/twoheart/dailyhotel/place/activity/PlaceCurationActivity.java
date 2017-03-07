@@ -192,7 +192,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
     }
 
-    protected DailyTextView getGridLayoutItemView(String text, int resId, boolean isSingleLine)
+    protected DailyTextView getGridLayoutItemView(String text, int resId)
     {
         DailyTextView dailyTextView = new DailyTextView(this);
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
@@ -204,17 +204,10 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = Util.dpToPx(this, 74d);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-        if (isSingleLine == true)
-        {
-            dailyTextView.setPadding(0, Util.dpToPx(this, 10), 0, Util.dpToPx(this, 15));
-        } else
-        {
-            dailyTextView.setPadding(0, Util.dpToPx(this, 10), 0, Util.dpToPx(this, 2));
-        }
-
+        dailyTextView.setPadding(0, Util.dpToPx(this, 12), 0, 0);
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;

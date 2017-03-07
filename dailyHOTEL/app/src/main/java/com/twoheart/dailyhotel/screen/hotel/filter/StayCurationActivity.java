@@ -238,7 +238,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             for (StayAmenities stayAmenities : values)
             {
-                DailyTextView amenitiesView = getGridLayoutItemView(stayAmenities.getName(this), stayAmenities.getResId(), false);
+                DailyTextView amenitiesView = getGridLayoutItemView(stayAmenities.getName(this), stayAmenities.getResId());
                 amenitiesView.setOnClickListener(onClickListener);
                 amenitiesView.setTag(stayAmenities);
                 amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
@@ -252,7 +252,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         }
 
-        mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
+        mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), 0);
     }
 
     protected void initInRoomAmenitiesLayout(View view, StayCurationOption stayCurationOption)
@@ -293,7 +293,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             for (StayRoomAmenities stayRoomAmenities : values)
             {
-                DailyTextView amenitiesView = getGridLayoutItemView(stayRoomAmenities.getName(this), stayRoomAmenities.getResId(), false);
+                DailyTextView amenitiesView = getGridLayoutItemView(stayRoomAmenities.getName(this), stayRoomAmenities.getResId());
                 amenitiesView.setOnClickListener(onClickListener);
                 amenitiesView.setTag(stayRoomAmenities);
                 amenitiesView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
@@ -307,7 +307,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         }
 
-        mInRoomAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 10));
+        mInRoomAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 5));
     }
 
     protected void updatePersonFilter(int person)
