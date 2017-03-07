@@ -5,7 +5,9 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -113,6 +115,9 @@ public class HomeCarouselLayout extends LinearLayout
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(false);
+
+        SnapHelper helper = new PagerSnapHelper();
+        helper.attachToRecyclerView(mRecyclerView);
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
