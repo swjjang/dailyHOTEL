@@ -373,18 +373,18 @@ public class GourmetProductDetailActivity extends BaseActivity
             if (gourmetProduct.getPrimaryImage() == null)
             {
                 AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
-                    AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK_PHOTO, "n", null);
+                    AnalyticsManager.Action.GOURMET_MENU_BOOKING_CLICK_PHOTO, "n", null);
             } else
             {
                 AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
-                    AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK_PHOTO, "y", null);
+                    AnalyticsManager.Action.GOURMET_MENU_BOOKING_CLICK_PHOTO, "y", null);
             }
         }
 
         @Override
         public void finish()
         {
-            GourmetProductDetailActivity.this.finish();
+            GourmetProductDetailActivity.this.onBackPressed();
         }
     };
 
