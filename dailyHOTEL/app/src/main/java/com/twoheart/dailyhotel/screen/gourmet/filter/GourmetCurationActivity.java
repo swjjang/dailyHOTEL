@@ -83,16 +83,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         mNetworkController = getNetworkController(this);
 
         initLayout();
-
-        mAnimationLayout.setVisibility(View.INVISIBLE);
-        mAnimationLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                showAnimation();
-            }
-        }, 20);
     }
 
     protected void initIntent(Intent intent)
@@ -677,7 +667,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mGourmetCuration);
 
         setResult(RESULT_OK, intent);
-        hideAnimation();
+        finish();
 
         Province province = mGourmetCuration.getProvince();
 
@@ -729,7 +719,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.GOURMET_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
 
-        hideAnimation();
+        finish();
     }
 
     @Override

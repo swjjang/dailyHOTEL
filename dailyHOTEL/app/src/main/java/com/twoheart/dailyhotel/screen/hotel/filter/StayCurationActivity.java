@@ -83,16 +83,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mNetworkController = getNetworkController(this);
 
         initLayout();
-
-        mAnimationLayout.setVisibility(View.INVISIBLE);
-        mAnimationLayout.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                showAnimation();
-            }
-        }, 20);
     }
 
     protected void initIntent(Intent intent)
@@ -612,7 +602,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, mStayCuration);
 
         setResult(RESULT_OK, intent);
-        hideAnimation();
+        finish();
 
         Province province = mStayCuration.getProvince();
         Map<String, String> eventParams = new HashMap<>();
@@ -667,7 +657,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
             , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
 
-        hideAnimation();
+        finish();
     }
 
     @Override

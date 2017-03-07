@@ -6,105 +6,87 @@
                 android:layout_height="match_parent"
                 android:background="@color/black_a67">
 
-    <View
-        android:id="@+id/exitView"
+    <FrameLayout
+        android:id="@+id/informationLayout"
         android:layout_width="match_parent"
-        android:layout_height="92dp"/>
+        android:layout_height="52dp"
+        android:background="@color/white">
 
-    <RelativeLayout
-        android:id="@+id/animationLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/exitView">
-
-        <FrameLayout
-            android:id="@+id/informationLayout"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@color/white">
-
-            <ImageView
-                android:id="@+id/closeView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_x"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/activity_curation_title"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="16dp"/>
-        </FrameLayout>
-
-        <ScrollView
-            android:id="@+id/contentScrollView"
+        <com.twoheart.dailyhotel.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottomLayout"
-            android:layout_below="@+id/informationLayout"
-            android:background="@color/white"
-            android:fadingEdge="none">
+            android:gravity="left|center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="100dp"
+            android:text="@string/activity_curation_title"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="18dp"/>
 
-            <LinearLayout
-                android:id="@+id/contentLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </ScrollView>
+        <ImageView
+            android:id="@+id/closeView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:srcCompat="@drawable/navibar_ic_x"/>
+    </FrameLayout>
 
-        <RelativeLayout
-            android:id="@+id/bottomLayout"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_alignParentTop="true"
-                android:background="@color/default_line_ce7e7e7"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/resetCurationView"
-                android:layout_width="48dp"
-                android:layout_height="44dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
-                android:drawablePadding="4dp"
-                android:gravity="center_horizontal"
-                android:paddingTop="9dp"
-                android:text="@string/label_reset"
-                android:textColor="@color/default_text_c454545"
-                android:textSize="9dp"
-                app:drawableCompatTop="@drawable/ic_refresh"/>
-
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/confirmView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_toRightOf="@+id/resetCurationView"
-                android:background="@drawable/selector_button_default_background"
-                android:gravity="center"
-                android:text="@string/label_searching"
-                android:textColor="@drawable/selector_button_default_text_color"
-                android:textSize="17dp"
-                dailyFont:style="Medium"/>
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <View
-        android:id="@+id/disableLayout"
+    <ScrollView
+        android:id="@+id/contentScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_above="@+id/bottomLayout"
+        android:layout_below="@+id/informationLayout"
+        android:background="@color/white"
+        android:fadingEdge="none">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentTop="true"
+            android:background="@color/default_line_ce7e7e7"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/resetCurationView"
+            android:layout_width="48dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
+            android:drawablePadding="4dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="9dp"
+            android:text="@string/label_reset"
+            android:textColor="@color/default_text_c454545"
+            android:textSize="9dp"
+            app:drawableCompatTop="@drawable/ic_refresh"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/confirmView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/resetCurationView"
+            android:background="@drawable/selector_button_default_background"
+            android:gravity="center"
+            android:text="@string/label_searching"
+            android:textColor="@drawable/selector_button_default_text_color"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
 </RelativeLayout>
