@@ -344,11 +344,11 @@ public class GourmetProductListActivity extends BaseActivity
             if (gourmetProduct.getPrimaryImage() == null)
             {
                 AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
-                    AnalyticsManager.Action.GOURMET_MENU_BOOKING_CLICK_PHOTO, "n", null);
+                    AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK_PHOTO, "n", null);
             } else
             {
                 AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
-                    AnalyticsManager.Action.GOURMET_MENU_BOOKING_CLICK_PHOTO, "y", null);
+                    AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK_PHOTO, "y", null);
             }
         }
 
@@ -387,6 +387,16 @@ public class GourmetProductListActivity extends BaseActivity
                 String label = String.format("%s-%s", gourmetDetailParams.name, gourmetProduct.ticketName);
                 AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, mGourmetDetail, position));
+            }
+
+            if (gourmetProduct.getPrimaryImage() == null)
+            {
+                AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+                    AnalyticsManager.Action.GOURMET_MENU_BOOKING_CLICK_PHOTO, "n", null);
+            } else
+            {
+                AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
+                    AnalyticsManager.Action.GOURMET_MENU_BOOKING_CLICK_PHOTO, "y", null);
             }
         }
     };
