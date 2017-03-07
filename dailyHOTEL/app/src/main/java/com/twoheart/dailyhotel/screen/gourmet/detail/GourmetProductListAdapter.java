@@ -96,7 +96,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
             case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
-                View view = mInflater.inflate(R.layout.list_row_footer, parent, false);
+                View view = mInflater.inflate(R.layout.list_row_product_footer, parent, false);
 
                 return new FooterViewHolder(view);
             }
