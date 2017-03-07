@@ -79,6 +79,7 @@ public class DailyRemoteConfig
                 String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
                 String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
+                String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
 
                 if (Constants.DEBUG == true)
                 {
@@ -91,6 +92,7 @@ public class DailyRemoteConfig
                         ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
                         ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
+                        ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -140,6 +142,9 @@ public class DailyRemoteConfig
 
                 // default Event link
                 writeHomeEventDefaultLink(mContext, androidHomeEventDefaultLink);
+
+                // Stamp
+                writeStamp(mContext, androidStamp);
 
                 if (listener != null)
                 {
@@ -397,6 +402,40 @@ public class DailyRemoteConfig
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
+        }
+    }
+
+    private void writeStamp(Context context, String androidStamp)
+    {
+        if (context == null || Util.isTextEmpty(androidStamp) == true)
+        {
+            return;
+        }
+
+        try
+        {
+            JSONObject jsonObject = new JSONObject(androidStamp);
+
+            boolean enabled = jsonObject.getBoolean("enabled");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
+
+            JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
+
+            String stayDetailMessage = stayDetailJSONObject.getString("message");
+            String stayDetailImageUrl = stayDetailJSONObject.getString("imageUrl");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampStayDetail(stayDetailImageUrl, stayDetailMessage);
+
+            JSONObject stayThankYouJSONObject = jsonObject.getJSONObject("stayThankYou");
+
+            String stayThankYouMessage = stayThankYouJSONObject.getString("message");
+            String stayThankYouImageUrl = stayThankYouJSONObject.getString("imageUrl");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampStayDetail(stayThankYouImageUrl, stayThankYouMessage);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
     }
 }

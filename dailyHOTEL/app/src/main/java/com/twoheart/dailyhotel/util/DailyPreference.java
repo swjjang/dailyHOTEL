@@ -127,6 +127,13 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_URL = "316";
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_INDEX = "317";
 
+    // Stamp
+    private static final String KEY_REMOTE_CONFIG_STAMP_ENABLED = "318";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE = "319";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_IMAGE_URL = "320";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE = "321";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_IMAGE_URL = "322";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1102,6 +1109,48 @@ public class DailyPreference
     public int getRemoteConfigHomeEventIndex()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_INDEX, -1);
+    }
+
+    public void setRemoteConfigStampEnabled(boolean enabled)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_ENABLED, enabled);
+    }
+
+    public boolean getRemoteConfigStampEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_ENABLED, false);
+    }
+
+    public void setRemoteConfigStampStayDetail(String imageUrl, String message)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_IMAGE_URL, imageUrl);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE, message);
+    }
+
+    public String getRemoteConfigStampStayDetailImageUrl()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_IMAGE_URL, null);
+    }
+
+    public String getRemoteConfigStampStayDetailMessage()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE, null);
+    }
+
+    public void setRemoteConfigStampStayThankYou(String imageUrl, String message)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_IMAGE_URL, imageUrl);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE, message);
+    }
+
+    public String getRemoteConfigStampStayThankYouImageUrl()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_IMAGE_URL, null);
+    }
+
+    public String getRemoteConfigStampStayThankYoulMessage()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
