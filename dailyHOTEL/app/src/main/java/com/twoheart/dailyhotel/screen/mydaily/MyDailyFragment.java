@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
+import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -375,6 +376,23 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
+        }
+
+        @Override
+        public void startStamp()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            startActivity(new Intent(baseActivity, StampActivity.class));
+
+//            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+//                , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
         }
 
         @Override
