@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +31,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
@@ -433,6 +433,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         break;
                 }
                 break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK:
+                mDontReloadAtOnResume = true;
+                break;
         }
     }
 
@@ -733,21 +737,24 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        try
-        {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        } catch (ActivityNotFoundException e)
-        {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
-        }
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().index, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+
+
+        //        try
+        //        {
+        //            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+        //        } catch (ActivityNotFoundException e)
+        //        {
+        //            try
+        //            {
+        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+        //            } catch (ActivityNotFoundException e1)
+        //            {
+        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+        //                startActivity(marketLaunch);
+        //            }
+        //        }
     }
 
     protected void processBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex)

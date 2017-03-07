@@ -33,6 +33,14 @@ public interface IDailyNetwork
     void requestStatusServer(String tag, Object listener);
 
     /**
+     * HappyTalk
+     *
+     * @param tag
+     * @param listener
+     */
+    void requestHappyTalkCategory(String tag, Object listener);
+
+    /**
      * common/ver_dual
      * 버전을 받아 업데이트를 체크한다
      *

@@ -1262,6 +1262,9 @@ public class MainActivity extends BaseActivity implements Constants
                 String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
 
                 mNetworkController.requestHoliday(startDay, endDay);
+
+                // 하루에 한번 휴일을 얻을때 해피톡 카테고리도 같이 얻는다.
+                mNetworkController.requestHappyTalkCategory();
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);
@@ -1283,6 +1286,17 @@ public class MainActivity extends BaseActivity implements Constants
         {
             DailyPreference.getInstance(MainActivity.this).setCheckCalendarHolidays(startDay);
             DailyPreference.getInstance(MainActivity.this).setCalendarHolidays(holidays);
+        }
+
+        @Override
+        public void onHappyTalkCategory(String categorys)
+        {
+            if (Util.isTextEmpty(categorys) == true)
+            {
+                return;
+            }
+
+            DailyPreference.getInstance(MainActivity.this).setHappyTalkCategory(categorys);
         }
     };
 }

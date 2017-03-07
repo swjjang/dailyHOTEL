@@ -40,6 +40,9 @@ public interface DailyMobileService
     @GET()
     Call<BaseDto<Status>> requestStatusServer(@Url String url);
 
+    @GET()
+    Call<JSONObject> requestHappyTalkCategory(@Url String url);
+
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestCommonVersion(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
