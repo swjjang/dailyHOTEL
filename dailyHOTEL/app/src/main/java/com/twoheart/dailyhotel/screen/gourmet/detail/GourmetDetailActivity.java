@@ -797,6 +797,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
+            lockUI();
+
             mSaleTime = checkInSaleTime;
             mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, //
                 mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount, mPlaceDetail.isDailyChoice);
@@ -1170,6 +1172,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onProductListClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
             GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
