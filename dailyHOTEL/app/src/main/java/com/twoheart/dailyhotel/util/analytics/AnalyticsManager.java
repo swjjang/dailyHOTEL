@@ -893,6 +893,8 @@ public class AnalyticsManager
 
         public static final String GOURMET_MENU_DETAIL_CLICK = "gourmet_menu_detail_click";
         public static final String GOURMET_MENU_BACK_CLICK = "gourmet_menu_back_click";
+        public static final String GOURMET_MENU_DETAIL_CLICK_PHOTO = "gourmet_menu_detail_click_photo";
+        public static final String GOURMET_MENU_BOOKING_CLICK_PHOTO = "gourmet_menu_booking_click_photo";
 
         public static final String STAY_SORT = "stay_sort";
         public static final String STAY_PERSON = "stay_person";
