@@ -436,13 +436,13 @@
     <string name="act_credit_line3">친구가 데일리호텔에서 첫 예약을 하면\n5,000원을 받을 수 있어요!</string>
     <string name="act_credit_line4">(친구의 체크아웃 기준으로\n최대 10만원까지 적립할 수 있습니다.)</string>
     <string name="act_credit_line4_is_exceed_bonus">(최대 10만원을 이미 적립했습니다.)</string>
-    <string name="act_credit_btn_login">기존 회원 로그인</string>
     <string name="act_credit_sign_up">회원 가입하고 친구 초대하기</string>
     <string name="act_credit_view_credit">적립금</string>
     <string name="act_credit_current_credit">보유 적립금</string>
     <string name="act_credit_history">적립금내역</string>
     <string name="act_credit_kakao">카카오톡으로 친구 초대하기</string>
     <string name="label_invite_friends">친구 초대하기</string>
+    <string name="label_invite_friends_login_button_text">기존 회원 로그인</string>
     <string name="label_copy">복사</string>
     <string name="label_code_copy">코드복사</string>
     <string name="label_my_code">내 추천인 코드</string>
@@ -458,7 +458,7 @@
     <!-- Booking List Fragment -->
     <string name="frag_booking_no_hotels">예약된 내역이 없습니다.</string>
     <string name="frag_booking_line">당신의 파라다이스가 기다리고 있어요.</string>
-    <string name="frag_booking_btn_login">기존 회원 로그인</string>
+    <string name="frag_booking_btn_login">로그인 또는 회원가입</string>
     <string name="frag_booking_wait_account">입금 대기</string>
     <string name="frag_booking_wait_refund">무료취소 대기</string>
     <string name="frag_booking_complete_payment">결제 완료</string>
@@ -1066,6 +1066,7 @@
     <string name="wishlist_detail_delete_message">위시리스트에서\n삭제했습니다.</string>
     <string name="wishlist_count_over_10_thousand">만명 이상</string>
     <string name="wishlist_count_format">%1$d명</string>
+    <string name="label_wishlist_login_button_text">로그인 또는 회원가입</string>
 
     <!-- Review  -->
     <string name="frag_rating_hotel_title">호텔은 만족스러우셨나요?</string>
