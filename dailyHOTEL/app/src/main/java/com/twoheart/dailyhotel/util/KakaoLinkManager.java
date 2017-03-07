@@ -10,6 +10,7 @@ import com.kakao.util.KakaoParameterException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.SaleTime;
 
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -75,7 +76,9 @@ public class KakaoLinkManager implements Constants
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
-                messageBuilder.addImage(imageUrl, 300, 200);
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
             }
 
             messageBuilder.addText(text);
@@ -101,7 +104,9 @@ public class KakaoLinkManager implements Constants
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
-                messageBuilder.addImage(imageUrl, 300, 200);
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
             }
 
             messageBuilder.addText(message);
@@ -133,7 +138,9 @@ public class KakaoLinkManager implements Constants
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
-                messageBuilder.addImage(imageUrl, 300, 200);
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
             }
 
             messageBuilder.addText(text);
@@ -160,7 +167,9 @@ public class KakaoLinkManager implements Constants
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
-                messageBuilder.addImage(imageUrl, 300, 200);
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
             }
 
             messageBuilder.addText(message);

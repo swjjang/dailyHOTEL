@@ -94,7 +94,7 @@
                     android:layout_marginBottom="10dp"
                     android:background="@drawable/shape_fillrect_bb70038_r2"
                     android:gravity="center"
-                    android:text="@string/frag_booking_btn_login"
+                    android:text="@string/label_invite_friends_login_button_text"
                     android:textColor="@android:color/white"
                     android:textSize="14dp"
                     dailyFont:style="Medium"/>
