@@ -38,6 +38,12 @@ public class StampActivity extends BaseActivity
         mNetworkController = new StampNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mStampLayout.onCreateView(R.layout.activity_stamp));
+
+        String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
+        String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
+        String stampDate3 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
+
+        mStampLayout.setStampDate(stampDate1, stampDate2, stampDate3);
     }
 
     @Override
@@ -51,11 +57,11 @@ public class StampActivity extends BaseActivity
         {
             if (DailyHotel.isLogin() == false)
             {
-//                showLoginDialog();
+                //                showLoginDialog();
             } else
             {
-//                lockUI();
-//                mNetworkController.requestStamp();
+                //                lockUI();
+                //                mNetworkController.requestStamp();
             }
         } else
         {
@@ -151,6 +157,27 @@ public class StampActivity extends BaseActivity
 
     private StampLayout.OnEventListener mOnEventListener = new StampLayout.OnEventListener()
     {
+        @Override
+        public void onStampHistoryClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(StampHistoryActivity.newInstance(StampActivity.this), CODE_REQUEST_ACTIVITY_STAMP_HISTORY);
+        }
+
+        @Override
+        public void onStampTermsClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(StampTermsActivity.newInstance(StampActivity.this), CODE_REQUEST_ACTIVITY_STAMP_TERMS);
+        }
 
         @Override
         public void finish()

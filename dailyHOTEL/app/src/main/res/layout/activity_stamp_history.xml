@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_default"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:orientation="vertical">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/stampDate01TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:drawablePadding="5dp"
+            android:freezesText="true"
+            android:lineSpacingExtra="-2dp"
+            android:text="스탬프 이벤트 기간:2017.04.14 - 2017.06.30"
+            android:textColor="@color/default_background_section_c323232"
+            android:textSize="13dp"
+            app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/stampDate02TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:drawablePadding="5dp"
+            android:freezesText="true"
+            android:lineSpacingExtra="-2dp"
+            android:text="스탬프 적립 기준 체크아웃 시간:2017.04.14 - 2017.06.30"
+            android:textColor="@color/default_background_section_c323232"
+            android:textSize="13dp"
+            app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/stampDate03TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:drawablePadding="5dp"
+            android:freezesText="true"
+            android:lineSpacingExtra="-2dp"
+            android:text="스탬프 발행 기간:2017.04.14 - 2017.06.30"
+            android:textColor="@color/default_background_section_c323232"
+            android:textSize="13dp"
+            app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>
