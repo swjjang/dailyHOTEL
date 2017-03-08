@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public enum StayRoomAmenities
 {
+    FREE_BREAKFAST(R.string.label_breakfast, R.drawable.f_ic_facilities_02, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST, AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST),
     WIFI(R.string.label_wifi, R.drawable.f_ic_facilities_01, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_WIFI, AnalyticsManager.Label.SORTFILTER_WIFI),
     COOKING(R.string.label_cooking, R.drawable.f_ic_facilities_03, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_COOKING, AnalyticsManager.Label.SORTFILTER_KITCHEN),
     PC(R.string.label_computer, R.drawable.f_ic_facilities_18, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PC, AnalyticsManager.Label.SORTFILTER_PC),
@@ -18,7 +19,6 @@ public enum StayRoomAmenities
     TV(R.string.label_television, R.drawable.f_ic_facilities_19, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_TV, AnalyticsManager.Label.SORTFILTER_TV),
     SPA_WHIRLPOOL(R.string.label_whirlpool, R.drawable.f_ic_facilities_20, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_SPA_WHIRLPOOL, AnalyticsManager.Label.SORTFILTER_SPA_WHIRLPOOL),
     PRIVATE_BBQ(R.string.label_private_bbq, R.drawable.f_ic_facilities_09, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PRIVATE_BBQ, AnalyticsManager.Label.SORTFILTER_PRIVATE_BBQ),
-    FREE_BREAKFAST(R.string.label_breakfast, R.drawable.f_ic_facilities_02, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_BREAKFAST, AnalyticsManager.Label.SORTFILTER_FREE_BREAKFAST),
     KARAOKE(R.string.label_karaoke, R.drawable.f_ic_facilities_21, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_KARAOKE, AnalyticsManager.Label.SORTFILTER_KARAOKE),
     PARTY_ROOM(R.string.label_party_room, R.drawable.f_ic_facilities_22, StayFilter.FLAG_HOTEL_FILTER_ROOM_AMENITIES_PARTY_ROOM, AnalyticsManager.Label.SORTFILTER_PARTYROOM);
 
