@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_default"/>
+    <!--<include layout="@layout/toolbar_default"/>-->
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,94 +17,114 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.GridLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:columnCount="3">
+                android:layout_height="wrap_content">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/messageTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1박 더하면 5,000원 쿠폰"/>
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="21dp"
-                    android:text="1박"/>
+                    android:layout_alignParentRight="true"
+                    android:text="1/5박"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.GridLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="21dp"
-                    android:text="2박"/>
+                    android:layout_below="@+id/messageTextView01"
+                    app:columnCount="3">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="21dp"
-                    android:text="3박"/>
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1박"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="21dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="21dp"
-                    android:text="4박"/>
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2박"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="21dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="21dp"
-                    android:text="5박"/>
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3박"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="21dp"
+                        app:layout_column="0"
+                        app:layout_row="1"/>
 
-            </android.support.v7.widget.GridLayout>
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4박"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="21dp"
+                        app:layout_column="1"
+                        app:layout_row="1"/>
 
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5박"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="21dp"
+                        app:layout_column="2"
+                        app:layout_row="1"/>
+
+                </android.support.v7.widget.GridLayout>
+            </RelativeLayout>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/default_text_c323232"
                 android:text="@string/message_stamp_explanation"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="11dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/stampEventDetailTextView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_fillrect_bb70038_r2"
-                android:gravity="center"
-                android:text="@string/label_stamp_event_detail"
-                android:textColor="@color/white"
-                android:textSize="17dp"
-                dailyFont:style="Medium"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/stampTermsTextView"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_fillrect_bb70038_r2"
-                android:gravity="center"
-                android:text="@string/label_stamp_terms"
-                android:textColor="@color/white"
-                android:textSize="17dp"
-                dailyFont:style="Medium"/>
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/stampEventDetailTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_fillrect_bb70038_r2"
+                    android:gravity="center"
+                    android:text="@string/label_stamp_history"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    dailyFont:style="Medium"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/stampGoTextView"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/shape_fillrect_bb70038_r2"
-                android:gravity="center"
-                android:text="@string/label_stamp_go"
-                android:textColor="@color/white"
-                android:textSize="17dp"
-                dailyFont:style="Medium"/>
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/stampTermsTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_fillrect_bb70038_r2"
+                    android:gravity="center"
+                    android:text="@string/label_stamp_terms"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    dailyFont:style="Medium"/>
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

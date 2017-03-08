@@ -133,6 +133,9 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_IMAGE_URL = "320";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE = "321";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_IMAGE_URL = "322";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1 = "323";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "324";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "325";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -1151,6 +1154,28 @@ public class DailyPreference
     public String getRemoteConfigStampStayThankYoulMessage()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE, null);
+    }
+
+    public void setRemoteConfigStampDate(String date1, String date2, String date3)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, date1);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, date2);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, date3);
+    }
+
+    public String getRemoteConfigStampDate1()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, null);
+    }
+
+    public String getRemoteConfigStampDate2()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, null);
+    }
+
+    public String getRemoteConfigStampDate3()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
