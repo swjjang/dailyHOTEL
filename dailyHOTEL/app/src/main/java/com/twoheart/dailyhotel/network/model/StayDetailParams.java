@@ -167,22 +167,10 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
             mPictogramList.add(StayDetail.Pictogram.NO_PARKING);
         }
 
-        // 바베큐
-        if (sharedBBQ == true)
-        {
-            mPictogramList.add(StayDetail.Pictogram.SHARED_BBQ);
-        }
-
         // 수영장
         if (pool == true)
         {
             mPictogramList.add(StayDetail.Pictogram.POOL);
-        }
-
-        // 비지니스 센터
-        if (businessCenter == true)
-        {
-            mPictogramList.add(StayDetail.Pictogram.BUSINESS_CENTER);
         }
 
         // 피트니스
@@ -197,16 +185,28 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
             mPictogramList.add(StayDetail.Pictogram.SAUNA);
         }
 
-        // 애완동물
-        if (pet == true)
+        // 비지니스 센터
+        if (businessCenter == true)
         {
-            mPictogramList.add(StayDetail.Pictogram.PET);
+            mPictogramList.add(StayDetail.Pictogram.BUSINESS_CENTER);
         }
 
         // 키즈 플레이 룸
         if (kidsPlayRoom == true)
         {
             mPictogramList.add(StayDetail.Pictogram.KIDS_PLAY_ROOM);
+        }
+
+        // 바베큐
+        if (sharedBBQ == true)
+        {
+            mPictogramList.add(StayDetail.Pictogram.SHARED_BBQ);
+        }
+
+        // 애완동물
+        if (pet == true)
+        {
+            mPictogramList.add(StayDetail.Pictogram.PET);
         }
 
         if (mImageList == null)
