@@ -166,6 +166,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             productInformationViewHolder.simpleDraweeView.setImageURI(Uri.parse(productImageInformation.imageUrl + "?impolicy=" + url));
+            productInformationViewHolder.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
         }
 
         productInformationViewHolder.productNameTextView.setText(gourmetProduct.ticketName);
