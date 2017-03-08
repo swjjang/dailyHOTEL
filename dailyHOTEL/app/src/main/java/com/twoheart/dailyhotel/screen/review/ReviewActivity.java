@@ -294,6 +294,12 @@ public class ReviewActivity extends BaseActivity
                 {
                     String text = data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT);
 
+                    if (mReviewLayout == null)
+                    {
+                        restartExpiredSession();
+                        return;
+                    }
+
                     mReviewLayout.setReviewCommentView(text);
                     setConfirmTextView();
                 }
@@ -305,7 +311,10 @@ public class ReviewActivity extends BaseActivity
     {
         stopEmoticonAnimation();
 
-        mReviewLayout = new ReviewLayout(this, mOnEventListener);
+        if (mReviewLayout == null)
+        {
+            mReviewLayout = new ReviewLayout(this, mOnEventListener);
+        }
 
         setContentView(mReviewLayout.onCreateView(R.layout.activity_review));
 
