@@ -146,7 +146,7 @@ android {
 
         def gitName = getGitName();
 
-        if (gitName == 'pinkred') {
+        if (gitName == 'sheldon') {
             apkName += "-Sheldon";
         } else if (gitName == 'android_sam') {
             apkName += "-Sam";
