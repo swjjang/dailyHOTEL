@@ -329,7 +329,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 case CODE_REQUEST_ACTIVITY_ZOOMMAP:
                 case CODE_REQUEST_ACTIVITY_SHAREKAKAO:
                 case CODE_REQUEST_ACTIVITY_EXTERNAL_MAP:
-                    mDontReloadAtOnResume = true;
+                    if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+                        finish();
+                    } else
+                    {
+                        mDontReloadAtOnResume = true;
+                    }
                     break;
 
                 case CODE_REQUEST_ACTIVITY_CALENDAR:

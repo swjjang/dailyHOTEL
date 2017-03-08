@@ -186,6 +186,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 refreshCurrentFragment(true);
             }
+        } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+        {
+            setResult(resultCode);
+            finish();
         }
     }
 

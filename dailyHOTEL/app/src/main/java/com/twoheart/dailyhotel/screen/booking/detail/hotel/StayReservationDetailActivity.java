@@ -734,7 +734,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     , ZoomMapActivity.SourceType.HOTEL_BOOKING, mPlaceBookingDetail.placeName, mPlaceBookingDetail.address//
                     , mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude, mPlaceBookingDetail.isOverseas);
 
-                startActivity(intent);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_ZOOMMAP);
             } else
             {
                 mPlaceReservationDetailLayout.expandMap(mPlaceBookingDetail.latitude, mPlaceBookingDetail.longitude);
