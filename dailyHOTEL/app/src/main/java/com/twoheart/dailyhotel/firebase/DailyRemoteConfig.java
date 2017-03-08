@@ -433,6 +433,13 @@ public class DailyRemoteConfig
             String stayThankYouImageUrl = stayThankYouJSONObject.getString("imageUrl");
 
             DailyPreference.getInstance(context).setRemoteConfigStampStayThankYou(stayThankYouImageUrl, stayThankYouMessage);
+
+            JSONObject stampDateJSONObject = jsonObject.getJSONObject("stampDate");
+
+            String date1 = stampDateJSONObject.getString("date1");
+            String date2 = stampDateJSONObject.getString("date2");
+            String date3 = stampDateJSONObject.getString("date3");
+
         } catch (Exception e)
         {
             ExLog.e(e.toString());
