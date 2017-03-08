@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
@@ -62,8 +63,6 @@ public abstract class PlaceMainActivity extends BaseActivity
     @Override
     public void onResume()
     {
-        mPlaceMainLayout.showAppBarLayout(false);
-
         super.onResume();
 
         if (isFinishing() == true)
@@ -87,6 +86,18 @@ public abstract class PlaceMainActivity extends BaseActivity
         super.onPause();
 
         mDontReloadAtOnResume = true;
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            new Handler().postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mPlaceMainLayout.showAppBarLayout(false);
+                }
+            }, 200);
+        }
     }
 
     @Override
