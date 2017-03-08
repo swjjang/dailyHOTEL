@@ -54,8 +54,8 @@ public class StampActivity extends BaseActivity
 //                showLoginDialog();
             } else
             {
-                lockUI();
-                mNetworkController.requestStamp();
+//                lockUI();
+//                mNetworkController.requestStamp();
             }
         } else
         {
