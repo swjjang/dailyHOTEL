@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -46,13 +47,19 @@ public class StampActivity extends BaseActivity
 
         //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
 
-        if (DailyHotel.isLogin() == false)
+        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
         {
-            showLoginDialog();
+            if (DailyHotel.isLogin() == false)
+            {
+//                showLoginDialog();
+            } else
+            {
+                lockUI();
+                mNetworkController.requestStamp();
+            }
         } else
         {
-            lockUI();
-            mNetworkController.requestStamp();
+            showFinishDialog();
         }
     }
 
@@ -115,10 +122,10 @@ public class StampActivity extends BaseActivity
             }
         };
 
-        String title = this.getResources().getString(R.string.dialog_notice2);
-        String message = this.getResources().getString(R.string.message_stamp_you_can_check_the_stamp_after_login);
-        String positive = this.getResources().getString(R.string.dialog_btn_text_yes);
-        String negative = this.getResources().getString(R.string.dialog_btn_text_no);
+        String title = getString(R.string.dialog_notice2);
+        String message = getString(R.string.message_stamp_you_can_check_the_stamp_after_login);
+        String positive = getString(R.string.dialog_btn_text_yes);
+        String negative = getString(R.string.dialog_btn_text_no);
 
         showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
         {
@@ -128,6 +135,18 @@ public class StampActivity extends BaseActivity
                 finish();
             }
         }, null, true);
+    }
+
+    private void showFinishDialog()
+    {
+        showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                StampActivity.this.onBackPressed();
+            }
+        });
     }
 
     private StampLayout.OnEventListener mOnEventListener = new StampLayout.OnEventListener()

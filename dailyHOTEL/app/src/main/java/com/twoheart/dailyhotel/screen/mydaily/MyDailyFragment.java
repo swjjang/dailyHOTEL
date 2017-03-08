@@ -130,7 +130,11 @@ public class MyDailyFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startEditProfile();
                 return;
+            } else if (DailyDeepLink.getInstance().isStampView() == true)
+            {
+                mOnEventListener.startStamp();
             }
+
             //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
             //            {
             //                mOnEventListener.startWishList(PlaceType.HOTEL);
@@ -391,8 +395,8 @@ public class MyDailyFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             startActivity(new Intent(baseActivity, StampActivity.class));
 
-//            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-//                , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
+            //            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+            //                , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
         }
 
         @Override

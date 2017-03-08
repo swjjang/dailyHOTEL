@@ -1033,6 +1033,7 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isRegisterCouponView() == true //
                     || DailyDeepLink.getInstance().isProfileView() == true//
                     || DailyDeepLink.getInstance().isProfileBirthdayView() == true//
+                    || DailyDeepLink.getInstance().isStampView() == true//
                     )
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true);
