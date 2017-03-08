@@ -463,46 +463,53 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         {
             case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             {
-                if (resultCode == RESULT_OK)
+                switch (resultCode)
                 {
-                    //                    checkedChangedDistance();
-                    searchMyLocation();
-                } else
-                {
-                    StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
-                    SortType sortType;
+                    case RESULT_OK:
+                        searchMyLocation();
+                        break;
 
-                    if (stayCurationOption == null)
-                    {
-                        sortType = SortType.DEFAULT;
-                    } else
-                    {
-                        sortType = stayCurationOption.getSortType();
-                    }
+                    case CODE_RESULT_ACTIVITY_GO_HOME:
+                        setResult(resultCode);
+                        finish();
+                        break;
 
-                    switch (sortType)
-                    {
-                        case DEFAULT:
-                            mSortRadioGroup.check(R.id.regionCheckView);
-                            break;
+                    default:
+                        StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+                        SortType sortType;
 
-                        case LOW_PRICE:
-                            mSortRadioGroup.check(R.id.lowPriceCheckView);
-                            break;
+                        if (stayCurationOption == null)
+                        {
+                            sortType = SortType.DEFAULT;
+                        } else
+                        {
+                            sortType = stayCurationOption.getSortType();
+                        }
 
-                        case HIGH_PRICE:
-                            mSortRadioGroup.check(R.id.highPriceCheckView);
-                            break;
+                        switch (sortType)
+                        {
+                            case DEFAULT:
+                                mSortRadioGroup.check(R.id.regionCheckView);
+                                break;
 
-                        case SATISFACTION:
-                            mSortRadioGroup.check(R.id.satisfactionCheckView);
-                            break;
+                            case LOW_PRICE:
+                                mSortRadioGroup.check(R.id.lowPriceCheckView);
+                                break;
 
-                        // 거리 소트을 요청하였으나 동의를 하지 않는 경우 다시 거리 소트로 돌아오는 경우 종료시킨다.
-                        case DISTANCE:
-                            finish();
-                            break;
-                    }
+                            case HIGH_PRICE:
+                                mSortRadioGroup.check(R.id.highPriceCheckView);
+                                break;
+
+                            case SATISFACTION:
+                                mSortRadioGroup.check(R.id.satisfactionCheckView);
+                                break;
+
+                            // 거리 소트을 요청하였으나 동의를 하지 않는 경우 다시 거리 소트로 돌아오는 경우 종료시킨다.
+                            case DISTANCE:
+                                finish();
+                                break;
+                        }
+                        break;
                 }
                 break;
             }
@@ -741,7 +748,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
 
                 AnalyticsManager.getInstance(StayCurationActivity.this).recordEvent(AnalyticsManager.Category.SORT_FLITER //
-                , AnalyticsManager.Action.STAY_NO_RESULT, stayCurationOption.toString(), null);
+                    , AnalyticsManager.Action.STAY_NO_RESULT, stayCurationOption.toString(), null);
             } else
             {
                 setResultMessage(getString(R.string.label_hotel_filter_result_count, hotelSaleCount));

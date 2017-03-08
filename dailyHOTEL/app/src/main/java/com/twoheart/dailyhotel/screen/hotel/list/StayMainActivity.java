@@ -199,6 +199,10 @@ public class StayMainActivity extends PlaceMainActivity
 
                 startAroundSearchResult(this, mStayCuration.getCheckInSaleTime(), mStayCuration.getNights(), location, callByScreen);
             }
+        } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+        {
+            setResult(resultCode);
+            finish();
         }
     }
 
@@ -251,6 +255,10 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 refreshCurrentFragment(true);
             }
+        } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+        {
+            setResult(resultCode);
+            finish();
         }
     }
 

@@ -157,16 +157,32 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             {
                 if (mViewType == ViewType.MAP)
                 {
-                    PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
-                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                    switch (resultCode)
+                    {
+                        case CODE_RESULT_ACTIVITY_GO_HOME:
+                            finish(resultCode);
+                            break;
+
+                        default:
+                            PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+                            placeListFragment.onActivityResult(requestCode, resultCode, data);
+                            break;
+                    }
                 } else
                 {
-                    if (resultCode == Activity.RESULT_OK)
+                    switch (resultCode)
                     {
-                        searchMyLocation();
-                    } else
-                    {
-                        onLocationFailed();
+                        case Activity.RESULT_OK:
+                            searchMyLocation();
+                            break;
+
+                        case CODE_RESULT_ACTIVITY_GO_HOME:
+                            finish(resultCode);
+                            break;
+
+                        default:
+                            onLocationFailed();
+                            break;
                     }
                 }
                 break;

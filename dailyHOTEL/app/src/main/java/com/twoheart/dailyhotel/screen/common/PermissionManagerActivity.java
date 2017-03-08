@@ -218,6 +218,10 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                 break;
             }
 
+            case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
+                finish(resultCode);
+                break;
+
             case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
             default:
                 finish(resultCode);
@@ -527,7 +531,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             public void onClick(View v)
             {
                 Intent intent = new Intent(PermissionManagerActivity.this, LocationTermsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
 
                 //                AnalyticsManager.getInstance(PlaceSearchActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                 //                    , AnalyticsManager.Action.LOCATION_AGREEMENT_POPPEDUP, AnalyticsManager.Label.TERMSOF_LOCATION, null);

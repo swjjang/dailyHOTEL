@@ -158,9 +158,21 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                     {
                         searchMyLocation(mPlaceReservationDetailLayout.getMyLocationView());
                     }
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
                 }
                 break;
             }
+
+            case Constants.CODE_REQUEST_ACTIVITY_ZOOMMAP:
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+                break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
