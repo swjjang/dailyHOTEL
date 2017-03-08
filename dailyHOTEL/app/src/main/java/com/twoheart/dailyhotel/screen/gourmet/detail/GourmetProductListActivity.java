@@ -318,7 +318,7 @@ public class GourmetProductListActivity extends BaseActivity
         }
 
         @Override
-        public void onProductDetailClick(int position)
+        public void onProductDetailClick(int position, int where)
         {
             GourmetProduct gourmetProduct = mGourmetDetail.getProduct(position);
 
@@ -338,8 +338,11 @@ public class GourmetProductListActivity extends BaseActivity
                 , mSaleTime, mGourmetDetail, position, mProvince, mArea);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
 
+            Map<String, String> paramsMap = new HashMap<>();
+            paramsMap.put(AnalyticsManager.KeyType.VALUE, Integer.toString(where));
+
             AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, //
-                AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK, Integer.toString(gourmetProduct.index), null);
+                AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK, Integer.toString(gourmetProduct.index), paramsMap);
 
             if (gourmetProduct.getPrimaryImage() == null)
             {

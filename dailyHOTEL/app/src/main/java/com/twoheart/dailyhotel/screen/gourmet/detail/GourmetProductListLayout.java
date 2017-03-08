@@ -25,7 +25,7 @@ public class GourmetProductListLayout extends BaseLayout
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onProductDetailClick(int position);
+        void onProductDetailClick(int position, int where);
 
         void onReservationClick(int position);
     }
@@ -79,9 +79,9 @@ public class GourmetProductListLayout extends BaseLayout
         mProductTypeListAdapter = new GourmetProductListAdapter(mContext, placeViewItemList, new GourmetProductListAdapter.OnProductClickListener()
         {
             @Override
-            public void onProductDetailClick(int position)
+            public void onProductDetailClick(int position, int where)
             {
-                ((OnEventListener) mOnEventListener).onProductDetailClick(position);
+                ((OnEventListener) mOnEventListener).onProductDetailClick(position, where);
             }
 
             @Override

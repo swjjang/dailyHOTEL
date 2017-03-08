@@ -34,7 +34,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface OnProductClickListener
     {
-        void onProductDetailClick(int position);
+        void onProductDetailClick(int position, int where);
 
         void onReservationClick(int position);
     }
@@ -141,7 +141,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onClick(View v)
             {
-                mOnProductClickListener.onProductDetailClick((int) v.getTag());
+                mOnProductClickListener.onProductDetailClick((int) v.getTag(), 2);
             }
         });
 
@@ -265,7 +265,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             {
                 if (mOnProductClickListener != null)
                 {
-                    mOnProductClickListener.onProductDetailClick((int) v.getTag());
+                    mOnProductClickListener.onProductDetailClick((int) v.getTag(), 1);
                 }
             }
         });

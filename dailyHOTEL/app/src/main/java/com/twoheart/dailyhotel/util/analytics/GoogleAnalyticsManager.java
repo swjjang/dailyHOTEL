@@ -263,6 +263,18 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
                     value = 0L;
                 }
             }
+        } else if (AnalyticsManager.Category.GOURMET_BOOKINGS.equalsIgnoreCase(category) == true//
+            && AnalyticsManager.Action.GOURMET_MENU_DETAIL_CLICK.equalsIgnoreCase(action) && params != null)
+        {
+            String where = params.get(AnalyticsManager.KeyType.VALUE);
+
+            try
+            {
+                value = Long.parseLong(where);
+            } catch (Exception e)
+            {
+                value = 0L;
+            }
         }
 
         mGoogleAnalyticsTracker.send(new HitBuilders.EventBuilder()//
