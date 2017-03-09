@@ -220,6 +220,10 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 if (resultCode == Activity.RESULT_OK)
                 {
                     searchMyLocation();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    mBaseActivity.setResult(resultCode);
+                    mBaseActivity.finish();
                 }
                 break;
             }

@@ -684,7 +684,7 @@ public class AnalyticsManager
         public static final String HOTEL_LOCATIONS_CLICKED = "HotelLocationsClicked";
         public static final String HOTEL_CATEGORY_CLICKED = "DailyHotelCategoryClicked";
         public static final String HOTEL_SORT_FILTER_BUTTON_CLICKED = "HotelSortFilterButtonClicked";
-//        public static final String HOTEL_SORT_FILTER_BUTTON_UNCLICKED = "HotelSortFilterButtonUnClicked";
+        //        public static final String HOTEL_SORT_FILTER_BUTTON_UNCLICKED = "HotelSortFilterButtonUnClicked";
         public static final String HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED = "HotelSortFilterApplyButtonClicked";
         public static final String HOTEL_DETAIL_MAP_CLICKED = "HotelDetailMapClicked";
         public static final String HOTEL_DETAIL_ADDRESS_COPY_CLICKED = "HotelDetailAddressCopyClicked";
@@ -971,8 +971,8 @@ public class AnalyticsManager
         public static final String GOURMET_DISSATISFACTION = "GourmetDissatisfaction";
         public static final String GOURMET_CLOSE_BUTTON_CLICKED = "GourmetCloseButtonClicked";
         //
-//        public 7static final String MINUS_BUTTON_CLICKED = "MinusButtonClicked";
-//        public static final String PLUS_BUTTON_CLICKED = "PlusButtonClicked";
+        //        public 7static final String MINUS_BUTTON_CLICKED = "MinusButtonClicked";
+        //        public static final String PLUS_BUTTON_CLICKED = "PlusButtonClicked";
         public static final String RESET_BUTTON_CLICKED = "ResetButtonClicked";
         public static final String CLOSE_BUTTON_CLICKED = "CloseButtonClicked";
         //

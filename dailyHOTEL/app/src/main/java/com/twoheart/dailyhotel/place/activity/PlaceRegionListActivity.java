@@ -127,6 +127,10 @@ public abstract class PlaceRegionListActivity extends BaseActivity
                 if (resultCode == Activity.RESULT_OK)
                 {
                     searchMyLocation();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
                 }
                 break;
             }

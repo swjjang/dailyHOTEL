@@ -142,6 +142,10 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 startAroundSearchResult(this, mGourmetCuration.getSaleTime(), location, callByScreen);
             }
+        } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+        {
+            setResult(resultCode);
+            finish();
         }
     }
 
@@ -191,6 +195,10 @@ public class GourmetMainActivity extends PlaceMainActivity
             {
                 refreshCurrentFragment(true);
             }
+        } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+        {
+            setResult(resultCode);
+            finish();
         }
     }
 

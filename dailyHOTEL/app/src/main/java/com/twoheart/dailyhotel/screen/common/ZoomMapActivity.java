@@ -274,6 +274,10 @@ public class ZoomMapActivity extends BaseActivity
                 if (resultCode == RESULT_OK)
                 {
                     searchMyLocation();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
                 }
                 break;
             }
