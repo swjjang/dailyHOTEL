@@ -389,7 +389,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         setPaymentInformation((GourmetPaymentInformation) mPaymentInformation);
 
-        showChangedValueDialog(R.string.message_gourmet_detail_changed_price, new DialogInterface.OnDismissListener()
+        showChangedValueDialog(R.string.message_gourmet_payment_changed_price, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
