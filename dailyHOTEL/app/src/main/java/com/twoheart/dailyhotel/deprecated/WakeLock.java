@@ -1,7 +1,9 @@
-package com.twoheart.dailyhotel.util;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.content.Context;
 import android.os.PowerManager;
+
+import com.twoheart.dailyhotel.util.ExLog;
 
 public class WakeLock
 {
