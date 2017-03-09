@@ -210,6 +210,15 @@ public class CouponListActivity extends BaseActivity
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_COUPON_TERMS:
+            case CODE_REQUEST_ACTIVITY_COUPON_HISTORY:
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+                break;
         }
     }
 
@@ -259,7 +268,7 @@ public class CouponListActivity extends BaseActivity
             }
 
             Intent intent = CouponHistoryActivity.newInstance(CouponListActivity.this);
-            startActivity(intent);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_COUPON_HISTORY);
         }
 
         @Override
@@ -267,7 +276,7 @@ public class CouponListActivity extends BaseActivity
         {
             // 쿠폰 사용시 유의사항 안내
             Intent intent = CouponTermActivity.newInstance(CouponListActivity.this);
-            startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPON_TERMS);
         }
 
         @Override
@@ -282,7 +291,7 @@ public class CouponListActivity extends BaseActivity
             // 리스트 아이템 쿠폰 유의사항 팝업
             // 쿠폰 사용시 유의사항 안내
             Intent intent = CouponTermActivity.newInstance(CouponListActivity.this, coupon.couponCode);
-            startActivity(intent);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPON_TERMS);
         }
 
         @Override

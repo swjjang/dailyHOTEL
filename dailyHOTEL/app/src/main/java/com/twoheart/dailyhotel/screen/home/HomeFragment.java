@@ -220,6 +220,9 @@ public class HomeFragment extends BaseFragment
             case Constants.CODE_REQUEST_ACTIVITY_CONTACTUS:
             case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
             case Constants.CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
+            case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
+            case Constants.CODE_REQUEST_ACTIVITY_BONUS:
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP:
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     mDontReload = false;

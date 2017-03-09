@@ -99,6 +99,13 @@ public class StampHistoryActivity extends BaseActivity
     {
 
         @Override
+        public void onHomeClick()
+        {
+            setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+            finish();
+        }
+
+        @Override
         public void finish()
         {
             StampHistoryActivity.this.finish();

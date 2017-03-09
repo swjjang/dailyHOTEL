@@ -71,7 +71,21 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         holder.descriptionTextView.setText(coupon.title);
 
-        holder.lastBottomLine.setVisibility(position == getItemCount() - 1 ? View.VISIBLE : View.GONE);
+        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.rootView.getLayoutParams();
+
+        if (position == getItemCount() - 1)
+        {
+            layoutParams.bottomMargin = Util.dpToPx(mContext, 40);
+
+            holder.lastBottomLine.setVisibility(View.VISIBLE);
+        } else
+        {
+            layoutParams.bottomMargin = 0;
+
+            holder.lastBottomLine.setVisibility(View.GONE);
+        }
+
+        holder.rootView.setLayoutParams(layoutParams);
 
         int resId;
         if (coupon.isRedeemed == true)

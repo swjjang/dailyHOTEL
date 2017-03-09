@@ -95,6 +95,15 @@ public class StampActivity extends BaseActivity
                 break;
             }
 
+            case CODE_REQUEST_ACTIVITY_STAMP_TERMS:
+            case CODE_REQUEST_ACTIVITY_STAMP_HISTORY:
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+                break;
+
             default:
                 break;
         }

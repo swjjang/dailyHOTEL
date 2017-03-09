@@ -12,6 +12,7 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
 {
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onHomeClick();
     }
 
     public StampHistoryLayout(Context context, OnEventListener mOnEventListener)
@@ -24,6 +25,15 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
     {
         initToolbar(view);
 
+        View homeButtonView = view.findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onHomeClick();
+            }
+        });
     }
 
     private void initToolbar(View view)

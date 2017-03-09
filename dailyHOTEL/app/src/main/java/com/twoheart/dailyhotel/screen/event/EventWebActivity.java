@@ -325,6 +325,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_COUPONLIST:
+            case CODE_REQUEST_ACTIVITY_STAMP:
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+                break;
         }
     }
 

@@ -358,7 +358,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
             Intent intent = CouponListActivity.newInstance(baseActivity, sortType);
-            startActivity(intent);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
                 Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
@@ -376,7 +376,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, BonusActivity.class));
+            baseActivity.startActivityForResult(BonusActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_BONUS);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
@@ -393,7 +393,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, StampActivity.class));
+            baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_STAMP);
 
             //            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             //                , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
