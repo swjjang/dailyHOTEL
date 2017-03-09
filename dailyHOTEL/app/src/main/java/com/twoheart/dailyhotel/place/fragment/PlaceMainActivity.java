@@ -87,17 +87,14 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         mDontReloadAtOnResume = true;
 
-        if (Util.isUsedMultiTransition() == true)
+        new Handler().postDelayed(new Runnable()
         {
-            new Handler().postDelayed(new Runnable()
+            @Override
+            public void run()
             {
-                @Override
-                public void run()
-                {
-                    mPlaceMainLayout.showAppBarLayout(false);
-                }
-            }, 200);
-        }
+                mPlaceMainLayout.showAppBarLayout(false);
+            }
+        }, 200);
     }
 
     @Override
