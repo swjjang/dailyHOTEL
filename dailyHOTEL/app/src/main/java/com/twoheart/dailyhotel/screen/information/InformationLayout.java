@@ -102,7 +102,12 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
             WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             windowManager.getDefaultDisplay().getMetrics(displayMetrics);
 
-            String dpiText = "\nldpi 120dpi\n" + "mdpi 160dpi\n" + "hdpi 240dpi\n" + "xhdpi 320dpi\n" + "xxhdpi 480dpi\n" + "xxxhdpi 640dpi";
+            String dpiText = "\nldpi 120dpi\n" +//
+                "mdpi 160dpi\n" +//
+                "hdpi 240dpi\n" +//
+                "xhdpi 320dpi\n" +//
+                "xxhdpi 480dpi\n" +//
+                "xxxhdpi 640dpi";
 
             debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion + "\n\nDPI : " + displayMetrics.densityDpi + dpiText);
         }
