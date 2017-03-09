@@ -115,8 +115,6 @@ public class HomeCarouselLayout extends LinearLayout
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(false);
-        mRecyclerView.setFadingEdgeLength(mRecyclerView.getHorizontalFadingEdgeLength() * 5);
-        mRecyclerView.setHorizontalFadingEdgeEnabled(true);
 
         SnapHelper helper = new PagerSnapHelper();
         helper.attachToRecyclerView(mRecyclerView);
