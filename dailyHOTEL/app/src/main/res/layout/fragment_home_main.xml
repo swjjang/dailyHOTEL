@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar">
 
-        <android.support.v4.widget.NestedScrollView
+        <com.twoheart.dailyhotel.widget.DailyNestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -29,7 +29,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </com.twoheart.dailyhotel.widget.DailyNestedScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -48,8 +48,8 @@
         android:id="@+id/errorView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
+        android:orientation="vertical"
         android:translationY="94dp">
 
         <include

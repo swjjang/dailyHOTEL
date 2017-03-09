@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
+import com.twoheart.dailyhotel.widget.DailyNestedScrollView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
@@ -76,7 +77,7 @@ public class HomeLayout extends BaseLayout
 
     private View mActionButtonLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    NestedScrollView mNestedScrollView;
+    DailyNestedScrollView mNestedScrollView;
     View mErrorPopupLayout;
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
@@ -644,7 +645,7 @@ public class HomeLayout extends BaseLayout
 
     private void initNestedScrollLayout(View view)
     {
-        mNestedScrollView = (NestedScrollView) view.findViewById(R.id.nestedScrollView);
+        mNestedScrollView = (DailyNestedScrollView) view.findViewById(R.id.nestedScrollView);
         mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNestedScrollView.setOnScrollChangeListener(mOnScrollChangeListener);
         mNestedScrollView.addOnLayoutChangeListener(mOnLayoutChangeListener);
