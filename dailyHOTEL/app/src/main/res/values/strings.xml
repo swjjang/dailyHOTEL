@@ -594,6 +594,7 @@
     <string name="message_visit_no_parking_memo">업체 사정상 주차장 이용이 불가능합니다.\n방문 시 도보나 대중교통을 이용해주세요.</string>
     <string name="message_payment_free_payment">결제하실 금액이 없습니다.</string>
     <string name="message_gourmet_payment_changed_price">업체 사정으로 해당 상품의 요금이 변동되었습니다.\n상품 금액을 한번 더 확인하신 후 결제해주세요.</string>
+    <string name="message_stay_payment_changed_price">업체 사정으로 해당 객실의 요금이 변동되었습니다.\n객실 금액을 한번 더 확인해주세요.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -1013,9 +1014,9 @@
     <string name="label_detail_view_total_price">총가격</string>
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
-    <string name="message_stay_detail_changed_price">업체 사정으로 해당 객실의 요금이 변동되었습니다.\n객실 금액을 한번 더 확인해주세요.</string>
+    <string name="message_stay_detail_changed_price">일부 상품이 판매 완료되었습니다.\n원하시는 상품이 없으면 날짜를 변경해주세요.</string>
     <string name="message_stay_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 숙소를 확인해주세요.</string>
-    <string name="message_gourmet_detail_changed_price">업체 사정으로 해당 상품의 요금이 변동되었습니다.\n상품 금액을 한번 더 확인해주세요.</string>
+    <string name="message_gourmet_detail_changed_price">일부 상품이 판매 완료되었습니다.\n원하시는 상품이 없으면 날짜를 변경해주세요.</string>
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>

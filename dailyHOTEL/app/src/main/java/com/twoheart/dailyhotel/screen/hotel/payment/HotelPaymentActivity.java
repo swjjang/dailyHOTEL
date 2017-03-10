@@ -437,7 +437,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         setCouponSelected(false);
         setPaymentInformation((StayPaymentInformation) mPaymentInformation);
 
-        showChangedValueDialog(R.string.message_stay_detail_changed_price, new OnDismissListener()
+        showChangedValueDialog(R.string.message_stay_payment_changed_price, new OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialog)
