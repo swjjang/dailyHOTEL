@@ -62,7 +62,8 @@ import retrofit2.Response;
 public class GourmetDetailActivity extends PlaceDetailActivity
 {
     int mSelectedTicketIndex;
-    private boolean mCheckPrice;
+    private boolean mFirstCheckPrice;
+    private boolean mRefreshCheckPrice;
 
     /**
      * 리스트에서 호출
@@ -426,6 +427,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     case CODE_RESULT_ACTIVITY_REFRESH:
                     case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
                         mDontReloadAtOnResume = false;
+
+                        mRefreshCheckPrice = true;
                         break;
 
                     default:
@@ -911,10 +914,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, gourmetDetail, mCurrentImage);
         }
 
-        if (mCheckPrice == false)
+        if (mFirstCheckPrice == false)
         {
-            mCheckPrice = true;
+            mFirstCheckPrice = true;
             checkGourmetTicket(mIsDeepLink, gourmetDetail, mViewPrice);
+        } else if (mRefreshCheckPrice == true)
+        {
+            mRefreshCheckPrice = false;
+            checkGourmetTicket(mIsDeepLink, gourmetDetail, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
         }
 
         // 딥링크로 메뉴 오픈 요청
