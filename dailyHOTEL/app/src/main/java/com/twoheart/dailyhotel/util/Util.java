@@ -1648,6 +1648,17 @@ public class Util implements Constants
         return "image" + "_" + versions[0].replaceAll(REMOVE_CHARACTER, "");
     }
 
+    public static String makeStampStayThankYpuImageFileName(String version)
+    {
+        if (Util.isTextEmpty(version) == true)
+        {
+            return "daily_stamp_stay";
+        }
+
+        String[] versions = version.split("\\+");
+        return "stamp_stay_image" + "_" + versions[0].replaceAll(REMOVE_CHARACTER, "");
+    }
+
     public static boolean isSktNetwork(Context context)
     {
         if (context == null)

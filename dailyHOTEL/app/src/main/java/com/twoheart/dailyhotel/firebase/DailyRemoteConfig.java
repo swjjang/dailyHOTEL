@@ -335,7 +335,7 @@ public class DailyRemoteConfig
 
         final String clientHomeEventCurrentVersion = DailyPreference.getInstance(context).getRemoteConfigHomeEventCurrentVersion();
 
-        processEventImage(context, clientHomeEventCurrentVersion, androidHomeEventDefaultLink, new ImageDownloadAsyncTask.OnCompletedListener()
+        processImage(context, clientHomeEventCurrentVersion, androidHomeEventDefaultLink, new ImageDownloadAsyncTask.OnCompletedListener()
         {
             @Override
             public void onCompleted(boolean result, String version)
@@ -362,7 +362,7 @@ public class DailyRemoteConfig
         });
     }
 
-    void processEventImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
+    void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
     {
         if (Util.isTextEmpty(jsonObject) == true)
         {
@@ -405,12 +405,15 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writeStamp(Context context, String androidStamp)
+    private void writeStamp(final Context context, String androidStamp)
     {
         if (context == null || Util.isTextEmpty(androidStamp) == true)
         {
             return;
         }
+
+        String stayThankYouImageUrl;
+        String version;
 
         try
         {
@@ -430,9 +433,10 @@ public class DailyRemoteConfig
             JSONObject stayThankYouJSONObject = jsonObject.getJSONObject("stayThankYou");
 
             String stayThankYouMessage = stayThankYouJSONObject.getString("message");
-            String stayThankYouImageUrl = stayThankYouJSONObject.getString("imageUrl");
+            stayThankYouImageUrl = stayThankYouJSONObject.getString("imageUrl");
+            version = jsonObject.getString("version");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampStayThankYou(stayThankYouImageUrl, stayThankYouMessage);
+            DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouMessage(stayThankYouMessage);
 
             JSONObject stampDateJSONObject = jsonObject.getJSONObject("stampDate");
 
@@ -443,6 +447,45 @@ public class DailyRemoteConfig
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+
+            stayThankYouImageUrl = null;
+            version = null;
         }
+
+        final String stayThankYouImageLinkUrl = stayThankYouImageUrl;
+
+        String clientCurrentVersion = DailyPreference.getInstance(context).getRemoteConfigStampStayThankYouCurrentVersion();
+        if (Util.isTextEmpty(clientCurrentVersion) == true)
+        {
+            clientCurrentVersion = "";
+        }
+
+        final String clientStampStayThankYouCurrentVersion = clientCurrentVersion;
+
+        new StampStayThankYouImageDownloadAsyncTask(context, version, new StampStayThankYouImageDownloadAsyncTask.OnCompletedListener() {
+            @Override
+            public void onCompleted(boolean result, String version)
+            {
+                if (result == true)
+                {
+                    // 이전 파일 삭제
+                    if (Util.isTextEmpty(clientStampStayThankYouCurrentVersion) == false)
+                    {
+                        if (clientStampStayThankYouCurrentVersion.compareTo(version) < 0)
+                        {
+                            String fileName = Util.makeStampStayThankYpuImageFileName(clientStampStayThankYouCurrentVersion);
+                            File currentFile = new File(context.getCacheDir(), fileName);
+                            if (currentFile.exists() == true && currentFile.delete() == false)
+                            {
+                                currentFile.deleteOnExit();
+                            }
+                        }
+                    }
+
+                    DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouCurrentVersion(version);
+                    DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouImageUrl(stayThankYouImageLinkUrl);
+                }
+            }
+        }).execute(stayThankYouImageLinkUrl);
     }
 }

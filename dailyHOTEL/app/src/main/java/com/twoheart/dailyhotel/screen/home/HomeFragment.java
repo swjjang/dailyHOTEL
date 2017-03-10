@@ -18,13 +18,13 @@ import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentThankyouActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
@@ -307,13 +307,27 @@ public class HomeFragment extends BaseFragment
 
     void startEventWebActivity(String url, String eventName)
     {
-        if (Util.isTextEmpty(url) == true)
-        {
-            return;
-        }
+        //        if (Util.isTextEmpty(url) == true)
+        //        {
+        //            return;
+        //        }
+        //
+        //        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName);
+        //        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
 
-        Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName);
-        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
+        String discountType = AnalyticsManager.Label.PAYMENTWITH_CREDIT;
+        String imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
+        String placeName = "[신규] 천호 YES";
+        String placeType = "준특실 더블";
+        String checkInDate = "2016.11.2 (수) 17시";
+        String checkOutDate = "2016.11.3 (목) 13시";
+        int nights = 1;
+        String userName = "dh00_test";
+        HashMap<String, String> params = new HashMap<>();
+        params.put(AnalyticsManager.KeyType.TICKET_INDEX, "183856");
+        Intent intent = HotelPaymentThankyouActivity.newInstance(mBaseActivity, imageUrl, placeName//
+            , placeType, userName, checkInDate, checkOutDate, nights, "CardPay", discountType, params);
+        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_REFRESH);
     }
 
     private void startDeepLinkRecommendationActivity(String serviceType, int index)

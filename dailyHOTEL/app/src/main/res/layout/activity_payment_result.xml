@@ -336,6 +336,37 @@
                 </LinearLayout>
 
             </RelativeLayout>
+            <!-- Remote Config 영역 -->
+            <RelativeLayout
+                android:id="@+id/benefitLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@id/receiptLayout"
+                android:layout_marginTop="10dp">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/benefitImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:adjustViewBounds="true"
+                    fresco:actualImageScaleType="centerCrop"
+                    fresco:placeholderImage="@drawable/layerlist_placeholder"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/benefitTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"
+                    />
+
+            </RelativeLayout>
 
 
         </RelativeLayout>

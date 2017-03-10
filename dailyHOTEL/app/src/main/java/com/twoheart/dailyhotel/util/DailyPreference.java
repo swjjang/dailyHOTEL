@@ -136,6 +136,7 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1 = "323";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "324";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "325";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_VERSION = "326";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -1140,10 +1141,19 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE, null);
     }
 
-    public void setRemoteConfigStampStayThankYou(String imageUrl, String message)
+    public void setRemoteConfigStampStayThankYouCurrentVersion(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_VERSION, value);
+    }
+
+    public String getRemoteConfigStampStayThankYouCurrentVersion()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_VERSION, null);
+    }
+
+    public void setRemoteConfigStampStayThankYouImageUrl(String imageUrl)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_IMAGE_URL, imageUrl);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE, message);
     }
 
     public String getRemoteConfigStampStayThankYouImageUrl()
@@ -1151,7 +1161,12 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_IMAGE_URL, null);
     }
 
-    public String getRemoteConfigStampStayThankYoulMessage()
+    public void setRemoteConfigStampStayThankYouMessage(String message)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE, message);
+    }
+
+    public String getRemoteConfigStampStayThankYouMessage()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE, null);
     }

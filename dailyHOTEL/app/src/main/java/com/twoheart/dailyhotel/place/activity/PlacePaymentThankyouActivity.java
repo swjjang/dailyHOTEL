@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -15,6 +16,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
@@ -23,8 +26,10 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
+import java.io.File;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -47,6 +52,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     String mPaymentType;
     Map<String, String> mParams;
+    View mBenefitLayout;
+    String mBenefitImageUrl;
 
     protected abstract void recordEvent(String action, String label);
 
@@ -86,6 +93,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         initToolbar();
         initLayout(imageUrl, placeName, placeType, userName);
+        initBenefitView();
 
         final ScrollView informationLayout = (ScrollView) findViewById(R.id.informationLayout);
         EdgeEffectColor.setEdgeGlowColor(informationLayout, getResources().getColor(R.color.default_over_scroll_edge));
@@ -148,6 +156,57 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         startReceiptAnimation();
     }
 
+    private void initBenefitView()
+    {
+        mBenefitLayout = findViewById(R.id.benefitLayout);
+        DailyTextView benefitTextView = (DailyTextView) findViewById(R.id.benefitTextView);
+        SimpleDraweeView benefitImageView = (SimpleDraweeView) findViewById(R.id.benefitImageView);
+
+        if (mBenefitLayout == null)
+        {
+            return;
+        }
+
+        mBenefitLayout.setVisibility(View.GONE);
+
+        if (isBenefitViewEnabled() == false)
+        {
+            return;
+        }
+
+        benefitTextView.setText(getBenefitMessage());
+
+        String version = getBenefitCurrentVersion();
+        String fileName = Util.makeStampStayThankYpuImageFileName(version);
+
+        File file = new File(getApplicationContext().getCacheDir(), fileName);
+
+        mBenefitImageUrl = null;
+
+        if (file.exists() == true)
+        {
+            try
+            {
+                Uri uri = Uri.fromFile(file);
+                mBenefitImageUrl = uri.toString();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
+
+        benefitImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+        benefitImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+        if (Util.isTextEmpty(mBenefitImageUrl) == true)
+        {
+            benefitImageView.setImageURI((String) null);
+        } else
+        {
+            Util.requestImageResize(this, benefitImageView, mBenefitImageUrl);
+        }
+    }
+
     private void startReceiptAnimation()
     {
         final View confirmImageView = findViewById(R.id.confirmImageView);
@@ -194,6 +253,14 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 confirmImageView.setScaleY(endScaleY);
 
                 confirmImageView.setVisibility(View.VISIBLE);
+
+                if (Util.isTextEmpty(mBenefitImageUrl) == false)
+                {
+                    mBenefitLayout.setVisibility(View.VISIBLE);
+                } else
+                {
+                    mBenefitLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -203,6 +270,14 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 confirmImageView.setScaleY(endScaleY);
 
                 confirmImageView.setVisibility(View.VISIBLE);
+
+                if (Util.isTextEmpty(mBenefitImageUrl) == false)
+                {
+                    mBenefitLayout.setVisibility(View.VISIBLE);
+                } else
+                {
+                    mBenefitLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -249,6 +324,21 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         animatorSet.start();
     }
 
+    protected boolean isBenefitViewEnabled()
+    {
+        return false;
+    }
+
+    protected String getBenefitMessage()
+    {
+        return null;
+    }
+
+    protected String getBenefitCurrentVersion()
+    {
+        return null;
+    }
+
     @Override
     public void finish()
     {
@@ -275,7 +365,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
     }
 
-    private PlacePaymentThankyouNetworkController.OnNetworkControllerListener mNetworkControllerListener = new PlacePaymentThankyouNetworkController.OnNetworkControllerListener()
+    private final PlacePaymentThankyouNetworkController.OnNetworkControllerListener mNetworkControllerListener = new PlacePaymentThankyouNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onUserTracking(int hotelPaymentCompletedCount, int gourmetPaymentCompletedCount)
