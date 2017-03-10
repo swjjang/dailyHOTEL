@@ -254,7 +254,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
                 confirmImageView.setVisibility(View.VISIBLE);
 
-                if (Util.isTextEmpty(mBenefitImageUrl) == false)
+                if (isBenefitViewEnabled() == true && Util.isTextEmpty(mBenefitImageUrl) == false)
                 {
                     mBenefitLayout.setVisibility(View.VISIBLE);
                 } else
@@ -271,7 +271,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
                 confirmImageView.setVisibility(View.VISIBLE);
 
-                if (Util.isTextEmpty(mBenefitImageUrl) == false)
+                if (isBenefitViewEnabled() == true && Util.isTextEmpty(mBenefitImageUrl) == false)
                 {
                     mBenefitLayout.setVisibility(View.VISIBLE);
                 } else
