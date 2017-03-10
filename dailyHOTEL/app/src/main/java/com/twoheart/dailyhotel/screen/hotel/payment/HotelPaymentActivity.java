@@ -74,6 +74,13 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 {
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
+    private static final String STATE_PAYMENT_INFORMATION = "state_payment_information";
+    private static final String STATE_PLACE_NAME = "state_place_name";
+    private static final String STATE_PLACE_PROVINCE = "state_place_province";
+    private static final String STATE_PLACE_AREA = "state_place_area";
+    private static final String STATE_PLACE_NIGHTS = "state_place_nights";
+    private static final String STATE_PLACE_SCREEN = "state_place_screen";
+
     HotelPaymentLayout mHotelPaymentLayout;
     //
     boolean mIsChangedPrice; // 가격이 변경된 경우.
@@ -146,6 +153,32 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         mHotelPaymentLayout.setToolbarTitle(getString(R.string.actionbar_title_payment_activity));
 
         setAvailableDefaultPaymentType();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        outState.putParcelable(STATE_PAYMENT_INFORMATION, mPaymentInformation);
+        outState.putString(STATE_PLACE_NAME, mPlaceName);
+        outState.putParcelable(STATE_PLACE_PROVINCE, mProvince);
+        outState.putString(STATE_PLACE_AREA, mArea);
+        outState.putInt(STATE_PLACE_NIGHTS, mNights);
+        outState.putString(STATE_PLACE_SCREEN, mScreenAnalytics);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mPaymentInformation = savedInstanceState.getParcelable(STATE_PAYMENT_INFORMATION);
+        mPlaceName = savedInstanceState.getString(STATE_PLACE_NAME);
+        mProvince = savedInstanceState.getParcelable(STATE_PLACE_PROVINCE);
+        mArea = savedInstanceState.getString(STATE_PLACE_AREA);
+        mNights = savedInstanceState.getInt(STATE_PLACE_NIGHTS);
+        mScreenAnalytics = savedInstanceState.getString(STATE_PLACE_SCREEN);
     }
 
     private boolean initIntent(Intent intent)
