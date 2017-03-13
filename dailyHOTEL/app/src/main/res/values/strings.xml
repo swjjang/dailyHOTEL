@@ -1014,9 +1014,9 @@
     <string name="label_detail_view_total_price">총가격</string>
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
-    <string name="message_stay_detail_changed_price">일부 상품이 판매 완료되었습니다.\n원하시는 상품이 없으면 날짜를 변경해주세요.</string>
+    <string name="message_stay_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
     <string name="message_stay_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 숙소를 확인해주세요.</string>
-    <string name="message_gourmet_detail_changed_price">일부 상품이 판매 완료되었습니다.\n원하시는 상품이 없으면 날짜를 변경해주세요.</string>
+    <string name="message_gourmet_detail_changed_price">일부 상품의 요금이\n변동되었습니다.\n상품 금액을\n한번 더 확인해주시고\n원하시는 상품이 없으면\n날짜를 변경해보세요.</string>
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
