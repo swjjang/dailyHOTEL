@@ -362,7 +362,7 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
     public enum Pictogram implements Parcelable
     {
         PARKING(R.string.label_parking, R.drawable.f_ic_facilities_05),
-        NO_PARKING(R.string.label_unabled_parking, R.drawable.f_ic_facilities_05),
+        NO_PARKING(R.string.label_unabled_parking, R.drawable.f_ic_facilities_05_no_parking),
         POOL(R.string.label_pool, R.drawable.f_ic_facilities_06),
         FITNESS(R.string.label_fitness, R.drawable.f_ic_facilities_07),
         SAUNA(R.string.label_sauna, R.drawable.f_ic_facilities_16),

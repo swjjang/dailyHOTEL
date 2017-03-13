@@ -8,8 +8,6 @@ import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
@@ -241,7 +239,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
 
-        if(homePlace.prices != null && homePlace.prices.discountPrice > 0)
+        if (homePlace.prices != null && homePlace.prices.discountPrice > 0)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, homePlace.prices.discountPrice);
         } else
@@ -1308,12 +1306,12 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.hideWishButtonAnimation();
             }
 
-            if (Util.isOverAPI21() == true)
-            {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(getResources().getColor(R.color.textView_textColor_shadow_soldout));
-            }
+            //            if (Util.isOverAPI21() == true)
+            //            {
+            //                Window window = getWindow();
+            //                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //                window.setStatusBarColor(getResources().getColor(R.color.textView_textColor_shadow_soldout));
+            //            }
 
             releaseUiComponent();
 
@@ -1347,12 +1345,12 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }
             }
 
-            if (Util.isOverAPI21() == true)
-            {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(getResources().getColor(R.color.white));
-            }
+            //            if (Util.isOverAPI21() == true)
+            //            {
+            //                Window window = getWindow();
+            //                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            //                window.setStatusBarColor(getResources().getColor(R.color.white));
+            //            }
 
             releaseUiComponent();
         }
