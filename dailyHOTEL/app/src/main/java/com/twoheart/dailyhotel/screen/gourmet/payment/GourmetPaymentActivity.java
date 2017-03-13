@@ -126,6 +126,26 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         setAvailableDefaultPaymentType();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        outState.putParcelable(STATE_PAYMENT_INFORMATION, mPaymentInformation);
+        outState.putParcelable(STATE_PLACE_PROVINCE, mProvince);
+        outState.putString(STATE_PLACE_AREA, mArea);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mPaymentInformation = savedInstanceState.getParcelable(STATE_PAYMENT_INFORMATION);
+        mProvince = savedInstanceState.getParcelable(STATE_PLACE_PROVINCE);
+        mArea = savedInstanceState.getString(STATE_PLACE_AREA);
+    }
+
     private boolean initIntent(Intent intent)
     {
         mPaymentInformation = new GourmetPaymentInformation();
