@@ -74,10 +74,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 {
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
-    private static final String STATE_PAYMENT_INFORMATION = "state_payment_information";
     private static final String STATE_PLACE_NAME = "state_place_name";
-    private static final String STATE_PLACE_PROVINCE = "state_place_province";
-    private static final String STATE_PLACE_AREA = "state_place_area";
     private static final String STATE_PLACE_NIGHTS = "state_place_nights";
     private static final String STATE_PLACE_SCREEN = "state_place_screen";
 

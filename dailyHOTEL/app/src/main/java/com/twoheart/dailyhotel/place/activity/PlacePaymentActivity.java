@@ -54,6 +54,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected static final int PHONE_PAYMENT_LIMIT = 500000;
 
+    protected static final String STATE_PAYMENT_INFORMATION = "state_payment_information";
+    protected static final String STATE_PLACE_PROVINCE = "state_place_province";
+    protected static final String STATE_PLACE_AREA = "state_place_area";
+
     protected PlacePaymentInformation mPaymentInformation;
     protected CreditCard mSelectedCreditCard;
     protected Dialog mFinalCheckDialog;
