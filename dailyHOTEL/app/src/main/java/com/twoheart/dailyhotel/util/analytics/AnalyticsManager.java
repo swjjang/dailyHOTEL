@@ -1148,6 +1148,7 @@ public class AnalyticsManager
         public static final String AREA = "area ";
         public static final String NUM_OF_BOOKING = "num_of_booking";
         public static final String EVENT_NAME = "event_name";
+        public static final String EVENT_IDX = "event_idx";
         public static final String KEYWORD = "keyword";
         public static final String NUM_OF_SEARCH_RESULTS_RETURNED = "num_of_search_results_returned";
         public static final String USER_IDX = "user_idx";
@@ -1216,6 +1217,8 @@ public class AnalyticsManager
         public static final String VENDOR_NAME = "vendor_name";
         public static final String SERVICE = "service";
         public static final String HOME_SCREEN = "home_screen";
+        public static final String RECOMMEND_IDX = "recommend_idx";
+        public static final String RECOMMEND_ITEM_IDX = "recommend_item_idx";
     }
 
     public static class ValueType
