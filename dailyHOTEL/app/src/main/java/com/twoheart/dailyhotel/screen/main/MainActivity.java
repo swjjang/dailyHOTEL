@@ -233,7 +233,16 @@ public class MainActivity extends BaseActivity implements Constants
         } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
             imageView.setPadding(0, 0, 0, 0);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            if (Util.isTabletDevice(this) == true)
+            {
+                imageView.setBackgroundColor(getResources().getColor(R.color.white));
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else
+            {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+
             imageView.setImageResource(R.drawable.splash);
         } else
         {
@@ -249,7 +258,16 @@ public class MainActivity extends BaseActivity implements Constants
                 try
                 {
                     imageView.setPadding(0, 0, 0, 0);
-                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                    if (Util.isTabletDevice(this) == true)
+                    {
+                        imageView.setBackgroundColor(getResources().getColor(R.color.white));
+                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    } else
+                    {
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    }
+
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception | OutOfMemoryError e)
                 {
