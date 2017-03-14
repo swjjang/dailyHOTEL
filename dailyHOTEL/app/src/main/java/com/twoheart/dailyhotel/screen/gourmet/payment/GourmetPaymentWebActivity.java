@@ -574,6 +574,22 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                     return false;
                 } else if (url.startsWith("tel:"))
                 {
+                    String noCallMessage = GourmetPaymentWebActivity.this.getResources().getString(R.string.toast_msg_no_call_web);
+
+                    if (Util.isTelephonyEnabled(GourmetPaymentWebActivity.this) == true)
+                    {
+                        try
+                        {
+                            startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
+                        } catch (ActivityNotFoundException e)
+                        {
+                            DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        }
+                    } else
+                    {
+                        DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    }
+
                     return false;
                 } else
                 {

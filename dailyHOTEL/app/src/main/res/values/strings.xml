@@ -232,6 +232,7 @@
     <string name="toast_msg_input_error_write_review">해당 문자는 입력이 불가합니다.</string>
     <string name="toast_msg_no_call_format">전화기능을 사용할 수 없는 기기입니다.\n데일리고객센터 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_no_hotel_call">전화기능을 사용할 수 없는 기기입니다.\n호텔 전화번호는 %1$s입니다.</string>
+    <string name="toast_msg_no_call_web">전화기능을 사용할 수 없는 기기입니다</string>
     <string name="toast_msg_no_gourmet_call">전화기능을 사용할 수 없는 기기입니다.\n레스토랑 전화번호는 %1$s입니다.</string>
     <string name="toast_msg_dont_past_hotelinfo">이전 날짜 정보는 조회 할 수 없습니다.</string>
     <string name="toast_msg_maxcount_ticket">한번에 구매할 수 있는 최대 수량은 %1$d개 입니다.</string>
