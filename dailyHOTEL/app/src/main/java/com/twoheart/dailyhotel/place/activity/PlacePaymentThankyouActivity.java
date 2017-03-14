@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -16,8 +15,6 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
@@ -26,10 +23,8 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import java.io.File;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -52,8 +47,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     String mPaymentType;
     Map<String, String> mParams;
-    View mBenefitLayout;
-    String mBenefitImageUrl;
+    View mStampLayout;
 
     protected abstract void recordEvent(String action, String label);
 
@@ -93,7 +87,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         initToolbar();
         initLayout(imageUrl, placeName, placeType, userName);
-        initBenefitView();
+        initStampLayout();
 
         final ScrollView informationLayout = (ScrollView) findViewById(R.id.informationLayout);
         EdgeEffectColor.setEdgeGlowColor(informationLayout, getResources().getColor(R.color.default_over_scroll_edge));
@@ -156,55 +150,26 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         startReceiptAnimation();
     }
 
-    private void initBenefitView()
+    private void initStampLayout()
     {
-        mBenefitLayout = findViewById(R.id.benefitLayout);
-        DailyTextView benefitTextView = (DailyTextView) findViewById(R.id.benefitTextView);
-        SimpleDraweeView benefitImageView = (SimpleDraweeView) findViewById(R.id.benefitImageView);
+        mStampLayout = findViewById(R.id.stampLayout);
+        mStampLayout.setVisibility(View.GONE);
+    }
 
-        if (mBenefitLayout == null)
+    public void setStampLayout(String message1, String message2, String message3)
+    {
+        TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
+        TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
+        TextView message3TextView = (TextView) mStampLayout.findViewById(R.id.message3TextView);
+
+        if (mStampLayout == null)
         {
             return;
         }
 
-        mBenefitLayout.setVisibility(View.GONE);
-
-        if (isBenefitViewEnabled() == false)
-        {
-            return;
-        }
-
-        benefitTextView.setText(getBenefitMessage());
-
-        String version = getBenefitCurrentVersion();
-        String fileName = Util.makeStampStayThankYpuImageFileName(version);
-
-        File file = new File(getApplicationContext().getCacheDir(), fileName);
-
-        mBenefitImageUrl = null;
-
-        if (file.exists() == true)
-        {
-            try
-            {
-                Uri uri = Uri.fromFile(file);
-                mBenefitImageUrl = uri.toString();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
-        benefitImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-        benefitImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-
-        if (Util.isTextEmpty(mBenefitImageUrl) == true)
-        {
-            benefitImageView.setImageURI((String) null);
-        } else
-        {
-            Util.requestImageResize(this, benefitImageView, mBenefitImageUrl);
-        }
+        message1TextView.setText(message1);
+        message2TextView.setText(message2);
+        message3TextView.setText(message3);
     }
 
     private void startReceiptAnimation()
@@ -254,12 +219,12 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
                 confirmImageView.setVisibility(View.VISIBLE);
 
-                if (isBenefitViewEnabled() == true && Util.isTextEmpty(mBenefitImageUrl) == false)
+                if (isStampEnabled() == true)
                 {
-                    mBenefitLayout.setVisibility(View.VISIBLE);
+                    mStampLayout.setVisibility(View.VISIBLE);
                 } else
                 {
-                    mBenefitLayout.setVisibility(View.GONE);
+                    mStampLayout.setVisibility(View.GONE);
                 }
             }
 
@@ -271,12 +236,12 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
                 confirmImageView.setVisibility(View.VISIBLE);
 
-                if (isBenefitViewEnabled() == true && Util.isTextEmpty(mBenefitImageUrl) == false)
+                if (isStampEnabled() == true)
                 {
-                    mBenefitLayout.setVisibility(View.VISIBLE);
+                    mStampLayout.setVisibility(View.VISIBLE);
                 } else
                 {
-                    mBenefitLayout.setVisibility(View.GONE);
+                    mStampLayout.setVisibility(View.GONE);
                 }
             }
 
@@ -324,19 +289,9 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         animatorSet.start();
     }
 
-    protected boolean isBenefitViewEnabled()
+    protected boolean isStampEnabled()
     {
         return false;
-    }
-
-    protected String getBenefitMessage()
-    {
-        return null;
-    }
-
-    protected String getBenefitCurrentVersion()
-    {
-        return null;
     }
 
     @Override

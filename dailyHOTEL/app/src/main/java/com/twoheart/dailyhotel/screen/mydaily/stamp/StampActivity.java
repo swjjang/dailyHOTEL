@@ -154,6 +154,11 @@ public class StampActivity extends BaseActivity
 
     private void showFinishDialog()
     {
+        if (DailyPreference.getInstance(this).isRemoteConfigStampStayEndEventPopupEnabled() == false)
+        {
+            return;
+        }
+
         showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
         {
             @Override

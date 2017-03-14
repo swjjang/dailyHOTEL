@@ -417,9 +417,6 @@ public class DailyRemoteConfig
             return;
         }
 
-        String stayThankYouImageUrl;
-        String version;
-
         try
         {
             JSONObject jsonObject = new JSONObject(androidStamp);
@@ -430,20 +427,33 @@ public class DailyRemoteConfig
 
             JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
 
-            String stayDetailMessage = stayDetailJSONObject.getString("message");
-            String stayDetailImageUrl = stayDetailJSONObject.getString("imageUrl");
+            String stayDetailMessage1 = stayDetailJSONObject.getString("message1");
+            String stayDetailMessage2 = stayDetailJSONObject.getString("message2");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampStayDetail(stayDetailImageUrl, stayDetailMessage);
+            JSONObject stayDetailMessage3JSONObject = stayDetailJSONObject.getJSONObject("message3");
+            String stayDetailMessage3Text = stayDetailMessage3JSONObject.getString("text");
+            boolean stayDetailMessage3Enabled = stayDetailMessage3JSONObject.getBoolean("enabled");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampStayDetailMessage(stayDetailMessage1, stayDetailMessage2, stayDetailMessage3Text, stayDetailMessage3Enabled);
+
+            JSONObject stayDetailPopupJSONObject = stayDetailJSONObject.getJSONObject("popup");
+
+            String stayDetailPopupTitle = stayDetailPopupJSONObject.getString("title");
+            String stayDetailPopupMessage = stayDetailPopupJSONObject.getString("message");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampStayDetailPopup(stayDetailPopupTitle, stayDetailPopupMessage);
 
             JSONObject stayThankYouJSONObject = jsonObject.getJSONObject("stayThankYou");
 
-            String stayThankYouMessage = stayThankYouJSONObject.getString("message");
-            stayThankYouImageUrl = stayThankYouJSONObject.getString("imageUrl");
-            version = jsonObject.getString("version");
+            String stayThankYouMessage1 = stayThankYouJSONObject.getString("message1");
+            String stayThankYouMessage2 = stayThankYouJSONObject.getString("message2");
+            String stayThankYouMessage3 = stayThankYouJSONObject.getString("message3");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouMessage(stayThankYouMessage);
+            DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouMessage(stayThankYouMessage1, stayThankYouMessage2, stayThankYouMessage3);
 
-            JSONObject stampDateJSONObject = jsonObject.getJSONObject("stampDate");
+            boolean endEventPopupEnabled = jsonObject.getBoolean("endEventPopupEnabled");
+
+            JSONObject stampDateJSONObject = jsonObject.getJSONObject("dates");
 
             String date1 = stampDateJSONObject.getString("date1");
             String date2 = stampDateJSONObject.getString("date2");
@@ -454,47 +464,7 @@ public class DailyRemoteConfig
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-
-            stayThankYouImageUrl = null;
-            version = null;
         }
-
-        final String stayThankYouImageLinkUrl = stayThankYouImageUrl;
-
-        String clientCurrentVersion = DailyPreference.getInstance(context).getRemoteConfigStampStayThankYouCurrentVersion();
-        if (Util.isTextEmpty(clientCurrentVersion) == true)
-        {
-            clientCurrentVersion = "";
-        }
-
-        final String clientStampStayThankYouCurrentVersion = clientCurrentVersion;
-
-        new StampStayThankYouImageDownloadAsyncTask(context, version, new StampStayThankYouImageDownloadAsyncTask.OnCompletedListener()
-        {
-            @Override
-            public void onCompleted(boolean result, String version)
-            {
-                if (result == true)
-                {
-                    // 이전 파일 삭제
-                    if (Util.isTextEmpty(clientStampStayThankYouCurrentVersion) == false)
-                    {
-                        if (clientStampStayThankYouCurrentVersion.compareTo(version) < 0)
-                        {
-                            String fileName = Util.makeStampStayThankYpuImageFileName(clientStampStayThankYouCurrentVersion);
-                            File currentFile = new File(context.getCacheDir(), fileName);
-                            if (currentFile.exists() == true && currentFile.delete() == false)
-                            {
-                                currentFile.deleteOnExit();
-                            }
-                        }
-                    }
-
-                    DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouCurrentVersion(version);
-                    DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouImageUrl(stayThankYouImageLinkUrl);
-                }
-            }
-        }).execute(stayThankYouImageLinkUrl);
     }
 
     private void writeABTest(final Context context, String abTest)

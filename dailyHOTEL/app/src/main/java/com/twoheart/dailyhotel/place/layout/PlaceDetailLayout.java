@@ -322,6 +322,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
         });
     }
 
+    public int getStatusBarHeight()
+    {
+        return mStatusBarHeight;
+    }
+
     public int getBookingStatus()
     {
         return mBookingStatus;

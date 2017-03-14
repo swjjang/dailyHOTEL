@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
@@ -275,21 +274,36 @@ public class StayDetailListAdapter extends BaseAdapter
             // 테블릿 높이 수정 필요한지 확인
             stampLayout.setVisibility(View.VISIBLE);
 
-            SimpleDraweeView stampSimpleDraweeView = (SimpleDraweeView) stampLayout.findViewById(R.id.stampSimpleDraweeView);
-            TextView stampMessageTextView = (TextView) stampLayout.findViewById(R.id.stampMessageTextView);
+            TextView stampMessage1TextView = (TextView) stampLayout.findViewById(R.id.stampMessage1TextView);
+            TextView stampMessage2TextView = (TextView) stampLayout.findViewById(R.id.stampMessage2TextView);
+            TextView stampMessage3TextView = (TextView) stampLayout.findViewById(R.id.stampMessage3TextView);
 
-            String imageUrl = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailImageUrl();
-            String message = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage();
+            String message1 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage1();
+            String message2 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage2();
+            String message3 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage3();
+            boolean message3Enabled = DailyPreference.getInstance(mContext).isRemoteConfigStampStayDetailMessage3Enabled();
 
-            if (Util.isTextEmpty(imageUrl) == true)
+            stampMessage1TextView.setText(message1);
+            stampMessage2TextView.setText(message2);
+
+            if (message3Enabled == true)
             {
-                stampSimpleDraweeView.setImageURI((String) null);
+                stampMessage3TextView.setVisibility(View.VISIBLE);
+                stampMessage3TextView.setText(message3);
+
+                stampLayout.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mOnEventListener.onStampClick();
+                    }
+                });
             } else
             {
-                stampSimpleDraweeView.setImageURI(imageUrl);
+                stampMessage3TextView.setVisibility(View.GONE);
+                stampLayout.setOnClickListener(null);
             }
-
-            stampMessageTextView.setText(message);
         } else
         {
             stampLayout.setVisibility(View.GONE);

@@ -63,6 +63,10 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
 
         View textLayout = findViewById(R.id.textInformationLayout);
         initTextLayout(textLayout);
+
+        setStampLayout(DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage1()//
+            , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage2()//
+            , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
     }
 
     private void initDateLayout(View view, String checkInDate, String checkOutDate, int nights)
@@ -158,20 +162,8 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     }
 
     @Override
-    protected boolean isBenefitViewEnabled()
+    protected boolean isStampEnabled()
     {
         return DailyPreference.getInstance(this).getRemoteConfigStampEnabled();
-    }
-
-    @Override
-    protected String getBenefitMessage()
-    {
-        return DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage();
-    }
-
-    @Override
-    protected String getBenefitCurrentVersion()
-    {
-        return DailyPreference.getInstance(this).getRemoteConfigHomeEventCurrentVersion();
     }
 }

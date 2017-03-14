@@ -336,39 +336,61 @@
                 </LinearLayout>
 
             </RelativeLayout>
+
             <!-- Remote Config 영역 -->
             <RelativeLayout
-                android:id="@+id/benefitLayout"
+                android:id="@+id/stampLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_below="@id/receiptLayout"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
 
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/benefitImageView"
+                <ImageView
+                    android:id="@+id/stampImageView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:adjustViewBounds="true"
-                    fresco:actualImageScaleType="centerCrop"
-                    fresco:placeholderImage="@drawable/layerlist_placeholder"/>
+                    android:layout_height="match_parent"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/benefitTextView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="13dp"
-                    />
+                    android:layout_toRightOf="@+id/stampImageView"
+                    android:orientation="vertical">
 
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/message1TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="13dp"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/message2TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="13dp"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/message3TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="13dp"/>
+                </LinearLayout>
             </RelativeLayout>
-
-
         </RelativeLayout>
     </ScrollView>
 

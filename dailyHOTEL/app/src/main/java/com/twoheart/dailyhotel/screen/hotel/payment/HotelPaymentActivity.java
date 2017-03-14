@@ -485,6 +485,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showStopOnSaleDialog()
     {
+        unLockUI();
+
         showChangedValueDialog(R.string.dialog_msg_stay_stop_onsale, null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
