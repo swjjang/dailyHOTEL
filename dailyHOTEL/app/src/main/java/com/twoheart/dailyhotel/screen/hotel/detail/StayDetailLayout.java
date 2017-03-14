@@ -487,7 +487,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         if (Util.isOverAPI12() == true)
         {
-            final float y = mBottomLayout.getTop();
+            final float fromAnimationY = mBottomLayout.getTop();
 
             if (mObjectAnimator != null)
             {
@@ -502,9 +502,15 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
             int height = mProductTypeLayout.getHeight();
-            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
+            int toolbarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+            int maxHeight = Util.getLCDHeight(mContext) - (mBottomLayout.getBottom() - mBottomLayout.getTop()) - toolbarHeight - getStatusBarHeight();
 
-            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop() - height);
+            float toAnimationY = fromAnimationY - Math.min(height, maxHeight);
+
+            int startTransY = Util.dpToPx(mContext, height);
+            mProductTypeLayout.setTranslationY(startTransY);
+
+            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", fromAnimationY, toAnimationY);
             mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
 
             mObjectAnimator.addListener(new Animator.AnimatorListener()
