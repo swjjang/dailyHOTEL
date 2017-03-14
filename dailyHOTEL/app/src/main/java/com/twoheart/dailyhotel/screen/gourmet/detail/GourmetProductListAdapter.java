@@ -32,6 +32,9 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private int mDpi;
 
+    // ABTest
+    private boolean mIsLeft;
+
     public interface OnProductClickListener
     {
         void onProductDetailClick(int position, int where);
@@ -76,6 +79,11 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         mDpi = dpi;
     }
 
+    public void setThumbnailLocation(boolean isLeft)
+    {
+        mIsLeft = isLeft;
+    }
+
     @Override
     public int getItemViewType(int position)
     {
@@ -89,7 +97,15 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             case PlaceViewItem.TYPE_ENTRY:
             {
-                View view = mInflater.inflate(R.layout.list_row_detail_product, parent, false);
+                View view;
+
+                if (mIsLeft == true)
+                {
+                    view = mInflater.inflate(R.layout.list_row_detail_product_left, parent, false);
+                } else
+                {
+                    view = mInflater.inflate(R.layout.list_row_detail_product, parent, false);
+                }
 
                 return new ProductInformationViewHolder(view);
             }

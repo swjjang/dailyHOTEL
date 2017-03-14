@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -82,6 +83,8 @@ public class GourmetProductListActivity extends BaseActivity
 
         mGourmetProductListLayout.setProductInformationLayout(this, mGourmetDetail.getProductList());
 
+        settingABTest(mGourmetDetail);
+
         // 메뉴 상세화면 진입
         if (productIndex > 0)
         {
@@ -96,6 +99,31 @@ public class GourmetProductListActivity extends BaseActivity
                     startActivityForResult(intentProductDetail, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
                     break;
                 }
+            }
+        }
+    }
+
+    private void settingABTest(GourmetDetail gourmetDetail)
+    {
+        String data = DailyPreference.getInstance(this).getRemoteConfigABTestGourmetProductList();
+
+        if (Util.isTextEmpty(data) == false)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(data);
+
+                int index = jsonObject.getInt("index");
+                boolean isLeft;
+
+                if (gourmetDetail.getGourmetDetailParmas().index == index)
+                {
+                    isLeft = "left".equalsIgnoreCase(jsonObject.getString("thumbnail"));
+                    mGourmetProductListLayout.setThumbnailLocation(isLeft);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
             }
         }
     }

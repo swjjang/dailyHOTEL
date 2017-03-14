@@ -80,6 +80,7 @@ public class DailyRemoteConfig
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
                 String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
                 String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
+                String androidABTestGourmetProductList = mFirebaseRemoteConfig.getString("androidABTestGourmetProductList");
 
                 if (Constants.DEBUG == true)
                 {
@@ -93,6 +94,7 @@ public class DailyRemoteConfig
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
                         ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                         ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
+                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -145,6 +147,9 @@ public class DailyRemoteConfig
 
                 // Stamp
                 writeStamp(mContext, androidStamp);
+
+                // ABTest
+                writeABTest(mContext, androidABTestGourmetProductList);
 
                 if (listener != null)
                 {
@@ -444,6 +449,8 @@ public class DailyRemoteConfig
             String date2 = stampDateJSONObject.getString("date2");
             String date3 = stampDateJSONObject.getString("date3");
 
+            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
+
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -462,7 +469,8 @@ public class DailyRemoteConfig
 
         final String clientStampStayThankYouCurrentVersion = clientCurrentVersion;
 
-        new StampStayThankYouImageDownloadAsyncTask(context, version, new StampStayThankYouImageDownloadAsyncTask.OnCompletedListener() {
+        new StampStayThankYouImageDownloadAsyncTask(context, version, new StampStayThankYouImageDownloadAsyncTask.OnCompletedListener()
+        {
             @Override
             public void onCompleted(boolean result, String version)
             {
@@ -487,5 +495,22 @@ public class DailyRemoteConfig
                 }
             }
         }).execute(stayThankYouImageLinkUrl);
+    }
+
+    private void writeABTest(final Context context, String abTest)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (Util.isTextEmpty(abTest) == true)
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(null);
+            return;
+        } else
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(abTest);
+        }
     }
 }
