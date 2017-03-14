@@ -64,6 +64,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         void showProductInformationLayout();
 
         void hideProductInformationLayout(boolean isAnimation);
+
+        void onStampClick();
     }
 
     public StayDetailLayout(Context context, OnBaseEventListener listener)

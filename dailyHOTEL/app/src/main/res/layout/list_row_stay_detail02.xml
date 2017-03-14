@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -138,31 +137,56 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/stampSimpleDraweeView"
-                android:layout_width="match_parent"
-                android:layout_height="101dp"
-                android:adjustViewBounds="true"
-                fresco:actualImageScaleType="centerCrop"
-                fresco:overlayImage="@color/black_a40"/>
+            <ImageView
+                android:id="@+id/stampImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_daily_small"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
-                android:id="@+id/stampMessageTextView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:textColor="@color/white"
-                android:textSize="15dp"/>
-        </FrameLayout>
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/stampImageView"
+                android:orientation="vertical">
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/stampMessage1TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="15dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/stampMessage2TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="15dp"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/stampMessage3TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="15dp"
+                    android:visibility="gone"/>
+            </LinearLayout>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
