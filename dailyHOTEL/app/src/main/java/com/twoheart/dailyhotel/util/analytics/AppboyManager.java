@@ -332,6 +332,31 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + " : " + eventName + ", " + appboyProperties.forJsonPut().toString());
                 }
+            } else if (AnalyticsManager.Action.HOME_EVENT_BANNER_CLICK.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.EVENT_IDX, label);
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                mAppboy.logCustomEvent(EventName.HOME_BANNER_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.HOME_BANNER_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
+            } else if (AnalyticsManager.Action.HOME_RECOMMEND_LIST_CLICK.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.RECOMMEND_IDX, label);
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                mAppboy.logCustomEvent(EventName.HOME_RECOMMEND_CLICKED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.HOME_RECOMMEND_CLICKED + ", " + appboyProperties.forJsonPut().toString());
+                }
             }
         } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true//
             && AnalyticsManager.Action.BOOKING_CLICKED.equalsIgnoreCase(action) == true)
@@ -453,6 +478,20 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     mAppboy.logCustomEvent(EventName.GOURMET_DISSATISFACTION_DETAIL_RESPONSE, appboyProperties);
                 }
+            }
+        } else if (AnalyticsManager.Category.HOME_RECOMMEND.equalsIgnoreCase(category) == true)
+        {
+            AppboyProperties appboyProperties = new AppboyProperties();
+
+            appboyProperties.addProperty(AnalyticsManager.KeyType.RECOMMEND_IDX, action);
+            appboyProperties.addProperty(AnalyticsManager.KeyType.RECOMMEND_ITEM_IDX, label);
+            appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+
+            mAppboy.logCustomEvent(EventName.HOME_RECOMMEND_ITEM_CLICKED, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + EventName.HOME_RECOMMEND_ITEM_CLICKED + ", " + appboyProperties.forJsonPut().toString());
             }
         }
     }
@@ -1087,6 +1126,10 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String STAY_WISHLIST_DELETED = "stay_wishlist_deleted";
         public static final String GOURMET_WISHLIST_ADDED = "gourmet_wishlist_added";
         public static final String GOURMET_WISHLIST_DELETED = "gourmet_wishlist_deleted";
+
+        public static final String HOME_BANNER_CLICKED = "home_banner_clicked";
+        public static final String HOME_RECOMMEND_CLICKED = "home_recommend_clicked";
+        public static final String HOME_RECOMMEND_ITEM_CLICKED = "home_recommend_item_clicked";
     }
 
     private static final class ValueName
