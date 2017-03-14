@@ -427,6 +427,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showStopOnSaleDialog()
     {
+        unLockUI();
+
         showChangedValueDialog(R.string.dialog_msg_gourmet_stop_onsale, null);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, //
