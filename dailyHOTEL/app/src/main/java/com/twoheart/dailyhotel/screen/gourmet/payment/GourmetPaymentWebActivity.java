@@ -584,13 +584,13 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                         } catch (ActivityNotFoundException e)
                         {
                             DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                            return false;
                         }
                     } else
                     {
                         DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        return false;
                     }
-
-                    return false;
                 } else
                 {
                     return url_scheme_intent(view, url);
