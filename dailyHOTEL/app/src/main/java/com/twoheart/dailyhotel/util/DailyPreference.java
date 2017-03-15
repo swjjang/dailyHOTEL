@@ -143,6 +143,9 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
 
+    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
+    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1226,6 +1229,26 @@ public class DailyPreference
     public String getRemoteConfigStampDate3()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, null);
+    }
+
+    public void setRemoteConfigABTestGourmetProductList(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST, value);
+    }
+
+    public String getRemoteConfigABTestGourmetProductList()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST, null);
+    }
+
+    public void setRemoteConfigABTestHomeButton(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON, value);
+    }
+
+    public String getRemoteConfigABTestHomeButton()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

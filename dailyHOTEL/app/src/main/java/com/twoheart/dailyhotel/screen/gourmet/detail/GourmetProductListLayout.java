@@ -118,4 +118,14 @@ public class GourmetProductListLayout extends BaseLayout
         //                }
         //            });
     }
+
+    public void setThumbnailLocation(boolean isLeft)
+    {
+        if (mProductTypeListAdapter == null)
+        {
+            return;
+        }
+
+        mProductTypeListAdapter.setThumbnailLocation(isLeft);
+    }
 }

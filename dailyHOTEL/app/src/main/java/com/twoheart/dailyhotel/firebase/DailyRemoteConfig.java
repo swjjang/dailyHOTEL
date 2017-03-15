@@ -80,6 +80,8 @@ public class DailyRemoteConfig
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
                 String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
                 String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
+                String androidABTestGourmetProductList = mFirebaseRemoteConfig.getString("androidABTestGourmetProductList");
+                String androidABTestHome = mFirebaseRemoteConfig.getString("androidABTestHome");
 
                 if (Constants.DEBUG == true)
                 {
@@ -93,6 +95,8 @@ public class DailyRemoteConfig
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
                         ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                         ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
+                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
+                        ExLog.d("androidABTestHome : " + androidABTestHome);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -145,6 +149,9 @@ public class DailyRemoteConfig
 
                 // Stamp
                 writeStamp(mContext, androidStamp);
+
+                // ABTest
+                writeABTest(mContext, androidABTestGourmetProductList, androidABTestHome);
 
                 if (listener != null)
                 {
@@ -454,9 +461,37 @@ public class DailyRemoteConfig
             String date2 = stampDateJSONObject.getString("date2");
             String date3 = stampDateJSONObject.getString("date3");
 
+            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
+
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    private void writeABTest(final Context context, String abTest1, String abTest2)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (Util.isTextEmpty(abTest1) == true)
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(null);
+            return;
+        } else
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(abTest1);
+        }
+
+        if (Util.isTextEmpty(abTest2) == true)
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(null);
+            return;
+        } else
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest2);
         }
     }
 }
