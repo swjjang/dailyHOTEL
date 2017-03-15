@@ -9,10 +9,12 @@
 package com.twoheart.dailyhotel.screen.booking.detail;
 
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +29,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -471,42 +471,42 @@ public class PaymentWaitActivity extends BaseActivity
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
-        switch (mBooking.placeType)
-        {
-            case HOTEL:
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-                break;
-
-            case FNB:
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-                break;
-        }
-
-        //        try
+        //        switch (mBooking.placeType)
         //        {
-        //            switch (mBooking.placeType)
-        //            {
-        //                case HOTEL:
+        //            case HOTEL:
+        //                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        //                break;
         //
-        //                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-        //                    break;
-        //
-        //                case FNB:
-        //                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        //                    break;
-        //            }
-        //        } catch (ActivityNotFoundException e)
-        //        {
-        //            try
-        //            {
-        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-        //            } catch (ActivityNotFoundException e1)
-        //            {
-        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-        //                startActivity(marketLaunch);
-        //            }
+        //            case FNB:
+        //                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        //                break;
         //        }
+
+        try
+        {
+            switch (mBooking.placeType)
+            {
+                case HOTEL:
+
+                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+                    break;
+
+                case FNB:
+                    startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+                    break;
+            }
+        } catch (ActivityNotFoundException e)
+        {
+            try
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+            } catch (ActivityNotFoundException e1)
+            {
+                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+                startActivity(marketLaunch);
+            }
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
