@@ -94,6 +94,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         }
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
     protected void initLayout(int layoutResID, final SaleTime dailyTime, final int dayCountOfMax)
     {
         setContentView(layoutResID);

@@ -98,6 +98,14 @@ public abstract class PlaceMainActivity extends BaseActivity
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
+    @Override
     public void onBackPressed()
     {
         // 맵인 경우에 하단에 정보를 보고 있으면 백키를 누를 경우 정보를 사라지게 해준다.(편의성 제공)
