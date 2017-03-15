@@ -1183,6 +1183,7 @@
     <string name="label_stamp_3_nights">3박</string>
     <string name="label_stamp_4_nights">4박</string>
     <string name="label_stamp_5_nights">1박무료</string>
+    <string name="label_stamp_nights">%1$d/5박</string>
     <string name="label_stamp_event_date1">스탬프 이벤트 기간: %1$s</string>
     <string name="label_stamp_event_date2">스탬프 적립 기준 체크아웃 시간: %1$s</string>
     <string name="label_stamp_event_date3">스탬프 발행 기간: %1$s</string>
@@ -1192,6 +1193,13 @@
     <string name="message_stamp_you_can_check_the_stamp_after_login">로그인 후 스탬프를 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="message_stamp_finish_stamp">종료한\n이벤트 입니다.</string>
     <string name="message_stamp_notification_on">스탬프 혜택 알림을 푸시 메시지로 받아보세요!</string>
+    <string name="message_stamp_title_message0">5박까지 스탬프를 모아보세요!\n어디든 갈 수 있는 1박 무료쿠폰이 생겨요!</string>
+    <string name="message_stamp_title_message1">1박 더하면,\n5,000원 응원쿠폰 드려요!</string>
+    <string name="message_stamp_title_message2">취향에 맞는 호텔 찾기,\n지금부터 시작이에요!</string>
+    <string name="message_stamp_title_message3">이제 2번 남았어요.\n또 어디로 떠나볼까요? </string>
+    <string name="message_stamp_title_message4">드디어 다왔어요.\n두근두근 1박 무료쿠폰이 눈앞에!</string>
+    <string name="message_stamp_title_message5">축하합니다.\n1박 무료쿠폰으로 원하는 호텔로 떠나보세요!</string>
+
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

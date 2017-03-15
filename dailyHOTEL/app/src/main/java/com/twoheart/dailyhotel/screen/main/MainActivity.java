@@ -478,20 +478,29 @@ public class MainActivity extends BaseActivity implements Constants
             case Constants.CODE_REQUEST_ACTIVITY_BONUS:
             case Constants.CODE_REQUEST_ACTIVITY_STAMP:
             {
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                switch (resultCode)
                 {
-                    if (mMainFragmentManager != null)
-                    {
-                        Fragment fragment = mMainFragmentManager.getCurrentFragment();
+                    case Constants.CODE_RESULT_ACTIVITY_GO_HOME:
+                        if (mMainFragmentManager != null)
+                        {
+                            Fragment fragment = mMainFragmentManager.getCurrentFragment();
 
-                        if (fragment instanceof HomeFragment)
-                        {
-                            fragment.onActivityResult(requestCode, resultCode, data);
-                        } else
-                        {
-                            mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                            if (fragment instanceof HomeFragment)
+                            {
+                                fragment.onActivityResult(requestCode, resultCode, data);
+                            } else
+                            {
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                            }
                         }
-                    }
+                        break;
+
+                    default:
+                        if (mMainFragmentManager != null)
+                        {
+                            mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                        }
+                        break;
                 }
                 break;
             }

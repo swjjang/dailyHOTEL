@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -44,6 +44,11 @@ public class StampActivity extends BaseActivity
         String stampDate3 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
 
         mStampLayout.setStampDate(stampDate1, stampDate2, stampDate3);
+        mStampLayout.setLogin(DailyHotel.isLogin());
+
+        boolean isBenefitAlarm = DailyPreference.getInstance(StampActivity.this).isUserBenefitAlarm();
+
+        mStampLayout.setPushLayout(isBenefitAlarm == false);
     }
 
     @Override
@@ -53,17 +58,7 @@ public class StampActivity extends BaseActivity
 
         //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
 
-        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
-        {
-            if (DailyHotel.isLogin() == false)
-            {
-                //                showLoginDialog();
-            } else
-            {
-                //                lockUI();
-                //                mNetworkController.requestStamp();
-            }
-        } else
+        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() != true)
         {
             showFinishDialog();
         }
@@ -88,9 +83,9 @@ public class StampActivity extends BaseActivity
         {
             case CODE_REQUEST_ACTIVITY_LOGIN:
             {
-                if (resultCode != Activity.RESULT_OK)
+                if (resultCode == Activity.RESULT_OK)
                 {
-                    finish();
+
                 }
                 break;
             }
@@ -115,43 +110,6 @@ public class StampActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
     }
 
-    private void showLoginDialog()
-    {
-        // 로그인 필요
-        View.OnClickListener positiveListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                lockUI();
-                startLogin();
-            }
-        };
-
-        View.OnClickListener negativeListener = new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                finish();
-            }
-        };
-
-        String title = getString(R.string.dialog_notice2);
-        String message = getString(R.string.message_stamp_you_can_check_the_stamp_after_login);
-        String positive = getString(R.string.dialog_btn_text_yes);
-        String negative = getString(R.string.dialog_btn_text_no);
-
-        showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
-        {
-            @Override
-            public void onCancel(DialogInterface dialog)
-            {
-                finish();
-            }
-        }, null, true);
-    }
-
     private void showFinishDialog()
     {
         if (DailyPreference.getInstance(this).isRemoteConfigStampStayEndEventPopupEnabled() == false)
@@ -171,6 +129,32 @@ public class StampActivity extends BaseActivity
 
     private StampLayout.OnEventListener mOnEventListener = new StampLayout.OnEventListener()
     {
+        @Override
+        public void onLoginClick()
+        {
+            Intent intent = LoginActivity.newInstance(StampActivity.this);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+        }
+
+        @Override
+        public void onStampEventDetailClick()
+        {
+
+        }
+
+        @Override
+        public void onSettingPushClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
+            mNetworkController.requestPushBenefit(true);
+        }
+
         @Override
         public void onStampHistoryClick()
         {
@@ -202,6 +186,35 @@ public class StampActivity extends BaseActivity
 
     private StampNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StampNetworkController.OnNetworkControllerListener()
     {
+
+        @Override
+        public void onBenefitAgreement(boolean isAgree, String updateDate)
+        {
+            DailyPreference.getInstance(StampActivity.this).setUserBenefitAlarm(isAgree);
+            AnalyticsManager.getInstance(StampActivity.this).setPushEnabled(isAgree, AnalyticsManager.ValueType.OTHER);
+
+            if (isAgree == true)
+            {
+                // 혜택 알림 설정이 off --> on 일때
+                String title = getResources().getString(R.string.label_setting_alarm);
+                String message = getResources().getString(R.string.message_benefit_alarm_on_confirm_format, updateDate);
+                String positive = getResources().getString(R.string.dialog_btn_text_confirm);
+
+                showSimpleDialog(title, message, positive, null, null, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        mStampLayout.setPushLayout(false);
+                    }
+                }, true);
+
+                AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
+                    AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, AnalyticsManager.Label.ON, null);
+            }
+
+            unLockUI();
+        }
 
         @Override
         public void onError(Throwable e)

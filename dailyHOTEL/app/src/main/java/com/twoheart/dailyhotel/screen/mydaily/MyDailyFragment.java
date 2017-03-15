@@ -177,6 +177,8 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
                 boolean isBenefitAlarm = DailyPreference.getInstance(getActivity()).isUserBenefitAlarm();
 
+                mMyDailyLayout.updatePushIcon(isBenefitAlarm);
+
                 if (Util.isOverAPI19() == true && isBenefitAlarm == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
@@ -241,6 +243,12 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
                     }
                 }
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP:
+            {
+                mDontReload = false;
                 break;
             }
 

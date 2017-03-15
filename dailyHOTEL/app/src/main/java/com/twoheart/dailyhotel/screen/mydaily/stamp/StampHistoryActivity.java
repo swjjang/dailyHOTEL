@@ -116,6 +116,12 @@ public class StampHistoryActivity extends BaseActivity
     {
 
         @Override
+        public void onBenefitAgreement(boolean isAgree, String updateDate)
+        {
+
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StampHistoryActivity.this.onError(e);
