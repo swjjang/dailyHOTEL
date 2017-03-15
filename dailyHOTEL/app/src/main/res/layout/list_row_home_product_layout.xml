@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:id="@+id/productLayout"
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
@@ -30,8 +29,7 @@
             android:layout_marginLeft="18dp"
             android:layout_marginTop="20dp"
             android:scaleType="fitStart"
-            android:src="@drawable/ic_home_category_01_hotel"
-            />
+            android:src="@drawable/ic_home_category_01_hotel"/>
 
         <LinearLayout
             android:id="@+id/stayButtonTextView"
@@ -42,6 +40,7 @@
             android:orientation="vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/stayTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_home_stay_menu_title"
@@ -50,6 +49,7 @@
                 dailyFont:style="Medium"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/stayDoTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -86,6 +86,7 @@
             android:orientation="vertical">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/gourmetTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_home_gourmet_menu_title"
@@ -94,6 +95,7 @@
                 dailyFont:style="Medium"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/gourmetDoTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
