@@ -59,7 +59,14 @@ public class DailyRemoteConfig
             writeCompanyInformation(mContext, mContext.getString(R.string.default_company_information));
         }
 
-        mFirebaseRemoteConfig.fetch(600).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Void>()
+        long fetchTime = 600L;
+
+        if (Constants.DEBUG == true)
+        {
+            fetchTime = 0L;
+        }
+
+        mFirebaseRemoteConfig.fetch(fetchTime).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> task)

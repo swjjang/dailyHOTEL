@@ -268,6 +268,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
         // Stamp
         View stampLayout = view.findViewById(R.id.stampLayout);
+        View stampClickLayout = stampLayout.findViewById(R.id.stampClickLayout);
 
         if (DailyPreference.getInstance(mContext).getRemoteConfigStampEnabled() == true)
         {
@@ -291,7 +292,7 @@ public class StayDetailListAdapter extends BaseAdapter
                 stampMessage3TextView.setVisibility(View.VISIBLE);
                 stampMessage3TextView.setText(message3);
 
-                stampLayout.setOnClickListener(new OnClickListener()
+                stampClickLayout.setOnClickListener(new OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -302,7 +303,7 @@ public class StayDetailListAdapter extends BaseAdapter
             } else
             {
                 stampMessage3TextView.setVisibility(View.GONE);
-                stampLayout.setOnClickListener(null);
+                stampClickLayout.setOnClickListener(null);
             }
         } else
         {
