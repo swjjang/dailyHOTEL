@@ -283,6 +283,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     {
                         case RESULT_OK:
                         case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                        case CODE_RESULT_ACTIVITY_GO_HOME:
                             finish();
                             break;
 

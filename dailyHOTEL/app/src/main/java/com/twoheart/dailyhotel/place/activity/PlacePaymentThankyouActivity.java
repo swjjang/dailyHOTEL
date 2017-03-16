@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
+import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -155,6 +156,9 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     {
         mStampLayout = findViewById(R.id.stampLayout);
         mStampLayout.setVisibility(View.GONE);
+
+        View message3TextView = findViewById(R.id.message3TextView);
+        message3TextView.setOnClickListener(this);
     }
 
     public void setStampLayout(String message1, String message2, String message3)
@@ -342,8 +346,6 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     @Override
     public void finish()
     {
-        setResult(RESULT_OK);
-
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.abc_fade_out);
@@ -356,11 +358,38 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         {
             case R.id.closeView:
                 recordEvent(AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED);
+                setResult(RESULT_OK);
                 finish();
                 break;
+
             case R.id.confirmView:
                 recordEvent(AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.VIEW_BOOKING_STATUS_CLICKED);
+                setResult(RESULT_OK);
                 finish();
+                break;
+
+            case R.id.message3TextView:
+                Intent intent = StampActivity.newInstance(this);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_STAMP:
+            {
+                setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
+                return;
+            }
+
+            default:
                 break;
         }
     }
