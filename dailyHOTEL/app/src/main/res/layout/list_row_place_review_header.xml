@@ -37,6 +37,7 @@
         android:background="@color/default_line_cf0f0f0"/>
 
     <LinearLayout
+        android:id="@+id/progressBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -44,16 +45,7 @@
         android:paddingBottom="11dp"
         android:paddingLeft="49dp"
         android:paddingRight="50dp"
-        android:paddingTop="23dp">
-
-        <include layout="@layout/view_progress_layout"/>
-
-        <include layout="@layout/view_progress_layout"/>
-
-        <include layout="@layout/view_progress_layout"/>
-
-        <include layout="@layout/view_progress_layout"/>
-    </LinearLayout>
+        android:paddingTop="23dp"/>
 
     <include layout="@layout/view_separate_line_no_linear"/>
 </LinearLayout>

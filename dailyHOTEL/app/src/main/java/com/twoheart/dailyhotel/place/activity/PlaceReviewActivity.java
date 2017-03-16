@@ -25,6 +25,7 @@ public abstract class PlaceReviewActivity extends BaseActivity
 
         createInstanceLayout();
 
+        setContentView(mPlaceReviewLayout.onCreateView(R.layout.activity_place_review));
     }
 
     @Override

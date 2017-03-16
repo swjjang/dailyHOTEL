@@ -10,6 +10,7 @@
     android:paddingTop="20dp">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/reviewCountTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="101개의 리뷰"
@@ -24,6 +25,7 @@
         android:orientation="horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/emailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="dai**"
@@ -31,15 +33,16 @@
             android:textSize="12dp"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="2017.02.14"
             android:textColor="@color/default_text_cc5c5c5"
             android:textSize="11dp"/>
     </LinearLayout>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/reviewTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
