@@ -252,6 +252,7 @@
     <color name="default_text_c2284dc">#2284dc</color>
     <color name="default_text_c5a5a5a">#5a5a5a</color>
     <color name="default_text_cababab">#ababab</color>
+    <color name="default_text_cbe945b">#be945b</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
@@ -282,6 +283,7 @@
     <color name="default_background_cefeff0">#efeff0</color>
     <color name="default_background_ce6e6e7">#e6e6e7</color>
     <color name="default_background_ce4e4e9">#e4e4e9</color>
+    <color name="default_background_ccfad80">#cfad80</color>
     <color name="default_placeholder">#dfdfe0</color>
 
     <color name="default_popup_button_background_cb70038">#B70038</color>
