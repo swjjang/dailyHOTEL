@@ -1188,6 +1188,7 @@
     <string name="label_stamp_event_date1">스탬프 이벤트 기간: %1$s</string>
     <string name="label_stamp_event_date2">스탬프 적립 기준 체크아웃 시간: %1$s</string>
     <string name="label_stamp_event_date3">스탬프 발행 기간: %1$s</string>
+    <string name="label_stamphistory_date">스탬프 발행일: %1$s</string>
     <string name="message_stamp_explanation1">2박에 5,000원 응원쿠폰, 5박에 1박 무료쿠폰을 드려요!</string>
     <string name="message_stamp_explanation2">(1박 무료쿠폰은 5박 평균 결제 금액에 해당되는 쿠폰으로 드립니다.)</string>
     <string name="message_stamp_explanation3">스탬프 이벤트 자세히 보기</string>

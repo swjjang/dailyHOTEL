@@ -85,7 +85,7 @@ public class StampActivity extends BaseActivity
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-
+                    mStampLayout.setLogin(DailyHotel.isLogin());
                 }
                 break;
             }
