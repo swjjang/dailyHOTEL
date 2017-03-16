@@ -243,8 +243,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
             int size = happyTalkCategoryList.size();
 
-            final String STAY_PREFIX = "호텔";
-            final String GOURMET_PREFIX = "고메";
+            final String STAY_PREFIX = "S_";
+            final String GOURMET_PREFIX = "G_";
 
             mainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, STAY_PREFIX));
             mainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, GOURMET_PREFIX));

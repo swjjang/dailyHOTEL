@@ -44,7 +44,16 @@ public class StampActivity extends BaseActivity
         String stampDate3 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
 
         mStampLayout.setStampDate(stampDate1, stampDate2, stampDate3);
-        mStampLayout.setLogin(DailyHotel.isLogin());
+
+        if (DailyHotel.isLogin() == true)
+        {
+            mStampLayout.setLogin(true);
+            mStampLayout.setStampHistoryEnabled(true);
+        } else
+        {
+            mStampLayout.setLogin(false);
+            mStampLayout.setStampHistoryEnabled(false);
+        }
 
         boolean isBenefitAlarm = DailyPreference.getInstance(StampActivity.this).isUserBenefitAlarm();
 
