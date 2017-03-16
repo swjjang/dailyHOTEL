@@ -115,34 +115,28 @@ public class GourmetProductListActivity extends BaseActivity
         try
         {
             JSONObject jsonObject = new JSONObject(data);
+            String abTest = jsonObject.getString("value");
 
-            int index = jsonObject.getInt("index");
-
-            if (gourmetDetail.getGourmetDetailParmas().index == index)
+            if (Util.isTextEmpty(abTest) == true)
             {
-                String abTest = jsonObject.getString("value");
-
-                if (Util.isTextEmpty(abTest) == true)
-                {
-                    return;
-                }
-
-                boolean isLeft;
-
-                switch (abTest)
-                {
-                    case "b":
-                        isLeft = true;
-                        break;
-
-                    case "a":
-                    default:
-                        isLeft = false;
-                        break;
-                }
-
-                mGourmetProductListLayout.setThumbnailLocation(isLeft);
+                return;
             }
+
+            boolean isLeft;
+
+            switch (abTest)
+            {
+                case "b":
+                    isLeft = true;
+                    break;
+
+                case "a":
+                default:
+                    isLeft = false;
+                    break;
+            }
+
+            mGourmetProductListLayout.setThumbnailLocation(isLeft);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
