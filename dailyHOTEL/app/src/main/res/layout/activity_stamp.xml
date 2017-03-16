@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/ic_stamp_header"/>
+                android:src="@drawable/img_stamp_header"/>
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/stampEventMessageTextView"
