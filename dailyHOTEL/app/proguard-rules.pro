@@ -100,11 +100,6 @@
 -keepnames class android.support.v4.widget.EdgeEffectCompat { *; }
 
 #Appboy
--dontoptimize
--dontwarn com.amazon.device.messaging.**
--dontwarn bo.app.**
--dontwarn com.appboy.ui.**
--dontwarn com.google.android.gms.**
 -keep class bo.app.** { *; }
 -keep class com.appboy.** { *; }
 
