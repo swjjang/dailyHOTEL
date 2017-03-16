@@ -289,7 +289,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 if (getPackageManager().resolveActivity(intent, 0) == null)
                 {
                     Util.installPackage(HotelPaymentWebActivity.this, intent.getPackage());
-                    return false;
+                    return true;
                 }
 
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()));
@@ -300,7 +300,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 } catch (ActivityNotFoundException e)
                 {
                     Util.installPackage(HotelPaymentWebActivity.this, intent.getPackage());
-                    return false;
+                    return true;
                 }
             }
         }
