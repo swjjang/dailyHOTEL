@@ -29,10 +29,10 @@
                 android:id="@+id/stampEventMessageTextView"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:text="5박까지 스탬프를 모아보세요!\n어디든 갈 수 있는 1박 무료쿠폰이 생겨요!"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="16dp"
@@ -329,7 +329,7 @@
                         android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2"
                         android:gravity="center"
                         android:text="@string/label_stamp_history"
-                        android:textColor="@color/default_text_c323232"
+                        android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
                         android:textSize="13dp"
                         dailyFont:style="Medium"/>
 

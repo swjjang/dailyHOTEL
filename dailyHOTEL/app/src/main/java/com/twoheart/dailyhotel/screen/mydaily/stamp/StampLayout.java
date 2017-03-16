@@ -15,7 +15,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
 {
     private TextView mStampEventMessageTextView;
     private TextView mNightsTextView;
-    private View mPushLayout;
+    private View mPushLayout, mStampHistoryTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -41,7 +41,6 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         initToolbar(view);
 
         mStampEventMessageTextView = (TextView) view.findViewById(R.id.stampEventMessageTextView);
-        mStampEventMessageTextView.setOnClickListener(this);
 
         mPushLayout = view.findViewById(R.id.pushLayout);
 
@@ -51,10 +50,10 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         stampMessageLayout.setOnClickListener(this);
         pushMessageLayout.setOnClickListener(this);
 
-        View stampHistoryTextView = view.findViewById(R.id.stampHistoryTextView);
+        mStampHistoryTextView = view.findViewById(R.id.stampHistoryTextView);
         View stampTermsTextView = view.findViewById(R.id.stampTermsTextView);
 
-        stampHistoryTextView.setOnClickListener(this);
+        mStampHistoryTextView.setOnClickListener(this);
         stampTermsTextView.setOnClickListener(this);
     }
 
@@ -96,7 +95,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
 
     public void setPushLayout(boolean enabled)
     {
-        if(enabled == true)
+        if (enabled == true)
         {
             mPushLayout.setVisibility(View.VISIBLE);
         } else
@@ -184,17 +183,21 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         }
     }
 
-    private int test;
+    public void setStampHistoryEnabled(boolean enabled)
+    {
+        if (mStampHistoryTextView == null)
+        {
+            return;
+        }
+
+        mStampHistoryTextView.setEnabled(enabled);
+    }
 
     @Override
     public void onClick(View v)
     {
         switch (v.getId())
         {
-            case R.id.stampEventMessageTextView:
-                setNights(test++ % 6);
-                break;
-
             case R.id.loginView:
                 ((OnEventListener) mOnEventListener).onLoginClick();
                 break;
