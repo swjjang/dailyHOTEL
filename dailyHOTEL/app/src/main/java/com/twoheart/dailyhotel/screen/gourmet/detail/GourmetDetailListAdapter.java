@@ -215,10 +215,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
         GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
         mGourmetTitleLayout = view.findViewById(R.id.gourmetTitleLayout);
-        mGourmetTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         // 등급
-        TextView gradeTextView = (TextView) view.findViewById(R.id.gourmetGradeTextView);
+        TextView gradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetGradeTextView);
 
         if (Util.isTextEmpty(gourmetDetailParams.category) == true)
         {
@@ -230,7 +229,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         }
 
         // 소분류 등급
-        TextView subGradeTextView = (TextView) view.findViewById(R.id.gourmetSubGradeTextView);
+        TextView subGradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetSubGradeTextView);
 
         if (Util.isTextEmpty(gourmetDetailParams.categorySub) == true)
         {
@@ -242,12 +241,12 @@ public class GourmetDetailListAdapter extends BaseAdapter
         }
 
         // 호텔명
-        TextView placeNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
+        TextView placeNameTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetNameTextView);
         placeNameTextView.setText(gourmetDetailParams.name);
 
-        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
-
         // 만족도
+        TextView satisfactionView = (TextView) mGourmetTitleLayout.findViewById(R.id.satisfactionView);
+
         if (gourmetDetailParams.ratingShow == false)
         {
             satisfactionView.setVisibility(View.GONE);
@@ -257,6 +256,18 @@ public class GourmetDetailListAdapter extends BaseAdapter
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             satisfactionView.setText(mContext.getString(R.string.label_gourmet_detail_satisfaction, //
                 gourmetDetailParams.ratingValue, decimalFormat.format(gourmetDetailParams.ratingPersons)));
+        }
+
+        // 리뷰
+        TextView trueReviewTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (gourmetDetailParams.reviewCount == 0)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            trueReviewTextView.setVisibility(View.VISIBLE);
+            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, gourmetDetailParams.reviewCount));
         }
 
         // 할인 쿠폰

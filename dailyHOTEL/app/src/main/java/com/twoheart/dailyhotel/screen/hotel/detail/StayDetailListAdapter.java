@@ -220,18 +220,18 @@ public class StayDetailListAdapter extends BaseAdapter
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
 
         // 등급
-        TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
+        TextView hotelGradeTextView = (TextView) mHotelTitleLayout.findViewById(R.id.hotelGradeTextView);
         hotelGradeTextView.setVisibility(View.VISIBLE);
 
         hotelGradeTextView.setText(stayDetailParams.getGrade().getName(mContext));
         hotelGradeTextView.setBackgroundResource(stayDetailParams.getGrade().getColorResId());
 
         // 호텔명
-        TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
+        TextView hotelNameTextView = (TextView) mHotelTitleLayout.findViewById(R.id.hotelNameTextView);
         hotelNameTextView.setText(stayDetailParams.name);
 
         // 만족도
-        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+        TextView satisfactionView = (TextView) mHotelTitleLayout.findViewById(R.id.satisfactionView);
 
         if (stayDetailParams.ratingValue == 0)
         {
@@ -242,6 +242,18 @@ public class StayDetailListAdapter extends BaseAdapter
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             satisfactionView.setText(mContext.getString(R.string.label_stay_detail_satisfaction, //
                 stayDetailParams.ratingValue, decimalFormat.format(stayDetailParams.ratingPersons)));
+        }
+
+        // 리뷰
+        TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (stayDetailParams.reviewCount == 0)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            trueReviewTextView.setVisibility(View.VISIBLE);
+            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, stayDetailParams.reviewCount));
         }
 
         // 할인 쿠폰

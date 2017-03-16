@@ -1209,6 +1209,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
         }
 
+        @Override
+        public void onReviewClick()
+        {
+
+        }
+
         //        @Override
         //        public void onReservationClick(TicketInformation ticketInformation)
         //        {

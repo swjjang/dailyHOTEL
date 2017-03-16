@@ -73,6 +73,9 @@ public abstract class PlaceDetailParams<E> implements Parcelable
     @JsonField
     public boolean myWish; // 위시리스트 클릭 상태
 
+    @JsonField
+    public int reviewCount = 1; // 리뷰 개수
+
     protected ArrayList<ImageInformation> mImageList;
     protected ArrayList<DetailInformation> mDetailList;
 

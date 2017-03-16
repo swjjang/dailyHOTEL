@@ -23,6 +23,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
         void onProductListClick();
+
+        void onReviewClick();
     }
 
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)

@@ -1414,6 +1414,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void onReviewClick()
+        {
+
+        }
+
+        @Override
         public void showMap()
         {
             if (Util.isInstallGooglePlayService(StayDetailActivity.this) == true)
