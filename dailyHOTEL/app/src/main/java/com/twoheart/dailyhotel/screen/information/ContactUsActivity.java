@@ -9,8 +9,8 @@ import android.view.View;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -125,16 +125,16 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
 
     private void startKakaoTalkConsult()
     {
-        //        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_CONTACT_US, 0, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_CONTACT_US, 0, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
-        Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"));
-        if (intent.resolveActivity(getPackageManager()) == null)
-        {
-            Util.installPackage(this, "com.kakao.talk");
-        } else
-        {
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SHAREKAKAO);
-        }
+        //        Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"));
+        //        if (intent.resolveActivity(getPackageManager()) == null)
+        //        {
+        //            Util.installPackage(this, "com.kakao.talk");
+        //        } else
+        //        {
+        //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SHAREKAKAO);
+        //        }
     }
 
     public void startEmail()
