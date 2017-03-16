@@ -11,6 +11,7 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -89,6 +90,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         initLayout(imageUrl, placeName, placeType, userName);
         initStampLayout();
 
+        startReceiptAnimation();
+
         final ScrollView informationLayout = (ScrollView) findViewById(R.id.informationLayout);
         EdgeEffectColor.setEdgeGlowColor(informationLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
@@ -146,8 +149,6 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         confirmView.setOnClickListener(this);
-
-        startReceiptAnimation();
     }
 
     private void initStampLayout()
@@ -185,25 +186,27 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         final float endScaleY = 1.0f;
 
         int animatorSetStartDelay = Util.isOverAPI21() ? 400 : 600;
-        int transAnimatorDuration = Util.isOverAPI21() ? 300 : 400;
-        int scaleAnimatorStartDelay = transAnimatorDuration - 50;
-        int scaleAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
+        int receiptLayoutAnimatorDuration = Util.isOverAPI21() ? 300 : 400;
+        int confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+        int confirmImageAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
+        int stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+        int stampLayoutAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
 
         receiptLayout.setTranslationY(startY);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setStartDelay(animatorSetStartDelay);
 
-        final ObjectAnimator scaleAnimator = ObjectAnimator.ofPropertyValuesHolder(confirmImageView //
+        final ObjectAnimator confirmImageAnimator = ObjectAnimator.ofPropertyValuesHolder(confirmImageView //
             , PropertyValuesHolder.ofFloat("scaleX", startScaleY, endScaleY) //
             , PropertyValuesHolder.ofFloat("scaleY", startScaleY, endScaleY) //
             , PropertyValuesHolder.ofFloat("alpha", 0.0f, 1.0f) //
         );
 
-        scaleAnimator.setDuration(scaleAnimatorDuration);
-        scaleAnimator.setStartDelay(scaleAnimatorStartDelay);
-        scaleAnimator.setInterpolator(new OvershootInterpolator(1.6f));
-        scaleAnimator.addListener(new Animator.AnimatorListener()
+        confirmImageAnimator.setDuration(confirmImageAnimatorDuration);
+        confirmImageAnimator.setStartDelay(confirmImageAnimatorStartDelay);
+        confirmImageAnimator.setInterpolator(new OvershootInterpolator(1.6f));
+        confirmImageAnimator.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
@@ -252,13 +255,13 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             }
         });
 
-        ObjectAnimator translateAnimator = ObjectAnimator.ofPropertyValuesHolder(receiptLayout //
+        ObjectAnimator receiptLayoutAnimator = ObjectAnimator.ofPropertyValuesHolder(receiptLayout //
             , PropertyValuesHolder.ofFloat("translationY", startY, endY) //
         );
 
-        translateAnimator.setDuration(transAnimatorDuration);
-        translateAnimator.setInterpolator(new OvershootInterpolator(0.82f));
-        translateAnimator.addListener(new Animator.AnimatorListener()
+        receiptLayoutAnimator.setDuration(receiptLayoutAnimatorDuration);
+        receiptLayoutAnimator.setInterpolator(new OvershootInterpolator(0.82f));
+        receiptLayoutAnimator.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
@@ -285,7 +288,49 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             }
         });
 
-        animatorSet.playTogether(translateAnimator, scaleAnimator);
+        final ObjectAnimator stampLayoutAnimator = ObjectAnimator.ofPropertyValuesHolder(mStampLayout //
+            , PropertyValuesHolder.ofFloat("scaleX", 0.9f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.9f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("alpha", 0.0f, 1.0f) //
+        );
+
+        stampLayoutAnimator.setDuration(stampLayoutAnimatorDuration);
+        stampLayoutAnimator.setStartDelay(stampLayoutAnimatorStartDelay);
+        stampLayoutAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        stampLayoutAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mStampLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        if (isStampEnabled() == true)
+        {
+            animatorSet.playTogether(receiptLayoutAnimator, confirmImageAnimator, stampLayoutAnimator);
+        } else
+        {
+            animatorSet.playTogether(receiptLayoutAnimator, confirmImageAnimator);
+        }
         animatorSet.start();
     }
 
