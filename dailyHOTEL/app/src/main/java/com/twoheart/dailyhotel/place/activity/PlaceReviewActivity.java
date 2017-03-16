@@ -1,19 +1,29 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.layout.PlaceReviewLayout;
 import com.twoheart.dailyhotel.util.Util;
 
 public abstract class PlaceReviewActivity extends BaseActivity
 {
+    private PlaceReviewLayout mPlaceReviewLayout;
+
+    protected abstract
+    @NonNull
+    PlaceReviewLayout createInstanceLayout();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
+
+        createInstanceLayout();
 
     }
 
