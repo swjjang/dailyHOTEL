@@ -57,6 +57,8 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         void startBonusList();
 
+        void startStamp();
+
         void startCreditCardList();
 
         void startInviteFriend();
@@ -89,9 +91,19 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         initProfileLayout(mContext, view);
         initAccountInfoLayout(mContext, view);
 
+        View stampLayout = view.findViewById(R.id.stampLayout);
         View recommendLayout = view.findViewById(R.id.recommendLayout);
         View wishListLayout = view.findViewById(R.id.wishListLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
+
+        if (DailyPreference.getInstance(mContext).getRemoteConfigStampEnabled() == true)
+        {
+            stampLayout.setVisibility(View.VISIBLE);
+            stampLayout.setOnClickListener(this);
+        } else
+        {
+            stampLayout.setVisibility(View.GONE);
+        }
 
         recommendLayout.setOnClickListener(this);
         recentPlacesLayout.setOnClickListener(this);
@@ -394,6 +406,10 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
             case R.id.bonusLayout:
                 ((OnEventListener) mOnEventListener).startBonusList();
+                break;
+
+            case R.id.stampLayout:
+                ((OnEventListener) mOnEventListener).startStamp();
                 break;
 
             case R.id.recommendLayout:

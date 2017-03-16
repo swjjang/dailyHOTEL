@@ -26,7 +26,7 @@ public class CouponHistoryLayout extends BaseLayout
 
     public interface OnEventListener extends OnBaseEventListener
     {
-
+        void onHomeClick();
     }
 
     public CouponHistoryLayout(Context context, OnBaseEventListener listener)
@@ -68,6 +68,16 @@ public class CouponHistoryLayout extends BaseLayout
         mRecyclerView.setLayoutManager(layoutManager);
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+        View homeButtonView = view.findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onHomeClick();
+            }
+        });
     }
 
     public void setData(List<CouponHistory> list)

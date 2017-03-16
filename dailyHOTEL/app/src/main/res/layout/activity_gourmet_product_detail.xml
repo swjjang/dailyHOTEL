@@ -159,6 +159,7 @@
                     android:textSize="13dp"/>
 
                 <View
+                    android:id="@+id/benefitLineView"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -227,6 +228,12 @@
                     android:textSize="13dp"/>
             </LinearLayout>
 
+            <View
+                android:id="@+id/bottomMarginView"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:background="@color/white"/>
+
             <LinearLayout
                 android:id="@+id/menuInformationTopLine"
                 android:layout_width="match_parent"
@@ -236,7 +243,6 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
                     android:background="@color/default_line_cf0f0f0"/>
 
                 <View

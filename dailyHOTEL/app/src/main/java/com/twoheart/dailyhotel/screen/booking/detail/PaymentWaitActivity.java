@@ -471,11 +471,23 @@ public class PaymentWaitActivity extends BaseActivity
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
+        //        switch (mBooking.placeType)
+        //        {
+        //            case HOTEL:
+        //                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        //                break;
+        //
+        //            case FNB:
+        //                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        //                break;
+        //        }
+
         try
         {
             switch (mBooking.placeType)
             {
                 case HOTEL:
+
                     startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
                     break;
 

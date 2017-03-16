@@ -259,7 +259,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                 recordPaymentInformation();
 
-                setResult(RESULT_OK);
+                setResult(resultCode);
                 finish();
                 return;
             }

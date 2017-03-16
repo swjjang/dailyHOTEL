@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -324,6 +325,15 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_COUPONLIST:
+            case CODE_REQUEST_ACTIVITY_STAMP:
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+                break;
         }
     }
 
@@ -717,6 +727,16 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    boolean moveDeepLinkStamp(Context context)
+    {
+        DailyDeepLink.getInstance().clear();
+
+        Intent intent = StampActivity.newInstance(context);
+        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+
+        return true;
+    }
+
     void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -935,6 +955,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         } else if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
                         {
                             if (moveDeepLinkRegisterCoupon(EventWebActivity.this) == true)
+                            {
+                                return;
+                            }
+                        } else if (DailyDeepLink.getInstance().isStampView() == true)
+                        {
+                            if (moveDeepLinkStamp(EventWebActivity.this) == true)
                             {
                                 return;
                             }

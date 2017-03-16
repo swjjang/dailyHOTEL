@@ -180,6 +180,14 @@ public abstract class PlaceDetailActivity extends BaseActivity
         super.onResume();
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
     /**
      * 이전화면이 갱신되어야 하면 Transition 효과를 주지 않도록 한다.
      *
@@ -275,6 +283,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     {
                         case RESULT_OK:
                         case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                        case CODE_RESULT_ACTIVITY_GO_HOME:
                             finish();
                             break;
 

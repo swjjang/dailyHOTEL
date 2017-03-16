@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -38,7 +39,6 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, discountType);
         intent.putExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM, (Serializable) params);
 
-
         return intent;
     }
 
@@ -63,6 +63,10 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
 
         View textLayout = findViewById(R.id.textInformationLayout);
         initTextLayout(textLayout);
+
+        setStampLayout(DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage1()//
+            , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage2()//
+            , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
     }
 
     private void initDateLayout(View view, String checkInDate, String checkOutDate, int nights)
@@ -155,5 +159,11 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
         params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, paymentType);
         AnalyticsManager.getInstance(this).purchaseWithCoupon(params);
+    }
+
+    @Override
+    protected boolean isStampEnabled()
+    {
+        return DailyPreference.getInstance(this).getRemoteConfigStampEnabled();
     }
 }

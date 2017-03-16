@@ -233,7 +233,16 @@ public class MainActivity extends BaseActivity implements Constants
         } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
             imageView.setPadding(0, 0, 0, 0);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            if (Util.isTabletDevice(this) == true)
+            {
+                imageView.setBackgroundColor(getResources().getColor(R.color.white));
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else
+            {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+
             imageView.setImageResource(R.drawable.splash);
         } else
         {
@@ -249,7 +258,16 @@ public class MainActivity extends BaseActivity implements Constants
                 try
                 {
                     imageView.setPadding(0, 0, 0, 0);
-                    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+                    if (Util.isTabletDevice(this) == true)
+                    {
+                        imageView.setBackgroundColor(getResources().getColor(R.color.white));
+                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    } else
+                    {
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    }
+
                     imageView.setImageURI(Uri.fromFile(file));
                 } catch (Exception | OutOfMemoryError e)
                 {
@@ -456,21 +474,33 @@ public class MainActivity extends BaseActivity implements Constants
             case Constants.CODE_REQUEST_ACTIVITY_CONTACTUS:
             case Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY:
             case Constants.CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
+            case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
+            case Constants.CODE_REQUEST_ACTIVITY_BONUS:
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP:
             {
-                if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
+                switch (resultCode)
                 {
-                    if (mMainFragmentManager != null)
-                    {
-                        Fragment fragment = mMainFragmentManager.getCurrentFragment();
+                    case Constants.CODE_RESULT_ACTIVITY_GO_HOME:
+                        if (mMainFragmentManager != null)
+                        {
+                            Fragment fragment = mMainFragmentManager.getCurrentFragment();
 
-                        if (fragment instanceof HomeFragment)
-                        {
-                            fragment.onActivityResult(requestCode, resultCode, data);
-                        } else
-                        {
-                            mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                            if (fragment instanceof HomeFragment)
+                            {
+                                fragment.onActivityResult(requestCode, resultCode, data);
+                            } else
+                            {
+                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                            }
                         }
-                    }
+                        break;
+
+                    default:
+                        if (mMainFragmentManager != null)
+                        {
+                            mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
+                        }
+                        break;
                 }
                 break;
             }
@@ -1033,6 +1063,7 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isRegisterCouponView() == true //
                     || DailyDeepLink.getInstance().isProfileView() == true//
                     || DailyDeepLink.getInstance().isProfileBirthdayView() == true//
+                    || DailyDeepLink.getInstance().isStampView() == true//
                     )
                 {
                     mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true);
@@ -1262,6 +1293,9 @@ public class MainActivity extends BaseActivity implements Constants
                 String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
 
                 mNetworkController.requestHoliday(startDay, endDay);
+
+                // 하루에 한번 휴일을 얻을때 해피톡 카테고리도 같이 얻는다.
+                mNetworkController.requestHappyTalkCategory();
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);
@@ -1283,6 +1317,17 @@ public class MainActivity extends BaseActivity implements Constants
         {
             DailyPreference.getInstance(MainActivity.this).setCheckCalendarHolidays(startDay);
             DailyPreference.getInstance(MainActivity.this).setCalendarHolidays(holidays);
+        }
+
+        @Override
+        public void onHappyTalkCategory(String categorys)
+        {
+            if (Util.isTextEmpty(categorys) == true)
+            {
+                return;
+            }
+
+            DailyPreference.getInstance(MainActivity.this).setHappyTalkCategory(categorys);
         }
     };
 }

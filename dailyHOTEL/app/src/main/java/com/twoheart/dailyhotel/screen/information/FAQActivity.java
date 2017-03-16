@@ -184,6 +184,8 @@ public class FAQActivity extends WebViewActivity
 
     void startKakao()
     {
+        //        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_FAQ, 0, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+
         try
         {
             startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));

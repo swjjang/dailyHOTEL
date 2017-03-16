@@ -1,15 +1,21 @@
 package com.twoheart.dailyhotel.screen.hotel.detail;
 
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -761,6 +767,8 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
+        //        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL, ((StayDetail) mPlaceDetail).getStayDetailParams().index, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+
         try
         {
             startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
@@ -1351,6 +1359,58 @@ public class StayDetailActivity extends PlaceDetailActivity
             //            }
 
             releaseUiComponent();
+        }
+
+        @Override
+        public void onStampClick()
+        {
+            if (isFinishing())
+            {
+                return;
+            }
+
+            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialogView = layoutInflater.inflate(R.layout.view_dialog_stamp_layout, null, false);
+
+            final Dialog dialog = new Dialog(StayDetailActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.setCanceledOnTouchOutside(false);
+
+            // 상단
+            TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+            titleTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupTitle());
+
+            // 메시지
+            TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+            messageTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupMessage());
+
+            View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
+            confirmTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (dialog != null && dialog.isShowing())
+                    {
+                        dialog.dismiss();
+                    }
+                }
+            });
+
+            try
+            {
+                dialog.setContentView(dialogView);
+
+                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(StayDetailActivity.this, dialog);
+
+                dialog.show();
+
+                dialog.getWindow().setAttributes(layoutParams);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         @Override

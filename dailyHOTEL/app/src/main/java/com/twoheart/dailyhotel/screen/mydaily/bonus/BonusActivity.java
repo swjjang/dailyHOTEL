@@ -93,6 +93,14 @@ public class BonusActivity extends BaseActivity
                 break;
             }
 
+            case REQUEST_ACTIVITY_TERMS:
+                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+                break;
+
             default:
                 break;
         }

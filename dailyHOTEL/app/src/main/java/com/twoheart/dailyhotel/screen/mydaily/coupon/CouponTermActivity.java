@@ -8,6 +8,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -136,6 +137,17 @@ public class CouponTermActivity extends WebViewActivity
                 {
                     topButtonView.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        View homeButtonView = findViewById(R.id.homeButtonView);
+        homeButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+                finish();
             }
         });
     }

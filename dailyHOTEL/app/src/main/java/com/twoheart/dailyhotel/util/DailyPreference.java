@@ -79,6 +79,7 @@ public class DailyPreference
 
     private static final String KEY_CALENDAR_HOLIDAYS = "1012";
     private static final String KEY_CHECK_CALENDAR_HOLIDAYS_STARTDAY = "1013";
+    private static final String KEY_HAPPY_TALK_CATEGORY = "1014"; // 해피톡 상담유형 저장하기
 
     private static final String KEY_BACKGROUND_APP_TIME = "2000";
 
@@ -125,6 +126,25 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_TITLE = "315";
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_URL = "316";
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_INDEX = "317";
+
+    // Stamp
+    private static final String KEY_REMOTE_CONFIG_STAMP_ENABLED = "318";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1 = "319";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE2 = "320";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3 = "321";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3_ENABLED = "322";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_TITLE = "323";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_MESSAGE = "324";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE1 = "325";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE2 = "326";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3 = "327";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1 = "328";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
+    private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
+
+    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
+    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -787,6 +807,16 @@ public class DailyPreference
         return getValue(mPreferences, KEY_CHECK_CALENDAR_HOLIDAYS_STARTDAY, null);
     }
 
+    public void setHappyTalkCategory(String value)
+    {
+        setValue(mEditor, KEY_HAPPY_TALK_CATEGORY, value);
+    }
+
+    public String getHappyTalkCategory()
+    {
+        return getValue(mPreferences, KEY_HAPPY_TALK_CATEGORY, null);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // Remote Config Text
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1091,6 +1121,134 @@ public class DailyPreference
     public int getRemoteConfigHomeEventIndex()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_INDEX, -1);
+    }
+
+    public void setRemoteConfigStampEnabled(boolean enabled)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_ENABLED, enabled);
+    }
+
+    public boolean getRemoteConfigStampEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_ENABLED, false);
+    }
+
+    public void setRemoteConfigStampStayDetailMessage(String message1, String message2, String message3, boolean message3Enabled)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1, message1);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE2, message2);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3, message3);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3_ENABLED, message3Enabled);
+    }
+
+    public String getRemoteConfigStampStayDetailMessage1()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1, null);
+    }
+
+    public String getRemoteConfigStampStayDetailMessage2()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE2, null);
+    }
+
+    public String getRemoteConfigStampStayDetailMessage3()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3, null);
+    }
+
+    public boolean isRemoteConfigStampStayDetailMessage3Enabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3_ENABLED, false);
+    }
+
+    public void setRemoteConfigStampStayDetailPopup(String title, String message)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_TITLE, title);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_MESSAGE, message);
+    }
+
+    public String getRemoteConfigStampStayDetailPopupTitle()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_TITLE, null);
+    }
+
+    public String getRemoteConfigStampStayDetailPopupMessage()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_MESSAGE, null);
+    }
+
+    public void setRemoteConfigStampStayThankYouMessage(String message1, String message2, String message3)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE1, message1);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE2, message2);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3, message3);
+    }
+
+    public String getRemoteConfigStampStayThankYouMessage1()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE1, null);
+    }
+
+    public String getRemoteConfigStampStayThankYouMessage2()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE2, null);
+    }
+
+    public String getRemoteConfigStampStayThankYouMessage3()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3, null);
+    }
+
+    public void setRemoteConfigStampStayEndEventPopupEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, value);
+    }
+
+    public boolean isRemoteConfigStampStayEndEventPopupEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, false);
+    }
+
+    public void setRemoteConfigStampDate(String date1, String date2, String date3)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, date1);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, date2);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, date3);
+    }
+
+    public String getRemoteConfigStampDate1()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, null);
+    }
+
+    public String getRemoteConfigStampDate2()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, null);
+    }
+
+    public String getRemoteConfigStampDate3()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, null);
+    }
+
+    public void setRemoteConfigABTestGourmetProductList(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST, value);
+    }
+
+    public String getRemoteConfigABTestGourmetProductList()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST, null);
+    }
+
+    public void setRemoteConfigABTestHomeButton(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON, value);
+    }
+
+    public String getRemoteConfigABTestHomeButton()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

@@ -266,6 +266,50 @@ public class StayDetailListAdapter extends BaseAdapter
             couponLayout.setVisibility(View.GONE);
         }
 
+        // Stamp
+        View stampLayout = view.findViewById(R.id.stampLayout);
+        View stampClickLayout = stampLayout.findViewById(R.id.stampClickLayout);
+
+        if (DailyPreference.getInstance(mContext).getRemoteConfigStampEnabled() == true)
+        {
+            // 테블릿 높이 수정 필요한지 확인
+            stampLayout.setVisibility(View.VISIBLE);
+
+            TextView stampMessage1TextView = (TextView) stampLayout.findViewById(R.id.stampMessage1TextView);
+            TextView stampMessage2TextView = (TextView) stampLayout.findViewById(R.id.stampMessage2TextView);
+            TextView stampMessage3TextView = (TextView) stampLayout.findViewById(R.id.stampMessage3TextView);
+
+            String message1 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage1();
+            String message2 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage2();
+            String message3 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage3();
+            boolean message3Enabled = DailyPreference.getInstance(mContext).isRemoteConfigStampStayDetailMessage3Enabled();
+
+            stampMessage1TextView.setText(message1);
+            stampMessage2TextView.setText(message2);
+
+            if (message3Enabled == true)
+            {
+                stampMessage3TextView.setVisibility(View.VISIBLE);
+                stampMessage3TextView.setText(message3);
+
+                stampClickLayout.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mOnEventListener.onStampClick();
+                    }
+                });
+            } else
+            {
+                stampMessage3TextView.setVisibility(View.GONE);
+                stampClickLayout.setOnClickListener(null);
+            }
+        } else
+        {
+            stampLayout.setVisibility(View.GONE);
+        }
+
         // 날짜
         View dateInformationLayout = view.findViewById(R.id.dateInformationLayout);
         TextView checkinDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkinDayTextView);

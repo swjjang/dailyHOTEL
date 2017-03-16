@@ -40,8 +40,7 @@
                 android:layout_marginTop="4dp"
                 android:text="@string/coupon_history_header_sub_description"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="11dp"
-                />
+                android:textSize="11dp"/>
 
         </LinearLayout>
 
@@ -90,6 +89,31 @@
             android:textSize="18dp"
             app:drawableCompatTop="@drawable/no_coupon_ic"
             dailyFont:style="Medium"/>
-
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:gravity="right|bottom"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/topButtonView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:src="@drawable/btn_top"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/homeButtonView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:src="@drawable/btn_back_to_home"/>
+    </LinearLayout>
 </RelativeLayout>

@@ -206,11 +206,25 @@ public class GourmetProductDetailLayout extends BaseLayout
             checkLayout.setPadding(0, Util.dpToPx(mContext, 10), 0, 0);
         }
 
-        if (benefitLayout.getVisibility() == View.GONE && timeLayout.getVisibility() == View.GONE && checkLayout.getVisibility() == View.GONE)
+        View bottomMarginView = mNestedScrollView.findViewById(R.id.bottomMarginView);
+
+        if (timeLayout.getVisibility() == View.GONE && checkLayout.getVisibility() == View.GONE)
         {
-            mDefaultInformationTopLine.setVisibility(View.GONE);
+            bottomMarginView.setVisibility(View.GONE);
+
+            if (benefitLayout.getVisibility() == View.GONE)
+            {
+                mDefaultInformationTopLine.setVisibility(View.GONE);
+            } else
+            {
+                View benefitLineView = benefitLayout.findViewById(R.id.benefitLineView);
+                benefitLineView.setVisibility(View.GONE);
+
+                mDefaultInformationTopLine.setVisibility(View.VISIBLE);
+            }
         } else
         {
+            bottomMarginView.setVisibility(View.VISIBLE);
             mDefaultInformationTopLine.setVisibility(View.VISIBLE);
         }
 

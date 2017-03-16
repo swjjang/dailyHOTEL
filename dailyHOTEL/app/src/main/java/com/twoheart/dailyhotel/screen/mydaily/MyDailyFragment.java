@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
+import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -129,7 +130,11 @@ public class MyDailyFragment extends BaseFragment implements Constants
             {
                 mOnEventListener.startEditProfile();
                 return;
+            } else if (DailyDeepLink.getInstance().isStampView() == true)
+            {
+                mOnEventListener.startStamp();
             }
+
             //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
             //            {
             //                mOnEventListener.startWishList(PlaceType.HOTEL);
@@ -171,6 +176,8 @@ public class MyDailyFragment extends BaseFragment implements Constants
                 mMyDailyLayout.updateAccountLayout(false, 0, 0);
 
                 boolean isBenefitAlarm = DailyPreference.getInstance(getActivity()).isUserBenefitAlarm();
+
+                mMyDailyLayout.updatePushIcon(isBenefitAlarm);
 
                 if (Util.isOverAPI19() == true && isBenefitAlarm == true)
                 {
@@ -236,6 +243,12 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
                     }
                 }
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP:
+            {
+                mDontReload = false;
                 break;
             }
 
@@ -353,7 +366,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
             Intent intent = CouponListActivity.newInstance(baseActivity, sortType);
-            startActivity(intent);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
                 Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
@@ -371,10 +384,27 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, BonusActivity.class));
+            baseActivity.startActivityForResult(BonusActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_BONUS);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
+        }
+
+        @Override
+        public void startStamp()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_STAMP);
+
+            //            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+            //                , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
         }
 
         @Override

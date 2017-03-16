@@ -19,10 +19,12 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
@@ -39,6 +41,8 @@ import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyNestedScrollView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -206,6 +210,7 @@ public class HomeLayout extends BaseLayout
         }
 
         mActionButtonLayout = view.findViewById(R.id.actionButtonLayout);
+        settingABTest(mActionButtonLayout);
         mActionButtonLayout.setVisibility(View.GONE);
 
         View stayButtonTextView = mActionButtonLayout.findViewById(R.id.stayButtonTextView);
@@ -337,8 +342,9 @@ public class HomeLayout extends BaseLayout
         }
 
         mScrollButtonLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
-        layout.addView(mScrollButtonLayout);
 
+        settingABTest(mScrollButtonLayout);
+        layout.addView(mScrollButtonLayout);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(//
             ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT));
@@ -364,6 +370,80 @@ public class HomeLayout extends BaseLayout
                 ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick(false);
             }
         });
+    }
+
+    private void settingABTest(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        String data = DailyPreference.getInstance(mContext).getRemoteConfigABTestHomeButton();
+
+        if (Util.isTextEmpty(data) == true)
+        {
+            return;
+        }
+
+        try
+        {
+            JSONObject jsonObject = new JSONObject(data);
+            String abTest = jsonObject.getString("value");
+
+            if (Util.isTextEmpty(abTest) == true)
+            {
+                return;
+            }
+
+            TextView stayTextView = (TextView) view.findViewById(R.id.stayTextView);
+            TextView stayDoTextView = (TextView) view.findViewById(R.id.stayDoTextView);
+            TextView gourmetTextView = (TextView) view.findViewById(R.id.gourmetTextView);
+            TextView gourmetDoTextView = (TextView) view.findViewById(R.id.gourmetDoTextView);
+
+            switch (abTest)
+            {
+                case "b":
+                    stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+                    stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                    stayTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+
+                    stayDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                    stayDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                    stayDoTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+
+                    gourmetTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+                    gourmetTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                    gourmetTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+
+                    gourmetDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                    gourmetDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                    gourmetDoTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+                    break;
+
+                case "a":
+                default:
+                    stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                    stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+                    stayTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+
+                    stayDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+                    stayDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                    stayDoTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+
+                    gourmetTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                    gourmetTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+                    gourmetTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
+
+                    gourmetDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+                    gourmetDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                    gourmetDoTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
+                    break;
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     private void initTextMessageLayout(LinearLayout layout)

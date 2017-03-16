@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
@@ -72,6 +73,13 @@ public class CouponHistoryActivity extends BaseActivity
     // ////////////////////////////////////////////////////////
     private CouponHistoryLayout.OnEventListener mOnEventListener = new CouponHistoryLayout.OnEventListener()
     {
+        @Override
+        public void onHomeClick()
+        {
+            setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
+            finish();
+        }
+
         @Override
         public void finish()
         {

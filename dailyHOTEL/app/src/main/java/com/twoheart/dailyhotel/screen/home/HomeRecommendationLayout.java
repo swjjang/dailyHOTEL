@@ -223,7 +223,7 @@ public class HomeRecommendationLayout extends LinearLayout
             return 0;
         }
 
-        return mTitleLayoutHeight + (mExpectedItemHeight * itemCount);
+        return mTitleLayoutHeight + (mExpectedItemHeight * itemCount) - 1;
     }
 
     private void startLayoutHeightAnimation(int itemCount)

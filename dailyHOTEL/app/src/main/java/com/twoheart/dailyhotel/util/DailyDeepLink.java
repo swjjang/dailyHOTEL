@@ -118,9 +118,11 @@ public class DailyDeepLink
 
     private static final String PARAM_V13_PRODUCT_INDEX = "pdi"; // 상품 인덱스.
 
+    private static final String STAMP_V14 = "stamp"; // 스탬프.
+
 
     private static final int MINIMUM_VERSION_CODE = 2;
-    private static final int MAXIMUM_VERSION_CODE = 13;
+    private static final int MAXIMUM_VERSION_CODE = 14;
 
     private static DailyDeepLink mInstance;
 
@@ -187,6 +189,22 @@ public class DailyDeepLink
         mParams.clear();
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 14
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isStampView()
+    {
+        String view = getView();
+
+        if (mVersionCode >= 14)
+        {
+            return STAMP_V14.equalsIgnoreCase(view);
+        } else
+        {
+            return false;
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 13

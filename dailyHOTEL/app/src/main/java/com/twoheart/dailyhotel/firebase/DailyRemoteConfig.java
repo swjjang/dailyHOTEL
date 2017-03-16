@@ -59,7 +59,14 @@ public class DailyRemoteConfig
             writeCompanyInformation(mContext, mContext.getString(R.string.default_company_information));
         }
 
-        mFirebaseRemoteConfig.fetch(600).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Void>()
+        long fetchTime = 600L;
+
+        if (Constants.DEBUG == true)
+        {
+            fetchTime = 0L;
+        }
+
+        mFirebaseRemoteConfig.fetch(fetchTime).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Void>()
         {
             @Override
             public void onComplete(@NonNull Task<Void> task)
@@ -79,6 +86,9 @@ public class DailyRemoteConfig
                 String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
                 String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
+                String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
+                String androidABTestGourmetProductList = mFirebaseRemoteConfig.getString("androidABTestGourmetProductList");
+                String androidABTestHome = mFirebaseRemoteConfig.getString("androidABTestHome");
 
                 if (Constants.DEBUG == true)
                 {
@@ -91,6 +101,9 @@ public class DailyRemoteConfig
                         ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
                         ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
+                        ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
+                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
+                        ExLog.d("androidABTestHome : " + androidABTestHome);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -140,6 +153,12 @@ public class DailyRemoteConfig
 
                 // default Event link
                 writeHomeEventDefaultLink(mContext, androidHomeEventDefaultLink);
+
+                // Stamp
+                writeStamp(mContext, androidStamp);
+
+                // ABTest
+                writeABTest(mContext, androidABTestGourmetProductList, androidABTestHome);
 
                 if (listener != null)
                 {
@@ -330,7 +349,7 @@ public class DailyRemoteConfig
 
         final String clientHomeEventCurrentVersion = DailyPreference.getInstance(context).getRemoteConfigHomeEventCurrentVersion();
 
-        processEventImage(context, clientHomeEventCurrentVersion, androidHomeEventDefaultLink, new ImageDownloadAsyncTask.OnCompletedListener()
+        processImage(context, clientHomeEventCurrentVersion, androidHomeEventDefaultLink, new ImageDownloadAsyncTask.OnCompletedListener()
         {
             @Override
             public void onCompleted(boolean result, String version)
@@ -357,7 +376,7 @@ public class DailyRemoteConfig
         });
     }
 
-    void processEventImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
+    void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
     {
         if (Util.isTextEmpty(jsonObject) == true)
         {
@@ -397,6 +416,89 @@ public class DailyRemoteConfig
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
+        }
+    }
+
+    private void writeStamp(final Context context, String androidStamp)
+    {
+        if (context == null || Util.isTextEmpty(androidStamp) == true)
+        {
+            return;
+        }
+
+        try
+        {
+            JSONObject jsonObject = new JSONObject(androidStamp);
+
+            boolean enabled = jsonObject.getBoolean("enabled");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
+
+            JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
+
+            String stayDetailMessage1 = stayDetailJSONObject.getString("message1");
+            String stayDetailMessage2 = stayDetailJSONObject.getString("message2");
+
+            JSONObject stayDetailMessage3JSONObject = stayDetailJSONObject.getJSONObject("message3");
+            String stayDetailMessage3Text = stayDetailMessage3JSONObject.getString("text");
+            boolean stayDetailMessage3Enabled = stayDetailMessage3JSONObject.getBoolean("enabled");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampStayDetailMessage(stayDetailMessage1, stayDetailMessage2, stayDetailMessage3Text, stayDetailMessage3Enabled);
+
+            JSONObject stayDetailPopupJSONObject = stayDetailJSONObject.getJSONObject("popup");
+
+            String stayDetailPopupTitle = stayDetailPopupJSONObject.getString("title");
+            String stayDetailPopupMessage = stayDetailPopupJSONObject.getString("message");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampStayDetailPopup(stayDetailPopupTitle, stayDetailPopupMessage);
+
+            JSONObject stayThankYouJSONObject = jsonObject.getJSONObject("stayThankYou");
+
+            String stayThankYouMessage1 = stayThankYouJSONObject.getString("message1");
+            String stayThankYouMessage2 = stayThankYouJSONObject.getString("message2");
+            String stayThankYouMessage3 = stayThankYouJSONObject.getString("message3");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampStayThankYouMessage(stayThankYouMessage1, stayThankYouMessage2, stayThankYouMessage3);
+
+            boolean endEventPopupEnabled = jsonObject.getBoolean("endEventPopupEnabled");
+
+            JSONObject stampDateJSONObject = jsonObject.getJSONObject("dates");
+
+            String date1 = stampDateJSONObject.getString("date1");
+            String date2 = stampDateJSONObject.getString("date2");
+            String date3 = stampDateJSONObject.getString("date3");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void writeABTest(final Context context, String abTest1, String abTest2)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (Util.isTextEmpty(abTest1) == true)
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(null);
+            return;
+        } else
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(abTest1);
+        }
+
+        if (Util.isTextEmpty(abTest2) == true)
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(null);
+            return;
+        } else
+        {
+            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest2);
         }
     }
 }

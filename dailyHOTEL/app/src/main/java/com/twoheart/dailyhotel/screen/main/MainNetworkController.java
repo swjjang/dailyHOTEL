@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import retrofit2.Call;
@@ -48,6 +49,8 @@ public class MainNetworkController extends BaseNetworkController
         void onUserProfileBenefit(boolean isExceedBonus);
 
         void onHolidays(String startDay, String holidays);
+
+        void onHappyTalkCategory(String categorys);
     }
 
     public MainNetworkController(Context context, String networkTag, OnNetworkControllerListener listener)
@@ -69,6 +72,11 @@ public class MainNetworkController extends BaseNetworkController
     public void requestHoliday(String startDay, String endDay)
     {
         DailyMobileAPI.getInstance(mContext).requestHoliday(mNetworkTag, startDay, endDay, mHolidayCallback);
+    }
+
+    public void requestHappyTalkCategory()
+    {
+        DailyMobileAPI.getInstance(mContext).requestHappyTalkCategory(mNetworkTag, mHappyTalkCategoryCallback);
     }
 
     /**
@@ -600,6 +608,43 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseListDto<Holiday>> call, Throwable t)
         {
+        }
+    };
+
+    private retrofit2.Callback mHappyTalkCategoryCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject jsonObjectData = response.body();
+
+                    if ("success".equalsIgnoreCase(jsonObjectData.getString("code")) == true)
+                    {
+                        JSONObject jsonObjectResults = jsonObjectData.getJSONObject("results");
+                        JSONArray jsonArray = jsonObjectResults.getJSONArray("assign");
+
+                        String happyTalkCategory = jsonArray.toString();
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onHappyTalkCategory(happyTalkCategory);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            } else
+            {
+
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+
         }
     };
 }

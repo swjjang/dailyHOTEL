@@ -444,6 +444,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         break;
                 }
                 break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK:
+                mDontReloadAtOnResume = true;
+                break;
         }
     }
 
@@ -744,6 +748,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
+        //        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().index, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+
         try
         {
             startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));

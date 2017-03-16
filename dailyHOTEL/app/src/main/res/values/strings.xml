@@ -85,6 +85,7 @@
     <string name="label_visit_walk">도보</string>
     <string name="label_visit_car">차량</string>
     <string name="label_parking_information">주차 정보 안내</string>
+    <string name="label_view_detail">자세히 보기</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
@@ -190,6 +191,9 @@
     <string name="actionbar_title_coupon_history">쿠폰 사용내역</string>
     <string name="actionbar_title_register_coupon">할인쿠폰 코드 등록</string>
     <string name="actionbar_title_wishList">위시리스트</string>
+    <string name="actionbar_title_stamp">스탬프</string>
+    <string name="actionbar_title_stamp_history">스탬프 내역</string>
+    <string name="actionbar_title_stamp_terms_activity">스탬프 유의사항</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
@@ -558,7 +562,7 @@
     <string name="label_booking_visitor_name">방문자명</string>
     <string name="label_booking_count">%1$d개</string>
     <string name="label_booking_select">선택하세요</string>
-    <string name="label_booking_simplecard_description">(법인카드 결제 가능)</string>
+    <string name="label_booking_simplecard_description">(법인카드 결제 가능, 일시불만 결제 가능 )</string>
     <string name="label_booking_card_description">(할부 결제 가능)</string>
     <string name="label_booking_phonepay_description">(월 50만원 이내 결제 가능)</string>
     <string name="label_booking_virtualpay_description">(가상계좌로 10분 내 입금시 결제 완료)</string>
@@ -1165,7 +1169,39 @@
     <string name="label_gourmet_product_detail_menu_description">메뉴 설명</string>
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
 
+    <!-- Happy Talk -->
+    <string name="label_select_main_category">대분류 항목 선택</string>
+    <string name="label_select_sub_category">중분류 항목 선택</string>
+    <string name="label_consulting">상담 시작</string>
+    <string name="message_happytalk_login">원활한 상담 진행을 위해\n앱 로그인을 해주세요.</string>
 
+    <!-- Stamp -->
+    <string name="label_stamp_history">스탬프 내역</string>
+    <string name="label_stamp_terms">스탬프 유의사항</string>
+    <string name="label_stamp_event_go">스탬프 이벤트 자세히 보기</string>
+    <string name="label_stamp_notification_on_setting">혜택 알림 받기 설정하기</string>
+    <string name="label_stamp_1_nights">1박</string>
+    <string name="label_stamp_2_nights">쿠폰제공</string>
+    <string name="label_stamp_3_nights">3박</string>
+    <string name="label_stamp_4_nights">4박</string>
+    <string name="label_stamp_5_nights">1박무료</string>
+    <string name="label_stamp_nights">%1$d/5박</string>
+    <string name="label_stamp_event_date1">스탬프 이벤트 기간: %1$s</string>
+    <string name="label_stamp_event_date2">스탬프 적립 기준 체크아웃 시간: %1$s</string>
+    <string name="label_stamp_event_date3">스탬프 발행 기간: %1$s</string>
+    <string name="label_stamphistory_date">스탬프 발행일: %1$s</string>
+    <string name="message_stamp_explanation1">2박에 5,000원 응원쿠폰, 5박에 1박 무료쿠폰을 드려요!</string>
+    <string name="message_stamp_explanation2">(1박 무료쿠폰은 5박 평균 결제 금액에 해당되는 쿠폰으로 드립니다.)</string>
+    <string name="message_stamp_explanation3">스탬프 이벤트 자세히 보기</string>
+    <string name="message_stamp_you_can_check_the_stamp_after_login">로그인 후 스탬프를 확인할 수 있습니다.\n로그인 할까요?</string>
+    <string name="message_stamp_finish_stamp">종료한\n이벤트 입니다.</string>
+    <string name="message_stamp_notification_on">스탬프 혜택 알림을 푸시 메시지로 받아보세요!</string>
+    <string name="message_stamp_title_message0">5박까지 스탬프를 모아보세요!\n어디든 갈 수 있는 1박 무료쿠폰이 생겨요!</string>
+    <string name="message_stamp_title_message1">1박 더하면,\n5,000원 응원쿠폰 드려요!</string>
+    <string name="message_stamp_title_message2">취향에 맞는 호텔 찾기,\n지금부터 시작이에요!</string>
+    <string name="message_stamp_title_message3">이제 2번 남았어요.\n또 어디로 떠나볼까요? </string>
+    <string name="message_stamp_title_message4">드디어 다왔어요.\n두근두근 1박 무료쿠폰이 눈앞에!</string>
+    <string name="message_stamp_title_message5">축하합니다.\n1박 무료쿠폰으로 원하는 호텔로 떠나보세요!</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
