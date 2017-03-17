@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.payment;
+package com.twoheart.dailyhotel.place.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,11 +8,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -24,19 +22,13 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.Guest;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
-import com.twoheart.dailyhotel.model.StayPaymentInformation;
-import com.twoheart.dailyhotel.network.IDailyNetwork;
-import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.net.URISyntaxException;
@@ -48,20 +40,26 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-@SuppressLint("NewApi")
-public class HotelPaymentWebActivity extends BaseActivity implements Constants
+/**
+ * Created by android_sam on 2017. 3. 17..
+ */
+
+public abstract class PlacePaymentWebActivity extends BaseActivity implements Constants
 {
-    public static final int PROGRESS_STAT_NOT_START = 1;
-    public static final int PROGRESS_STAT_IN = 2;
-    public static final int PROGRESS_DONE = 3;
-    static String CARD_CD = "";
-    static String QUOTA = "";
-    public int m_nStat = PROGRESS_STAT_NOT_START;
-    StayPaymentInformation mStayPaymentInformation;
+    private static final int PROGRESS_STATE_NOT_START = 1;
+    private static final int PROGRESS_STATE_IN = 2;
+    private static final int PROGRESS_DONE = 3;
 
-    WebView mWebView;
-    Handler handler = new Handler();
+    private static String mCardCD = "";
+    private static String mQuota = "";
+    public int mProgressState = PROGRESS_STATE_NOT_START;
 
+    protected WebView mWebView;
+    private Handler handler = new Handler();
+
+    protected PlacePaymentInformation mPlacePaymentInformation;
+
+    @SuppressLint("AddJavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,25 +75,25 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        mStayPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
-        SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        initIntentData(intent);
 
-        if (mStayPaymentInformation == null)
+        if (hasProductList() == false)
         {
-            DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
+            DailyToast.showToast(PlacePaymentWebActivity.this //
+                , R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
             return;
         }
 
-        if (mStayPaymentInformation.getSaleRoomInformation().roomIndex == 0)
+        if (getProductIndex() <= 0)
         {
             // 세션이 만료되어 재시작 요청.
             restartExpiredSession();
             return;
         }
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams( //
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
         // 앱에서 팝업이 띄어진 상태에서 Activity를 종료하면 발생하는 현상을 막기 위해서
         Activity activity = this;
@@ -108,7 +106,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
         setContentView(mWebView, layoutParams);
 
-        // TODO  setWebContentsDebuggingEnabled
+        // setWebContentsDebuggingEnabled
         //        WebView.setWebContentsDebuggingEnabled(true);
 
         mWebView.getSettings().setSavePassword(false);
@@ -116,7 +114,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        if (Util.isOverAPI21() == true)
         {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
@@ -129,19 +127,15 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         // 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
         mWebView.addJavascriptInterface(new KCPPayCardInfoBridge(), "KCPPayCardInfo");
         mWebView.addJavascriptInterface(new KCPPayPinInfoBridge(), "KCPPayPinInfo"); // 페이핀 기능 추가
-        mWebView.addJavascriptInterface(new KCPPayPinReturn(), "KCPPayPinRet"); // 페이핀
-        // 기능
-        // 추가
-        mWebView.addJavascriptInterface(new JavaScriptExtention(), "android");
-
+        mWebView.addJavascriptInterface(new KCPPayPinReturn(), "KCPPayPinRet"); // 페이핀 기능 추가
+        mWebView.addJavascriptInterface(new JavaScriptExtension(), "android");
         mWebView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
-
         // webView.addJavascriptInterface(new HtmlObserver(), "HtmlObserver");
 
         mWebView.setWebChromeClient(new DailyWebChromeClient());
         mWebView.setWebViewClient(new DailyWebViewClient());
 
-        mWebView.setOnLongClickListener(new OnLongClickListener()
+        mWebView.setOnLongClickListener(new View.OnLongClickListener()
         {
             @Override
             public boolean onLongClick(View v)
@@ -150,90 +144,36 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        requestPostPaymentWebView(mWebView, mStayPaymentInformation, saleTime, nights);
+        // 자식 클래스에서 처리
+        //        requestPostPaymentWebView(mWebView, mPlacePaymentInformation, saleTime, nights);
     }
 
-    private void requestPostPaymentWebView(WebView webView //
-        , StayPaymentInformation stayPaymentInformation, SaleTime saleTime, int nights)
+    public void initIntentData(Intent intent)
     {
-        String name;
-        String phone;
-        String email;
-
-        boolean isOverseas = stayPaymentInformation.isOverSeas;
-        Guest guest = stayPaymentInformation.getGuest();
-
-        if (isOverseas == true)
+        if (intent == null)
         {
-            name = guest.name;
-            phone = guest.phone;
-            email = guest.email;
-        } else
-        {
-            if (guest == null)
-            {
-                Customer customer = stayPaymentInformation.getCustomer();
-
-                name = customer.getName();
-                phone = customer.getPhone();
-                email = customer.getEmail();
-            } else
-            {
-                name = guest.name;
-                phone = guest.phone;
-                email = guest.email;
-            }
-        }
-
-        if (Util.isTextEmpty(name, phone, email) == true)
-        {
-            restartExpiredSession();
             return;
         }
 
-        StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
-
-        FormBody.Builder builder = new FormBody.Builder();
-        builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
-        builder.add("payment_type", stayPaymentInformation.paymentType.name());
-        builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        builder.add("nights", Integer.toString(nights));
-
-        switch (stayPaymentInformation.discountType)
-        {
-            case BONUS:
-                builder.add("bonus", Integer.toString(stayPaymentInformation.bonus));
-                break;
-
-            case COUPON:
-                builder.add("user_coupon_code", stayPaymentInformation.getCoupon().userCouponCode);
-                break;
-        }
-
-        builder.add("guest_name", name);
-        builder.add("guest_phone", phone.replace("-", ""));
-        builder.add("guest_email", email);
-
-        // 주차/도보
-        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            builder.add("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
-        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            builder.add("arrival_transportation", "NO_PARKING");
-        }
-
-        String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
-            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
-
-        WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
-        webViewPostAsyncTask.execute(url);
+        mPlacePaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
     }
+
+    protected abstract boolean hasProductList();
+
+    protected abstract int getProductIndex();
+
+    protected abstract void requestPostPaymentWebView(WebView webView, PlacePaymentInformation placePaymentInformation, SaleTime saleTime, int nights);
+
+    protected abstract String getScreenName();
 
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(this, Screen.DAILYHOTEL_PAYMENT_PROCESS, null);
+        String screenName = getScreenName();
+        if (Util.isTextEmpty(screenName) == false)
+        {
+            AnalyticsManager.getInstance(this).recordScreen(this, screenName, null);
+        }
 
         super.onStart();
     }
@@ -255,7 +195,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                     return false;
                 } catch (ActivityNotFoundException e)
                 {
-                    Util.installPackage(HotelPaymentWebActivity.this, "com.lotte.lottesmartpay");
+                    Util.installPackage(this, "com.lotte.lottesmartpay");
                     return false;
                 }
             }
@@ -270,7 +210,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                     return false;
                 } catch (ActivityNotFoundException e)
                 {
-                    Util.installPackage(HotelPaymentWebActivity.this, "com.ahnlab.v3mobileplus");
+                    Util.installPackage(this, "com.ahnlab.v3mobileplus");
                     return false;
                 }
             } else
@@ -288,7 +228,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 // 앱설치 체크를 합니다.
                 if (getPackageManager().resolveActivity(intent, 0) == null)
                 {
-                    Util.installPackage(HotelPaymentWebActivity.this, intent.getPackage());
+                    Util.installPackage(this, intent.getPackage());
                     return true;
                 }
 
@@ -299,7 +239,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                     startActivity(intent);
                 } catch (ActivityNotFoundException e)
                 {
-                    Util.installPackage(HotelPaymentWebActivity.this, intent.getPackage());
+                    Util.installPackage(this, intent.getPackage());
                     return true;
                 }
             }
@@ -313,13 +253,13 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 {
                     try
                     {
-                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+                        DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
                         view.goBack();
                         return true;
                     } catch (ActivityNotFoundException e)
                     {
-                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_ISP);
+                        Util.installPackage(this, PACKAGE_NAME_ISP);
                         return true;
                     }
                 }
@@ -329,13 +269,13 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 {
                     try
                     {
-                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+                        DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
                         view.goBack();
                         return true;
                     } catch (ActivityNotFoundException e)
                     {
-                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_KFTC);
+                        Util.installPackage(this, PACKAGE_NAME_KFTC);
                         return true;
                     }
                 }
@@ -345,12 +285,12 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 {
                     try
                     {
-                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+                        DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
                         return true;
                     } catch (ActivityNotFoundException e)
                     {
-                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_MPOCKET);
+                        Util.installPackage(this, PACKAGE_NAME_MPOCKET);
                         return true;
                     }
                 }
@@ -410,33 +350,43 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         // 하나 SK 모듈로 결제 이후 해당 카드 정보를 가지고 오기위해 사용
         if (ResultRcvActivity.m_uriResult != null)
         {// ResultRcvActivity
-            if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null && ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null && ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null && ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null)
+            if (ResultRcvActivity.m_uriResult.getQueryParameter("realPan") != null //
+                && ResultRcvActivity.m_uriResult.getQueryParameter("cavv") != null //
+                && ResultRcvActivity.m_uriResult.getQueryParameter("xid") != null //
+                && ResultRcvActivity.m_uriResult.getQueryParameter("eci") != null)
             {
-                //				ExLog.d("[PayDemoActivity] HANA SK Result = javascript:hanaSK('" + ResultRcvActivity.m_uriResult.getQueryParameter("realPan") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci") + "', '" + CARD_CD + "', '" + QUOTA + "');");
+                // ExLog.d("[PayDemoActivity] HANA SK Result = javascript:hanaSK('" + ResultRcvActivity.m_uriResult.getQueryParameter("realPan") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci") + "', '" + mCardCD + "', '" + mQuota + "');");
 
                 // 하나 SK 모듈로 인증 이후 승인을 하기위해 결제 함수를 호출 (주문자 페이지)
-                mWebView.loadUrl("javascript:hanaSK('" + ResultRcvActivity.m_uriResult.getQueryParameter("realPan") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid") + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci") + "', '" + CARD_CD + "', '" + QUOTA + "');");
+                mWebView.loadUrl("javascript:hanaSK('" //
+                    + ResultRcvActivity.m_uriResult.getQueryParameter("realPan") //
+                    + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("cavv") //
+                    + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("xid") //
+                    + "', '" + ResultRcvActivity.m_uriResult.getQueryParameter("eci") //
+                    + "', '" + mCardCD + "', '" + mQuota + "');");
             }
 
-            if ((ResultRcvActivity.m_uriResult.getQueryParameter("res_cd") == null ? "" : ResultRcvActivity.m_uriResult.getQueryParameter("res_cd")).equals("999"))
+            if ((ResultRcvActivity.m_uriResult.getQueryParameter("res_cd") == null //
+                ? "" : ResultRcvActivity.m_uriResult.getQueryParameter("res_cd")).equals("999"))
             {
-                //				ExLog.d("[PayDemoActivity] HANA SK Result = cancel");
-
-                m_nStat = 9;
+                // ExLog.d("[PayDemoActivity] HANA SK Result = cancel");
+                mProgressState = 9;
             }
 
-            if ((ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd") == null ? "" : ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd")).equals("0000"))
+            if ((ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd") == null //
+                ? "" : ResultRcvActivity.m_uriResult.getQueryParameter("isp_res_cd")).equals("0000"))
             {
-                //				ExLog.d("[PayDemoActivity] ISP Result = 0000");
-
-                mWebView.loadUrl("http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a=" + ResultRcvActivity.m_uriResult.getQueryParameter("a"));
+                // ExLog.d("[PayDemoActivity] ISP Result = 0000");
+                mWebView.loadUrl( //
+                    "http://pggw.kcp.co.kr/lds/smart_phone_linux_jsp/sample/card/samrt_res.jsp?result=OK&a=" //
+                        + ResultRcvActivity.m_uriResult.getQueryParameter("a"));
             } else
             {
-                //				ExLog.d("[PayDemoActivity] ISP Result = cancel");
+                // ExLog.d("[PayDemoActivity] ISP Result = cancel");
             }
         }
 
-        if (m_nStat == PROGRESS_STAT_IN)
+        if (mProgressState == PROGRESS_STATE_IN)
         {
             checkFrom();
         }
@@ -451,7 +401,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         {
             if (ResultRcvActivity.m_uriResult != null)
             {
-                m_nStat = PROGRESS_DONE;
+                mProgressState = PROGRESS_DONE;
                 String strResultInfo = ResultRcvActivity.m_uriResult.getQueryParameter("approval_key");
 
                 if (strResultInfo == null || strResultInfo.length() <= 4)
@@ -462,13 +412,13 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
                 String strResCD = strResultInfo.substring(strResultInfo.length() - 4);
 
-                //				ExLog.d("[PayDemoActivity] result=[" + strResultInfo + "]+" + "res_cd=[" + strResCD + "]");
+                // ExLog.d("[PayDemoActivity] result=[" + strResultInfo + "]+" + "res_cd=[" + strResCD + "]");
 
                 if (strResCD.equals("0000") == true)
                 {
                     String strApprovalKey = strResultInfo.substring(0, strResultInfo.length() - 4);
 
-                    //					ExLog.d("[PayDemoActivity] approval_key=[" + strApprovalKey + "]");
+                    // ExLog.d("[PayDemoActivity] approval_key=[" + strApprovalKey + "]");
 
                     mWebView.loadUrl("https://smpay.kcp.co.kr/app.do?ActionResult=app&approval_key=" + strApprovalKey);
 
@@ -521,7 +471,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         }
 
         Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
         setResult(resultCode, intent);
         finish();
@@ -568,7 +518,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         {
             super.onProgressChanged(view, newProgress);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            if (Util.isOverAPI14() == true)
             {
                 if (newProgress != 100)
                 {
@@ -616,21 +566,21 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                     return false;
                 } else if (url.startsWith("tel:"))
                 {
-                    String noCallMessage = HotelPaymentWebActivity.this.getResources().getString(R.string.toast_msg_no_call_web);
+                    String noCallMessage = getResources().getString(R.string.toast_msg_no_call_web);
 
-                    if (Util.isTelephonyEnabled(HotelPaymentWebActivity.this) == true)
+                    if (Util.isTelephonyEnabled(PlacePaymentWebActivity.this) == true)
                     {
                         try
                         {
                             startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
                         } catch (ActivityNotFoundException e)
                         {
-                            DailyToast.showToast(HotelPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                            DailyToast.showToast(PlacePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
                             return false;
                         }
                     } else
                     {
-                        DailyToast.showToast(HotelPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        DailyToast.showToast(PlacePaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
                         return false;
                     }
                 } else
@@ -649,14 +599,14 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         {
             super.onReceivedError(view, errorCode, description, failingUrl);
 
-            //			ExLog.e("ErrorCode / Description / failingUrl : " + errorCode + " / " + description + " / " + failingUrl);
+            // ExLog.e("ErrorCode / Description / failingUrl : " + errorCode + " / " + description + " / " + failingUrl);
 
             mWebView.loadUrl("about:blank");
 
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
-            if (Util.isAvailableNetwork(HotelPaymentWebActivity.this) == true)
+            if (Util.isAvailableNetwork(PlacePaymentWebActivity.this) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
             } else
@@ -677,7 +627,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             // 불안정뜨므로, 네트워크 체크는
             // 제거하도록 함.
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            if (Util.isOverAPI14() == true)
             {
                 setSupportProgressBarIndeterminateVisibility(true);
             }
@@ -690,7 +640,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
             unLockUI();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            if (Util.isOverAPI14() == true)
             {
                 setSupportProgressBarIndeterminateVisibility(false);
             }
@@ -715,7 +665,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         public void Result(final String val)
         {
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
             setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
             finish();
@@ -728,7 +678,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         public void BestClose()
         {
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
             setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
             finish();
@@ -768,7 +718,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             {
                 public void run()
                 {
-                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
+                    PackageState ps = new PackageState(PlacePaymentWebActivity.this);
 
                     if (!ps.getPackageAllInstallState("com.skp.android.paypin"))
                     {
@@ -789,7 +739,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 return;
             }
 
-            View.OnClickListener posListener = new View.OnClickListener()
+            View.OnClickListener positiveListener = new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -801,16 +751,19 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 }
             };
 
-            View.OnClickListener negaListener = new View.OnClickListener()
+            View.OnClickListener negativeListener = new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
-                    DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(PlacePaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
                 }
             };
 
-            showSimpleDialog(getString(R.string.dialog_btn_text_confirm), getString(R.string.dialog_msg_install_paypin), getString(R.string.dialog_btn_text_install), getString(R.string.dialog_btn_text_cancel), posListener, negaListener);
+            showSimpleDialog(getString(R.string.dialog_btn_text_confirm), //
+                getString(R.string.dialog_msg_install_paypin), //
+                getString(R.string.dialog_btn_text_install), //
+                getString(R.string.dialog_btn_text_cancel), positiveListener, negativeListener);
         }
     }
 
@@ -828,10 +781,10 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             {
                 public void run()
                 {
-                    CARD_CD = card_cd;
-                    QUOTA = quota;
+                    mCardCD = card_cd;
+                    mQuota = quota;
 
-                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
+                    PackageState ps = new PackageState(PlacePaymentWebActivity.this);
 
                     if (!ps.getPackageDownloadInstallState("com.skt.at"))
                     {
@@ -856,7 +809,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
                 {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cert.hanaskcard.com/Ansim/HanaSKPay.apk"));
 
-                    m_nStat = PROGRESS_STAT_IN;
+                    mProgressState = PROGRESS_STATE_IN;
 
                     startActivity(intent);
                 }
@@ -879,7 +832,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             {
                 public void run()
                 {
-                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
+                    PackageState ps = new PackageState(PlacePaymentWebActivity.this);
 
                     String argUrl = arg;
 
@@ -892,96 +845,53 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUrl));
 
-                    m_nStat = PROGRESS_STAT_IN;
+                    mProgressState = PROGRESS_STATE_IN;
 
                     try
                     {
                         startActivity(intent);
                     } catch (Exception e)
                     {
-                        Util.installPackage(HotelPaymentWebActivity.this, "kvp.jjy.MispAndroid320");
+                        Util.installPackage(PlacePaymentWebActivity.this, "kvp.jjy.MispAndroid320");
                     }
                 }
             });
         }
     }
 
-    private class JavaScriptExtention
+    private class JavaScriptExtension
     {
-        JavaScriptExtention()
+        JavaScriptExtension()
         {
+
         }
 
-        // 서버로부터 받은 결제 결과 메시지를 처리함.
-        // 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
+        /**
+         * 서버로부터 받은 결제 결과 메시지를 처리함.
+         * 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
+         */
         @JavascriptInterface
         public void feed(final String msg)
         {
-            int resultCode;
-
-            if (msg == null)
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-            } else if (msg.equals("SUCCESS"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
-            } else if (msg.equals("INVALID_SESSION"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
-            } else if (msg.equals("SOLD_OUT"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
-            } else if (msg.equals("PAYMENT_COMPLETE"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
-            } else if (msg.equals("INVALID_DATE"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
-            } else if (msg.equals("PAYMENT_CANCELED"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
-            } else if (msg.equals("ACCOUNT_READY"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
-            } else if (msg.equals("ACCOUNT_TIME_ERROR"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
-            } else if (msg.equals("ACCOUNT_DUPLICATE"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
-            } else if (msg.equals("NOT_AVAILABLE"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
-            } else if (msg.equals("PAYMENT_TIMEOVER"))
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER;
-            } else
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-            }
-
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
-
-            setResult(resultCode, intent);
-            finish();
+            onFeed(msg);
         }
 
-        // 서버로부터 받은 결제 결과 메시지를 처리함.
-        // 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
+        /**
+         * 서버로부터 받은 결제 결과 메시지를 처리함.
+         * 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
+         */
         @JavascriptInterface
         public void paymentFeed(String result)
         {
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
-
-            setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
-            finish();
+            onPaymentFeed(result);
         }
     }
 
-    class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
+    public abstract void onFeed(String msg);
+
+    public abstract void onPaymentFeed(String result);
+
+    protected class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
     {
         private WebView mWebView;
         private FormBody.Builder mBuilder;
@@ -1031,7 +941,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         protected void onPostExecute(String data)
         {
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
             if (Util.isTextEmpty(data) == true)
             {

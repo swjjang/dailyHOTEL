@@ -508,7 +508,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
     {
-        Intent intent = new Intent(this, HotelPaymentWebActivity.class);
+        Intent intent = new Intent(this, StayPaymentWebActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);

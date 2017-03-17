@@ -1,16 +1,16 @@
-package com.twoheart.dailyhotel.screen.gourmet.payment;
+package com.twoheart.dailyhotel.screen.hotel.payment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
 
 import com.twoheart.dailyhotel.model.Customer;
-import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.StayPaymentInformation;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
-import com.twoheart.dailyhotel.network.model.GourmetProduct;
+import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -18,20 +18,30 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import okhttp3.FormBody;
 
-public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
+/**
+ * Created by android_sam on 2017. 3. 17..
+ */
+
+public class StayPaymentWebActivity extends PlacePaymentWebActivity
 {
+    private SaleTime mSaleTime;
+    private int mNights;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        requestPostPaymentWebView(mWebView, mPlacePaymentInformation, null, 0);
+        requestPostPaymentWebView(mWebView, mPlacePaymentInformation, mSaleTime, mNights);
     }
 
     @Override
     public void initIntentData(Intent intent)
     {
         super.initIntentData(intent);
+
+        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mNights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
     }
 
     @Override
@@ -42,13 +52,13 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
             return false;
         }
 
-        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPlacePaymentInformation;
-        if (gourmetPaymentInformation == null)
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPlacePaymentInformation;
+        if (stayPaymentInformation == null)
         {
             return false;
         }
 
-        return gourmetPaymentInformation.getTicket() != null;
+        return stayPaymentInformation.getSaleRoomInformation() != null;
     }
 
     @Override
@@ -59,25 +69,32 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
             return 0;
         }
 
-        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPlacePaymentInformation;
-        if (gourmetPaymentInformation == null || gourmetPaymentInformation.getTicket() == null)
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPlacePaymentInformation;
+        if (stayPaymentInformation == null || stayPaymentInformation.getSaleRoomInformation() == null)
         {
             return 0;
         }
 
-        return gourmetPaymentInformation.getTicket().saleIdx;
+        return stayPaymentInformation.getSaleRoomInformation().roomIndex;
     }
 
     @Override
-    protected void requestPostPaymentWebView(WebView webView, PlacePaymentInformation placePaymentInformation, SaleTime saleTime, int nights)
+    protected String getScreenName()
+    {
+        return AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS;
+    }
+
+    @Override
+    protected void requestPostPaymentWebView(WebView webView //
+        , PlacePaymentInformation placePaymentInformation, SaleTime saleTime, int nights)
     {
         if (placePaymentInformation == null)
         {
             return;
         }
 
-        GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) placePaymentInformation;
-        if (gourmetPaymentInformation == null)
+        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) placePaymentInformation;
+        if (stayPaymentInformation == null)
         {
             return;
         }
@@ -86,20 +103,29 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
         String phone;
         String email;
 
-        Guest guest = gourmetPaymentInformation.getGuest();
+        boolean isOverseas = stayPaymentInformation.isOverSeas;
+        Guest guest = stayPaymentInformation.getGuest();
 
-        if (guest == null)
-        {
-            Customer customer = gourmetPaymentInformation.getCustomer();
-
-            name = customer.getName();
-            phone = customer.getPhone();
-            email = customer.getEmail();
-        } else
+        if (isOverseas == true)
         {
             name = guest.name;
             phone = guest.phone;
             email = guest.email;
+        } else
+        {
+            if (guest == null)
+            {
+                Customer customer = stayPaymentInformation.getCustomer();
+
+                name = customer.getName();
+                phone = customer.getPhone();
+                email = customer.getEmail();
+            } else
+            {
+                name = guest.name;
+                phone = guest.phone;
+                email = guest.email;
+            }
         }
 
         if (Util.isTextEmpty(name, phone, email) == true)
@@ -108,38 +134,43 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
             return;
         }
 
-        GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
+        StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
         FormBody.Builder builder = new FormBody.Builder();
-        builder.add("sale_reco_idx", String.valueOf(gourmetProduct.saleIdx));
-        builder.add("payment_type", gourmetPaymentInformation.paymentType.name());
-        builder.add("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
-        builder.add("customer_name", name);
-        builder.add("customer_phone", phone.replace("-", ""));
-        builder.add("customer_email", email);
-        builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
+        builder.add("payment_type", stayPaymentInformation.paymentType.name());
+        builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        builder.add("nights", Integer.toString(nights));
 
-        switch (gourmetPaymentInformation.discountType)
+        switch (stayPaymentInformation.discountType)
         {
             case BONUS:
+                builder.add("bonus", Integer.toString(stayPaymentInformation.bonus));
                 break;
 
             case COUPON:
-                builder.add("user_coupon_code", gourmetPaymentInformation.getCoupon().userCouponCode);
+                builder.add("user_coupon_code", stayPaymentInformation.getCoupon().userCouponCode);
                 break;
         }
 
+        builder.add("guest_name", name);
+        builder.add("guest_phone", phone.replace("-", ""));
+        builder.add("guest_email", email);
+
+        // 주차/도보
+        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            builder.add("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+        {
+            builder.add("arrival_transportation", "NO_PARKING");
+        }
+
         String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
-            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
+            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
 
         WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
         webViewPostAsyncTask.execute(url);
-    }
-
-    @Override
-    protected String getScreenName()
-    {
-        return AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS;
     }
 
     @Override
@@ -147,33 +178,50 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
     {
         int resultCode;
 
-        Intent intent = new Intent();
-
         if (msg == null)
         {
             resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+        } else if (msg.equals("SUCCESS"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+        } else if (msg.equals("INVALID_SESSION"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
+        } else if (msg.equals("SOLD_OUT"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
+        } else if (msg.equals("PAYMENT_COMPLETE"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
+        } else if (msg.equals("INVALID_DATE"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
+        } else if (msg.equals("PAYMENT_CANCELED"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
+        } else if (msg.equals("ACCOUNT_READY"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
+        } else if (msg.equals("ACCOUNT_TIME_ERROR"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
+        } else if (msg.equals("ACCOUNT_DUPLICATE"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
+        } else if (msg.equals("NOT_AVAILABLE"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+        } else if (msg.equals("PAYMENT_TIMEOVER"))
+        {
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER;
         } else
         {
-            String[] result = msg.split("\\^");
-
-            if (result.length >= 2)
-            {
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, result[1]);
-            }
-
-            if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
-            } else if ("FAIL".equalsIgnoreCase(result[0]) == true)
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCEL;
-            } else
-            {
-                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-            }
+            resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
         }
 
+        Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
+
         setResult(resultCode, intent);
         finish();
     }
@@ -181,15 +229,19 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
     @Override
     public void onPaymentFeed(String result)
     {
-        // do nothing!
+        Intent intent = new Intent();
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
+
+        setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
+        finish();
     }
 }
 
-// Old Version
+// Old Version HotelPaymentWebActivity
 //@SuppressLint("NewApi")
-//public class GourmetPaymentWebActivity extends BaseActivity implements Constants
+//public class HotelPaymentWebActivity extends BaseActivity implements Constants
 //{
-//
 //    public static final int PROGRESS_STAT_NOT_START = 1;
 //    public static final int PROGRESS_STAT_IN = 2;
 //    public static final int PROGRESS_DONE = 3;
@@ -197,7 +249,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //    static String QUOTA = "";
 //    public int m_nStat = PROGRESS_STAT_NOT_START;
 //
-//    GourmetPaymentInformation mGourmetPaymentInformation;
+//    StayPaymentInformation mStayPaymentInformation;
 //
 //    WebView mWebView;
 //    Handler handler = new Handler();
@@ -217,16 +269,18 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            return;
 //        }
 //
-//        mGourmetPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+//        mStayPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
+//        SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+//        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 //
-//        if (mGourmetPaymentInformation == null || mGourmetPaymentInformation.getTicket() == null)
+//        if (mStayPaymentInformation == null)
 //        {
-//            DailyToast.showToast(GourmetPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
+//            DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
 //            finish();
 //            return;
 //        }
 //
-//        if (mGourmetPaymentInformation.getTicket().saleIdx == 0)
+//        if (mStayPaymentInformation.getSaleRoomInformation().roomIndex == 0)
 //        {
 //            // 세션이 만료되어 재시작 요청.
 //            restartExpiredSession();
@@ -247,7 +301,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        setContentView(mWebView, layoutParams);
 //
 //        // TODO  setWebContentsDebuggingEnabled
-//        //		WebView.setWebContentsDebuggingEnabled(true);
+//        //        WebView.setWebContentsDebuggingEnabled(true);
 //
 //        mWebView.getSettings().setSavePassword(false);
 //        mWebView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
@@ -270,7 +324,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        mWebView.addJavascriptInterface(new KCPPayPinReturn(), "KCPPayPinRet"); // 페이핀
 //        // 기능
 //        // 추가
-//        mWebView.addJavascriptInterface(new JavaScriptExtension(), "android");
+//        mWebView.addJavascriptInterface(new JavaScriptExtention(), "android");
 //
 //        mWebView.addJavascriptInterface(new TeleditBridge(), "TeleditApp");
 //
@@ -288,29 +342,39 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            }
 //        }); // 롱클릭 에러 방지.
 //
-//        requestPostPaymentWebView(mWebView, mGourmetPaymentInformation);
+//        requestPostPaymentWebView(mWebView, mStayPaymentInformation, saleTime, nights);
 //    }
 //
-//    private void requestPostPaymentWebView(WebView webView, GourmetPaymentInformation gourmetPaymentInformation)
+//    private void requestPostPaymentWebView(WebView webView //
+//        , StayPaymentInformation stayPaymentInformation, SaleTime saleTime, int nights)
 //    {
 //        String name;
 //        String phone;
 //        String email;
 //
-//        Guest guest = gourmetPaymentInformation.getGuest();
+//        boolean isOverseas = stayPaymentInformation.isOverSeas;
+//        Guest guest = stayPaymentInformation.getGuest();
 //
-//        if (guest == null)
-//        {
-//            Customer customer = gourmetPaymentInformation.getCustomer();
-//
-//            name = customer.getName();
-//            phone = customer.getPhone();
-//            email = customer.getEmail();
-//        } else
+//        if (isOverseas == true)
 //        {
 //            name = guest.name;
 //            phone = guest.phone;
 //            email = guest.email;
+//        } else
+//        {
+//            if (guest == null)
+//            {
+//                Customer customer = stayPaymentInformation.getCustomer();
+//
+//                name = customer.getName();
+//                phone = customer.getPhone();
+//                email = customer.getEmail();
+//            } else
+//            {
+//                name = guest.name;
+//                phone = guest.phone;
+//                email = guest.email;
+//            }
 //        }
 //
 //        if (Util.isTextEmpty(name, phone, email) == true)
@@ -319,29 +383,40 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            return;
 //        }
 //
-//        GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
+//        StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 //
 //        FormBody.Builder builder = new FormBody.Builder();
-//        builder.add("sale_reco_idx", String.valueOf(gourmetProduct.saleIdx));
-//        builder.add("payment_type", gourmetPaymentInformation.paymentType.name());
-//        builder.add("ticket_count", String.valueOf(gourmetPaymentInformation.ticketCount));
-//        builder.add("customer_name", name);
-//        builder.add("customer_phone", phone.replace("-", ""));
-//        builder.add("customer_email", email);
-//        builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+//        builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
+//        builder.add("payment_type", stayPaymentInformation.paymentType.name());
+//        builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+//        builder.add("nights", Integer.toString(nights));
 //
-//        switch (gourmetPaymentInformation.discountType)
+//        switch (stayPaymentInformation.discountType)
 //        {
 //            case BONUS:
+//                builder.add("bonus", Integer.toString(stayPaymentInformation.bonus));
 //                break;
 //
 //            case COUPON:
-//                builder.add("user_coupon_code", gourmetPaymentInformation.getCoupon().userCouponCode);
+//                builder.add("user_coupon_code", stayPaymentInformation.getCoupon().userCouponCode);
 //                break;
 //        }
 //
+//        builder.add("guest_name", name);
+//        builder.add("guest_phone", phone.replace("-", ""));
+//        builder.add("guest_email", email);
+//
+//        // 주차/도보
+//        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+//        {
+//            builder.add("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+//        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+//        {
+//            builder.add("arrival_transportation", "NO_PARKING");
+//        }
+//
 //        String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
-//            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_FNB_PAYMENT_SESSION_COMMON);
+//            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
 //
 //        WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
 //        webViewPostAsyncTask.execute(url);
@@ -350,7 +425,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //    @Override
 //    protected void onStart()
 //    {
-//        AnalyticsManager.getInstance(GourmetPaymentWebActivity.this).recordScreen(this, Screen.DAILYGOURMET_PAYMENT_PROCESS, null);
+//        AnalyticsManager.getInstance(this).recordScreen(this, Screen.DAILYHOTEL_PAYMENT_PROCESS, null);
 //
 //        super.onStart();
 //    }
@@ -372,7 +447,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                    return false;
 //                } catch (ActivityNotFoundException e)
 //                {
-//                    Util.installPackage(GourmetPaymentWebActivity.this, "com.lotte.lottesmartpay");
+//                    Util.installPackage(HotelPaymentWebActivity.this, "com.lotte.lottesmartpay");
 //                    return false;
 //                }
 //            }
@@ -387,7 +462,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                    return false;
 //                } catch (ActivityNotFoundException e)
 //                {
-//                    Util.installPackage(GourmetPaymentWebActivity.this, "com.ahnlab.v3mobileplus");
+//                    Util.installPackage(HotelPaymentWebActivity.this, "com.ahnlab.v3mobileplus");
 //                    return false;
 //                }
 //            } else
@@ -405,7 +480,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                // 앱설치 체크를 합니다.
 //                if (getPackageManager().resolveActivity(intent, 0) == null)
 //                {
-//                    Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
+//                    Util.installPackage(HotelPaymentWebActivity.this, intent.getPackage());
 //                    return true;
 //                }
 //
@@ -416,7 +491,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                    startActivity(intent);
 //                } catch (ActivityNotFoundException e)
 //                {
-//                    Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
+//                    Util.installPackage(HotelPaymentWebActivity.this, intent.getPackage());
 //                    return true;
 //                }
 //            }
@@ -428,25 +503,48 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            { // 7.4 ISP 모듈 연동 테스트
 //                if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_ISP))
 //                {
-//                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
-//                    view.goBack();
-//                    return true;
+//                    try
+//                    {
+//                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
+//                        view.goBack();
+//                        return true;
+//                    } catch (ActivityNotFoundException e)
+//                    {
+//                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_ISP);
+//                        return true;
+//                    }
 //                }
 //            } else if (url.startsWith("kftc-bankpay"))
 //            { // 7.9 이니시스 모듈 연동 테스트
 //                if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_KFTC))
 //                {
-//                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
-//                    view.goBack();
-//                    return true;
+//                    try
+//                    {
+//                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
+//                        view.goBack();
+//                        return true;
+//                    } catch (ActivityNotFoundException e)
+//                    {
+//                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_KFTC);
+//                        return true;
+//                    }
 //                }
 //            } else if (url.startsWith("mpocket.online.ansimclick"))
 //            {
 //                if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_MPOCKET))
 //                {
-//                    DailyToast.showToast(GourmetPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
-//                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
-//                    return true;
+//                    try
+//                    {
+//                        DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
+//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_MPOCKET)));
+//                        return true;
+//                    } catch (ActivityNotFoundException e)
+//                    {
+//                        Util.installPackage(HotelPaymentWebActivity.this, PACKAGE_NAME_MPOCKET);
+//                        return true;
+//                    }
 //                }
 //            } else if (url.startsWith("market") == true)
 //            {
@@ -618,7 +716,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        }
 //
 //        Intent intent = new Intent();
-//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+//        intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 //
 //        setResult(resultCode, intent);
 //        finish();
@@ -713,21 +811,21 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                    return false;
 //                } else if (url.startsWith("tel:"))
 //                {
-//                    String noCallMessage = GourmetPaymentWebActivity.this.getResources().getString(R.string.toast_msg_no_call_web);
+//                    String noCallMessage = HotelPaymentWebActivity.this.getResources().getString(R.string.toast_msg_no_call_web);
 //
-//                    if (Util.isTelephonyEnabled(GourmetPaymentWebActivity.this) == true)
+//                    if (Util.isTelephonyEnabled(HotelPaymentWebActivity.this) == true)
 //                    {
 //                        try
 //                        {
 //                            startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
 //                        } catch (ActivityNotFoundException e)
 //                        {
-//                            DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+//                            DailyToast.showToast(HotelPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
 //                            return false;
 //                        }
 //                    } else
 //                    {
-//                        DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+//                        DailyToast.showToast(HotelPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
 //                        return false;
 //                    }
 //                } else
@@ -746,12 +844,14 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        {
 //            super.onReceivedError(view, errorCode, description, failingUrl);
 //
+//            //			ExLog.e("ErrorCode / Description / failingUrl : " + errorCode + " / " + description + " / " + failingUrl);
+//
 //            mWebView.loadUrl("about:blank");
 //
 //            Intent intent = new Intent();
-//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 //
-//            if (Util.isAvailableNetwork(GourmetPaymentWebActivity.this) == true)
+//            if (Util.isAvailableNetwork(HotelPaymentWebActivity.this) == true)
 //            {
 //                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
 //            } else
@@ -810,7 +910,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        public void Result(final String val)
 //        {
 //            Intent intent = new Intent();
-//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 //
 //            setResult(CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE, intent);
 //            finish();
@@ -823,7 +923,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        public void BestClose()
 //        {
 //            Intent intent = new Intent();
-//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 //
 //            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CANCELED, intent);
 //            finish();
@@ -863,7 +963,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            {
 //                public void run()
 //                {
-//                    PackageState ps = new PackageState(GourmetPaymentWebActivity.this);
+//                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
 //
 //                    if (!ps.getPackageAllInstallState("com.skp.android.paypin"))
 //                    {
@@ -901,7 +1001,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                @Override
 //                public void onClick(View view)
 //                {
-//                    DailyToast.showToast(GourmetPaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
+//                    DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_cancel_payment, Toast.LENGTH_SHORT);
 //                }
 //            };
 //
@@ -926,7 +1026,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                    CARD_CD = card_cd;
 //                    QUOTA = quota;
 //
-//                    PackageState ps = new PackageState(GourmetPaymentWebActivity.this);
+//                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
 //
 //                    if (!ps.getPackageDownloadInstallState("com.skt.at"))
 //                    {
@@ -974,7 +1074,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            {
 //                public void run()
 //                {
-//                    PackageState ps = new PackageState(GourmetPaymentWebActivity.this);
+//                    PackageState ps = new PackageState(HotelPaymentWebActivity.this);
 //
 //                    String argUrl = arg;
 //
@@ -994,16 +1094,16 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //                        startActivity(intent);
 //                    } catch (Exception e)
 //                    {
-//                        Util.installPackage(GourmetPaymentWebActivity.this, "kvp.jjy.MispAndroid320");
+//                        Util.installPackage(HotelPaymentWebActivity.this, "kvp.jjy.MispAndroid320");
 //                    }
 //                }
 //            });
 //        }
 //    }
 //
-//    private class JavaScriptExtension
+//    private class JavaScriptExtention
 //    {
-//        JavaScriptExtension()
+//        JavaScriptExtention()
 //        {
 //        }
 //
@@ -1014,34 +1114,64 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        {
 //            int resultCode;
 //
-//            Intent intent = new Intent();
-//
 //            if (msg == null)
 //            {
 //                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
+//            } else if (msg.equals("SUCCESS"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
+//            } else if (msg.equals("INVALID_SESSION"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION;
+//            } else if (msg.equals("SOLD_OUT"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT;
+//            } else if (msg.equals("PAYMENT_COMPLETE"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE;
+//            } else if (msg.equals("INVALID_DATE"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_INVALID_DATE;
+//            } else if (msg.equals("PAYMENT_CANCELED"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCELED;
+//            } else if (msg.equals("ACCOUNT_READY"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY;
+//            } else if (msg.equals("ACCOUNT_TIME_ERROR"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_TIME_ERROR;
+//            } else if (msg.equals("ACCOUNT_DUPLICATE"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_DUPLICATE;
+//            } else if (msg.equals("NOT_AVAILABLE"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_NOT_AVAILABLE;
+//            } else if (msg.equals("PAYMENT_TIMEOVER"))
+//            {
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER;
 //            } else
 //            {
-//                String[] result = msg.split("\\^");
-//
-//                if (result.length >= 2)
-//                {
-//                    intent.putExtra(NAME_INTENT_EXTRA_DATA_RESULT, result[1]);
-//                }
-//
-//                if ("SUCCESS".equalsIgnoreCase(result[0]) == true)
-//                {
-//                    resultCode = CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS;
-//                } else if ("FAIL".equalsIgnoreCase(result[0]) == true)
-//                {
-//                    resultCode = CODE_RESULT_ACTIVITY_PAYMENT_CANCEL;
-//                } else
-//                {
-//                    resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
-//                }
+//                resultCode = CODE_RESULT_ACTIVITY_PAYMENT_FAIL;
 //            }
 //
-//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+//            Intent intent = new Intent();
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
+//
 //            setResult(resultCode, intent);
+//            finish();
+//        }
+//
+//        // 서버로부터 받은 결제 결과 메시지를 처리함.
+//        // 각각의 경우에 맞는 resultCode를 넣어 BookingActivity로 finish시킴.
+//        @JavascriptInterface
+//        public void paymentFeed(String result)
+//        {
+//            Intent intent = new Intent();
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, result);
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
+//
+//            setResult(CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
 //            finish();
 //        }
 //    }
@@ -1096,7 +1226,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //        protected void onPostExecute(String data)
 //        {
 //            Intent intent = new Intent();
-//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
+//            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 //
 //            if (Util.isTextEmpty(data) == true)
 //            {
@@ -1120,4 +1250,4 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            }
 //        }
 //    }
-// }
+//}

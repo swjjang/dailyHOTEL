@@ -595,7 +595,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/TransDialog"/>
         <activity
-            android:name=".screen.hotel.payment.HotelPaymentWebActivity"
+            android:name=".screen.hotel.payment.StayPaymentWebActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
