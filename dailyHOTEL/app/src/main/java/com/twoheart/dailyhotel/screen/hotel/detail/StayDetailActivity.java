@@ -767,7 +767,11 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL, ((StayDetail) mPlaceDetail).getStayDetailParams().index, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        StayDetailParams stayDetailParams = ((StayDetail) mPlaceDetail).getStayDetailParams();
+
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
+            , stayDetailParams.index, 0, stayDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
         //        try
         //        {

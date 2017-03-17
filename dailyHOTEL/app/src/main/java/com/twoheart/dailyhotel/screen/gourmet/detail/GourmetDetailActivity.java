@@ -748,7 +748,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().index, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL
+            , gourmetDetailParams.index, 0, gourmetDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
         //        try
         //        {

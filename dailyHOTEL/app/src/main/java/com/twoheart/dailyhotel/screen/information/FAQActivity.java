@@ -182,7 +182,8 @@ public class FAQActivity extends WebViewActivity
 
     void startKakao()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_FAQ, 0, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_FAQ, 0, 0, null), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
         //        try
         //        {

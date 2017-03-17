@@ -474,11 +474,15 @@ public class PaymentWaitActivity extends BaseActivity
         switch (mBooking.placeType)
         {
             case HOTEL:
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                    , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAMENT_WAIT, 0//
+                    , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
                 break;
 
             case FNB:
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAMENT_WAIT, 0, mBooking.reservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                    , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAMENT_WAIT, 0//
+                    , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
                 break;
         }
 

@@ -20,7 +20,7 @@ public class HappyTalkCategoryDialogNetworkController extends BaseNetworkControl
     {
         void onHappyTalkCategory(String happyTalkCategory);
 
-        void onUserProfile(String userIndex);
+        void onUserProfile(String userIndex, String name, String phone, String email);
     }
 
     public HappyTalkCategoryDialogNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -97,7 +97,11 @@ public class HappyTalkCategoryDialogNetworkController extends BaseNetworkControl
                         JSONObject jsonObject = responseJSONObject.getJSONObject("data");
 
                         String userIndex = jsonObject.getString("userIdx");
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex);
+                        String name = jsonObject.getString("name");
+                        String phone = jsonObject.getString("phone");
+                        String email = jsonObject.getString("email");
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex, name, phone, email);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

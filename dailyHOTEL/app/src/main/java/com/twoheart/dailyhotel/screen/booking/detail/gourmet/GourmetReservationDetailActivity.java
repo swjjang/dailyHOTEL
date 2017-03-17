@@ -467,7 +467,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING, mPlaceBookingDetail.placeIndex, mReservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING//
+            , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
         //        try
         //        {
