@@ -45,20 +45,48 @@ public abstract class PlaceReviewLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setHeaderLayout(List<PlaceReviewProgress> placeReviewProgressList)
+    public void setReviewList(List<PlaceReviewProgress> placeReviewProgressList, List<PlaceReview> placeReviewList)
     {
-        if(placeReviewProgressList == null || placeReviewProgressList.size() == 0)
+        if (placeReviewProgressList == null || placeReviewProgressList.size() == 0 || placeReviewList == null || placeReviewList.size() == 0)
         {
             return;
         }
 
+        if (mReviewListAdapter == null)
+        {
+            mReviewListAdapter = new ReviewListAdapter(mContext);
+            mRecyclerView.setAdapter(mReviewListAdapter);
+        }
 
+        List<PlaceReviewItem> placeReviewItemList = new ArrayList<>();
 
+        placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_HEADER_VIEW, placeReviewProgressList));
+
+        for(PlaceReview placeReview : placeReviewList)
+        {
+            placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_ENTRY, placeReview));
+        }
+
+        mReviewListAdapter.setAll(placeReviewItemList);
+        mReviewListAdapter.notifyDataSetChanged();
     }
 
-    public void setReviewList()
+    public void addReviewList(List<PlaceReview> placeReviewList)
     {
+        if (mReviewListAdapter == null || placeReviewList == null || placeReviewList.size() == 0)
+        {
+            return;
+        }
 
+        List<PlaceReviewItem> placeReviewItemList = new ArrayList<>();
+
+        for(PlaceReview placeReview : placeReviewList)
+        {
+            placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_ENTRY, placeReview));
+        }
+
+        mReviewListAdapter.addAll(placeReviewItemList);
+        mReviewListAdapter.notifyDataSetChanged();
     }
 
     class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
@@ -83,6 +111,27 @@ public abstract class PlaceReviewLayout extends BaseLayout
             }
 
             return mPlaceReviewItemList.get(position);
+        }
+
+        public void setAll(List<PlaceReviewItem> placeReviewItemList)
+        {
+            clear();
+            addAll(placeReviewItemList);
+        }
+
+        public void addAll(List<PlaceReviewItem> placeReviewItemList)
+        {
+            if (placeReviewItemList == null || placeReviewItemList.size() == 0)
+            {
+                return;
+            }
+
+            mPlaceReviewItemList.addAll(placeReviewItemList);
+        }
+
+        public void clear()
+        {
+            mPlaceReviewItemList.clear();
         }
 
         @Override
@@ -161,7 +210,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
         {
             PlaceReview placeReview = placeViewItem.getItem();
 
-            
+
         }
 
         private void onBindViewHolder(ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
