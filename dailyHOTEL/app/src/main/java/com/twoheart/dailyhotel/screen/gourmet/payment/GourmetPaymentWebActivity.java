@@ -266,7 +266,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 if (getPackageManager().resolveActivity(intent, 0) == null)
                 {
                     Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
-                    return false;
+                    return true;
                 }
 
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()));
@@ -277,7 +277,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 } catch (ActivityNotFoundException e)
                 {
                     Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
-                    return false;
+                    return true;
                 }
             }
         }
