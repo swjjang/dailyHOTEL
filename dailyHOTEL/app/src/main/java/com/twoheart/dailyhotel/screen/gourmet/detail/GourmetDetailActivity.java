@@ -64,6 +64,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     int mSelectedTicketIndex;
     private boolean mFirstCheckPrice;
     private boolean mRefreshCheckPrice;
+    private boolean mIsListSoldOut; // 리스테어서 솔드아웃인지 체크한다.
 
     /**
      * 리스트에서 호출
@@ -86,6 +87,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
@@ -190,6 +192,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, gourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
@@ -268,6 +272,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, recommendationGourmet.imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, recommendationGourmet.isSoldOut);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRICE, recommendationGourmet.price);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
@@ -392,6 +398,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
             mArea = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AREA);
             mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
+            mIsListSoldOut = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, false);
 
             boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
 
@@ -924,11 +931,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         if (mFirstCheckPrice == false)
         {
             mFirstCheckPrice = true;
-            checkGourmetTicket(mIsDeepLink, gourmetDetail, mViewPrice);
+            checkGourmetTicket(mIsDeepLink, gourmetDetail, mViewPrice, mIsListSoldOut);
         } else if (mRefreshCheckPrice == true)
         {
             mRefreshCheckPrice = false;
-            checkGourmetTicket(mIsDeepLink, gourmetDetail, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
+            checkGourmetTicket(mIsDeepLink, gourmetDetail, SKIP_CHECK_DISCOUNT_PRICE_VALUE, mIsListSoldOut);
         }
 
         // 딥링크로 메뉴 오픈 요청
@@ -946,7 +953,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }
 
-    private void checkGourmetTicket(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice)
+    private void checkGourmetTicket(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice, final boolean isListSoldOut)
     {
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
         List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
@@ -960,7 +967,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+                        if (isListSoldOut == false)
+                        {
+                            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+                        }
                     }
                 });
 
