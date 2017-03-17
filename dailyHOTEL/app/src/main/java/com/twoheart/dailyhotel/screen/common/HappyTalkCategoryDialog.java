@@ -193,7 +193,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
         urlStringBuilder.append("?yid=%40hailey099"); // 객사 옐로우 아이디
         urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
-        urlStringBuilder.append("&division_id=" + subId); // 중분류
+        urlStringBuilder.append("&division_id="); // 중분류
         urlStringBuilder.append("&title="); // 상담제목
 
         if (mBookingIndex > 0)
