@@ -1172,8 +1172,7 @@
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
 
     <!-- Happy Talk -->
-    <string name="label_select_main_category">대분류 항목 선택</string>
-    <string name="label_select_sub_category">중분류 항목 선택</string>
+    <string name="label_select_category">선택</string>
     <string name="label_consulting">상담 시작</string>
     <string name="message_happytalk_login">원활한 상담 진행을 위해\n앱 로그인을 해주세요.</string>
 

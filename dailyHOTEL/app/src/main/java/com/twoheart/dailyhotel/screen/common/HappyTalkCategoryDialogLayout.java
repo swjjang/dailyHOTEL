@@ -98,20 +98,17 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
         negativeTextView.setOnClickListener(this);
         positiveTextView.setOnClickListener(this);
 
-        mMainCategorySpinner.setHintLayout(R.layout.list_row_coupon_spinner);
-        mSubCategorySpinner.setHintLayout(R.layout.list_row_coupon_spinner);
+        mMainCategorySpinner.setHintLayout(R.layout.spinner_row_happytalk_hint);
+        mSubCategorySpinner.setHintLayout(R.layout.spinner_row_happytalk_hint);
 
-        mMainCategorySpinner.setPromptId(R.string.label_select_main_category);
-
-        mMainCategoryArrayAdapter = new CategoryArrayAdapter(mContext, R.layout.list_row_coupon_spinner, new ArrayList<>(mMainCategoryMap.values()));
-        mMainCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        mMainCategoryArrayAdapter = new CategoryArrayAdapter(mContext, R.layout.spinner_row_happytalk, new ArrayList<>(mMainCategoryMap.values()));
+        mMainCategoryArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
         mMainCategorySpinner.setAdapter(mMainCategoryArrayAdapter);
-        mMainCategorySpinner.setHintLayout(R.layout.list_row_coupon_spinner);
 
         ArrayList<String> subCategoryList = new ArrayList<>();
-        subCategoryList.add(0, mContext.getString(R.string.label_select_sub_category));
-        mSubCategoryArrayAdapter = new CategoryArrayAdapter(mContext, R.layout.list_row_coupon_spinner, subCategoryList);
-        mSubCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        subCategoryList.add(0, mContext.getString(R.string.label_select_category));
+        mSubCategoryArrayAdapter = new CategoryArrayAdapter(mContext, R.layout.spinner_row_happytalk, subCategoryList);
+        mSubCategoryArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
         mSubCategorySpinner.setAdapter(mSubCategoryArrayAdapter);
         mSubCategorySpinner.setEnabled(false);
 
@@ -134,7 +131,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
                 mSubCategoryArrayAdapter.clear();
                 mSubCategoryArrayAdapter.addAll(new ArrayList(pairList));
-                mSubCategoryArrayAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+                mSubCategoryArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
                 mSubCategorySpinner.setAdapter(mSubCategoryArrayAdapter);
                 mSubCategorySpinner.setEnabled(true);
 
