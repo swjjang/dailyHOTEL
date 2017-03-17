@@ -31,15 +31,15 @@ public class HappyTalkCategoryDialog extends BaseActivity
 {
     public enum CallScreen
     {
-        SCREEN_STAY_DETAIL("스테이상세화면"),
-        SCREEN_GOURMET_DETAIL("고메상세화면"),
-        SCREEN_STAY_PAMENT_WAIT("스테이계좌이체결제대기"),
-        SCREEN_GOURMET_PAMENT_WAIT("고메계좌이체결제대기"),
-        SCREEN_STAY_BOOKING("스테이예약화면"),
-        SCREEN_GOURMET_BOOKING("고메예약화면"),
-        SCREEN_FAQ("자주묻는질문화면"),
-        SCREEN_CONTACT_US("문의하기화면"),
-        SCREEN_STAY_REFUND("스테이예약환불문의");
+        SCREEN_STAY_DETAIL("호텔상세"),
+        SCREEN_GOURMET_DETAIL("고메상세"),
+        SCREEN_STAY_PAMENT_WAIT("예약내역>입금대기"),
+        SCREEN_GOURMET_PAMENT_WAIT("예약내역>입금대기"),
+        SCREEN_STAY_BOOKING("예약내역>문의"),
+        SCREEN_GOURMET_BOOKING("예약내역>문의"),
+        SCREEN_FAQ("더보기>자주묻는질문"),
+        SCREEN_CONTACT_US("더보기>문의하기"),
+        SCREEN_STAY_REFUND("예약내역>환불문의");
 
         private String mName;
 
