@@ -246,8 +246,11 @@ public class HappyTalkCategoryDialog extends BaseActivity
             final String STAY_PREFIX = "S_";
             final String GOURMET_PREFIX = "G_";
 
-            mainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, STAY_PREFIX));
-            mainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, GOURMET_PREFIX));
+            final String hotel = getString(R.string.label_hotel);
+            final String gourmet = getString(R.string.label_fnb);
+
+            mainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, hotel));
+            mainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, gourmet));
 
             List<Pair<String, String>> subStayCategoryList = new ArrayList<>();
             subCategoryMap.put(STAY_PREFIX, subStayCategoryList);
