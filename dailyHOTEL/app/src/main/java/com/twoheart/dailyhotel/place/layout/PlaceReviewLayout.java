@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PlaceReviewLayout extends BaseLayout
@@ -26,6 +27,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onTermsClick();
     }
 
     public PlaceReviewLayout(Context context, OnBaseEventListener listener)
@@ -43,8 +45,14 @@ public abstract class PlaceReviewLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setHeaderLayout()
+    public void setHeaderLayout(List<PlaceReviewProgress> placeReviewProgressList)
     {
+        if(placeReviewProgressList == null || placeReviewProgressList.size() == 0)
+        {
+            return;
+        }
+
+
 
     }
 
@@ -63,6 +71,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
         {
             mContext = context;
 
+            mPlaceReviewItemList = new ArrayList<>();
             mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
