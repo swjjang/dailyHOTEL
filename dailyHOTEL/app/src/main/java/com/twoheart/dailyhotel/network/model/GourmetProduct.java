@@ -102,11 +102,23 @@ public class GourmetProduct implements Parcelable
         if (Util.isTextEmpty(closeTime) == false)
         {
             closeTime = closeTime.substring(0, closeTime.length() - 3);
+
+            // 00:00 -> 24:00
+            if ("00:00".equalsIgnoreCase(closeTime) == true)
+            {
+                closeTime = "24:00";
+            }
         }
 
         if (Util.isTextEmpty(lastOrderTime) == false)
         {
             lastOrderTime = lastOrderTime.substring(0, lastOrderTime.length() - 3);
+
+            // 00:00 -> 24:00
+            if ("00:00".equalsIgnoreCase(lastOrderTime) == true)
+            {
+                lastOrderTime = "24:00";
+            }
         }
     }
 

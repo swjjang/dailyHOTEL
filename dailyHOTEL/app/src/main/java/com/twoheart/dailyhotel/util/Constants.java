@@ -191,6 +191,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN = "isUsedMultiTransition";
     String NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL = "gourmetDetail";
     String NAME_INTENT_EXTRA_DATA_CALL_SCREEN = "callScreen";
+    String NAME_INTENT_EXTRA_DATA_IS_SOLDOUT = "isSoldOut";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

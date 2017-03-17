@@ -266,7 +266,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 if (getPackageManager().resolveActivity(intent, 0) == null)
                 {
                     Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
-                    return false;
+                    return true;
                 }
 
                 intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent.getDataString()));
@@ -277,7 +277,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                 } catch (ActivityNotFoundException e)
                 {
                     Util.installPackage(GourmetPaymentWebActivity.this, intent.getPackage());
-                    return false;
+                    return true;
                 }
             }
         }
@@ -574,7 +574,23 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
                     return false;
                 } else if (url.startsWith("tel:"))
                 {
-                    return false;
+                    String noCallMessage = GourmetPaymentWebActivity.this.getResources().getString(R.string.toast_msg_no_call_web);
+
+                    if (Util.isTelephonyEnabled(GourmetPaymentWebActivity.this) == true)
+                    {
+                        try
+                        {
+                            startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
+                        } catch (ActivityNotFoundException e)
+                        {
+                            DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                            return false;
+                        }
+                    } else
+                    {
+                        DailyToast.showToast(GourmetPaymentWebActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        return false;
+                    }
                 } else
                 {
                     return url_scheme_intent(view, url);
