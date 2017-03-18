@@ -1,12 +1,15 @@
 package com.twoheart.dailyhotel.place.layout;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.StaticLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -15,7 +18,11 @@ import com.twoheart.dailyhotel.network.model.PlaceReview;
 import com.twoheart.dailyhotel.network.model.PlaceReviewProgress;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +47,25 @@ public abstract class PlaceReviewLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
+        initToolbar(view, mContext.getString(R.string.label_truereview));
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+    }
+
+    private void initToolbar(View view, String title)
+    {
+        View toolbar = view.findViewById(R.id.toolbar);
+        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
+        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnEventListener.finish();
+            }
+        }, false);
     }
 
     public void setReviewList(List<PlaceReviewProgress> placeReviewProgressList, List<PlaceReview> placeReviewList)
@@ -62,7 +85,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
         placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_HEADER_VIEW, placeReviewProgressList));
 
-        for(PlaceReview placeReview : placeReviewList)
+        for (PlaceReview placeReview : placeReviewList)
         {
             placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_ENTRY, placeReview));
         }
@@ -80,7 +103,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
         List<PlaceReviewItem> placeReviewItemList = new ArrayList<>();
 
-        for(PlaceReview placeReview : placeReviewList)
+        for (PlaceReview placeReview : placeReviewList)
         {
             placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_ENTRY, placeReview));
         }
@@ -208,22 +231,116 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
         private void onBindViewHolder(HeaderViewHolder headerViewHolder, int position, PlaceReviewItem placeViewItem)
         {
-            PlaceReview placeReview = placeViewItem.getItem();
+            List<PlaceReviewProgress> placeReviewProgressList = placeViewItem.getItem();
+
+            headerViewHolder.termsView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    ((OnEventListener)mOnEventListener).onTermsClick();
+                }
+            });
 
 
+            for (PlaceReviewProgress placeReviewProgress : placeReviewProgressList)
+            {
+                View view = LayoutInflater.from(mContext).inflate(R.layout.view_progress_layout, headerViewHolder.progressBarLayout, false);
+
+                TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+                ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+                TextView valueTextView = (TextView) view.findViewById(R.id.valueTextView);
+
+
+                titleTextView.setText(placeReviewProgress.name);
+                progressBar.setProgress(placeReviewProgress.value);
+                valueTextView.setText(Float.toString(((float) placeReviewProgress.value) / 10.0f));
+
+                headerViewHolder.progressBarLayout.addView(view);
+            }
+
+            headerViewHolder.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, getItemCount() - 1));
         }
 
-        private void onBindViewHolder(ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
+        private void onBindViewHolder(final ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
         {
-            PlaceReviewProgress placeReviewProgress = placeViewItem.getItem();
+            final int MAXLINE = 11;
+            PlaceReview placeReview = placeViewItem.getItem();
 
+            reviewViewHolder.emailTextView.setText(placeReview.email);
 
+            try
+            {
+                reviewViewHolder.dateTextView.setText(DailyCalendar.convertDateFormatString(placeReview.date, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            reviewViewHolder.reviewTextView.setText(placeReview.message);
+            reviewViewHolder.reviewTextView.setTag(placeReview.message);
+
+            Paint paint = reviewViewHolder.reviewTextView.getPaint();
+
+            int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
+            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.EXACTLY);
+            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+            reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
+
+            int lineCount = reviewViewHolder.reviewTextView.getLineCount();
+
+            if (lineCount > MAXLINE)
+            {
+                final String expandText = "...  더 읽어보기";
+
+                StaticLayout layout = (StaticLayout) reviewViewHolder.reviewTextView.getLayout();
+                int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAXLINE - 1);
+                int lineEndIndex = reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAXLINE - 1);
+
+                CharSequence text = reviewViewHolder.reviewTextView.getText().subSequence(lineStartIndex, lineEndIndex);
+
+                int length = text.length();
+                float moreReadWidth = paint.measureText(expandText);
+
+                int count = 0, readCount = 0;
+
+                for (int i = length - 1; i >= 0; i--)
+                {
+                    readCount = paint.breakText(text, i, length, false, moreReadWidth, null);
+
+                    if (readCount != count)
+                    {
+                        count = readCount;
+                    } else
+                    {
+                        break;
+                    }
+                }
+
+                reviewViewHolder.reviewTextView.setText(reviewViewHolder.reviewTextView.getText().subSequence(0, lineEndIndex - count) + "...");
+                reviewViewHolder.moreReadTextView.setVisibility(View.VISIBLE);
+                reviewViewHolder.moreReadTextView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        reviewViewHolder.reviewTextView.setText((String)reviewViewHolder.reviewTextView.getTag());
+                        reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
+                        reviewViewHolder.moreReadTextView.setOnClickListener(null);
+                    }
+                });
+            } else
+            {
+                reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
+                reviewViewHolder.moreReadTextView.setOnClickListener(null);
+            }
         }
 
         private class HeaderViewHolder extends RecyclerView.ViewHolder
         {
             View termsView;
             LinearLayout progressBarLayout;
+            TextView reviewCountTextView;
 
             public HeaderViewHolder(View view)
             {
@@ -231,24 +348,25 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
                 termsView = itemView.findViewById(R.id.termsView);
                 progressBarLayout = (LinearLayout) itemView.findViewById(R.id.progressBarLayout);
+                reviewCountTextView = (TextView) itemView.findViewById(R.id.reviewCountTextView);
             }
         }
 
         private class ReviewViewHolder extends RecyclerView.ViewHolder
         {
-            TextView reviewCountTextView;
             TextView emailTextView;
             TextView dateTextView;
             TextView reviewTextView;
+            TextView moreReadTextView;
 
             public ReviewViewHolder(View view)
             {
                 super(view);
 
-                reviewCountTextView = (TextView) view.findViewById(R.id.reviewCountTextView);
                 emailTextView = (TextView) view.findViewById(R.id.emailTextView);
                 dateTextView = (TextView) view.findViewById(R.id.dateTextView);
                 reviewTextView = (TextView) view.findViewById(R.id.reviewTextView);
+                moreReadTextView = (TextView) view.findViewById(R.id.moreReadTextView);
             }
         }
 

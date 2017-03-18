@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.common;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -12,6 +14,12 @@ import com.twoheart.dailyhotel.widget.DailyWebView;
 
 public class ReviewTermsActivity extends WebViewActivity
 {
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, ReviewTermsActivity.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

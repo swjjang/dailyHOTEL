@@ -1,57 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:paddingTop="20dp">
-
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/reviewCountTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="101개의 리뷰"
-        android:textColor="@color/default_text_c323232"
-        android:textSize="15dp"/>
+    android:paddingTop="19dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="22dp"
         android:orientation="horizontal">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/emailTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="dai**"
             android:textColor="@color/default_text_c666666"
-            android:textSize="12dp"/>
+            android:textSize="12dp"
+            dailyFont:style="Medium"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2017.02.14"
+            android:layout_marginLeft="4dp"
             android:textColor="@color/default_text_cc5c5c5"
-            android:textSize="11dp"/>
+            android:textSize="11dp"
+            dailyFont:style="DemiLight"/>
     </LinearLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
-        android:id="@+id/reviewTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="22dp"
-        android:text="어플서 4인기준 코너스위트룸 구매해서 갔는데 데일리앱과 호텔간의 소통에 문제가 있었는지 침대와는 별도로, 매트와 베개는 있는데 이불은 없었어요. 프론트에 문의하니 2인기준에 2인추가 한거 아니냐고 추가 침구비용내고 구매가능하다고 얘기하더라구요. 객실선택 캡쳐화면 내용 그대로 읽어주니 4인기준 (퀸사이즈 베드 + 침구2채) 그제서야 알겠다고 갔다준다고 하더라구요. 일주일전 토요일에 숙박 잡았을뿐더러 그렇다고 저렴하게 예약한것도 아닌데 이러한 문제가 생겨서 기분이 별로였어요. 체크인 할때 호텔과 이런 문제가 있어서 체체크인시 기분은 정말 별로였지만 그래도 기분좋게 푹 쉬다... 더 읽어보기호텔자체가 너무 좋아서 좋았으며 체크인하는과정에있어서 진정한 서비스 마인드에 또 한번 감동 받았고, 시설 또한 훌륭했습니다. 직원들의 서비스는 진짜 완벽할 정도로 훌륭했습니다."
-        android:textColor="@color/default_text_c666666"
-        android:maxLines="11"
-        android:ellipsize="end"
-        android:textSize="13dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/reviewTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/default_text_c666666"
+            android:textSize="13dp"/>
+
+        <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/moreReadTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/reviewTextView"
+            android:layout_alignParentRight="true"
+            android:ellipsize="end"
+            android:maxLines="11"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:text="@string/label_detail_review_more_read"
+            android:textColor="@color/default_text_cb70038"
+            android:textSize="13dp"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"

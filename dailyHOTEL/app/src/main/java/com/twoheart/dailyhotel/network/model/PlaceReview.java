@@ -18,4 +18,11 @@ public class PlaceReview
     public PlaceReview()
     {
     }
+
+    public PlaceReview(String email, String date, String message)
+    {
+        this.email = email;
+        this.date = date;
+        this.message = message;
+    }
 }

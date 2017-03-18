@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -14,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/termsView"
-            android:text="트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다."
+            android:text="@string/message_detail_review_explain"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 
@@ -26,7 +27,7 @@
             android:layout_marginLeft="24dp"
             android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2"
             android:gravity="center"
-            android:text="운영정책 보기"
+            android:text="@string/label_detail_review_terms_go"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
     </RelativeLayout>
@@ -48,4 +49,17 @@
         android:paddingTop="23dp"/>
 
     <include layout="@layout/view_separate_line_no_linear"/>
+
+    <com.twoheart.dailyhotel.widget.DailyTextView
+        android:id="@+id/reviewCountTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="1dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="20dp"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="15dp"
+        dailyFont:style="Medium"/>
 </LinearLayout>

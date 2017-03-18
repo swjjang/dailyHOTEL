@@ -24,6 +24,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
     private CallScreen mCallScreen;
     private int mPlaceIndex, mBookingIndex;
     private String mPlaceType, mMainCategoryId, mPlaceName;
+    private HashMap<String, String> mSubCategoryId;
 
     public static Intent newInstance(Context context, CallScreen callScreen, int placeIndex, int bookingIndex, String placeName)
     {
@@ -192,8 +194,9 @@ public class HappyTalkCategoryDialog extends BaseActivity
         // https://docs.google.com/spreadsheets/d/1rB-bDASf80h8cW5lIX9kzrnuw0da-S65PJbEQ3lXeoU/edit#gid=0
         StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
         urlStringBuilder.append("?yid=%40hailey099"); // 객사 옐로우 아이디
+        urlStringBuilder.append("&site_id=4000000120"); // 사이트 아이디
         urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
-        urlStringBuilder.append("&division_id="); // 중분류
+        urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
         urlStringBuilder.append("&title="); // 상담제목
 
         if (mBookingIndex > 0)
@@ -218,11 +221,11 @@ public class HappyTalkCategoryDialog extends BaseActivity
         urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
 
         urlStringBuilder.append("&app_ver=" + DailyHotel.VERSION_CODE);
-        urlStringBuilder.append("&phone_os=" + "Android");
+        urlStringBuilder.append("&phone_os=" + "A");
         urlStringBuilder.append("&phone_model=" + URLEncoder.encode(Build.MODEL));
         urlStringBuilder.append("&phone_os_ver=" + URLEncoder.encode(Build.VERSION.RELEASE));
 
-        TelephonyManager telephonyManager =((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
+        TelephonyManager telephonyManager = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
 
         try
@@ -262,6 +265,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
             final String hotel = getString(R.string.label_daily_hotel);
             final String gourmet = getString(R.string.label_daily_gourmet);
 
+            mSubCategoryId = new HashMap<>();
+
             mainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, hotel));
             mainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, gourmet));
 
@@ -284,9 +289,19 @@ public class HappyTalkCategoryDialog extends BaseActivity
                     if (happyTalkCategory.name.startsWith(STAY_PREFIX) == true)
                     {
                         subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(STAY_PREFIX.length())));
+
+                        if (mSubCategoryId.containsKey(happyTalkCategory.id) == false)
+                        {
+                            mSubCategoryId.put(happyTalkCategory.id, happyTalkCategory.id2);
+                        }
                     } else if (happyTalkCategory.name.startsWith(GOURMET_PREFIX) == true)
                     {
                         subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(GOURMET_PREFIX.length())));
+
+                        if (mSubCategoryId.containsKey(happyTalkCategory.id) == false)
+                        {
+                            mSubCategoryId.put(happyTalkCategory.id, happyTalkCategory.id2);
+                        }
                     } else
                     {
                         subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));

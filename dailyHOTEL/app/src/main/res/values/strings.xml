@@ -78,6 +78,7 @@
     <string name="label_product_detail">상품 상세</string>
     <string name="label_office_hours">이용시간</string>
     <string name="label_checklist">확인사항</string>
+    <string name="label_truereview">트루리뷰</string>
 
     <string name="label_count_stay">%1$d개 호텔</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -1203,6 +1204,12 @@
     <string name="message_stamp_title_message3">이제 2번 남았어요.\n또 어디로 떠나볼까요? </string>
     <string name="message_stamp_title_message4">드디어 다왔어요.\n두근두근 1박 무료쿠폰이 눈앞에!</string>
     <string name="message_stamp_title_message5">축하합니다.\n1박 무료쿠폰으로 원하는 호텔로 떠나보세요!</string>
+
+    <!-- True Review -->
+    <string name="label_detail_review_count">%1$d개의 리뷰</string>
+    <string name="label_detail_review_terms_go">운영정책 보기</string>
+    <string name="label_detail_review_more_read">더 읽어보기</string>
+    <string name="message_detail_review_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

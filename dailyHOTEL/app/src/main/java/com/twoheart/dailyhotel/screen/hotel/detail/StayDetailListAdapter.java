@@ -254,6 +254,14 @@ public class StayDetailListAdapter extends BaseAdapter
         {
             trueReviewTextView.setVisibility(View.VISIBLE);
             trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, stayDetailParams.reviewCount));
+            trueReviewTextView.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.onReviewClick();
+                }
+            });
         }
 
         // 할인 쿠폰

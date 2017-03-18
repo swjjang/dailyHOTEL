@@ -15,4 +15,10 @@ public class PlaceReviewProgress
     public PlaceReviewProgress()
     {
     }
+
+    public PlaceReviewProgress(String name, int value)
+    {
+        this.name = name;
+        this.value = value;
+    }
 }
