@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.place.layout;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +10,7 @@ import android.text.StaticLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -114,6 +117,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
     class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
+        private boolean mShowtProgressbarAnimation;
         private Context mContext;
         private LayoutInflater mInflater;
         private List<PlaceReviewItem> mPlaceReviewItemList;
@@ -140,6 +144,8 @@ public abstract class PlaceReviewLayout extends BaseLayout
         {
             clear();
             addAll(placeReviewItemList);
+
+            mShowtProgressbarAnimation = false;
         }
 
         public void addAll(List<PlaceReviewItem> placeReviewItemList)
@@ -229,7 +235,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
             }
         }
 
-        private void onBindViewHolder(HeaderViewHolder headerViewHolder, int position, PlaceReviewItem placeViewItem)
+        private void onBindViewHolder(final HeaderViewHolder headerViewHolder, int position, PlaceReviewItem placeViewItem)
         {
             List<PlaceReviewProgress> placeReviewProgressList = placeViewItem.getItem();
 
@@ -238,10 +244,9 @@ public abstract class PlaceReviewLayout extends BaseLayout
                 @Override
                 public void onClick(View v)
                 {
-                    ((OnEventListener)mOnEventListener).onTermsClick();
+                    ((OnEventListener) mOnEventListener).onTermsClick();
                 }
             });
-
 
             for (PlaceReviewProgress placeReviewProgress : placeReviewProgressList)
             {
@@ -251,15 +256,37 @@ public abstract class PlaceReviewLayout extends BaseLayout
                 ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
                 TextView valueTextView = (TextView) view.findViewById(R.id.valueTextView);
 
-
                 titleTextView.setText(placeReviewProgress.name);
-                progressBar.setProgress(placeReviewProgress.value);
+
+                if (mShowtProgressbarAnimation == true)
+                {
+                    progressBar.setProgress(placeReviewProgress.value);
+                } else
+                {
+                    progressBar.setProgress(0);
+                }
+
+                progressBar.setTag(placeReviewProgress.value);
                 valueTextView.setText(Float.toString(((float) placeReviewProgress.value) / 10.0f));
 
                 headerViewHolder.progressBarLayout.addView(view);
             }
 
             headerViewHolder.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, getItemCount() - 1));
+
+            if(mShowtProgressbarAnimation == false)
+            {
+                mShowtProgressbarAnimation = true;
+
+                headerViewHolder.progressBarLayout.post(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        startAnimation(headerViewHolder.progressBarLayout);
+                    }
+                });
+            }
         }
 
         private void onBindViewHolder(final ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
@@ -324,7 +351,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
                     @Override
                     public void onClick(View view)
                     {
-                        reviewViewHolder.reviewTextView.setText((String)reviewViewHolder.reviewTextView.getTag());
+                        reviewViewHolder.reviewTextView.setText((String) reviewViewHolder.reviewTextView.getTag());
                         reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
                         reviewViewHolder.moreReadTextView.setOnClickListener(null);
                     }
@@ -333,6 +360,65 @@ public abstract class PlaceReviewLayout extends BaseLayout
             {
                 reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
                 reviewViewHolder.moreReadTextView.setOnClickListener(null);
+            }
+        }
+
+        private void startAnimation(ViewGroup viewGroup)
+        {
+            int childCount = viewGroup.getChildCount();
+
+            for (int i = 0; i < childCount; i++)
+            {
+                final ProgressBar progressBar = (ProgressBar) viewGroup.getChildAt(i).findViewById(R.id.progressBar);
+                final int value = (int) progressBar.getTag();
+                final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, value);
+                valueAnimator.setDuration(300 * value / 50);
+                valueAnimator.setStartDelay(200 + i * 100);
+                valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation)
+                    {
+                        if (animation.getAnimatedValue() == null)
+                        {
+                            return;
+                        }
+
+                        progressBar.setProgress((int) animation.getAnimatedValue());
+                    }
+                });
+
+                valueAnimator.addListener(new Animator.AnimatorListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        progressBar.setProgress(value);
+                        valueAnimator.removeAllUpdateListeners();
+                        valueAnimator.removeAllListeners();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+
+                    }
+                });
+
+                valueAnimator.start();
             }
         }
 
