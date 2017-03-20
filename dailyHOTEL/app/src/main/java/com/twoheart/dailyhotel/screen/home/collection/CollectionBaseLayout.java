@@ -335,21 +335,25 @@ public abstract class CollectionBaseLayout extends BaseLayout
     protected void setData(ArrayList<PlaceViewItem> placeViewItems)
     {
         mPlaceListAdapter.setAll(placeViewItems);
+        postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
+    }
 
-        if (mRecyclerView.isComputingLayout() == true)
+    private void postAndNotifyAdapter(final RecyclerView recyclerView, final RecyclerView.Adapter adapter)
+    {
+        mHandler.postDelayed(new Runnable()
         {
-            mPlaceListAdapter.notifyDataSetChanged();
-        } else
-        {
-            mHandler.postDelayed(new Runnable()
+            @Override
+            public void run()
             {
-                @Override
-                public void run()
+                if (recyclerView.isComputingLayout() == false)
                 {
-                    mPlaceListAdapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
+                } else
+                {
+                    postAndNotifyAdapter(recyclerView, adapter);
                 }
-            }, 50);
-        }
+            }
+        }, 50);
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
