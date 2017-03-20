@@ -166,6 +166,14 @@ public abstract class CollectionBaseActivity extends BaseActivity
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
+    @Override
     public void onBackPressed()
     {
         if (mIsUsedMultiTransition == true)
