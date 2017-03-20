@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,8 @@ public abstract class CollectionBaseLayout extends BaseLayout
     int mTitleLayoutTopPaddingHeight;
     int mScrollState;
     boolean mIsUsedMultiTransition;
+
+    private Handler mHandler = new Handler();
 
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
 
@@ -332,7 +335,21 @@ public abstract class CollectionBaseLayout extends BaseLayout
     protected void setData(ArrayList<PlaceViewItem> placeViewItems)
     {
         mPlaceListAdapter.setAll(placeViewItems);
-        mPlaceListAdapter.notifyDataSetChanged();
+
+        if (mRecyclerView.isComputingLayout() == true)
+        {
+            mPlaceListAdapter.notifyDataSetChanged();
+        } else
+        {
+            mHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    mPlaceListAdapter.notifyDataSetChanged();
+                }
+            }, 50);
+        }
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
