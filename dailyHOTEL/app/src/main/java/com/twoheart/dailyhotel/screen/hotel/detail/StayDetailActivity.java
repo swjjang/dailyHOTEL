@@ -387,8 +387,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (isShowCalendar == true)
             {
                 startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mStartSaleTime,//
-                    mEndSaleTime, mPlaceDetail.index, false, //
-                    ((StayDetail) mPlaceDetail).getStayDetailParams().isSingleStay);
+                    mEndSaleTime, mPlaceDetail.index, false, false);
             }
         } else
         {
@@ -425,8 +424,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (isShowCalendar == true)
             {
                 startCalendar(mSaleTime, ((StayDetail) mPlaceDetail).nights, mStartSaleTime,//
-                    mEndSaleTime, mPlaceDetail.index, true, //
-                    ((StayDetail) mPlaceDetail).getStayDetailParams().isSingleStay);
+                    mEndSaleTime, mPlaceDetail.index, true, false);
             }
         }
     }
