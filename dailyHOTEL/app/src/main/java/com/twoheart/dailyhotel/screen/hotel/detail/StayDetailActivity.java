@@ -1480,7 +1480,18 @@ public class StayDetailActivity extends PlaceDetailActivity
         public void onCalendarClick()
         {
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
+            if (stayDetail == null)
+            {
+                return;
+            }
+
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
+            if (stayDetailParams == null)
+            {
+                return;
+            }
 
             startCalendar(mSaleTime, stayDetail.nights, mStartSaleTime, mEndSaleTime,//
                 stayDetail.index, true, stayDetailParams.isSingleStay);
