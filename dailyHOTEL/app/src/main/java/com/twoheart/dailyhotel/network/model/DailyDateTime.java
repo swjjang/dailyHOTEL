@@ -2,10 +2,17 @@ package com.twoheart.dailyhotel.network.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
+
+import java.util.Date;
+import java.util.TimeZone;
 
 @JsonObject
 public class DailyDateTime implements Parcelable
@@ -37,6 +44,36 @@ public class DailyDateTime implements Parcelable
     public DailyDateTime(Parcel in)
     {
         readFromParcel(in);
+    }
+
+    public DailyDateTime getClone()
+    {
+        return new DailyDateTime(openDateTime, closeDateTime, currentDateTime, dailyDateTime);
+    }
+
+    /**
+     * getTime 시에 Java에서는 GMT 0시간으로 처리 되도록 되어있다. 특정 시간을 부여하면 해당 long값에 더해진 값으로 반환된다.
+     * @param timeZone
+     * @return
+     */
+    public long getCurrentTime(@NonNull TimeZone timeZone)
+    {
+        if (timeZone == null)
+        {
+            return 0;
+        }
+
+        try
+        {
+            Date date = DailyCalendar.convertDate(currentDateTime, DailyCalendar.ISO_8601_FORMAT, timeZone);
+
+            return date.getTime() + timeZone.getRawOffset();
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return 0;
     }
 
     @Override
