@@ -617,6 +617,8 @@ public class StayMainActivity extends PlaceMainActivity
                 SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
                 mStayCuration.setCheckOutSaleTime(checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
 
+                // 현재 추측으로는 다음날을 선택했는데 하루가 지나서 오늘이 되어야 할때 날짜가 자동으로 변경되지 않고 미래를 보기 때문에 추가된 내용으로 추측됨
+                // ex) 2017-01-02를 보다가 하루가 지나면 2017-01-03을 보게 되는데 2017-01-02 를 볼수 있께 해줌.
                 String lastViewDate = DailyPreference.getInstance(StayMainActivity.this).getStayLastViewDate();
 
                 if (Util.isTextEmpty(lastViewDate) == false)

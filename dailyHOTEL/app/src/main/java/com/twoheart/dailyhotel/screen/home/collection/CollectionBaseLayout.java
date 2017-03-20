@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
@@ -17,13 +18,12 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 
 public abstract class CollectionBaseLayout extends BaseLayout
 {
-    PinnedSectionRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     PlaceListAdapter mPlaceListAdapter;
     private TextView mCalendarTextView;
     TextView mTitleTextView, mSubTitleTextView;
@@ -32,6 +32,8 @@ public abstract class CollectionBaseLayout extends BaseLayout
     int mTitleLayoutTopPaddingHeight;
     int mScrollState;
     boolean mIsUsedMultiTransition;
+
+    private Handler mHandler = new Handler();
 
     protected abstract PlaceListAdapter getPlaceListAdapter(View.OnClickListener listener);
 
@@ -95,11 +97,11 @@ public abstract class CollectionBaseLayout extends BaseLayout
         });
 
         // 리스트
-        mRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         final LinearLayoutManager linearLayoutManager = new ScrollingLinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setShadowVisible(false);
+        //        mRecyclerView.setShadowVisible(false);
 
         if (mPlaceListAdapter == null)
         {
@@ -333,7 +335,25 @@ public abstract class CollectionBaseLayout extends BaseLayout
     protected void setData(ArrayList<PlaceViewItem> placeViewItems)
     {
         mPlaceListAdapter.setAll(placeViewItems);
-        mPlaceListAdapter.notifyDataSetChanged();
+        postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
+    }
+
+    private void postAndNotifyAdapter(final RecyclerView recyclerView, final RecyclerView.Adapter adapter)
+    {
+        mHandler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (recyclerView.isComputingLayout() == false)
+                {
+                    adapter.notifyDataSetChanged();
+                } else
+                {
+                    postAndNotifyAdapter(recyclerView, adapter);
+                }
+            }
+        }, 50);
     }
 
     private View.OnClickListener mOnItemClickListener = new View.OnClickListener()
