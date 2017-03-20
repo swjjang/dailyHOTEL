@@ -5,26 +5,26 @@ import android.os.Parcel;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-public class StayReservationTime extends PlaceReservationTime
+public class StayBookTime extends PlaceBookTime
 {
     private int mNights;
 
-    public StayReservationTime()
+    public StayBookTime()
     {
     }
 
-    public void setReservationTime(String reservationTime, int nights) throws Exception
+    public void setBookTime(String bookTime, int nights) throws Exception
     {
-        if (Util.isTextEmpty(reservationTime) == true || nights <= 0)
+        if (Util.isTextEmpty(bookTime) == true || nights <= 0)
         {
             return;
         }
 
-        setReservationTime(reservationTime);
+        setBookTime(bookTime);
         mNights = nights;
     }
 
-    public StayReservationTime(Parcel in)
+    public StayBookTime(Parcel in)
     {
         readFromParcel(in);
     }
@@ -38,18 +38,18 @@ public class StayReservationTime extends PlaceReservationTime
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(mReservationTime);
+        dest.writeString(mBookTime);
         dest.writeInt(mNights);
     }
 
     private void readFromParcel(Parcel in)
     {
-        String reservationTime = in.readString();
+        String bookTime = in.readString();
         int nights = in.readInt();
 
         try
         {
-            setReservationTime(reservationTime, nights);
+            setBookTime(bookTime, nights);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -58,15 +58,15 @@ public class StayReservationTime extends PlaceReservationTime
 
     public static final Creator CREATOR = new Creator()
     {
-        public StayReservationTime createFromParcel(Parcel in)
+        public StayBookTime createFromParcel(Parcel in)
         {
-            return new StayReservationTime(in);
+            return new StayBookTime(in);
         }
 
         @Override
-        public StayReservationTime[] newArray(int size)
+        public StayBookTime[] newArray(int size)
         {
-            return new StayReservationTime[size];
+            return new StayBookTime[size];
         }
     };
 }
