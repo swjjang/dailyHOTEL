@@ -17,13 +17,12 @@ import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 
 public abstract class CollectionBaseLayout extends BaseLayout
 {
-    PinnedSectionRecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     PlaceListAdapter mPlaceListAdapter;
     private TextView mCalendarTextView;
     TextView mTitleTextView, mSubTitleTextView;
@@ -95,11 +94,11 @@ public abstract class CollectionBaseLayout extends BaseLayout
         });
 
         // 리스트
-        mRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         final LinearLayoutManager linearLayoutManager = new ScrollingLinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setShadowVisible(false);
+        //        mRecyclerView.setShadowVisible(false);
 
         if (mPlaceListAdapter == null)
         {
