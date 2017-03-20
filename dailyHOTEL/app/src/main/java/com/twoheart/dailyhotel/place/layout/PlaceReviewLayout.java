@@ -344,7 +344,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
                     }
                 }
 
-                reviewViewHolder.reviewTextView.setText(reviewViewHolder.reviewTextView.getText().subSequence(0, lineEndIndex - count) + "...");
+                reviewViewHolder.reviewTextView.setText(reviewViewHolder.reviewTextView.getText().subSequence(0, lineEndIndex - count - 1) + "...");
                 reviewViewHolder.moreReadTextView.setVisibility(View.VISIBLE);
                 reviewViewHolder.moreReadTextView.setOnClickListener(new View.OnClickListener()
                 {
