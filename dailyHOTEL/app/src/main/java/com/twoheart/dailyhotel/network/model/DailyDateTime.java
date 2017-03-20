@@ -8,7 +8,7 @@ import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 @JsonObject
-public class DailyTime implements Parcelable
+public class DailyDateTime implements Parcelable
 {
     @JsonField
     public String openDateTime; // ISO-8601
@@ -22,11 +22,11 @@ public class DailyTime implements Parcelable
     @JsonField
     public String dailyDateTime; // ISO-8601
 
-    public DailyTime()
+    public DailyDateTime()
     {
     }
 
-    public DailyTime(String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime)
+    public DailyDateTime(String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime)
     {
         this.openDateTime = openDateTime;
         this.closeDateTime = closeDateTime;
@@ -34,7 +34,7 @@ public class DailyTime implements Parcelable
         this.dailyDateTime = dailyDateTime;
     }
 
-    public DailyTime(Parcel in)
+    public DailyDateTime(Parcel in)
     {
         readFromParcel(in);
     }
@@ -65,15 +65,15 @@ public class DailyTime implements Parcelable
     @JsonIgnore
     public static final Creator CREATOR = new Creator()
     {
-        public DailyTime createFromParcel(Parcel in)
+        public DailyDateTime createFromParcel(Parcel in)
         {
-            return new DailyTime(in);
+            return new DailyDateTime(in);
         }
 
         @Override
-        public DailyTime[] newArray(int size)
+        public DailyDateTime[] newArray(int size)
         {
-            return new DailyTime[size];
+            return new DailyDateTime[size];
         }
 
     };
