@@ -355,7 +355,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     @Override
     protected void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
-        if (paymentInformation == null || selectedCreditCard == null)
+        if (paymentInformation == null)
         {
             return;
         }
