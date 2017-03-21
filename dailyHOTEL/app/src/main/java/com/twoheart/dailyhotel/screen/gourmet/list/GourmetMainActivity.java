@@ -1019,7 +1019,13 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-
+            if (isShow == true)
+            {
+                mPlaceMainLayout.hideBottomLayout();
+            } else
+            {
+                mPlaceMainLayout.showBottomLayout();
+            }
         }
 
         @Override

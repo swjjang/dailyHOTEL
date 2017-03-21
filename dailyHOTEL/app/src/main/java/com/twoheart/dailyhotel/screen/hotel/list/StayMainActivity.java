@@ -479,7 +479,6 @@ public class StayMainActivity extends PlaceMainActivity
             mStayCuration.setCategory(StayMainActivity.this, category);
 
             mPlaceMainLayout.setCurrentItem(tab.getPosition());
-            mPlaceMainLayout.showBottomLayout();
 
             refreshCurrentFragment(false);
         }
@@ -1111,7 +1110,13 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-
+            if (isShow == true)
+            {
+                mPlaceMainLayout.hideBottomLayout();
+            } else
+            {
+                mPlaceMainLayout.showBottomLayout();
+            }
         }
 
         @Override
