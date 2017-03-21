@@ -26,12 +26,11 @@ import java.util.TimeZone;
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
 {
     private final String BOOKING_DATE_FORMAT = "yyyy.MM.dd(EEE)";
-    private long mCurrentTime;
     private ArrayList<Booking> mBookingList;
     private Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
 
-    public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items, long currentTime)
+    public BookingListAdapter(Context context, int resourceId, ArrayList<Booking> items)
     {
         super(context, resourceId, items);
 
@@ -43,8 +42,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         mBookingList.clear();
         mBookingList.addAll(items);
 
-        this.mContext = context;
-        this.mCurrentTime = currentTime;
+        mContext = context;
     }
 
     public void setOnUserActionListener(BookingListFragment.OnUserActionListener listener)
@@ -269,15 +267,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                 {
                     String text;
 
-                    int dayOfDays = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(mCurrentTime)) / SaleTime.MILLISECOND_IN_A_DAY);
-                    if (dayOfDays < 0 || dayOfDays > 3)
-                    {
-                        text = null;
-                    } else if (dayOfDays > 0)
-                    {
-                        // 하루이상 남음
-                        text = mContext.getString(R.string.frag_booking_duedate_formet, dayOfDays);
-                    } else
+                    if (booking.leftFromToDay == 0)
                     {
                         // 당일
                         switch (booking.placeType)
@@ -298,6 +288,13 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                                 text = null;
                                 break;
                         }
+                    } else if (booking.leftFromToDay > 0 && booking.leftFromToDay <= 3)
+                    {
+                        // 하루이상 남음
+                        text = mContext.getString(R.string.frag_booking_duedate_formet, booking.leftFromToDay);
+                    } else
+                    {
+                        text = null;
                     }
 
                     if (Util.isTextEmpty(text) == true)

@@ -27,6 +27,8 @@ public class Booking implements Parcelable
     public boolean readyForRefund;
     public Constants.PlaceType placeType;
 
+    public int leftFromToDay;
+
     public Booking(String sectionName)
     {
         placeName = sectionName;
@@ -77,6 +79,8 @@ public class Booking implements Parcelable
         dest.writeInt(isUsed ? 1 : 0);
         dest.writeInt(readyForRefund ? 1 : 0);
         dest.writeString(placeType.name());
+
+        dest.writeInt(leftFromToDay);
     }
 
     private void readFromParcel(Parcel in)
@@ -94,6 +98,8 @@ public class Booking implements Parcelable
         isUsed = in.readInt() == 1;
         readyForRefund = in.readInt() == 1;
         placeType = Constants.PlaceType.valueOf(in.readString());
+
+        leftFromToDay = in.readInt();
     }
 
     @Override

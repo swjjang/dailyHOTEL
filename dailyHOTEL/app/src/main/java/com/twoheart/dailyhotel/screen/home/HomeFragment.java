@@ -314,20 +314,6 @@ public class HomeFragment extends BaseFragment
 
         Intent intent = EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.HOME_EVENT, url, eventName);
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-
-        //        String discountType = AnalyticsManager.Label.PAYMENTWITH_CREDIT;
-        //        String imageUrl = "https://img.dailyhotel.me/resources/images/dh_23351/01.jpg";
-        //        String placeName = "[신규] 천호 YES";
-        //        String placeType = "준특실 더블";
-        //        String checkInDate = "2016.11.2 (수) 17시";
-        //        String checkOutDate = "2016.11.3 (목) 13시";
-        //        int nights = 1;
-        //        String userName = "dh00_test";
-        //        HashMap<String, String> params = new HashMap<>();
-        //        params.put(AnalyticsManager.KeyType.TICKET_INDEX, "183856");
-        //        Intent intent = HotelPaymentThankyouActivity.newInstance(mBaseActivity, imageUrl, placeName//
-        //            , placeType, userName, checkInDate, checkOutDate, nights, "CardPay", discountType, params);
-        //        startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_REFRESH);
     }
 
     private void startDeepLinkRecommendationActivity(String serviceType, int index)

@@ -83,7 +83,7 @@ public class GourmetProductListActivity extends BaseActivity
 
         mGourmetProductListLayout.setProductInformationLayout(this, mGourmetDetail.getProductList());
 
-        settingABTest(mGourmetDetail);
+        //        settingABTest(mGourmetDetail);
 
         // 메뉴 상세화면 진입
         if (productIndex > 0)

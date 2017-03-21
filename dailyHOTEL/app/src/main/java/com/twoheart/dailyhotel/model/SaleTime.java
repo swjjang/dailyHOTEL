@@ -148,7 +148,7 @@ public class SaleTime implements Parcelable
         {
             SimpleDateFormat format = new java.text.SimpleDateFormat("yyyyMMdd", Locale.KOREA);
             Date schemeDate = format.parse(date);
-            Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+            Date dailyDate = format.parse(DailyCalendar.format(saleTime.getDailyTime() - DailyCalendar.NINE_HOUR_MILLISECOND, "yyyyMMdd", null));
 
             int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
 

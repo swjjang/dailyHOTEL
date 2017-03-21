@@ -115,7 +115,7 @@ public class StayMainActivity extends PlaceMainActivity
                 mStayCuration.setCategory(this, Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
-                mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
+                mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
                 // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
                 String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
@@ -150,7 +150,7 @@ public class StayMainActivity extends PlaceMainActivity
                 mStayCuration.setCategory(this, Category.ALL);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
-                mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
+                mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
                 // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
                 String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
@@ -244,7 +244,7 @@ public class StayMainActivity extends PlaceMainActivity
             StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
 
             mStayCuration.setCurationOption(changedStayCurationOption);
-            mPlaceMainLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
+            mPlaceMainLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
 
             if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
             {
@@ -268,7 +268,7 @@ public class StayMainActivity extends PlaceMainActivity
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
+        mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -279,7 +279,7 @@ public class StayMainActivity extends PlaceMainActivity
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
+        mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -479,7 +479,6 @@ public class StayMainActivity extends PlaceMainActivity
             mStayCuration.setCategory(StayMainActivity.this, category);
 
             mPlaceMainLayout.setCurrentItem(tab.getPosition());
-            mPlaceMainLayout.showBottomLayout();
 
             refreshCurrentFragment(false);
         }
@@ -617,6 +616,8 @@ public class StayMainActivity extends PlaceMainActivity
                 SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
                 mStayCuration.setCheckOutSaleTime(checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
 
+                // 현재 추측으로는 다음날을 선택했는데 하루가 지나서 오늘이 되어야 할때 날짜가 자동으로 변경되지 않고 미래를 보기 때문에 추가된 내용으로 추측됨
+                // ex) 2017-01-02를 보다가 하루가 지나면 2017-01-03을 보게 되는데 2017-01-02 를 볼수 있께 해줌.
                 String lastViewDate = DailyPreference.getInstance(StayMainActivity.this).getStayLastViewDate();
 
                 if (Util.isTextEmpty(lastViewDate) == false)
@@ -1097,7 +1098,23 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onShowMenuBar()
         {
+            if (mPlaceMainLayout == null)
+            {
+                return;
+            }
+
             mPlaceMainLayout.showBottomLayout();
+        }
+
+        @Override
+        public void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled)
+        {
+            if (mPlaceMainLayout == null)
+            {
+                return;
+            }
+
+            mPlaceMainLayout.setOptionViewTypeEnabled(isShowViewTypeEnabled);
         }
 
         @Override
@@ -1109,7 +1126,15 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-
+            if (isShow == true)
+            {
+                mPlaceMainLayout.hideBottomLayout();
+                mPlaceMainLayout.setOptionFilterEnabled(false);
+            } else
+            {
+                mPlaceMainLayout.showBottomLayout();
+                mPlaceMainLayout.setOptionFilterEnabled(true);
+            }
         }
 
         @Override
@@ -1505,7 +1530,7 @@ public class StayMainActivity extends PlaceMainActivity
         StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
         stayCurationOption.setSortType(DailyDeepLink.getInstance().getSorting());
 
-        mPlaceMainLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
+        mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
         int nights = 1;
         int provinceIndex;

@@ -55,6 +55,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
         void onShowMenuBar();
 
+        void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled);
+
         void onFilterClick();
 
         void onShowActivityEmptyView(boolean isShow);
@@ -197,6 +199,11 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     public void setBottomOptionLayout(View view)
     {
         mBottomOptionLayout = view;
+    }
+
+    public ViewType getViewType()
+    {
+        return this.mViewType;
     }
 
     public void setViewType(ViewType viewType)

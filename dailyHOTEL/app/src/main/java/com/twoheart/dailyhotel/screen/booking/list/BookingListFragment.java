@@ -28,7 +28,10 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.DailyDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
@@ -51,6 +54,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -68,9 +72,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private BookingListAdapter mAdapter;
     private RelativeLayout mEmptyLayout;
     private PinnedSectionListView mListView;
-    private View btnLogin;
-    long mCurrentTime;
+    private View mLoginView;
     boolean mDontReload;
+
+    private DailyDateTime mDailyDateTime;
 
     public interface OnUserActionListener
     {
@@ -104,9 +109,9 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         mListView.setTag("BookingListFragment");
 
         mEmptyLayout = (RelativeLayout) view.findViewById(R.id.emptyLayout);
-        btnLogin = view.findViewById(R.id.loginView);
+        mLoginView = view.findViewById(R.id.loginView);
 
-        btnLogin.setOnClickListener(this);
+        mLoginView.setOnClickListener(this);
     }
 
     void updateLayout(boolean isSignin, ArrayList<Booking> bookingArrayList)
@@ -134,13 +139,12 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                 //예약한 호텔이 없는 경우
                 mListView.setVisibility(View.GONE);
                 mEmptyLayout.setVisibility(View.VISIBLE);
-                btnLogin.setVisibility(View.INVISIBLE);
+                mLoginView.setVisibility(View.INVISIBLE);
             } else
             {
                 if (mAdapter == null)
                 {
-                    mAdapter = new BookingListAdapter(baseActivity, //
-                        R.layout.list_row_booking, new ArrayList<Booking>(), mCurrentTime);
+                    mAdapter = new BookingListAdapter(baseActivity, R.layout.list_row_booking, new ArrayList<Booking>());
                     mAdapter.setOnUserActionListener(mOnUserActionListener);
                     mListView.setOnItemClickListener(BookingListFragment.this);
                     mListView.setAdapter(mAdapter);
@@ -208,7 +212,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 lockUI();
 
-                DailyMobileAPI.getInstance(baseActivity).requestCommonDateTime(mNetworkTag, mDateTimeCallBack);
+                DailyMobileAPI.getInstance(baseActivity).requestCommonDateTimeRefactoring(mNetworkTag, mDateTimeCallBack);
             }
         }
     }
@@ -216,7 +220,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == btnLogin.getId())
+        if (v.getId() == mLoginView.getId())
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -453,6 +457,19 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         return true;
     }
 
+    private long getCompareDate(long timeInMillis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
+        calendar.setTimeInMillis(timeInMillis);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
+    }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // UserActionListener
@@ -653,7 +670,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws Exception
         {
-            if (jsonArray == null || jsonArray.length() == 0)
+            if (jsonArray == null || jsonArray.length() == 0 || mDailyDateTime == null)
             {
                 return null;
             }
@@ -666,11 +683,15 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             ArrayList<Booking> paymentBookingList = new ArrayList<>();
             ArrayList<Booking> usedBookingList = new ArrayList<>();
 
+            long currentTime = mDailyDateTime.getCurrentTime(TimeZone.getTimeZone("GMT+09:00"));
+
             for (int i = 0; i < length; i++)
             {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                 Booking booking = new Booking(jsonObject);
+
+                booking.leftFromToDay = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(currentTime)) / SaleTime.MILLISECOND_IN_A_DAY);
 
                 if (booking.readyForRefund == true)
                 {
@@ -681,7 +702,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                     {
                         case CODE_PAY_TYPE_CARD_COMPLETE:
                         case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-                            booking.isUsed = booking.checkoutTime < mCurrentTime;
+                            booking.isUsed = booking.checkoutTime < currentTime;
 
                             if (booking.isUsed)
                             {
@@ -737,10 +758,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     };
 
-    private retrofit2.Callback mDateTimeCallBack = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mDateTimeCallBack = new retrofit2.Callback<BaseDto<DailyDateTime>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<DailyDateTime>> call, Response<BaseDto<DailyDateTime>> response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -748,21 +769,16 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<DailyDateTime> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100)
+                    if (baseDto.msgCode == 100)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                        mCurrentTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
+                        mDailyDateTime = baseDto.data.getClone();
 
                         DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
                     } else
                     {
-                        String message = responseJSONObject.getString("msg");
-                        onErrorPopupMessage(msgCode, message);
+                        onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
                     }
                 } catch (Exception e)
                 {
@@ -776,7 +792,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<DailyDateTime>> call, Throwable t)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
