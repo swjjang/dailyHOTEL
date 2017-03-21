@@ -296,7 +296,13 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 }
             } else if (url.startsWith("market") == true)
             {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                try
+                {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                } catch (ActivityNotFoundException e)
+                {
+                    return false;
+                }
                 return true;
             }
 
