@@ -410,6 +410,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard)
     {
+        if (paymentInformation == null)
+        {
+            return;
+        }
+
         mHotelPaymentLayout.setPaymentInformation((StayPaymentInformation) paymentInformation, selectedCreditCard);
     }
 
