@@ -56,6 +56,8 @@ public class StaySearchResultListLayout extends StayListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case MAP:
@@ -79,6 +81,8 @@ public class StaySearchResultListLayout extends StayListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case GONE:
@@ -100,6 +104,8 @@ public class StaySearchResultListLayout extends StayListLayout
                 mResultTextView.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
                 break;
         }
     }

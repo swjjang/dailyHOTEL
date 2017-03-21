@@ -79,6 +79,8 @@ public class StayListLayout extends PlaceListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case MAP:
@@ -101,6 +103,8 @@ public class StayListLayout extends PlaceListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case GONE:
@@ -121,6 +125,8 @@ public class StayListLayout extends PlaceListLayout
                 mMapLayout.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
 
                 if (mContext instanceof Activity)
                 {

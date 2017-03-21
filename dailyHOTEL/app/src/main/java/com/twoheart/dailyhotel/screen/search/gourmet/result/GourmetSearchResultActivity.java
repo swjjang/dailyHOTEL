@@ -151,7 +151,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
             mGourmetSearchCuration.getCurationOption().clear();
 
-            mPlaceSearchResultLayout.setOptionFilterEnabled(false);
+            mPlaceSearchResultLayout.setOptionFilterSelected(false);
             mPlaceSearchResultLayout.clearCategoryTab();
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
             mPlaceSearchResultLayout.processListLayout();
@@ -175,7 +175,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             GourmetCurationOption changedGourmetCurationOption = (GourmetCurationOption) changedGourmetCuration.getCurationOption();
 
             mGourmetSearchCuration.setCurationOption(changedGourmetCurationOption);
-            mPlaceSearchResultLayout.setOptionFilterEnabled(changedGourmetCurationOption.isDefaultFilter() == false);
+            mPlaceSearchResultLayout.setOptionFilterSelected(changedGourmetCurationOption.isDefaultFilter() == false);
 
             if (changedGourmetCurationOption.getSortType() == SortType.DISTANCE)
             {
@@ -199,7 +199,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetSearchCuration.getCurationOption();
 
         gourmetCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
+        mPlaceSearchResultLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -210,7 +210,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetSearchCuration.getCurationOption();
 
         gourmetCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
+        mPlaceSearchResultLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -835,6 +835,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
                 mViewType, mSearchType, mGourmetSearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
+        }
+
+        @Override
+        public void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled)
+        {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
+
+            mPlaceSearchResultLayout.setOptionViewTypeEnabled(isShowViewTypeEnabled);
         }
 
         @Override

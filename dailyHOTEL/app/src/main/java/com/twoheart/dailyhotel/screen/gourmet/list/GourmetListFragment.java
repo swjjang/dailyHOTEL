@@ -225,6 +225,12 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onUpdateViewTypeEnabled(boolean isEnabled)
+        {
+            mOnPlaceListFragmentListener.onUpdateViewTypeEnabled(isEnabled);
+        }
+
+        @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
             mOnPlaceListFragmentListener.onShowActivityEmptyView(isShow);
