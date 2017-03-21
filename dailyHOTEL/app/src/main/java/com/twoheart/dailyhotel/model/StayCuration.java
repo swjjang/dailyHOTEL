@@ -5,61 +5,86 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.DailyPreference;
 
 public class StayCuration extends PlaceCuration
 {
-    protected SaleTime mCheckInSaleTime;
-    protected SaleTime mCheckOutSaleTime;
+    protected StayBookingDay mStayBookingTime;
     protected Category mCategory;
     protected StayCurationOption mStayCurationOption;
-
-    public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
-    {
-        if (mCheckInSaleTime == null)
-        {
-            mCheckInSaleTime = new SaleTime();
-        }
-
-        mCheckInSaleTime.setCurrentTime(currentDateTime);
-        mCheckInSaleTime.setDailyTime(dailyDateTime);
-    }
-
-    public void setCheckInSaleTime(SaleTime saleTime)
-    {
-        mCheckInSaleTime = saleTime;
-    }
-
-    public void setCheckOutSaleTime(SaleTime saleTime)
-    {
-        mCheckOutSaleTime = saleTime;
-    }
-
-    public SaleTime getCheckInSaleTime()
-    {
-        return mCheckInSaleTime;
-    }
-
-    public SaleTime getCheckOutSaleTime()
-    {
-        return mCheckOutSaleTime;
-    }
-
-    public int getNights()
-    {
-        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
-        {
-            return 1;
-        }
-
-        return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-    }
 
     public StayCuration()
     {
         mStayCurationOption = new StayCurationOption();
+        mStayBookingTime = new StayBookingDay();
 
         clear();
+    }
+
+    public StayCuration(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    public void setCheckInDay(long millis)
+    {
+        if (mStayBookingTime == null)
+        {
+            mStayBookingTime = new StayBookingDay();
+        }
+
+        mStayBookingTime.setCheckInTime(millis);
+    }
+
+    public void setCheckInDay(String dateString)
+    {
+        if (mStayBookingTime == null)
+        {
+            mStayBookingTime = new StayBookingDay();
+        }
+
+        mStayBookingTime.setCheckInTime(dateString);
+    }
+
+    public String getCheckInDay(String format)
+    {
+        if (mStayBookingTime == null)
+        {
+            return null;
+        }
+
+        return mStayBookingTime.getCheckInTime(format);
+    }
+
+    public void setCheckOutDay(String dateString) throws Exception
+    {
+        if (mStayBookingTime == null)
+        {
+            mStayBookingTime = new StayBookingDay();
+        }
+
+        mStayBookingTime.setCheckOutTime(dateString);
+    }
+
+    public void setCheckOutDay(String dateString, int afterDay) throws Exception
+    {
+        if (mStayBookingTime == null)
+        {
+            mStayBookingTime = new StayBookingDay();
+        }
+
+        mStayBookingTime.setCheckOutTime(dateString, afterDay);
+    }
+
+    public String getCheckOutDay(String format)
+    {
+        if (mStayBookingTime == null)
+        {
+            return null;
+        }
+
+        return mStayBookingTime.getCheckOutTime(format);
     }
 
     @Override
@@ -125,17 +150,11 @@ public class StayCuration extends PlaceCuration
 
         mStayCurationOption.clear();
 
-        mCheckInSaleTime = null;
-        mCheckOutSaleTime = null;
-
+        mStayBookingTime = null;
         mProvince = null;
         mLocation = null;
     }
 
-    public StayCuration(Parcel in)
-    {
-        readFromParcel(in);
-    }
 
     @Override
     public int describeContents()
@@ -148,8 +167,7 @@ public class StayCuration extends PlaceCuration
     {
         dest.writeParcelable(mProvince, flags);
         dest.writeParcelable(mLocation, flags);
-        dest.writeParcelable(mCheckInSaleTime, flags);
-        dest.writeParcelable(mCheckOutSaleTime, flags);
+        dest.writeParcelable(mStayBookingTime, flags);
         dest.writeParcelable(mCategory, flags);
         dest.writeParcelable(mStayCurationOption, flags);
     }
@@ -158,8 +176,7 @@ public class StayCuration extends PlaceCuration
     {
         mProvince = in.readParcelable(Province.class.getClassLoader());
         mLocation = in.readParcelable(Location.class.getClassLoader());
-        mCheckInSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
-        mCheckOutSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
+        mStayBookingTime = in.readParcelable(StayBookingDay.class.getClassLoader());
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
     }

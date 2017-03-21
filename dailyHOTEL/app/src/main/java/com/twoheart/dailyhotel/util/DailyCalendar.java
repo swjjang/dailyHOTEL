@@ -12,6 +12,8 @@ import java.util.TreeMap;
 public class DailyCalendar
 {
     public static final long NINE_HOUR_MILLISECOND = 3600 * 9 * 1000;
+    public static final long DAY_MILLISECOND = 3600 * 24 * 1000;
+
     public static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
 
     // 하단에 나오는 포맷이외에는 지원하지 않음. 추가적으로 필요한 포맷은 동일한 포맷터 위치 뒤로 이동한다. 갯수가 많은것 부터 작은것 순서대로 넣는다. (yyyy -> yy, MM -> M)
@@ -20,6 +22,28 @@ public class DailyCalendar
     public static Calendar getInstance()
     {
         return Calendar.getInstance(TimeZone.getTimeZone("GMT+09:00"), Locale.KOREA);
+    }
+
+    /**
+     * @param dateString     ISO-8601만 가능
+     * @param isDeleteTField true인 경우 모든 시간 필드는 초기화 한다.
+     * @return
+     * @throws Exception
+     */
+    public static Calendar getInstance(String dateString, boolean isDeleteTField) throws Exception
+    {
+        Calendar calendar = getInstance();
+        calendar.setTime(DailyCalendar.convertStringToDate(dateString));
+
+        if (isDeleteTField == true)
+        {
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+        }
+
+        return calendar;
     }
 
     //    /**
@@ -64,6 +88,26 @@ public class DailyCalendar
     public static Date convertDate(final String dateString, final String format) throws ParseException, NullPointerException
     {
         return convertDate(dateString, format, TimeZone.getTimeZone("GMT+09:00"));
+    }
+
+    /**
+     * 이 메소드는 기존과 동일하지만 타임존을 받지 않아서 dateString에 존재하는 Time존을 사용하도록 한다.
+     *
+     * @param dateString ISO-8601 포맷이 아니면 지원 하지 않음.
+     * @return
+     * @throws ParseException
+     * @throws NullPointerException
+     */
+    public static Date convertStringToDate(final String dateString) throws ParseException, NullPointerException
+    {
+        if (Util.isTextEmpty(dateString) == true)
+        {
+            throw new NullPointerException("dateString is empty");
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DailyCalendar.ISO_8601_FORMAT, Locale.KOREA);
+
+        return simpleDateFormat.parse(dateString);
     }
 
     public static Date convertDate(final String dateString, final String format, TimeZone timeZone) throws ParseException, NullPointerException
@@ -211,6 +255,22 @@ public class DailyCalendar
         }
 
         return formatStringBuilder.toString();
+    }
+
+    public static long compareDateTime(String dateTime1, String dateTime2) throws ParseException, NullPointerException
+    {
+        Date date1 = DailyCalendar.convertDate(dateTime1, ISO_8601_FORMAT, null);
+        Date date2 = DailyCalendar.convertDate(dateTime2, ISO_8601_FORMAT, null);
+
+        return date1.getTime() - date2.getTime();
+    }
+
+    public static int compareDateDay(String dateTime1, String dateTime2) throws ParseException, NullPointerException
+    {
+        Date date1 = DailyCalendar.convertDate(dateTime1, ISO_8601_FORMAT, null);
+        Date date2 = DailyCalendar.convertDate(dateTime2, ISO_8601_FORMAT, null);
+
+        return (int) ((date1.getTime() - date2.getTime()) / DAY_MILLISECOND);
     }
 
     private static TreeMap<Integer, Integer> searchFormat(StringBuilder stringBuilder)

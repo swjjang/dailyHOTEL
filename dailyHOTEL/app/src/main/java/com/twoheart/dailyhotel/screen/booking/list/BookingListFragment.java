@@ -31,7 +31,7 @@ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
-import com.twoheart.dailyhotel.network.model.DailyDateTime;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
@@ -75,7 +75,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private View mLoginView;
     boolean mDontReload;
 
-    private DailyDateTime mDailyDateTime;
+    private TodayDateTime mTodayDateTime;
 
     public interface OnUserActionListener
     {
@@ -670,7 +670,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws Exception
         {
-            if (jsonArray == null || jsonArray.length() == 0 || mDailyDateTime == null)
+            if (jsonArray == null || jsonArray.length() == 0 || mTodayDateTime == null)
             {
                 return null;
             }
@@ -683,7 +683,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             ArrayList<Booking> paymentBookingList = new ArrayList<>();
             ArrayList<Booking> usedBookingList = new ArrayList<>();
 
-            long currentTime = mDailyDateTime.getCurrentTime(TimeZone.getTimeZone("GMT+09:00"));
+            long currentTime = mTodayDateTime.getCurrentTime(TimeZone.getTimeZone("GMT+09:00"));
 
             for (int i = 0; i < length; i++)
             {
@@ -758,10 +758,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
     };
 
-    private retrofit2.Callback mDateTimeCallBack = new retrofit2.Callback<BaseDto<DailyDateTime>>()
+    private retrofit2.Callback mDateTimeCallBack = new retrofit2.Callback<BaseDto<TodayDateTime>>()
     {
         @Override
-        public void onResponse(Call<BaseDto<DailyDateTime>> call, Response<BaseDto<DailyDateTime>> response)
+        public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
@@ -769,11 +769,11 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 try
                 {
-                    BaseDto<DailyDateTime> baseDto = response.body();
+                    BaseDto<TodayDateTime> baseDto = response.body();
 
                     if (baseDto.msgCode == 100)
                     {
-                        mDailyDateTime = baseDto.data.getClone();
+                        mTodayDateTime = baseDto.data;
 
                         DailyMobileAPI.getInstance(baseActivity).requestBookingList(mNetworkTag, mReservationListCallback);
                     } else
@@ -792,7 +792,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         }
 
         @Override
-        public void onFailure(Call<BaseDto<DailyDateTime>> call, Throwable t)
+        public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
         {
             BaseActivity baseActivity = (BaseActivity) getActivity();
 

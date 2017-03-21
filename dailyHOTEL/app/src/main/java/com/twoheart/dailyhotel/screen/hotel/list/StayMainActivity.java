@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -37,6 +38,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -44,6 +46,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -603,51 +606,46 @@ public class StayMainActivity extends PlaceMainActivity
     private PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onDateTime(long currentDateTime, long dailyDateTime)
+        public void onDateTime(TodayDateTime todayDateTime)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
+            mTodayDateTime = todayDateTime;
+
             try
             {
-                mStayCuration.setCheckInSaleTime(currentDateTime, dailyDateTime);
+                String checkInDateTime = mStayCuration.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
 
-                SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
-                mStayCuration.setCheckOutSaleTime(checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + 1));
-
-                // 현재 추측으로는 다음날을 선택했는데 하루가 지나서 오늘이 되어야 할때 날짜가 자동으로 변경되지 않고 미래를 보기 때문에 추가된 내용으로 추측됨
-                // ex) 2017-01-02를 보다가 하루가 지나면 2017-01-03을 보게 되는데 2017-01-02 를 볼수 있께 해줌.
-                String lastViewDate = DailyPreference.getInstance(StayMainActivity.this).getStayLastViewDate();
-
-                if (Util.isTextEmpty(lastViewDate) == false)
+                // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
+                if (Util.isTextEmpty(checkInDateTime) == true)
                 {
-                    DailyPreference.getInstance(StayMainActivity.this).setStayLastViewDate(null);
+                    mStayCuration.setCheckInDay(mTodayDateTime.dailyDateTime);
+                    mStayCuration.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+                } else
+                {
+                    // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
+                    // 체크인 날짜 체크
 
-                    String[] lastViewDates = lastViewDate.split("\\,");
-                    int nights = 1;
+                    // 날짜로 비교해야 한다.
+                    Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
+                    Calendar checkInCalendar = DailyCalendar.getInstance(mStayCuration.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), true);
+                    Calendar checkOutCalendar = DailyCalendar.getInstance(mStayCuration.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT), true);
 
-                    try
+                    // 하루가 지나서 체크인 날짜가 전날짜 인 경우
+                    if (todayCalendar.getTimeInMillis() > checkInCalendar.getTimeInMillis())
                     {
-                        nights = Integer.parseInt(lastViewDates[1]);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    } finally
-                    {
-                        if (nights <= 0)
-                        {
-                            nights = 1;
-                        }
+                        mStayCuration.setCheckInDay(mTodayDateTime.dailyDateTime);
+
+                        checkInCalendar = DailyCalendar.getInstance(mStayCuration.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), true);
                     }
 
-                    checkInSaleTime = SaleTime.changeDateSaleTime(checkInSaleTime, lastViewDates[0]);
-
-                    if (checkInSaleTime != null)
+                    // 체크인 날짜가 체크 아웃 날짜와 같거나 큰경우.
+                    if (checkInCalendar.getTimeInMillis() >= checkOutCalendar.getTimeInMillis())
                     {
-                        mStayCuration.setCheckInSaleTime(checkInSaleTime);
-                        mStayCuration.setCheckOutSaleTime(checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights));
+                        mStayCuration.setCheckOutDay(mStayCuration.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), 1);
                     }
                 }
 

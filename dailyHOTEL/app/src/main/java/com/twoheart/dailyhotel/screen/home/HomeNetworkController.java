@@ -11,9 +11,9 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.Recommendation;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -39,7 +39,7 @@ public class HomeNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onCommonDateTime(long currentDateTime, long dailyDateTime);
+        void onCommonDateTime(TodayDateTime todayDateTime);
 
         void onEventList(ArrayList<Event> list);
 
@@ -52,7 +52,7 @@ public class HomeNetworkController extends BaseNetworkController
 
     public void requestCommonDateTime()
     {
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeJsonCallback);
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTimeRefactoring(mNetworkTag, mDateTimeJsonCallback);
     }
 
     public void requestEventList()
@@ -131,31 +131,23 @@ public class HomeNetworkController extends BaseNetworkController
         return jsonArray;
     }
 
-    private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mDateTimeJsonCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<TodayDateTime> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100)
+                    if (baseDto.msgCode == 100)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
-
-                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(currentDateTime, dailyDateTime);
+                        ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(baseDto.data);
                     } else
                     {
-                        String message = responseJSONObject.getString("msg");
-                        mOnNetworkControllerListener.onError(new RuntimeException(message));
+                        mOnNetworkControllerListener.onError(new RuntimeException(baseDto.msg));
                     }
                 } catch (Exception e)
                 {
@@ -168,7 +160,7 @@ public class HomeNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
         }

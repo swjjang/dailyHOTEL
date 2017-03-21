@@ -1,0 +1,63 @@
+package com.twoheart.dailyhotel.model.time;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class GourmetBookingDay extends PlaceBookingDay
+{
+    public GourmetBookingDay()
+    {
+    }
+
+    public GourmetBookingDay(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    /**
+     * @param millis GMT-0
+     */
+    public void setVisitTime(long millis)
+    {
+        setTimeInMillis(millis);
+    }
+
+    /**
+     * @param dateTime ISO-8601
+     */
+    public void setVisitTime(String dateTime)
+    {
+        setTimeInString(dateTime);
+    }
+
+    @Override
+    public int describeContents()
+    {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags)
+    {
+        super.writeToParcel(dest, flags);
+    }
+
+    protected void readFromParcel(Parcel in)
+    {
+        super.readFromParcel(in);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Creator()
+    {
+        public GourmetBookingDay createFromParcel(Parcel in)
+        {
+            return new GourmetBookingDay(in);
+        }
+
+        @Override
+        public GourmetBookingDay[] newArray(int size)
+        {
+            return new GourmetBookingDay[size];
+        }
+    };
+}
