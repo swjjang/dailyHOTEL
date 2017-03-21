@@ -164,6 +164,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
+
+        showBottomLayout();
     }
 
     private void initCategoryTabLayout(View view)
