@@ -10,9 +10,10 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity implements OnClickListener
 {
     public static Intent newInstance(Context context, String imageUrl, String placeName, String placeType, //
-                                     String userName, String checkInDate, String checkOutDate, int nights, //
+                                     String userName, StayBookingDay stayBookingDay, //
                                      String paymentType, String discountType, Map<String, String> params)
     {
         Intent intent = new Intent(context, HotelPaymentThankyouActivity.class);
@@ -32,9 +33,7 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_NAME, placeName);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
         intent.putExtra(INTENT_EXTRA_DATA_USER_NAME, userName);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
         intent.putExtra(INTENT_EXTRA_DATA_DISCOUNT_TYPE, discountType);
         intent.putExtra(INTENT_EXTRA_DATA_MAP_PAYMENT_INFORM, (Serializable) params);
@@ -54,12 +53,10 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
             return;
         }
 
-        String checkInDate = intent.getStringExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE);
-        String checkOutDate = intent.getStringExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE);
-        int nights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 0);
+        StayBookingDay stayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
         View dateLayout = findViewById(R.id.dateInformationLayout);
-        initDateLayout(dateLayout, checkInDate, checkOutDate, nights);
+        initDateLayout(dateLayout, stayBookingDay);
 
         View textLayout = findViewById(R.id.textInformationLayout);
         initTextLayout(textLayout);
@@ -69,14 +66,9 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
             , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
     }
 
-    private void initDateLayout(View view, String checkInDate, String checkOutDate, int nights)
+    private void initDateLayout(View view, StayBookingDay stayBookingDay)
     {
-        if (view == null)
-        {
-            return;
-        }
-
-        if (Util.isTextEmpty(checkInDate, checkOutDate) == true)
+        if (view == null || stayBookingDay == null)
         {
             return;
         }
@@ -89,6 +81,9 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
 
         checkInDateTitleView.setText(R.string.act_booking_chkin);
         checkOutDateTitleView.setText(R.string.act_booking_chkout);
+
+        String checkInDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
+        String checkOutDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
 
         SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDate);
         checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(this).getMediumTypeface()),//
@@ -104,7 +99,13 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
 
         checkOutDateTextView.setText(checkOutSpannableStringBuilder);
 
-        nightsTextView.setText(this.getString(R.string.label_nights, nights));
+        try
+        {
+            nightsTextView.setText(this.getString(R.string.label_nights, stayBookingDay.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     private void initTextLayout(View view)
