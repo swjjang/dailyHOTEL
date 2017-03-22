@@ -12,13 +12,9 @@ public class StayPaymentInformation extends PlacePaymentInformation
     public static final String VISIT_TYPE_NO_PARKING = "NO_PARKING"; // 주차 불가능
 
     private StayProduct mStayProduct;
-    // Thankyou에 넘기기 위한 데이터 저장
-    public long checkInDate;
-    public long checkOutDate;
-    public int nights;
 
-    public String checkInDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
-    public String checkOutDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
+    //    public String checkInDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
+    //    public String checkOutDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
 
     //
     public String visitType = VISIT_TYPE_NONE; // 방문 형태로
@@ -45,11 +41,6 @@ public class StayPaymentInformation extends PlacePaymentInformation
         super.writeToParcel(dest, flags);
 
         dest.writeParcelable(mStayProduct, flags);
-        dest.writeLong(checkInDate);
-        dest.writeLong(checkOutDate);
-        dest.writeInt(nights);
-        dest.writeString(checkInDateFormat);
-        dest.writeString(checkOutDateFormat);
         dest.writeString(visitType);
         dest.writeInt(isVisitWalking ? 1 : 0);
         dest.writeString(grade.name());
@@ -63,11 +54,6 @@ public class StayPaymentInformation extends PlacePaymentInformation
         super.readFromParcel(in);
 
         mStayProduct = in.readParcelable(StayProduct.class.getClassLoader());
-        checkInDate = in.readLong();
-        checkOutDate = in.readLong();
-        nights = in.readInt();
-        checkInDateFormat = in.readString();
-        checkOutDateFormat = in.readString();
         visitType = in.readString();
         isVisitWalking = in.readInt() == 1;
 

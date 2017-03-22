@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
@@ -57,9 +57,8 @@ public class GourmetMainLayout extends PlaceMainLayout
         return mContext.getString(R.string.label_daily_gourmet);
     }
 
-    protected void setToolbarDateText(SaleTime saleTime)
+    protected void setToolbarDateText(GourmetBookingDay gourmetBookingDay)
     {
-        String dateText = saleTime.getDayOfDaysDateFormat("M.d(EEE)");
-        setToolbarDateText(dateText);
+        setToolbarDateText(gourmetBookingDay.getVisitDay("M.d(EEE"));
     }
 }

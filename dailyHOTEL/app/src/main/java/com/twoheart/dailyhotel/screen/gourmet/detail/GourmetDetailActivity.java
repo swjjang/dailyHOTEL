@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
+import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,12 +24,14 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RecentPlaces;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
@@ -51,10 +55,10 @@ import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -70,18 +74,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * 리스트에서 호출
      *
      * @param context
-     * @param saleTime
+     * @param gourmetBookingDay
      * @param province
      * @param gourmet
      * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Province province, Gourmet gourmet//
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Province province, Gourmet gourmet//
         , int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
@@ -117,40 +121,18 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * 딥링크로 호출
      *
      * @param context
-     * @param saleTime
+     * @param gourmetBookingDay
      * @param gourmetIndex
      * @param isShowCalendar
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, int gourmetIndex, int productIndex//
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, int gourmetIndex, int productIndex//
         , boolean isShowCalendar, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
-     * 딥링크로 호출
-     */
-    public static Intent newInstance(Context context, SaleTime startSaleTime, SaleTime endSaleTime//
-        , int gourmetIndex, int productIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, GourmetDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
@@ -166,28 +148,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * 검색 결과에서 호출
      *
      * @param context
-     * @param saleTime
+     * @param gourmetBookingDay
      * @param gourmet
      * @param listCount
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, int listCount, boolean isUsedMultiTransition)
-    {
-        SaleTime startSaleTime = saleTime.getClone(0);
-
-        return newInstance(context, saleTime, gourmet, startSaleTime, null, listCount, isUsedMultiTransition);
-    }
-
-    public static Intent newInstance(Context context, SaleTime saleTime, Gourmet gourmet, SaleTime startSaleTime//
-        , SaleTime endSaleTime, int listCount, boolean isUsedMultiTransition)
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Gourmet gourmet, int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
-
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, gourmet.imageUrl);
@@ -216,22 +187,26 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, HomePlace homePlace, boolean isUsedMultiTransition)
+    /**
+     * 홈에서 호출
+     *
+     * @param context
+     * @param gourmetBookingDay
+     * @param homePlace
+     * @param isUsedMultiTransition
+     * @return
+     */
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, HomePlace homePlace, boolean isUsedMultiTransition)
     {
-        if (saleTime == null || homePlace == null)
+        if (gourmetBookingDay == null || homePlace == null)
         {
             return null;
         }
 
-        SaleTime startSaleTime = saleTime.getClone(0);
-
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
-
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        //        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, homePlace.imageUrl);
@@ -258,16 +233,23 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, RecommendationGourmet recommendationGourmet//
-        , SaleTime startSaleTime, SaleTime endSaleTime, int listCount, boolean isUsedMultiTransition)
+    /**
+     * 추천 목록에서 호출
+     *
+     * @param context
+     * @param gourmetBookingDay
+     * @param recommendationGourmet
+     * @param listCount
+     * @param isUsedMultiTransition
+     * @return
+     */
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecommendationGourmet recommendationGourmet//
+        , int listCount, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
-
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL, recommendationGourmet.imageUrl);
@@ -309,49 +291,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
-        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
+        mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+        mIsShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
 
-        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-
-        boolean isShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
-
-        if (mStartSaleTime != null && mEndSaleTime != null)
+        if (mPlaceBookingDay == null)
         {
-            // 범위 지정인데 이미 날짜가 지난 경우
-            if (mStartSaleTime.getOffsetDailyDay() == 0 && mEndSaleTime.getOffsetDailyDay() == 0)
-            {
-                showSimpleDialog(null, getString(R.string.message_end_event), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Intent eventIntent = new Intent();
-                        eventIntent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=10&v=el"));
-                        startActivity(eventIntent);
-                    }
-                }, null);
-
-                mEndSaleTime = null;
-
-                // 이벤트 기간이 종료된 경우 달력을 띄우지 않는다.
-                isShowCalendar = false;
-            }
-
-            if (mSaleTime == null)
-            {
-                mSaleTime = mStartSaleTime.getClone();
-            }
-        } else
-        {
-            if (mSaleTime == null)
-            {
-                Util.restartApp(this);
-                return;
-            }
-
-            mStartSaleTime = mSaleTime.getClone(0);
-            mEndSaleTime = null;
+            Util.restartApp(this);
+            return;
         }
 
         mPlaceDetail = createPlaceDetail(intent);
@@ -360,12 +306,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         RecentPlaces recentPlaces = new RecentPlaces(this);
         recentPlaces.add(PlaceType.FNB, mPlaceDetail.index);
         recentPlaces.savePreference();
-
-        if (mSaleTime == null || mPlaceDetail == null)
-        {
-            Util.restartApp(this);
-            return;
-        }
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
         {
@@ -376,11 +316,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, 0);
 
             initLayout(null, null, false);
-
-            if (isShowCalendar == true)
-            {
-                startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, false);
-            }
         } else
         {
             mIsDeepLink = false;
@@ -413,11 +348,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             initLayout(placeName, mDefaultImageUrl, isFromMap);
-
-            if (isShowCalendar == true)
-            {
-                startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, false);
-            }
         }
     }
 
@@ -458,6 +388,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
+    @TargetApi(value = 21)
     private void initTransition()
     {
         if (mIsUsedMultiTransition == true)
@@ -519,7 +450,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                             @Override
                             public void run()
                             {
-                                updateDetailInformationLayout((GourmetDetail) mPlaceDetail);
+                                updateDetailInformationLayout((GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
                             }
                         });
 
@@ -625,9 +556,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void shareKakao(PlaceDetail placeDetail, String imageUrl)
+    protected void shareKakao(String imageUrl, PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
-        if (placeDetail == null)
+        if (placeBookingDay == null || placeDetail == null)
         {
             return;
         }
@@ -652,19 +583,20 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         KakaoLinkManager.newInstance(this).shareGourmet(name, gourmetDetailParams.name, gourmetDetailParams.address//
             , placeDetail.index //
             , imageUrl //
-            , mSaleTime);
+            , (GourmetBookingDay) placeBookingDay);
 
         recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
     }
 
     @Override
-    protected void shareSMS(PlaceDetail placeDetail)
+    protected void shareSMS(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
-        if (placeDetail == null)
+        if (placeBookingDay == null || placeDetail == null)
         {
             return;
         }
 
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
         GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
 
         try
@@ -680,7 +612,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             String message = getString(R.string.message_detail_gourmet_share_sms, //
-                name, gourmetDetailParams.name, mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd (EEE)"),//
+                name, gourmetDetailParams.name, gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"),//
                 gourmetDetailParams.address);
 
             Util.sendSms(this, message);
@@ -778,9 +710,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         //        }
     }
 
-    protected void processBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int ticketIndex)
+    protected void processBooking(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int ticketIndex)
     {
-        if (saleTime == null || gourmetDetail == null || ticketIndex < 0)
+        if (gourmetBookingDay == null || gourmetDetail == null || ticketIndex < 0)
         {
             return;
         }
@@ -804,7 +736,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         boolean isBenefit = Util.isTextEmpty(gourmetDetailParams.benefit) == false;
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.name, gourmetProduct//
-            , saleTime, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
+            , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
             , mProvince, mArea, gourmetDetail.isShowOriginalPrice, gourmetDetail.entryPosition //
             , gourmetDetail.isDailyChoice, gourmetDetailParams.ratingValue);
 
@@ -818,21 +750,22 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             hideSimpleDialog();
 
-            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+            GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-            if (checkInSaleTime == null)
+            if (gourmetBookingDay == null)
             {
                 return;
             }
 
             lockUI();
 
-            mSaleTime = checkInSaleTime;
+            mPlaceBookingDay = gourmetBookingDay;
+
             mPlaceDetail = new GourmetDetail(mPlaceDetail.index, mPlaceDetail.entryPosition, //
                 mPlaceDetail.isShowOriginalPrice, mPlaceDetail.listCount, mPlaceDetail.isDailyChoice);
 
             ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
-                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
         }
     }
 
@@ -843,14 +776,15 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    protected void downloadCoupon()
+    protected void downloadCoupon(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
+        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_COUPON_DOWNLOAD, gourmetDetailParams.name, null);
 
@@ -893,7 +827,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         } else
         {
             Intent intent = SelectGourmetCouponDialogActivity.newInstance(this, mPlaceDetail.index, //
-                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), gourmetDetailParams.name);
+                gourmetBookingDay.getVisitDay("yyyy-MM-dd"), gourmetDetailParams.name);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
     }
@@ -905,7 +839,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.GOURMET, null);
     }
 
-    void updateDetailInformationLayout(GourmetDetail gourmetDetail)
+    void updateDetailInformationLayout(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
     {
         switch (mInitializeStatus)
         {
@@ -929,7 +863,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
-            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(mSaleTime, gourmetDetail, mCurrentImage);
+            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(gourmetBookingDay, gourmetDetail, mCurrentImage);
         }
 
         if (mFirstCheckPrice == false)
@@ -947,7 +881,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             if (mPlaceDetailLayout != null)
             {
-                Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, gourmetDetail, mProductDetailIndex, null, null);
+                Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, gourmetBookingDay, gourmetDetail, mProductDetailIndex, null, null);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
             }
         }
@@ -1022,7 +956,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    void startCalendar(SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, boolean isAnimation)
+    void startCalendar(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, boolean isAnimation)
     {
         if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -1039,7 +973,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(GourmetDetailActivity.this, //
-            saleTime, startSaleTime, endSaleTime, placeIndex, callByScreen, true, isAnimation);
+            todayDateTime, gourmetBookingDay, placeIndex, callByScreen, true, isAnimation);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
 
         AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
@@ -1071,9 +1005,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    protected void recordAnalyticsGourmetDetail(String screen, SaleTime saleTime, GourmetDetail gourmetDetail)
+    protected void recordAnalyticsGourmetDetail(String screen, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
     {
-        if (saleTime == null || gourmetDetail == null)
+        if (gourmetBookingDay == null || gourmetDetail == null)
         {
             return;
         }
@@ -1097,7 +1031,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetDetail.index));
-            params.put(AnalyticsManager.KeyType.DATE, saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.DATE, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
 
             if (mProvince == null)
             {
@@ -1121,7 +1055,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
-            params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
+            params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
             String listIndex = gourmetDetail.entryPosition == -1 //
                 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(gourmetDetail.entryPosition);
@@ -1145,9 +1079,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
-    protected Map<String, String> recordAnalyticsBooking(SaleTime saleTime, GourmetDetail gourmetDetail, GourmetProduct gourmetProduct)
+    protected Map<String, String> recordAnalyticsBooking(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, GourmetProduct gourmetProduct)
     {
-        if (saleTime == null || gourmetDetail == null || gourmetProduct == null)
+        if (gourmetBookingDay == null || gourmetDetail == null || gourmetProduct == null)
         {
             return null;
         }
@@ -1187,7 +1121,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
 
             params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(gourmetProduct.discountPrice));
-            params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
+            params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
             return params;
         } catch (Exception e)
@@ -1215,10 +1149,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             GourmetDetail gourmetDetail = (GourmetDetail) mPlaceDetail;
             GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
-            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, mSaleTime, gourmetDetail, -1, mProvince, mArea);
+            Intent intent = GourmetProductListActivity.newInstance(GourmetDetailActivity.this, (GourmetBookingDay) mPlaceBookingDay, gourmetDetail, -1, mProvince, mArea);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_LIST);
 
-            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, mSaleTime, (GourmetDetail) mPlaceDetail);
+            recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                 , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
         }
@@ -1267,7 +1201,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onDownloadCouponClick()
         {
-            GourmetDetailActivity.this.downloadCoupon();
+            GourmetDetailActivity.this.downloadCoupon(mPlaceBookingDay, mPlaceDetail);
         }
 
         @Override
@@ -1454,7 +1388,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendar(mSaleTime, mStartSaleTime, mEndSaleTime, mPlaceDetail.index, true);
+            startCalendar(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay, mPlaceDetail.index, true);
         }
 
         @Override
@@ -1482,28 +1416,52 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
+        public void onCommonDateTime(TodayDateTime todayDateTime)
         {
-            if (mIsDeepLink == true)
+            mTodayDateTime = todayDateTime;
+
+            try
             {
-                mSaleTime.setCurrentTime(currentDateTime);
-                long shareDailyTime = mSaleTime.getDayOfDaysDate().getTime();
+                // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
+                if (mPlaceBookingDay == null)
+                {
+                    mPlaceBookingDay = new GourmetBookingDay();
+                    GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
 
-                int shareDailyDay = Integer.parseInt(DailyCalendar.format(shareDailyTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
-                int todayDailyDay = Integer.parseInt(DailyCalendar.format(dailyDateTime, "yyyyMMdd", TimeZone.getTimeZone("GMT")));
+                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                } else
+                {
+                    GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
 
-                // 지난 날의 호텔인 경우.
-                if (shareDailyDay < todayDailyDay)
+                    // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
+                    // 체크인 날짜 체크
+
+                    // 날짜로 비교해야 한다.
+                    Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
+                    Calendar visitCalendar = DailyCalendar.getInstance(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), true);
+
+                    // 하루가 지나서 체크인 날짜가 전날짜 인 경우
+                    if (todayCalendar.getTimeInMillis() > visitCalendar.getTimeInMillis())
+                    {
+                        gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                    }
+                }
+
+                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+                if (mIsShowCalendar == true)
                 {
                     unLockUI();
-                    DailyToast.showToast(GourmetDetailActivity.this, R.string.toast_msg_dont_past_hotelinfo, Toast.LENGTH_LONG);
-                    finish();
+                    startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, false);
                     return;
                 }
-            }
 
-            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
-                mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
+                    gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         @Override
@@ -1522,7 +1480,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                     } else
                     {
-                        processBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketIndex);
+                        processBooking((GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail, mSelectedTicketIndex);
                     }
                 }
             } else
@@ -1536,7 +1494,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.getPhone());
                 } else
                 {
-                    processBooking(mSaleTime, (GourmetDetail) mPlaceDetail, mSelectedTicketIndex);
+                    processBooking((GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail, mSelectedTicketIndex);
                 }
             }
         }
@@ -1555,10 +1513,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 if (mIsTransitionEnd == true)
                 {
-                    updateDetailInformationLayout((GourmetDetail) mPlaceDetail);
+                    updateDetailInformationLayout((GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
                 }
 
-                recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, mSaleTime, (GourmetDetail) mPlaceDetail);
+                recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
             } catch (Exception e)
             {
                 DailyToast.showToast(GourmetDetailActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
@@ -1574,7 +1532,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             ((GourmetDetail) mPlaceDetail).hasCoupon = hasCoupon;
 
-            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mPlaceDetail.index);
+            ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestGourmetDetailInformation(((GourmetBookingDay) mPlaceBookingDay).getVisitDay("yyyy-MM-dd"), mPlaceDetail.index);
         }
 
         public void onAddWishList(boolean isSuccess, String message)
@@ -1589,6 +1547,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             }
 
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
 
             if (isSuccess == true)
@@ -1640,7 +1599,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
                     params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
-                    params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
                     params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
                     params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
 
@@ -1683,6 +1642,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             }
 
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
 
             if (isSuccess == true)
@@ -1732,7 +1692,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
                 params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
-                params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
                 params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
                 params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
 

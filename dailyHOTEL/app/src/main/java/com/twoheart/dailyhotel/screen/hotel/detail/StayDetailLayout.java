@@ -14,9 +14,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -144,7 +145,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         }
     }
 
-    public void setDetail(SaleTime saleTime, StayDetail stayDetail, int imagePosition)
+    public void setDetail(StayBookingDay stayBookingDay, StayDetail stayDetail, int imagePosition)
     {
         if (stayDetail == null)
         {
@@ -180,11 +181,11 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         if (mListAdapter == null)
         {
-            mListAdapter = new StayDetailListAdapter(mContext, saleTime, stayDetail, (StayDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
+            mListAdapter = new StayDetailListAdapter(mContext, stayBookingDay, stayDetail, (StayDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(stayDetail, saleTime);
+            mListAdapter.setData(stayBookingDay, stayDetail);
         }
 
         setCurrentImage(imagePosition);
@@ -226,16 +227,25 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
             setBookingStatus(STATUS_SELECT_PRODUCT);
 
-            updateRoomTypeInformationLayout(stayProductList, stayDetail.nights);
+            updateRoomTypeInformationLayout(stayBookingDay, stayProductList);
         }
 
-        if (stayDetail.nights > 1)
+        try
         {
-            mPriceRadioGroup.check(R.id.averageRadioButton);
-            mPriceOptionLayout.setVisibility(View.VISIBLE);
-            mPriceRadioGroup.setOnCheckedChangeListener(this);
-        } else
+            if (stayBookingDay.getNights() > 1)
+            {
+                mPriceRadioGroup.check(R.id.averageRadioButton);
+                mPriceOptionLayout.setVisibility(View.VISIBLE);
+                mPriceRadioGroup.setOnCheckedChangeListener(this);
+            } else
+            {
+                mPriceOptionLayout.setVisibility(View.GONE);
+                mPriceRadioGroup.setOnCheckedChangeListener(null);
+            }
+        } catch (Exception e)
         {
+            ExLog.e(e.toString());
+
             mPriceOptionLayout.setVisibility(View.GONE);
             mPriceRadioGroup.setOnCheckedChangeListener(null);
         }
@@ -246,10 +256,21 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         mListAdapter.notifyDataSetChanged();
     }
 
-    private void updateRoomTypeInformationLayout(List<StayProduct> stayProductList, final int nights)
+    private void updateRoomTypeInformationLayout(StayBookingDay stayBookingDay, List<StayProduct> stayProductList)
     {
-        if (stayProductList == null || stayProductList.size() == 0)
+        if (stayBookingDay == null || stayProductList == null || stayProductList.size() == 0)
         {
+            return;
+        }
+
+        final int nights;
+
+        try
+        {
+            nights = stayBookingDay.getNights();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
             return;
         }
 
@@ -288,15 +309,14 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         mProductTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
 
+        // 객실 개수로 높이를 재지정해준다.
+        final int productTitleBarHeight = Util.dpToPx(mContext, 52) + (nights > 1 ? Util.dpToPx(mContext, 40) : 0);
+
         mProductTypeRecyclerView.postDelayed(new Runnable()
         {
             @Override
             public void run()
             {
-                // 객실 개수로 높이를 재지정해준다.
-                int productTitleBarHeight = Util.dpToPx(mContext, 52) //
-                    + (nights > 1 ? Util.dpToPx(mContext, 40) : 0);
-
                 // 화면 높이 - 상단 타이틀 - 하단 버튼
                 final int maxHeight = ((View) mProductTypeLayout.getParent()).getHeight() //
                     - Util.dpToPx(mContext, 52) - Util.dpToPx(mContext, 64);

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -332,8 +333,9 @@ public abstract class CollectionBaseLayout extends BaseLayout
         mRecyclerView.scrollToPosition(0);
     }
 
-    protected void setData(ArrayList<PlaceViewItem> placeViewItems)
+    protected void setData(ArrayList<PlaceViewItem> placeViewItems, PlaceBookingDay placeBookingDay)
     {
+        mPlaceListAdapter.setPlaceBookingDay(placeBookingDay);
         mPlaceListAdapter.setAll(placeViewItems);
         postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
     }

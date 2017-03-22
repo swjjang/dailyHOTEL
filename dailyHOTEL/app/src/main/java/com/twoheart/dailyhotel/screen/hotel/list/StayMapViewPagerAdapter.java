@@ -10,14 +10,35 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
 
 public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 {
+    private int mNights;
+
     public StayMapViewPagerAdapter(Context context)
     {
         super(context);
+    }
+
+    @Override
+    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
+    {
+        if(placeBookingDay == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mNights = ((StayBookingDay)placeBookingDay).getNights();
+        } catch (Exception e)
+        {
+            mNights = 1;
+        }
     }
 
     @Override
@@ -102,7 +123,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             satisfactionView.setVisibility(View.GONE);
         }
 
-        if (stay.nights > 1)
+        if (mNights > 1)
         {
             averageTextView.setVisibility(View.VISIBLE);
         } else

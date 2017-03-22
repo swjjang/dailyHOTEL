@@ -192,6 +192,14 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
     protected DailyTextView getGridLayoutItemView(String text, int resId)
     {
         DailyTextView dailyTextView = new DailyTextView(this);

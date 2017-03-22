@@ -117,7 +117,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
     String NAME_INTENT_EXTRA_DATA_HOTELLIST = "hotellist";
     String NAME_INTENT_EXTRA_DATA_HOTELDETAIL = "hoteldetail";
-    String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
+//    String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
     String NAME_INTENT_EXTRA_DATA_REGION = "region";
     String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIndex";
     String NAME_INTENT_EXTRA_DATA_HOTELGRADE = "hotelGrade";
@@ -150,7 +150,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";
     String NAME_INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
     String NAME_INTENT_EXTRA_DATA_CATEGORY = "category";
-    String NAME_INTENT_EXTRA_DATA_NIGHTS = "nights";
+//    String NAME_INTENT_EXTRA_DATA_NIGHTS = "nights";
     String NAME_INTENT_EXTRA_DATA_DAILYTIME = "dailyTime";
     String NAME_INTENT_EXTRA_DATA_DAYOFDAYS = "dayOfDays";
     String NAME_INTENT_EXTRA_DATA_TYPE = "type";
@@ -159,6 +159,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_RESERVATIONINDEX = "reservationIndex";
     String NAME_INTENT_EXTRA_DATA_CHECKINDATE = "checkInDate";
     String NAME_INTENT_EXTRA_DATA_CHECKOUTDATE = "checkOutDate";
+    String NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
     String NAME_INTENT_EXTRA_DATA_URL = "url";
     String NAME_INTENT_EXTRA_DATA_PLACEIDX = "placeIdx";
     String NAME_INTENT_EXTRA_DATA_PLACENAME = "placeName";
@@ -192,6 +193,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL = "gourmetDetail";
     String NAME_INTENT_EXTRA_DATA_CALL_SCREEN = "callScreen";
     String NAME_INTENT_EXTRA_DATA_IS_SOLDOUT = "isSoldOut";
+    String NAME_INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

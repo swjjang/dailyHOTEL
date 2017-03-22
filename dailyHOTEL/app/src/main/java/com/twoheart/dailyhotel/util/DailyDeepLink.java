@@ -62,8 +62,8 @@ public class DailyDeepLink
     private static final String PARAM_V9_QUERY_TYPE = "qt"; // 쿼리 방식
     //    private static final String PARAM_V9_TITLE_IMAGE_URL = "tiu"; // 타이틀 이미지 URL
 
-    private static final String PARAM_V10_START_DATE = "sd"; // 캘린더 시작 날짜
-    private static final String PARAM_V10_END_DATE = "ed"; // 캘린더 끝날짜
+//    private static final String PARAM_V10_START_DATE = "sd"; // 캘린더 시작 날짜
+//    private static final String PARAM_V10_END_DATE = "ed"; // 캘린더 끝날짜
 
     private static final String VALUE_V4_SORTING_LOW_TO_HIGH = "lp";
     private static final String VALUE_V4_SORTING_HIGH_TO_LOW = "hp";
@@ -298,35 +298,35 @@ public class DailyDeepLink
     // Version 10
     ///////////////////////////////////////////////////////////////////////////////////
 
-    public String getStartDate()
-    {
-        String value;
-
-        if (mVersionCode >= 10)
-        {
-            value = mParams.get(PARAM_V10_START_DATE);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
-    }
-
-    public String getEndDate()
-    {
-        String value;
-
-        if (mVersionCode >= 10)
-        {
-            value = mParams.get(PARAM_V10_END_DATE);
-        } else
-        {
-            value = null;
-        }
-
-        return value;
-    }
+//    public String getStartDate()
+//    {
+//        String value;
+//
+//        if (mVersionCode >= 10)
+//        {
+//            value = mParams.get(PARAM_V10_START_DATE);
+//        } else
+//        {
+//            value = null;
+//        }
+//
+//        return value;
+//    }
+//
+//    public String getEndDate()
+//    {
+//        String value;
+//
+//        if (mVersionCode >= 10)
+//        {
+//            value = mParams.get(PARAM_V10_END_DATE);
+//        } else
+//        {
+//            value = null;
+//        }
+//
+//        return value;
+//    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////

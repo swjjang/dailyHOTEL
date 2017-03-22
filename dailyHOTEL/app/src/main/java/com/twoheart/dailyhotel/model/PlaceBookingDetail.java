@@ -38,8 +38,6 @@ public abstract class PlaceBookingDetail implements Parcelable
     public int bonus;
     public int coupon;
     public int paymentPrice;
-    public long currentDateTime;
-    public long dailyDateTime;
     public int reservationIndex;
     public String reviewStatusType;
 
@@ -73,8 +71,6 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeInt(bonus);
         dest.writeInt(coupon);
         dest.writeInt(paymentPrice);
-        dest.writeLong(currentDateTime);
-        dest.writeLong(dailyDateTime);
         dest.writeInt(reservationIndex);
         dest.writeString(reviewStatusType);
     }
@@ -102,8 +98,6 @@ public abstract class PlaceBookingDetail implements Parcelable
         bonus = in.readInt();
         coupon = in.readInt();
         paymentPrice = in.readInt();
-        currentDateTime = in.readLong();
-        dailyDateTime = in.readLong();
         reservationIndex = in.readInt();
         reviewStatusType = in.readString();
     }

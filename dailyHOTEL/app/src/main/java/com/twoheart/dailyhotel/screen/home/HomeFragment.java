@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
@@ -58,7 +60,7 @@ public class HomeFragment extends BaseFragment
     BaseActivity mBaseActivity;
     PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
-    SaleTime mSaleTime;
+    TodayDateTime mTodayDateTime;
     int mNights = 1;
     boolean mIsAttach;
     boolean mDontReload;
@@ -372,84 +374,97 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
-    public void startPlaceDetail(View view, HomePlace place)
+    public void startPlaceDetail(View view, HomePlace place, TodayDateTime todayDateTime)
     {
-        if (place == null)
+        if (place == null || todayDateTime == null)
         {
             return;
         }
 
-        switch (place.placeType)
+        try
         {
-            case HOTEL:
+            switch (place.placeType)
             {
-                if (Util.isUsedMultiTransition() == true)
+                case HOTEL:
                 {
-                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
+                    StayBookingDay stayBookingDay = new StayBookingDay();
+                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+                    stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
 
-                    if (intent == null)
+                    if (Util.isUsedMultiTransition() == true)
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
-                    }
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
 
-                    View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
 
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                        android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                        View simpleDraweeView = view.findViewById(R.id.contentImageView);
 
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
-                } else
-                {
-                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
-                    if (intent == null)
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+                    } else
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, false);
+
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
+
+                        mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                        mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     }
-
-                    mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-
-                    mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    break;
                 }
-                break;
-            }
 
-            case FNB:
-            {
-                if (Util.isUsedMultiTransition() == true)
+                case FNB:
                 {
-                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, true);
+                    GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-                    if (intent == null)
+                    if (Util.isUsedMultiTransition() == true)
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
-                    }
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, true);
 
-                    View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
 
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                        android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                        View simpleDraweeView = view.findViewById(R.id.contentImageView);
 
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
-                } else
-                {
-                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, mSaleTime, place, false);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
-                    if (intent == null)
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+                    } else
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, false);
+
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
+
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                        mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     }
-
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
-                    mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    break;
                 }
-                break;
             }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
     }
 
@@ -602,11 +617,21 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+            try
+            {
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
-                AnalyticsManager.Label.HOME, null);
+                mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, stayBookingDay), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
+                    AnalyticsManager.Label.HOME, null);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         @Override
@@ -788,7 +813,7 @@ public class HomeFragment extends BaseFragment
 
             if (wishItem != null)
             {
-                startPlaceDetail(view, wishItem);
+                startPlaceDetail(view, wishItem, mTodayDateTime);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -813,7 +838,7 @@ public class HomeFragment extends BaseFragment
 
             if (recentItem != null)
             {
-                startPlaceDetail(view, recentItem);
+                startPlaceDetail(view, recentItem, mTodayDateTime);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -860,7 +885,7 @@ public class HomeFragment extends BaseFragment
     HomeNetworkController.OnNetworkControllerListener mNetworkControllerListener = new HomeNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
+        public void onCommonDateTime(TodayDateTime todayDateTime)
         {
             if (isFinishing() == true)
             {
@@ -877,10 +902,7 @@ public class HomeFragment extends BaseFragment
                 }
             }
 
-            mSaleTime = new SaleTime();
-            mSaleTime.setCurrentTime(currentDateTime);
-            mSaleTime.setDailyTime(dailyDateTime);
-            mSaleTime.setOffsetDailyDay(0);
+            mTodayDateTime = todayDateTime;
         }
 
         @Override

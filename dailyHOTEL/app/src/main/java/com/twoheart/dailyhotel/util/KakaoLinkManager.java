@@ -8,11 +8,10 @@ import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class KakaoLinkManager implements Constants
 {
@@ -53,26 +52,22 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareHotel(String name, String hotelName, String address, int hotelIndex, String imageUrl, SaleTime checkInSaleTime, int nights)
+    public void shareStay(String name, String hotelName, String address, int hotelIndex, String imageUrl, StayBookingDay stayBookingDay)
     {
         try
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            String date = checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd");
-            String schemeParams = String.format("vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, date, nights);
+            String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
+            int nights = stayBookingDay.getNights();
+            String schemeParams = String.format("vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
 
             messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            Date checkInDate = checkInSaleTime.getDayOfDaysDate();
-            Date checkOutDate = new Date(checkInSaleTime.getDayOfDaysDate().getTime() + SaleTime.MILLISECOND_IN_A_DAY * nights);
-
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-                , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd(EEE)", TimeZone.getTimeZone("GMT"))//
-                , DailyCalendar.format(checkOutDate.getTime(), "yyyy.MM.dd(EEE)", TimeZone.getTimeZone("GMT"))//
-                , nights, nights + 1, address);
+                , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"), stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
 
             if (Util.isTextEmpty(imageUrl) == false)
             {
@@ -118,13 +113,13 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, SaleTime saleTime)
+    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, GourmetBookingDay gourmetBookingDay)
     {
         try
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            String date = saleTime.getDayOfDaysDateFormat("yyyyMMdd");
+            String date = gourmetBookingDay.getVisitDay("yyyyMMdd");
             String schemeParams = String.format("vc=5&v=gd&i=%d&d=%s", index, date);
 
             messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb)//
@@ -132,9 +127,8 @@ public class KakaoLinkManager implements Constants
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            Date checkInDate = saleTime.getDayOfDaysDate();
             String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
-                , DailyCalendar.format(checkInDate.getTime(), "yyyy.MM.dd(EEE)", TimeZone.getTimeZone("GMT")), address);
+                , gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"), address);
 
             if (Util.isTextEmpty(imageUrl) == false)
             {

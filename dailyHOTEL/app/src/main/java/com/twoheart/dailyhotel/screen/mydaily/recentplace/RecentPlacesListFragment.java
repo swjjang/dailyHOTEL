@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -30,7 +31,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     protected RecentPlacesListLayout mListLayout;
     protected BaseNetworkController mNetworkController;
 
-    protected SaleTime mSaleTime;
+    protected PlaceBookingDay mPlaceBookingDay;
 
     protected boolean mDontReload = false;
 
@@ -40,11 +41,13 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     protected ArrayList<Pair<Integer, String>> mRecentPlaceList;
     protected OnRecentPlaceListFragmentListener mRecentPlaceListFragmentListener;
 
+    protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
+
     protected abstract RecentPlacesListLayout getListLayout();
 
     protected abstract BaseNetworkController getNetworkController();
 
-    protected abstract void requestRecentPlacesList();
+    protected abstract void requestRecentPlacesList(PlaceBookingDay placeBookingDay);
 
     public interface OnRecentPlaceListFragmentListener
     {
@@ -78,20 +81,9 @@ public abstract class RecentPlacesListFragment extends BaseFragment
             mDontReload = false;
         } else
         {
-            requestRecentPlacesList();
+            requestRecentPlacesList(mPlaceBookingDay);
         }
     }
-
-    public void setSaleTime(SaleTime saleTime)
-    {
-        if (saleTime == null)
-        {
-            return;
-        }
-
-        mSaleTime = saleTime;
-    }
-
 
     public void setRecentPlaceList(ArrayList<Pair<Integer, String>> recentPlaceList)
     {

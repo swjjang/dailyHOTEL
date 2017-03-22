@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -20,6 +21,12 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         super(context);
     }
 
+    @Override
+    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
+    {
+
+    }
+    
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {

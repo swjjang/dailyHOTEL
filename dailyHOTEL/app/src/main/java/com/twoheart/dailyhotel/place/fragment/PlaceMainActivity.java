@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
@@ -23,6 +24,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 {
     protected boolean mDontReloadAtOnResume, mIsDeepLink;
     protected ViewType mViewType = ViewType.LIST;
+    protected TodayDateTime mTodayDateTime;
 
     protected PlaceMainLayout mPlaceMainLayout;
     protected PlaceMainNetworkController mPlaceMainNetworkController;

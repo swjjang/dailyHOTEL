@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -543,14 +543,19 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 return;
             }
 
-            SaleTime saleTime = new SaleTime();
-            saleTime.setCurrentTime(mPlaceBookingDetail.currentDateTime);
-            saleTime.setDailyTime(mPlaceBookingDetail.dailyDateTime);
+            try
+            {
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-            Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, saleTime, mPlaceBookingDetail.placeIndex, 0, false, false);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, gourmetBookingDay, mPlaceBookingDetail.placeIndex, 0, false, false);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         @Override
@@ -665,7 +670,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         {
             unLockUI();
 
-            if (jsonObject == null || isFinishing() == true || (Util.isOverAPI17() == true && isDestroyed() == true))
+            if (jsonObject == null || isFinishing() == true)
             {
                 finish();
                 return;
@@ -675,7 +680,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             {
                 GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) mPlaceBookingDetail;
                 gourmetBookingDetail.setData(jsonObject);
-                mPlaceReservationDetailLayout.initLayout(gourmetBookingDetail);
+                mPlaceReservationDetailLayout.initLayout(mTodayDateTime, gourmetBookingDetail);
             } catch (Exception e)
             {
                 if (Constants.DEBUG == false)

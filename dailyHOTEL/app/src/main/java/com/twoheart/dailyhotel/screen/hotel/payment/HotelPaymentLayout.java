@@ -30,11 +30,12 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.StayPaymentInformation;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -42,8 +43,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.FontManager;
-
-import java.util.TimeZone;
 
 public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
@@ -454,7 +453,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         }
     }
 
-    public void setReservationInformation(StayPaymentInformation stayPaymentInformation, String placeName)
+    public void setReservationInformation(StayPaymentInformation stayPaymentInformation, String placeName, StayBookingDay stayBookingDay)
     {
         // 예약 장소
         mPlaceNameTextView.setText(placeName);
@@ -462,7 +461,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         // 객실 타입
         mRoomTypeTextView.setText(stayPaymentInformation.getSaleRoomInformation().roomName);
 
-        String checkInDateFormat = DailyCalendar.format(stayPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkInDateFormat = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
         SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
         checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkInDateFormat.length() - 3, checkInDateFormat.length(),//
@@ -470,7 +469,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckinDayTextView.setText(checkInSpannableStringBuilder);
 
-        String checkOutDateFormat = DailyCalendar.format(stayPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
+        String checkOutDateFormat = stayBookingDay.getCheckOutDay("yyyy.M.d (EEE) HH시");
         SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
         checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getMediumTypeface()),//
             checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
@@ -478,7 +477,13 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
         mCheckoutDayTextView.setText(checkOutSpannableStringBuilder);
 
-        mNightsTextView.setText(mContext.getString(R.string.label_nights, stayPaymentInformation.nights));
+        try
+        {
+            mNightsTextView.setText(mContext.getString(R.string.label_nights, stayBookingDay.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     protected void setUserInformation(Customer user, boolean isOverseas)

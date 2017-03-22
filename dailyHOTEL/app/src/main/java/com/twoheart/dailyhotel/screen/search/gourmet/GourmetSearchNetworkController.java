@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.screen.search.gourmet;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
@@ -27,15 +27,15 @@ public class GourmetSearchNetworkController extends PlaceSearchNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestAutoComplete(SaleTime saleTime, String keyword)
+    public void requestAutoComplete(GourmetBookingDay gourmetBookingDay, String keyword)
     {
-        if (saleTime == null || Util.isTextEmpty(keyword) == true)
+        if (gourmetBookingDay == null || Util.isTextEmpty(keyword) == true)
         {
             return;
         }
 
         DailyMobileAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteCallback);
+            , gourmetBookingDay.getVisitDay("yyyy-MM-dd"), keyword, mGourmetSearchAutoCompleteCallback);
     }
 
     private retrofit2.Callback mGourmetSearchAutoCompleteCallback = new retrofit2.Callback<JSONObject>()

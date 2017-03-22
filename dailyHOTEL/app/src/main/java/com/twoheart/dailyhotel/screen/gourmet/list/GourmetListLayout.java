@@ -80,6 +80,8 @@ public class GourmetListLayout extends PlaceListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case MAP:
@@ -102,6 +104,8 @@ public class GourmetListLayout extends PlaceListLayout
                 }
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
             case GONE:
@@ -122,6 +126,8 @@ public class GourmetListLayout extends PlaceListLayout
                 mMapLayout.setVisibility(View.GONE);
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
 
                 if (mContext instanceof Activity)
                 {

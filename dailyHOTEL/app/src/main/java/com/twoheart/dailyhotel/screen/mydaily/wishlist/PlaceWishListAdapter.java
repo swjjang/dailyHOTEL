@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
 
         void onItemRemoveClick(View view, int position);
     }
+
+    public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);
 
     public PlaceWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {

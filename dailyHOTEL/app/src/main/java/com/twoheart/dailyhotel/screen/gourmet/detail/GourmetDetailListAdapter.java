@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -32,7 +32,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private static final int GRID_COLUMN_COUNT = 5;
 
     private GourmetDetail mGourmetDetail;
-    private SaleTime mSaleTime;
+    private GourmetBookingDay mGourmetBookingDay;
     private Context mContext;
     private View[] mDetailViews;
     private int mImageHeight;
@@ -41,13 +41,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
     GourmetDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public GourmetDetailListAdapter(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, //
+    public GourmetDetailListAdapter(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, //
                                     GourmetDetailLayout.OnEventListener onEventListener, //
                                     View.OnTouchListener emptyViewOnTouchListener)
     {
         mContext = context;
         mGourmetDetail = gourmetDetail;
-        mSaleTime = saleTime;
+        mGourmetBookingDay = gourmetBookingDay;
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(context);
 
@@ -55,10 +55,10 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(GourmetDetail gourmetDetail, SaleTime saleTime)
+    public void setData(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
     {
+        mGourmetBookingDay = gourmetBookingDay;
         mGourmetDetail = gourmetDetail;
-        mSaleTime = saleTime;
     }
 
     @Override
@@ -295,7 +295,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 날짜
         TextView dayTextView = (TextView) view.findViewById(R.id.dayTextView);
 
-        dayTextView.setText(mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
+        dayTextView.setText(mGourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"));
 
         View dateInformationLayout = view.findViewById(R.id.dateInformationLayout);
         dateInformationLayout.setOnClickListener(new View.OnClickListener()
@@ -319,7 +319,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
      * 주소 및 맵
      *
      * @param view
-     * @param GourmetDetail
+     * @param gourmetDetail
      * @return
      */
     private View getAddressView(final View view, GourmetDetail gourmetDetail)

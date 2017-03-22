@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -34,7 +34,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     }
 
     @Override
-    protected void initPlaceInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail)
+    protected void initPlaceInformationLayout(Context context, View view, TodayDateTime todayDateTime, PlaceBookingDetail placeBookingDetail)
     {
         if (context == null || view == null || placeBookingDetail == null)
         {
@@ -56,9 +56,10 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             {
                 String remainedDayText;
 
-                Date checkInDate = DailyCalendar.convertDate(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
+                Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);
+                Date currentDate = DailyCalendar.convertStringToDate(todayDateTime.currentDateTime);
 
-                int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(stayBookingDetail.currentDateTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+                int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
                 if (dayOfDays < 0 || dayOfDays > 3)
                 {
                     remainedDayText = null;
@@ -147,7 +148,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
             Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
 
-            int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
+            int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
             nightsTextView.setText(context.getString(R.string.label_nights, nights));
         } catch (Exception e)
         {

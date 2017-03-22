@@ -3,12 +3,13 @@ package com.twoheart.dailyhotel.screen.search.stay;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import retrofit2.Call;
@@ -21,15 +22,21 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestAutoComplete(SaleTime saleTime, int stays, String keyword)
+    public void requestAutoComplete(StayBookingDay stayBookingDay, String keyword)
     {
-        if (saleTime == null || stays == 0 || Util.isTextEmpty(keyword) == true)
+        if (stayBookingDay == null || Util.isTextEmpty(keyword) == true)
         {
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
-            , saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), stays, keyword, mHotelSearchAutoCompleteCallback);
+        try
+        {
+            DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
+                , stayBookingDay.getCheckInDay("yyyy-MM-dd"), stayBookingDay.getNights(), keyword, mHotelSearchAutoCompleteCallback);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     private retrofit2.Callback mHotelSearchAutoCompleteCallback = new retrofit2.Callback<BaseListDto<Keyword>>()

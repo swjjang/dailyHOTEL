@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
@@ -37,6 +38,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
     protected PlaceSearchLayout mPlaceSearchLayout;
     protected PlaceSearchNetworkController mPlaceSearchNetworkController;
     protected OnSearchFragmentListener mOnSearchFragmentListener;
+
+    protected TodayDateTime mTodayDateTime;
 
     protected abstract PlaceSearchLayout getPlaceSearchLayout(Context context);
 
@@ -70,6 +73,9 @@ public abstract class PlaceSearchFragment extends BaseFragment
         View view = mPlaceSearchLayout.onCreateView(R.layout.fragment_search, container);
 
         initContents();
+
+        lockUI();
+        mPlaceSearchNetworkController.requestCommonDateTime();
 
         return view;
     }

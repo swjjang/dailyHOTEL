@@ -74,13 +74,6 @@ public class StaySearchResultListFragment extends StayListFragment
             }
         }
 
-        int nights = mStayCuration.getNights();
-        if (nights <= 0)
-        {
-            unLockUI();
-            return;
-        }
-
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
             || (mStayCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStayCuration.getLocation() == null) //

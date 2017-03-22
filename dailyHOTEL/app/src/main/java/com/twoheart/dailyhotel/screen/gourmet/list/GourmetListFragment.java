@@ -11,11 +11,10 @@ import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -75,10 +74,10 @@ public class GourmetListFragment extends PlaceListFragment
             lockUI(isShowProgress);
         }
 
-        SaleTime saleTime = mGourmetCuration.getSaleTime();
+        GourmetBookingDay gourmetBookingDay = mGourmetCuration.getGourmetBookingDay();
         Province province = mGourmetCuration.getProvince();
 
-        if (province == null || saleTime == null)
+        if (province == null || gourmetBookingDay == null)
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
@@ -139,7 +138,7 @@ public class GourmetListFragment extends PlaceListFragment
         {
             case LIST:
             {
-                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay());
 
                 int size = mPlaceListLayout.getItemCount();
 
@@ -154,7 +153,7 @@ public class GourmetListFragment extends PlaceListFragment
 
             case MAP:
             {
-                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType);
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay());
 
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
@@ -185,12 +184,6 @@ public class GourmetListFragment extends PlaceListFragment
         {
             ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(view, placeViewItem, getPlaceCount());
         }
-
-        //        @Override
-        //        public void onEventBannerClick(EventBanner eventBanner)
-        //        {
-        //            mOnPlaceListFragmentListener.onEventBannerClick(eventBanner);
-        //        }
 
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
@@ -225,6 +218,12 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onUpdateViewTypeEnabled(boolean isEnabled)
+        {
+            mOnPlaceListFragmentListener.onUpdateViewTypeEnabled(isEnabled);
+        }
+
+        @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
             mOnPlaceListFragmentListener.onShowActivityEmptyView(isShow);
@@ -251,9 +250,6 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onGourmetList(ArrayList<Gourmet> list, int page, int totalCount, int maxCount, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
         {
-            String value = mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyyMMdd");
-            DailyPreference.getInstance(mBaseActivity).setGourmetLastViewDate(value);
-
             GourmetListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, true);
         }
 
