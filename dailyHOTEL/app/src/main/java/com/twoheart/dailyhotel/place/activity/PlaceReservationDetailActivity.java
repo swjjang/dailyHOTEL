@@ -10,12 +10,13 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -34,6 +35,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
     protected String mImageUrl;
     protected boolean mIsDeepLink;
     protected PlaceBookingDetail mPlaceBookingDetail;
+    protected TodayDateTime mTodayDateTime;
 
     protected PlaceReservationDetailLayout mPlaceReservationDetailLayout;
 
@@ -222,33 +224,25 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
     protected void requestCommonDatetime()
     {
-        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<JSONObject>()
+        DailyMobileAPI.getInstance(this).requestCommonDateTimeRefactoring(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
         {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
             {
                 if (response != null && response.isSuccessful() && response.body() != null)
                 {
                     try
                     {
-                        JSONObject responseJSONObject = response.body();
+                        BaseDto<TodayDateTime> baseDto = response.body();
 
-                        int msgCode = responseJSONObject.getInt("msgCode");
-
-                        if (msgCode == 100)
+                        if (baseDto.msgCode == 100)
                         {
-                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                            long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                            long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
-
-                            setCurrentDateTime(currentDateTime, dailyDateTime);
+                            setCurrentDateTime(baseDto.data);
 
                             requestUserProfile();
                         } else
                         {
-                            String message = responseJSONObject.getString("msg");
-                            PlaceReservationDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                            PlaceReservationDetailActivity.this.onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
                         }
                     } catch (Exception e)
                     {
@@ -264,7 +258,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
+            public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
             {
                 PlaceReservationDetailActivity.this.onError(t);
                 finish();
@@ -342,15 +336,9 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
         });
     }
 
-    void setCurrentDateTime(long currentDateTime, long dailyDateTime)
+    void setCurrentDateTime(TodayDateTime todayDateTime)
     {
-        if (mPlaceBookingDetail == null)
-        {
-            return;
-        }
-
-        mPlaceBookingDetail.currentDateTime = currentDateTime;
-        mPlaceBookingDetail.dailyDateTime = dailyDateTime;
+        mTodayDateTime = todayDateTime;
     }
 
     void setUserName(String userName)

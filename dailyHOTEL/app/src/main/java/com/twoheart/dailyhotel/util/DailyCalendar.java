@@ -26,21 +26,21 @@ public class DailyCalendar
 
     /**
      * @param dateString     ISO-8601만 가능
-     * @param isDeleteTField true인 경우 모든 시간 필드는 초기화 한다.
+     * @param isClearTField true인 경우 모든 시간 필드는 초기화 한다.
      * @return
      * @throws Exception
      */
-    public static Calendar getInstance(String dateString, boolean isDeleteTField) throws Exception
+    public static Calendar getInstance(String dateString, boolean isClearTField) throws Exception
     {
         Calendar calendar = getInstance();
         calendar.setTime(DailyCalendar.convertStringToDate(dateString));
 
-        if (isDeleteTField == true)
+        if (isClearTField == true)
         {
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
+            calendar.clear(Calendar.HOUR_OF_DAY);
+            calendar.clear(Calendar.MINUTE);
+            calendar.clear(Calendar.SECOND);
+            calendar.clear(Calendar.MILLISECOND);
         }
 
         return calendar;
@@ -140,6 +140,35 @@ public class DailyCalendar
         Date date = convertDate(dateString, format);
 
         return date.getTime() + NINE_HOUR_MILLISECOND;
+    }
+
+    /**
+     * @param calendar
+     * @param dateString ISO8601타입이 아니면 안받아줌.
+     */
+    /**
+     * @param calendar
+     * @param dateString ISO8601타입이 아니면 안받아줌.
+     */
+    public static void setCalendarDateString(Calendar calendar, String dateString) throws Exception
+    {
+        if (calendar == null || Util.isTextEmpty(dateString) == true)
+        {
+            return;
+        }
+
+        calendar.setTime(DailyCalendar.convertStringToDate(dateString));
+    }
+
+    public static void setCalendarDateString(Calendar calendar, String dateString, int afterDay) throws Exception
+    {
+        if (calendar == null || Util.isTextEmpty(dateString) == true)
+        {
+            return;
+        }
+
+        setCalendarDateString(calendar, dateString);
+        calendar.add(Calendar.DAY_OF_MONTH, afterDay);
     }
 
     public static String format(Date date, final String format)

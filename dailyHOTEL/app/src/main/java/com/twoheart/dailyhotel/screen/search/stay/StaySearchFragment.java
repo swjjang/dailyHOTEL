@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.location.Location;
 
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
@@ -15,6 +16,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -25,20 +27,19 @@ import retrofit2.Response;
 
 public class StaySearchFragment extends PlaceSearchFragment
 {
-    SaleTime mCheckInSaleTime;
-    SaleTime mCheckOutSaleTime;
+    StayBookingDay mStayBookingDay;
 
     @Override
     protected void initContents()
     {
         super.initContents();
 
-        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+        if (mStayBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
         } else
         {
-            setDateText(mCheckInSaleTime, mCheckOutSaleTime);
+            setDateText(mStayBookingDay);
         }
     }
 
@@ -47,12 +48,12 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         super.onResume();
 
-        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+        if (mStayBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
         } else
         {
-            setDateText(mCheckInSaleTime, mCheckOutSaleTime);
+            setDateText(mStayBookingDay);
         }
     }
 
@@ -67,13 +68,17 @@ public class StaySearchFragment extends PlaceSearchFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE) == true//
-                        && data.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE) == true)
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY) == true)
                     {
-                        SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-                        SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+                        StayBookingDay stayBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-                        setDateText(checkInSaleTime, checkOutSaleTime);
+                        if (stayBookingDay == null)
+                        {
+                            return;
+                        }
+
+                        setStayBookingDay(stayBookingDay);
+                        setDateText(stayBookingDay);
 
                         mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
                     }
@@ -117,15 +122,13 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+        if (mStayBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, location, AnalyticsManager.Screen.SEARCH_MAIN);
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -144,39 +147,42 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-        if (mCheckOutSaleTime == null || mCheckInSaleTime == null)
+        if (mStayBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
-    public void setSaleTime(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    public void setStayBookingDay(StayBookingDay stayBookingDay)
     {
-        mCheckInSaleTime = checkInSaleTime;
-        mCheckOutSaleTime = checkOutSaleTime;
-    }
-
-    private void setDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
-    {
-        if (checkInSaleTime == null || checkOutSaleTime == null || mPlaceSearchLayout == null)
+        if (stayBookingDay == null)
         {
             return;
         }
 
-        mCheckInSaleTime = checkInSaleTime;
-        mCheckOutSaleTime = checkOutSaleTime;
+        mStayBookingDay = stayBookingDay;
+    }
 
-        String checkInDate = checkInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDate = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+    private void setDateText(StayBookingDay stayBookingDay)
+    {
+        if (stayBookingDay == null || mPlaceSearchLayout == null)
+        {
+            return;
+        }
 
-        int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-        mPlaceSearchLayout.setDataText(String.format("%s - %s, %d박", checkInDate, checkOutDate, nights));
+        try
+        {
+            mPlaceSearchLayout.setDataText(String.format("%s - %s, %d박"//
+                , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)")//
+                , stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), stayBookingDay.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,15 +244,13 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+            if (mStayBookingDay == null)
             {
                 Util.restartApp(mBaseActivity);
                 return;
             }
 
-            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-
-            ((StaySearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mCheckInSaleTime, nights, keyword);
+            ((StaySearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mStayBookingDay, keyword);
         }
 
         @Override
@@ -262,9 +266,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text);
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
@@ -276,20 +278,18 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (keyword == null)
+            if (keyword == null || mStayBookingDay == null)
             {
                 return;
             }
 
-            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-
             if (keyword.price < 0)
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, keyword, Constants.SearchType.RECENT);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, text, keyword, Constants.SearchType.AUTOCOMPLETE);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
@@ -302,7 +302,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+            if (mStayBookingDay == null)
             {
                 Util.restartApp(mBaseActivity);
                 return;
@@ -314,9 +314,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
             }
 
-            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-
-            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mCheckInSaleTime, nights, //
+            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mStayBookingDay, //
                 AnalyticsManager.ValueType.SEARCH, true, isAnimation);
 
             if (intent == null)
@@ -361,6 +359,14 @@ public class StaySearchFragment extends PlaceSearchFragment
             }
 
             mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
+        }
+
+        @Override
+        public void onDateTime(TodayDateTime todayDateTime)
+        {
+            unLockUI();
+
+            mTodayDateTime = todayDateTime;
         }
 
         @Override

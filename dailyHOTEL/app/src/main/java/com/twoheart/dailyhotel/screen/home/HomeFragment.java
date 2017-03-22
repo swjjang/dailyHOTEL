@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.RecentPlaces;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
@@ -375,92 +374,97 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
-    public void startPlaceDetail(View view, HomePlace place)
+    public void startPlaceDetail(View view, HomePlace place, TodayDateTime todayDateTime)
     {
-        if (place == null)
+        if (place == null || todayDateTime == null)
         {
             return;
         }
 
-        switch (place.placeType)
+        try
         {
-            case HOTEL:
+            switch (place.placeType)
             {
-                StayBookingDay stayBookingTime = new StayBookingDay();
-                stayBookingTime.setCheckInTime(mTodayDateTime.dailyDateTime);
-                stayBookingTime.setNights(1);
-
-
-                if (Util.isUsedMultiTransition() == true)
+                case HOTEL:
                 {
-                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingTime, place, true);
+                    StayBookingDay stayBookingDay = new StayBookingDay();
+                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+                    stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
 
-                    if (intent == null)
+                    if (Util.isUsedMultiTransition() == true)
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
-                    }
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
 
-                    View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
 
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                        android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                        View simpleDraweeView = view.findViewById(R.id.contentImageView);
 
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
-                } else
-                {
-                    Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingTime, place, false);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
-                    if (intent == null)
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+                    } else
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
+                        Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, false);
+
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
+
+                        mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                        mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     }
-
-                    mBaseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-
-                    mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    break;
                 }
-                break;
-            }
 
-            case FNB:
-            {
-                GourmetBookingDay gourmetBookingTime = new GourmetBookingDay();
-                gourmetBookingTime.setVisitTime(mTodayDateTime.dailyDateTime);
-
-                if (Util.isUsedMultiTransition() == true)
+                case FNB:
                 {
-                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingTime, place, true);
+                    GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-                    if (intent == null)
+                    if (Util.isUsedMultiTransition() == true)
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
-                    }
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, true);
 
-                    View simpleDraweeView = view.findViewById(R.id.contentImageView);
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
 
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
-                        android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
+                        View simpleDraweeView = view.findViewById(R.id.contentImageView);
 
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
-                } else
-                {
-                    Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingTime, place, false);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
+                            android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)));
 
-                    if (intent == null)
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
+                    } else
                     {
-                        Util.restartApp(mBaseActivity);
-                        return;
+                        Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, false);
+
+                        if (intent == null)
+                        {
+                            Util.restartApp(mBaseActivity);
+                            return;
+                        }
+
+                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                        mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                     }
-
-                    mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
-                    mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    break;
                 }
-                break;
             }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
     }
 
@@ -613,11 +617,21 @@ public class HomeFragment extends BaseFragment
                 return;
             }
 
-            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, mSaleTime, mNights), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+            try
+            {
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
-                AnalyticsManager.Label.HOME, null);
+                mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, stayBookingDay), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
+                    AnalyticsManager.Label.HOME, null);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         @Override
@@ -799,7 +813,7 @@ public class HomeFragment extends BaseFragment
 
             if (wishItem != null)
             {
-                startPlaceDetail(view, wishItem);
+                startPlaceDetail(view, wishItem, mTodayDateTime);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -824,7 +838,7 @@ public class HomeFragment extends BaseFragment
 
             if (recentItem != null)
             {
-                startPlaceDetail(view, recentItem);
+                startPlaceDetail(view, recentItem, mTodayDateTime);
             }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//

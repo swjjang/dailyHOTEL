@@ -10,14 +10,13 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 
 public class StayCuration extends PlaceCuration
 {
-    protected StayBookingDay mStayBookingTime;
+    protected StayBookingDay mStayBookingDay;
     protected Category mCategory;
     protected StayCurationOption mStayCurationOption;
 
     public StayCuration()
     {
         mStayCurationOption = new StayCurationOption();
-        mStayBookingTime = new StayBookingDay();
 
         clear();
     }
@@ -27,64 +26,19 @@ public class StayCuration extends PlaceCuration
         readFromParcel(in);
     }
 
-    public void setCheckInDay(long millis)
+    public StayBookingDay getStayBookingDay()
     {
-        if (mStayBookingTime == null)
-        {
-            mStayBookingTime = new StayBookingDay();
-        }
-
-        mStayBookingTime.setCheckInTime(millis);
+        return mStayBookingDay;
     }
 
-    public void setCheckInDay(String dateString)
+    public void setStayBookingDay(StayBookingDay stayBookingDay)
     {
-        if (mStayBookingTime == null)
+        if (stayBookingDay == null)
         {
-            mStayBookingTime = new StayBookingDay();
+            return;
         }
 
-        mStayBookingTime.setCheckInTime(dateString);
-    }
-
-    public String getCheckInDay(String format)
-    {
-        if (mStayBookingTime == null)
-        {
-            return null;
-        }
-
-        return mStayBookingTime.getCheckInTime(format);
-    }
-
-    public void setCheckOutDay(String dateString) throws Exception
-    {
-        if (mStayBookingTime == null)
-        {
-            mStayBookingTime = new StayBookingDay();
-        }
-
-        mStayBookingTime.setCheckOutTime(dateString);
-    }
-
-    public void setCheckOutDay(String dateString, int afterDay) throws Exception
-    {
-        if (mStayBookingTime == null)
-        {
-            mStayBookingTime = new StayBookingDay();
-        }
-
-        mStayBookingTime.setCheckOutTime(dateString, afterDay);
-    }
-
-    public String getCheckOutDay(String format)
-    {
-        if (mStayBookingTime == null)
-        {
-            return null;
-        }
-
-        return mStayBookingTime.getCheckOutTime(format);
+        mStayBookingDay = stayBookingDay;
     }
 
     @Override
@@ -150,7 +104,7 @@ public class StayCuration extends PlaceCuration
 
         mStayCurationOption.clear();
 
-        mStayBookingTime = null;
+        mStayBookingDay = null;
         mProvince = null;
         mLocation = null;
     }
@@ -167,7 +121,7 @@ public class StayCuration extends PlaceCuration
     {
         dest.writeParcelable(mProvince, flags);
         dest.writeParcelable(mLocation, flags);
-        dest.writeParcelable(mStayBookingTime, flags);
+        dest.writeParcelable(mStayBookingDay, flags);
         dest.writeParcelable(mCategory, flags);
         dest.writeParcelable(mStayCurationOption, flags);
     }
@@ -176,7 +130,7 @@ public class StayCuration extends PlaceCuration
     {
         mProvince = in.readParcelable(Province.class.getClassLoader());
         mLocation = in.readParcelable(Location.class.getClassLoader());
-        mStayBookingTime = in.readParcelable(StayBookingDay.class.getClassLoader());
+        mStayBookingDay = in.readParcelable(StayBookingDay.class.getClassLoader());
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
     }

@@ -18,7 +18,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -35,8 +36,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     protected static final String INTENT_EXTRA_DATA_SCREEN = "screen";
     protected static final String INTENT_EXTRA_DATA_ANIMATION = "animation";
     protected static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
-    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
-    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+    protected static final String INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
     protected static final String INTENT_EXTRA_DATA_ISSINGLE_DAY = "isSingleDay"; // 연박 불가
 
     private static final int ANIMATION_DELAY = 200;
@@ -52,7 +52,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private TextView mTitleTextView;
     protected String mCallByScreen;
 
-    protected SaleTime mStartSaleTime, mEndSaleTime;
+    protected TodayDateTime mTodayDateTime;
+    protected PlaceBookingDay mPlaceBookingDay;
 
     ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
@@ -102,7 +103,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         Util.restartApp(this);
     }
 
-    protected void initLayout(int layoutResID, final SaleTime dailyTime, final int dayCountOfMax)
+    protected void initLayout(int layoutResID, final int dayCountOfMax)
     {
         setContentView(layoutResID);
 
@@ -123,37 +124,44 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mDailyViews = new View[dayCountOfMax];
     }
 
-    protected void makeCalendar(SaleTime dailyTime, int dayCountOfMax)
+    protected void makeCalendar(TodayDateTime mTodayDateTime, int dayCountOfMax)
     {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(dailyTime.getDailyTime());
-
-        int maxMonth = getMonthInterval(calendar, dayCountOfMax);
-        int maxDay = dayCountOfMax;
-        int dayCount = 0;
-
-        for (int i = 0; i <= maxMonth; i++)
+        try
         {
-            int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTime(DailyCalendar.convertStringToDate(mTodayDateTime.dailyDateTime));
 
-            View calendarLayout = getMonthCalendarView(this, dailyTime.getClone(dayCount)//
-                , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1);
+            int maxMonth = getMonthInterval(calendar, dayCountOfMax);
+            int maxDay = dayCountOfMax;
+            int dayOffset = 0;
 
-            if (i >= 0 && i < maxMonth)
+            for (int i = 0; i <= maxMonth; i++)
             {
-                calendarLayout.setPadding(calendarLayout.getPaddingLeft(), calendarLayout.getPaddingTop()//
-                    , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + Util.dpToPx(this, 30));
+                int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                View calendarLayout = getMonthCalendarView(this, dayOffset//
+                    , calendar, day + maxDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + maxDay - 1);
+
+                if (i >= 0 && i < maxMonth)
+                {
+                    calendarLayout.setPadding(calendarLayout.getPaddingLeft(), calendarLayout.getPaddingTop()//
+                        , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + Util.dpToPx(this, 30));
+                }
+
+                mCalendarsLayout.addView(calendarLayout);
+
+                dayOffset += maxDayOfMonth - day + 1;
+                maxDay = dayCountOfMax - dayOffset;
+
+                calendar.add(Calendar.MONTH, 1);
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
             }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
 
-            mCalendarsLayout.addView(calendarLayout);
 
-            dayCount += maxDayOfMonth - day + 1;
-            maxDay = dayCountOfMax - dayCount;
-
-            calendar.add(Calendar.MONTH, 1);
-            calendar.set(Calendar.DAY_OF_MONTH, 1);
         }
     }
 
@@ -168,20 +176,16 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         mTitleTextView.setText(title);
     }
 
-    private View getMonthCalendarView(Context context, final SaleTime dailyTime, final Calendar calendar, final int maxDayOfMonth)
+    private View getMonthCalendarView(Context context, final int dayOffset, final Calendar calendar, final int maxDayOfMonth)
     {
         View calendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
 
         TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
         android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
 
-        //        SimpleDateFormat simpleDayFormat = new SimpleDateFormat("yyyy.MM", Locale.KOREA);
-        //        simpleDayFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        monthTextView.setText(simpleDayFormat.format(calendar.getTime()));
         monthTextView.setText(DailyCalendar.format(calendar.getTimeInMillis(), "yyyy.MM", TimeZone.getTimeZone("GMT")));
 
-        // day
+        // dayString
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
@@ -200,8 +204,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         for (int i = 0, j = dayOfWeek, k = day; k <= maxDayOfMonth; i++, j++, k++)
         {
             days[j] = new Day();
-            days[j].dayTime = dailyTime.getClone(dailyTime.getOffsetDailyDay() + i);
-            days[j].day = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
+            days[j].dayOffset = dayOffset + i;
+            days[j].dayString = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
             days[j].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
 
             cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -215,7 +219,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
             if (dayClass != null)
             {
-                mDailyViews[dayClass.dayTime.getOffsetDailyDay()] = dayView;
+                mDailyViews[dayOffset] = dayView;
             }
 
             calendarGridLayout.addView(dayView);
@@ -295,7 +299,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                     break;
             }
 
-            dayTextView.setText(day.day);
+            dayTextView.setText(day.dayString);
             relativeLayout.setTag(day);
         }
 
@@ -306,14 +310,18 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     private boolean isHoliday(Day day)
     {
-        if (day == null || mHolidays == null || mHolidays.length == 0)
+        if (day == null || mHolidays == null || mHolidays.length == 0 || mTodayDateTime == null)
         {
             return false;
         }
 
+        Calendar calendar = DailyCalendar.getInstance();
+
         try
         {
-            int calendarDay = Integer.parseInt(day.dayTime.getDayOfDaysDateFormat("yyyyMMdd"));
+            DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, day.dayOffset);
+
+            int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
 
             for (int holiday : mHolidays)
             {
@@ -322,7 +330,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                     return true;
                 }
             }
-        } catch (NumberFormatException e)
+        } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
@@ -589,8 +597,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected static class Day
     {
-        public SaleTime dayTime;
-        String day;
+        public int dayOffset;
+        String dayString;
         int dayOfWeek;
     }
 }

@@ -26,8 +26,6 @@ public class RecommendationStay extends RecommendationPlace
     @JsonField
     public boolean overseas;
 
-    public int nights;
-
     @OnJsonParseComplete
     void onParseComplete()
     {

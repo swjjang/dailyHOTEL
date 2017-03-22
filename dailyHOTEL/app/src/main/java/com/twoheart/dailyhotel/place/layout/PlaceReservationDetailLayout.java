@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -63,7 +64,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
 
     LatLng mCenterLatLng;
 
-    protected abstract void initPlaceInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
+    protected abstract void initPlaceInformationLayout(Context context, View view, TodayDateTime todayDateTime, PlaceBookingDetail placeBookingDetail);
 
     protected abstract void initTimeInformationLayout(Context context, View view, PlaceBookingDetail placeBookingDetail);
 
@@ -156,10 +157,10 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         setReservationDetailToolbar();
     }
 
-    public void initLayout(PlaceBookingDetail placeBookingDetail)
+    public void initLayout(TodayDateTime todayDateTime, PlaceBookingDetail placeBookingDetail)
     {
         initHeaderInformationLayout(mContext, mScrollLayout, placeBookingDetail);
-        initPlaceInformationLayout(mContext, mScrollLayout, placeBookingDetail);
+        initPlaceInformationLayout(mContext, mScrollLayout, todayDateTime, placeBookingDetail);
         initTimeInformationLayout(mContext, mScrollLayout, placeBookingDetail);
         initGuestInformationLayout(mContext, mScrollLayout, placeBookingDetail);
         initPaymentInformationLayout(mContext, mScrollLayout, placeBookingDetail);

@@ -17,8 +17,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
@@ -33,8 +34,8 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
-    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
-    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
+    //    protected static final String INTENT_EXTRA_DATA_START_SALETIME = "startSaleTime";
+    //    protected static final String INTENT_EXTRA_DATA_END_SALETIME = "endSaleTime";
 
     protected static final int STATUS_INITIALIZE_NONE = 0; // 아무것도 데이터 관련 받은게 없는 상태
     protected static final int STATUS_INITIALIZE_DATA = 1; // 서버로 부터 데이터만 받은 상태
@@ -47,10 +48,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected PlaceDetail mPlaceDetail;
     protected PlaceDetailNetworkController mPlaceDetailNetworkController;
 
-    protected SaleTime mSaleTime;
-    protected SaleTime mStartSaleTime, mEndSaleTime;
+    protected PlaceBookingDay mPlaceBookingDay;
+    protected TodayDateTime mTodayDateTime;
+
     protected int mCurrentImage;
     protected boolean mIsDeepLink;
+    protected boolean mIsShowCalendar;
     protected String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
     protected boolean mDontReloadAtOnResume;
@@ -75,17 +78,17 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract PlaceDetail createPlaceDetail(Intent intent);
 
-    protected abstract void shareKakao(PlaceDetail placeDetail, String imageUrl);
+    protected abstract void shareKakao(String imageUrl, PlaceBookingDay placeBookingDay, PlaceDetail placeDetail);
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
     protected abstract void doBooking();
 
-    protected abstract void downloadCoupon();
+    protected abstract void downloadCoupon(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail);
 
     protected abstract void startKakao();
 
-    protected abstract void shareSMS(PlaceDetail placeDetail);
+    protected abstract void shareSMS(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail);
 
     protected abstract void recordAnalyticsShareClicked();
 
@@ -349,7 +352,15 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     break;
 
                 case CODE_REQUEST_ACTIVITY_CALENDAR:
-                    mDontReloadAtOnResume = true;
+                    if (mIsShowCalendar == true)
+                    {
+                        mIsShowCalendar = true;
+                        mDontReloadAtOnResume = false;
+                    } else
+                    {
+                        mDontReloadAtOnResume = true;
+                    }
+
                     onCalendarActivityResult(resultCode, data);
                     break;
 

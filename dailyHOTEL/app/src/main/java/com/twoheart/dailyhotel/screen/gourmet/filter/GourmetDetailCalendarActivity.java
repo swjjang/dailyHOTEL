@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -24,14 +25,12 @@ import retrofit2.Response;
 public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 {
     private int mPlaceIndex;
-    private SaleTime mSaleTime;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, int placeIndex, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, int placeIndex, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetDetailCalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
@@ -51,21 +50,19 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
     }
 
     @Override
-    protected void onConfirm(SaleTime saleTime)
+    protected void onConfirm(GourmetBookingDay gourmetBookingDay)
     {
-        if (saleTime == null)
+        if (gourmetBookingDay == null)
         {
-            setSaleTicketResult(-1);
+            setSaleTicketResult(gourmetBookingDay, -1);
             return;
         }
 
         if (mPlaceIndex == -1)
         {
-            setSaleTicketResult(-1);
+            setSaleTicketResult(gourmetBookingDay, -1);
             return;
         }
-
-        mSaleTime = saleTime;
 
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -74,17 +71,17 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
 
         lockUI();
 
-        DailyMobileAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, saleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mGourmetDetailInformationCallback);
+        DailyMobileAPI.getInstance(this).requestGourmetDetailInformation(mNetworkTag, mPlaceIndex, gourmetBookingDay.getVisitDay("yyyy-MM-dd"), mGourmetDetailInformationCallback);
     }
 
-    void setSaleTicketResult(int count)
+    void setSaleTicketResult(GourmetBookingDay gourmetBookingDay, int count)
     {
         if (count < 1)
         {
             showEmptyDialog();
         } else
         {
-            if (mSaleTime == null)
+            if (gourmetBookingDay == null)
             {
                 showEmptyDialog();
                 return;
@@ -95,21 +92,18 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
                 return;
             }
 
-            String date = mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+            String date = gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)");
 
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(mSaleTime.getDayOfDaysDate().getTime()));
+            params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
             params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
-
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
-            //            String phoneDate = simpleDateFormat.format(new Date());
 
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
                 , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : //
                     AnalyticsManager.ValueType.NONE_) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
 
             Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, mSaleTime);
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
 
             setResult(RESULT_OK, intent);
             hideAnimation();
@@ -165,7 +159,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
                 } finally
                 {
                     unLockUI();
-                    GourmetDetailCalendarActivity.this.setSaleTicketResult(saleTicketCount);
+                    GourmetDetailCalendarActivity.this.setSaleTicketResult((GourmetBookingDay) mPlaceBookingDay, saleTicketCount);
                 }
             } else
             {

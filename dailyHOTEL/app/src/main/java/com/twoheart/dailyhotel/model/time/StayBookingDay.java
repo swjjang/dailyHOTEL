@@ -21,19 +21,19 @@ public class StayBookingDay extends PlaceBookingDay
     }
 
     /**
-     * @param millis GMT-0
-     */
-    public void setCheckInTime(long millis)
-    {
-        setTimeInMillis(millis);
-    }
-
-    /**
      * @param dateTime ISO-8601
      */
     public void setCheckInDay(String dateTime) throws Exception
     {
         setTimeInString(dateTime);
+    }
+
+    /**
+     * @param dateTime ISO-8601
+     */
+    public void setCheckInDay(String dateTime, int afterDay) throws Exception
+    {
+        setTimeInString(dateTime, afterDay);
     }
 
     public String getCheckInDay(String format)
@@ -51,17 +51,25 @@ public class StayBookingDay extends PlaceBookingDay
      */
     public void setCheckOutDay(String dateTime) throws Exception
     {
-        setCalendarDateString(mCheckOutCalendar, dateTime);
+        DailyCalendar.setCalendarDateString(mCheckOutCalendar, dateTime);
     }
 
     public void setCheckOutDay(String dateTime, int afterDay) throws Exception
     {
-        setCalendarDateString(mCheckOutCalendar, dateTime);
+        DailyCalendar.setCalendarDateString(mCheckOutCalendar, dateTime);
     }
 
     public String getCheckOutDay(String format)
     {
         return getCalendarDateString(mCheckOutCalendar, format);
+    }
+
+    public int getNights() throws Exception
+    {
+        Calendar checkInCalendar = DailyCalendar.getInstance(getCheckInDay(DailyCalendar.ISO_8601_FORMAT), true);
+        Calendar checkOutCalendar = DailyCalendar.getInstance(getCheckOutDay(DailyCalendar.ISO_8601_FORMAT), true);
+
+        return (int) ((checkOutCalendar.getTimeInMillis() - checkInCalendar.getTimeInMillis()) / DailyCalendar.NINE_HOUR_MILLISECOND);
     }
 
     @Override

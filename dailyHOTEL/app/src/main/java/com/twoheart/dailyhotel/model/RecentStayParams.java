@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.HashMap;
@@ -26,14 +27,14 @@ public class RecentStayParams extends StayParams
         super(in);
     }
 
-    public void setCheckInTime(SaleTime checkInTime)
+    public void setCheckInTime(StayBookingDay stayBookingDay)
     {
-        if (checkInTime == null)
+        if (stayBookingDay == null)
         {
             return;
         }
 
-        dateCheckIn = checkInTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+        dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
         stays = 1;
     }
 

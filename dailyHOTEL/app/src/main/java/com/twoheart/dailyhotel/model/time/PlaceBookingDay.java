@@ -37,32 +37,12 @@ public abstract class PlaceBookingDay implements Parcelable
      */
     void setTimeInString(String dateString) throws Exception
     {
-        setCalendarDateString(mCalendar, dateString);
+        DailyCalendar.setCalendarDateString(mCalendar, dateString);
     }
 
-    /**
-     * @param calendar
-     * @param dateString ISO8601타입이 아니면 안받아줌.
-     */
-    void setCalendarDateString(Calendar calendar, String dateString) throws Exception
+    void setTimeInString(String dateString, int afterDay) throws Exception
     {
-        if (calendar == null || Util.isTextEmpty(dateString) == true)
-        {
-            return;
-        }
-
-        calendar.setTime(DailyCalendar.convertStringToDate(dateString));
-    }
-
-    void setCalendarDateString(Calendar calendar, String dateString, int afterDay) throws Exception
-    {
-        if (calendar == null || Util.isTextEmpty(dateString) == true)
-        {
-            return;
-        }
-
-        setCalendarDateString(calendar, dateString);
-        calendar.add(Calendar.DAY_OF_MONTH, afterDay);
+        DailyCalendar.setCalendarDateString(mCalendar, dateString, afterDay);
     }
 
     String getCalendarDateString(Calendar calendar, String format)

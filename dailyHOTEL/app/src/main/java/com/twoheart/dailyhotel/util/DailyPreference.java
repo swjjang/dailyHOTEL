@@ -53,8 +53,8 @@ public class DailyPreference
 
     private static final String KEY_IS_REQUEST_REVIEW_ = "32";
 
-    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
-    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
+//    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
+//    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
@@ -527,25 +527,25 @@ public class DailyPreference
         setValue(mEditor, KEY_SHOW_GUIDE, value);
     }
 
-    public String getStayLastViewDate()
-    {
-        return getValue(mPreferences, KEY_STAY_LAST_VIEW_DATE, null);
-    }
-
-    public void setStayLastViewDate(String value)
-    {
-        setValue(mEditor, KEY_STAY_LAST_VIEW_DATE, value);
-    }
-
-    public String getGourmetLastViewDate()
-    {
-        return getValue(mPreferences, KEY_GOURMET_LAST_VIEW_DATE, null);
-    }
-
-    public void setGourmetLastViewDate(String value)
-    {
-        setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
-    }
+//    public String getStayLastViewDate()
+//    {
+//        return getValue(mPreferences, KEY_STAY_LAST_VIEW_DATE, null);
+//    }
+//
+//    public void setStayLastViewDate(String value)
+//    {
+//        setValue(mEditor, KEY_STAY_LAST_VIEW_DATE, value);
+//    }
+//
+//    public String getGourmetLastViewDate()
+//    {
+//        return getValue(mPreferences, KEY_GOURMET_LAST_VIEW_DATE, null);
+//    }
+//
+//    public void setGourmetLastViewDate(String value)
+//    {
+//        setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
+//    }
 
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
     {

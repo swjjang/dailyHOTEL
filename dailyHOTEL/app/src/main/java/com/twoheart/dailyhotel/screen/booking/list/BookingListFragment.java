@@ -28,7 +28,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -691,7 +690,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 Booking booking = new Booking(jsonObject);
 
-                booking.leftFromToDay = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(currentTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+                booking.leftFromToDay = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(currentTime)) / DailyCalendar.DAY_MILLISECOND);
 
                 if (booking.readyForRefund == true)
                 {

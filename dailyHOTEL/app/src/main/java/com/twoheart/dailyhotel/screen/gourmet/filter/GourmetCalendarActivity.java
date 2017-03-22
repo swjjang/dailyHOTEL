@@ -8,12 +8,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,34 +31,20 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
     protected boolean mIsChanged;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, String screen, boolean isSelected, boolean isAnimation)
-    {
-        if (saleTime == null)
-        {
-            return null;
-        }
-
-        SaleTime startSaleTime = saleTime.getClone(0);
-
-        return newInstance(context, saleTime, startSaleTime, null, screen, isSelected, isAnimation);
-    }
-
     /**
      * @param context
-     * @param saleTime
-     * @param startSaleTime
-     * @param endSaleTime   null인 경우 마지막 날짜로 한다.
+     * @param todayDateTime
+     * @param gourmetBookingDay
      * @param screen
      * @param isSelected
      * @param isAnimation
      * @return
      */
-    public static Intent newInstance(Context context, SaleTime saleTime, SaleTime startSaleTime, SaleTime endSaleTime, String screen, boolean isSelected, boolean isAnimation)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String screen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, GourmetCalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
@@ -70,35 +59,19 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = getIntent();
 
-        final SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mTodayDateTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME);
+        mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
 
-        mStartSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_START_SALETIME);
-        mEndSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_END_SALETIME);
-
-        if (saleTime == null || mStartSaleTime == null)
+        if (mTodayDateTime == null || mPlaceBookingDay == null)
         {
             Util.restartApp(this);
             return;
         }
 
-        if (mEndSaleTime == null)
-        {
-            mEndSaleTime = mStartSaleTime.getClone(ENABLE_DAYCOUNT_OF_MAX);
-        }
-
-        // 예외 처리 추가
-        int offsetDailyDay = saleTime.getOffsetDailyDay();
-
-        if (offsetDailyDay < mStartSaleTime.getOffsetDailyDay()//
-            || offsetDailyDay >= mEndSaleTime.getOffsetDailyDay())
-        {
-            saleTime.setOffsetDailyDay(mStartSaleTime.getOffsetDailyDay());
-        }
-
-        initLayout(R.layout.activity_calendar, saleTime.getClone(0), DAYCOUNT_OF_MAX);
+        initLayout(R.layout.activity_calendar, DAYCOUNT_OF_MAX);
         initToolbar(getString(R.string.label_calendar_gourmet_select));
 
         if (isAnimation == true)
@@ -109,13 +82,13 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 @Override
                 public void run()
                 {
-                    makeCalendar(saleTime, DAYCOUNT_OF_MAX);
+                    makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
 
                     reset();
 
                     if (isSelected == true)
                     {
-                        setSelectedDay(saleTime);
+                        setSelectedDay(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay);
                     }
 
                     showAnimation();
@@ -125,21 +98,21 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         {
             setTouchEnabled(true);
 
-            makeCalendar(saleTime, DAYCOUNT_OF_MAX);
+            makeCalendar(mTodayDateTime, DAYCOUNT_OF_MAX);
 
             reset();
 
             if (isSelected == true)
             {
-                setSelectedDay(saleTime);
+                setSelectedDay(mTodayDateTime, (GourmetBookingDay) mPlaceBookingDay);
             }
         }
     }
 
     @Override
-    protected void initLayout(int layoutResID, SaleTime dailyTime, int dayCountOfMax)
+    protected void initLayout(int layoutResID, int dayCountOfMax)
     {
-        super.initLayout(layoutResID, dailyTime, dayCountOfMax);
+        super.initLayout(layoutResID, dayCountOfMax);
 
         mConfirmTextView = (TextView) findViewById(R.id.confirmView);
         mConfirmTextView.setVisibility(View.VISIBLE);
@@ -198,7 +171,17 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             {
                 Day day = (Day) mDayView.getTag();
 
-                onConfirm(day.dayTime);
+                GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+                try
+                {
+                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime, day.dayOffset);
+
+                    onConfirm(gourmetBookingDay);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
                 break;
             }
 
@@ -225,9 +208,21 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
                 setSelectedDay(mDayView);
 
                 view.setSelected(true);
-                setToolbarText(day.dayTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
 
-                mConfirmTextView.setEnabled(true);
+                Calendar calendar = DailyCalendar.getInstance();
+
+                try
+                {
+                    DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, day.dayOffset);
+                    String visitDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
+
+                    setToolbarText(visitDate);
+
+                    mConfirmTextView.setEnabled(true);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
 
                 releaseUiComponent();
                 break;
@@ -235,9 +230,9 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         }
     }
 
-    protected void onConfirm(SaleTime saleTime)
+    protected void onConfirm(GourmetBookingDay gourmetBookingDay)
     {
-        if (saleTime == null)
+        if (gourmetBookingDay == null)
         {
             return;
         }
@@ -247,21 +242,18 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        String date = saleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        String date = gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)");
 
         Map<String, String> params = new HashMap<>();
-        params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
+        params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
         params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
-
-        //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분");
-        //        String phoneDate = simpleDateFormat.format(new Date());
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.GOURMET_BOOKING_DATE_CLICKED//
             , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : //
                 AnalyticsManager.ValueType.NONE_) + "-" + date + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분"), params);
 
         Intent intent = new Intent();
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
 
         setResult(RESULT_OK, intent);
         hideAnimation();
@@ -295,27 +287,41 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_day_background));
     }
 
-    void setSelectedDay(SaleTime saleTime)
+    void setSelectedDay(TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay)
     {
-        if (saleTime == null)
+        if (gourmetBookingDay == null)
         {
             return;
         }
 
-        for (View dayView : mDailyViews)
+        Calendar calendar = DailyCalendar.getInstance();
+
+        try
         {
-            if (dayView == null)
-            {
-                continue;
-            }
+            int visitDay = Integer.parseInt(gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
-            Day day = (Day) dayView.getTag();
-
-            if (saleTime.isDayOfDaysDateEquals(day.dayTime) == true)
+            for (View dayView : mDailyViews)
             {
-                dayView.performClick();
-                break;
+                if (dayView == null)
+                {
+                    continue;
+                }
+
+                Day day = (Day) dayView.getTag();
+
+                DailyCalendar.setCalendarDateString(calendar, todayDateTime.dailyDateTime, day.dayOffset);
+
+                int calendarDay = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "yyyyMMdd"));
+
+                if (calendarDay == visitDay)
+                {
+                    dayView.performClick();
+                    break;
+                }
             }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
     }
 
@@ -344,16 +350,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             {
                 Day day = (Day) tag;
 
-                int offsetDay = day.dayTime.getOffsetDailyDay();
-
-                if (offsetDay >= mStartSaleTime.getOffsetDailyDay()//
-                    && offsetDay < mEndSaleTime.getOffsetDailyDay())
-                {
-                    dayView.setEnabled(true);
-                } else
-                {
-                    dayView.setEnabled(false);
-                }
+                dayView.setEnabled(true);
             } else
             {
                 dayView.setEnabled(false);

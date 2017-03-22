@@ -9,14 +9,13 @@ import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayParams;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -79,20 +78,13 @@ public class StayListFragment extends PlaceListFragment
             lockUI(isShowProgress);
         }
 
-        SaleTime checkInSaleTime = mStayCuration.getCheckInSaleTime();
+        StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
         Province province = mStayCuration.getProvince();
 
-        if (province == null || checkInSaleTime == null)
+        if (province == null || stayBookingDay == null)
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
-            return;
-        }
-
-        int nights = mStayCuration.getNights();
-        if (nights <= 0)
-        {
-            unLockUI();
             return;
         }
 
@@ -257,9 +249,6 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onStayList(ArrayList<Stay> list, int page)
         {
-            String value = mStayCuration.getCheckInSaleTime().getDayOfDaysDateFormat("yyyyMMdd") + "," + mStayCuration.getNights();
-            DailyPreference.getInstance(mBaseActivity).setStayLastViewDate(value);
-
             StayListFragment.this.onStayList(list, page, true);
         }
 

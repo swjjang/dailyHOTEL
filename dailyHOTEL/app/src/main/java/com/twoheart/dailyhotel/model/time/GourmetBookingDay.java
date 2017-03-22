@@ -15,19 +15,24 @@ public class GourmetBookingDay extends PlaceBookingDay
     }
 
     /**
-     * @param millis GMT-0
+     * @param dateTime ISO-8601
      */
-    public void setVisitTime(long millis)
+    public void setVisitDay(String dateTime) throws Exception
     {
-        setTimeInMillis(millis);
+        setTimeInString(dateTime);
     }
 
     /**
      * @param dateTime ISO-8601
      */
-    public void setVisitTime(String dateTime)
+    public void setVisitDay(String dateTime, int afterDay) throws Exception
     {
-        setTimeInString(dateTime);
+        setTimeInString(dateTime, afterDay);
+    }
+
+    public String getVisitDay(String format)
+    {
+        return getString(format);
     }
 
     @Override

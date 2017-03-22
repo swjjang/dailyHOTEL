@@ -9,6 +9,7 @@ import android.view.Window;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -47,23 +48,20 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
     int mHotelIdx;
     int mRoomIdx;
-    int mNights;
 
     private String mRoomPrice;
-    String mCheckInDate;
-    String mCheckOutDate;
     private String mCategoryCode;
     private String mHotelName;
     String mCallByScreen;
+    private StayBookingDay mStayBookingDay;
 
-    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, //
-                                     String checkOutDate, String categoryCode, String hotelName, String roomPrice)
+    public static Intent newInstance(Context context, int hotelIdx, int roomIdx, StayBookingDay stayBookingDay//
+        , String categoryCode, String hotelName, String roomPrice)
     {
         Intent intent = new Intent(context, SelectStayCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
         intent.putExtra(INTENT_EXTRA_ROOM_IDX, roomIdx);
-        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
-        intent.putExtra(INTENT_EXTRA_CHECK_OUT_DATE, checkOutDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
         intent.putExtra(INTENT_EXTRA_ROOM_PRICE, roomPrice);
@@ -72,13 +70,12 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, int hotelIdx, String checkInDate, //
-                                     int nights, String categoryCode, String hotelName)
+    public static Intent newInstance(Context context, int hotelIdx, StayBookingDay stayBookingDay //
+        , String categoryCode, String hotelName)
     {
         Intent intent = new Intent(context, SelectStayCouponDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_HOTEL_IDX, hotelIdx);
-        intent.putExtra(INTENT_EXTRA_CHECK_IN_DATE, checkInDate);
-        intent.putExtra(INTENT_EXTRA_NIGHTS, nights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(INTENT_EXTRA_CATEGORY_CODE, categoryCode);
         intent.putExtra(INTENT_EXTRA_HOTEL_NAME, hotelName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
@@ -100,15 +97,13 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         }
 
         mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+        mStayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
         switch (mCallByScreen)
         {
             case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
             {
                 mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
-                mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
-                mCheckOutDate = intent.getStringExtra(INTENT_EXTRA_CHECK_OUT_DATE);
-
                 mRoomIdx = intent.getIntExtra(INTENT_EXTRA_ROOM_IDX, -1);
                 mCategoryCode = intent.getStringExtra(INTENT_EXTRA_CATEGORY_CODE);
                 mHotelName = intent.getStringExtra(INTENT_EXTRA_HOTEL_NAME);
@@ -119,9 +114,6 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
             {
                 mHotelIdx = intent.getIntExtra(INTENT_EXTRA_HOTEL_IDX, -1);
-                mCheckInDate = intent.getStringExtra(INTENT_EXTRA_CHECK_IN_DATE);
-                mNights = intent.getIntExtra(INTENT_EXTRA_NIGHTS, 1);
-
                 mCategoryCode = intent.getStringExtra(INTENT_EXTRA_CATEGORY_CODE);
                 mHotelName = intent.getStringExtra(INTENT_EXTRA_HOTEL_NAME);
                 break;
@@ -147,32 +139,15 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
         lockUI();
 
-        switch (mCallByScreen)
+        if (mStayBookingDay == null)
         {
-            case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
-            {
-                if (Util.isTextEmpty(mCheckInDate, mCheckOutDate) == true)
-                {
-                    Util.restartApp(this);
-                    return;
-                }
-
-                mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
-                break;
-            }
-
-            case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
-            {
-                if (Util.isTextEmpty(mCheckInDate) == true)
-                {
-                    Util.restartApp(this);
-                    return;
-                }
-
-                mNetworkController.requestCouponList(mHotelIdx, mCheckInDate, mNights);
-                break;
-            }
+            Util.restartApp(this);
+            return;
         }
+
+        mNetworkController.requestCouponList(mHotelIdx, mRoomIdx//
+            , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
     }
 
     @Override
@@ -335,32 +310,9 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             Coupon coupon = mLayout.getCoupon(userCouponCode);
             recordAnalytics(coupon);
 
-            switch (mCallByScreen)
-            {
-                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
-                {
-                    if (Util.isTextEmpty(mCheckInDate, mCheckOutDate) == true)
-                    {
-                        Util.restartApp(SelectStayCouponDialogActivity.this);
-                        return;
-                    }
-
-                    mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mCheckInDate, mCheckOutDate);
-                    break;
-                }
-
-                case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
-                {
-                    if (Util.isTextEmpty(mCheckInDate) == true)
-                    {
-                        Util.restartApp(SelectStayCouponDialogActivity.this);
-                        return;
-                    }
-
-                    mNetworkController.requestCouponList(mHotelIdx, mCheckInDate, mNights);
-                    break;
-                }
-            }
+            mNetworkController.requestCouponList(mHotelIdx, mRoomIdx//
+                , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
         }
 
         @Override
