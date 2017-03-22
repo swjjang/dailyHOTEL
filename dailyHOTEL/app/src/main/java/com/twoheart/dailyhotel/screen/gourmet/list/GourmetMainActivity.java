@@ -112,7 +112,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 mGourmetCuration.setProvince(province);
 
                 mPlaceMainLayout.setToolbarRegionText(province.name);
-                mPlaceMainLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
+                mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
                 String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.FNB);
 
@@ -189,7 +189,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             GourmetCurationOption changedGourmetCurationOption = (GourmetCurationOption) changedGourmetCuration.getCurationOption();
 
             mGourmetCuration.setCurationOption(changedGourmetCurationOption);
-            mPlaceMainLayout.setOptionFilterEnabled(changedGourmetCurationOption.isDefaultFilter() == false);
+            mPlaceMainLayout.setOptionFilterSelected(changedGourmetCurationOption.isDefaultFilter() == false);
 
             if (changedGourmetCurationOption.getSortType() == SortType.DISTANCE)
             {
@@ -213,7 +213,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
         gourmetCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceMainLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
+        mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -224,7 +224,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
         gourmetCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceMainLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
+        mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -937,7 +937,23 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onShowMenuBar()
         {
+            if (mPlaceMainLayout == null)
+            {
+                return;
+            }
+
             mPlaceMainLayout.showBottomLayout();
+        }
+
+        @Override
+        public void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled)
+        {
+            if (mPlaceMainLayout == null)
+            {
+                return;
+            }
+
+            mPlaceMainLayout.setOptionViewTypeEnabled(isShowViewTypeEnabled);
         }
 
         @Override
@@ -949,7 +965,15 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onShowActivityEmptyView(boolean isShow)
         {
-
+            if (isShow == true)
+            {
+                mPlaceMainLayout.hideBottomLayout();
+                mPlaceMainLayout.setOptionFilterEnabled(false);
+            } else
+            {
+                mPlaceMainLayout.showBottomLayout();
+                mPlaceMainLayout.setOptionFilterEnabled(true);
+            }
         }
 
         @Override
@@ -1194,7 +1218,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
         gourmetCurationOption.setSortType(DailyDeepLink.getInstance().getSorting());
 
-        mPlaceMainLayout.setOptionFilterEnabled(gourmetCurationOption.isDefaultFilter() == false);
+        mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
         int provinceIndex;
         int areaIndex;

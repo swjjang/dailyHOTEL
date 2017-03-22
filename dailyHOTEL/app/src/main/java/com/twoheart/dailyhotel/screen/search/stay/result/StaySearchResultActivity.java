@@ -156,7 +156,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mStaySearchCuration.getCurationOption().clear();
             mStaySearchCuration.setCategory(Category.ALL);
 
-            mPlaceSearchResultLayout.setOptionFilterEnabled(false);
+            mPlaceSearchResultLayout.setOptionFilterSelected(false);
             mPlaceSearchResultLayout.clearCategoryTab();
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.processListLayout();
@@ -180,7 +180,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
 
             mStaySearchCuration.setCurationOption(changedStayCurationOption);
-            mPlaceSearchResultLayout.setOptionFilterEnabled(changedStayCurationOption.isDefaultFilter() == false);
+            mPlaceSearchResultLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
 
             if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
             {
@@ -204,7 +204,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
+        mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -215,7 +215,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
 
         stayCurationOption.setSortType(SortType.DEFAULT);
-        mPlaceSearchResultLayout.setOptionFilterEnabled(stayCurationOption.isDefaultFilter() == false);
+        mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
         refreshCurrentFragment(true);
     }
@@ -868,6 +868,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, //
                 mViewType, mSearchType, mStaySearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+        }
+
+        @Override
+        public void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled)
+        {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
+
+            mPlaceSearchResultLayout.setOptionViewTypeEnabled(isShowViewTypeEnabled);
         }
 
         @Override

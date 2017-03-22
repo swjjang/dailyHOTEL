@@ -209,6 +209,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
+
+        setOptionViewTypeEnabled(true);
+        setOptionFilterEnabled(true);
     }
 
     public void setOptionViewTypeView(Constants.ViewType viewType)
@@ -228,7 +231,26 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         }
     }
 
-    public void setOptionFilterEnabled(boolean enabled)
+    public void setOptionViewTypeEnabled(boolean isTypeEnabled)
+    {
+        // disable opacity 40% - 0 ~ 255
+        if (isTypeEnabled == true)
+        {
+            mViewTypeOptionImageView.getBackground().setAlpha(255);
+        } else
+        {
+            mViewTypeOptionImageView.getBackground().setAlpha(102);
+        }
+
+        mViewTypeOptionImageView.setEnabled(isTypeEnabled);
+    }
+
+    public void setOptionFilterEnabled(boolean isFilterEnabled)
+    {
+        mFilterOptionImageView.setEnabled(isFilterEnabled);
+    }
+
+    public void setOptionFilterSelected(boolean enabled)
     {
         mFilterOptionImageView.setSelected(enabled);
     }
@@ -324,6 +346,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 }
 
                 prevPosition = position;
+
+                setOptionViewTypeEnabled(getPlaceListFragment().get(position).getViewType() != Constants.ViewType.GONE);
             }
 
             @Override

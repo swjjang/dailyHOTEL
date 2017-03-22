@@ -164,6 +164,10 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
+
+        showBottomLayout();
+        setOptionViewTypeEnabled(true);
+        setOptionFilterEnabled(true);
     }
 
     private void initCategoryTabLayout(View view)
@@ -226,11 +230,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             case GONE:
                 break;
         }
-    }
-
-    public void setOptionFilterEnabled(boolean enabled)
-    {
-        mFilterOptionImageView.setSelected(enabled);
     }
 
     public void setCategoryTabLayoutVisibility(int visibility)
@@ -367,6 +366,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                     }
 
                     prevPosition = position;
+
+                    setOptionViewTypeEnabled(getPlaceListFragment().get(position).getViewType() != Constants.ViewType.GONE);
                 }
 
                 @Override
@@ -439,10 +440,28 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
     }
 
-    private void setMenuBarLayoutEnabled(boolean enabled)
+    public void setOptionViewTypeEnabled(boolean isTypeEnabled)
     {
-        mViewTypeOptionImageView.setEnabled(enabled);
-        mFilterOptionImageView.setEnabled(enabled);
+        // disable opacity 40% - 0 ~ 255
+        if (isTypeEnabled == true)
+        {
+            mViewTypeOptionImageView.getBackground().setAlpha(255);
+        } else
+        {
+            mViewTypeOptionImageView.getBackground().setAlpha(102);
+        }
+
+        mViewTypeOptionImageView.setEnabled(isTypeEnabled);
+    }
+
+    public void setOptionFilterEnabled(boolean isFilterEnabled)
+    {
+        mFilterOptionImageView.setEnabled(isFilterEnabled);
+    }
+
+    public void setOptionFilterSelected(boolean isSelected)
+    {
+        mFilterOptionImageView.setSelected(isSelected);
     }
 
     public synchronized void showAppBarLayout(boolean animate)
@@ -464,8 +483,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
         mBottomOptionLayout.setVisibility(View.VISIBLE);
         mBottomOptionLayout.setTranslationY(0);
-
-        setMenuBarLayoutEnabled(true);
     }
 
     public void hideBottomLayout()
@@ -476,8 +493,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
 
         mBottomOptionLayout.setVisibility(View.GONE);
-
-        setMenuBarLayoutEnabled(false);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
