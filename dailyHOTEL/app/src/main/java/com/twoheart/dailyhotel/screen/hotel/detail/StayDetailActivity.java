@@ -1537,6 +1537,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 if (mIsShowCalendar == true)
                 {
+                    unLockUI();
                     startCalendar(mTodayDateTime, stayBookingDay, mPlaceDetail.index, false, false);
                     return;
                 }

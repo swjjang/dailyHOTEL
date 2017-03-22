@@ -151,6 +151,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     }
 
                     stayBookingDay = (StayBookingDay) placeBookingDay;
+
+                    gourmetBookingDay = new GourmetBookingDay();
                     gourmetBookingDay.setVisitDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
                     break;
                 }
@@ -159,6 +161,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                     mTooltipLayout.setVisibility(View.GONE);
 
                     gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
+
+                    stayBookingDay = new StayBookingDay();
                     stayBookingDay.setCheckInDay(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
                     stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), 1);
                     break;

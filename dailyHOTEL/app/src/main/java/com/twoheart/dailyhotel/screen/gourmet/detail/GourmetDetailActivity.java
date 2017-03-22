@@ -1440,6 +1440,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 if (mIsShowCalendar == true)
                 {
+                    unLockUI();
                     startCalendar(mTodayDateTime, gourmetBookingDay, mPlaceDetail.index, false);
                     return;
                 }

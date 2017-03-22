@@ -219,7 +219,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
             if (dayClass != null)
             {
-                mDailyViews[dayOffset] = dayView;
+                mDailyViews[dayClass.dayOffset] = dayView;
             }
 
             calendarGridLayout.addView(dayView);

@@ -354,7 +354,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 case CODE_REQUEST_ACTIVITY_CALENDAR:
                     if (mIsShowCalendar == true)
                     {
-                        mIsShowCalendar = true;
+                        mIsShowCalendar = false;
                         mDontReloadAtOnResume = false;
                     } else
                     {

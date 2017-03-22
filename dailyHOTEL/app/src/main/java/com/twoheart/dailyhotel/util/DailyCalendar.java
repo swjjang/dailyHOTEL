@@ -11,7 +11,6 @@ import java.util.TreeMap;
 
 public class DailyCalendar
 {
-    public static final long NINE_HOUR_MILLISECOND = 3600 * 9 * 1000;
     public static final long DAY_MILLISECOND = 3600 * 24 * 1000;
 
     public static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
@@ -133,13 +132,6 @@ public class DailyCalendar
         }
 
         return simpleDateFormat.parse(dateString);
-    }
-
-    public static long getTimeGMT9(final String dateString, final String format) throws ParseException, NullPointerException
-    {
-        Date date = convertDate(dateString, format);
-
-        return date.getTime() + NINE_HOUR_MILLISECOND;
     }
 
     /**
