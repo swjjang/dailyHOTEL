@@ -38,6 +38,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     protected static final String INTENT_EXTRA_DATA_PLACE_NAME = "placeName";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
     protected static final String INTENT_EXTRA_DATA_USER_NAME = "userName";
+    protected static final String INTENT_EXTRA_DATA_VISIT_DAY = "visitDay";
     protected static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
     protected static final String INTENT_EXTRA_DATA_PRODUCT_COUNT = "productCount";
     protected static final String INTENT_EXTRA_DATA_PAYMENT_TYPE = "paymentType";

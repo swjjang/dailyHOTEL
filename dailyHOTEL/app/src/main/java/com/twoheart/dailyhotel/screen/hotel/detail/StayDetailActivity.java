@@ -788,6 +788,11 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void downloadCoupon(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail)
     {
+        if (placeBookingDay == null || placeDetail == null)
+        {
+            return;
+        }
+
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
@@ -836,16 +841,9 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            try
-            {
-                Intent intent = SelectStayCouponDialogActivity.newInstance(this, mPlaceDetail.index//
-                    , stayBookingDay.getCheckInDay("yyyy-MM-dd"), stayBookingDay.getNights()//
-                    , stayDetailParams.category, stayDetailParams.name);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
+            Intent intent = SelectStayCouponDialogActivity.newInstance(this, mPlaceDetail.index//
+                , stayBookingDay, stayDetailParams.category, stayDetailParams.name);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DOWNLOAD_COUPON);
         }
     }
 

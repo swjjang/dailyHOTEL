@@ -26,8 +26,8 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayPaymentInformation;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -78,10 +78,9 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
         }
 
         mStayPaymentInformation = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION);
-        SaleTime saleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-        int nights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        StayBookingDay stayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-        if (mStayPaymentInformation == null)
+        if (mStayPaymentInformation == null || stayBookingDay == null)
         {
             DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
             finish();
@@ -150,11 +149,11 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             }
         }); // 롱클릭 에러 방지.
 
-        requestPostPaymentWebView(mWebView, mStayPaymentInformation, saleTime, nights);
+        requestPostPaymentWebView(mWebView, mStayPaymentInformation, stayBookingDay);
     }
 
     private void requestPostPaymentWebView(WebView webView //
-        , StayPaymentInformation stayPaymentInformation, SaleTime saleTime, int nights)
+        , StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
         String name;
         String phone;
@@ -191,43 +190,53 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
             return;
         }
 
-        StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
-
-        FormBody.Builder builder = new FormBody.Builder();
-        builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
-        builder.add("payment_type", stayPaymentInformation.paymentType.name());
-        builder.add("checkin_date", saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        builder.add("nights", Integer.toString(nights));
-
-        switch (stayPaymentInformation.discountType)
+        try
         {
-            case BONUS:
-                builder.add("bonus", Integer.toString(stayPaymentInformation.bonus));
-                break;
+            StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
-            case COUPON:
-                builder.add("user_coupon_code", stayPaymentInformation.getCoupon().userCouponCode);
-                break;
+            FormBody.Builder builder = new FormBody.Builder();
+            builder.add("room_idx", String.valueOf(stayProduct.roomIndex));
+            builder.add("payment_type", stayPaymentInformation.paymentType.name());
+            builder.add("checkin_date", stayBookingDay.getCheckInDay("yyyyMMdd"));
+            builder.add("nights", Integer.toString(stayBookingDay.getNights()));
+
+            switch (stayPaymentInformation.discountType)
+            {
+                case BONUS:
+                    builder.add("bonus", Integer.toString(stayPaymentInformation.bonus));
+                    break;
+
+                case COUPON:
+                    builder.add("user_coupon_code", stayPaymentInformation.getCoupon().userCouponCode);
+                    break;
+            }
+
+            builder.add("guest_name", name);
+            builder.add("guest_phone", phone.replace("-", ""));
+            builder.add("guest_email", email);
+
+            // 주차/도보
+            if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+            {
+                builder.add("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+            } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+            {
+                builder.add("arrival_transportation", "NO_PARKING");
+            }
+
+            String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
+                + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
+
+            WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
+            webViewPostAsyncTask.execute(url);
+        }catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            DailyToast.showToast(HotelPaymentWebActivity.this, R.string.toast_msg_failed_to_get_payment_info, Toast.LENGTH_SHORT);
+            finish();
+            return;
         }
-
-        builder.add("guest_name", name);
-        builder.add("guest_phone", phone.replace("-", ""));
-        builder.add("guest_email", email);
-
-        // 주차/도보
-        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            builder.add("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
-        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            builder.add("arrival_transportation", "NO_PARKING");
-        }
-
-        String url = Crypto.getUrlDecoderEx(IDailyNetwork.URL_DAILYHOTEL_SERVER)//
-            + Crypto.getUrlDecoderEx(IDailyNetwork.URL_WEBAPI_HOTEL_V1_PAYMENT_SESSION_COMMON);
-
-        WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
-        webViewPostAsyncTask.execute(url);
     }
 
     @Override

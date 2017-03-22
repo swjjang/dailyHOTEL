@@ -408,7 +408,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
+        if (mGourmetCuration == null)
         {
             Util.restartApp(GourmetCurationActivity.this);
             return;
@@ -424,7 +424,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (mGourmetCuration == null || mGourmetCuration.getSaleTime() == null)
+        if (mGourmetCuration == null)
         {
             Util.restartApp(GourmetCurationActivity.this);
             return;

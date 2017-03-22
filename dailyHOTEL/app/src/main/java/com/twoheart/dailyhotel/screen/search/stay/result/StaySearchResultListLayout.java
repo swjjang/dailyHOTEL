@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -157,13 +158,13 @@ public class StaySearchResultListLayout extends StayListLayout
 
     @Override
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                              ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+                              ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
     {
         if (mSearchType == Constants.SearchType.LOCATION)
         {
             mPlaceListAdapter.setShowDistanceIgnoreSort(true);
         }
 
-        super.addResultList(fragmentManager, viewType, list, sortType);
+        super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay);
     }
 }

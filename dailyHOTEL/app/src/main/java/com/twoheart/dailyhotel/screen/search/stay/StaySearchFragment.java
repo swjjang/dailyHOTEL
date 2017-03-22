@@ -128,7 +128,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -153,7 +153,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, text);
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -266,7 +266,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, text);
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
@@ -285,11 +285,11 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (keyword.price < 0)
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, keyword, Constants.SearchType.RECENT);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
@@ -314,7 +314,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                     , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
             }
 
-            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mStayBookingDay, //
+            Intent intent = StayCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, //
                 AnalyticsManager.ValueType.SEARCH, true, isAnimation);
 
             if (intent == null)

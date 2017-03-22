@@ -320,7 +320,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                     if (resultCode == RESULT_OK)
                     {
-                        downloadCoupon();
+                        downloadCoupon(mPlaceBookingDay, mPlaceDetail);
                     }
                     break;
                 }
@@ -562,7 +562,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         }
                     }
 
-                    shareKakao(mPlaceDetail, mDefaultImageUrl);
+                    shareKakao(mDefaultImageUrl, mPlaceBookingDay, mPlaceDetail);
                 }
             });
 
@@ -578,7 +578,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         shareDialog.dismiss();
                     }
 
-                    shareSMS(mPlaceDetail);
+                    shareSMS(mPlaceBookingDay, mPlaceDetail);
                 }
             });
 

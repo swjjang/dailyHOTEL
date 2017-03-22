@@ -147,7 +147,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             return;
         }
 
-        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mGourmetBookingDay, text);
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -247,7 +247,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mGourmetBookingDay, text);
+            Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
@@ -266,11 +266,11 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             if (keyword.price < 0)
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mGourmetBookingDay, keyword, Constants.SearchType.RECENT);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mGourmetBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
@@ -289,7 +289,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
             }
 
-            Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mGourmetBookingDay, //
+            Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, //
                 AnalyticsManager.ValueType.SEARCH, true, isAnimation);
 
             if (intent == null)

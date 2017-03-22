@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.location.Location;
 import android.os.Parcel;
 
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -36,11 +37,11 @@ public class GourmetSearchParams extends GourmetParams
 
         clear();
 
-        SaleTime saleTime = gourmetSearchCuration.getSaleTime();
+        GourmetBookingDay gourmetBookingDay = gourmetSearchCuration.getGourmetBookingDay();
 
-        if (saleTime != null)
+        if (gourmetBookingDay != null)
         {
-            date = saleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+            date = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
         }
 
         GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) gourmetSearchCuration.getCurationOption();

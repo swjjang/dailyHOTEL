@@ -11,10 +11,13 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -35,6 +38,27 @@ public class StayWishListFragment extends PlaceWishListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
+
+            mPlaceBookingDay = stayBookingDay;
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -227,7 +251,7 @@ public class StayWishListFragment extends PlaceWishListFragment
 
             if (Util.isUsedMultiTransition() == true)
             {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0, true);
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -245,7 +269,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0, false);
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
@@ -292,14 +316,13 @@ public class StayWishListFragment extends PlaceWishListFragment
         @Override
         public void onRecordAnalyticsList(ArrayList<? extends Place> list)
         {
-            if (list == null || list.isEmpty() == true || mSaleTime == null)
+            if (list == null || list.isEmpty() == true || mPlaceBookingDay == null)
             {
                 return;
             }
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             String placeTypeString = AnalyticsManager.ValueType.STAY;
-            int dayOfDays = mSaleTime.getOffsetDailyDay();
             int size = list.size();
 
             StringBuilder stringBuilder = new StringBuilder("[");
@@ -315,11 +338,12 @@ public class StayWishListFragment extends PlaceWishListFragment
 
             stringBuilder.append("]");
 
+            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, mSaleTime.getClone(dayOfDays + 1).getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
 

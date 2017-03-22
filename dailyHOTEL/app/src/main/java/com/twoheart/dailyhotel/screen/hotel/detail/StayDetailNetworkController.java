@@ -9,7 +9,6 @@ import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
@@ -51,24 +50,11 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
             {
                 try
                 {
-                    String nightsString = call.request().url().queryParameter("stays");
-
                     BaseDto<StayDetailParams> baseDto = response.body();
 
                     int msgCode = baseDto.msgCode;
 
                     StayDetailParams stayDetailParams = baseDto.data;
-                    if (stayDetailParams != null && Util.isTextEmpty(nightsString) == false)
-                    {
-                        try
-                        {
-                            int nights = Integer.parseInt(nightsString);
-                            stayDetailParams.setNights(nights);
-                        } catch (Exception e)
-                        {
-                            ExLog.w(e.getMessage());
-                        }
-                    }
 
                     if (msgCode == 100 && stayDetailParams == null)
                     {

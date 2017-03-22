@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.HashMap;
@@ -27,14 +28,20 @@ public class RecentGourmetParams extends GourmetParams
         super(in);
     }
 
-    public void setVisitDay(GourmetBookingDay gourmetBookingDay)
+    public void setGourmetBookingDay(GourmetBookingDay gourmetBookingDay)
     {
         if (gourmetBookingDay == null)
         {
             return;
         }
 
-        date = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
+        try
+        {
+            date = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     public void setTargetIndices(String targetIndices)

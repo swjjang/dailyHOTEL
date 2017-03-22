@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyViewPagerCircleIndicator;
@@ -40,6 +41,8 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     Handler mEventBannerHandler;
     int mLastEventBannerPosition;
     private Constants.SortType mSortType;
+
+    public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);
 
     public PlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {

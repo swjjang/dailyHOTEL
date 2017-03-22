@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -23,9 +24,11 @@ public abstract class PlaceWishListFragment extends BaseFragment
     protected PlaceWishListLayout mListLayout;
     protected BaseNetworkController mNetworkController;
 
-    protected SaleTime mSaleTime;
+    protected PlaceBookingDay mPlaceBookingDay;
 
     protected OnWishListFragmentListener mWishListFragmentListener;
+
+    protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
 
     protected abstract PlaceWishListLayout getListLayout();
 
@@ -81,16 +84,6 @@ public abstract class PlaceWishListFragment extends BaseFragment
         {
             requestWishList();
         }
-    }
-
-    public void setSaleTime(SaleTime saleTime)
-    {
-        if (saleTime == null)
-        {
-            return;
-        }
-
-        mSaleTime = saleTime;
     }
 
     public void forceRefreshList()

@@ -20,14 +20,14 @@ import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
-import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.model.User;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
+import com.twoheart.dailyhotel.network.model.StayProduct;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.CouponUtil;
@@ -50,6 +50,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -94,7 +95,7 @@ public class DailyMobileAPITest
 
     private Context mContext;
 
-    private SaleTime mSaleTime;
+    private TodayDateTime mTodayDateTime;
 
     // user login
     private String mAuthorization;
@@ -215,16 +216,16 @@ public class DailyMobileAPITest
     @Ignore
     private long getGourmetReservationTime() throws Exception
     {
-        if (mSaleTime == null)
+        if (mTodayDateTime == null)
         {
-            assertThat("mSaleTime is null", false);
+            assertThat("mTodayDateTime is null", false);
             return -1;
         }
 
-        String currentTimeString = mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT);
+        String currentTimeString = mTodayDateTime.dailyDateTime;
         assertThat(currentTimeString, notNullValue());
 
-        String findText = mSaleTime.getDayOfDaysDateFormat("HH:mm");
+        String findText = DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm");
         assertThat(findText, allOf(notNullValue(), containsString(":")));
 
         currentTimeString = currentTimeString.replace(findText, Const.TEST_GOURMET_RESERVATION_TIME);
@@ -332,48 +333,33 @@ public class DailyMobileAPITest
     @Ignore
     public void requestCommonDateTimeBySetUp() throws Exception
     {
-        if (mSaleTime != null)
+        if (mTodayDateTime != null)
         {
             return;
         }
 
         mLock = new CountDownLatch(1);
 
-        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        retrofit2.Callback networkCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
         {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
             {
                 try
                 {
                     assertThat(response, notNullValue());
                     assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+                    assertThat(response.body(), allOf(notNullValue(), isA(BaseDto.class)));
 
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<TodayDateTime> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    if (msgCode == 100)
+                    if (baseDto.msgCode == 100)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                        assertThat(dataJSONObject, allOf(notNullValue(), isA(JSONObject.class)));
-
-                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
-
-                        if (mSaleTime == null)
-                        {
-                            mSaleTime = new SaleTime();
-                        }
-
-                        mSaleTime.setCurrentTime(currentDateTime);
-                        mSaleTime.setDailyTime(dailyDateTime);
-                        mSaleTime.setOffsetDailyDay(0);
+                        mTodayDateTime = baseDto.data;
                     } else
                     {
-                        String message = responseJSONObject.getString("msg");
-                        assertThat(message, isNotEmpty());
-                        assertThat(message, msgCode, is(100));
+                        assertThat(baseDto.msg, isNotEmpty());
+                        assertThat(baseDto.msg, baseDto.msgCode, is(100));
                     }
                 } catch (Throwable t)
                 {
@@ -385,14 +371,14 @@ public class DailyMobileAPITest
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
+            public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
             {
                 addException(call, null, t);
                 mLock.countDown();
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, networkCallback);
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTimeRefactoring(mNetworkTag, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -638,7 +624,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, networkCallback);
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTimeRefactoring(mNetworkTag, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -1398,7 +1384,7 @@ public class DailyMobileAPITest
 
         HashMap<String, Object> paramMap = new HashMap<>();
 
-        paramMap.put("dateCheckIn", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+        paramMap.put("dateCheckIn", DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
         paramMap.put("stays", TEST_NIGHTS);
         paramMap.put("provinceIdx", Const.TEST_STAY_PROVINCE_INDEX);
         // area skip
@@ -1500,7 +1486,8 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestStaySearchAutoCompleteList(mNetworkTag//
-            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
+            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
+            , TEST_NIGHTS, Const.TEST_STAY_AUTO_SEARCH_TEXT, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -1660,7 +1647,7 @@ public class DailyMobileAPITest
 
         DailyMobileAPI.getInstance(mContext).requestStayPaymentInformation(mNetworkTag//
             , Const.TEST_STAY_SALE_ROOM_INDEX//
-            , mSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
+            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd")//
             , TEST_NIGHTS, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
@@ -1827,7 +1814,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestStayDetailInformation(mNetworkTag, Const.TEST_STAY_INDEX, //
-            mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), TEST_NIGHTS, networkCallback);
+            DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), TEST_NIGHTS, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -1896,7 +1883,7 @@ public class DailyMobileAPITest
 
         Map<String, String> params = new HashMap<>();
         params.put("room_idx", String.valueOf(Const.TEST_STAY_SALE_ROOM_INDEX));
-        params.put("checkin_date", mSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
+        params.put("checkin_date", DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
         params.put("nights", String.valueOf(TEST_NIGHTS));
         params.put("billkey", Const.TEST_EASY_CARD_BILLINGKEY);
 
@@ -2569,7 +2556,7 @@ public class DailyMobileAPITest
         };
 
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("reserveDate", mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+        hashMap.put("reserveDate", DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
         hashMap.put("provinceIdx", Const.TEST_GOURMET_PROVINCE_INDEX);
         // skip Area
         //  hashMap.put("areaIdx", areaIdx);
@@ -2663,7 +2650,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestGourmetSearchAutoCompleteList(mNetworkTag//
-            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_GOURMET_AUTO_SEARCH_TEXT, networkCallback);
+            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), Const.TEST_GOURMET_AUTO_SEARCH_TEXT, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -2839,7 +2826,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestGourmetDetailInformation(//
-            mNetworkTag, Const.TEST_GOURMET_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), networkCallback);
+            mNetworkTag, Const.TEST_GOURMET_INDEX, DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -2956,7 +2943,7 @@ public class DailyMobileAPITest
 
         DailyMobileAPI.getInstance(mContext).requestGourmetCheckTicket(mNetworkTag//
             , ticketIndex//
-            , mSaleTime.getDayOfDaysDateFormat("yyMMdd")//
+            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyMMdd")//
             , Const.TEST_GOURMET_TICKET_COUNT//
             , Long.toString(ticketTime), networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
@@ -3776,7 +3763,7 @@ public class DailyMobileAPITest
             }
         };
 
-        String email = "dh_" + mSaleTime.getDayOfDaysDateFormat("yyyy_MM_dd") + "@dailyhotel.com";
+        String email = "dh_" + DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy_MM_dd") + "@dailyhotel.com";
 
         HashMap<String, String> signUpParams = new HashMap<>();
 
@@ -4079,10 +4066,13 @@ public class DailyMobileAPITest
             }
         };
 
+        Calendar calendar = DailyCalendar.getInstance();
+        DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, 1);
+
         DailyMobileAPI.getInstance(mContext).requestCouponList(//
             mNetworkTag, Const.TEST_STAY_INDEX, Const.TEST_STAY_SALE_ROOM_INDEX,//
-            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
-            mSaleTime.getClone(TEST_NIGHTS).getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), networkCallback);
+            mTodayDateTime.dailyDateTime,//
+            DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT), networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -4484,7 +4474,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestHasCoupon( //
-            mNetworkTag, Const.TEST_STAY_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_NIGHTS, hasCouponCallback);
+            mNetworkTag, Const.TEST_STAY_INDEX, DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), Const.TEST_NIGHTS, hasCouponCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -4532,7 +4522,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestHasCoupon(//
-            mNetworkTag, Const.TEST_GOURMET_INDEX, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), hasCouponCallback);
+            mNetworkTag, Const.TEST_GOURMET_INDEX, DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), hasCouponCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -4582,7 +4572,7 @@ public class DailyMobileAPITest
 
         DailyMobileAPI.getInstance(mContext).requestCouponList(//
             mNetworkTag, Const.TEST_STAY_INDEX,//
-            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT),//
+            mTodayDateTime.dailyDateTime,//
             Const.TEST_NIGHTS, couponListCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
@@ -4633,7 +4623,7 @@ public class DailyMobileAPITest
 
         DailyMobileAPI.getInstance(mContext).requestCouponList(//
             mNetworkTag, Const.TEST_GOURMET_INDEX,//
-            mSaleTime.getDayOfDaysDateFormat(DailyCalendar.ISO_8601_FORMAT), couponListCallback);
+            mTodayDateTime.dailyDateTime, couponListCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -5360,9 +5350,13 @@ public class DailyMobileAPITest
             }
         };
 
+        Calendar calendar = DailyCalendar.getInstance();
+        DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, 1);
+
         DailyMobileAPI.getInstance(mContext).requestPolicyRefund(mNetworkTag//
             , Const.TEST_STAY_INDEX, Const.TEST_STAY_SALE_ROOM_INDEX//
-            , mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), mSaleTime.getClone(1).getDayOfDaysDateFormat("yyyy-MM-dd") //
+            , DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
+            , DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd") //
             , policyRefundCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
@@ -5502,7 +5496,7 @@ public class DailyMobileAPITest
         };
 
         DailyMobileAPI.getInstance(mContext).requestRefund(mNetworkTag, Const.TEST_STAY_INDEX, //
-            mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), Const.TEST_PAYMENT_TYPE//
+            DailyCalendar.convertDateFormatString(mTodayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), Const.TEST_PAYMENT_TYPE//
             , Const.TEST_STAY_RESERVATION_INDEX, Const.TEST_AUTO_REFUND_CANCEL_MESSAGE, null, null, null, refundCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }

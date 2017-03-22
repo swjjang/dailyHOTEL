@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -459,18 +459,13 @@ public class WishListTabActivity extends BaseActivity
     private final WishListTabNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new WishListTabNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
+        public void onCommonDateTime(TodayDateTime todayDateTime)
         {
-            SaleTime saleTime = new SaleTime();
-            saleTime.setCurrentTime(currentDateTime);
-            saleTime.setDailyTime(dailyDateTime);
-            saleTime.setOffsetDailyDay(0);
-
             if (mFragmentList != null)
             {
                 for (PlaceWishListFragment fragment : mFragmentList)
                 {
-                    fragment.setSaleTime(saleTime);
+                    fragment.setPlaceBookingDay(todayDateTime);
                 }
             }
 

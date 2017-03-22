@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -26,6 +27,12 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
     public GourmetWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {
         super(context, list, listener);
+    }
+
+    @Override
+    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
+    {
+
     }
 
     @Override

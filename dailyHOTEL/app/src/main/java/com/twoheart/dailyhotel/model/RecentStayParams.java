@@ -4,6 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.HashMap;
@@ -27,15 +30,21 @@ public class RecentStayParams extends StayParams
         super(in);
     }
 
-    public void setCheckInTime(StayBookingDay stayBookingDay)
+    public void setStayBookingDay(StayBookingDay stayBookingDay)
     {
         if (stayBookingDay == null)
         {
             return;
         }
 
-        dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
-        stays = 1;
+        try
+        {
+            dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
+            stays = stayBookingDay.getNights();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     public void setTargetIndices(String targetIndices)
