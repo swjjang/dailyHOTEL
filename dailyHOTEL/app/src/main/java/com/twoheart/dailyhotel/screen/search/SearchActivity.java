@@ -10,11 +10,14 @@ import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -39,20 +42,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     StaySearchFragment mStaySearchFragment;
     GourmetSearchFragment mGourmetSearchFragment;
 
-    private SaleTime mSaleTime;
-    private int mNights;
-
-    public static Intent newInstance(Context context, PlaceType placeType, SaleTime saleTime, int nights)
+    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay)
     {
-        return newInstance(context, placeType, saleTime, nights, null);
+        return newInstance(context, placeType, placeBookingDay, null);
     }
 
-    public static Intent newInstance(Context context, PlaceType placeType, SaleTime saleTime, int nights, String word)
+    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay, String word)
     {
         Intent intent = new Intent(context, SearchActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
 
         if (Util.isTextEmpty(word) == false)
         {
@@ -77,10 +76,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
-        mNights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
+        PlaceBookingDay placeBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-        if (mSaleTime == null)
+        if (placeBookingDay == null)
         {
             Util.restartApp(this);
             return;
@@ -102,162 +100,173 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             word = intent.getStringExtra(INTENT_EXTRA_DATA_WORD);
         }
 
-        initLayout(mPlaceType, word);
+        initLayout(placeBookingDay, mPlaceType, word);
 
+        recordAnalyticsSearch(placeBookingDay, mPlaceType);
     }
 
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        recordAnalyticsSearch(mSaleTime, mNights, mPlaceType);
-    }
-
-    private void initLayout(PlaceType placeType, final String word)
+    private void initLayout(PlaceBookingDay placeBookingDay, PlaceType placeType, final String word)
     {
         initToolbar(placeType);
 
         mTooltipLayout = findViewById(R.id.tooltipLayout);
 
-        switch (placeType)
-        {
-            case HOTEL:
-            {
-                if (DailyPreference.getInstance(this).isViewSearchTooltip() == true)
-                {
-                    mTooltipLayout.setVisibility(View.GONE);
-                } else
-                {
-                    DailyPreference.getInstance(this).setIsViewSearchTooltip(true);
-                    mTooltipLayout.setVisibility(View.VISIBLE);
-                    mTooltipLayout.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            hideAnimationTooltip();
-                        }
-                    });
+        StayBookingDay stayBookingDay = null;
+        GourmetBookingDay gourmetBookingDay = null;
 
-                    // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
-                    mTooltipLayout.postDelayed(new Runnable()
+        try
+        {
+            switch (placeType)
+            {
+                case HOTEL:
+                {
+                    if (DailyPreference.getInstance(this).isViewSearchTooltip() == true)
                     {
-                        @Override
-                        public void run()
+                        mTooltipLayout.setVisibility(View.GONE);
+                    } else
+                    {
+                        DailyPreference.getInstance(this).setIsViewSearchTooltip(true);
+                        mTooltipLayout.setVisibility(View.VISIBLE);
+                        mTooltipLayout.setOnClickListener(new View.OnClickListener()
                         {
-                            if (mTooltipLayout.getVisibility() != View.GONE)
+                            @Override
+                            public void onClick(View view)
                             {
                                 hideAnimationTooltip();
                             }
-                        }
-                    }, 10000);
-                }
-                break;
-            }
+                        });
 
-            case FNB:
-                mTooltipLayout.setVisibility(View.GONE);
-                break;
-        }
-
-        ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
-
-        SaleTime checkInSaleTime = mSaleTime;
-        SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + mNights);
-
-        mStaySearchFragment = new StaySearchFragment();
-        mStaySearchFragment.setSaleTime(checkInSaleTime, checkOutSaleTime);
-        mStaySearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
-        {
-            @Override
-            public void finish()
-            {
-                SearchActivity.this.finish();
-            }
-
-            @Override
-            public void finish(int resultCode)
-            {
-                setResult(resultCode);
-                finish();
-            }
-
-            @Override
-            public void onSearchEnabled(boolean enabled)
-            {
-                mSearchView.setEnabled(enabled);
-            }
-        });
-
-        fragmentList.add(mStaySearchFragment);
-
-        mGourmetSearchFragment = new GourmetSearchFragment();
-        mGourmetSearchFragment.setSaleTime(mSaleTime);
-        mGourmetSearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
-        {
-            @Override
-            public void finish()
-            {
-                SearchActivity.this.finish();
-            }
-
-            @Override
-            public void finish(int resultCode)
-            {
-                setResult(resultCode);
-                finish();
-            }
-
-            @Override
-            public void onSearchEnabled(boolean enabled)
-            {
-                mSearchView.setEnabled(enabled);
-            }
-        });
-
-        fragmentList.add(mGourmetSearchFragment);
-
-        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
-
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
-        mViewPager.setOffscreenPageLimit(SEARCH_TAB_COUNT);
-        mViewPager.setAdapter(mSearchFragmentPagerAdapter);
-        mViewPager.setPagingEnabled(false);
-
-        switch (placeType)
-        {
-            case HOTEL:
-                mViewPager.setCurrentItem(0);
-
-                if (Util.isTextEmpty(word) == false)
-                {
-                    // Fragment 가 생성되기 전이라서 지연시간 추가
-                    mViewPager.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
+                        // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
+                        mTooltipLayout.postDelayed(new Runnable()
                         {
-                            mStaySearchFragment.setSearchWord(word);
-                        }
-                    }, 500);
+                            @Override
+                            public void run()
+                            {
+                                if (mTooltipLayout.getVisibility() != View.GONE)
+                                {
+                                    hideAnimationTooltip();
+                                }
+                            }
+                        }, 10000);
+                    }
+
+                    stayBookingDay = (StayBookingDay) placeBookingDay;
+
+                    gourmetBookingDay = new GourmetBookingDay();
+                    gourmetBookingDay.setVisitDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+                    break;
                 }
-                break;
 
-            case FNB:
-                mViewPager.setCurrentItem(1);
+                case FNB:
+                    mTooltipLayout.setVisibility(View.GONE);
 
-                if (Util.isTextEmpty(word) == false)
+                    gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
+
+                    stayBookingDay = new StayBookingDay();
+                    stayBookingDay.setCheckInDay(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
+                    stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), 1);
+                    break;
+            }
+
+            ArrayList<PlaceSearchFragment> fragmentList = new ArrayList<>();
+
+            mStaySearchFragment = new StaySearchFragment();
+            mStaySearchFragment.setStayBookingDay(stayBookingDay);
+            mStaySearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
+            {
+                @Override
+                public void finish()
                 {
-                    mViewPager.postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            mGourmetSearchFragment.setSearchWord(word);
-                        }
-                    }, 500);
+                    SearchActivity.this.finish();
                 }
-                break;
+
+                @Override
+                public void finish(int resultCode)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+
+                @Override
+                public void onSearchEnabled(boolean enabled)
+                {
+                    mSearchView.setEnabled(enabled);
+                }
+            });
+
+            fragmentList.add(mStaySearchFragment);
+
+            mGourmetSearchFragment = new GourmetSearchFragment();
+            mGourmetSearchFragment.setGourmetBookingDay(gourmetBookingDay);
+            mGourmetSearchFragment.setOnSearchFragmentListener(new PlaceSearchFragment.OnSearchFragmentListener()
+            {
+                @Override
+                public void finish()
+                {
+                    SearchActivity.this.finish();
+                }
+
+                @Override
+                public void finish(int resultCode)
+                {
+                    setResult(resultCode);
+                    finish();
+                }
+
+                @Override
+                public void onSearchEnabled(boolean enabled)
+                {
+                    mSearchView.setEnabled(enabled);
+                }
+            });
+
+            fragmentList.add(mGourmetSearchFragment);
+
+            mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
+
+            mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+            mViewPager.setOffscreenPageLimit(SEARCH_TAB_COUNT);
+            mViewPager.setAdapter(mSearchFragmentPagerAdapter);
+            mViewPager.setPagingEnabled(false);
+
+            switch (placeType)
+            {
+                case HOTEL:
+                    mViewPager.setCurrentItem(0);
+
+                    if (Util.isTextEmpty(word) == false)
+                    {
+                        // Fragment 가 생성되기 전이라서 지연시간 추가
+                        mViewPager.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mStaySearchFragment.setSearchWord(word);
+                            }
+                        }, 500);
+                    }
+                    break;
+
+                case FNB:
+                    mViewPager.setCurrentItem(1);
+
+                    if (Util.isTextEmpty(word) == false)
+                    {
+                        mViewPager.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                mGourmetSearchFragment.setSearchWord(word);
+                            }
+                        }, 500);
+                    }
+                    break;
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
     }
 
@@ -489,13 +498,10 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         AnalyticsManager.getInstance(SearchActivity.this).recordEvent(category, AnalyticsManager.Action.SEARCH_SCREEN, label, null);
     }
 
-    private void recordAnalyticsSearch(SaleTime saleTime, int nights, PlaceType placeType)
+    private void recordAnalyticsSearch(PlaceBookingDay placeBookingDay, PlaceType placeType)
     {
         try
         {
-            SaleTime checkInSaleTime = saleTime;
-            SaleTime checkOutSaleTime = checkInSaleTime.getClone(checkInSaleTime.getOffsetDailyDay() + nights);
-
             String placeValueType = null;
 
             Map<String, String> params = new HashMap<>();
@@ -503,13 +509,15 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             switch (placeType)
             {
                 case HOTEL:
-                    params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-                    params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+                    params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
                     placeValueType = AnalyticsManager.ValueType.HOTEL;
                     break;
 
                 case FNB:
-                    params.put(AnalyticsManager.KeyType.CHECK_IN, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+                    GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
+                    params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
                     placeValueType = AnalyticsManager.ValueType.GOURMET;
                     break;
             }

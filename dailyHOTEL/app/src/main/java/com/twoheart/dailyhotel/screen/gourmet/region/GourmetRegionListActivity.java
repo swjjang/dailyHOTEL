@@ -10,7 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
@@ -39,24 +39,24 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     ViewPager mViewPager;
     PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
     private GourmetRegionListNetworkController mNetworkController;
-    private SaleTime mSaleTime;
+    private GourmetBookingDay mGourmetBookingDay;
     private Province mSelectedProvince;
 
-    public static Intent newInstance(Context context, Province province, SaleTime saleTime)
+    public static Intent newInstance(Context context, Province province, GourmetBookingDay gourmetBookingDay)
     {
         Intent intent = new Intent(context, GourmetRegionListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, SaleTime saleTime)
+    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, GourmetBookingDay gourmetBookingDay)
     {
         Intent intent = new Intent(context, GourmetRegionListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE_INDEX, provinceIndex);
         intent.putExtra(INTENT_EXTRA_DATA_AREA_INDEX, areaIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
 
         return intent;
     }
@@ -71,7 +71,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     protected void initIntent(Intent intent)
     {
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+        mGourmetBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void showSearch()
     {
-        Intent intent = SearchActivity.newInstance(this, PlaceType.FNB, mSaleTime, 1);
+        Intent intent = SearchActivity.newInstance(this, PlaceType.FNB, mGourmetBookingDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//

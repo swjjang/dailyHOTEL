@@ -5,61 +5,40 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.DailyPreference;
 
 public class StayCuration extends PlaceCuration
 {
-    protected SaleTime mCheckInSaleTime;
-    protected SaleTime mCheckOutSaleTime;
+    protected StayBookingDay mStayBookingDay;
     protected Category mCategory;
     protected StayCurationOption mStayCurationOption;
-
-    public void setCheckInSaleTime(long currentDateTime, long dailyDateTime)
-    {
-        if (mCheckInSaleTime == null)
-        {
-            mCheckInSaleTime = new SaleTime();
-        }
-
-        mCheckInSaleTime.setCurrentTime(currentDateTime);
-        mCheckInSaleTime.setDailyTime(dailyDateTime);
-    }
-
-    public void setCheckInSaleTime(SaleTime saleTime)
-    {
-        mCheckInSaleTime = saleTime;
-    }
-
-    public void setCheckOutSaleTime(SaleTime saleTime)
-    {
-        mCheckOutSaleTime = saleTime;
-    }
-
-    public SaleTime getCheckInSaleTime()
-    {
-        return mCheckInSaleTime;
-    }
-
-    public SaleTime getCheckOutSaleTime()
-    {
-        return mCheckOutSaleTime;
-    }
-
-    public int getNights()
-    {
-        if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
-        {
-            return 1;
-        }
-
-        return mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
-    }
 
     public StayCuration()
     {
         mStayCurationOption = new StayCurationOption();
 
         clear();
+    }
+
+    public StayCuration(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    public StayBookingDay getStayBookingDay()
+    {
+        return mStayBookingDay;
+    }
+
+    public void setStayBookingDay(StayBookingDay stayBookingDay)
+    {
+        if (stayBookingDay == null)
+        {
+            return;
+        }
+
+        mStayBookingDay = stayBookingDay;
     }
 
     @Override
@@ -125,17 +104,11 @@ public class StayCuration extends PlaceCuration
 
         mStayCurationOption.clear();
 
-        mCheckInSaleTime = null;
-        mCheckOutSaleTime = null;
-
+        mStayBookingDay = null;
         mProvince = null;
         mLocation = null;
     }
 
-    public StayCuration(Parcel in)
-    {
-        readFromParcel(in);
-    }
 
     @Override
     public int describeContents()
@@ -148,8 +121,7 @@ public class StayCuration extends PlaceCuration
     {
         dest.writeParcelable(mProvince, flags);
         dest.writeParcelable(mLocation, flags);
-        dest.writeParcelable(mCheckInSaleTime, flags);
-        dest.writeParcelable(mCheckOutSaleTime, flags);
+        dest.writeParcelable(mStayBookingDay, flags);
         dest.writeParcelable(mCategory, flags);
         dest.writeParcelable(mStayCurationOption, flags);
     }
@@ -158,8 +130,7 @@ public class StayCuration extends PlaceCuration
     {
         mProvince = in.readParcelable(Province.class.getClassLoader());
         mLocation = in.readParcelable(Location.class.getClassLoader());
-        mCheckInSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
-        mCheckOutSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
+        mStayBookingDay = in.readParcelable(StayBookingDay.class.getClassLoader());
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
     }

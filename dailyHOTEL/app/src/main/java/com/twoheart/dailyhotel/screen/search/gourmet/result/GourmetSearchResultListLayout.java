@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -151,13 +152,13 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
     @Override
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                              ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+                              ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
     {
         if (mSearchType == Constants.SearchType.LOCATION)
         {
             mPlaceListAdapter.setShowDistanceIgnoreSort(true);
         }
 
-        super.addResultList(fragmentManager, viewType, list, sortType);
+        super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay);
     }
 }

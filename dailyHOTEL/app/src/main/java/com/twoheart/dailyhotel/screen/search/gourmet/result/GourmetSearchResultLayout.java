@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -20,11 +20,14 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
         super(context, listener);
     }
 
-    public void setCalendarText(SaleTime saleTime)
+    public void setCalendarText(GourmetBookingDay gourmetBookingDay)
     {
-        String checkInDate = saleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        if (gourmetBookingDay == null)
+        {
+            return;
+        }
 
-        setCalendarText(checkInDate);
+        setCalendarText(gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"));
     }
 
     @Override

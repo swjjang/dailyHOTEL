@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -212,7 +211,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
                 day.setText(period);
 
-                int nightsCount = (int) ((getCompareDate(booking.checkoutTime) - getCompareDate(booking.checkinTime)) / SaleTime.MILLISECOND_IN_A_DAY);
+                int nightsCount = (int) ((getCompareDate(booking.checkoutTime) - getCompareDate(booking.checkinTime)) / DailyCalendar.DAY_MILLISECOND);
 
                 nights.setVisibility(View.VISIBLE);
                 nights.setText(mContext.getString(R.string.label_nights, nightsCount));

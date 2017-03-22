@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -230,6 +231,12 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         //        {
         holder.distanceTextView.setVisibility(View.GONE);
         //        }
+    }
+
+    @Override
+    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
+    {
+
     }
 
     private class GourmetViewHolder extends RecyclerView.ViewHolder

@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 public class CollectionStayAdapter extends PlaceListAdapter
 {
     private boolean mIsUsedMultiTransition;
+    private int mNights;
     View.OnClickListener mOnClickListener;
 
     public CollectionStayAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
@@ -36,6 +39,23 @@ public class CollectionStayAdapter extends PlaceListAdapter
     public void setUsedMultiTransition(boolean isUsedMultiTransition)
     {
         mIsUsedMultiTransition = isUsedMultiTransition;
+    }
+
+    @Override
+    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
+    {
+        if (placeBookingDay == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mNights = ((StayBookingDay)placeBookingDay).getNights();
+        } catch (Exception e)
+        {
+            mNights = 1;
+        }
     }
 
     @Override
@@ -158,7 +178,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (recommendationStay.nights > 1)
+        if (mNights > 1)
         {
             holder.averageView.setVisibility(View.VISIBLE);
         } else

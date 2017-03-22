@@ -33,12 +33,15 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.StayPaymentInformation;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.StayProduct;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -60,11 +63,9 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -74,9 +75,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 {
     private static final int DEFAULT_AVAILABLE_RESERVES = 20000;
 
-    private static final String STATE_PLACE_NAME = "state_place_name";
-    private static final String STATE_PLACE_NIGHTS = "state_place_nights";
-    private static final String STATE_PLACE_SCREEN = "state_place_screen";
+    private static final String STATE_PLACE_NAME = "statePlaceName";
+    private static final String STATE_PLACE_SCREEN = "statePlaceScreen";
 
     HotelPaymentLayout mHotelPaymentLayout;
     //
@@ -97,15 +97,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     String mScreenAnalytics;
 
     public static Intent newInstance(Context context, StayProduct stayProduct//
-        , SaleTime checkInSaleTime, String imageUrl, int hotelIndex, boolean isDBenefit //
+        , StayBookingDay stayBookingDay, String imageUrl, int hotelIndex, boolean isDBenefit //
         , Province province, String area, String isShowOriginalPrice, int entryPosition //
         , boolean isDailyChoice, int ratingValue, String gradeName, String address //
-        , boolean isOverSeas, String placeName, String categoryCode, int nights)
+        , boolean isOverSeas, String placeName, String categoryCode)
     {
         Intent intent = new Intent(context, HotelPaymentActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION, stayProduct);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, isDBenefit);
@@ -121,7 +121,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, isOverSeas);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, categoryCode);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
 
         return intent;
     }
@@ -159,7 +158,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         outState.putString(STATE_PLACE_NAME, mPlaceName);
         outState.putParcelable(STATE_PLACE_PROVINCE, mProvince);
         outState.putString(STATE_PLACE_AREA, mArea);
-        outState.putInt(STATE_PLACE_NIGHTS, mNights);
+        outState.putParcelable(STATE_PLACE_BOOKINGDAY, mPlaceBookingDay);
         outState.putString(STATE_PLACE_SCREEN, mScreenAnalytics);
 
         super.onSaveInstanceState(outState);
@@ -174,7 +173,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         mPlaceName = savedInstanceState.getString(STATE_PLACE_NAME);
         mProvince = savedInstanceState.getParcelable(STATE_PLACE_PROVINCE);
         mArea = savedInstanceState.getString(STATE_PLACE_AREA);
-        mNights = savedInstanceState.getInt(STATE_PLACE_NIGHTS);
+        mPlaceBookingDay = savedInstanceState.getParcelable(STATE_PLACE_BOOKINGDAY);
         mScreenAnalytics = savedInstanceState.getString(STATE_PLACE_SCREEN);
     }
 
@@ -184,7 +183,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
         stayPaymentInformation.setSaleRoomInformation((StayProduct) intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALEROOMINFORMATION));
-        mCheckInSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mPlaceImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_URL);
         stayPaymentInformation.placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
         stayPaymentInformation.isDBenefit = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_DBENEFIT, false);
@@ -198,7 +197,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         stayPaymentInformation.isOverSeas = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_ISOVERSEAS, false);
         mPlaceName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
         mCategoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
-        mNights = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, 1);
 
         Stay.Grade grade;
         try
@@ -244,9 +242,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestEasyPayment(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-        if (paymentInformation == null || checkInSaleTime == null || mSelectedCreditCard == null)
+        if (paymentInformation == null || placeBookingDay == null || mSelectedCreditCard == null)
         {
             Util.restartApp(this);
             return;
@@ -265,67 +263,74 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             guest.email = customer.getEmail();
         }
 
+        StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) paymentInformation;
         StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
-        Map<String, String> params = new HashMap<>();
-        params.put("room_idx", String.valueOf(stayProduct.roomIndex));
-        params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        params.put("nights", String.valueOf(mNights));
-        params.put("billkey", mSelectedCreditCard.billingkey);
-
-        switch (paymentInformation.discountType)
+        try
         {
-            case BONUS:
-                String bonus = String.valueOf(paymentInformation.bonus);
-                params.put("bonus", bonus);
-                break;
+            Map<String, String> params = new HashMap<>();
+            params.put("room_idx", String.valueOf(stayProduct.roomIndex));
+            params.put("checkin_date", stayBookingDay.getCheckInDay("yyyyMMdd"));
+            params.put("nights", Integer.toString(stayBookingDay.getNights()));
+            params.put("billkey", mSelectedCreditCard.billingkey);
 
-            case COUPON:
-                Coupon coupon = paymentInformation.getCoupon();
-                params.put("user_coupon_code", coupon.userCouponCode);
-                break;
-        }
-
-        params.put("guest_name", guest.name);
-        params.put("guest_phone", guest.phone.replace("-", ""));
-        params.put("guest_email", guest.email);
-        params.put("guest_msg", "");
-
-        // 주차/도보
-        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
-        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            params.put("arrival_transportation", "NO_PARKING");
-        }
-
-        if (DEBUG == false)
-        {
-            if (customer == null)
+            switch (paymentInformation.discountType)
             {
-                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
-            } else if (Util.isTextEmpty(customer.getName()) == true)
-            {
-                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
-                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+                case BONUS:
+                    String bonus = String.valueOf(paymentInformation.bonus);
+                    params.put("bonus", bonus);
+                    break;
+
+                case COUPON:
+                    Coupon coupon = paymentInformation.getCoupon();
+                    params.put("user_coupon_code", coupon.userCouponCode);
+                    break;
             }
-        }
 
-        DailyMobileAPI.getInstance(this).requestStayPayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+            params.put("guest_name", guest.name);
+            params.put("guest_phone", guest.phone.replace("-", ""));
+            params.put("guest_email", guest.email);
+            params.put("guest_msg", "");
+
+            // 주차/도보
+            if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+            {
+                params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+            } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+            {
+                params.put("arrival_transportation", "NO_PARKING");
+            }
+
+            if (DEBUG == false)
+            {
+                if (customer == null)
+                {
+                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+                } else if (Util.isTextEmpty(customer.getName()) == true)
+                {
+                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                        + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+                }
+            }
+
+            DailyMobileAPI.getInstance(this).requestStayPayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     /**
      * 전액 결제는 아직 사용하지 않는데 대기중.
      *
      * @param paymentInformation
-     * @param checkInSaleTime
+     * @param placeBookingDay
      */
     @Override
-    protected void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestFreePayment(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-        if (paymentInformation == null || checkInSaleTime == null)
+        if (paymentInformation == null || placeBookingDay == null)
         {
             Util.restartApp(this);
             return;
@@ -344,67 +349,86 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             guest.email = customer.getEmail();
         }
 
+        StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) paymentInformation;
         StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
-        Map<String, String> params = new HashMap<>();
-        params.put("room_idx", String.valueOf(stayProduct.roomIndex));
-        params.put("checkin_date", checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        params.put("nights", Integer.toString(mNights));
-        params.put("billkey", mSelectedCreditCard.billingkey);
-
-        switch (paymentInformation.discountType)
+        try
         {
-            case BONUS:
-                String bonus = String.valueOf(paymentInformation.bonus);
-                params.put("bonus", bonus);
-                break;
+            Map<String, String> params = new HashMap<>();
+            params.put("room_idx", String.valueOf(stayProduct.roomIndex));
+            params.put("checkin_date", stayBookingDay.getCheckInDay("yyyyMMdd"));
+            params.put("nights", Integer.toString(stayBookingDay.getNights()));
+            params.put("billkey", mSelectedCreditCard.billingkey);
 
-            case COUPON:
-                Coupon coupon = paymentInformation.getCoupon();
-                params.put("user_coupon_code", coupon.userCouponCode);
-                break;
-        }
-
-        params.put("guest_name", guest.name);
-        params.put("guest_phone", guest.phone.replace("-", ""));
-        params.put("guest_email", guest.email);
-        params.put("guest_msg", "");
-
-        // 주차/도보
-        if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
-        } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
-        {
-            params.put("arrival_transportation", "NO_PARKING");
-        }
-
-        if (DEBUG == false)
-        {
-            if (customer == null)
+            switch (paymentInformation.discountType)
             {
-                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
-            } else if (Util.isTextEmpty(customer.getName()) == true)
-            {
-                Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
-                    + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+                case BONUS:
+                    String bonus = String.valueOf(paymentInformation.bonus);
+                    params.put("bonus", bonus);
+                    break;
+
+                case COUPON:
+                    Coupon coupon = paymentInformation.getCoupon();
+                    params.put("user_coupon_code", coupon.userCouponCode);
+                    break;
             }
-        }
 
-        //        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+            params.put("guest_name", guest.name);
+            params.put("guest_phone", guest.phone.replace("-", ""));
+            params.put("guest_email", guest.email);
+            params.put("guest_msg", "");
+
+            // 주차/도보
+            if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+            {
+                params.put("arrival_transportation", stayPaymentInformation.isVisitWalking == true ? "WALKING" : "CAR");
+            } else if (StayPaymentInformation.VISIT_TYPE_NO_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
+            {
+                params.put("arrival_transportation", "NO_PARKING");
+            }
+
+            if (DEBUG == false)
+            {
+                if (customer == null)
+                {
+                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
+                } else if (Util.isTextEmpty(customer.getName()) == true)
+                {
+                    Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
+                        + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
+                }
+            }
+
+            //        DailyMobileAPI.getInstance(this).requestStayFreePayment(mNetworkTag, params, mPaymentEasyCreditCardCallback);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
-    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-        StayProduct stayProduct = ((StayPaymentInformation) paymentInformation).getSaleRoomInformation();
+        if (paymentInformation == null || placeBookingDay == null)
+        {
+            return;
+        }
 
-        // 호텔 디테일 정보 재 요청
-        DailyMobileAPI.getInstance(this).requestStayPaymentInformation(mNetworkTag//
-            , stayProduct.roomIndex//
-            , checkInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-            , mNights, mHotelPaymentInformationCallback);
+        try
+        {
+            StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
+            StayProduct stayProduct = ((StayPaymentInformation) paymentInformation).getSaleRoomInformation();
+
+            // 호텔 디테일 정보 재 요청
+            DailyMobileAPI.getInstance(this).requestStayPaymentInformation(mNetworkTag//
+                , stayProduct.roomIndex//
+                , stayBookingDay.getCheckInDay("yyyyMMdd")//
+                , stayBookingDay.getNights(), mHotelPaymentInformationCallback);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -470,7 +494,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         setBonusSelected(false);
         setCouponSelected(false);
-        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
 
         showChangedValueDialog(R.string.message_stay_payment_changed_price, new OnDismissListener()
         {
@@ -505,25 +529,23 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         setBonusSelected(false);
         setCouponSelected(false);
-        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
 
         super.showChangedBonusDialog();
     }
 
     @Override
-    protected void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime)
+    protected void showPaymentWeb(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
         Intent intent = new Intent(this, HotelPaymentWebActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, paymentInformation);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, checkInSaleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, mNights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PAYMENT);
     }
 
     @Override
-    protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl)
+    protected void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl, PlaceBookingDay placeBookingDay)
     {
         if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
         {
@@ -536,6 +558,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             }
         }
 
+        StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) paymentInformation;
         StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
@@ -557,9 +580,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         String placeName = mPlaceName;
         String placeType = stayProduct.roomName;
-        String checkInDate = DailyCalendar.format(stayPaymentInformation.checkInDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
-        String checkOutDate = DailyCalendar.format(stayPaymentInformation.checkOutDate, "yyyy.M.d (EEE) HH시", TimeZone.getTimeZone("GMT"));
-        int nights = stayPaymentInformation.nights;
+        String checkInDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
+        String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.M.d (EEE) HH시");
         String userName = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getName();
         String userIndex = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getUserIdx();
 
@@ -587,10 +609,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 Action.WAYTOVISIT_SELECTED, Label.PARKING_NOT_AVAILABLE, null);
         }
 
-        Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation);
+        Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation, (StayBookingDay) mPlaceBookingDay);
 
         Intent intent = HotelPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
-            userName, checkInDate, checkOutDate, nights, paymentInformation.paymentType.getName(), discountType, params);
+            userName, stayBookingDay, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }
@@ -841,9 +863,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             Customer customer = mPaymentInformation.getCustomer();
 
-            if (customer == null || Util.isTextEmpty(customer.getName(), customer.getUserIdx()) == true //
-                || ((StayPaymentInformation) mPaymentInformation).checkInDate == 0//
-                || ((StayPaymentInformation) mPaymentInformation).checkOutDate == 0)
+            if (customer == null || Util.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
             {
                 if (DEBUG == false)
                 {
@@ -859,9 +879,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             // 결제가 성공한 경우 GA와 믹스패널에 등록
             case CODE_RESULT_ACTIVITY_PAYMENT_COMPLETE:
             case CODE_RESULT_ACTIVITY_PAYMENT_SUCCESS:
-                recordAnalyticsPaymentComplete(mPaymentInformation);
+                recordAnalyticsPaymentComplete((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
 
-                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
+                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl, mPlaceBookingDay);
                 return;
 
             case CODE_RESULT_ACTIVITY_PAYMENT_SOLD_OUT:
@@ -919,14 +939,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     {
                         recordPaymentInformation();
 
+                        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
                         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
                         DailyPreference.getInstance(HotelPaymentActivity.this)//
-                            .setPaymentInformation(PlaceType.HOTEL,//
-                                mPlaceName,//
-                                stayPaymentInformation.paymentType,//
-                                stayPaymentInformation.checkInDateFormat,//
-                                stayPaymentInformation.checkOutDateFormat);
+                            .setPaymentInformation(PlaceType.HOTEL//
+                                , mPlaceName//
+                                , stayPaymentInformation.paymentType//
+                                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
 
                         setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                         finish();
@@ -1015,9 +1036,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             case 1000:
                             {
-                                recordAnalyticsPaymentComplete(mPaymentInformation);
+                                recordAnalyticsPaymentComplete((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
 
-                                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl);
+                                showPaymentThankyou(mPaymentInformation, mPlaceImageUrl, mPlaceBookingDay);
                                 return;
                             }
 
@@ -1071,10 +1092,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation)
+    protected void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
         AnalyticsManager.getInstance(this).recordScreen(this, Screen.DAILYHOTEL_PAYMENT_AGREEMENT_POPUP//
-            , null, getMapPaymentInformation((StayPaymentInformation) paymentInformation));
+            , null, getMapPaymentInformation((StayPaymentInformation) paymentInformation, (StayBookingDay) placeBookingDay));
     }
 
     @Override
@@ -1136,14 +1157,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     {
         DailyPreference.getInstance(this).clearPaymentInformation();
 
+        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
         DailyPreference.getInstance(this)//
-            .setPaymentInformation(PlaceType.HOTEL,//
-                mPlaceName,//
-                stayPaymentInformation.paymentType,//
-                stayPaymentInformation.checkInDateFormat,//
-                stayPaymentInformation.checkOutDateFormat);
+            .setPaymentInformation(PlaceType.HOTEL//
+                , mPlaceName//
+                , stayPaymentInformation.paymentType//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
     }
 
     private void setAvailableDefaultPaymentType()
@@ -1222,15 +1244,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
 
-    private void recordAnalyticsPaymentComplete(PlacePaymentInformation paymentInformation)
+    private void recordAnalyticsPaymentComplete(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
         try
         {
             String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
-            String userIndex = paymentInformation.getCustomer().getUserIdx();
+            String userIndex = stayPaymentInformation.getCustomer().getUserIdx();
             String transId = strDate + '_' + userIndex;
 
-            Map<String, String> params = getMapPaymentInformation((StayPaymentInformation) paymentInformation);
+            Map<String, String> params = getMapPaymentInformation(stayPaymentInformation, stayBookingDay);
 
             AnalyticsManager.getInstance(getApplicationContext()).purchaseCompleteHotel(transId, params);
         } catch (Exception e)
@@ -1240,29 +1262,29 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void recordAnalyticsPayment(PlacePaymentInformation paymentInformation)
+    protected void recordAnalyticsPayment(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-        if (paymentInformation == null || Util.isTextEmpty(mScreenAnalytics) == true)
+        if (paymentInformation == null || placeBookingDay == null || Util.isTextEmpty(mScreenAnalytics) == true)
         {
             return;
         }
 
+        StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
         try
         {
+            int nights = stayBookingDay.getNights();
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().averageDiscount));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayPaymentInformation.getSaleRoomInformation().totalDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mNights));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mNights));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayPaymentInformation.placeIndex));
 
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mNights);
-
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, stayPaymentInformation.getSaleRoomInformation().roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(stayPaymentInformation.getSaleRoomInformation().roomIndex));
             params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(HotelPaymentActivity.this));
@@ -1305,9 +1327,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     }
 
-    private Map<String, String> getMapPaymentInformation(StayPaymentInformation stayPaymentInformation)
+    private Map<String, String> getMapPaymentInformation(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
-        if (stayPaymentInformation == null)
+        if (stayPaymentInformation == null || stayBookingDay == null)
         {
             return null;
         }
@@ -1316,23 +1338,22 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         try
         {
+            int nights = stayBookingDay.getNights();
             StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
             params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
             params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayPaymentInformation.placeIndex));
             params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayProduct.averageDiscount));
-            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(mNights));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(mNights));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
             params.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(stayProduct.totalDiscount));
             params.put(AnalyticsManager.KeyType.TICKET_NAME, stayProduct.roomName);
             params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(stayProduct.roomIndex));
             params.put(AnalyticsManager.KeyType.GRADE, stayPaymentInformation.grade.getName(this));
             params.put(AnalyticsManager.KeyType.DBENEFIT, stayPaymentInformation.isDBenefit ? "yes" : "no");
 
-            SaleTime checkOutSaleTime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mNights);
-
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mCheckInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, checkOutSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
 
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.NRD, stayPaymentInformation.getSaleRoomInformation().isNRD ? "y" : "n");
@@ -1425,8 +1446,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
-            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(checkOutSaleTime.getDayOfDaysDate().getTime()));
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookingDay.getCheckInDay("yyyyMMdd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, stayBookingDay.getCheckOutDay("yyyyMMdd"));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1435,14 +1456,24 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         return params;
     }
 
-    void setPaymentInformation(StayPaymentInformation stayPaymentInformation)
+    void setPaymentInformation(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
-        if (stayPaymentInformation == null)
+        if (stayPaymentInformation == null || stayBookingDay == null)
         {
             return;
         }
 
-        int nights = mNights;
+        int nights;
+
+        try
+        {
+            nights = stayBookingDay.getNights();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            nights = 1;
+        }
+
         int originalPrice = stayPaymentInformation.getSaleRoomInformation().totalDiscount;
         int payPrice = originalPrice;
 
@@ -1630,7 +1661,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 , Action.USING_CREDIT_CANCEL_CLICKED, Integer.toString(mPaymentInformation.bonus), null);
         }
 
-        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
     }
 
     void setCouponSelected(boolean isSelected)
@@ -1645,24 +1676,27 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             mPaymentInformation.discountType = PlacePaymentInformation.DiscountType.NONE;
         }
 
-        setPaymentInformation((StayPaymentInformation) mPaymentInformation);
+        setPaymentInformation((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
     }
 
-    void startCouponPopup(StayPaymentInformation stayPaymentInformation)
+    void startCouponPopup(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
+        if (stayPaymentInformation == null || stayBookingDay == null)
+        {
+            return;
+        }
+
         StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
         int hotelIdx = stayPaymentInformation.placeIndex;
         int roomIdx = stayProduct.roomIndex;
-        String checkInDate = stayPaymentInformation.checkInDateFormat;
-        String checkOutDate = stayPaymentInformation.checkOutDateFormat;
 
         String categoryCode = mCategoryCode;
         String hotelName = mPlaceName;
         String roomPrice = Integer.toString(stayProduct.averageDiscount);
 
         Intent intent = SelectStayCouponDialogActivity.newInstance(HotelPaymentActivity.this, hotelIdx, //
-            roomIdx, checkInDate, checkOutDate, categoryCode, hotelName, roomPrice);
+            roomIdx, stayBookingDay, categoryCode, hotelName, roomPrice);
         startActivityForResult(intent, REQUEST_CODE_COUPONPOPUP_ACTIVITY);
 
         AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
@@ -1746,31 +1780,15 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
 
-    void setReservationInformation(long checkInDate, long checkOutDate, int nights)
+    void setReservationInformation(StayBookingDay stayBookingDay)
     {
+        if (stayBookingDay == null)
+        {
+            return;
+        }
+
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
-
-        stayPaymentInformation.checkInDate = checkInDate;
-        stayPaymentInformation.checkOutDate = checkOutDate;
-        stayPaymentInformation.nights = nights;
-
-        mHotelPaymentLayout.setReservationInformation(stayPaymentInformation, mPlaceName);
-
-        // Check In
-        Calendar calendarCheckin = DailyCalendar.getInstance();
-        calendarCheckin.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendarCheckin.setTimeInMillis(checkInDate);
-
-        // CheckOut
-        Calendar calendarCheckout = DailyCalendar.getInstance();
-        calendarCheckout.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendarCheckout.setTimeInMillis(checkOutDate);
-
-        calendarCheckin.setTimeInMillis(calendarCheckin.getTimeInMillis() - 3600 * 1000 * 9);
-        calendarCheckout.setTimeInMillis(calendarCheckout.getTimeInMillis() - 3600 * 1000 * 9);
-
-        stayPaymentInformation.checkInDateFormat = DailyCalendar.format(calendarCheckin.getTime(), DailyCalendar.ISO_8601_FORMAT);
-        stayPaymentInformation.checkOutDateFormat = DailyCalendar.format(calendarCheckout.getTime(), DailyCalendar.ISO_8601_FORMAT);
+        mHotelPaymentLayout.setReservationInformation(stayPaymentInformation, mPlaceName, stayBookingDay);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1983,7 +2001,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         {
                             setBonusSelected(false);
                             setCouponSelected(true);
-                            startCouponPopup((StayPaymentInformation) mPaymentInformation);
+                            startCouponPopup((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
                         }
                     });
                     break;
@@ -1994,7 +2012,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     if (isRadioLayout == true)
                     {
                         setCouponSelected(true);
-                        startCouponPopup((StayPaymentInformation) mPaymentInformation);
+                        startCouponPopup((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
                     } else
                     {
                         // 쿠폰 삭제
@@ -2015,7 +2033,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     // 아무것도 선택 되지 않은 상태 일때 couponLayout 과 동일한 처리
                     setCouponSelected(true);
-                    startCouponPopup((StayPaymentInformation) mPaymentInformation);
+                    startCouponPopup((StayPaymentInformation) mPaymentInformation, (StayBookingDay) mPlaceBookingDay);
                     break;
                 }
             }
@@ -2082,10 +2100,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         bonus = 0;
                     }
 
+                    StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
                     StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
                     stayPaymentInformation.bonus = bonus;
 
-                    setPaymentInformation(stayPaymentInformation);
+                    setPaymentInformation(stayPaymentInformation, stayBookingDay);
 
                     Customer buyer = new Customer();
                     buyer.setEmail(email);
@@ -2155,8 +2174,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     // 2. 화면 정보 얻기
                     DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
                         , stayPaymentInformation.getSaleRoomInformation().roomIndex//
-                        , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                        , mNights, mHotelPaymentInformationCallback);
+                        , stayBookingDay.getCheckInDay("yyyyMMdd")//
+                        , stayBookingDay.getNights(), mHotelPaymentInformationCallback);
                 } catch (Exception e)
                 {
                     onError(e);
@@ -2230,6 +2249,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 isNRD = true;
                             }
 
+                            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
                             StayProduct stayProduct = stayPaymentInformation.getSaleRoomInformation();
 
                             stayProduct.isNRD = isNRD;
@@ -2251,7 +2271,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 return;
                             }
 
-                            setReservationInformation(checkInDate, checkOutDate, mNights);
+                            setReservationInformation(stayBookingDay);
 
                             if (provideTransportation == true)
                             {
@@ -2298,7 +2318,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 // 취소 및 환불 규정
                                 DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestPolicyRefund(mNetworkTag//
                                     , stayPaymentInformation.placeIndex, stayProduct.roomIndex//
-                                    , stayPaymentInformation.checkInDateFormat, stayPaymentInformation.checkOutDateFormat//
+                                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                                     , mPolicyRefundCallback);
                             }
                             break;
@@ -2465,7 +2486,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 showChangedPriceDialog();
                             } else
                             {
-                                processPayment(stayPaymentInformation, mCheckInSaleTime);
+                                processPayment(stayPaymentInformation, mPlaceBookingDay);
                             }
                             break;
                         }
@@ -2577,6 +2598,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         bonus = 0;
                     }
 
+                    StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
                     StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
                     if (stayPaymentInformation.discountType == PlacePaymentInformation.DiscountType.BONUS //
@@ -2590,8 +2612,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     // 2. 마지막 가격 및 기타 이상이 없는지 검사
                     DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestStayPaymentInformation(mNetworkTag//
                         , stayPaymentInformation.getSaleRoomInformation().roomIndex//
-                        , mCheckInSaleTime.getDayOfDaysDateFormat("yyyyMMdd")//
-                        , mNights, mFinalCheckPayCallback);
+                        , stayBookingDay.getCheckInDay("yyyyMMdd")//
+                        , stayBookingDay.getNights(), mFinalCheckPayCallback);
                 } catch (Exception e)
                 {
                     onError(e);
@@ -2609,10 +2631,10 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    retrofit2.Callback mMessageDateTimeCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mMessageDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
         {
             if (isFinishing() == true)
             {
@@ -2623,24 +2645,18 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 try
                 {
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto<TodayDateTime> baseDto = response.body();
 
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100)
+                    if (baseDto.msgCode == 100)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
 
-                        long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long openDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("openDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                        long closeDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("closeDateTime"), DailyCalendar.ISO_8601_FORMAT);
-
-                        int openHour = Integer.parseInt(DailyCalendar.format(openDateTime, "HH", TimeZone.getTimeZone("GMT")));
-                        int closeHour = Integer.parseInt(DailyCalendar.format(closeDateTime, "HH", TimeZone.getTimeZone("GMT")));
-                        int currentHour = Integer.parseInt(DailyCalendar.format(currentDateTime, "HH", TimeZone.getTimeZone("GMT")));
+                        int openHour = Integer.parseInt(DailyCalendar.convertDateFormatString(baseDto.data.openDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+                        int closeHour = Integer.parseInt(DailyCalendar.convertDateFormatString(baseDto.data.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+                        int currentHour = Integer.parseInt(DailyCalendar.convertDateFormatString(baseDto.data.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
 
                         // 당일인지 아닌지
-                        if (mCheckInSaleTime.getOffsetDailyDay() == 0)
+                        if (baseDto.data.dailyDateTime.equalsIgnoreCase(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)) == true)
                         {
                             if (currentHour >= openHour && currentHour < 18)
                             {
@@ -2669,8 +2685,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         processAgreeTermDialog();
                     } else
                     {
-                        String message = responseJSONObject.getString("msg");
-                        onErrorPopupMessage(msgCode, message);
+                        onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
 
                         setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     }
@@ -2690,7 +2705,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
         {
             HotelPaymentActivity.this.onError(t);
         }

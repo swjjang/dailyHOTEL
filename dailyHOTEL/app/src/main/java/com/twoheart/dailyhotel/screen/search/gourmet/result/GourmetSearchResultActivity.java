@@ -23,7 +23,8 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
@@ -33,14 +34,12 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,10 +58,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, String inputText, Keyword keyword, SearchType searchType)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String inputText, Keyword keyword, SearchType searchType)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
@@ -70,10 +70,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, LatLng latLng, double radius, boolean isDeepLink)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, LatLng latLng, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
@@ -82,20 +83,21 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, Keyword keyword, SearchType searchType)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Keyword keyword, SearchType searchType)
     {
-        return newInstance(context, saleTime, null, keyword, searchType);
+        return newInstance(context, todayDateTime, gourmetBookingDay, null, keyword, searchType);
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, String text)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String text)
     {
-        return newInstance(context, saleTime, null, new Keyword(0, text), SearchType.SEARCHES);
+        return newInstance(context, todayDateTime, gourmetBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
     }
 
-    public static Intent newInstance(Context context, SaleTime saleTime, Location location, String callByScreen)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Location location, String callByScreen)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
@@ -137,16 +139,16 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+            GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-            if (saleTime == null)
+            if (gourmetBookingDay == null)
             {
                 return;
             }
 
-            mGourmetSearchCuration.setSaleTime(saleTime);
+            mGourmetSearchCuration.setGourmetBookingDay(gourmetBookingDay);
 
-            ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(saleTime);
+            ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(gourmetBookingDay);
 
             // 날짜가 바뀌면 전체탭으로 이동하고 다시 재로딩.
             mGourmetSearchCuration.getCurationOption().clear();
@@ -237,14 +239,21 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initIntent(Intent intent)
     {
-        SaleTime saleTime;
+        GourmetBookingDay gourmetBookingDay;
 
         try
         {
-            saleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
+            mTodayDateTime = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_TODAYDATETIME);
+            gourmetBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         } catch (Exception e)
         {
             Util.restartApp(this);
+            return;
+        }
+
+        if (gourmetBookingDay == null)
+        {
+            finish();
             return;
         }
 
@@ -293,12 +302,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
-        if (saleTime == null)
-        {
-            finish();
-            return;
-        }
-
         mGourmetSearchCuration.setKeyword(keyword);
 
         // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
@@ -309,13 +312,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         mGourmetSearchCuration.setLocation(location);
-        mGourmetSearchCuration.setSaleTime(saleTime);
+        mGourmetSearchCuration.setGourmetBookingDay(gourmetBookingDay);
     }
 
     @Override
     protected void initLayout()
     {
-        if (mGourmetSearchCuration == null || mGourmetSearchCuration.getSaleTime() == null)
+        if (mGourmetSearchCuration == null)
         {
             finish();
             return;
@@ -329,7 +332,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setToolbarTitle(mGourmetSearchCuration.getKeyword().name);
         }
 
-        ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getSaleTime());
+        ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getGourmetBookingDay());
 
         mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
     }
@@ -362,9 +365,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         try
         {
+            GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
             Map<String, String> params = new HashMap<>();
 
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
 
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
@@ -460,14 +464,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, //
-                mGourmetSearchCuration.getSaleTime(), AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
+            GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
 
-            if (intent == null)
-            {
-                Util.restartApp(GourmetSearchResultActivity.this);
-                return;
-            }
+            Intent intent = GourmetCalendarActivity.newInstance(GourmetSearchResultActivity.this, //
+                mTodayDateTime, gourmetBookingDay, AnalyticsManager.ValueType.SEARCH_RESULT, true, true);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
@@ -616,10 +616,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                         ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
                         if (placeListFragmentList != null || placeListFragmentList.size() > 0)
                         {
+                            GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
                             Map<String, String> params = new HashMap<>();
+
                             try
                             {
-                                params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+                                params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
 
                                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
                                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
@@ -700,7 +702,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             if (Util.isUsedMultiTransition() == true)
             {
                 Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
-                    mGourmetSearchCuration.getSaleTime(), gourmet, listCount, true);
+                    mGourmetSearchCuration.getGourmetBookingDay(), gourmet, listCount, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -724,7 +726,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this,//
-                    mGourmetSearchCuration.getSaleTime(), gourmet, listCount, false);
+                    mGourmetSearchCuration.getGourmetBookingDay(), gourmet, listCount, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
@@ -868,10 +870,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.showListLayout();
             }
 
+            GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
             Map<String, String> params = new HashMap<>();
             try
             {
-                params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+                params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
 
                 params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
@@ -943,13 +946,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
             mSearchCount = searchCount;
             mSearchMaxCount = searchMaxCount;
-        }
-
-        private String getSearchDate()
-        {
-            String checkInDate = mGourmetSearchCuration.getSaleTime().getDayOfDaysDateFormat("yyMMdd");
-
-            return String.format("%s-%s", checkInDate, DailyCalendar.format(new Date(), "yyMMddHHmm"));
         }
     };
 }

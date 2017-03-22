@@ -127,7 +127,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
 
     // 결제 전 해당 값을 조회하여 stayProduct에 넣어 줄 수 있도록 해야 함
-    public int nights;
+//    public int nights;
 
     //    protected ArrayList<DetailInformation> mDetailList;
     private ArrayList<StayDetail.Pictogram> mPictogramList;
@@ -315,11 +315,6 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
         return rooms;
     }
 
-    public void setNights(int nights)
-    {
-        this.nights = nights;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -338,7 +333,6 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
         dest.writeTypedList(rooms);
         dest.writeInt(isSingleStay == true ? 1 : 0);
         dest.writeInt(isOverseas == true ? 1 : 0);
-        dest.writeInt(nights);
         dest.writeTypedList(mPictogramList);
         dest.writeStringList(mBenefitInformation);
     }
@@ -360,7 +354,6 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
         rooms = in.createTypedArrayList(StayProduct.CREATOR);
         isSingleStay = in.readInt() == 1;
         isOverseas = in.readInt() == 1;
-        nights = in.readInt();
         mPictogramList = in.createTypedArrayList(StayDetail.Pictogram.CREATOR);
         mBenefitInformation = in.createStringArrayList();
     }

@@ -4,9 +4,11 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+
 public class GourmetCuration extends PlaceCuration
 {
-    private SaleTime mSaleTime;
+    private GourmetBookingDay mGourmetBookingDay;
 
     protected GourmetCurationOption mGourmetCurationOption;
 
@@ -20,6 +22,21 @@ public class GourmetCuration extends PlaceCuration
         mGourmetCurationOption = new GourmetCurationOption();
 
         clear();
+    }
+
+    public GourmetBookingDay getGourmetBookingDay()
+    {
+        return mGourmetBookingDay;
+    }
+
+    public void setGourmetBookingDay(GourmetBookingDay gourmetBookingDay)
+    {
+        if (gourmetBookingDay == null)
+        {
+            return;
+        }
+
+        mGourmetBookingDay = gourmetBookingDay;
     }
 
     @Override
@@ -48,34 +65,13 @@ public class GourmetCuration extends PlaceCuration
         return gourmetParams;
     }
 
-    public void setSaleTime(long currentDateTime, long dailyDateTime)
-    {
-        if (mSaleTime == null)
-        {
-            mSaleTime = new SaleTime();
-        }
-
-        mSaleTime.setCurrentTime(currentDateTime);
-        mSaleTime.setDailyTime(dailyDateTime);
-    }
-
-    public void setSaleTime(SaleTime saleTime)
-    {
-        mSaleTime = saleTime;
-    }
-
-    public SaleTime getSaleTime()
-    {
-        return mSaleTime;
-    }
-
     public void clear()
     {
         mGourmetCurationOption.clear();
 
+        mGourmetBookingDay = null;
         mProvince = null;
         mLocation = null;
-        mSaleTime = null;
     }
 
     @Override
@@ -89,7 +85,7 @@ public class GourmetCuration extends PlaceCuration
     {
         dest.writeParcelable(mProvince, flags);
         dest.writeParcelable(mLocation, flags);
-        dest.writeParcelable(mSaleTime, flags);
+        dest.writeParcelable(mGourmetBookingDay, flags);
         dest.writeParcelable(mGourmetCurationOption, flags);
     }
 
@@ -97,7 +93,7 @@ public class GourmetCuration extends PlaceCuration
     {
         mProvince = in.readParcelable(Province.class.getClassLoader());
         mLocation = in.readParcelable(Location.class.getClassLoader());
-        mSaleTime = in.readParcelable(SaleTime.class.getClassLoader());
+        mGourmetBookingDay = in.readParcelable(GourmetBookingDay.class.getClassLoader());
         mGourmetCurationOption = in.readParcelable(GourmetCurationOption.class.getClassLoader());
     }
 

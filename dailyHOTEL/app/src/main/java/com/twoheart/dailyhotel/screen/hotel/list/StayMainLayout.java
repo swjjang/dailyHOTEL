@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
@@ -60,15 +60,15 @@ public class StayMainLayout extends PlaceMainLayout
         return mContext.getString(R.string.label_daily_hotel);
     }
 
-    protected void setToolbarDateText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    protected void setToolbarDateText(StayBookingDay stayBookingDay)
     {
-        if (checkInSaleTime == null || checkOutSaleTime == null)
+        if (stayBookingDay == null)
         {
             return;
         }
 
-        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
-        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("M.d(EEE)");
+        String checkInDay = stayBookingDay.getCheckInDay("M.d(EEE)");
+        String checkOutDay = stayBookingDay.getCheckOutDay("M.d(EEE)");
 
         setToolbarDateText(String.format("%s - %s", checkInDay, checkOutDay));
     }

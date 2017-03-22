@@ -11,10 +11,13 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -35,6 +38,26 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+
+            mPlaceBookingDay = gourmetBookingDay;
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -224,7 +247,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             if (Util.isUsedMultiTransition() == true)
             {
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    mSaleTime, gourmet, 0, true);
+                    (GourmetBookingDay) mPlaceBookingDay, gourmet, 0, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -241,7 +264,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    mSaleTime, gourmet, 0, false);
+                    (GourmetBookingDay) mPlaceBookingDay, gourmet, 0, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
@@ -288,7 +311,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         @Override
         public void onRecordAnalyticsList(ArrayList<? extends Place> list)
         {
-            if (list == null || list.isEmpty() == true || mSaleTime == null)
+            if (list == null || list.isEmpty() == true || mPlaceBookingDay == null)
             {
                 return;
             }
@@ -310,10 +333,11 @@ public class GourmetWishListFragment extends PlaceWishListFragment
 
             stringBuilder.append("]");
 
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
 

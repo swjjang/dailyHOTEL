@@ -24,7 +24,8 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -38,6 +39,7 @@ import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -46,9 +48,12 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -140,7 +145,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     callByScreen = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
                 }
 
-                startAroundSearchResult(this, mGourmetCuration.getSaleTime(), location, callByScreen);
+                startAroundSearchResult(this, mTodayDateTime, mGourmetCuration.getGourmetBookingDay(), location, callByScreen);
             }
         } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
         {
@@ -154,15 +159,15 @@ public class GourmetMainActivity extends PlaceMainActivity
     {
         if (resultCode == Activity.RESULT_OK && data != null)
         {
-            SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+            GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-            if (saleTime == null)
+            if (gourmetBookingDay == null)
             {
                 return;
             }
 
-            mGourmetCuration.setSaleTime(saleTime);
-            ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(saleTime);
+            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+            ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
 
             refreshCurrentFragment(true);
         }
@@ -251,14 +256,14 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     }
 
-    void startCalendar(String callByScreen)
+    void startCalendar(String callByScreen, TodayDateTime todayDateTime)
     {
-        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        if (todayDateTime == null || isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(this, mGourmetCuration.getSaleTime(), callByScreen, true, true);
+        Intent intent = GourmetCalendarActivity.newInstance(this, todayDateTime, mGourmetCuration.getGourmetBookingDay(), callByScreen, true, true);
 
         if (intent == null)
         {
@@ -272,16 +277,16 @@ public class GourmetMainActivity extends PlaceMainActivity
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
-    private void startAroundSearchResult(Context context, SaleTime saleTime, Location location, String callByScreen)
+    private void startAroundSearchResult(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Location location, String callByScreen)
     {
-        if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        if (todayDateTime == null || gourmetBookingDay == null || isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
         lockUI();
 
-        Intent intent = GourmetSearchResultActivity.newInstance(this, saleTime, location, callByScreen);
+        Intent intent = GourmetSearchResultActivity.newInstance(this, todayDateTime, gourmetBookingDay, location, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -299,9 +304,10 @@ public class GourmetMainActivity extends PlaceMainActivity
             return;
         }
 
+        GourmetBookingDay gourmetBookingDay = mGourmetCuration.getGourmetBookingDay();
         Map<String, String> params = new HashMap<>();
 
-        params.put(AnalyticsManager.KeyType.CHECK_IN, mGourmetCuration.getSaleTime().getDayOfDaysDateFormat("yyyy-MM-dd"));
+        params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
         params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
 
         if (DailyHotel.isLogin() == false)
@@ -427,7 +433,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
-            Intent intent = SearchActivity.newInstance(GourmetMainActivity.this, PlaceType.FNB, mGourmetCuration.getSaleTime(), 1);
+            Intent intent = SearchActivity.newInstance(GourmetMainActivity.this, PlaceType.FNB, mGourmetCuration.getGourmetBookingDay());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
@@ -447,7 +453,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onDateClick()
         {
-            startCalendar(AnalyticsManager.ValueType.LIST);
+            startCalendar(AnalyticsManager.ValueType.LIST, mTodayDateTime);
         }
 
         @Override
@@ -458,10 +464,9 @@ public class GourmetMainActivity extends PlaceMainActivity
                 return;
             }
 
-            SaleTime saleTime = mGourmetCuration.getSaleTime();
             Province province = mGourmetCuration.getProvince();
 
-            Intent intent = GourmetRegionListActivity.newInstance(GourmetMainActivity.this, province, saleTime);
+            Intent intent = GourmetRegionListActivity.newInstance(GourmetMainActivity.this, province, mGourmetCuration.getGourmetBookingDay());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
@@ -530,39 +535,49 @@ public class GourmetMainActivity extends PlaceMainActivity
     private PlaceMainNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new PlaceMainNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onDateTime(long currentDateTime, long dailyDateTime)
+        public void onDateTime(TodayDateTime todayDateTime)
         {
             if (isFinishing() == true)
             {
                 return;
             }
 
+            mTodayDateTime = todayDateTime;
+
             try
             {
-                mGourmetCuration.setSaleTime(currentDateTime, dailyDateTime);
+                GourmetBookingDay gourmetBookingDay = mGourmetCuration.getGourmetBookingDay();
 
-                String lastViewDate = DailyPreference.getInstance(GourmetMainActivity.this).getGourmetLastViewDate();
-
-                if (Util.isTextEmpty(lastViewDate) == false)
+                if (gourmetBookingDay == null)
                 {
-                    DailyPreference.getInstance(GourmetMainActivity.this).setGourmetLastViewDate(null);
+                    gourmetBookingDay = new GourmetBookingDay();
 
-                    SaleTime changedSaleTime = SaleTime.changeDateSaleTime(mGourmetCuration.getSaleTime(), lastViewDate);
+                    gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-                    if (changedSaleTime != null)
+                    mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+                } else
+                {
+                    // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
+                    // 체크인 날짜 체크
+
+                    // 날짜로 비교해야 한다.
+                    Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, true);
+                    Calendar visitCalendar = DailyCalendar.getInstance(gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), true);
+
+                    // 하루가 지나서 체크인 날짜가 전날짜 인 경우
+                    if (todayCalendar.getTimeInMillis() > visitCalendar.getTimeInMillis())
                     {
-                        mGourmetCuration.setSaleTime(changedSaleTime);
-                        ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(changedSaleTime);
+                        gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
                     }
                 }
 
                 if (DailyDeepLink.getInstance().isValidateLink() == true //
-                    && processDeepLinkByDateTime(GourmetMainActivity.this) == true)
+                    && processDeepLinkByDateTime(GourmetMainActivity.this, mTodayDateTime) == true)
                 {
                     // 딥링크 이동
                 } else
                 {
-                    ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(mGourmetCuration.getSaleTime());
+                    ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(mGourmetCuration.getGourmetBookingDay());
 
                     mPlaceMainNetworkController.requestEventBanner();
                 }
@@ -586,12 +601,6 @@ public class GourmetMainActivity extends PlaceMainActivity
         {
             if (isFinishing() == true || provinceList == null || areaList == null)
             {
-                return;
-            }
-
-            if (mGourmetCuration.getSaleTime() == null)
-            {
-                Util.restartApp(GourmetMainActivity.this);
                 return;
             }
 
@@ -639,7 +648,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             mGourmetCuration.setProvince(selectedProvince);
 
             if (DailyDeepLink.getInstance().isValidateLink() == true//
-                && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList) == true)
+                && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList, mTodayDateTime) == true)
             {
 
             } else
@@ -675,38 +684,23 @@ public class GourmetMainActivity extends PlaceMainActivity
             GourmetMainActivity.this.onErrorResponse(call, response);
         }
 
-        private boolean processDeepLinkByDateTime(BaseActivity baseActivity)
+        private boolean processDeepLinkByDateTime(BaseActivity baseActivity, TodayDateTime todayDateTime)
         {
             if (DailyDeepLink.getInstance().isGourmetDetailView() == true)
             {
                 unLockUI();
 
-                return moveDeepLinkDetail(baseActivity);
-                //            } else if (DailyDeepLink.getInstance().isGourmetEventBannerWebView() == true)
-                //            {
-                //                unLockUI();
-                //
-                //                return moveDeepLinkEventBannerWeb(baseActivity);
-                //            } else if (DailyDeepLink.getInstance().isGourmetRegionListView() == true)
-                //            {
-                //                unLockUI();
-                //
-                //                return moveDeepLinkRegionList(baseActivity);
+                return moveDeepLinkDetail(baseActivity, todayDateTime);
             } else if (DailyDeepLink.getInstance().isGourmetSearchView() == true)
             {
                 unLockUI();
 
-                return moveDeepLinkSearch(baseActivity);
+                return moveDeepLinkSearch(baseActivity, todayDateTime);
             } else if (DailyDeepLink.getInstance().isGourmetSearchResultView() == true)
             {
                 unLockUI();
 
-                return moveDeepLinkSearchResult(baseActivity);
-                //            } else if (DailyDeepLink.getInstance().isCollectionView() == true)
-                //            {
-                //                unLockUI();
-                //
-                //                return moveDeepLinkCollection(baseActivity);
+                return moveDeepLinkSearchResult(baseActivity, todayDateTime);
             } else
             {
                 // 더이상 진입은 없다.
@@ -719,13 +713,13 @@ public class GourmetMainActivity extends PlaceMainActivity
             return false;
         }
 
-        private boolean processDeepLinkByRegionList(BaseActivity baseActivity, List<Province> provinceList, List<Area> areaList)
+        private boolean processDeepLinkByRegionList(BaseActivity baseActivity, List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime)
         {
             if (DailyDeepLink.getInstance().isGourmetListView() == true)
             {
                 unLockUI();
 
-                return moveDeepLinkGourmetList(provinceList, areaList);
+                return moveDeepLinkGourmetList(provinceList, areaList, todayDateTime);
             } else
             {
                 DailyDeepLink.getInstance().clear();
@@ -819,7 +813,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     if (Util.isUsedMultiTransition() == true)
                     {
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getSaleTime(), province, gourmet, listCount, true);
+                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, true);
 
                         View simpleDraweeView = view.findViewById(R.id.imageView);
                         View nameTextView = view.findViewById(R.id.nameTextView);
@@ -843,7 +837,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     } else
                     {
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this, //
-                            mGourmetCuration.getSaleTime(), province, gourmet, listCount, false);
+                            mGourmetCuration.getGourmetBookingDay(), province, gourmet, listCount, false);
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
@@ -873,70 +867,6 @@ public class GourmetMainActivity extends PlaceMainActivity
                 ((GourmetCurationOption) mGourmetCuration.getCurationOption()).setCategorySequenceMap(categorySequenceMap);
             }
         }
-
-        //        @Override
-        //        public void onEventBannerClick(EventBanner eventBanner)
-        //        {
-        //            if (isFinishing())
-        //            {
-        //                return;
-        //            }
-        //
-        //            if (lockUiComponentAndIsLockUiComponent() == true)
-        //            {
-        //                return;
-        //            }
-        //
-        //            lockUI();
-        //
-        //            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-        //                , AnalyticsManager.Action.GOURMET_EVENT_BANNER_CLICKED, eventBanner.name, null);
-        //
-        //            // SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
-        //
-        //            // 이벤트 배너 딥링크 사용하지 않기로 했음.
-        //            if (eventBanner.isDeepLink() == true)
-        //            {
-        //                // 이벤트 베너 클릭후 바로 딥링크로 이동하는 것은 사용하지 않기로 한다.
-        //                //                try
-        //                //                {
-        //                //                    Calendar calendar = DailyCalendar.getInstance();
-        //                //                    calendar.setTimeZone(TimeZone.getTimeZone("GMT+9"));
-        //                //                    calendar.setTimeInMillis(eventBanner.dateTime);
-        //                //
-        //                //                    SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.KOREA);
-        //                //                    Date schemeDate = format.parse(format.format(calendar.getTime()));
-        //                //                    Date dailyDate = format.parse(saleTime.getDayOfDaysDateFormat("yyyyMMdd"));
-        //                //
-        //                //                    int dailyDayOfDays = (int) ((schemeDate.getTime() - dailyDate.getTime()) / SaleTime.MILLISECOND_IN_A_DAY);
-        //                //
-        //                //                    saleTime.setOffsetDailyDay(dailyDayOfDays);
-        //                //
-        //                //                    if (eventBanner.isHotel() == true)
-        //                //                    {
-        //                //                        Intent intent = new Intent(mBaseActivity, StayDetailActivity.class);
-        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, eventBanner.index);
-        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, eventBanner.nights);
-        //                //                        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, 0);
-        //                //
-        //                //                        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-        //                //                    } else
-        //                //                    {
-        //                //                        startGourmetDetailByDeepLink(eventBanner.index, saleTime);
-        //                //                    }
-        //                //                } catch (Exception e)
-        //                //                {
-        //                //                    ExLog.e(e.toString());
-        //                //                }
-        //            } else
-        //            {
-        //                Intent intent = EventWebActivity.newInstance(GourmetMainActivity.this, //
-        //                    EventWebActivity.SourceType.GOURMET_BANNER, eventBanner.webLink, eventBanner.name);
-        //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-        //            }
-        //        }
 
         @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)
@@ -1075,7 +1005,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    boolean moveDeepLinkDetail(BaseActivity baseActivity)
+    boolean moveDeepLinkDetail(BaseActivity baseActivity, TodayDateTime todayDateTime)
     {
         try
         {
@@ -1086,47 +1016,26 @@ public class GourmetMainActivity extends PlaceMainActivity
             boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
             int productIndex = DailyDeepLink.getInstance().getProductIndex();
 
-            String startDate = DailyDeepLink.getInstance().getStartDate();
-            String endDate = DailyDeepLink.getInstance().getEndDate();
-
-            SaleTime changedSaleTime = mGourmetCuration.getSaleTime().getClone(0);
-            SaleTime startSaleTime = null, endSaleTime = null;
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
             if (Util.isTextEmpty(date) == false)
             {
-                changedSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, date);
+                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
             } else if (datePlus >= 0)
             {
-                changedSaleTime.setOffsetDailyDay(datePlus);
-            } else if (Util.isTextEmpty(startDate, endDate) == false)
-            {
-                startSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, startDate);
-                endSaleTime = SaleTime.changeDateSaleTime(changedSaleTime, endDate, -1);
-
-                // 캘린더에서는 미만으로 날짜를 처리하여 1을 더해주어야 한다.
-                endSaleTime.setOffsetDailyDay(endSaleTime.getOffsetDailyDay() + 1);
-
-                changedSaleTime = startSaleTime.getClone();
-            }
-
-            if (changedSaleTime == null)
-            {
-                return false;
-            }
-
-            if (Util.isTextEmpty(startDate, endDate) == false)
-            {
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, startSaleTime, endSaleTime, gourmetIndex, productIndex, isShowCalendar, false);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
             } else
             {
-                Intent intent = GourmetDetailActivity.newInstance(baseActivity, changedSaleTime, gourmetIndex, productIndex, isShowCalendar, false);
-                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
-                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
             }
+
+            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+
+            Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, productIndex, isShowCalendar, false);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
             mIsDeepLink = true;
         } catch (Exception e)
@@ -1140,24 +1049,6 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         return true;
     }
-
-    //    private boolean moveDeepLinkEventBannerWeb(BaseActivity baseActivity)
-    //    {
-    //        String url = DailyDeepLink.getInstance().getUrl();
-    //        DailyDeepLink.getInstance().clear();
-    //
-    //        if (Util.isTextEmpty(url) == false)
-    //        {
-    //            Intent intent = EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.GOURMET_BANNER, url, null);
-    //            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_EVENTWEB);
-    //
-    //            mIsDeepLink = true;
-    //            return true;
-    //        } else
-    //        {
-    //            return false;
-    //        }
-    //    }
 
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, //
                                          List<Province> provinceList, List<Area> areaList)
@@ -1211,36 +1102,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         return selectedProvince;
     }
 
-    private boolean moveDeepLinkRegionList(BaseActivity baseActivity)
-    {
-        int provinceIndex = -1;
-        int areaIndex = -1;
-
-        try
-        {
-            provinceIndex = Integer.parseInt(DailyDeepLink.getInstance().getProvinceIndex());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        try
-        {
-            areaIndex = Integer.parseInt(DailyDeepLink.getInstance().getAreaIndex());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        Intent intent = GourmetRegionListActivity.newInstance(baseActivity, provinceIndex, areaIndex, mGourmetCuration.getSaleTime());
-        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-        DailyDeepLink.getInstance().clear();
-        mIsDeepLink = true;
-        return true;
-    }
-
-    boolean moveDeepLinkSearch(BaseActivity baseActivity)
+    boolean moveDeepLinkSearch(BaseActivity baseActivity, TodayDateTime todayDateTime)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -1248,53 +1110,39 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         DailyDeepLink.getInstance().clear();
 
-        SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
-        SaleTime checkInSaleTime;
+        try
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
-        if (Util.isTextEmpty(date) == false)
-        {
-            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+            if (Util.isTextEmpty(date) == false)
+            {
+                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+            } else if (datePlus >= 0)
+            {
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+            } else
+            {
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+            }
 
-            if (checkInSaleTime == null)
-            {
-                return false;
-            }
-        } else if (datePlus >= 0)
-        {
-            try
-            {
-                checkInSaleTime = saleTime.getClone(datePlus);
-            } catch (Exception e)
-            {
-                return false;
-            }
-        } else
-        {
-            // 날짜 정보가 없는 경우 예외 처리 추가
-            try
-            {
-                checkInSaleTime = saleTime;
-            } catch (Exception e)
-            {
-                return false;
-            }
-        }
+            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
 
-        if (checkInSaleTime == null)
+            Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, word);
+            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+            mIsDeepLink = true;
+        } catch (Exception e)
         {
+            ExLog.e(e.toString());
+
             return false;
         }
-
-        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, checkInSaleTime, 1, word);
-        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
-
-        mIsDeepLink = true;
 
         return true;
     }
 
-    boolean moveDeepLinkSearchResult(BaseActivity baseActivity)
+    boolean moveDeepLinkSearchResult(BaseActivity baseActivity, TodayDateTime todayDateTime)
     {
         String word = DailyDeepLink.getInstance().getSearchWord();
         DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
@@ -1306,78 +1154,63 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         DailyDeepLink.getInstance().clear();
 
-        SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
-        SaleTime checkInSaleTime;
-
-        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
-        if (Util.isTextEmpty(date) == false)
+        try
         {
-            checkInSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-            if (checkInSaleTime == null)
+            if (Util.isTextEmpty(date) == false)
             {
-                return false;
+                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+            } else if (datePlus >= 0)
+            {
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+            } else
+            {
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
             }
 
-        } else if (datePlus >= 0)
-        {
-            try
-            {
-                checkInSaleTime = saleTime.getClone(datePlus);
-            } catch (Exception e)
-            {
-                return false;
-            }
-        } else
-        {
-            // 날짜 정보가 없는 경우 예외 처리 추가
-            try
-            {
-                checkInSaleTime = saleTime;
-            } catch (Exception e)
-            {
-                return false;
-            }
-        }
+            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
 
-        if (checkInSaleTime == null)
+            switch (searchType)
+            {
+                case LOCATION:
+                {
+                    if (latLng != null)
+                    {
+                        Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, latLng, radius, true);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                    } else
+                    {
+                        return false;
+                    }
+                    break;
+                }
+
+                default:
+                    if (Util.isTextEmpty(word) == false)
+                    {
+                        Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                    } else
+                    {
+                        return false;
+                    }
+                    break;
+            }
+
+            mIsDeepLink = true;
+        } catch (Exception e)
         {
+            ExLog.e(e.toString());
+
             return false;
         }
-
-        switch (searchType)
-        {
-            case LOCATION:
-            {
-                if (latLng != null)
-                {
-                    Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, checkInSaleTime, latLng, radius, true);
-                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                } else
-                {
-                    return false;
-                }
-                break;
-            }
-
-            default:
-                if (Util.isTextEmpty(word) == false)
-                {
-                    Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, checkInSaleTime, new Keyword(0, word), SearchType.SEARCHES);
-                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                } else
-                {
-                    return false;
-                }
-                break;
-        }
-
-        mIsDeepLink = true;
 
         return true;
     }
 
-    boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList)
+    boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime)
     {
         String date = DailyDeepLink.getInstance().getDate();
         int datePlus = DailyDeepLink.getInstance().getDatePlus();
@@ -1418,36 +1251,33 @@ public class GourmetMainActivity extends PlaceMainActivity
         mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
         DailyDeepLink.getInstance().clear();
 
-        SaleTime saleTime = mGourmetCuration.getSaleTime().getClone(0);
-        SaleTime changedSaleTime;
+        try
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-        // 날짜가 있는 경우 디폴트로 3번째 탭으로 넘어가야 한다
-        if (Util.isTextEmpty(date) == false)
-        {
-            changedSaleTime = SaleTime.changeDateSaleTime(saleTime, date);
-        } else if (datePlus >= 0)
-        {
-            try
+            if (Util.isTextEmpty(date) == false)
             {
-                changedSaleTime = saleTime.getClone(datePlus);
-            } catch (Exception e)
+                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+            } else if (datePlus >= 0)
             {
-                return false;
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+            } else
+            {
+                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
             }
-        } else
-        {
-            changedSaleTime = saleTime;
-        }
 
-        if (changedSaleTime == null)
+            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+
+            ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
+
+            mPlaceMainNetworkController.requestRegionList();
+        } catch (Exception e)
         {
+            ExLog.e(e.toString());
+
             return false;
         }
-
-        mGourmetCuration.setSaleTime(changedSaleTime);
-        ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(changedSaleTime);
-
-        mPlaceMainNetworkController.requestRegionList();
 
         return true;
     }

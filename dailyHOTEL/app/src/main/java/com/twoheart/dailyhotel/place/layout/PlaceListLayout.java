@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -267,11 +268,11 @@ public abstract class PlaceListLayout extends BaseLayout
     }
 
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                              ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+                              ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
     {
         mIsLoading = false;
 
-        if (mPlaceListAdapter == null)
+        if (mPlaceListAdapter == null || placeBookingDay == null)
         {
             Util.restartApp(mContext);
             return;
@@ -342,6 +343,7 @@ public abstract class PlaceListLayout extends BaseLayout
                     }
                 }
 
+                mPlaceListAdapter.setPlaceBookingDay(placeBookingDay);
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.addAll(list);
 
@@ -419,7 +421,8 @@ public abstract class PlaceListLayout extends BaseLayout
         return hasPlace;
     }
 
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType)
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType
+        , ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
     {
         mIsLoading = false;
 
@@ -452,7 +455,7 @@ public abstract class PlaceListLayout extends BaseLayout
                     }
                 });
 
-                mPlaceListMapFragment.setPlaceViewItemList(list, true);
+                mPlaceListMapFragment.setPlaceViewItemList(placeBookingDay, list, true);
 
                 ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
             }

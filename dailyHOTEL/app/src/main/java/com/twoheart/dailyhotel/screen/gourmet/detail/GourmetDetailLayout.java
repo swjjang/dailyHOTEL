@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
@@ -58,9 +58,9 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
     }
 
-    public void setDetail(SaleTime saleTime, GourmetDetail gourmetDetail, int imagePosition)
+    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int imagePosition)
     {
-        if (gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
+        if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
         {
             setLineIndicatorVisible(false);
             setWishButtonSelected(false);
@@ -85,12 +85,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new GourmetDetailListAdapter(mContext, saleTime, (GourmetDetail) mPlaceDetail,//
+            mListAdapter = new GourmetDetailListAdapter(mContext, gourmetBookingDay, (GourmetDetail) mPlaceDetail,//
                 (GourmetDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData((GourmetDetail) mPlaceDetail, saleTime);
+            mListAdapter.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail);
         }
 
         setCurrentImage(imagePosition);

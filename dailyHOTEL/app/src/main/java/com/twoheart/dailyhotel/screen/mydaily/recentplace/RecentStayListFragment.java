@@ -14,6 +14,9 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.RecentStayParams;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -34,11 +37,31 @@ import retrofit2.Response;
 
 public class RecentStayListFragment extends RecentPlacesListFragment
 {
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
+
+            mPlaceBookingDay = stayBookingDay;
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -54,7 +77,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected void requestRecentPlacesList()
+    protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
     {
         lockUI();
 
@@ -65,13 +88,13 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             if (mListLayout != null && isFinishing() == false)
             {
-                mListLayout.setData(null);
+                mListLayout.setData(null, placeBookingDay);
             }
             return;
         }
 
         RecentStayParams recentStayParams = new RecentStayParams();
-        recentStayParams.setCheckInTime(mSaleTime);
+        recentStayParams.setStayBookingDay((StayBookingDay) placeBookingDay);
         recentStayParams.setTargetIndices(getPlaceIndexList());
 
         ((RecentStayListNetworkController) mNetworkController).requestRecentStayList(recentStayParams);
@@ -93,7 +116,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             sortList(mRecentPlaceList, list);
 
             ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
-            mListLayout.setData(viewItemList);
+            mListLayout.setData(viewItemList, mPlaceBookingDay);
         }
 
         @Override
@@ -140,7 +163,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             if (Util.isUsedMultiTransition() == true)
             {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0, true);
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -158,7 +181,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(mBaseActivity, mSaleTime, stay, 0, false);
+                Intent intent = StayDetailActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay, 0, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
@@ -189,7 +212,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             mRecentPlaceList.remove(deleteItem);
 
-            mListLayout.setData(mListLayout.getList());
+            mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClick(deleteItem);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -212,14 +235,13 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         @Override
         public void onRecordAnalyticsList(ArrayList<PlaceViewItem> list)
         {
-            if (list == null || list.isEmpty() == true || mSaleTime == null)
+            if (list == null || list.isEmpty() == true || mPlaceBookingDay == null)
             {
                 return;
             }
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             String placeTypeString = AnalyticsManager.ValueType.STAY;
-            int dayOfDays = mSaleTime.getOffsetDailyDay();
             int size = list.size();
 
             StringBuilder stringBuilder = new StringBuilder("[");
@@ -242,11 +264,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             stringBuilder.append("]");
 
+            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT, mSaleTime.getClone(dayOfDays + 1).getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookingDay.getCheckInDay("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookingDay.getCheckOutDay("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
 

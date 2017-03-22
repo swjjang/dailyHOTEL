@@ -19,8 +19,8 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -171,7 +171,15 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeInMillis(mPlaceBookingDetail.currentDateTime - DailyCalendar.NINE_HOUR_MILLISECOND);
+
+        try
+        {
+            DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.currentDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
         int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
 
         if (Util.isTextEmpty(mPlaceBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
@@ -336,7 +344,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
                     Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
 
-                    int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / SaleTime.MILLISECOND_IN_A_DAY);
+                    int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
 
                     KakaoLinkManager.newInstance(StayReservationDetailActivity.this).shareBookingStay(message, stayBookingDetail.placeIndex,//
                         mImageUrl, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
@@ -758,14 +766,20 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            SaleTime saleTime = new SaleTime();
-            saleTime.setCurrentTime(mPlaceBookingDetail.currentDateTime);
-            saleTime.setDailyTime(mPlaceBookingDetail.dailyDateTime);
+            try
+            {
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, saleTime, 1, mPlaceBookingDetail.placeIndex, 0, false, false);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay, mPlaceBookingDetail.placeIndex, 0, false, false);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         @Override
@@ -903,7 +917,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         @Override
         public void onPolicyRefund(boolean isSuccess, String comment, String refundPolicy, boolean refundManual, String message)
         {
-            if (isFinishing() == true || (Util.isOverAPI17() == true && isDestroyed() == true))
+            if (isFinishing() == true)
             {
                 finish();
                 return;
@@ -926,7 +940,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         stayBookingDetail.mRefundComment = message;
                     }
 
-                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
+                    mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
                 } else
                 {
                     if (StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy) == true)
@@ -938,7 +952,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     }
 
                     stayBookingDetail.refundPolicy = refundPolicy;
-                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
+                    mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
                 }
 
                 // Analytics
@@ -966,7 +980,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 stayBookingDetail.isVisibleRefundPolicy = false;
 
-                mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
+                mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
 
                 AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordScreen(StayReservationDetailActivity.this, AnalyticsManager.Screen.BOOKINGDETAIL_MYBOOKINGINFO_NOREFUNDS, null);
             }
@@ -996,12 +1010,13 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     stayBookingDetail.isVisibleRefundPolicy = true;
 
                     // 환불 대기 인 상태에서는 문구가 고정이다.
-                    mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
+                    mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
                 } else
                 {
-                    long checkOutDateTime = DailyCalendar.getTimeGMT9(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+                    long checkOutDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkOutDate).getTime();
+                    long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
 
-                    if (stayBookingDetail.currentDateTime < checkOutDateTime)
+                    if (currentDateTime < checkOutDateTime)
                     {
                         stayBookingDetail.isVisibleRefundPolicy = true;
 
@@ -1010,7 +1025,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     {
                         stayBookingDetail.isVisibleRefundPolicy = false;
 
-                        mPlaceReservationDetailLayout.initLayout(stayBookingDetail);
+                        mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
                     }
                 }
             } catch (Exception e)

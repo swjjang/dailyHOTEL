@@ -27,7 +27,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_NAME, placeName);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
         intent.putExtra(INTENT_EXTRA_DATA_USER_NAME, userName);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, date);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DAY, date);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_TIME, visitTime);
         intent.putExtra(INTENT_EXTRA_DATA_PRODUCT_COUNT, productCount);
         intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
@@ -50,7 +50,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
             return;
         }
 
-        String date = intent.getStringExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE);
+        String date = intent.getStringExtra(INTENT_EXTRA_DATA_VISIT_DAY);
         String visitTime = intent.getStringExtra(INTENT_EXTRA_DATA_VISIT_TIME);
         int productCount = intent.getIntExtra(INTENT_EXTRA_DATA_PRODUCT_COUNT, 0);
 

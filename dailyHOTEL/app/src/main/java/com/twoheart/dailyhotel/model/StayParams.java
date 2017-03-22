@@ -4,7 +4,9 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -47,13 +49,19 @@ public class StayParams extends PlaceParams
 
         clear();
 
-        SaleTime checkInSaleTime = stayCuration.getCheckInSaleTime();
-        SaleTime checkOutSaleTime = stayCuration.getCheckOutSaleTime();
+        StayBookingDay stayBookingDay = stayCuration.getStayBookingDay();
 
-        if (checkInSaleTime != null && checkOutSaleTime != null)
+        if (stayBookingDay != null)
         {
-            dateCheckIn = checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
-            stays = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+            dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
+
+            try
+            {
+                stays = stayBookingDay.getNights();
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         Province province = stayCuration.getProvince();

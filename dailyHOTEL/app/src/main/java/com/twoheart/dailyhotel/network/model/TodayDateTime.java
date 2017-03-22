@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.network.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
@@ -15,7 +14,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @JsonObject
-public class DailyDateTime implements Parcelable
+public class TodayDateTime implements Parcelable
 {
     @JsonField
     public String openDateTime; // ISO-8601
@@ -29,11 +28,26 @@ public class DailyDateTime implements Parcelable
     @JsonField
     public String dailyDateTime; // ISO-8601
 
-    public DailyDateTime()
+    public TodayDateTime()
     {
     }
 
-    public DailyDateTime(String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime)
+    public TodayDateTime(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
+    public TodayDateTime(String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime)
+    {
+        setToday(openDateTime, closeDateTime, currentDateTime, dailyDateTime);
+    }
+
+    public TodayDateTime getClone()
+    {
+        return new TodayDateTime(openDateTime, closeDateTime, currentDateTime, dailyDateTime);
+    }
+
+    public void setToday(String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime)
     {
         this.openDateTime = openDateTime;
         this.closeDateTime = closeDateTime;
@@ -41,18 +55,10 @@ public class DailyDateTime implements Parcelable
         this.dailyDateTime = dailyDateTime;
     }
 
-    public DailyDateTime(Parcel in)
-    {
-        readFromParcel(in);
-    }
-
-    public DailyDateTime getClone()
-    {
-        return new DailyDateTime(openDateTime, closeDateTime, currentDateTime, dailyDateTime);
-    }
-
     /**
      * getTime 시에 Java에서는 GMT 0시간으로 처리 되도록 되어있다. 특정 시간을 부여하면 해당 long값에 더해진 값으로 반환된다.
+     * 기존에 시간값을 정리하는데 미정리된 부분들을 처리하기 위한 메소드.
+     *
      * @param timeZone
      * @return
      */
@@ -102,16 +108,15 @@ public class DailyDateTime implements Parcelable
     @JsonIgnore
     public static final Creator CREATOR = new Creator()
     {
-        public DailyDateTime createFromParcel(Parcel in)
+        public TodayDateTime createFromParcel(Parcel in)
         {
-            return new DailyDateTime(in);
+            return new TodayDateTime(in);
         }
 
         @Override
-        public DailyDateTime[] newArray(int size)
+        public TodayDateTime[] newArray(int size)
         {
-            return new DailyDateTime[size];
+            return new TodayDateTime[size];
         }
-
     };
 }

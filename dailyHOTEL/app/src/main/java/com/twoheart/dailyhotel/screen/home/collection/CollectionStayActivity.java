@@ -7,14 +7,17 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -49,12 +52,26 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void requestRecommendationPlaceList()
+    protected void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay)
     {
-        String salesDate = mStartSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
-        int period = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
+        if (placeBookingDay == null)
+        {
+            return;
+        }
 
-        DailyMobileAPI.getInstance(this).requestRecommendationStayList(mNetworkTag, mRecommendationIndex, salesDate, period, mRecommendationStayListCallback);
+        try
+        {
+            StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
+
+            String salesDate = stayBookingDay.getCheckInDay("yyyy-MM-dd");
+            int period = stayBookingDay.getNights();
+
+            DailyMobileAPI.getInstance(this).requestRecommendationStayList(mNetworkTag, mRecommendationIndex, salesDate, period, mRecommendationStayListCallback);
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -64,19 +81,50 @@ public class CollectionStayActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected String getCalendarDate()
+    protected String getCalendarDate(PlaceBookingDay placeBookingDay)
     {
-        if (mStartSaleTime == null || mEndSaleTime == null)
+        if (placeBookingDay == null)
         {
             return null;
         }
 
-        String checkInDate = mStartSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDate = mEndSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        StayBookingDay stayBookingDay = (StayBookingDay) placeBookingDay;
 
-        int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
+        try
+        {
+            String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
+            String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
 
-        return String.format("%s - %s, %d박", checkInDate, checkOutDate, nights);
+            int nights = stayBookingDay.getNights();
+
+            return String.format("%s - %s, %d박", checkInDate, checkOutDate, nights);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return null;
+    }
+
+    @Override
+    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    {
+        if(todayDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
+
+            mPlaceBookingDay = stayBookingDay;
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -84,37 +132,32 @@ public class CollectionStayActivity extends CollectionBaseActivity
     {
         if (resultCode == RESULT_OK)
         {
-            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
-            SaleTime checkOutSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE);
+            StayBookingDay stayBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-            if (checkInSaleTime == null || checkOutSaleTime == null)
+            if (stayBookingDay == null)
             {
                 return;
             }
 
-            mStartSaleTime = checkInSaleTime;
-            mEndSaleTime = checkOutSaleTime;
+            mPlaceBookingDay = stayBookingDay;
 
-            mCollectionBaseLayout.setCalendarText(getCalendarDate());
+            mCollectionBaseLayout.setCalendarText(getCalendarDate(stayBookingDay));
 
             lockUI();
 
-            requestRecommendationPlaceList();
+            requestRecommendationPlaceList(stayBookingDay);
         }
     }
 
     @Override
-    protected void startCalendarActivity()
+    protected void startCalendarActivity(TodayDateTime todayDateTime, PlaceBookingDay placeBookingDay)
     {
-        if (mStartSaleTime == null || mEndSaleTime == null || mSaleTIme == null)
+        if (todayDateTime == null || placeBookingDay == null)
         {
             return;
         }
 
-        final int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
-
-        Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, nights //
-            , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
+        Intent intent = StayCalendarActivity.newInstance(CollectionStayActivity.this, todayDateTime, (StayBookingDay) placeBookingDay, AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
@@ -140,14 +183,11 @@ public class CollectionStayActivity extends CollectionBaseActivity
             // 개수 넣기
             //            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_SECTION, getSectionTitle(placeList.size())));
 
-            int nights = mEndSaleTime.getOffsetDailyDay() - mStartSaleTime.getOffsetDailyDay();
             int entryPosition = 0;
 
             for (RecommendationPlace place : placeList)
             {
                 place.imageUrl = imageBaseUrl + place.imageUrl;
-                ((RecommendationStay) place).nights = nights;
-
                 place.entryPosition = entryPosition++;
 
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
@@ -164,7 +204,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendarActivity();
+            startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
         }
 
         @Override
@@ -179,7 +219,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             if (mIsUsedMultiTransition == true)
             {
-                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count, true);
+                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View gradeTextView = view.findViewById(R.id.gradeTextView);
@@ -204,7 +244,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, mStartSaleTime, recommendationStay, null, null, count, false);
+                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay, count, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,17 +15,17 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,9 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
     protected static final String INTENT_EXTRA_DATA_SUBTITLE = "subTitle";
 
-    protected SaleTime mSaleTIme;
-    protected SaleTime mStartSaleTime, mEndSaleTime;
+    protected PlaceBookingDay mPlaceBookingDay;
+    protected TodayDateTime mTodayDateTime;
+
     int mRecommendationIndex;
     CollectionBaseLayout mCollectionBaseLayout;
     private boolean checkRequestCollection; // 추천 목록 진입시에만 노출 하도록 한다.
@@ -49,15 +51,17 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     private Handler mHandler = new Handler();
 
-    protected abstract void requestRecommendationPlaceList();
+    protected abstract void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay);
 
     protected abstract CollectionBaseLayout getCollectionLayout(Context context);
 
-    protected abstract String getCalendarDate();
+    protected abstract String getCalendarDate(PlaceBookingDay placeBookingDay);
+
+    protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
 
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
-    protected abstract void startCalendarActivity();
+    protected abstract void startCalendarActivity(TodayDateTime todayDateTime, PlaceBookingDay placeBookingDay);
 
     protected abstract String getSectionTitle(int count);
 
@@ -113,31 +117,23 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     void requestCommonDateTime()
     {
-        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new Callback<JSONObject>()
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new Callback<BaseDto<TodayDateTime>>()
         {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
             {
                 if (response != null && response.isSuccessful() && response.body() != null)
                 {
                     try
                     {
-                        JSONObject responseJSONObject = response.body();
+                        BaseDto<TodayDateTime> baseDto = response.body();
 
-                        int msgCode = responseJSONObject.getInt("msgCode");
-
-                        if (msgCode == 100)
+                        if (baseDto.msgCode == 100)
                         {
-                            JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                            long currentDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("currentDateTime"), DailyCalendar.ISO_8601_FORMAT);
-                            long dailyDateTime = DailyCalendar.getTimeGMT9(dataJSONObject.getString("dailyDateTime"), DailyCalendar.ISO_8601_FORMAT);
-
-                            onCommonDateTime(currentDateTime, dailyDateTime);
+                            onCommonDateTime(baseDto.data);
                         } else
                         {
-                            String message = responseJSONObject.getString("msg");
-                            onErrorPopupMessage(msgCode, message);
+                            onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
                         }
                     } catch (Exception e)
                     {
@@ -150,7 +146,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
+            public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
             {
                 onError(t);
             }
@@ -206,6 +202,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
     }
 
+    @TargetApi(value = 21)
     private void initTransition()
     {
         if (mIsUsedMultiTransition == true)
@@ -289,21 +286,15 @@ public abstract class CollectionBaseActivity extends BaseActivity
         }
     }
 
-    void onCommonDateTime(long currentDateTime, long dailyDateTime)
+    protected void onCommonDateTime(TodayDateTime todayDateTime)
     {
-        mSaleTIme = new SaleTime();
-        mSaleTIme.setCurrentTime(currentDateTime);
-        mSaleTIme.setDailyTime(dailyDateTime);
+        mTodayDateTime = todayDateTime;
 
-        mStartSaleTime = new SaleTime();
-        mStartSaleTime.setCurrentTime(currentDateTime);
-        mStartSaleTime.setDailyTime(dailyDateTime);
+        setPlaceBookingDay(todayDateTime);
 
-        mEndSaleTime = mStartSaleTime.getClone(1);
+        mCollectionBaseLayout.setCalendarText(getCalendarDate(mPlaceBookingDay));
 
-        mCollectionBaseLayout.setCalendarText(getCalendarDate());
-
-        requestRecommendationPlaceList();
+        requestRecommendationPlaceList(mPlaceBookingDay);
     }
 
     protected void onPlaceList(String imageBaseUrl, Recommendation recommendation, ArrayList<? extends RecommendationPlace> list)
@@ -316,7 +307,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         long currentTime, endTime;
         try
         {
-            currentTime = mSaleTIme.getCurrentTime() - DailyCalendar.NINE_HOUR_MILLISECOND;
+            currentTime = DailyCalendar.convertDate(mTodayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
             endTime = DailyCalendar.convertDate(recommendation.endedAt, DailyCalendar.ISO_8601_FORMAT).getTime();
         } catch (Exception e)
         {
@@ -330,11 +321,11 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         if (endTime < currentTime)
         {
-            mCollectionBaseLayout.setData(null);
+            mCollectionBaseLayout.setData(null, mPlaceBookingDay);
 
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null);
 
-            mCollectionBaseLayout.setData(placeViewItems);
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
 
             showSimpleDialog(null, getString(R.string.message_collection_finished_recommendation), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
             {
@@ -348,7 +339,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         {
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list);
 
-            mCollectionBaseLayout.setData(placeViewItems);
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
 
             if ((list == null || list.size() == 0) && checkRequestCollection == false)
             {
@@ -360,7 +351,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
                         @Override
                         public void onClick(View v)
                         {
-                            startCalendarActivity();
+                            startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
                         }
                     }, null);
             }

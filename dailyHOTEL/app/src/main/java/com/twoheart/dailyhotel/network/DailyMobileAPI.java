@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
-import com.twoheart.dailyhotel.network.model.DailyDateTime;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.Holiday;
@@ -107,19 +107,9 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime"//
             : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCommonDateTime(Crypto.getUrlDecoderEx(URL));
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
-    public void requestCommonDateTimeRefactoring(String tag, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime"//
-            : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
-
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCommonDateTimeRefactoring(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<DailyDateTime>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<TodayDateTime>>) listener);
     }
 
     @Override

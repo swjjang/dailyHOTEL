@@ -15,11 +15,12 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
 import com.twoheart.dailyhotel.model.StayDetail;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -34,7 +35,7 @@ public class StayDetailListAdapter extends BaseAdapter
     private static final int GRID_COLUMN_COUNT = 5;
 
     private StayDetail mStayDetail;
-    private SaleTime mCheckInSaleTime;
+    private StayBookingDay mStayBookingDay;
     private Context mContext;
     private View[] mDetailViews;
     private int mImageHeight;
@@ -43,12 +44,12 @@ public class StayDetailListAdapter extends BaseAdapter
     StayDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public StayDetailListAdapter(Context context, SaleTime saleTime, StayDetail stayDetail,//
+    public StayDetailListAdapter(Context context, StayBookingDay stayBookingDay, StayDetail stayDetail,//
                                  StayDetailLayout.OnEventListener onEventListener,//
                                  View.OnTouchListener emptyViewOnTouchListener)
     {
         mContext = context;
-        mCheckInSaleTime = saleTime;
+        mStayBookingDay = stayBookingDay;
         mStayDetail = stayDetail;
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(mContext);
@@ -57,10 +58,10 @@ public class StayDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(StayDetail stayDetail, SaleTime checkInSaleTime)
+    public void setData(StayBookingDay stayBookingDay, StayDetail stayDetail)
     {
+        mStayBookingDay = stayBookingDay;
         mStayDetail = stayDetail;
-        mCheckInSaleTime = checkInSaleTime;
     }
 
     @Override
@@ -317,13 +318,16 @@ public class StayDetailListAdapter extends BaseAdapter
         TextView nightsTextView = (TextView) dateInformationLayout.findViewById(R.id.nightsTextView);
 
         // 체크인체크아웃 날짜
-        final String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        SaleTime checkOutSaletime = mCheckInSaleTime.getClone(mCheckInSaleTime.getOffsetDailyDay() + mStayDetail.nights);
-        String checkOutDate = checkOutSaletime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        checkinDayTextView.setText(mStayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"));
+        checkoutDayTextView.setText(mStayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"));
 
-        checkinDayTextView.setText(checkInDate);
-        checkoutDayTextView.setText(checkOutDate);
-        nightsTextView.setText(mContext.getString(R.string.label_nights, mStayDetail.nights));
+        try
+        {
+            nightsTextView.setText(mContext.getString(R.string.label_nights, mStayBookingDay.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
 
         dateInformationLayout.setOnClickListener(new View.OnClickListener()
         {

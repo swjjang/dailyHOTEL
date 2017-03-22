@@ -8,6 +8,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -107,7 +108,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<PlaceViewItem> list)
+    public void setData(ArrayList<PlaceViewItem> list, PlaceBookingDay placeBookingDay)
     {
         if (list == null || list.size() == 0)
         {
@@ -125,6 +126,7 @@ public abstract class RecentPlacesListLayout extends BaseLayout
             mRecyclerView.setAdapter(mListAdapter);
         } else
         {
+            mListAdapter.setPlaceBookingDay(placeBookingDay);
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
         }

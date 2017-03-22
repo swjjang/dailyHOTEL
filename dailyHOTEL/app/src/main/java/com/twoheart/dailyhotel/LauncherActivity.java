@@ -50,10 +50,6 @@ public class LauncherActivity extends Activity
         // 리뷰 초기화
         DailyPreference.getInstance(this).setIsRequestReview(false);
 
-        // 선택 날짜를 초기화 한다.
-        DailyPreference.getInstance(this).setStayLastViewDate(null);
-        DailyPreference.getInstance(this).setGourmetLastViewDate(null);
-
         // 스테이 카테고리 정보를 초기화한다.
         DailyPreference.getInstance(this).setStayCategory(null, null);
 

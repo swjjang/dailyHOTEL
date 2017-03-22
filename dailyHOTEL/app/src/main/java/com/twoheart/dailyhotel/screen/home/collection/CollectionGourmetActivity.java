@@ -7,14 +7,17 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -49,9 +52,16 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected void requestRecommendationPlaceList()
+    protected void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay)
     {
-        String period = mStartSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd");
+        if (placeBookingDay == null)
+        {
+            return;
+        }
+
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) placeBookingDay;
+
+        String period = gourmetBookingDay.getVisitDay("yyyy-MM-dd");
 
         DailyMobileAPI.getInstance(this).requestRecommendationGourmetList(mNetworkTag, mRecommendationIndex, period, 0, mRecommendationGourmetListCallback);
     }
@@ -63,14 +73,34 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     }
 
     @Override
-    protected String getCalendarDate()
+    protected String getCalendarDate(PlaceBookingDay placeBookingDay)
     {
-        if (mStartSaleTime == null)
+        if (placeBookingDay == null)
         {
             return null;
         }
 
-        return mStartSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+        return ((GourmetBookingDay) placeBookingDay).getVisitDay("yyyy.MM.dd(EEE)");
+    }
+
+    @Override
+    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+
+            mPlaceBookingDay = gourmetBookingDay;
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -78,33 +108,33 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     {
         if (resultCode == RESULT_OK)
         {
-            SaleTime checkInSaleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+            GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-            if (checkInSaleTime == null)
+            if (gourmetBookingDay == null)
             {
                 return;
             }
 
-            mStartSaleTime = checkInSaleTime;
+            mPlaceBookingDay = gourmetBookingDay;
 
-            mCollectionBaseLayout.setCalendarText(getCalendarDate());
+            mCollectionBaseLayout.setCalendarText(getCalendarDate(gourmetBookingDay));
 
             lockUI();
 
-            requestRecommendationPlaceList();
+            requestRecommendationPlaceList(gourmetBookingDay);
         }
     }
 
     @Override
-    protected void startCalendarActivity()
+    protected void startCalendarActivity(TodayDateTime todayDateTime, PlaceBookingDay placeBookingDay)
     {
-        if (mStartSaleTime == null || mSaleTIme == null)
+        if (todayDateTime == null || placeBookingDay == null)
         {
             return;
         }
 
-        Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime//
-            , mSaleTIme, null, AnalyticsManager.ValueType.SEARCH, true, true);
+        Intent intent = GourmetCalendarActivity.newInstance(CollectionGourmetActivity.this, todayDateTime//
+            , (GourmetBookingDay) placeBookingDay, AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
     }
 
@@ -150,7 +180,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         @Override
         public void onCalendarClick()
         {
-            startCalendarActivity();
+            startCalendarActivity(mTodayDateTime, mPlaceBookingDay);
         }
 
         @Override
@@ -165,7 +195,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             if (mIsUsedMultiTransition == true)
             {
-                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, recommendationGourmet, null, null, count, true);
+                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, count, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -188,7 +218,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, options.toBundle());
             } else
             {
-                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, mStartSaleTime, recommendationGourmet, null, null, count, false);
+                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this, (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet, count, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

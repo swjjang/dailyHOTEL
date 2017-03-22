@@ -24,7 +24,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -54,15 +54,15 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected static final int PHONE_PAYMENT_LIMIT = 500000;
 
-    protected static final String STATE_PAYMENT_INFORMATION = "state_payment_information";
+    protected static final String STATE_PAYMENT_INFORMATION = "statePaymentInformation";
+    protected static final String STATE_PLACE_BOOKINGDAY = "statePlaceBookingDay";
     protected static final String STATE_PLACE_PROVINCE = "state_place_province";
-    protected static final String STATE_PLACE_AREA = "state_place_area";
+    protected static final String STATE_PLACE_AREA = "statePlaceArea";
 
     protected PlacePaymentInformation mPaymentInformation;
     protected CreditCard mSelectedCreditCard;
     protected Dialog mFinalCheckDialog;
-    protected SaleTime mCheckInSaleTime;
-    protected int mNights;
+    protected PlaceBookingDay mPlaceBookingDay;
 
     private ProgressDialog mProgressDialog;
 
@@ -70,11 +70,11 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void requestUserInformationForPayment();
 
-    protected abstract void requestEasyPayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+    protected abstract void requestEasyPayment(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay);
 
-    protected abstract void requestFreePayment(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+    protected abstract void requestFreePayment(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay);
 
-    protected abstract void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+    protected abstract void requestPlacePaymentInformation(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay);
 
     protected abstract void setSimpleCardInformation(PlacePaymentInformation paymentInformation, CreditCard selectedCreditCard);
 
@@ -92,9 +92,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void showStopOnSaleDialog();
 
-    protected abstract void showPaymentWeb(PlacePaymentInformation paymentInformation, SaleTime checkInSaleTime);
+    protected abstract void showPaymentWeb(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay);
 
-    protected abstract void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl);
+    protected abstract void showPaymentThankyou(PlacePaymentInformation paymentInformation, String imageUrl, PlaceBookingDay placeBookingDay);
 
     protected abstract Dialog getEasyPaymentConfirmDialog();
 
@@ -102,9 +102,9 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void onActivityPaymentResult(int requestCode, int resultCode, Intent intent);
 
-    protected abstract void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation);
+    protected abstract void recordAnalyticsAgreeTermDialog(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay);
 
-    protected abstract void recordAnalyticsPayment(PlacePaymentInformation paymentInformation);
+    protected abstract void recordAnalyticsPayment(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay);
 
     protected abstract void setCoupon(Coupon coupon);
 
@@ -385,11 +385,11 @@ public abstract class PlacePaymentActivity extends BaseActivity
      * 실제 결제를 진행
      *
      * @param paymentInformation
-     * @param saleTime
+     * @param mPlaceBookingDay
      */
-    protected void processPayment(PlacePaymentInformation paymentInformation, SaleTime saleTime)
+    protected void processPayment(PlacePaymentInformation paymentInformation, PlaceBookingDay mPlaceBookingDay)
     {
-        if (paymentInformation == null || saleTime == null || isFinishing() == true)
+        if (paymentInformation == null || mPlaceBookingDay == null || isFinishing() == true)
         {
             setResult(CODE_RESULT_ACTIVITY_REFRESH);
             finish();
@@ -406,19 +406,19 @@ public abstract class PlacePaymentActivity extends BaseActivity
         {
             showProgressDialog();
 
-            requestFreePayment(paymentInformation, saleTime);
+            requestFreePayment(paymentInformation, mPlaceBookingDay);
         } else
         {
             if (paymentInformation.paymentType == PlacePaymentInformation.PaymentType.EASY_CARD)
             {
                 showProgressDialog();
 
-                requestEasyPayment(paymentInformation, saleTime);
+                requestEasyPayment(paymentInformation, mPlaceBookingDay);
             } else
             {
                 lockUI();
 
-                showPaymentWeb(paymentInformation, saleTime);
+                showPaymentWeb(paymentInformation, mPlaceBookingDay);
             }
         }
     }
@@ -486,7 +486,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
         {
             mFinalCheckDialog.show();
 
-            recordAnalyticsAgreeTermDialog(mPaymentInformation);
+            recordAnalyticsAgreeTermDialog(mPaymentInformation, mPlaceBookingDay);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -548,7 +548,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
             mFinalCheckDialog.getWindow().setAttributes(layoutParams);
 
-            recordAnalyticsAgreeTermDialog(mPaymentInformation);
+            recordAnalyticsAgreeTermDialog(mPaymentInformation, mPlaceBookingDay);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -628,7 +628,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 lockUI();
 
-                requestPlacePaymentInformation(mPaymentInformation, mCheckInSaleTime);
+                requestPlacePaymentInformation(mPaymentInformation, mPlaceBookingDay);
             }
         }, null, false);
     }
@@ -804,7 +804,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         showWarningMessageDialog();
                     }
 
-                    recordAnalyticsPayment(mPaymentInformation);
+                    recordAnalyticsPayment(mPaymentInformation, mPlaceBookingDay);
                 } catch (Exception e)
                 {
                     // 해당 화면 에러시에는 일반 결제가 가능해야 한다.
