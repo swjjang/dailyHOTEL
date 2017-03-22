@@ -33,7 +33,7 @@ public class WishListTabNetworkController extends BaseNetworkController
 
     public void requestCommonDateTime()
     {
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTimeRefactoring(mNetworkTag, mDateTimeJsonCallback);
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeJsonCallback);
     }
 
     public void requestWishListCount()

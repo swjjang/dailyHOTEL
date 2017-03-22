@@ -54,7 +54,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-//    void requestCommonDateTime(String tag, Object listener);
+    void requestCommonDateTime(String tag, Object listener);
 
     /**
      * 나의 정보를 요청한다

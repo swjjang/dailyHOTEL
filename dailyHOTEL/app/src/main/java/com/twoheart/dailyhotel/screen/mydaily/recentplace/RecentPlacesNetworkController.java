@@ -7,9 +7,6 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -32,7 +29,7 @@ public class RecentPlacesNetworkController extends BaseNetworkController
 
     public void requestCommonDateTime()
     {
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTimeRefactoring(mNetworkTag, mDateTimeCallback);
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeCallback);
     }
 
     private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()

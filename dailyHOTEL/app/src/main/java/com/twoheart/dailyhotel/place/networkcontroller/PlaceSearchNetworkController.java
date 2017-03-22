@@ -30,7 +30,7 @@ public abstract class PlaceSearchNetworkController extends BaseNetworkController
 
     public void requestCommonDateTime()
     {
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTimeRefactoring(mNetworkTag, mDateTimeCallback);
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeCallback);
     }
 
     private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()

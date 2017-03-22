@@ -117,7 +117,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
     void requestCommonDateTime()
     {
-        DailyMobileAPI.getInstance(this).requestCommonDateTimeRefactoring(mNetworkTag, new Callback<BaseDto<TodayDateTime>>()
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new Callback<BaseDto<TodayDateTime>>()
         {
             @Override
             public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)

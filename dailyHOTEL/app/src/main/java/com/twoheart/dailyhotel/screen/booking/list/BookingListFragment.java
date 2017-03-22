@@ -211,7 +211,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             {
                 lockUI();
 
-                DailyMobileAPI.getInstance(baseActivity).requestCommonDateTimeRefactoring(mNetworkTag, mDateTimeCallBack);
+                DailyMobileAPI.getInstance(baseActivity).requestCommonDateTime(mNetworkTag, mDateTimeCallBack);
             }
         }
     }

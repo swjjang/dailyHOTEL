@@ -1908,7 +1908,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 {
                     lockUI();
 
-                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTimeRefactoring(mNetworkTag, mMessageDateTimeCallback);
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeCallback);
                 } else
                 {
                     processAgreeTermDialog();

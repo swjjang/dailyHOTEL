@@ -85,7 +85,7 @@ public class MainNetworkController extends BaseNetworkController
      */
     protected void requestCommonDatetime()
     {
-        DailyMobileAPI.getInstance(mContext).requestCommonDateTimeRefactoring(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
         {
             @Override
             public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)

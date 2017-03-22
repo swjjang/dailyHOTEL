@@ -224,7 +224,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
     protected void requestCommonDatetime()
     {
-        DailyMobileAPI.getInstance(this).requestCommonDateTimeRefactoring(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
         {
             @Override
             public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)

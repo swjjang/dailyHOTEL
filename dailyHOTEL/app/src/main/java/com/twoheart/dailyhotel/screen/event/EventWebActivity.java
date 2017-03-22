@@ -222,7 +222,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private void requestCommonDatetime(final String url)
     {
-        DailyMobileAPI.getInstance(this).requestCommonDateTimeRefactoring(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
+        DailyMobileAPI.getInstance(this).requestCommonDateTime(mNetworkTag, new retrofit2.Callback<BaseDto<TodayDateTime>>()
         {
             @Override
             public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
