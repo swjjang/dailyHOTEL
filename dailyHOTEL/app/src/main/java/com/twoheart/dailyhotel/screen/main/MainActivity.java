@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements Constants
     MainFragmentManager mMainFragmentManager;
     MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
-    View mSplashLayout, mTooltipLayout;
+    View mSplashLayout;
 
     boolean mIsInitialization;
     boolean mIsBenefitAlarm;
@@ -187,25 +187,6 @@ public class MainActivity extends BaseActivity implements Constants
         mSplashLayout = findViewById(R.id.splashLayout);
 
         loadSplash(mSplashLayout);
-
-        mTooltipLayout = findViewById(R.id.tooltipLayout);
-
-        if (DailyPreference.getInstance(this).isViewWishListTooltip() == true)
-        {
-            hideAnimationTooltip();
-        } else
-        {
-            DailyPreference.getInstance(this).setIsViewWishListTooltip(true);
-            mTooltipLayout.setVisibility(View.VISIBLE);
-            mTooltipLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    hideAnimationTooltip();
-                }
-            });
-        }
 
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
         mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
@@ -563,50 +544,6 @@ public class MainActivity extends BaseActivity implements Constants
 
             mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT, false);
         }
-    }
-
-    void hideAnimationTooltip()
-    {
-        if (mTooltipLayout.getTag() != null)
-        {
-            return;
-        }
-
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
-
-        mTooltipLayout.setTag(objectAnimator);
-
-        objectAnimator.setInterpolator(new LinearInterpolator());
-        objectAnimator.setDuration(300);
-        objectAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animator)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator)
-            {
-                mTooltipLayout.setTag(null);
-                mTooltipLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator)
-            {
-
-            }
-        });
-
-        objectAnimator.start();
     }
 
     void checkAppVersion(final String currentVersion, final String forceVersion)
@@ -1119,19 +1056,6 @@ public class MainActivity extends BaseActivity implements Constants
 
                     AnalyticsManager.getInstance(MainActivity.this).startApplication();
                 }
-
-                // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
-                mDelayTimeHandler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        if (mTooltipLayout.getVisibility() != View.GONE)
-                        {
-                            hideAnimationTooltip();
-                        }
-                    }
-                }, 10000);
             }
         }
 

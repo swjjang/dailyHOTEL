@@ -62,13 +62,13 @@
 
         <Spinner
             android:id="@+id/sortSpinner"
-            android:layout_width="120dp"
+            android:layout_width="125dp"
             android:layout_height="28dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:background="@drawable/shape_coupon_sorting_button_backround"
-            android:dropDownWidth="120dp"
+            android:dropDownWidth="134dp"
             android:spinnerMode="dropdown"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dh_theme_color">#B70038</color>
+    <color name="dh_theme_second_color">#BE945B</color>
     <color name="dh_theme_color_a10">#1AB70038</color>
     <color name="dh_theme_color_a8">#14B70038</color>
 
