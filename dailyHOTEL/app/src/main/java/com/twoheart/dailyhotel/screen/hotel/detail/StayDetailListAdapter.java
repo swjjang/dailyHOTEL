@@ -2,6 +2,9 @@ package com.twoheart.dailyhotel.screen.hotel.detail;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -282,7 +285,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
             String message1 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage1();
             String message2 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage2();
-            String message3 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage3();
+
             boolean message3Enabled = DailyPreference.getInstance(mContext).isRemoteConfigStampStayDetailMessage3Enabled();
 
             stampMessage1TextView.setText(message1);
@@ -290,8 +293,13 @@ public class StayDetailListAdapter extends BaseAdapter
 
             if (message3Enabled == true)
             {
+                String message3 = DailyPreference.getInstance(mContext).getRemoteConfigStampStayDetailMessage3();
+
+                SpannableString spannableString3 = new SpannableString(message3);
+                spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
                 stampMessage3TextView.setVisibility(View.VISIBLE);
-                stampMessage3TextView.setText(message3);
+                stampMessage3TextView.setText(spannableString3);
 
                 stampClickLayout.setOnClickListener(new OnClickListener()
                 {

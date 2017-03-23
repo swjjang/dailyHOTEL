@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="dh_theme_color">#B70038</color>
+    <color name="dh_theme_second_color">#BE945B</color>
     <color name="dh_theme_color_a10">#1AB70038</color>
     <color name="dh_theme_color_a8">#14B70038</color>
 
@@ -252,6 +253,7 @@
     <color name="default_text_c2284dc">#2284dc</color>
     <color name="default_text_c5a5a5a">#5a5a5a</color>
     <color name="default_text_cababab">#ababab</color>
+    <color name="default_text_cbe945b">#be945b</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>
