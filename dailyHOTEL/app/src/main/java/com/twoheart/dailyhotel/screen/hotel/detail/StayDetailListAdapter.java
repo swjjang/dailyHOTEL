@@ -530,7 +530,7 @@ public class StayDetailListAdapter extends BaseAdapter
      */
     private View getInformationView(LayoutInflater layoutInflater, ViewGroup viewGroup, StayDetail stayDetail)
     {
-        if (layoutInflater == null || viewGroup == null || stayDetail == null)
+        if (layoutInflater == null || viewGroup == null || stayDetail == null || stayDetail.getProductList() == null)
         {
             return viewGroup;
         }
