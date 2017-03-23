@@ -403,7 +403,7 @@ public class HomeLayout extends BaseLayout
 
             switch (abTest)
             {
-                case "b":
+                case "a":
                     stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
                     stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
                     stayTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
@@ -421,7 +421,6 @@ public class HomeLayout extends BaseLayout
                     gourmetDoTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
                     break;
 
-                case "a":
                 default:
                     stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
                     stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);

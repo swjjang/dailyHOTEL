@@ -483,15 +483,6 @@ public class DailyRemoteConfig
             return;
         }
 
-//        if (Util.isTextEmpty(abTest1) == true)
-//        {
-//            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(null);
-//            return;
-//        } else
-//        {
-//            DailyPreference.getInstance(context).setRemoteConfigABTestGourmetProductList(abTest1);
-//        }
-
         if (Util.isTextEmpty(abTest) == true)
         {
             DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(null);
