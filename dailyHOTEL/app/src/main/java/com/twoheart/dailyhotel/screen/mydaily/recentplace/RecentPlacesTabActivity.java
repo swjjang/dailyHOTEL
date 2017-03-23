@@ -224,7 +224,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     {
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_accommodate));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
         //        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
