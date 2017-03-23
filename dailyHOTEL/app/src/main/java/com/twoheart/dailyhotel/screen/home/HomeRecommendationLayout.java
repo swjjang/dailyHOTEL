@@ -278,7 +278,7 @@ public class HomeRecommendationLayout extends LinearLayout
             {
                 clearAnimation();
 
-                setHeight(expectedHeight);
+                setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 
                 mValueAnimator = null;
             }
@@ -288,7 +288,7 @@ public class HomeRecommendationLayout extends LinearLayout
             {
                 clearAnimation();
 
-                setHeight(expectedHeight);
+                setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 
                 mValueAnimator = null;
             }
