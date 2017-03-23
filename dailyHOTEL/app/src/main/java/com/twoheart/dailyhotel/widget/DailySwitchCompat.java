@@ -164,7 +164,8 @@ public class DailySwitchCompat extends SwitchCompat
         try
         {
             mSwitchLeft.setInt(this, 0);
-            mSwitchWidth.setInt(this, Util.dpToPx(getContext(), 160));
+            mSwitchWidth.setInt(this, Util.dpToPx(getContext(), 181));
+//            mSwitchWidth.setInt(this, getWidth());
         } catch (IllegalAccessException e)
         {
             ExLog.d(e.toString());
