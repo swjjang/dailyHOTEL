@@ -389,9 +389,9 @@ public class HomeLayout extends BaseLayout
         try
         {
             JSONObject jsonObject = new JSONObject(data);
-            String abTest = jsonObject.getString("value");
+            String abTestValue = jsonObject.getString("value");
 
-            if (Util.isTextEmpty(abTest) == true)
+            if (Util.isTextEmpty(abTestValue) == true)
             {
                 return;
             }
@@ -401,7 +401,7 @@ public class HomeLayout extends BaseLayout
             TextView gourmetTextView = (TextView) view.findViewById(R.id.gourmetTextView);
             TextView gourmetDoTextView = (TextView) view.findViewById(R.id.gourmetDoTextView);
 
-            switch (abTest)
+            switch (abTestValue)
             {
                 case "a":
                     stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));

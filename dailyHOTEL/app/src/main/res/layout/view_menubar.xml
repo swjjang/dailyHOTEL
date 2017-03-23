@@ -5,152 +5,141 @@
     <LinearLayout
         android:id="@+id/bottomMenuBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/menubar_height"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:baselineAligned="false"
-        android:orientation="vertical">
+        android:background="@color/white"
+        android:baselineAligned="false">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_line_ce7e7e7"/>
+        <RelativeLayout
+            android:id="@+id/hotelLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="4dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/white">
+            <ImageView
+                android:id="@+id/hotelImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/tabbar_ic_01_home_off"/>
 
-            <RelativeLayout
-                android:id="@+id/hotelLayout"
-                android:layout_width="0dp"
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/hotelView"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/hotelImageView"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/menu_item_title_home"
+                android:textColor="@drawable/selector_menu_textcolor"
+                android:textSize="9dp"/>
+        </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/hotelImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tabbar_ic_01_home_off"/>
+        <RelativeLayout
+            android:id="@+id/bookingLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="4dp">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/hotelView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/hotelImageView"
-                    android:layout_marginBottom="3dp"
-                    android:gravity="center"
-                    android:text="@string/menu_item_title_home"
-                    android:textColor="@drawable/selector_menu_textcolor"
-                    android:textSize="9dp"/>
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/bookingImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/tabbar_ic_02_reservation_off"/>
 
-            <RelativeLayout
-                android:id="@+id/bookingLayout"
-                android:layout_width="0dp"
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/bookingView"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/bookingImageView"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/menu_item_title_bookings"
+                android:textColor="@drawable/selector_menu_textcolor"
+                android:textSize="9dp"/>
+        </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/bookingImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tabbar_ic_02_reservation_off"/>
+        <RelativeLayout
+            android:id="@+id/myDailyLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="4dp">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/bookingView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/bookingImageView"
-                    android:layout_marginBottom="3dp"
-                    android:gravity="center"
-                    android:text="@string/menu_item_title_bookings"
-                    android:textColor="@drawable/selector_menu_textcolor"
-                    android:textSize="9dp"/>
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/myDailyImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/tabbar_ic_03_mydaily_off"/>
 
-            <RelativeLayout
-                android:id="@+id/myDailyLayout"
-                android:layout_width="0dp"
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/myDailyView"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/myDailyImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/menu_item_title_mydaily"
+                android:textColor="@drawable/selector_menu_textcolor"
+                android:textSize="9dp"/>
 
-                <ImageView
-                    android:id="@+id/myDailyImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="4dp"
-                    android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tabbar_ic_03_mydaily_off"/>
+            <ImageView
+                android:id="@+id/myDailyNewIconView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/myDailyImageView"
+                android:layout_alignTop="@+id/myDailyImageView"
+                android:layout_marginLeft="23dp"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/tabbar_ic_n"/>
+        </RelativeLayout>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/myDailyView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/myDailyImageView"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="3dp"
-                    android:gravity="center"
-                    android:text="@string/menu_item_title_mydaily"
-                    android:textColor="@drawable/selector_menu_textcolor"
-                    android:textSize="9dp"/>
+        <RelativeLayout
+            android:id="@+id/informationLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="4dp">
 
-                <ImageView
-                    android:id="@+id/myDailyNewIconView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/myDailyImageView"
-                    android:layout_alignTop="@+id/myDailyImageView"
-                    android:layout_marginLeft="23dp"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/tabbar_ic_n"/>
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/informationImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/tabbar_ic_04_more_off"/>
 
-            <RelativeLayout
-                android:id="@+id/informationLayout"
-                android:layout_width="0dp"
+            <com.twoheart.dailyhotel.widget.DailyTextView
+                android:id="@+id/informationView"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/informationImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:text="@string/menu_item_title_information"
+                android:textColor="@drawable/selector_menu_textcolor"
+                android:textSize="9dp"/>
 
-                <ImageView
-                    android:id="@+id/informationImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="4dp"
-                    android:scaleType="centerInside"
-                    app:srcCompat="@drawable/tabbar_ic_04_more_off"/>
-
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/informationView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_below="@+id/informationImageView"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="3dp"
-                    android:gravity="center"
-                    android:text="@string/menu_item_title_information"
-                    android:textColor="@drawable/selector_menu_textcolor"
-                    android:textSize="9dp"/>
-
-                <ImageView
-                    android:id="@+id/informationNewIconView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/informationImageView"
-                    android:layout_alignTop="@+id/informationImageView"
-                    android:layout_marginLeft="26dp"
-                    android:visibility="invisible"
-                    app:srcCompat="@drawable/tabbar_ic_n"/>
-            </RelativeLayout>
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/informationNewIconView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/informationImageView"
+                android:layout_alignTop="@+id/informationImageView"
+                android:layout_marginLeft="26dp"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/tabbar_ic_n"/>
+        </RelativeLayout>
     </LinearLayout>
 </merge>
