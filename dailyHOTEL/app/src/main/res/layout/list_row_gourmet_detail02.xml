@@ -94,8 +94,7 @@
             android:textColor="@color/default_text_cb70038"
             android:textSize="13dp"
             android:visibility="visible"
-            app:drawableCompatLeft="@drawable/detail_ic_review"
-            app:drawableCompatRight="@drawable/ic_right_burgundy"/>
+            app:drawableCompatLeft="@drawable/detail_ic_review"/>
     </LinearLayout>
 
     <include layout="@layout/view_separate_line_no_linear"/>
