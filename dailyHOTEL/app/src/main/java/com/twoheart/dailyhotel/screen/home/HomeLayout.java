@@ -952,27 +952,6 @@ public class HomeLayout extends BaseLayout
         DailyTextView descriptionView = (DailyTextView) mTextMessageLayout.findViewById(R.id.descriptionTextView);
 
         titleView.setText(title);
-
-        if (Util.isTextEmpty(description) == true)
-        {
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        } else
-        {
-            // 메세지에 '>'가 포함 되었을 경우 제거하고 trim!
-            if (description.endsWith(">") == true)
-            {
-                int lastIndex = description.lastIndexOf(">");
-                if (lastIndex != -1)
-                {
-                    description = description.substring(0, lastIndex);
-                    description = description.trim();
-                }
-            }
-
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.payment_ic_right, 0);
-            descriptionView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3d));
-        }
-
         descriptionView.setText(description);
 
         if (mTextMessageLayout.getVisibility() == View.VISIBLE)

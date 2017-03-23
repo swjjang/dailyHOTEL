@@ -7,7 +7,9 @@ import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -172,7 +174,11 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         message1TextView.setText(message1);
         message2TextView.setText(message2);
-        message3TextView.setText(message3);
+
+        SpannableString spannableString3 = new SpannableString(message3);
+        spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        message3TextView.setText(spannableString3);
     }
 
     private void startReceiptAnimation()

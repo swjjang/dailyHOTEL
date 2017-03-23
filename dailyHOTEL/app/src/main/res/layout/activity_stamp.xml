@@ -201,11 +201,9 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="6dp"
                     android:layout_toRightOf="@+id/iconImageView01"
-                    android:drawablePadding="3dp"
                     android:text="@string/message_stamp_explanation3"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"
-                    app:drawableCompatRight="@drawable/payment_ic_right"/>
+                    android:textSize="12dp"/>
             </RelativeLayout>
 
             <LinearLayout
@@ -249,11 +247,9 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="6dp"
                         android:layout_toRightOf="@+id/iconImageView02"
-                        android:drawablePadding="3dp"
                         android:text="@string/label_stamp_notification_on_setting"
                         android:textColor="@color/default_text_c929292"
-                        android:textSize="12dp"
-                        app:drawableCompatRight="@drawable/payment_ic_right"/>
+                        android:textSize="12dp"/>
                 </RelativeLayout>
             </LinearLayout>
 

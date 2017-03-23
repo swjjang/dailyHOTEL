@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/default_background">
@@ -28,7 +29,7 @@
         android:textColor="@color/default_text_cababab"
         android:textSize="11dp"
         app:drawableCompatRight="@drawable/navibar_m_ic_v_gray"
-        app:style="Medium"/>
+        dailyFont:style="Medium"/>
 
     <LinearLayout
         android:id="@+id/providerInfoLayout"
@@ -95,7 +96,7 @@
             android:text="@string/label_home_term"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            app:style="Bold"/>
+            dailyFont:style="Bold"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/vericalLineTextView1"
@@ -105,7 +106,7 @@
             android:text="@string/label_home_vertical_line_text"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            app:style="DemiLight"/>
+            dailyFont:style="DemiLight"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/privacyTextView"
@@ -115,7 +116,7 @@
             android:text="@string/label_home_privacy"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            app:style="Bold"/>
+            dailyFont:style="Bold"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/vericalLineTextView2"
@@ -125,7 +126,7 @@
             android:text="@string/label_home_vertical_line_text"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            app:style="DemiLight"/>
+            dailyFont:style="DemiLight"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/locationTermsTextView"
@@ -135,7 +136,7 @@
             android:text="@string/label_home_location_terms"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            app:style="Bold"/>
+            dailyFont:style="Bold"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/vericalLineTextView3"
@@ -145,7 +146,7 @@
             android:text="@string/label_home_vertical_line_text"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            app:style="DemiLight"/>
+            dailyFont:style="DemiLight"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/protectYouthTermsTextView"
@@ -155,7 +156,7 @@
             android:text="@string/label_home_protect_youth_terms"
             android:textColor="@color/default_text_cababab"
             android:textSize="10dp"
-            app:style="Bold"/>
+            dailyFont:style="Bold"/>
 
     </LinearLayout>
 
