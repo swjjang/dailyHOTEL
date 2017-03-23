@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -23,10 +25,28 @@ import java.util.ArrayList;
 
 public class RecentStayListAdapter extends RecentPlacesListAdapter
 {
+    private int mNights;
 
     public RecentStayListAdapter(Context context, ArrayList<PlaceViewItem> list, OnRecentPlacesItemListener listener)
     {
         super(context, list, listener);
+    }
+
+    @Override
+    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
+    {
+        if (placeBookingDay == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mNights = ((StayBookingDay)placeBookingDay).getNights();
+        } catch (Exception e)
+        {
+            mNights = 1;
+        }
     }
 
     @Override
@@ -116,7 +136,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (stay.nights > 1)
+        if (mNights > 1)
         {
             holder.averageView.setVisibility(View.VISIBLE);
         } else

@@ -79,8 +79,7 @@ public class StayWishListNetworkController extends BaseNetworkController
                         if (hotelJSONArray != null)
                         {
                             imageUrl = dataJSONObject.getString("imgUrl");
-                            int nights = dataJSONObject.getInt("stays");
-                            stayList = makeStayList(hotelJSONArray, imageUrl, nights);
+                            stayList = makeStayList(hotelJSONArray, imageUrl);
                         } else
                         {
                             stayList = new ArrayList<>();
@@ -114,7 +113,7 @@ public class StayWishListNetworkController extends BaseNetworkController
             mOnNetworkControllerListener.onError(t);
         }
 
-        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, int nights) throws JSONException
+        private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl) throws JSONException
         {
             if (jsonArray == null)
             {
@@ -132,7 +131,7 @@ public class StayWishListNetworkController extends BaseNetworkController
 
                 stay = new Stay();
 
-                if (stay.setStay(jsonObject, imageUrl, nights) == true)
+                if (stay.setStay(jsonObject, imageUrl) == true)
                 {
                     stayList.add(stay); // 추가.
                 }

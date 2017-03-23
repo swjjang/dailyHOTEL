@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public abstract class PlaceMapViewPagerAdapter extends PagerAdapter
 
         void onCloseClick();
     }
+
+    public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);
 
     public PlaceMapViewPagerAdapter(Context context)
     {

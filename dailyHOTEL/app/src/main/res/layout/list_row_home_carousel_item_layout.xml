@@ -22,8 +22,7 @@
         android:layout_width="239dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/leftLayout"
-        android:layout_toRightOf="@+id/leftLayout"
+        android:layout_toRightOf="@id/leftLayout"
         android:background="@drawable/shape_home_viewpager_content_gradient"
         android:orientation="vertical">
 

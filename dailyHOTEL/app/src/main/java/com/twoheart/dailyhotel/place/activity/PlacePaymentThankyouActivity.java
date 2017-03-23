@@ -7,7 +7,9 @@ import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -38,9 +40,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     protected static final String INTENT_EXTRA_DATA_PLACE_NAME = "placeName";
     protected static final String INTENT_EXTRA_DATA_PLACE_TYPE = "placeType";
     protected static final String INTENT_EXTRA_DATA_USER_NAME = "userName";
-    protected static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkIn";
-    protected static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOut";
-    protected static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
+    protected static final String INTENT_EXTRA_DATA_VISIT_DAY = "visitDay";
     protected static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
     protected static final String INTENT_EXTRA_DATA_PRODUCT_COUNT = "productCount";
     protected static final String INTENT_EXTRA_DATA_PAYMENT_TYPE = "paymentType";
@@ -174,7 +174,11 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         message1TextView.setText(message1);
         message2TextView.setText(message2);
-        message3TextView.setText(message3);
+
+        SpannableString spannableString3 = new SpannableString(message3);
+        spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        message3TextView.setText(spannableString3);
     }
 
     private void startReceiptAnimation()

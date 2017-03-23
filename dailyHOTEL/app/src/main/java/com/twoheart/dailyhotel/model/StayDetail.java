@@ -15,13 +15,12 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
 {
     private StayDetailParams mStayDetailParams;
 
-    public int nights;
+//    public int nights;
     public boolean hasCoupon;
 
-    public StayDetail(int hotelIndex, int nights, int entryIndex, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
+    public StayDetail(int hotelIndex, int entryIndex, String isShowOriginalPrice, int listCount, boolean isDailyChoice)
     {
         this.index = hotelIndex;
-        this.nights = nights;
         this.entryPosition = entryIndex;
         this.isShowOriginalPrice = isShowOriginalPrice;
         this.listCount = listCount;

@@ -14,6 +14,9 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.RecentGourmetParams;
 import com.twoheart.dailyhotel.model.RecentPlaces;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
@@ -41,6 +44,26 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     }
 
     @Override
+    protected void setPlaceBookingDay(TodayDateTime todayDateTime)
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+
+            mPlaceBookingDay = gourmetBookingDay;
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    @Override
     protected RecentPlacesListLayout getListLayout()
     {
         return new RecentGourmetListLayout(mBaseActivity, mEventListener);
@@ -53,7 +76,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     }
 
     @Override
-    protected void requestRecentPlacesList()
+    protected void requestRecentPlacesList(PlaceBookingDay placeBookingDay)
     {
         lockUI();
 
@@ -64,13 +87,13 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             if (mListLayout != null && isFinishing() == false)
             {
-                mListLayout.setData(null);
+                mListLayout.setData(null, placeBookingDay);
             }
             return;
         }
 
         RecentGourmetParams params = new RecentGourmetParams();
-        params.setSaleTime(mSaleTime);
+        params.setGourmetBookingDay((GourmetBookingDay) placeBookingDay);
         params.setTargetIndices(getPlaceIndexList());
 
         ((RecentGourmetListNetworkController) mNetworkController).requestRecentGourmetList(params);
@@ -92,7 +115,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             ArrayList<PlaceViewItem> viewItemList = mListLayout.makePlaceViewItemList(list);
 
-            mListLayout.setData(viewItemList);
+            mListLayout.setData(viewItemList, mPlaceBookingDay);
         }
 
         @Override
@@ -140,7 +163,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             if (Util.isUsedMultiTransition() == true)
             {
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    mSaleTime, gourmet, 0, true);
+                    (GourmetBookingDay) mPlaceBookingDay, gourmet, 0, true);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
@@ -157,7 +180,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, //
-                    mSaleTime, gourmet, 0, false);
+                    (GourmetBookingDay) mPlaceBookingDay, gourmet, 0, false);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
@@ -186,7 +209,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             mRecentPlaceList.remove(deleteItem);
 
-            mListLayout.setData(mListLayout.getList());
+            mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClick(deleteItem);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
@@ -209,7 +232,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         @Override
         public void onRecordAnalyticsList(ArrayList<PlaceViewItem> list)
         {
-            if (list == null || list.isEmpty() == true || mSaleTime == null)
+            if (list == null || list.isEmpty() == true || mPlaceBookingDay == null)
             {
                 return;
             }
@@ -238,10 +261,11 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             stringBuilder.append("]");
 
+            GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
             HashMap<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, placeTypeString);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, placeTypeString);
-            params.put(AnalyticsManager.KeyType.CHECK_IN, mSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.LIST_TOP5_PLACE_INDEXES, stringBuilder.toString());
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(size));
 

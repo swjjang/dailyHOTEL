@@ -48,13 +48,13 @@ public class DailyPreference
 
     //    private static final String KEY_IS_VIEW_RECENT_PLACE_TOOLTIP = "28"; // 삭제! - 30 으로 대체 됨
     private static final String KEY_INFORMATION_CS_OPERATION_TIME = "29"; // 운영시간 H,H (앞은 시작 뒤는 끝나는 시간)
-    private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
+//    private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
     private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
 
     private static final String KEY_IS_REQUEST_REVIEW_ = "32";
 
-    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
-    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
+//    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
+//    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
     private static final String KEY_HOTEL_SEARCH_RECENTLY = "200";
     private static final String KEY_GOURMET_SEARCH_RECENTLY = "201";
@@ -226,7 +226,6 @@ public class DailyPreference
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
-        boolean isShowTooltip = isViewWishListTooltip();
         boolean isShowSearchToolTip = isViewSearchTooltip();
 
         String allRecentPlaces = getAllRecentPlaces();
@@ -243,7 +242,6 @@ public class DailyPreference
 
         setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
-        setIsViewWishListTooltip(isShowTooltip);
         setIsViewSearchTooltip(isShowSearchToolTip);
 
         setAllRecentPlaces(allRecentPlaces);
@@ -527,25 +525,25 @@ public class DailyPreference
         setValue(mEditor, KEY_SHOW_GUIDE, value);
     }
 
-    public String getStayLastViewDate()
-    {
-        return getValue(mPreferences, KEY_STAY_LAST_VIEW_DATE, null);
-    }
-
-    public void setStayLastViewDate(String value)
-    {
-        setValue(mEditor, KEY_STAY_LAST_VIEW_DATE, value);
-    }
-
-    public String getGourmetLastViewDate()
-    {
-        return getValue(mPreferences, KEY_GOURMET_LAST_VIEW_DATE, null);
-    }
-
-    public void setGourmetLastViewDate(String value)
-    {
-        setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
-    }
+//    public String getStayLastViewDate()
+//    {
+//        return getValue(mPreferences, KEY_STAY_LAST_VIEW_DATE, null);
+//    }
+//
+//    public void setStayLastViewDate(String value)
+//    {
+//        setValue(mEditor, KEY_STAY_LAST_VIEW_DATE, value);
+//    }
+//
+//    public String getGourmetLastViewDate()
+//    {
+//        return getValue(mPreferences, KEY_GOURMET_LAST_VIEW_DATE, null);
+//    }
+//
+//    public void setGourmetLastViewDate(String value)
+//    {
+//        setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
+//    }
 
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
     {
@@ -716,16 +714,6 @@ public class DailyPreference
     public String getFirstAppVersion()
     {
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
-    }
-
-    public void setIsViewWishListTooltip(boolean value)
-    {
-        setValue(mEditor, KEY_IS_VIEW_WISHLIST_TOOLTIP, value);
-    }
-
-    public boolean isViewWishListTooltip()
-    {
-        return getValue(mPreferences, KEY_IS_VIEW_WISHLIST_TOOLTIP, true);
     }
 
     public void setIsViewSearchTooltip(boolean value)

@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
@@ -38,8 +38,6 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 {
     public static final String INTENT_EXTRA_DATA_PROVINCE_INDEX = "provinceIndex";
     public static final String INTENT_EXTRA_DATA_AREA_INDEX = "areaIndex";
-    public static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
-    public static final String INTENT_EXTRA_DATA_NIGHTS = "nights";
 
     private static final int STAY_TAB_COUNT = 2;
 
@@ -47,28 +45,25 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
     private StayRegionListNetworkController mNetworkController;
-    SaleTime mSaleTime;
-    int mNights;
+    private StayBookingDay mStayBookingDay;
     Province mSelectedProvince;
     private TabLayout mTabLayout;
 
-    public static Intent newInstance(Context context, Province province, SaleTime saleTime, int nights)
+    public static Intent newInstance(Context context, Province province, StayBookingDay stayBookingDay)
     {
         Intent intent = new Intent(context, StayRegionListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, SaleTime saleTime, int nights)
+    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, StayBookingDay stayBookingDay)
     {
         Intent intent = new Intent(context, StayRegionListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE_INDEX, provinceIndex);
         intent.putExtra(INTENT_EXTRA_DATA_AREA_INDEX, areaIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, nights);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
 
         return intent;
     }
@@ -83,8 +78,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     protected void initIntent(Intent intent)
     {
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-        mSaleTime = intent.getParcelableExtra(INTENT_EXTRA_DATA_SALETIME);
-        mNights = intent.getIntExtra(INTENT_EXTRA_DATA_NIGHTS, 1);
+        mStayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
     }
 
     @Override
@@ -194,7 +188,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void showSearch()
     {
-        Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mSaleTime, mNights);
+        Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mStayBookingDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
@@ -268,19 +262,16 @@ public class StayRegionListActivity extends PlaceRegionListActivity
             return label;
         }
 
-        private String getRegionAnalytics(Province previousProvince, Province selectedProvince, SaleTime checkInTime, SaleTime checkOutTime)
+        private String getRegionAnalytics(Province previousProvince, Province selectedProvince, StayBookingDay stayBookingDay)
         {
             try
             {
                 String previousLabel = convertLabelFormatAnalytics(previousProvince);
                 String selectedLabel = convertLabelFormatAnalytics(selectedProvince);
 
-                //                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분", Locale.KOREA);
+                String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
+                String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
 
-                String checkInDate = checkInTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-                String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-
-                //                return previousLabel + "-" + selectedLabel + "-" + checkInDate + "-" + checkOutDate + "-" + simpleDateFormat.format(new Date());
                 return previousLabel + "-" + selectedLabel + "-" + checkInDate + "-" + checkOutDate + "-" + DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분");
             } catch (Exception e)
             {
@@ -313,14 +304,9 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                 if (mSelectedProvince != null && (mSelectedProvince.isOverseas != province.isOverseas//
                     || mSelectedProvince.getProvinceIndex() != province.getProvinceIndex()))
                 {
-                    String checkInDate = mSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
+                    String message = mStayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)") + "-" + mStayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)") + "\n" + getString(R.string.message_region_search_date);
 
-                    SaleTime checkOutTime = mSaleTime.getClone(mSaleTime.getOffsetDailyDay() + mNights);
-                    String checkOutDate = checkOutTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-
-                    String message = checkInDate + "-" + checkOutDate + "\n" + getString(R.string.message_region_search_date);
-
-                    final String analyticsLabel = getRegionAnalytics(mSelectedProvince, province, mSaleTime, checkOutTime);
+                    final String analyticsLabel = getRegionAnalytics(mSelectedProvince, province, mStayBookingDay);
 
                     showSimpleDialog(getString(R.string.label_visit_date), message, getString(R.string.dialog_btn_text_yes), getString(R.string.label_region_change_date), new View.OnClickListener()
                     {
@@ -357,8 +343,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                             // 날짜 선택 화면으로 이동한다.
                             Intent intent = new Intent();
                             intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-                            intent.putExtra(INTENT_EXTRA_DATA_SALETIME, mSaleTime);
-                            intent.putExtra(INTENT_EXTRA_DATA_NIGHTS, mNights);
+                            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, mStayBookingDay);
                             setResult(RESULT_CHANGED_DATE, intent);
 
                             recordEvent(province);

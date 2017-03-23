@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,8 @@ import android.widget.LinearLayout;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.DailyPagerSnapHelper;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -110,14 +113,22 @@ public class HomeCarouselLayout extends LinearLayout
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         layoutManager.setAutoMeasureEnabled(true);
+        layoutManager.setReverseLayout(false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.horizontalRecyclerView);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setNestedScrollingEnabled(false);
-        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setHasFixedSize(true);
 
-        SnapHelper helper = new PagerSnapHelper();
-        helper.attachToRecyclerView(mRecyclerView);
+        if (Util.isTabletDevice((Activity) mContext) == true)
+        {
+            SnapHelper snapHelper = new DailyPagerSnapHelper();
+            snapHelper.attachToRecyclerView(mRecyclerView);
+        } else
+        {
+            SnapHelper snapHelper = new PagerSnapHelper();
+            snapHelper.attachToRecyclerView(mRecyclerView);
+        }
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }

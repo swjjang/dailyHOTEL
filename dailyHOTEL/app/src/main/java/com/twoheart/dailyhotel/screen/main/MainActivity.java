@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.model.Review;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
@@ -45,7 +46,6 @@ import com.twoheart.dailyhotel.widget.DailyImageView;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements Constants
     MainFragmentManager mMainFragmentManager;
     MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
-    View mSplashLayout, mTooltipLayout;
+    View mSplashLayout;
 
     boolean mIsInitialization;
     boolean mIsBenefitAlarm;
@@ -187,25 +187,6 @@ public class MainActivity extends BaseActivity implements Constants
         mSplashLayout = findViewById(R.id.splashLayout);
 
         loadSplash(mSplashLayout);
-
-        mTooltipLayout = findViewById(R.id.tooltipLayout);
-
-        if (DailyPreference.getInstance(this).isViewWishListTooltip() == true)
-        {
-            hideAnimationTooltip();
-        } else
-        {
-            DailyPreference.getInstance(this).setIsViewWishListTooltip(true);
-            mTooltipLayout.setVisibility(View.VISIBLE);
-            mTooltipLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    hideAnimationTooltip();
-                }
-            });
-        }
 
         ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
         mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
@@ -563,50 +544,6 @@ public class MainActivity extends BaseActivity implements Constants
 
             mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT, false);
         }
-    }
-
-    void hideAnimationTooltip()
-    {
-        if (mTooltipLayout.getTag() != null)
-        {
-            return;
-        }
-
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
-
-        mTooltipLayout.setTag(objectAnimator);
-
-        objectAnimator.setInterpolator(new LinearInterpolator());
-        objectAnimator.setDuration(300);
-        objectAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animator)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator)
-            {
-                mTooltipLayout.setTag(null);
-                mTooltipLayout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator)
-            {
-
-            }
-        });
-
-        objectAnimator.start();
     }
 
     void checkAppVersion(final String currentVersion, final String forceVersion)
@@ -1119,19 +1056,6 @@ public class MainActivity extends BaseActivity implements Constants
 
                     AnalyticsManager.getInstance(MainActivity.this).startApplication();
                 }
-
-                // 10초 후에 터치가 없으면 자동으로 사라짐.(기획서상 10초이지만 실제 보이기까지 여분의 시간을 넣음)
-                mDelayTimeHandler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        if (mTooltipLayout.getVisibility() != View.GONE)
-                        {
-                            hideAnimationTooltip();
-                        }
-                    }
-                }, 10000);
             }
         }
 
@@ -1234,13 +1158,13 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onCommonDateTime(long currentDateTime, long dailyDateTime, long openDateTime, long closeDateTime)
+        public void onCommonDateTime(TodayDateTime todayDateTime)
         {
             try
             {
                 // 요청하면서 CS운영시간도 같이 받아온다.
-                String startHour = DailyCalendar.format(openDateTime, "H", TimeZone.getTimeZone("GMT"));
-                String endtHour = DailyCalendar.format(closeDateTime, "H", TimeZone.getTimeZone("GMT"));
+                String startHour = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+                String endtHour = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
 
                 DailyPreference.getInstance(MainActivity.this).setOperationTime(String.format("%s,%s", startHour, endtHour));
             } catch (Exception e)
@@ -1252,18 +1176,9 @@ public class MainActivity extends BaseActivity implements Constants
             String viewedCouponTime = DailyPreference.getInstance(MainActivity.this).getViewedCouponTime();
             String viewedNoticeTime = DailyPreference.getInstance(MainActivity.this).getViewedNoticeTime();
 
-            currentDateTime -= 3600 * 1000 * 9;
-
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTimeZone(TimeZone.getTimeZone("GMT+09:00"));
-            calendar.setTimeInMillis(currentDateTime);
-
-            //            String lastestTime = Util.getISO8601String(calendar.getTime());
-            String lastestTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
-
-            DailyPreference.getInstance(MainActivity.this).setLastestEventTime(lastestTime);
-            DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(lastestTime);
-            DailyPreference.getInstance(MainActivity.this).setLastestNoticeTime(lastestTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestEventTime(todayDateTime.currentDateTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(todayDateTime.currentDateTime);
+            DailyPreference.getInstance(MainActivity.this).setLastestNoticeTime(todayDateTime.currentDateTime);
 
             if (Util.isTextEmpty(viewedEventTime) == true)
             {
@@ -1280,22 +1195,26 @@ public class MainActivity extends BaseActivity implements Constants
                 viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
-            Calendar dailyCalendar = DailyCalendar.getInstance();
-            dailyCalendar.setTimeInMillis(dailyDateTime - 3600 * 1000 * 9);
-
-            String startDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
-
-            // 같은날짜에는 중복으로 요청하지 않는다.
-            if (startDay.equalsIgnoreCase(DailyPreference.getInstance(MainActivity.this).getCheckCalendarHolidays()) == false)
+            try
             {
-                // 90일을 미리 얻어온다.
-                dailyCalendar.add(Calendar.DAY_OF_MONTH, 90);
-                String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
+                String startDay = DailyCalendar.convertDateFormatString(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
 
-                mNetworkController.requestHoliday(startDay, endDay);
+                // 같은날짜에는 중복으로 요청하지 않는다.
+                if (startDay.equalsIgnoreCase(DailyPreference.getInstance(MainActivity.this).getCheckCalendarHolidays()) == false)
+                {
+                    // 90일을 미리 얻어온다.
+                    Calendar dailyCalendar = DailyCalendar.getInstance();
+                    DailyCalendar.setCalendarDateString(dailyCalendar, todayDateTime.dailyDateTime, 90);
+                    String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
 
-                // 하루에 한번 휴일을 얻을때 해피톡 카테고리도 같이 얻는다.
-                mNetworkController.requestHappyTalkCategory();
+                    mNetworkController.requestHoliday(startDay, endDay);
+
+                    // 하루에 한번 휴일을 얻을때 해피톡 카테고리도 같이 얻는다.
+                    mNetworkController.requestHappyTalkCategory();
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
             }
 
             mNetworkController.requestEventNCouponNNoticeNewCount(viewedEventTime, viewedCouponTime, viewedNoticeTime);

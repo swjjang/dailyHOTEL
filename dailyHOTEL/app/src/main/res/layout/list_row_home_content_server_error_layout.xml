@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
     <View
         android:layout_width="match_parent"
@@ -61,7 +62,7 @@
             android:text="@string/label_home_retry_button_text"
             android:textColor="@color/default_text_cb70038"
             android:textSize="13dp"
-            app:style="Medium"/>
+            dailyFont:style="Medium"/>
 
     </RelativeLayout>
 

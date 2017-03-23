@@ -10,7 +10,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.Province;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
@@ -37,17 +37,17 @@ import retrofit2.Response;
 public class GourmetProductListActivity extends BaseActivity
 {
     private GourmetProductListLayout mGourmetProductListLayout;
-    SaleTime mSaleTime;
+    GourmetBookingDay mGourmetBookingDay;
     GourmetDetail mGourmetDetail;
     Province mProvince;
     String mArea;
     int mSelectedProductPosition;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, GourmetDetail gourmetDetail, int productIndex, Province province, String area)
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int productIndex, Province province, String area)
     {
         Intent intent = new Intent(context, GourmetProductListActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL, gourmetDetail);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
@@ -73,7 +73,7 @@ public class GourmetProductListActivity extends BaseActivity
 
         mGourmetProductListLayout = new GourmetProductListLayout(this, mOnEventListener);
 
-        mSaleTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+        mGourmetBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mGourmetDetail = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_GOUREMT_DETAIL);
         int productIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, -1);
         mProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
@@ -95,7 +95,7 @@ public class GourmetProductListActivity extends BaseActivity
                 if (gourmetProductList.get(i).index == productIndex)
                 {
                     Intent intentProductDetail = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
-                        , mSaleTime, mGourmetDetail, i, mProvince, mArea);
+                        , mGourmetBookingDay, mGourmetDetail, i, mProvince, mArea);
                     startActivityForResult(intentProductDetail, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
                     break;
                 }
@@ -239,7 +239,7 @@ public class GourmetProductListActivity extends BaseActivity
                     moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.getPhone());
                 } else
                 {
-                    processBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition);
+                    processBooking(mGourmetBookingDay, mGourmetDetail, mSelectedProductPosition);
                 }
             }
         } else
@@ -253,14 +253,14 @@ public class GourmetProductListActivity extends BaseActivity
                 moveToUpdateUserPhoneNumber(user, EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.getPhone());
             } else
             {
-                processBooking(mSaleTime, mGourmetDetail, mSelectedProductPosition);
+                processBooking(mGourmetBookingDay, mGourmetDetail, mSelectedProductPosition);
             }
         }
     }
 
-    private void processBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int productIndex)
+    private void processBooking(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int productIndex)
     {
-        if (saleTime == null || gourmetDetail == null || productIndex < 0)
+        if (gourmetBookingDay == null || gourmetDetail == null || productIndex < 0)
         {
             unLockUI();
             return;
@@ -286,16 +286,16 @@ public class GourmetProductListActivity extends BaseActivity
         boolean isBenefit = Util.isTextEmpty(gourmetDetailParams.benefit) == false;
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetProductListActivity.this, gourmetDetailParams.name, gourmetProduct//
-            , saleTime, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
+            , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
             , mProvince, mArea, gourmetDetail.isShowOriginalPrice, gourmetDetail.entryPosition //
             , gourmetDetail.isDailyChoice, gourmetDetailParams.ratingValue);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING);
     }
 
-    protected Map<String, String> recordAnalyticsBooking(SaleTime saleTime, GourmetDetail gourmetDetail, int productIndex)
+    protected Map<String, String> recordAnalyticsBooking(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int productIndex)
     {
-        if (saleTime == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null || productIndex <= 0)
+        if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null || productIndex <= 0)
         {
             return null;
         }
@@ -341,7 +341,7 @@ public class GourmetProductListActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(gourmetProduct.discountPrice));
             }
 
-            params.put(AnalyticsManager.KeyType.VISIT_DATE, Long.toString(saleTime.getDayOfDaysDate().getTime()));
+            params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
 
             return params;
         } catch (Exception e)
@@ -378,7 +378,7 @@ public class GourmetProductListActivity extends BaseActivity
             }
 
             Intent intent = GourmetProductDetailActivity.newInstance(GourmetProductListActivity.this//
-                , mSaleTime, mGourmetDetail, position, mProvince, mArea);
+                , mGourmetBookingDay, mGourmetDetail, position, mProvince, mArea);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_PRODUCT_DETAIL);
 
             Map<String, String> paramsMap = new HashMap<>();
@@ -432,7 +432,7 @@ public class GourmetProductListActivity extends BaseActivity
             {
                 String label = String.format("%s-%s", gourmetDetailParams.name, gourmetProduct.ticketName);
                 AnalyticsManager.getInstance(GourmetProductListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-                    , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mSaleTime, mGourmetDetail, position));
+                    , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mGourmetBookingDay, mGourmetDetail, position));
             }
 
             if (gourmetProduct.getPrimaryImage() == null)

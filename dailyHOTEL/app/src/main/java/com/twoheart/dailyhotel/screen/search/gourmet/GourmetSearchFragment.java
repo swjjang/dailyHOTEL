@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.location.Location;
 
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
@@ -25,19 +26,19 @@ import retrofit2.Response;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
-    SaleTime mSaleTime;
+    GourmetBookingDay mGourmetBookingDay;
 
     @Override
     protected void initContents()
     {
         super.initContents();
 
-        if (mSaleTime == null)
+        if (mGourmetBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
         } else
         {
-            setDateText(mSaleTime);
+            setDateText(mGourmetBookingDay);
         }
     }
 
@@ -46,12 +47,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     {
         super.onResume();
 
-        if (mSaleTime == null)
+        if (mGourmetBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
         } else
         {
-            setDateText(mSaleTime);
+            setDateText(mGourmetBookingDay);
         }
     }
 
@@ -66,11 +67,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_SALETIME) == true)
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY) == true)
                     {
-                        SaleTime saleTime = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_SALETIME);
+                        GourmetBookingDay gourmetBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-                        setDateText(saleTime);
+                        setGourmetBookingDay(gourmetBookingDay);
+                        setDateText(gourmetBookingDay);
 
                         mPlaceSearchLayout.requestUpdateAutoCompleteLayout();
                     }
@@ -114,13 +116,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             return;
         }
 
-        if (mSaleTime == null)
+        if (mGourmetBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, location, AnalyticsManager.Screen.SEARCH_MAIN);
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
@@ -139,31 +141,29 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             return;
         }
 
-        if (mSaleTime == null)
+        if (mGourmetBookingDay == null)
         {
             Util.restartApp(mBaseActivity);
             return;
         }
 
-        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text);
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
     }
 
-    public void setSaleTime(SaleTime saleTime)
+    public void setGourmetBookingDay(GourmetBookingDay gourmetBookingDay)
     {
-        mSaleTime = saleTime;
+        mGourmetBookingDay = gourmetBookingDay;
     }
 
-    private void setDateText(SaleTime saleTime)
+    private void setDateText(GourmetBookingDay gourmetBookingDay)
     {
-        if (saleTime == null || mPlaceSearchLayout == null)
+        if (gourmetBookingDay == null || mPlaceSearchLayout == null)
         {
             return;
         }
 
-        mSaleTime = saleTime;
-
-        mPlaceSearchLayout.setDataText(saleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)"));
+        mPlaceSearchLayout.setDataText(gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,13 +225,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (mSaleTime == null)
+            if (mGourmetBookingDay == null)
             {
                 Util.restartApp(mBaseActivity);
                 return;
             }
 
-            ((GourmetSearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mSaleTime, keyword);
+            ((GourmetSearchNetworkController) mPlaceSearchNetworkController).requestAutoComplete(mGourmetBookingDay, keyword);
         }
 
         @Override
@@ -242,12 +242,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (Util.isTextEmpty(text) == true)
+            if (Util.isTextEmpty(text) == true || mGourmetBookingDay == null)
             {
                 return;
             }
 
-            Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text);
+            Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
         }
 
@@ -259,18 +259,18 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (keyword == null)
+            if (keyword == null || mGourmetBookingDay == null)
             {
                 return;
             }
 
             if (keyword.price < 0)
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, keyword, Constants.SearchType.RECENT);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, keyword, Constants.SearchType.RECENT);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             } else
             {
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mSaleTime, text, keyword, Constants.SearchType.AUTOCOMPLETE);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCHRESULT);
             }
         }
@@ -289,7 +289,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                     , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.SEARCH, null);
             }
 
-            Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mSaleTime, //
+            Intent intent = GourmetCalendarActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, //
                 AnalyticsManager.ValueType.SEARCH, true, isAnimation);
 
             if (intent == null)
@@ -334,6 +334,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             }
 
             mPlaceSearchLayout.updateAutoCompleteLayout(keyword, list);
+        }
+
+        @Override
+        public void onDateTime(TodayDateTime todayDateTime)
+        {
+            mTodayDateTime = todayDateTime;
         }
 
         @Override

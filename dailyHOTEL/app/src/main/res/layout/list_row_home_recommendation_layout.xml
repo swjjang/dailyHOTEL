@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+              xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
     <com.twoheart.dailyhotel.widget.DailyTextView
         android:id="@+id/titleTextView"
@@ -14,7 +14,7 @@
         android:text="@string/label_home_recommend_title"
         android:textColor="@color/default_text_c323232"
         android:textSize="14dp"
-        app:style="Medium"/>
+        dailyFont:style="Medium"/>
 
     <LinearLayout
         android:id="@+id/contentLayout"

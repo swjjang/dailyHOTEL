@@ -389,9 +389,9 @@ public class HomeLayout extends BaseLayout
         try
         {
             JSONObject jsonObject = new JSONObject(data);
-            String abTest = jsonObject.getString("value");
+            String abTestValue = jsonObject.getString("value");
 
-            if (Util.isTextEmpty(abTest) == true)
+            if (Util.isTextEmpty(abTestValue) == true)
             {
                 return;
             }
@@ -401,9 +401,9 @@ public class HomeLayout extends BaseLayout
             TextView gourmetTextView = (TextView) view.findViewById(R.id.gourmetTextView);
             TextView gourmetDoTextView = (TextView) view.findViewById(R.id.gourmetDoTextView);
 
-            switch (abTest)
+            switch (abTestValue)
             {
-                case "b":
+                case "a":
                     stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
                     stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
                     stayTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
@@ -421,7 +421,6 @@ public class HomeLayout extends BaseLayout
                     gourmetDoTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
                     break;
 
-                case "a":
                 default:
                     stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
                     stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
@@ -952,27 +951,6 @@ public class HomeLayout extends BaseLayout
         DailyTextView descriptionView = (DailyTextView) mTextMessageLayout.findViewById(R.id.descriptionTextView);
 
         titleView.setText(title);
-
-        if (Util.isTextEmpty(description) == true)
-        {
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        } else
-        {
-            // 메세지에 '>'가 포함 되었을 경우 제거하고 trim!
-            if (description.endsWith(">") == true)
-            {
-                int lastIndex = description.lastIndexOf(">");
-                if (lastIndex != -1)
-                {
-                    description = description.substring(0, lastIndex);
-                    description = description.trim();
-                }
-            }
-
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.payment_ic_right, 0);
-            descriptionView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3d));
-        }
-
         descriptionView.setText(description);
 
         if (mTextMessageLayout.getVisibility() == View.VISIBLE)

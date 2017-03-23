@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -224,7 +224,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     {
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_hotel));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_accommodate));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
         //        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
@@ -397,18 +397,13 @@ public class RecentPlacesTabActivity extends BaseActivity
     private RecentPlacesNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new RecentPlacesNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCommonDateTime(long currentDateTime, long dailyDateTime)
+        public void onCommonDateTime(TodayDateTime todayDateTime)
         {
-            SaleTime saleTime = new SaleTime();
-            saleTime.setCurrentTime(currentDateTime);
-            saleTime.setDailyTime(dailyDateTime);
-            saleTime.setOffsetDailyDay(0);
-
             if (mFragmentList != null)
             {
                 for (RecentPlacesListFragment fragment : mFragmentList)
                 {
-                    fragment.setSaleTime(saleTime);
+                    fragment.setPlaceBookingDay(todayDateTime);
                 }
             }
 

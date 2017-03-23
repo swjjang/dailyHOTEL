@@ -12,12 +12,14 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Map;
@@ -25,7 +27,6 @@ import java.util.Map;
 public abstract class PlaceSearchResultActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
-    public static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
     public static final String INTENT_EXTRA_DATA_LOCATION = "location";
     public static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     public static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
@@ -33,7 +34,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATA_RADIUS = "radius";
     public static final String INTENT_EXTRA_DATA_IS_DEEPLINK = "isDeepLink";
     public static final String INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
-    public static final String INTENT_EXTRA_DATA_QUERY = "query";
 
     protected static final double DEFAULT_SEARCH_RADIUS = 3d;
 
@@ -45,6 +45,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected int mSearchCount;
     protected int mSearchMaxCount;
+
+    protected TodayDateTime mTodayDateTime;
 
     protected PlaceSearchResultLayout mPlaceSearchResultLayout;
 
@@ -82,6 +84,14 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         setContentView(mPlaceSearchResultLayout.onCreateView(R.layout.activity_search_result));
 
         initLayout();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
     }
 
     @Override

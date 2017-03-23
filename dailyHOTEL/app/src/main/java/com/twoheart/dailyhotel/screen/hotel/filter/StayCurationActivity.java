@@ -387,7 +387,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (mStayCuration == null || mStayCuration.getCheckInSaleTime() == null)
+        if (mStayCuration == null)
         {
             Util.restartApp(StayCurationActivity.this);
             return;
@@ -403,7 +403,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     {
         setResultMessage(getResources().getString(R.string.label_searching));
 
-        if (mStayCuration == null || mStayCuration.getCheckInSaleTime() == null)
+        if (mStayCuration == null)
         {
             Util.restartApp(StayCurationActivity.this);
             return;

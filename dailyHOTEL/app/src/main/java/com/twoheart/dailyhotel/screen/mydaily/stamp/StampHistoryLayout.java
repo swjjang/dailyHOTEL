@@ -1,6 +1,9 @@
 package com.twoheart.dailyhotel.screen.mydaily.stamp;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +103,7 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
 
         TextView stayNameTextView = (TextView) view.findViewById(R.id.stayNameTextView);
         TextView stampDateTextView = (TextView) view.findViewById(R.id.stampDateTextView);
+        TextView bookingGoTextView = (TextView) view.findViewById(R.id.bookingGoTextView);
 
         stayNameTextView.setText(stampHistory.placeName);
 
@@ -110,6 +114,10 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
         {
             ExLog.d(e.toString());
         }
+
+        SpannableString spannableString = new SpannableString(mContext.getString(R.string.label_stamp_view_booking_detail));
+        spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        bookingGoTextView.setText(spannableString);
 
         ImageView stampImageView = (ImageView) view.findViewById(R.id.stampImageView);
 

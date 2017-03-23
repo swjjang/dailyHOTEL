@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.model.PlaceClusterItem;
 import com.twoheart.dailyhotel.model.PlaceClusterRenderer;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceMapViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
@@ -69,6 +70,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     protected boolean mIsCreateView = false;
     private boolean mCallMakeMarker = false;
 
+    private PlaceBookingDay mPlaceBookingDay;
     PlaceViewItem mSelectedPlaceViewItem;
     protected boolean mIsOpenMarker; // 마커를 선택한 경우.
 
@@ -304,8 +306,9 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         return mPlaceViewItemList.size();
     }
 
-    public void setPlaceViewItemList(List<PlaceViewItem> arrayList, boolean isRefreshAll)
+    public void setPlaceViewItemList(PlaceBookingDay placeBookingDay, List<PlaceViewItem> arrayList, boolean isRefreshAll)
     {
+        mPlaceBookingDay = placeBookingDay;
         mPlaceViewItemList = arrayList;
 
         // Marker 만들기.
@@ -582,6 +585,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             mPlaceMapViewPagerAdapter.setOnPlaceMapViewPagerAdapterListener(mOnPlaceMapViewPagerAdapterListener);
         }
 
+        mPlaceMapViewPagerAdapter.setPlaceBookingDay(mPlaceBookingDay);
         mPlaceMapViewPagerAdapter.setData(mPlaceViewItemViewPagerList);
         mViewPager.setAdapter(mPlaceMapViewPagerAdapter);
         mPlaceMapViewPagerAdapter.notifyDataSetChanged();

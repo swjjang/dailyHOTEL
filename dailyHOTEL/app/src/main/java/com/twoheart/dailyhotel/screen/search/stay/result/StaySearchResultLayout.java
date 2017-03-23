@@ -7,11 +7,12 @@ import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.FontManager;
 
@@ -28,13 +29,24 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         super(context, listener);
     }
 
-    protected void setCalendarText(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    protected void setCalendarText(StayBookingDay stayBookingDay)
     {
-        String checkInDay = checkInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        String checkOutDay = checkOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
+        if (stayBookingDay == null)
+        {
+            return;
+        }
 
-        setCalendarText(String.format("%s - %s, %d박", checkInDay, checkOutDay, nights));
+        try
+        {
+            int nights = stayBookingDay.getNights();
+
+            setCalendarText(String.format("%s - %s, %d박"//
+                , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)")//
+                , stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override

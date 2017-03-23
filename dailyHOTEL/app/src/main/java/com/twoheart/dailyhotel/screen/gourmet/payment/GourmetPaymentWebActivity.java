@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
@@ -25,7 +25,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
     {
         super.onCreate(savedInstanceState);
 
-        requestPostPaymentWebView(mWebView, mPlacePaymentInformation, null, 0);
+        requestPostPaymentWebView(mWebView, mPlacePaymentInformation, null);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
     }
 
     @Override
-    protected void requestPostPaymentWebView(WebView webView, PlacePaymentInformation placePaymentInformation, SaleTime saleTime, int nights)
+    protected void requestPostPaymentWebView(WebView webView, PlacePaymentInformation placePaymentInformation, PlaceBookingDay placeBookingDay)
     {
         if (placePaymentInformation == null)
         {

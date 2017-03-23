@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 
 public class StayListAdapter extends PlaceListAdapter
 {
+    private int mNights;
     View.OnClickListener mOnClickListener;
 
     public StayListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
@@ -31,6 +34,23 @@ public class StayListAdapter extends PlaceListAdapter
         mOnEventBannerClickListener = eventBannerListener;
 
         setSortType(Constants.SortType.DEFAULT);
+    }
+
+    @Override
+    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
+    {
+        if (placeBookingDay == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mNights = ((StayBookingDay)placeBookingDay).getNights();
+        } catch (Exception e)
+        {
+            mNights = 1;
+        }
     }
 
     @Override
@@ -150,7 +170,7 @@ public class StayListAdapter extends PlaceListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        if (stay.nights > 1)
+        if (mNights > 1)
         {
             holder.averageView.setVisibility(View.VISIBLE);
         } else

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import java.util.ArrayList;
 
 public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-
     protected Context mContext;
     protected LayoutInflater mInflater;
     private ArrayList<PlaceViewItem> mList;
@@ -38,6 +38,8 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
 
         void onDeleteClick(View view, int position);
     }
+
+    public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);
 
     public RecentPlacesListAdapter(Context context, ArrayList<PlaceViewItem> list, OnRecentPlacesItemListener listener)
     {

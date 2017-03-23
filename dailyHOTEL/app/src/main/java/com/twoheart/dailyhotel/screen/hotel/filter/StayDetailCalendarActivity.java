@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.SaleTime;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -28,21 +30,15 @@ import retrofit2.Response;
 public class StayDetailCalendarActivity extends StayCalendarActivity
 {
     private int mHotelIndex;
-    private SaleTime mCheckInSaleTime;
-    private SaleTime mCheckOutSaleTime;
-
     private boolean mIsSingleDay;
 
-    public static Intent newInstance(Context context, SaleTime saleTime, int nights, //
-                                     SaleTime startSaleTime, SaleTime endSaleTime, //
-                                     int hotelIndex, String screen, boolean isSelected, //
-                                     boolean isAnimation, boolean isSingleDay)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay //
+        , int hotelIndex, String screen, boolean isSelected//
+        , boolean isAnimation, boolean isSingleDay)
     {
         Intent intent = new Intent(context, StayDetailCalendarActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_SALETIME, saleTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_NIGHTS, nights);
-        intent.putExtra(INTENT_EXTRA_DATA_START_SALETIME, startSaleTime);
-        intent.putExtra(INTENT_EXTRA_DATA_END_SALETIME, endSaleTime);
+        intent.putExtra(INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, hotelIndex);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
@@ -101,46 +97,47 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
     }
 
     @Override
-    protected void onConfirm(SaleTime checkInSaleTime, SaleTime checkOutSaleTime)
+    protected void onConfirm(StayBookingDay stayBookingDay)
     {
-        if (checkInSaleTime == null || checkOutSaleTime == null)
+        if (stayBookingDay == null)
         {
-            setSaleRoomResult(-1, null);
+            setSaleRoomResult(stayBookingDay, -1, null);
             return;
         }
 
         if (mHotelIndex == -1)
         {
-            setSaleRoomResult(-1, null);
+            setSaleRoomResult(stayBookingDay, -1, null);
             return;
         }
-
-        mCheckInSaleTime = checkInSaleTime;
-        mCheckOutSaleTime = checkOutSaleTime;
 
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
 
-        lockUI();
+        try
+        {
+            lockUI();
 
-        int nights = checkOutSaleTime.getOffsetDailyDay() - checkInSaleTime.getOffsetDailyDay();
-
-        // 호텔 정보를 가져온다.
-        DailyMobileAPI.getInstance(StayDetailCalendarActivity.this) //
-            .requestStayDetailInformation(mNetworkTag, mHotelIndex, checkInSaleTime.getDayOfDaysDateFormat("yyyy-MM-dd"), //
-                nights, mStayDetailInformationCallback);
+            // 호텔 정보를 가져온다.
+            DailyMobileAPI.getInstance(StayDetailCalendarActivity.this) //
+                .requestStayDetailInformation(mNetworkTag, mHotelIndex, stayBookingDay.getCheckInDay("yyyy-MM-dd"), //
+                    stayBookingDay.getNights(), mStayDetailInformationCallback);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
-    void setSaleRoomResult(int count, String message)
+    void setSaleRoomResult(StayBookingDay stayBookingDay, int count, String message)
     {
         if (count < 1)
         {
             showEmptyDialog(message);
         } else
         {
-            if (mCheckInSaleTime == null || mCheckOutSaleTime == null)
+            if (stayBookingDay == null)
             {
                 showEmptyDialog(message);
                 return;
@@ -151,29 +148,32 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
                 return;
             }
 
-            String checkInDate = mCheckInSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-            String checkOutDate = mCheckOutSaleTime.getDayOfDaysDateFormat("yyyy.MM.dd(EEE)");
-            int nights = mCheckOutSaleTime.getOffsetDailyDay() - mCheckInSaleTime.getOffsetDailyDay();
+            try
+            {
+                String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
+                String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
+                int nights = stayBookingDay.getNights();
 
-            Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, Long.toString(mCheckInSaleTime.getDayOfDaysDate().getTime()));
-            params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, Long.toString(mCheckOutSaleTime.getDayOfDaysDate().getTime()));
-            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookingDay.getCheckInDay("yyyyMMdd"));
+                params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, stayBookingDay.getCheckOutDay("yyyyMMdd"));
+                params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+                params.put(AnalyticsManager.KeyType.SCREEN, mCallByScreen);
 
-            //            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd(EEE) HH시 mm분", Locale.KOREA);
-            //            String phoneDate = simpleDateFormat.format(new Date());
-            String phoneDate = DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분");
+                String phoneDate = DailyCalendar.format(new Date(), "yyyy.MM.dd(EEE) HH시 mm분");
 
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED//
-                , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE_) + "-" + checkInDate + "-" + checkOutDate + "-" + phoneDate, params);
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.HOTEL_BOOKING_DATE_CLICKED//
+                    , (mIsChanged ? AnalyticsManager.ValueType.CHANGED : AnalyticsManager.ValueType.NONE_) + "-" + checkInDate + "-" + checkOutDate + "-" + phoneDate, params);
 
-            Intent intent = new Intent();
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, mCheckInSaleTime);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, mCheckOutSaleTime);
+                Intent intent = new Intent();
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
 
-            setResult(RESULT_OK, intent);
-            hideAnimation();
+                setResult(RESULT_OK, intent);
+                hideAnimation();
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 
@@ -238,7 +238,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
                 } finally
                 {
                     unLockUI();
-                    StayDetailCalendarActivity.this.setSaleRoomResult(saleRoomCount, message);
+                    StayDetailCalendarActivity.this.setSaleRoomResult((StayBookingDay) mPlaceBookingDay, saleRoomCount, message);
                 }
             } else
             {
