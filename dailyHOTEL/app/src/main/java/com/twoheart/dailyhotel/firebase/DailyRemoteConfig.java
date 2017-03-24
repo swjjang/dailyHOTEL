@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -476,7 +477,7 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writeABTestHome(final Context context, String abTest)
+    private void writeABTestHome(Context context, String abTest)
     {
         if (context == null)
         {
@@ -484,5 +485,23 @@ public class DailyRemoteConfig
         }
 
         DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest);
+
+        if (Util.isTextEmpty(abTest) == false)
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(abTest);
+                String abTestValue = jsonObject.getString("value");
+
+                if ("a".equalsIgnoreCase(abTestValue) == true)
+                {
+                    AnalyticsManager.getInstance(context).recordEvent(AnalyticsManager.Category.EXPERIMENT,//
+                        AnalyticsManager.Action.HOME_MENU_BUTTON, AnalyticsManager.Label.CTA_VARIATION_A, null);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+        }
     }
 }

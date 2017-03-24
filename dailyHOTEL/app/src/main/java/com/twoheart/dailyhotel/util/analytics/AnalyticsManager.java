@@ -915,6 +915,10 @@ public class AnalyticsManager
         public static final String STAMP_DETAIL_CLICK = "stamp_detail_click";
         public static final String STAMP_MENU_CLICK = "stamp_menu_click";
         public static final String STAMP_HISTORY_CLICK = "stamp_history_click";
+
+        // AB Test
+        public static final String HOME_MENU_BUTTON = "home_menu_button";
+
     }
 
     public static class Category
@@ -947,6 +951,9 @@ public class AnalyticsManager
         public static final String HOME_RECOMMEND = "home_recommend";
 
         public static final String SORT_FLITER = "sort_fliter";
+
+        // AB Test
+        public static final String EXPERIMENT = "experiment";
     }
 
     public static class Label
@@ -1121,6 +1128,9 @@ public class AnalyticsManager
         public static final String STAY_DETAIL_VIEW = "stay_detail_view";
         public static final String STAY_THANKYOU = "stay_thankyou";
         public static final String STAMP_DETAIL = "stamp_detail";
+
+        // AB Test
+        public static final String CTA_VARIATION_A = "cta_variation_a";
     }
 
     public static class UserType
