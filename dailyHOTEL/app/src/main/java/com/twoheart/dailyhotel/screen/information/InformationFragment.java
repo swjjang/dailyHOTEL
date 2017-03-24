@@ -281,15 +281,21 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
 
             try
             {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
+                intent.setData(Uri.parse("naverblog://blog?blogUrl=blog.naver.com/dailyhotel"));
                 baseActivity.startActivity(intent);
-            } catch (ActivityNotFoundException e)
+            } catch (Exception e)
             {
-                ExLog.d(e.toString());
+                try
+                {
+                    intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
+                    baseActivity.startActivity(intent);
+                } catch (ActivityNotFoundException e1)
+                {
+                }
             }
         }
 
@@ -304,15 +310,21 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
 
             try
             {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://www.youtube.com/channel/UCNJASbBThd0TFo3qLgl1wuw"));
+                intent.setData(Uri.parse("youtube://channel/UCNJASbBThd0TFo3qLgl1wuw"));
                 baseActivity.startActivity(intent);
-            } catch (ActivityNotFoundException e)
+            } catch (Exception e)
             {
-
+                try
+                {
+                    intent.setData(Uri.parse("https://www.youtube.com/channel/UCNJASbBThd0TFo3qLgl1wuw"));
+                    baseActivity.startActivity(intent);
+                } catch (ActivityNotFoundException e1)
+                {
+                }
             }
         }
 

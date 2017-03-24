@@ -6,9 +6,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@drawable/shape_home_action_button_layout_gradient"
-        android:rotation="180"/>
+        android:layout_height="2dp"
+        android:background="@drawable/shape_gradient_bottom_up"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -63,7 +62,6 @@
             android:textColor="@color/default_text_cb70038"
             android:textSize="13dp"
             dailyFont:style="Medium"/>
-
     </RelativeLayout>
 
 </merge>

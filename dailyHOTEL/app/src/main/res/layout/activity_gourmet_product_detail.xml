@@ -300,15 +300,22 @@
     <View
         android:id="@+id/bottomBarLineView"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/gradient_1dp_line_height_under_21"
         android:layout_above="@+id/bottomBarLayout"
         android:background="@color/default_line_ce7e7e7"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gradient_2dp_line_height_over_21"
+        android:layout_above="@+id/bottomBarLayout"
+        android:background="@drawable/shape_gradient_bottom_up"/>
 
     <RelativeLayout
         android:id="@+id/bottomBarLayout"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
+        android:elevation="8dp"
         android:background="@color/white"
         android:padding="10dp">
 

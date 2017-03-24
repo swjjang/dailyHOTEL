@@ -8,8 +8,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/white"
-        android:baselineAligned="false"
-        android:elevation="8dp">
+        android:baselineAligned="false">
 
         <RelativeLayout
             android:id="@+id/homeLayout"
