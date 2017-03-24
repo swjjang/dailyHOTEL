@@ -34,7 +34,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
     {
 
     }
-    
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {

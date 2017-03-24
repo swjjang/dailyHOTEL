@@ -229,7 +229,7 @@ public class HotelPaymentWebActivity extends BaseActivity implements Constants
 
             WebViewPostAsyncTask webViewPostAsyncTask = new WebViewPostAsyncTask(webView, builder);
             webViewPostAsyncTask.execute(url);
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.e(e.toString());
 

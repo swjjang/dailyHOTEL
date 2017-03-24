@@ -109,7 +109,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void setPlaceBookingDay(TodayDateTime todayDateTime)
     {
-        if(todayDateTime == null)
+        if (todayDateTime == null)
         {
             return;
         }

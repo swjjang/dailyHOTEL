@@ -677,6 +677,10 @@ public class AnalyticsManager
         public static final String HOME = "home";
 
         public static final String GOURMET_MENU_DETAIL = "gourmet_menu_detail";
+
+        // Stamp
+        public static final String STAMP_DETAIL = "stamp_detail";
+        public static final String STAMP_HISTORY = "stamp_history";
     }
 
     public static class Action
@@ -907,6 +911,10 @@ public class AnalyticsManager
         public static final String GOURMET_TIME = "gourmet_time";
         public static final String GOURMET_AMENITIES = "gourmet_amenities";
         public static final String GOURMET_NO_RESULT = "gourmet_no_result";
+
+        public static final String STAMP_DETAIL_CLICK = "stamp_detail_click";
+        public static final String STAMP_MENU_CLICK = "stamp_menu_click";
+        public static final String STAMP_HISTORY_CLICK = "stamp_history_click";
     }
 
     public static class Category
@@ -1109,6 +1117,10 @@ public class AnalyticsManager
 
         public static final String MENU_LIST = "menu_list";
         public static final String MENU_DETAIL = "menu_detail";
+
+        public static final String STAY_DETAIL_VIEW = "stay_detail_view";
+        public static final String STAY_THANKYOU = "stay_thankyou";
+        public static final String STAMP_DETAIL = "stamp_detail";
     }
 
     public static class UserType

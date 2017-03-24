@@ -27,14 +27,14 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
     @Override
     public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
     {
-        if(placeBookingDay == null)
+        if (placeBookingDay == null)
         {
             return;
         }
 
         try
         {
-            mNights = ((StayBookingDay)placeBookingDay).getNights();
+            mNights = ((StayBookingDay) placeBookingDay).getNights();
         } catch (Exception e)
         {
             mNights = 1;

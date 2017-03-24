@@ -1,42 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="list_padding">10dp</dimen>
-    <dimen name="shadow_width">15dp</dimen>
-
-    <integer name="num_cols">1</integer>
-
-    <dimen name="tab_host_default_height">48dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-
-    <dimen name="fab_size_normal">56dp</dimen>
-    <dimen name="fab_size_mini">40dp</dimen>
-    <dimen name="fab_shadow_size">12dp</dimen>
-
-    <dimen name="fab_scroll_threshold">4dp</dimen>
-    <dimen name="fab_elevation_lollipop">8dp</dimen>
-
-    <dimen name="issuingreceipt_linespacing">9dp</dimen>
-    <dimen name="hdpi_issuingreceipt_linespacing">5dp</dimen>
-
-    <dimen name="toolbar_height">52dp</dimen>
-    <dimen name="menubar_height">51dp</dimen>
-
-    <dimen name="signature_height">160dp</dimen>
-
-    <dimen name="app_defaultsize_w">1.0dp</dimen>
-    <dimen name="app_defaultsize_h">1.0dp</dimen>
-    <dimen name="app_minimumsize_w">1.0dp</dimen>
-    <dimen name="app_minimumsize_h">1.0dp</dimen>
-
-    <dimen name="detail_button_min_left_margin">10dp</dimen>
-    <dimen name="detail_button_max_left_margin">68dp</dimen>
-    
-    <dimen name="home_carousel_min_height">0dp</dimen>
-    <dimen name="home_carousel_max_height">299.5dp</dimen>
-
-    <dimen name="stay_detail_room_type_default_height">122dp</dimen>
-    <dimen name="stay_detail_room_type_expand_height">142dp</dimen>
-
     <dimen name="gradient_line_height">0dp</dimen>
 </resources>

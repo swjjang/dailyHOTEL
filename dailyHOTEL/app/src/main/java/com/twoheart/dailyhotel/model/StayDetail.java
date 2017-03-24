@@ -15,7 +15,7 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
 {
     private StayDetailParams mStayDetailParams;
 
-//    public int nights;
+    //    public int nights;
     public boolean hasCoupon;
 
     public StayDetail(int hotelIndex, int entryIndex, String isShowOriginalPrice, int listCount, boolean isDailyChoice)

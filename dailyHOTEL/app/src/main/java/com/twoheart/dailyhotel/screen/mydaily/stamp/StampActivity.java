@@ -66,13 +66,17 @@ public class StampActivity extends BaseActivity
     {
         super.onStart();
 
-        //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
+        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_DETAIL, null);
 
         if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
         {
             lockUI();
 
-            mNetworkController.requestUserStamps(false);
+            if (DailyHotel.isLogin() == true)
+            {
+                mNetworkController.requestUserStamps(false);
+            }
+
             mNetworkController.requestPushBenefit(false);
         } else
         {
@@ -148,14 +152,19 @@ public class StampActivity extends BaseActivity
         @Override
         public void onLoginClick()
         {
-            Intent intent = LoginActivity.newInstance(StampActivity.this);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startLogin();
         }
 
         @Override
         public void onStampEventDetailClick()
         {
-
+            AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAMP_DETAIL, null);
         }
 
         @Override
@@ -180,6 +189,9 @@ public class StampActivity extends BaseActivity
             }
 
             startActivityForResult(StampHistoryActivity.newInstance(StampActivity.this), CODE_REQUEST_ACTIVITY_STAMP_HISTORY);
+
+            AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.STAMP_HISTORY_CLICK, AnalyticsManager.ValueType.EMPTY, null);
         }
 
         @Override
@@ -237,7 +249,7 @@ public class StampActivity extends BaseActivity
         {
             unLockUI();
 
-            if(stamp == null)
+            if (stamp == null)
             {
                 return;
             }

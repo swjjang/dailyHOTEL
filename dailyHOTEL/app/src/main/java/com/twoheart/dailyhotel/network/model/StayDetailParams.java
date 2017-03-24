@@ -127,7 +127,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
 
     // 결제 전 해당 값을 조회하여 stayProduct에 넣어 줄 수 있도록 해야 함
-//    public int nights;
+    //    public int nights;
 
     //    protected ArrayList<DetailInformation> mDetailList;
     private ArrayList<StayDetail.Pictogram> mPictogramList;

@@ -54,9 +54,9 @@ public class StampNetworkController extends BaseNetworkController
             {
                 BaseDto<Stamp> baseDto = response.body();
 
-                if(baseDto.msgCode == 100)
+                if (baseDto.msgCode == 100)
                 {
-                    ((OnNetworkControllerListener)mOnNetworkControllerListener).onUserStamps(baseDto.data);
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserStamps(baseDto.data);
                 } else
                 {
                     mOnNetworkControllerListener.onErrorPopupMessage(baseDto.msgCode, baseDto.msg);

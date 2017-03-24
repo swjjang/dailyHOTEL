@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.StampHistory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -51,7 +52,7 @@ public class StampHistoryActivity extends BaseActivity
     {
         super.onStart();
 
-        //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
+        AnalyticsManager.getInstance(StampHistoryActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_HISTORY, null);
 
         if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
         {

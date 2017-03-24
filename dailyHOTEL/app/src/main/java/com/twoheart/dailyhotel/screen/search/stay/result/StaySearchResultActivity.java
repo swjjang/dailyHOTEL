@@ -348,7 +348,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setToolbarTitle(mStaySearchCuration.getKeyword().name);
             }
 
-            ((StaySearchResultLayout)mPlaceSearchResultLayout).setCalendarText(stayBookingDay);
+            ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(stayBookingDay);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

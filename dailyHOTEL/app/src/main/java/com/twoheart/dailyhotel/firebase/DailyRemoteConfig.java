@@ -87,7 +87,7 @@ public class DailyRemoteConfig
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
                 String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
                 String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
-//                String androidABTestGourmetProductList = mFirebaseRemoteConfig.getString("androidABTestGourmetProductList");
+                //                String androidABTestGourmetProductList = mFirebaseRemoteConfig.getString("androidABTestGourmetProductList");
                 String androidABTestHome = mFirebaseRemoteConfig.getString("androidABTestHome");
 
                 if (Constants.DEBUG == true)
@@ -102,7 +102,7 @@ public class DailyRemoteConfig
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
                         ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                         ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
-//                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
+                        //                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
                         ExLog.d("androidABTestHome : " + androidABTestHome);
                     } catch (Exception e)
                     {
@@ -483,12 +483,6 @@ public class DailyRemoteConfig
             return;
         }
 
-        if (Util.isTextEmpty(abTest) == true)
-        {
-            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(null);
-        } else
-        {
-            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest);
-        }
+        DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest);
     }
 }

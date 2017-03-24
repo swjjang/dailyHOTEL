@@ -1328,6 +1328,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 ExLog.d(e.toString());
             }
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_DETAIL_VIEW, null);
         }
 
         @Override

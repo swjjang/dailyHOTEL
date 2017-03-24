@@ -403,8 +403,8 @@ public class MyDailyFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_STAMP);
 
-            //            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            //                , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.STAMP_MENU_CLICK, AnalyticsManager.ValueType.EMPTY, null);
         }
 
         @Override

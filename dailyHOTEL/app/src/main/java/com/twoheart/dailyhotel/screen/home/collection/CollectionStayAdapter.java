@@ -51,7 +51,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
 
         try
         {
-            mNights = ((StayBookingDay)placeBookingDay).getNights();
+            mNights = ((StayBookingDay) placeBookingDay).getNights();
         } catch (Exception e)
         {
             mNights = 1;
