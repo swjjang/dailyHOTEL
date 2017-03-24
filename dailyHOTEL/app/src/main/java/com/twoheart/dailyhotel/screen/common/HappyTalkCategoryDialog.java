@@ -37,8 +37,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
     {
         SCREEN_STAY_DETAIL("호텔상세"),
         SCREEN_GOURMET_DETAIL("고메상세"),
-        SCREEN_STAY_PAMENT_WAIT("예약내역>입금대기"),
-        SCREEN_GOURMET_PAMENT_WAIT("예약내역>입금대기"),
+        SCREEN_STAY_PAYMENT_WAIT("예약내역>입금대기"),
+        SCREEN_GOURMET_PAYMENT_WAIT("예약내역>입금대기"),
         SCREEN_STAY_BOOKING("예약내역>문의"),
         SCREEN_GOURMET_BOOKING("예약내역>문의"),
         SCREEN_FAQ("더보기>자주묻는질문"),
@@ -257,8 +257,6 @@ public class HappyTalkCategoryDialog extends BaseActivity
         {
             List<HappyTalkCategory> happyTalkCategoryList = LoganSquare.parseList(categoryData, HappyTalkCategory.class);
 
-            int size = happyTalkCategoryList.size();
-
             final String STAY_PREFIX = "S_";
             final String GOURMET_PREFIX = "G_";
 
@@ -330,7 +328,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
             mPlaceType = placeType;
             mMainCategoryId = mainId;
 
-            mNetworkController.requestUserProfie();
+            mNetworkController.requestUserProfile();
         }
     };
 

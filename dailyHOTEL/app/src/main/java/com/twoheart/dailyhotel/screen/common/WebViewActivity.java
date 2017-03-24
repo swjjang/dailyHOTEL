@@ -122,7 +122,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
             return;
         }
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofInt(webView, "scrollY", webView.getScrollY(), 0);
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofInt(webView, "scrollY", webView.getScrollY(), 0);
         objectAnimator.setDuration(webView.getScrollY() * 30 / Util.getLCDHeight(this));
         objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
@@ -138,6 +138,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                objectAnimator.removeAllListeners();
                 releaseUiComponent();
             }
 

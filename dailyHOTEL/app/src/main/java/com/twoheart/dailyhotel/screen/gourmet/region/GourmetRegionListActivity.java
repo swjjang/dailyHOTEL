@@ -32,7 +32,6 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
 {
     public static final String INTENT_EXTRA_DATA_PROVINCE_INDEX = "provinceIndex";
     public static final String INTENT_EXTRA_DATA_AREA_INDEX = "areaIndex";
-    private static final String INTENT_EXTRA_DATA_SALETIME = "saletime";
 
     private static final int GOURMET_TAB_COUNT = 1;
 
@@ -89,16 +88,15 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     protected void initToolbar(View toolbar)
     {
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_gourmet_area), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_gourmet_area), R.drawable.navibar_ic_x, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 finish();
             }
-        });
+        }, false);
 
-        dailyToolbarLayout.setBackImageView(R.drawable.navibar_ic_x);
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {

@@ -16,10 +16,10 @@ import java.util.Iterator;
 public class Stay extends Place
 {
     public String dBenefitText;
-//    public int nights = 1;
+    //    public int nights = 1;
     public double distance; // 정렬시에 보여주는 내용
     public String categoryCode;
-//    public String sday;
+    //    public String sday;
 
     protected Grade mGrade;
 
@@ -47,7 +47,7 @@ public class Stay extends Place
         dest.writeSerializable(mGrade);
         dest.writeString(dBenefitText);
         dest.writeString(categoryCode);
-//        dest.writeString(sday);
+        //        dest.writeString(sday);
     }
 
     protected void readFromParcel(Parcel in)
@@ -57,7 +57,7 @@ public class Stay extends Place
         mGrade = (Grade) in.readSerializable();
         dBenefitText = in.readString();
         categoryCode = in.readString();
-//        sday = in.readString();
+        //        sday = in.readString();
     }
 
     public Grade getGrade()
@@ -78,7 +78,7 @@ public class Stay extends Place
 
     public boolean setStay(JSONObject jsonObject, String imageUrl)
     {
-//        this.nights = nights;
+        //        this.nights = nights;
 
         try
         {
@@ -108,7 +108,7 @@ public class Stay extends Place
             longitude = jsonObject.getDouble("longitude");
             isDailyChoice = jsonObject.getBoolean("isDailyChoice");
             satisfaction = jsonObject.getInt("rating"); // ratingValue ??
-//            sday = jsonObject.getString("sday");
+            //            sday = jsonObject.getString("sday");
             distance = jsonObject.getDouble("distance");
 
             try

@@ -389,9 +389,9 @@ public class HomeLayout extends BaseLayout
         try
         {
             JSONObject jsonObject = new JSONObject(data);
-            String abTest = jsonObject.getString("value");
+            String abTestValue = jsonObject.getString("value");
 
-            if (Util.isTextEmpty(abTest) == true)
+            if (Util.isTextEmpty(abTestValue) == true)
             {
                 return;
             }
@@ -401,9 +401,9 @@ public class HomeLayout extends BaseLayout
             TextView gourmetTextView = (TextView) view.findViewById(R.id.gourmetTextView);
             TextView gourmetDoTextView = (TextView) view.findViewById(R.id.gourmetDoTextView);
 
-            switch (abTest)
+            switch (abTestValue)
             {
-                case "b":
+                case "a":
                     stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
                     stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
                     stayTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
@@ -421,7 +421,6 @@ public class HomeLayout extends BaseLayout
                     gourmetDoTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
                     break;
 
-                case "a":
                 default:
                     stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
                     stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
@@ -559,8 +558,6 @@ public class HomeLayout extends BaseLayout
         });
 
         layout.addView(mHomeRecommendationLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        setRecommendationData(null, false);
     }
 
     private void initProviderInfoLayout(LinearLayout layout)
@@ -902,11 +899,6 @@ public class HomeLayout extends BaseLayout
 
             String countString = mContext.getResources().getString(R.string.format_home_event_count, pageIndex, totalCount);
             int slashIndex = countString.indexOf("/");
-            int textSize = countString.length();
-            if (slashIndex < textSize)
-            {
-                textSize++;
-            }
 
             if (slashIndex == -1)
             {
@@ -952,27 +944,6 @@ public class HomeLayout extends BaseLayout
         DailyTextView descriptionView = (DailyTextView) mTextMessageLayout.findViewById(R.id.descriptionTextView);
 
         titleView.setText(title);
-
-        if (Util.isTextEmpty(description) == true)
-        {
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        } else
-        {
-            // 메세지에 '>'가 포함 되었을 경우 제거하고 trim!
-            if (description.endsWith(">") == true)
-            {
-                int lastIndex = description.lastIndexOf(">");
-                if (lastIndex != -1)
-                {
-                    description = description.substring(0, lastIndex);
-                    description = description.trim();
-                }
-            }
-
-            descriptionView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.payment_ic_right, 0);
-            descriptionView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3d));
-        }
-
         descriptionView.setText(description);
 
         if (mTextMessageLayout.getVisibility() == View.VISIBLE)
@@ -1062,6 +1033,8 @@ public class HomeLayout extends BaseLayout
         if (mErrorPopupAnimator != null)
         {
             mErrorPopupAnimator.cancel();
+            mErrorPopupAnimator.removeAllListeners();
+            mErrorPopupAnimator.removeAllUpdateListeners();
             mErrorPopupAnimator = null;
         }
 
@@ -1124,7 +1097,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
         valueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         valueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -1150,6 +1123,9 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
                 view.setVisibility(View.VISIBLE);
                 view.clearAnimation();
             }
@@ -1185,7 +1161,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
+        final ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
         closeValueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -1211,6 +1187,9 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                closeValueAnimator.removeAllUpdateListeners();
+                closeValueAnimator.removeAllListeners();
+
                 view.setVisibility(View.GONE);
                 view.clearAnimation();
             }

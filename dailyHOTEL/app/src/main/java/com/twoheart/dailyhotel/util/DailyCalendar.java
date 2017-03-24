@@ -24,7 +24,7 @@ public class DailyCalendar
     }
 
     /**
-     * @param dateString     ISO-8601만 가능
+     * @param dateString    ISO-8601만 가능
      * @param isClearTField true인 경우 모든 시간 필드는 초기화 한다.
      * @return
      * @throws Exception

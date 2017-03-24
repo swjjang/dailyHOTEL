@@ -19,13 +19,14 @@
             app:srcCompat="@drawable/navibar_ic_x"/>
 
         <RelativeLayout
-            android:layout_width="160dp"
+            android:layout_width="181dp"
             android:layout_height="32dp"
             android:layout_centerInParent="true">
 
+            <!-- 이미지 크기가 변경되면 DailySwitchCompat 크기도 수정 -->
             <com.twoheart.dailyhotel.widget.DailySwitchCompat
                 android:id="@+id/placeSwitch"
-                android:layout_width="160dp"
+                android:layout_width="181dp"
                 android:layout_height="32dp"
                 android:background="@null"
                 android:checked="false"
@@ -39,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="11dp"
                 android:gravity="center_vertical"
                 android:text="@string/label_accommodate"
                 android:textColor="@color/default_text_c454545"
@@ -52,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="17dp"
+                android:layout_marginRight="24dp"
                 android:gravity="center_vertical"
                 android:text="@string/label_fnb"
                 android:textColor="@color/default_text_c454545"

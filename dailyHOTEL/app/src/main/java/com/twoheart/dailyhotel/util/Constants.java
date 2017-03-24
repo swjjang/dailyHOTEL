@@ -117,7 +117,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_HOTEL = "hotel";
     String NAME_INTENT_EXTRA_DATA_HOTELLIST = "hotellist";
     String NAME_INTENT_EXTRA_DATA_HOTELDETAIL = "hoteldetail";
-//    String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
+    //    String NAME_INTENT_EXTRA_DATA_SALETIME = "saletime";
     String NAME_INTENT_EXTRA_DATA_REGION = "region";
     String NAME_INTENT_EXTRA_DATA_HOTELIDX = "hotelIndex";
     String NAME_INTENT_EXTRA_DATA_HOTELGRADE = "hotelGrade";
@@ -150,7 +150,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_SALEINDEX = "saleIndex";
     String NAME_INTENT_EXTRA_DATA_IMAGEURL = "imageUrl";
     String NAME_INTENT_EXTRA_DATA_CATEGORY = "category";
-//    String NAME_INTENT_EXTRA_DATA_NIGHTS = "nights";
+    //    String NAME_INTENT_EXTRA_DATA_NIGHTS = "nights";
     String NAME_INTENT_EXTRA_DATA_DAILYTIME = "dailyTime";
     String NAME_INTENT_EXTRA_DATA_DAYOFDAYS = "dayOfDays";
     String NAME_INTENT_EXTRA_DATA_TYPE = "type";

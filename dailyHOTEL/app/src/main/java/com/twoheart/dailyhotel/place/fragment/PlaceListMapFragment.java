@@ -694,8 +694,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             if (mValueAnimator.isRunning() == true)
             {
                 mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
             }
+
+            mValueAnimator.removeAllListeners();
+            mValueAnimator.removeAllUpdateListeners();
 
             mValueAnimator = null;
         }
@@ -781,8 +783,10 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             if (mValueAnimator.isRunning() == true)
             {
                 mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
             }
+
+            mValueAnimator.removeAllListeners();
+            mValueAnimator.removeAllUpdateListeners();
 
             mValueAnimator = null;
         }

@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -8,6 +7,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomMenuBarLayout"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gradient_1dp_line_height_under_21"
+        android:layout_above="@+id/bottomMenuBarLayout"
+        android:background="@color/default_line_ce7e7e7"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gradient_2dp_line_height_over_21"
+        android:layout_above="@+id/bottomMenuBarLayout"
+        android:background="@drawable/shape_gradient_bottom_up"/>
 
     <include
         layout="@layout/view_menubar"/>

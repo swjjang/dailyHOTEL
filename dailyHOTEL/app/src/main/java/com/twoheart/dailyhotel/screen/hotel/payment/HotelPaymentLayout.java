@@ -1085,6 +1085,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                 mValueAnimator.cancel();
             }
 
+            mValueAnimator.removeAllUpdateListeners();
+            mValueAnimator.removeAllListeners();
             mValueAnimator = null;
         }
 

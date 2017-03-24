@@ -82,6 +82,8 @@ public class DailyOverScrollViewPager extends ViewPager
                     @Override
                     public void onAnimationEnd(Animator animation)
                     {
+                        mAnimator.removeAllListeners();
+
                         startAnimation(0);
                     }
 
@@ -90,6 +92,7 @@ public class DailyOverScrollViewPager extends ViewPager
                     {
                     }
                 });
+
                 mAnimator.cancel();
             } else
             {

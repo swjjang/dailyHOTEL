@@ -260,7 +260,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                     return true;
                 }
 
-                ValueAnimator scaleDownAnimator = null, scaleUpAnimator = null;
+                ValueAnimator scaleDownAnimator, scaleUpAnimator;
 
                 if (mSelectedEmoticonView != null)
                 {
@@ -378,7 +378,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
         final float VALUE_DP15 = Util.dpToPx(mContext, 15);
         final int VALUE_DP8 = Util.dpToPx(mContext, 8);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, -VALUE_DP8);
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, -VALUE_DP8);
         valueAnimator.setDuration(200);
 
         final int VALUE_DP30 = Util.dpToPx(mContext, 30);
@@ -425,6 +425,9 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
                 if (mIsCancel == true)
                 {
                     return;
@@ -460,7 +463,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
         final float VALUE_DP15 = Util.dpToPx(mContext, 15);
         final int VALUE_DP7 = Util.dpToPx(mContext, 7);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, VALUE_DP7);
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, VALUE_DP7);
         valueAnimator.setDuration(200);
 
         final int VALUE_DP30 = Util.dpToPx(mContext, 30);
@@ -506,6 +509,9 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
                 if (mIsCancel == true)
                 {
                     return;

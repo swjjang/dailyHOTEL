@@ -79,6 +79,7 @@
     <color name="black_a14">#24000000</color>
      <color name="black_a10">#1A000000</color>
     <color name="black_a5">#0d000000</color>
+    <color name="black_a0">#00000000</color>
 
     <color name="statusbar_background">#323232</color>
     <color name="tab_text">#929292</color>

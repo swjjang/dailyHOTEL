@@ -4,8 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 

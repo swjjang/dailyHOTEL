@@ -91,7 +91,7 @@ public class EditProfilePhoneActivity extends BaseActivity
             return;
         }
 
-        String phoneNumber = null;
+        String phoneNumber;
 
         if (intent.hasExtra(INTENT_EXTRA_DATA_PHONENUMBER) == true)
         {

@@ -7,26 +7,18 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class StampHistory
 {
     @JsonField
-    public String placeName;
+    public String idx;
 
     @JsonField
-    public String date; // ISO-8601
+    public String reservationName;
 
     @JsonField
-    public int nights;
+    public String publishedAt; // yyyy-MM-dd
 
     @JsonField
-    public int reservationIndex;
+    public int reservationIdx;
 
     public StampHistory()
     {
-    }
-
-
-    public StampHistory(String placeName, String date, int nights)
-    {
-        this.placeName = placeName;
-        this.date = date;
-        this.nights = nights;
     }
 }

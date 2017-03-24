@@ -1,6 +1,9 @@
 package com.twoheart.dailyhotel.screen.mydaily.stamp;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -49,6 +52,16 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
 
         stampMessageLayout.setOnClickListener(this);
         pushMessageLayout.setOnClickListener(this);
+
+        TextView stampMessage03TextView = (TextView) stampMessageLayout.findViewById(R.id.stampMessage03TextView);
+        SpannableString stampMessage03SpannableString = new SpannableString(mContext.getString(R.string.message_stamp_explanation3));
+        stampMessage03SpannableString.setSpan(new UnderlineSpan(), 0, stampMessage03SpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        stampMessage03TextView.setText(stampMessage03SpannableString);
+
+        TextView pushMessage02TextView = (TextView) pushMessageLayout.findViewById(R.id.pushMessage02TextView);
+        SpannableString pushMessage02SpannableString = new SpannableString(mContext.getString(R.string.label_stamp_notification_on_setting));
+        pushMessage02SpannableString.setSpan(new UnderlineSpan(), 0, pushMessage02SpannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        pushMessage02TextView.setText(pushMessage02SpannableString);
 
         mStampHistoryTextView = view.findViewById(R.id.stampHistoryTextView);
         View stampTermsTextView = view.findViewById(R.id.stampTermsTextView);

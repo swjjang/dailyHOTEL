@@ -129,7 +129,7 @@ public class CouponUtil
 
     private static Coupon getCoupon(JSONObject jsonObject, String serverDate) throws Exception
     {
-        Coupon coupon = null;
+        Coupon coupon;
 
         String couponCode = null; // 이벤트 웹뷰, 쿠폰사용주의사항 용 쿠폰 코드
         String stayFrom = null;

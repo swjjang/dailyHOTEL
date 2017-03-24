@@ -5,6 +5,8 @@ import android.net.ParseException;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -20,6 +22,8 @@ public class StampNetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onBenefitAgreement(boolean isAgree, String updateDate);
+
+        void onUserStamps(Stamp stamp);
     }
 
     public StampNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -27,9 +31,9 @@ public class StampNetworkController extends BaseNetworkController
         super(context, networkTag, listener);
     }
 
-    public void requestStamp()
+    public void requestUserStamps(boolean details)
     {
-
+        DailyMobileAPI.getInstance(mContext).requestUserStamps(mNetworkTag, details, mStampCallback);
     }
 
     public void requestPushBenefit(boolean isAgree)
@@ -41,14 +45,22 @@ public class StampNetworkController extends BaseNetworkController
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mStampCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mStampCallback = new retrofit2.Callback<BaseDto<Stamp>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<Stamp>> call, Response<BaseDto<Stamp>> response)
         {
             if (response != null && response.isSuccessful() && response.body() != null)
             {
+                BaseDto<Stamp> baseDto = response.body();
 
+                if (baseDto.msgCode == 100)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserStamps(baseDto.data);
+                } else
+                {
+                    mOnNetworkControllerListener.onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
+                }
             } else
             {
                 mOnNetworkControllerListener.onErrorResponse(call, response);
@@ -56,7 +68,7 @@ public class StampNetworkController extends BaseNetworkController
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<Stamp>> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
         }

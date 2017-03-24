@@ -69,7 +69,7 @@ public class GourmetListNetworkController extends BaseNetworkController
                             gourmetJSONArray = dataJSONObject.getJSONArray("gourmetSales");
                         }
 
-                        int totalCount = dataJSONObject.getInt("searchCount");
+                        int totalCount = dataJSONObject.getInt("gourmetSalesCount");
                         int maxCount = dataJSONObject.getInt("searchMaxCount");
                         int page;
                         String imageUrl;

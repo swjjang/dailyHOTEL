@@ -496,7 +496,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         mSearchMapsLayout.setVisibility(View.INVISIBLE);
         mAddressLayout.setVisibility(View.INVISIBLE);
 
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+        final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
 
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
@@ -537,6 +537,9 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
                 int height = (int) mFakeMapLayout.getTag();
                 mFakeMapLayout.setPadding(0, 0, 0, (int) (mAddressLayout.getY() - height));
 
@@ -576,7 +579,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
     {
         setReservationDetailToolbar();
 
-        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+        final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
 
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
@@ -618,6 +621,9 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
                 mScrollLayout.scrollTo(0, 0);
                 mScrollLayout.setScrollingEnabled(true);
                 mFakeMapLayout.setTranslationY(0.0f);

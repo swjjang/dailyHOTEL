@@ -42,7 +42,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         try
         {
-            mNights = ((StayBookingDay)placeBookingDay).getNights();
+            mNights = ((StayBookingDay) placeBookingDay).getNights();
         } catch (Exception e)
         {
             mNights = 1;

@@ -337,9 +337,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         try
         {
-            String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
-            String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
-
             if (mSearchType == SearchType.LOCATION)
             {
                 mPlaceSearchResultLayout.setToolbarTitle("");
@@ -348,7 +345,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setToolbarTitle(mStaySearchCuration.getKeyword().name);
             }
 
-            ((StaySearchResultLayout)mPlaceSearchResultLayout).setCalendarText(stayBookingDay);
+            ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(stayBookingDay);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -442,7 +442,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             return;
         }
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTooltipLayout, "alpha", 1.0f, 0.0f);
 
         mTooltipLayout.setTag(objectAnimator);
 
@@ -459,6 +459,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onAnimationEnd(Animator animator)
             {
+                objectAnimator.removeAllListeners();
+                objectAnimator.removeAllUpdateListeners();
+
                 mTooltipLayout.setTag(null);
                 mTooltipLayout.setVisibility(View.GONE);
             }

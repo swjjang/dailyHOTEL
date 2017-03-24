@@ -7,7 +7,9 @@ import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -154,9 +156,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     {
         mStampLayout = findViewById(R.id.stampLayout);
         mStampLayout.setVisibility(View.GONE);
-
-        View message3TextView = findViewById(R.id.message3TextView);
-        message3TextView.setOnClickListener(this);
+        mStampLayout.setOnClickListener(this);
     }
 
     public void setStampLayout(String message1, String message2, String message3)
@@ -172,7 +172,11 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
         message1TextView.setText(message1);
         message2TextView.setText(message2);
-        message3TextView.setText(message3);
+
+        SpannableString spannableString3 = new SpannableString(message3);
+        spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        message3TextView.setText(spannableString3);
     }
 
     private void startReceiptAnimation()
@@ -366,9 +370,12 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 finish();
                 break;
 
-            case R.id.message3TextView:
+            case R.id.stampLayout:
                 Intent intent = StampActivity.newInstance(this);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+
+                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_THANKYOU, null);
                 break;
         }
     }

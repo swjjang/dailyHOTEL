@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.network;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.Holiday;
@@ -13,8 +12,10 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
+import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 
 import org.json.JSONObject;
 
@@ -411,4 +412,9 @@ public interface DailyMobileService
     @POST("{mobileAPI}")
     Call<BaseDto<HomePlaces<HomePlace>>> requestHomeRecentList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
                                                                @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<BaseDto<Stamp>> requestUserStamps(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
+                                           @Query("details") boolean details);
 }

@@ -397,8 +397,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 if (mObjectAnimator.isRunning() == true)
                 {
                     mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
                 }
+
+                mObjectAnimator.removeAllListeners();
+                mObjectAnimator.removeAllUpdateListeners();
 
                 mObjectAnimator = null;
             }
@@ -491,8 +493,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 if (mObjectAnimator.isRunning() == true)
                 {
                     mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
                 }
+
+                mObjectAnimator.removeAllListeners();
+                mObjectAnimator.removeAllUpdateListeners();
 
                 mObjectAnimator = null;
             }
