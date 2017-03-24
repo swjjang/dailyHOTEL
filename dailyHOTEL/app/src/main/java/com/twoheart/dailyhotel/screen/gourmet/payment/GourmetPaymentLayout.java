@@ -884,6 +884,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                 mValueAnimator.cancel();
             }
 
+            mValueAnimator.removeAllUpdateListeners();
+            mValueAnimator.removeAllListeners();
             mValueAnimator = null;
         }
 

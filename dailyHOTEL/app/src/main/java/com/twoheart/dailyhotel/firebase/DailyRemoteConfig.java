@@ -486,7 +486,6 @@ public class DailyRemoteConfig
         if (Util.isTextEmpty(abTest) == true)
         {
             DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(null);
-            return;
         } else
         {
             DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest);

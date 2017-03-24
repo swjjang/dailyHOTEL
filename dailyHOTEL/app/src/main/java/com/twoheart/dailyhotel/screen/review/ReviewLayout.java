@@ -276,7 +276,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         mRootView.setTranslationY(height);
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mRootView, "y", y, y - height);
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mRootView, "y", y, y - height);
         objectAnimator.setDuration(200);
         objectAnimator.addListener(new Animator.AnimatorListener()
         {
@@ -292,6 +292,9 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                objectAnimator.removeAllListeners();
+                objectAnimator.removeAllListeners();
+
                 ((OnEventListener) mOnEventListener).onReviewDetailAnimationEnd();
             }
 
@@ -314,7 +317,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     {
         final float y = mRootView.getTop();
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mRootView, "y", y, mRootView.getBottom());
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mRootView, "y", y, mRootView.getBottom());
         objectAnimator.setDuration(200);
         objectAnimator.addListener(new Animator.AnimatorListener()
         {
@@ -326,6 +329,9 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                objectAnimator.removeAllListeners();
+                objectAnimator.removeAllUpdateListeners();
+
                 mOnEventListener.finish();
             }
 

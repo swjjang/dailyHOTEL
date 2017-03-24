@@ -230,6 +230,8 @@ public class HomeCarouselLayout extends LinearLayout
         if (mValueAnimator != null)
         {
             mValueAnimator.cancel();
+            mValueAnimator.removeAllUpdateListeners();
+            mValueAnimator.removeAllListeners();
             mValueAnimator = null;
         }
 
@@ -300,6 +302,8 @@ public class HomeCarouselLayout extends LinearLayout
         if (mValueAnimator != null)
         {
             mValueAnimator.cancel();
+            mValueAnimator.removeAllUpdateListeners();
+            mValueAnimator.removeAllListeners();
             mValueAnimator = null;
         }
 

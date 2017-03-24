@@ -516,9 +516,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 if (mObjectAnimator.isRunning() == true)
                 {
                     mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
                 }
 
+                mObjectAnimator.removeAllListeners();
+                mObjectAnimator.removeAllUpdateListeners();
                 mObjectAnimator = null;
             }
 
@@ -613,9 +614,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 if (mObjectAnimator.isRunning() == true)
                 {
                     mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
                 }
 
+                mObjectAnimator.removeAllListeners();
+                mObjectAnimator.removeAllUpdateListeners();
                 mObjectAnimator = null;
             }
 
@@ -710,9 +712,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             if (mObjectAnimator.isRunning() == true)
             {
                 mObjectAnimator.cancel();
-                mObjectAnimator.removeAllListeners();
             }
 
+            mObjectAnimator.removeAllListeners();
+            mObjectAnimator.removeAllUpdateListeners();
             mObjectAnimator = null;
         }
 

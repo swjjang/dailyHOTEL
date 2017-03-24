@@ -10,10 +10,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="@dimen/gradient_line_height"
         android:layout_above="@+id/bottomMenuBarLayout"
-        android:layout_below="@id/buttonLayout"
-        android:background="@drawable/shape_gradient_bar_line"/>
+        android:background="@color/default_line_ce7e7e7"/>
 
     <include
         layout="@layout/view_menubar"/>
@@ -23,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/default_background_cf1f2f3"
+        android:elevation="9dp"
         android:visibility="visible">
 
         <com.twoheart.dailyhotel.widget.DailyImageView

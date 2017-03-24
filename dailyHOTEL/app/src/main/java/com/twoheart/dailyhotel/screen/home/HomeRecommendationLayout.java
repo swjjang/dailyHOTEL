@@ -244,6 +244,8 @@ public class HomeRecommendationLayout extends LinearLayout
         if (mValueAnimator != null)
         {
             mValueAnimator.cancel();
+            mValueAnimator.removeAllUpdateListeners();
+            mValueAnimator.removeAllListeners();
             mValueAnimator = null;
         }
 

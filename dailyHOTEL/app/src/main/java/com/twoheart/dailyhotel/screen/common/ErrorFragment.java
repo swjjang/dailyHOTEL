@@ -124,7 +124,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
         {
             if (mMainFragmentManager != null)
             {
-                mMainFragmentManager.select(mMainFragmentManager.getLastIndexFragment(), true);
+                mMainFragmentManager.select(false, mMainFragmentManager.getLastIndexFragment(), true);
             } else
             {
                 Util.restartApp(baseActivity);

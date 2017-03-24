@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
@@ -1038,6 +1039,8 @@ public class HomeLayout extends BaseLayout
         if (mErrorPopupAnimator != null)
         {
             mErrorPopupAnimator.cancel();
+            mErrorPopupAnimator.removeAllListeners();
+            mErrorPopupAnimator.removeAllUpdateListeners();
             mErrorPopupAnimator = null;
         }
 
@@ -1100,7 +1103,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
         valueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         valueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -1126,6 +1129,9 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
                 view.setVisibility(View.VISIBLE);
                 view.clearAnimation();
             }
@@ -1161,7 +1167,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
+        final ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
         closeValueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -1187,6 +1193,9 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                closeValueAnimator.removeAllUpdateListeners();
+                closeValueAnimator.removeAllListeners();
+
                 view.setVisibility(View.GONE);
                 view.clearAnimation();
             }

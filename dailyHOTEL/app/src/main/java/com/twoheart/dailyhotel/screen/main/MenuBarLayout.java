@@ -1,14 +1,24 @@
 package com.twoheart.dailyhotel.screen.main;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.TimeInterpolator;
+import android.animation.ValueAnimator;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.PathInterpolator;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Util;
 
 public class MenuBarLayout implements View.OnClickListener
 {
-    private static final int MENU_HOTEL_INDEX = 0;
+    private static final int MENU_HOME_INDEX = 0;
     private static final int MENU_BOOKING_INDEX = 1;
     private static final int MENU_MYDAILY_INDEX = 2;
     private static final int MENU_INFORMATION_INDEX = 3;
@@ -16,7 +26,7 @@ public class MenuBarLayout implements View.OnClickListener
     private static final int MENU_COUNT = 4;
 
     private View[] mMenuView;
-    private int mSelectedMenuIndex;
+    private int mSelectedMenuIndex = -1;
     private OnMenuBarSelectedListener mOnMenuBarSelectedListener;
     private BaseActivity mBaseActivity;
     private ViewGroup mViewGroup;
@@ -31,25 +41,27 @@ public class MenuBarLayout implements View.OnClickListener
             mMenuBarLayout = menuBarLayout;
         }
 
-        public void onPageChangeListener(int index)
+        public void onPageChangeListener(boolean isCallMenuBar, int index)
         {
             if (mMenuBarLayout == null)
             {
                 return;
             }
 
-            mMenuBarLayout.setTranslationY(0);
-            mMenuBarLayout.selectedMenu(index);
+            if (isCallMenuBar == false)
+            {
+                mMenuBarLayout.selectedMenu(index);
+            }
         }
     }
 
     public interface OnMenuBarSelectedListener
     {
-        void onMenuSelected(int index, int previousIndex);
+        void onMenuSelected(boolean isCallMenuBar, int index, int previousIndex);
 
-        void onMenuUnselected(int index);
+        void onMenuUnselected(boolean isCallMenuBar, int index);
 
-        void onMenuReselected(int index);
+        void onMenuReselected(boolean isCallMenuBar, int index);
     }
 
     public MenuBarLayout(BaseActivity baseActivity, ViewGroup viewGroup, OnMenuBarSelectedListener listener)
@@ -63,21 +75,21 @@ public class MenuBarLayout implements View.OnClickListener
 
     private void initLayout(ViewGroup viewGroup)
     {
-        mSelectedMenuIndex = MENU_HOTEL_INDEX;
-
         mMenuView = new View[MENU_COUNT];
 
-        mMenuView[MENU_HOTEL_INDEX] = viewGroup.findViewById(R.id.hotelLayout);
-        mMenuView[MENU_HOTEL_INDEX].setOnClickListener(this);
+        mMenuView[MENU_HOME_INDEX] = viewGroup.findViewById(R.id.homeLayout);
+        mMenuView[MENU_HOME_INDEX].setOnClickListener(this);
 
         mMenuView[MENU_BOOKING_INDEX] = viewGroup.findViewById(R.id.bookingLayout);
         mMenuView[MENU_BOOKING_INDEX].setOnClickListener(this);
 
+        mMenuView[MENU_MYDAILY_INDEX] = viewGroup.findViewById(R.id.myDailyLayout);
+        mMenuView[MENU_MYDAILY_INDEX].setOnClickListener(this);
+
         mMenuView[MENU_INFORMATION_INDEX] = viewGroup.findViewById(R.id.informationLayout);
         mMenuView[MENU_INFORMATION_INDEX].setOnClickListener(this);
 
-        mMenuView[MENU_MYDAILY_INDEX] = viewGroup.findViewById(R.id.myDailyLayout);
-        mMenuView[MENU_MYDAILY_INDEX].setOnClickListener(this);
+        selectedMenu(MENU_HOME_INDEX);
     }
 
     @Override
@@ -90,20 +102,20 @@ public class MenuBarLayout implements View.OnClickListener
 
         switch (v.getId())
         {
-            case R.id.hotelLayout:
-                selectedMenu(MENU_HOTEL_INDEX);
+            case R.id.homeLayout:
+                selectedMenu(MENU_HOME_INDEX);
                 break;
 
             case R.id.bookingLayout:
                 selectedMenu(MENU_BOOKING_INDEX);
                 break;
 
-            case R.id.informationLayout:
-                selectedMenu(MENU_INFORMATION_INDEX);
-                break;
-
             case R.id.myDailyLayout:
                 selectedMenu(MENU_MYDAILY_INDEX);
+                break;
+
+            case R.id.informationLayout:
+                selectedMenu(MENU_INFORMATION_INDEX);
                 break;
         }
     }
@@ -112,30 +124,236 @@ public class MenuBarLayout implements View.OnClickListener
     {
         if (mSelectedMenuIndex == index)
         {
-            mMenuView[index].setSelected(true);
-
             if (mOnMenuBarSelectedListener != null)
             {
-                mOnMenuBarSelectedListener.onMenuReselected(index);
+                mOnMenuBarSelectedListener.onMenuReselected(true, index);
             }
         } else
         {
-            mMenuView[mSelectedMenuIndex].setSelected(false);
-
-            if (mOnMenuBarSelectedListener != null)
+            if (mSelectedMenuIndex >= 0)
             {
-                mOnMenuBarSelectedListener.onMenuUnselected(mSelectedMenuIndex);
+                hideMenuText(mMenuView[mSelectedMenuIndex]);
+
+                if (mOnMenuBarSelectedListener != null)
+                {
+                    mOnMenuBarSelectedListener.onMenuUnselected(true, mSelectedMenuIndex);
+                }
             }
 
-            mMenuView[index].setSelected(true);
+            showMenuText(mMenuView[index]);
 
-            if (mOnMenuBarSelectedListener != null)
+            if (mOnMenuBarSelectedListener != null && mSelectedMenuIndex >= 0)
             {
-                mOnMenuBarSelectedListener.onMenuSelected(index, mSelectedMenuIndex);
+                mOnMenuBarSelectedListener.onMenuSelected(true, index, mSelectedMenuIndex);
             }
 
             mSelectedMenuIndex = index;
         }
+    }
+
+    void showMenuText(final View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        Object animator = view.getTag();
+
+        if (animator != null && animator instanceof AnimatorSet)
+        {
+            ((AnimatorSet) animator).cancel();
+        }
+
+        final View textView = getMenuTextView(view);
+
+        if (textView == null)
+        {
+            return;
+        }
+
+        final int DP_4 = Util.dpToPx(view.getContext(), 4);
+        final ValueAnimator showValueAnimator1 = ValueAnimator.ofInt(view.getPaddingTop(), DP_4);
+        showValueAnimator1.setDuration(200);
+        showValueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                int value = (int) animation.getAnimatedValue();
+
+                view.setPadding(0, value, 0, 0);
+            }
+        });
+
+        final ValueAnimator showValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), Util.dpToPx(view.getContext(), 29));
+        showValueAnimator2.setDuration(400);
+        showValueAnimator2.setInterpolator(PathInterpolatorCompat.create(0.0f, 0.74f, 0.22f, 1.28f));
+        showValueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                int value = (int) animation.getAnimatedValue();
+
+                textView.setPadding(0, value, 0, 0);
+            }
+        });
+
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(showValueAnimator1, showValueAnimator2);
+        animatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                showValueAnimator1.removeAllUpdateListeners();
+                showValueAnimator2.removeAllUpdateListeners();
+                animatorSet.removeAllListeners();
+
+                int paddingTop = view.getPaddingTop();
+
+                if (paddingTop == DP_4)
+                {
+                    view.setSelected(true);
+                }
+
+                view.setTag(null);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        view.setTag(animatorSet);
+        animatorSet.start();
+    }
+
+    void hideMenuText(final View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        Object animator = view.getTag();
+
+        if (animator != null && animator instanceof AnimatorSet)
+        {
+            ((AnimatorSet) animator).cancel();
+        }
+
+        final View textView = getMenuTextView(view);
+
+        if (textView == null)
+        {
+            return;
+        }
+
+        final int DP_10 = Util.dpToPx(view.getContext(), 10);
+        final ValueAnimator hideValueAnimator1 = ValueAnimator.ofInt(view.getPaddingTop(), DP_10);
+        hideValueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                int value = (int) animation.getAnimatedValue();
+
+                view.setPadding(0, value, 0, 0);
+            }
+        });
+
+        final ValueAnimator hideValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), Util.dpToPx(view.getContext(), 50));
+        hideValueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                int value = (int) animation.getAnimatedValue();
+
+                textView.setPadding(0, value, 0, 0);
+            }
+        });
+
+        final AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(200);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.playTogether(hideValueAnimator1, hideValueAnimator2);
+        animatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                hideValueAnimator1.removeAllUpdateListeners();
+                hideValueAnimator2.removeAllUpdateListeners();
+                animatorSet.removeAllListeners();
+
+                int paddingTop = view.getPaddingTop();
+
+                if (paddingTop == DP_10)
+                {
+                    view.setSelected(false);
+                }
+
+                view.setTag(null);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        view.setTag(animatorSet);
+        animatorSet.start();
     }
 
     public void setEnabled(boolean enabled)
@@ -172,7 +390,7 @@ public class MenuBarLayout implements View.OnClickListener
     {
         switch (position)
         {
-            case MENU_HOTEL_INDEX:
+            case MENU_HOME_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_home);
 
             case MENU_BOOKING_INDEX:
@@ -183,6 +401,33 @@ public class MenuBarLayout implements View.OnClickListener
 
             case MENU_INFORMATION_INDEX:
                 return mBaseActivity.getString(R.string.menu_item_title_information);
+
+            default:
+                return null;
+        }
+    }
+
+    private View getMenuTextView(View view)
+    {
+        if (view == null)
+        {
+            return null;
+
+        }
+
+        switch (view.getId())
+        {
+            case R.id.homeLayout:
+                return view.findViewById(R.id.homeView);
+
+            case R.id.bookingLayout:
+                return view.findViewById(R.id.bookingView);
+
+            case R.id.myDailyLayout:
+                return view.findViewById(R.id.myDailyView);
+
+            case R.id.informationLayout:
+                return view.findViewById(R.id.informationView);
 
             default:
                 return null;

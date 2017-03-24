@@ -154,7 +154,7 @@ public class MainFragmentManager
         }
     }
 
-    public void select(int index, boolean isRefresh)
+    public void select(boolean isCallMenuBar, int index, boolean isRefresh)
     {
         if (index != mIndexLastFragment || isRefresh == true)
         {
@@ -188,7 +188,7 @@ public class MainFragmentManager
 
         if (mMenuBarLayoutOnPageChangeListener != null)
         {
-            mMenuBarLayoutOnPageChangeListener.onPageChangeListener(mIndexLastFragment);
+            mMenuBarLayoutOnPageChangeListener.onPageChangeListener(isCallMenuBar, mIndexLastFragment);
         }
     }
 }

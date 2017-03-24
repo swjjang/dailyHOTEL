@@ -41,15 +41,15 @@ public class StampHistoryActivity extends BaseActivity
         mStampHistoryLayout.setStampDate(stampDate1, stampDate2, stampDate3);
 
 
-        List<StampHistory> stampHistoryList = new ArrayList<>();
-
-        stampHistoryList.add(new StampHistory("호텔 카푸치노", "2017-05-29T09:00:00+09:00", 5));
-        stampHistoryList.add(new StampHistory("그랜드 워커힐 서울 (구 쉐라톤 그랜드 워커힐) 업장명 두줄까지 노출", "2017-05-01T09:00:00+09:00", 4));
-        stampHistoryList.add(new StampHistory("더 플라자 호텔", "2017-04-26T09:00:00+09:00", 3));
-        stampHistoryList.add(new StampHistory("핸드픽트 호텔 서울", "2017-04-22T09:00:00+09:00", 2));
-        stampHistoryList.add(new StampHistory("서울신라호텔", "2017-04-17T09:00:00+09:00", 1));
-
-        mStampHistoryLayout.setHistoryList(stampHistoryList);
+//        List<StampHistory> stampHistoryList = new ArrayList<>();
+//
+//        stampHistoryList.add(new StampHistory("호텔 카푸치노", "2017-05-29T09:00:00+09:00", 5));
+//        stampHistoryList.add(new StampHistory("그랜드 워커힐 서울 (구 쉐라톤 그랜드 워커힐) 업장명 두줄까지 노출", "2017-05-01T09:00:00+09:00", 4));
+//        stampHistoryList.add(new StampHistory("더 플라자 호텔", "2017-04-26T09:00:00+09:00", 3));
+//        stampHistoryList.add(new StampHistory("핸드픽트 호텔 서울", "2017-04-22T09:00:00+09:00", 2));
+//        stampHistoryList.add(new StampHistory("서울신라호텔", "2017-04-17T09:00:00+09:00", 1));
+//
+//        mStampHistoryLayout.setHistoryList(stampHistoryList);
     }
 
     @Override

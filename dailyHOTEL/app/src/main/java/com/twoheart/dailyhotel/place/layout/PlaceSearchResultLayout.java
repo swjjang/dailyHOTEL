@@ -661,9 +661,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             if (mValueAnimator.isRunning() == true)
             {
                 mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
             }
 
+            mValueAnimator.removeAllListeners();
+            mValueAnimator.removeAllUpdateListeners();
             mValueAnimator = null;
         }
 
@@ -743,9 +744,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             if (mValueAnimator.isRunning() == true)
             {
                 mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
             }
 
+            mValueAnimator.removeAllListeners();
+            mValueAnimator.removeAllUpdateListeners();
             mValueAnimator = null;
         }
 

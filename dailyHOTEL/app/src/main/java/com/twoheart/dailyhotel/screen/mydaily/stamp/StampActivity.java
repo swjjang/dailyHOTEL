@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -70,6 +71,11 @@ public class StampActivity extends BaseActivity
         if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() != true)
         {
             showFinishDialog();
+        } else
+        {
+            lockUI();
+
+            mNetworkController.requestPushBenefit(false);
         }
     }
 
@@ -223,6 +229,19 @@ public class StampActivity extends BaseActivity
             }
 
             unLockUI();
+        }
+
+        @Override
+        public void onUserStamps(Stamp stamp)
+        {
+            unLockUI();
+
+            if(stamp == null)
+            {
+                return;
+            }
+
+            mStampLayout.setNights(stamp.count);
         }
 
         @Override

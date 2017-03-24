@@ -3,22 +3,18 @@ package com.twoheart.dailyhotel.network.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import java.util.List;
+
 @JsonObject
-public class StampHistory
+public class Stamp
 {
     @JsonField
-    public String idx;
+    public List<StampHistory> list;
 
     @JsonField
-    public String reservationName;
+    public int count;
 
-    @JsonField
-    public String publishedAt; // yyyy-MM-dd
-
-    @JsonField
-    public int reservationIdx;
-
-    public StampHistory()
+    public Stamp()
     {
     }
 }

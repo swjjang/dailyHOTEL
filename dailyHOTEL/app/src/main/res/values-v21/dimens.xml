@@ -38,5 +38,5 @@
     <dimen name="stay_detail_room_type_default_height">122dp</dimen>
     <dimen name="stay_detail_room_type_expand_height">142dp</dimen>
 
-    <dimen name="gradient_line_height">1dp</dimen>
+    <dimen name="gradient_line_height">0dp</dimen>
 </resources>
