@@ -68,14 +68,15 @@ public class StampActivity extends BaseActivity
 
         //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
 
-        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() != true)
-        {
-            showFinishDialog();
-        } else
+        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
         {
             lockUI();
 
+            mNetworkController.requestUserStamps(false);
             mNetworkController.requestPushBenefit(false);
+        } else
+        {
+            showFinishDialog();
         }
     }
 
