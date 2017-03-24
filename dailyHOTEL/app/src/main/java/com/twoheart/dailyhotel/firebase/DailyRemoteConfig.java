@@ -463,6 +463,8 @@ public class DailyRemoteConfig
 
             boolean endEventPopupEnabled = jsonObject.getBoolean("endEventPopupEnabled");
 
+            DailyPreference.getInstance(context).setRemoteConfigStampStayEndEventPopupEnabled(endEventPopupEnabled);
+
             JSONObject stampDateJSONObject = jsonObject.getJSONObject("dates");
 
             String date1 = stampDateJSONObject.getString("date1");

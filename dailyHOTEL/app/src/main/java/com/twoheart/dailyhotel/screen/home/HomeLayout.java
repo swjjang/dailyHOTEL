@@ -899,11 +899,6 @@ public class HomeLayout extends BaseLayout
 
             String countString = mContext.getResources().getString(R.string.format_home_event_count, pageIndex, totalCount);
             int slashIndex = countString.indexOf("/");
-            int textSize = countString.length();
-            if (slashIndex < textSize)
-            {
-                textSize++;
-            }
 
             if (slashIndex == -1)
             {

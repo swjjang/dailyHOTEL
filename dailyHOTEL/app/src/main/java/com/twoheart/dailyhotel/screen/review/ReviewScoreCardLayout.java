@@ -260,7 +260,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                     return true;
                 }
 
-                ValueAnimator scaleDownAnimator = null, scaleUpAnimator = null;
+                ValueAnimator scaleDownAnimator, scaleUpAnimator;
 
                 if (mSelectedEmoticonView != null)
                 {

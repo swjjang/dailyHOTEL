@@ -176,13 +176,13 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
         {
             case SCREEN_STAY_DETAIL:
             case SCREEN_STAY_BOOKING:
-            case SCREEN_STAY_PAMENT_WAIT:
+            case SCREEN_STAY_PAYMENT_WAIT:
                 mMainCategorySpinner.setSelection(0);
                 break;
 
             case SCREEN_GOURMET_DETAIL:
             case SCREEN_GOURMET_BOOKING:
-            case SCREEN_GOURMET_PAMENT_WAIT:
+            case SCREEN_GOURMET_PAYMENT_WAIT:
                 mMainCategorySpinner.setSelection(1);
                 break;
 

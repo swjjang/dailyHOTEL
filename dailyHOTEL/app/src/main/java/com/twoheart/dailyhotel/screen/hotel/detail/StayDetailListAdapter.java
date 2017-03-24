@@ -321,13 +321,13 @@ public class StayDetailListAdapter extends BaseAdapter
 
         // 날짜
         View dateInformationLayout = view.findViewById(R.id.dateInformationLayout);
-        TextView checkinDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkinDayTextView);
-        TextView checkoutDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkoutDayTextView);
+        TextView checkInDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkinDayTextView);
+        TextView checkOutDayTextView = (TextView) dateInformationLayout.findViewById(R.id.checkoutDayTextView);
         TextView nightsTextView = (TextView) dateInformationLayout.findViewById(R.id.nightsTextView);
 
         // 체크인체크아웃 날짜
-        checkinDayTextView.setText(mStayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"));
-        checkoutDayTextView.setText(mStayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"));
+        checkInDayTextView.setText(mStayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"));
+        checkOutDayTextView.setText(mStayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"));
 
         try
         {

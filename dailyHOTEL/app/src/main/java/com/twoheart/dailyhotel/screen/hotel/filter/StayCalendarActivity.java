@@ -475,19 +475,9 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                 continue;
             }
 
-            Object tag = dayView.getTag();
-
             dayView.setActivated(false);
             dayView.setSelected(false);
-
-            if (tag != null && tag instanceof Day)
-            {
-                Day day = (Day) tag;
-                dayView.setEnabled(true);
-            } else
-            {
-                dayView.setEnabled(false);
-            }
+            dayView.setEnabled(true);
         }
 
         setToolbarText(getString(R.string.label_calendar_hotel_select_checkin));

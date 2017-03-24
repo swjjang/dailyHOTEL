@@ -1,9 +1,9 @@
 package com.twoheart.dailyhotel.widget;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.facebook.keyframes.KeyframesDrawable;
 import com.facebook.keyframes.KeyframesDrawableBuilder;
@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class DailyEmoticonImageView extends ImageView
+public class DailyEmoticonImageView extends AppCompatImageView
 {
     private KFImage mKfImage;
     private KeyframesDrawable mKeyFramesDrawable;
@@ -34,11 +34,6 @@ public class DailyEmoticonImageView extends ImageView
     public DailyEmoticonImageView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
-    }
-
-    public DailyEmoticonImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-    {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     public void setJSONData(String fileName)

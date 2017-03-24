@@ -109,16 +109,15 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     protected void initToolbar(View toolbar)
     {
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_stay_area), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_stay_area), R.drawable.navibar_ic_x, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 finish();
             }
-        });
+        }, false);
 
-        dailyToolbarLayout.setBackImageView(R.drawable.navibar_ic_x);
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {

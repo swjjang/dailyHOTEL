@@ -133,11 +133,11 @@ public class StampHistoryActivity extends BaseActivity
                 return;
             }
 
-            String deepLinke = "dailyhotel://dailyhotel.co.kr?vc=12&v=bd&ri=" + stampHistory.reservationIdx + "&pt=stay";
+            String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=bd&ri=" + stampHistory.reservationIdx + "&pt=stay";
 
             Intent intent = new Intent(StampHistoryActivity.this, LauncherActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse(deepLinke));
+            intent.setData(Uri.parse(deepLink));
 
             startActivity(intent);
         }

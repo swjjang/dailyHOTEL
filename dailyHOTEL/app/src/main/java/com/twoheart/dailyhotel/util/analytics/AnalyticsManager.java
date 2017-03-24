@@ -431,8 +431,6 @@ public class AnalyticsManager
                     ExLog.d(TAG + e.toString());
                 }
             }
-
-            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());
@@ -453,8 +451,6 @@ public class AnalyticsManager
                     ExLog.d(TAG + e.toString());
                 }
             }
-
-            String price = params.get(AnalyticsManager.KeyType.TOTAL_PRICE);
         } catch (Exception e)
         {
             ExLog.d(TAG + e.toString());

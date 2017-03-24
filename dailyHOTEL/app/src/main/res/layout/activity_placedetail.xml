@@ -407,8 +407,5 @@
                 android:layout_weight="1.22"
                 />
         </LinearLayout>
-
     </ScrollView>
-
-
 </RelativeLayout>

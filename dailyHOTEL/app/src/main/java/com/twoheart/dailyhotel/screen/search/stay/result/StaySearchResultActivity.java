@@ -337,9 +337,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         try
         {
-            String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
-            String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
-
             if (mSearchType == SearchType.LOCATION)
             {
                 mPlaceSearchResultLayout.setToolbarTitle("");

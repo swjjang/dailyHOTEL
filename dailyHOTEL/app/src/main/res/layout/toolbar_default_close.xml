@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="false"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
+        android:paddingLeft="72dp"
         android:layout_toLeftOf="@+id/backImageView"
         android:ellipsize="end"
         android:gravity="center_vertical"

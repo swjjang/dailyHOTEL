@@ -1194,7 +1194,7 @@ public class DailyPreference
 
     public boolean isRemoteConfigStampStayEndEventPopupEnabled()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, false);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, true);
     }
 
     public void setRemoteConfigStampDate(String date1, String date2, String date3)

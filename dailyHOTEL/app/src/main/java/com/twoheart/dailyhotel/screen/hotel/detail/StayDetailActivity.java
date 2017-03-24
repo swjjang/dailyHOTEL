@@ -383,21 +383,21 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         if (mIsUsedMultiTransition == true)
         {
-            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
                 , 17, 18, new LinearInterpolator());
             inTextTransition.addTarget(getString(R.string.transition_place_name));
-            intransitionSet.addTransition(inTextTransition);
+            inTransitionSet.addTransition(inTextTransition);
 
             Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
             inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            intransitionSet.addTransition(inBottomAlphaTransition);
+            inTransitionSet.addTransition(inBottomAlphaTransition);
 
             Transition inTopAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
             inTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            intransitionSet.addTransition(inTopAlphaTransition);
+            inTransitionSet.addTransition(inTopAlphaTransition);
 
-            getWindow().setSharedElementEnterTransition(intransitionSet);
+            getWindow().setSharedElementEnterTransition(inTransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition outTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//

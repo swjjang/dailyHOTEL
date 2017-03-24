@@ -81,7 +81,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
             switch (mMainFragmentManager.getLastIndexFragment())
             {
                 case MainFragmentManager.INDEX_HOME_FRAGMENT:
-                    dailyToolbarLayout.initToolbar(R.drawable.img_gnb_logo, null, false);
+                    dailyToolbarLayout.initToolbar(R.drawable.img_gnb_logo, false);
                     break;
 
                 case MainFragmentManager.INDEX_BOOKING_FRAGMENT:

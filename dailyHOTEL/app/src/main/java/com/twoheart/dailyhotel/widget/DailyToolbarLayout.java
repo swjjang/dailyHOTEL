@@ -44,6 +44,11 @@ public class DailyToolbarLayout
 
     public void initToolbar(String title, View.OnClickListener backPressedListener, boolean isTransparent)
     {
+        initToolbar(title, R.drawable.navibar_ic_back_01_black, backPressedListener, isTransparent);
+    }
+
+    public void initToolbar(String title, int backPressedResId, View.OnClickListener backPressedListener, boolean isTransparent)
+    {
         setToolbarTransparent(isTransparent);
 
         FontManager.apply(mToolbar, FontManager.getInstance(mContext).getRegularTypeface());
@@ -51,21 +56,24 @@ public class DailyToolbarLayout
         TextView textView = getTitleTextView(mContext);
         textView.setText(title);
 
-        View backView = mToolbar.findViewById(R.id.backImageView);
+        DailyImageView backView = (DailyImageView) mToolbar.findViewById(R.id.backImageView);
 
         if (backPressedListener == null)
         {
             backView.setVisibility(View.GONE);
+
             textView.setPadding(Util.dpToPx(mContext, 15), 0, 0, 0);
         } else
         {
+            backView.setVectorImageResource(backPressedResId);
             backView.setVisibility(View.VISIBLE);
             backView.setOnClickListener(backPressedListener);
-            textView.setPadding(0, 0, 0, 0);
+
+            textView.setPadding(Util.dpToPx(mContext, 72), 0, 0, 0);
         }
     }
 
-    public void initToolbar(int titleResId, View.OnClickListener backPressedListener, boolean isTransparent)
+    public void initToolbar(int titleResId, boolean isTransparent)
     {
         setToolbarTransparent(isTransparent);
 
@@ -73,20 +81,10 @@ public class DailyToolbarLayout
 
         DailyTextView textView = getTitleTextView(mContext);
         textView.setText(null);
-        textView.setCompoundDrawablesWithIntrinsicBounds(titleResId, 0, 0, 0);
 
-        View backView = mToolbar.findViewById(R.id.backImageView);
-
-        if (backPressedListener == null)
-        {
-            backView.setVisibility(View.GONE);
-            textView.setPadding(Util.dpToPx(mContext, 15), 0, 0, 0);
-        } else
-        {
-            backView.setVisibility(View.VISIBLE);
-            backView.setOnClickListener(backPressedListener);
-            textView.setPadding(0, 0, 0, 0);
-        }
+        DailyImageView backView = (DailyImageView) mToolbar.findViewById(R.id.backImageView);
+        backView.setVectorImageResource(titleResId);
+        backView.setVisibility(View.VISIBLE);
     }
 
     public void setToolbarMenuClickListener(View.OnClickListener listener)
@@ -217,16 +215,20 @@ public class DailyToolbarLayout
         }
     }
 
-    public void setBackImageView(int backResId)
-    {
-        ImageView backView = (ImageView) mToolbar.findViewById(R.id.backImageView);
-        backView.setImageResource(backResId);
-    }
-
     public void setToolbarText(String title)
     {
         TextView textView = getTitleTextView(mContext);
         textView.setText(title);
+
+        DailyImageView backView = (DailyImageView) mToolbar.findViewById(R.id.backImageView);
+
+        if (backView.getVisibility() == View.GONE)
+        {
+            textView.setPadding(Util.dpToPx(mContext, 15), 0, 0, 0);
+        } else
+        {
+            textView.setPadding(Util.dpToPx(mContext, 72), 0, 0, 0);
+        }
     }
 
     public View getToolbar()
