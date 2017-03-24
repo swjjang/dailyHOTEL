@@ -285,17 +285,10 @@ public class InformationFragment extends BaseFragment implements Constants
 
             try
             {
-                intent.setData(Uri.parse("naverblog://blog?blogUrl=blog.naver.com/dailyhotel"));
+                intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
                 baseActivity.startActivity(intent);
-            } catch (Exception e)
+            } catch (ActivityNotFoundException e1)
             {
-                try
-                {
-                    intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
-                    baseActivity.startActivity(intent);
-                } catch (ActivityNotFoundException e1)
-                {
-                }
             }
         }
 
