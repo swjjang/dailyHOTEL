@@ -113,23 +113,28 @@ public class HomeRecommendationLayout extends LinearLayout
             return;
         }
 
-        int itemCount = 0;
-
         if (mRecommendationList != null)
         {
             int size = mRecommendationList.size();
             if (size > 0)
             {
-                itemCount = Math.min(size, MAX_RECOMMENDATION_SIZE);
+                setVisibility(View.VISIBLE);
 
+                int itemCount = Math.min(size, MAX_RECOMMENDATION_SIZE);
                 for (int i = 0; i < itemCount; i++)
                 {
                     Recommendation recommendation = mRecommendationList.get(i);
                     addRecommendationItemView(recommendation, i);
                 }
-            }
 
-            startLayoutHeightAnimation(itemCount);
+                startLayoutHeightAnimation(itemCount);
+            } else
+            {
+                setVisibility(View.GONE);
+            }
+        } else
+        {
+            setVisibility(View.GONE);
         }
     }
 
@@ -286,11 +291,7 @@ public class HomeRecommendationLayout extends LinearLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                clearAnimation();
 
-                setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                mValueAnimator = null;
             }
 
             @Override
