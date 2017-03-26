@@ -127,6 +127,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     protected abstract View getTitleLayout();
 
+    public abstract void setTrueReviewCount(int count);
+
     public abstract void setBookingStatus(int status);
 
     public PlaceDetailLayout(Context context, OnBaseEventListener listener)

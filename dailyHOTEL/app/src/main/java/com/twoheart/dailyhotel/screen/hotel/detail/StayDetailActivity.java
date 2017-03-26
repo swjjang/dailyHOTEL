@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
@@ -885,7 +886,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
-            ((StayDetailLayout) mPlaceDetailLayout).setDetail(stayBookingDay, stayDetail, mCurrentImage);
+            ((StayDetailLayout) mPlaceDetailLayout).setDetail(stayBookingDay, stayDetail, mPlaceReviewScores, mCurrentImage);
         }
 
         if (mCheckPrice == false)
@@ -1345,7 +1346,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+//            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
         }
 
         @Override
@@ -1562,6 +1563,8 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 ((StayDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                     stayBookingDay.getCheckInDay("yyyy-MM-dd"), stayBookingDay.getNights());
+
+                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, mPlaceDetail.index);
             } catch (Exception e)
             {
                 onError(e);
@@ -1848,6 +1851,14 @@ public class StayDetailActivity extends PlaceDetailActivity
                 showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
                     , getResources().getString(R.string.dialog_btn_text_confirm), null);
             }
+        }
+
+        @Override
+        public void onPlaceReviewScores(PlaceReviewScores placeReviewScores)
+        {
+            mPlaceReviewScores = placeReviewScores;
+
+            mPlaceDetailLayout.setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
         }
 
         @Override

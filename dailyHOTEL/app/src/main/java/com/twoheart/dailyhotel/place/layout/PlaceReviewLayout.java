@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceReviewItem;
 import com.twoheart.dailyhotel.network.model.PlaceReview;
-import com.twoheart.dailyhotel.network.model.PlaceReviewProgress;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScore;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -71,9 +71,9 @@ public abstract class PlaceReviewLayout extends BaseLayout
         }, false);
     }
 
-    public void setReviewList(List<PlaceReviewProgress> placeReviewProgressList, List<PlaceReview> placeReviewList)
+    public void setReviewScores(List<PlaceReviewScore> placeReviewScoreList)
     {
-        if (placeReviewProgressList == null || placeReviewProgressList.size() == 0 || placeReviewList == null || placeReviewList.size() == 0)
+        if (placeReviewScoreList == null || placeReviewScoreList.size() == 0)
         {
             return;
         }
@@ -86,12 +86,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
         List<PlaceReviewItem> placeReviewItemList = new ArrayList<>();
 
-        placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_HEADER_VIEW, placeReviewProgressList));
-
-        for (PlaceReview placeReview : placeReviewList)
-        {
-            placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_ENTRY, placeReview));
-        }
+        placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_HEADER_VIEW, placeReviewScoreList));
 
         mReviewListAdapter.setAll(placeReviewItemList);
         mReviewListAdapter.notifyDataSetChanged();
@@ -237,7 +232,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
         private void onBindViewHolder(final HeaderViewHolder headerViewHolder, int position, PlaceReviewItem placeViewItem)
         {
-            List<PlaceReviewProgress> placeReviewProgressList = placeViewItem.getItem();
+            List<PlaceReviewScore> placeReviewScoreList = placeViewItem.getItem();
 
             headerViewHolder.termsView.setOnClickListener(new View.OnClickListener()
             {
@@ -248,7 +243,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
                 }
             });
 
-            for (PlaceReviewProgress placeReviewProgress : placeReviewProgressList)
+            for (PlaceReviewScore placeReviewScore : placeReviewScoreList)
             {
                 View view = LayoutInflater.from(mContext).inflate(R.layout.view_progress_layout, headerViewHolder.progressBarLayout, false);
 
@@ -256,25 +251,27 @@ public abstract class PlaceReviewLayout extends BaseLayout
                 ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
                 TextView valueTextView = (TextView) view.findViewById(R.id.valueTextView);
 
-                titleTextView.setText(placeReviewProgress.name);
+                titleTextView.setText(placeReviewScore.type);
+
+                int progress = (int) (10.0f * placeReviewScore.scoreAvg);
 
                 if (mShowtProgressbarAnimation == true)
                 {
-                    progressBar.setProgress(placeReviewProgress.value);
+                    progressBar.setProgress(progress);
                 } else
                 {
                     progressBar.setProgress(0);
                 }
 
-                progressBar.setTag(placeReviewProgress.value);
-                valueTextView.setText(Float.toString(((float) placeReviewProgress.value) / 10.0f));
+                progressBar.setTag(progress);
+                valueTextView.setText(Float.toString(placeReviewScore.scoreAvg));
 
                 headerViewHolder.progressBarLayout.addView(view);
             }
 
             headerViewHolder.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, getItemCount() - 1));
 
-            if(mShowtProgressbarAnimation == false)
+            if (mShowtProgressbarAnimation == false)
             {
                 mShowtProgressbarAnimation = true;
 

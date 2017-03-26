@@ -260,15 +260,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         // 리뷰
         TextView trueReviewTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.trueReviewTextView);
-
-        if (gourmetDetailParams.reviewCount == 0)
-        {
-            trueReviewTextView.setVisibility(View.GONE);
-        } else
-        {
-            trueReviewTextView.setVisibility(View.VISIBLE);
-            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, gourmetDetailParams.reviewCount));
-        }
+        trueReviewTextView.setVisibility(View.GONE);
 
         // 할인 쿠폰
         View couponLayout = view.findViewById(R.id.couponLayout);
@@ -313,6 +305,33 @@ public class GourmetDetailListAdapter extends BaseAdapter
         });
 
         return view;
+    }
+
+    public void setTrueReviewCount(int count)
+    {
+        if (mGourmetTitleLayout == null)
+        {
+            return;
+        }
+
+        TextView trueReviewTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (count == 0)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            trueReviewTextView.setVisibility(View.VISIBLE);
+            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, count));
+            trueReviewTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.onReviewClick();
+                }
+            });
+        }
     }
 
     /**

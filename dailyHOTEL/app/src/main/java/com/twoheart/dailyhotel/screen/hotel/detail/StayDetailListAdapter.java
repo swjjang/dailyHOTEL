@@ -250,23 +250,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
         // 리뷰
         TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
-
-        if (stayDetailParams.reviewCount == 0)
-        {
-            trueReviewTextView.setVisibility(View.GONE);
-        } else
-        {
-            trueReviewTextView.setVisibility(View.VISIBLE);
-            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, stayDetailParams.reviewCount));
-            trueReviewTextView.setOnClickListener(new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    mOnEventListener.onReviewClick();
-                }
-            });
-        }
+        trueReviewTextView.setVisibility(View.GONE);
 
         // 할인 쿠폰
         View couponLayout = view.findViewById(R.id.couponLayout);
@@ -372,6 +356,33 @@ public class StayDetailListAdapter extends BaseAdapter
         });
 
         return view;
+    }
+
+    public void setTrueReviewCount(int count)
+    {
+        if (mHotelTitleLayout == null)
+        {
+            return;
+        }
+
+        TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (count == 0)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            trueReviewTextView.setVisibility(View.VISIBLE);
+            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, count));
+            trueReviewTextView.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.onReviewClick();
+                }
+            });
+        }
     }
 
     /**

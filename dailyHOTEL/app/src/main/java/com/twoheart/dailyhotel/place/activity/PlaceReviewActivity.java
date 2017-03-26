@@ -5,7 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.PlaceReview;
-import com.twoheart.dailyhotel.network.model.PlaceReviewProgress;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScore;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceReviewLayout;
 import com.twoheart.dailyhotel.util.Util;
@@ -60,14 +61,14 @@ public abstract class PlaceReviewActivity extends BaseActivity
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-    protected void setReviewList(List<PlaceReviewProgress> placeReviewProgressList, List<PlaceReview> placeReviewList)
+    protected void setReviewScores(List<PlaceReviewScore> placeReviewScoreList)
     {
         if (mPlaceReviewLayout == null)
         {
             return;
         }
 
-        mPlaceReviewLayout.setReviewList(placeReviewProgressList, placeReviewList);
+        mPlaceReviewLayout.setReviewScores(placeReviewScoreList);
     }
 
     public void addReviewList(List<PlaceReview> placeReviewList)

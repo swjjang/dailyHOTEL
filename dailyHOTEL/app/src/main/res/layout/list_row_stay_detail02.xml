@@ -72,7 +72,7 @@
             android:gravity="center_vertical"
             android:textColor="@color/default_text_cb70038"
             android:textSize="13dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:drawableCompatLeft="@drawable/detail_ic_review"/>
     </LinearLayout>
 

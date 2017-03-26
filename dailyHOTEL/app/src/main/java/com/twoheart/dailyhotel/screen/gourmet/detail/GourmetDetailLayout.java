@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -60,7 +61,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
     }
 
-    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int imagePosition)
+    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, PlaceReviewScores placeReviewScores, int imagePosition)
     {
         if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
         {
@@ -129,7 +130,21 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         setWishButtonSelected(gourmetDetailParams.myWish);
         setWishButtonCount(gourmetDetailParams.wishCount);
 
+        if (placeReviewScores != null)
+        {
+            setTrueReviewCount(placeReviewScores.reviewScoreTotalCount);
+        }
+
         mListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setTrueReviewCount(int count)
+    {
+        if (mListAdapter != null)
+        {
+            mListAdapter.setTrueReviewCount(count);
+        }
     }
 
     @Override

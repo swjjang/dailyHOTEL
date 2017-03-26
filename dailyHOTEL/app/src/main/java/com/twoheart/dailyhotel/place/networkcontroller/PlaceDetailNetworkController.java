@@ -5,6 +5,7 @@ import android.content.Context;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
@@ -34,6 +35,8 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
 
         void onRemoveWishList(boolean isSuccess, String message);
 
+        void onPlaceReviewScores(PlaceReviewScores placeReviewScores);
+
     }
 
     public void requestCommonDatetime()
@@ -58,6 +61,13 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
 
         DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, type, placeIndex, mRemoveWishListCallback);
+    }
+
+    public void requestPlaceReviewScores(Constants.PlaceType placeType, int placeIndex)
+    {
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestPlaceReviewScores(mNetworkTag, type, placeIndex, mPlaceReviewScoresCallback);
     }
 
     private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
@@ -227,6 +237,41 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mPlaceReviewScoresCallback = new retrofit2.Callback<BaseDto<PlaceReviewScores>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<PlaceReviewScores>> call, Response<BaseDto<PlaceReviewScores>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseDto<PlaceReviewScores> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(baseDto.data);
+                    } else
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+                    }
+                } catch (Exception e)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+                }
+            } else
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseDto<PlaceReviewScores>> call, Throwable t)
+        {
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
         }
     };
 }

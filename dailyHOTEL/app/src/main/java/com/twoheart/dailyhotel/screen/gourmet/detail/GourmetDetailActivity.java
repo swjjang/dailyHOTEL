@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
@@ -863,7 +864,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
-            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(gourmetBookingDay, gourmetDetail, mCurrentImage);
+            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(gourmetBookingDay, gourmetDetail, mPlaceReviewScores, mCurrentImage);
         }
 
         if (mFirstCheckPrice == false)
@@ -1160,6 +1161,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onReviewClick()
         {
+            if(lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+
+
 
         }
 
@@ -1458,6 +1466,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                     gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
+
+                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, mPlaceDetail.index);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
@@ -1715,6 +1725,14 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
                     , getResources().getString(R.string.dialog_btn_text_confirm), null);
             }
+        }
+
+        @Override
+        public void onPlaceReviewScores(PlaceReviewScores placeReviewScores)
+        {
+            mPlaceReviewScores = placeReviewScores;
+
+            mPlaceDetailLayout.setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
         }
 
         @Override
