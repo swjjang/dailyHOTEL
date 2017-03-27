@@ -74,19 +74,19 @@ public class DailyUserPreference
         DailyHotel.AUTHORIZATION = null;
     }
 
-    private String getValue(SharedPreferences sharedPreferences, String key, String defaultValue)
+    private String getValueDecrypt(SharedPreferences sharedPreferences, String key, String defaultValue)
     {
         String result = defaultValue;
 
         if (sharedPreferences != null)
         {
-            result = sharedPreferences.getString(key, defaultValue);
+            result = Crypto.urlDecrypt(sharedPreferences.getString(key, defaultValue));
         }
 
         return result;
     }
 
-    private void setValue(Editor editor, String key, String value)
+    private void setValueEncrypt(Editor editor, String key, String value)
     {
         if (editor != null)
         {
@@ -95,7 +95,7 @@ public class DailyUserPreference
                 editor.remove(key);
             } else
             {
-                editor.putString(key, value);
+                editor.putString(key, Crypto.urlEncrypt(value));
             }
 
             editor.apply();
@@ -178,17 +178,17 @@ public class DailyUserPreference
 
     public String getOverseasName()
     {
-        return getValue(mPreferences, KEY_OVERSEAS_NAME, null);
+        return getValueDecrypt(mPreferences, KEY_OVERSEAS_NAME, null);
     }
 
     public String getOverseasPhone()
     {
-        return getValue(mPreferences, KEY_OVERSEAS_PHONE, null);
+        return getValueDecrypt(mPreferences, KEY_OVERSEAS_PHONE, null);
     }
 
     public String getOverseasEmail()
     {
-        return getValue(mPreferences, KEY_OVERSEAS_EMAIL, null);
+        return getValueDecrypt(mPreferences, KEY_OVERSEAS_EMAIL, null);
     }
 
     public void setOverseasInformation(String name, String phone, String email)
@@ -204,27 +204,27 @@ public class DailyUserPreference
 
     public String getType()
     {
-        return Crypto.urlDecrypt(getValue(mPreferences, KEY_TYPE, null));
+        return getValueDecrypt(mPreferences, KEY_TYPE, null);
     }
 
     public String getName()
     {
-        return Crypto.urlDecrypt(getValue(mPreferences, KEY_NAME, null));
+        return getValueDecrypt(mPreferences, KEY_NAME, null);
     }
 
     public String getEmail()
     {
-        return Crypto.urlDecrypt(getValue(mPreferences, KEY_EMAIL, null));
+        return getValueDecrypt(mPreferences, KEY_EMAIL, null);
     }
 
     public String getBirthday()
     {
-        return getValue(mPreferences, KEY_BIRTHDAY, null);
+        return getValueDecrypt(mPreferences, KEY_BIRTHDAY, null);
     }
 
     public String getRecommender()
     {
-        return getValue(mPreferences, KEY_RECOMMENDER, null);
+        return getValueDecrypt(mPreferences, KEY_RECOMMENDER, null);
     }
 
     public boolean isBenefitAlarm()
@@ -255,7 +255,7 @@ public class DailyUserPreference
             mEditor.putString(KEY_EMAIL, Crypto.urlEncrypt(email));
             mEditor.putString(KEY_NAME, Crypto.urlEncrypt(name));
             mEditor.putString(KEY_BIRTHDAY, Crypto.urlEncrypt(birthday));
-            mEditor.putString(KEY_RECOMMENDER, recommender);
+            mEditor.putString(KEY_RECOMMENDER, Crypto.urlEncrypt(recommender));
             mEditor.apply();
         }
     }
@@ -268,6 +268,7 @@ public class DailyUserPreference
             mEditor.remove(KEY_EMAIL);
             mEditor.remove(KEY_NAME);
             mEditor.remove(KEY_BIRTHDAY);
+            mEditor.remove(KEY_RECOMMENDER);
             mEditor.remove(KEY_AUTHORIZATION);
 
             DailyHotel.AUTHORIZATION = null;
@@ -278,14 +279,14 @@ public class DailyUserPreference
 
     public String getAuthorization()
     {
-        return Crypto.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+        return getValueDecrypt(mPreferences, KEY_AUTHORIZATION, null);
     }
 
     public void setAuthorization(String value)
     {
         DailyHotel.AUTHORIZATION = value;
 
-        setValue(mEditor, KEY_AUTHORIZATION, Crypto.urlEncrypt(value));
+        setValueEncrypt(mEditor, KEY_AUTHORIZATION, value);
     }
 
     public void requestMigration(Context context)
@@ -293,18 +294,21 @@ public class DailyUserPreference
         String email = DailyPreference.getInstance(context).getUserEmail();
         String type = DailyPreference.getInstance(context).getUserType();
         String name = DailyPreference.getInstance(context).getUserName();
+        String birthday = DailyPreference.getInstance(context).getUserBirthday();
         String recommender = DailyPreference.getInstance(context).getUserRecommender();
+
         boolean isBenefitAlarm = DailyPreference.getInstance(context).isUserBenefitAlarm();
         boolean isExceedBonus = DailyPreference.getInstance(context).isUserExceedBonus();
-        String birthday = DailyPreference.getInstance(context).getUserBirthday();
+
         String authorization = DailyPreference.getInstance(context).getAuthorization();
 
         String overseasName = DailyPreference.getInstance(context).getOverseasName();
         String overseasPhone = DailyPreference.getInstance(context).getOverseasPhone();
         String overseasEmail = DailyPreference.getInstance(context).getOverseasEmail();
 
-
         setInformation(type, email, name, birthday, recommender);
+        setBenefitAlarm(isBenefitAlarm);
+        setExceedBonus(isExceedBonus);
         setAuthorization(authorization);
         setOverseasInformation(overseasName, overseasPhone, overseasEmail);
     }

@@ -1490,6 +1490,7 @@ public class DailyPreference
             mEditor.remove(KEY_PAYMENT_OVERSEAS_NAME);
             mEditor.remove(KEY_PAYMENT_OVERSEAS_PHONE);
             mEditor.remove(KEY_PAYMENT_OVERSEAS_EMAIL);
+            mEditor.remove(KEY_AUTHORIZATION);
 
             mEditor.apply();
         }
