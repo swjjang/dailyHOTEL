@@ -3,15 +3,21 @@ package com.twoheart.dailyhotel.screen.mydaily.stamp;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.StampHistory;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class StampHistoryActivity extends BaseActivity
 {
@@ -36,20 +42,8 @@ public class StampHistoryActivity extends BaseActivity
 
         String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
         String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
-        String stampDate3 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
 
-        mStampHistoryLayout.setStampDate(stampDate1, stampDate2, stampDate3);
-
-
-        List<StampHistory> stampHistoryList = new ArrayList<>();
-
-        stampHistoryList.add(new StampHistory("호텔 카푸치노", "2017-05-29T09:00:00+09:00", 5));
-        stampHistoryList.add(new StampHistory("그랜드 워커힐 서울 (구 쉐라톤 그랜드 워커힐) 업장명 두줄까지 노출", "2017-05-01T09:00:00+09:00", 4));
-        stampHistoryList.add(new StampHistory("더 플라자 호텔", "2017-04-26T09:00:00+09:00", 3));
-        stampHistoryList.add(new StampHistory("핸드픽트 호텔 서울", "2017-04-22T09:00:00+09:00", 2));
-        stampHistoryList.add(new StampHistory("서울신라호텔", "2017-04-17T09:00:00+09:00", 1));
-
-        mStampHistoryLayout.setHistoryList(stampHistoryList);
+        mStampHistoryLayout.setStampDate(stampDate1, stampDate2);
     }
 
     @Override
@@ -57,12 +51,12 @@ public class StampHistoryActivity extends BaseActivity
     {
         super.onStart();
 
-        //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
+        AnalyticsManager.getInstance(StampHistoryActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_HISTORY, null);
 
-        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
+        if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
         {
-            //                lockUI();
-            //                mNetworkController.requestStamp();
+            lockUI();
+            DailyMobileAPI.getInstance(this).requestUserStamps(mNetworkTag, true, mStampHistoryCallback);
         } else
         {
             showFinishDialog();
@@ -103,12 +97,29 @@ public class StampHistoryActivity extends BaseActivity
         });
     }
 
+    private void onStampHistory(Stamp stamp)
+    {
+        unLockUI();
+
+        if (stamp == null)
+        {
+            return;
+        }
+
+        mStampHistoryLayout.setHistoryList(stamp.list);
+    }
+
     private StampHistoryLayout.OnEventListener mOnEventListener = new StampHistoryLayout.OnEventListener()
     {
 
         @Override
         public void onHomeClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             setResult(CODE_RESULT_ACTIVITY_GO_HOME);
             finish();
         }
@@ -116,13 +127,53 @@ public class StampHistoryActivity extends BaseActivity
         @Override
         public void onStampHistoryClick(StampHistory stampHistory)
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=bd&ri=" + stampHistory.reservationIdx + "&pt=stay";
+
+            Intent intent = new Intent(StampHistoryActivity.this, LauncherActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setData(Uri.parse(deepLink));
+
+            startActivity(intent);
         }
 
         @Override
         public void finish()
         {
             StampHistoryActivity.this.finish();
+        }
+    };
+
+    private retrofit2.Callback mStampHistoryCallback = new retrofit2.Callback<BaseDto<Stamp>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<Stamp>> call, Response<BaseDto<Stamp>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                BaseDto<Stamp> baseDto = response.body();
+
+                if (baseDto.msgCode == 100)
+                {
+                    onStampHistory(baseDto.data);
+                } else
+                {
+                    onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
+                }
+            } else
+            {
+                onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseDto<Stamp>> call, Throwable t)
+        {
+            onError(t);
         }
     };
 }

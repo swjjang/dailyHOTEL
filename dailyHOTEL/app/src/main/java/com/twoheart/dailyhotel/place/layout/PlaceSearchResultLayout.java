@@ -247,6 +247,15 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void setOptionFilterEnabled(boolean isFilterEnabled)
     {
+        // disable opacity 40% - 0 ~ 255
+        if (isFilterEnabled == true)
+        {
+            mFilterOptionImageView.getBackground().setAlpha(255);
+        } else
+        {
+            mFilterOptionImageView.getBackground().setAlpha(102);
+        }
+
         mFilterOptionImageView.setEnabled(isFilterEnabled);
     }
 
@@ -347,7 +356,12 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
                 prevPosition = position;
 
-                setOptionViewTypeEnabled(getPlaceListFragment().get(position).getViewType() != Constants.ViewType.GONE);
+                PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
+
+                boolean isViewTypeEnabled = placeListFragment.getViewType() != Constants.ViewType.GONE;
+
+                setOptionViewTypeEnabled(isViewTypeEnabled);
+                setOptionFilterEnabled(isViewTypeEnabled || placeListFragment.isDefaultFilter() == false);
             }
 
             @Override
@@ -656,15 +670,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             return;
         }
 
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
-            }
-
-            mValueAnimator = null;
+            mValueAnimator.cancel();
         }
 
         if (isAnimation == true)
@@ -698,6 +706,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
@@ -711,8 +723,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 public void onAnimationCancel(Animator animation)
                 {
                     mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-
-                    setMenuBarLayoutEnabled(true);
                 }
 
                 @Override
@@ -738,15 +748,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             return;
         }
 
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-                mValueAnimator.removeAllListeners();
-            }
-
-            mValueAnimator = null;
+            mValueAnimator.cancel();
         }
 
         if (isAnimation == true)
@@ -781,6 +785,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;

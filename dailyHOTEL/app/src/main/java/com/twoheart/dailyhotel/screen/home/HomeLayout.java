@@ -899,11 +899,6 @@ public class HomeLayout extends BaseLayout
 
             String countString = mContext.getResources().getString(R.string.format_home_event_count, pageIndex, totalCount);
             int slashIndex = countString.indexOf("/");
-            int textSize = countString.length();
-            if (slashIndex < textSize)
-            {
-                textSize++;
-            }
 
             if (slashIndex == -1)
             {
@@ -1035,10 +1030,9 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        if (mErrorPopupAnimator != null)
+        if (mErrorPopupAnimator != null && mErrorPopupAnimator.isRunning() == true)
         {
             mErrorPopupAnimator.cancel();
-            mErrorPopupAnimator = null;
         }
 
         float oldTranslationY = mErrorPopupLayout.getTranslationY();
@@ -1067,13 +1061,16 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                mErrorPopupAnimator.removeAllListeners();
+                mErrorPopupAnimator.removeAllUpdateListeners();
+                mErrorPopupAnimator = null;
+
                 mErrorPopupLayout.setTranslationY(end);
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                mErrorPopupLayout.setTranslationY(end);
             }
 
             @Override
@@ -1100,7 +1097,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
         valueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         valueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -1126,6 +1123,9 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
                 view.setVisibility(View.VISIBLE);
                 view.clearAnimation();
             }
@@ -1133,8 +1133,6 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                view.setVisibility(View.VISIBLE);
-                view.clearAnimation();
             }
 
             @Override
@@ -1161,7 +1159,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
+        final ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
         closeValueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
         closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -1187,15 +1185,15 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                closeValueAnimator.removeAllUpdateListeners();
+                closeValueAnimator.removeAllListeners();
+
                 view.setVisibility(View.GONE);
-                view.clearAnimation();
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                view.setVisibility(View.GONE);
-                view.clearAnimation();
             }
 
             @Override

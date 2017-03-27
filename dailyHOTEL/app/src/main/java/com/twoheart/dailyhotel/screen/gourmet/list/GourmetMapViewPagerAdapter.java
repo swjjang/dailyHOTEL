@@ -26,7 +26,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
     {
 
     }
-    
+
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {

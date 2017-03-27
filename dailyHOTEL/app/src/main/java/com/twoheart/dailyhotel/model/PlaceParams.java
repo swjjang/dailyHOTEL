@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.Locale;
+
 /**
  * Created by android_sam on 2016. 6. 30..
  */
@@ -65,7 +67,7 @@ public abstract class PlaceParams implements Parcelable
             return "";
         }
 
-        return String.format("%s=%s", key, stringValue);
+        return String.format(Locale.KOREA, "%s=%s", key, stringValue);
     }
 
     protected void clear()

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class StaySearchResultLayout extends PlaceSearchResultLayout
@@ -40,7 +41,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         {
             int nights = stayBookingDay.getNights();
 
-            setCalendarText(String.format("%s - %s, %d박"//
+            setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
                 , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)")//
                 , stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights));
         } catch (Exception e)

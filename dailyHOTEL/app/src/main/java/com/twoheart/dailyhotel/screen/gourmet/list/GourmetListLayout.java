@@ -81,6 +81,7 @@ public class GourmetListLayout extends PlaceListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
@@ -105,6 +106,7 @@ public class GourmetListLayout extends PlaceListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
@@ -117,10 +119,12 @@ public class GourmetListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
+                    ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
 
                 mMapLayout.setVisibility(View.GONE);

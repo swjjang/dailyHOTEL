@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -44,6 +45,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
     private TextView mPushTextView;
     private TextView mPushBenefitTextView;
+    private TextView mStampTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -92,11 +94,13 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         initAccountInfoLayout(mContext, view);
 
         View stampLayout = view.findViewById(R.id.stampLayout);
+        mStampTextView = (TextView) stampLayout.findViewById(R.id.stampTextView);
+
         View recommendLayout = view.findViewById(R.id.recommendLayout);
         View wishListLayout = view.findViewById(R.id.wishListLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
 
-        if (DailyPreference.getInstance(mContext).getRemoteConfigStampEnabled() == true)
+        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
         {
             stampLayout.setVisibility(View.VISIBLE);
             stampLayout.setOnClickListener(this);
@@ -119,7 +123,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         updateLoginLayout(isLogin, true);
         updateAccountLayout(isLogin, -1, -1);
 
-        boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
+        boolean isAllowBenefitAlarm = DailyUserPreference.getInstance(mContext).isBenefitAlarm();
         updatePushIcon(isAllowBenefitAlarm);
 
         mLinkAlarmLayoutView = view.findViewById(R.id.linkAlarmLayout);
@@ -147,6 +151,22 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(context, toolbar);
         dailyToolbarLayout.initToolbar(mContext.getResources().getString(R.string.menu_item_title_mydaily), null, false);
+    }
+
+    public void setStampTitle(String title)
+    {
+        if (mStampTextView == null)
+        {
+            return;
+        }
+
+        if (Util.isTextEmpty(title) == true)
+        {
+            mStampTextView.setText(R.string.label_stamp_mydaily_title);
+        } else
+        {
+            mStampTextView.setText(title);
+        }
     }
 
     private void initProfileLayout(Context context, View view)
@@ -226,8 +246,8 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         if (isLogin == true)
         {
-            String userName = DailyPreference.getInstance(mContext).getUserName();
-            String userEmail = DailyPreference.getInstance(mContext).getUserEmail();
+            String userName = DailyUserPreference.getInstance(mContext).getName();
+            String userEmail = DailyUserPreference.getInstance(mContext).getEmail();
 
             boolean isEmptyName = Util.isTextEmpty(userName) == true;
             boolean isEmptyEmail = Util.isTextEmpty(userEmail) == true;

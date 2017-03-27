@@ -8,9 +8,11 @@ import android.os.Bundle;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import retrofit2.Call;
@@ -41,9 +43,8 @@ public class StampActivity extends BaseActivity
 
         String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
         String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
-        String stampDate3 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
 
-        mStampLayout.setStampDate(stampDate1, stampDate2, stampDate3);
+        mStampLayout.setStampDate(stampDate1, stampDate2);
 
         if (DailyHotel.isLogin() == true)
         {
@@ -55,7 +56,7 @@ public class StampActivity extends BaseActivity
             mStampLayout.setStampHistoryEnabled(false);
         }
 
-        boolean isBenefitAlarm = DailyPreference.getInstance(StampActivity.this).isUserBenefitAlarm();
+        boolean isBenefitAlarm = DailyUserPreference.getInstance(StampActivity.this).isBenefitAlarm();
 
         mStampLayout.setPushLayout(isBenefitAlarm == false);
     }
@@ -65,9 +66,19 @@ public class StampActivity extends BaseActivity
     {
         super.onStart();
 
-        //        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP, null);
+        AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_DETAIL, null);
 
-        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() != true)
+        if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
+        {
+            lockUI();
+
+            if (DailyHotel.isLogin() == true)
+            {
+                mNetworkController.requestUserStamps(false);
+            }
+
+            mNetworkController.requestPushBenefit(false);
+        } else
         {
             showFinishDialog();
         }
@@ -141,14 +152,19 @@ public class StampActivity extends BaseActivity
         @Override
         public void onLoginClick()
         {
-            Intent intent = LoginActivity.newInstance(StampActivity.this);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startLogin();
         }
 
         @Override
         public void onStampEventDetailClick()
         {
-
+            AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAMP_DETAIL, null);
         }
 
         @Override
@@ -173,6 +189,9 @@ public class StampActivity extends BaseActivity
             }
 
             startActivityForResult(StampHistoryActivity.newInstance(StampActivity.this), CODE_REQUEST_ACTIVITY_STAMP_HISTORY);
+
+            AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.STAMP_HISTORY_CLICK, AnalyticsManager.ValueType.EMPTY, null);
         }
 
         @Override
@@ -199,7 +218,7 @@ public class StampActivity extends BaseActivity
         @Override
         public void onBenefitAgreement(boolean isAgree, String updateDate)
         {
-            DailyPreference.getInstance(StampActivity.this).setUserBenefitAlarm(isAgree);
+            DailyUserPreference.getInstance(StampActivity.this).setBenefitAlarm(isAgree);
             AnalyticsManager.getInstance(StampActivity.this).setPushEnabled(isAgree, AnalyticsManager.ValueType.OTHER);
 
             if (isAgree == true)
@@ -223,6 +242,27 @@ public class StampActivity extends BaseActivity
             }
 
             unLockUI();
+        }
+
+        @Override
+        public void onUserStamps(Stamp stamp)
+        {
+            unLockUI();
+
+            if (stamp == null)
+            {
+                return;
+            }
+
+            mStampLayout.setNights(stamp.count);
+
+            if (stamp.count > 0)
+            {
+                mStampLayout.setStampHistoryEnabled(true);
+            } else
+            {
+                mStampLayout.setStampHistoryEnabled(false);
+            }
         }
 
         @Override

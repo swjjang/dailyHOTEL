@@ -5,17 +5,17 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.AutoCompleteTextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 
-public class DailyAutoCompleteEditText extends AutoCompleteTextView
+public class DailyAutoCompleteEditText extends AppCompatAutoCompleteTextView
 {
     private final int DRAWABLE_LEFT = 0;
     private final int DRAWABLE_TOP = 1;

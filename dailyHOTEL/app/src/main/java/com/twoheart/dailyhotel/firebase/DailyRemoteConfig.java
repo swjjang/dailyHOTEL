@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,7 +88,7 @@ public class DailyRemoteConfig
                 String androidText = mFirebaseRemoteConfig.getString("androidText");
                 String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
                 String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
-//                String androidABTestGourmetProductList = mFirebaseRemoteConfig.getString("androidABTestGourmetProductList");
+                //                String androidABTestGourmetProductList = mFirebaseRemoteConfig.getString("androidABTestGourmetProductList");
                 String androidABTestHome = mFirebaseRemoteConfig.getString("androidABTestHome");
 
                 if (Constants.DEBUG == true)
@@ -102,7 +103,7 @@ public class DailyRemoteConfig
                         ExLog.d("androidText : " + new JSONObject(androidText).toString());
                         ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                         ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
-//                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
+                        //                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
                         ExLog.d("androidABTestHome : " + androidABTestHome);
                     } catch (Exception e)
                     {
@@ -434,6 +435,10 @@ public class DailyRemoteConfig
 
             DailyPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
 
+            String myDailyTitle = jsonObject.getString("myDailyTitle");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampTitle(myDailyTitle);
+
             JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
 
             String stayDetailMessage1 = stayDetailJSONObject.getString("message1");
@@ -462,13 +467,14 @@ public class DailyRemoteConfig
 
             boolean endEventPopupEnabled = jsonObject.getBoolean("endEventPopupEnabled");
 
+            DailyPreference.getInstance(context).setRemoteConfigStampStayEndEventPopupEnabled(endEventPopupEnabled);
+
             JSONObject stampDateJSONObject = jsonObject.getJSONObject("dates");
 
             String date1 = stampDateJSONObject.getString("date1");
             String date2 = stampDateJSONObject.getString("date2");
-            String date3 = stampDateJSONObject.getString("date3");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
+            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2);
 
         } catch (Exception e)
         {
@@ -476,20 +482,31 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writeABTestHome(final Context context, String abTest)
+    private void writeABTestHome(Context context, String abTest)
     {
         if (context == null)
         {
             return;
         }
 
-        if (Util.isTextEmpty(abTest) == true)
+        DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest);
+
+        if (Util.isTextEmpty(abTest) == false)
         {
-            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(null);
-            return;
-        } else
-        {
-            DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest);
+            try
+            {
+                JSONObject jsonObject = new JSONObject(abTest);
+                String abTestValue = jsonObject.getString("value");
+
+                if ("a".equalsIgnoreCase(abTestValue) == true)
+                {
+                    AnalyticsManager.getInstance(context).recordEvent(AnalyticsManager.Category.EXPERIMENT,//
+                        AnalyticsManager.Action.HOME_MENU_BUTTON, AnalyticsManager.Label.CTA_VARIATION_A, null);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
     }
 }

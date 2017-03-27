@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
@@ -58,6 +59,11 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
+        if (mPlaceListLayout == null)
+        {
+            return;
+        }
+
         mStayCuration = (StayCuration) curation;
         ((StayListLayout) mPlaceListLayout).setStayCuration(mStayCuration);
     }
@@ -178,6 +184,23 @@ public class StayListFragment extends PlaceListFragment
         mPlaceListLayout.setSwipeRefreshing(false);
     }
 
+    @Override
+    public boolean isDefaultFilter()
+    {
+        if (mStayCuration == null)
+        {
+            return true;
+        }
+
+        PlaceCurationOption placeCurationOption = mStayCuration.getCurationOption();
+        if (placeCurationOption == null)
+        {
+            return true;
+        }
+
+        return placeCurationOption.isDefaultFilter();
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////   Listener   //////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
@@ -220,6 +243,12 @@ public class StayListFragment extends PlaceListFragment
         public void onFilterClick()
         {
             mOnPlaceListFragmentListener.onFilterClick();
+        }
+
+        @Override
+        public void onUpdateFilterEnabled(boolean isEnabled)
+        {
+            mOnPlaceListFragmentListener.onUpdateFilterEnabled(isEnabled);
         }
 
         @Override

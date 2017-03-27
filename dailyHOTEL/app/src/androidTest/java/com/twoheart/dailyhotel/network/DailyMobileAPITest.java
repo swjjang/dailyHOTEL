@@ -55,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
@@ -282,7 +283,7 @@ public class DailyMobileAPITest
                     assertThat(accessToken, isNotEmpty());
                     assertThat(tokenType, isNotEmpty());
 
-                    mAuthorization = String.format("%s %s", tokenType, accessToken);
+                    mAuthorization = String.format(Locale.KOREA, "%s %s", tokenType, accessToken);
 
                     JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
                     assertThat(userJSONObject, notNullValue());
@@ -2421,7 +2422,7 @@ public class DailyMobileAPITest
                         assertThat(gourmetJSONArray, notNullValue());
                     }
 
-                    int totalCount = dataJSONObject.getInt("searchCount");
+                    int totalCount = dataJSONObject.getInt("gourmetSalesCount");
                     int maxCount = dataJSONObject.getInt("searchMaxCount");
 
                     assertThat(totalCount, moreThan(0));

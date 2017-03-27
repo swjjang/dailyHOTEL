@@ -877,14 +877,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     @Override
     public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked)
     {
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-            }
-
-            mValueAnimator = null;
+            mValueAnimator.cancel();
         }
 
         if (isChecked == true)
@@ -951,6 +946,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+                mValueAnimator = null;
+
                 if (mIsAnimationCancel == false)
                 {
                     mGuestNameEditText.setEnabled(true);

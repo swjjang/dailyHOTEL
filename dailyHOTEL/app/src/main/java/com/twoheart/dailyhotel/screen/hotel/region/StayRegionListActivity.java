@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.widget.FontManager;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -109,16 +110,15 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     protected void initToolbar(View toolbar)
     {
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_stay_area), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.label_selectarea_stay_area), R.drawable.navibar_ic_x, new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 finish();
             }
-        });
+        }, false);
 
-        dailyToolbarLayout.setBackImageView(R.drawable.navibar_ic_x);
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
         {
@@ -219,16 +219,16 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
                 if (area.index == -1)
                 {
-                    label = String.format("%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    label = String.format(Locale.KOREA, "%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                         , area.getProvince().name);
                 } else
                 {
-                    label = String.format("%s-%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    label = String.format(Locale.KOREA, "%s-%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                         , area.getProvince().name, area.name);
                 }
             } else
             {
-                label = String.format("%s-%s", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                label = String.format(Locale.KOREA, "%s-%s", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                     , province.name);
             }
 
@@ -246,16 +246,16 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
                 if (area.index == -1)
                 {
-                    label = String.format("%s-%s-None", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    label = String.format(Locale.KOREA, "%s-%s-None", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                         , area.getProvince().name);
                 } else
                 {
-                    label = String.format("%s-%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                    label = String.format(Locale.KOREA, "%s-%s-%s", area.getProvince().isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                         , area.getProvince().name, area.name);
                 }
             } else
             {
-                label = String.format("%s-%s-None", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
+                label = String.format(Locale.KOREA, "%s-%s-None", province.isOverseas ? getString(R.string.label_global) : getString(R.string.label_domestic)//
                     , province.name);
             }
 

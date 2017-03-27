@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.util.Util;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -326,7 +327,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                                     }
                                 }
 
-                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format("%s %s", tokenType, accessToken),//
+                                ((OnNetworkControllerListener) mOnNetworkControllerListener).onLogin(String.format(Locale.KOREA, "%s %s", tokenType, accessToken),//
                                     userIndex, email, name, birthday, rndnum, userType, phoneNumber, isAgreedBenefit);
                                 return;
                             }

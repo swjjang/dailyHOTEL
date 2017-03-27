@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by android_sam on 2016. 5. 26..
@@ -123,7 +124,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         try
         {
             String expireText = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-            expireText = String.format("- %s", expireText);
+            expireText = String.format(Locale.KOREA, "- %s", expireText);
             holder.expireTextView.setText(expireText);
             holder.expireTextView.setVisibility(View.VISIBLE);
         } catch (ParseException e)

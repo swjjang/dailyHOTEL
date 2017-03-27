@@ -24,6 +24,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.Locale;
+
 public class SignupStep2Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
     private static final int VERIFICATION_NUMBER_LENGTH = 4;
@@ -360,7 +362,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
         }
 
         String countryCode = tag.substring(tag.indexOf('\n') + 1);
-        String phoneNumber = String.format("%s %s", countryCode, mPhoneEditText.getText().toString().trim());
+        String phoneNumber = String.format(Locale.KOREA, "%s %s", countryCode, mPhoneEditText.getText().toString().trim());
 
         return phoneNumber;
     }

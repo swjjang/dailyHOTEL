@@ -343,18 +343,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             }
 
             dayView.setSelected(false);
-
-            Object tag = dayView.getTag();
-
-            if (tag != null && tag instanceof Day)
-            {
-                Day day = (Day) tag;
-
-                dayView.setEnabled(true);
-            } else
-            {
-                dayView.setEnabled(false);
-            }
+            dayView.setEnabled(true);
         }
 
         setToolbarText(getString(R.string.label_calendar_gourmet_select));

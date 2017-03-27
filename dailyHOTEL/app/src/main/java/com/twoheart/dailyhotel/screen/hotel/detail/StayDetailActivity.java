@@ -52,6 +52,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -65,6 +66,7 @@ import com.twoheart.dailyhotel.widget.TextTransition;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -383,21 +385,21 @@ public class StayDetailActivity extends PlaceDetailActivity
     {
         if (mIsUsedMultiTransition == true)
         {
-            TransitionSet intransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
+            TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition inTextTransition = new TextTransition(getResources().getColor(R.color.white), getResources().getColor(R.color.default_text_c323232)//
                 , 17, 18, new LinearInterpolator());
             inTextTransition.addTarget(getString(R.string.transition_place_name));
-            intransitionSet.addTransition(inTextTransition);
+            inTransitionSet.addTransition(inTextTransition);
 
             Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
             inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
-            intransitionSet.addTransition(inBottomAlphaTransition);
+            inTransitionSet.addTransition(inBottomAlphaTransition);
 
             Transition inTopAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
             inTopAlphaTransition.addTarget(getString(R.string.transition_gradient_top_view));
-            intransitionSet.addTransition(inTopAlphaTransition);
+            inTransitionSet.addTransition(inTopAlphaTransition);
 
-            getWindow().setSharedElementEnterTransition(intransitionSet);
+            getWindow().setSharedElementEnterTransition(inTransitionSet);
 
             TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
             Transition outTextTransition = new TextTransition(getResources().getColor(R.color.default_text_c323232), getResources().getColor(R.color.white)//
@@ -548,7 +550,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String name = DailyPreference.getInstance(StayDetailActivity.this).getUserName();
+        String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
 
         if (Util.isTextEmpty(name) == true)
         {
@@ -596,7 +598,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            String name = DailyPreference.getInstance(StayDetailActivity.this).getUserName();
+            String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
 
             if (Util.isTextEmpty(name) == true)
             {
@@ -648,7 +650,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
 
-                switch (DailyPreference.getInstance(this).getUserType())
+                switch (DailyUserPreference.getInstance(this).getType())
                 {
                     case Constants.DAILY_USER:
                         params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
@@ -672,7 +674,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
             }
 
-            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(this).isBenefitAlarm() ? "on" : "off");
             params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
             params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(stayDetail.index));
             params.put(AnalyticsManager.KeyType.VENDOR_NAME, stayDetailParams.name);
@@ -923,14 +925,17 @@ public class StayDetailActivity extends PlaceDetailActivity
                     }
                 });
 
-            if (isDeepLink == true)
+            if (stayDetailParams != null)
             {
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                    Action.SOLDOUT_DEEPLINK, stayDetailParams.name, null);
-            } else
-            {
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                    Action.SOLDOUT, stayDetailParams.name, null);
+                if (isDeepLink == true)
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT_DEEPLINK, stayDetailParams.name, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT, stayDetailParams.name, null);
+                }
             }
         } else
         {
@@ -1328,6 +1333,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 ExLog.d(e.toString());
             }
+
+            AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_DETAIL_VIEW, null);
         }
 
         @Override
@@ -1455,7 +1463,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            String label = String.format("%s-%s", stayDetailParams.name, mSelectedStayProduct.roomName);
+            String label = String.format(Locale.KOREA, "%s-%s", stayDetailParams.name, mSelectedStayProduct.roomName);
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.BOOKING_CLICKED, label, recordAnalyticsBooking((StayBookingDay) mPlaceBookingDay, (StayDetail) mPlaceDetail, stayProduct));
         }

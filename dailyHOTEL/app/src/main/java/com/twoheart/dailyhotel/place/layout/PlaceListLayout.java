@@ -66,6 +66,8 @@ public abstract class PlaceListLayout extends BaseLayout
 
         void onUpdateViewTypeEnabled(boolean isEnabled);
 
+        void onUpdateFilterEnabled(boolean isEnabled);
+
         void onShowActivityEmptyView(boolean isShow);
 
         void onRecordAnalytics(Constants.ViewType viewType);
@@ -421,8 +423,7 @@ public abstract class PlaceListLayout extends BaseLayout
         return hasPlace;
     }
 
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType
-        , ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
     {
         mIsLoading = false;
 

@@ -392,15 +392,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             final float y = mAnimationLayout.getBottom();
 
-            if (mObjectAnimator != null)
+            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
-                }
-
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
@@ -430,6 +424,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mObjectAnimator.removeAllListeners();
+                    mObjectAnimator.removeAllUpdateListeners();
+                    mObjectAnimator = null;
+
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = ANIMATION_STATUS.SHOW_END;
@@ -486,15 +484,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             final float y = mAnimationLayout.getTop();
 
-            if (mObjectAnimator != null)
+            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                    mObjectAnimator.removeAllListeners();
-                }
-
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
             }
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
@@ -515,6 +507,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mObjectAnimator.removeAllListeners();
+                    mObjectAnimator.removeAllUpdateListeners();
+                    mObjectAnimator = null;
+
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = ANIMATION_STATUS.HIDE_END;

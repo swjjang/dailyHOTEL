@@ -40,7 +40,7 @@
         android:layout_height="112dp"
         android:background="@drawable/img_detail_gradient"/>
 
-    <ImageView
+    <com.twoheart.dailyhotel.widget.DailyImageView
         android:id="@+id/backImageView"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/toolbar_height"

@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAda
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedSectionListAdapter
@@ -205,7 +206,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
         {
             case HOTEL:
             {
-                String period = String.format("%s - %s"//
+                String period = String.format(Locale.KOREA, "%s - %s"//
                     , DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"))//
                     , DailyCalendar.format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT")));
 

@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
 import java.net.URLEncoder;
+import java.util.Locale;
 
 public class KakaoLinkManager implements Constants
 {
@@ -60,7 +61,7 @@ public class KakaoLinkManager implements Constants
 
             String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
             int nights = stayBookingDay.getNights();
-            String schemeParams = String.format("vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
 
             messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
@@ -91,7 +92,7 @@ public class KakaoLinkManager implements Constants
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            String schemeParams = String.format("vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
 
             messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_reservation_stay), //
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
@@ -120,7 +121,7 @@ public class KakaoLinkManager implements Constants
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
             String date = gourmetBookingDay.getVisitDay("yyyyMMdd");
-            String schemeParams = String.format("vc=5&v=gd&i=%d&d=%s", index, date);
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
 
             messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb)//
                 , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
@@ -152,7 +153,7 @@ public class KakaoLinkManager implements Constants
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            String schemeParams = String.format("vc=5&v=gd&i=%d&d=%s", index, reservationDate);
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, reservationDate);
 
             messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_reservation_gourmet)//
                 , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//

@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -57,6 +58,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -494,8 +496,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         //        String phoneNumber = userJSONObject.getString("phone");
         String birthday = userJSONObject.getString("birthday");
 
-        DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
-        DailyPreference.getInstance(this).setUserInformation(userType, email, name, birthday, recommender);
+        DailyUserPreference.getInstance(this).setAuthorization(String.format(Locale.KOREA, "%s %s", tokenType, accessToken));
+        DailyUserPreference.getInstance(this).setInformation(userType, email, name, birthday, recommender);
 
         AnalyticsManager.getInstance(this).setUserInformation(userIndex, userType);
         return userIndex;
@@ -793,7 +795,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             // 회원가입에 성공하면 이제 로그인 절차
                             mIsSocialSignUp = true;
 
-                            DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(false);
+                            DailyUserPreference.getInstance(LoginActivity.this).setBenefitAlarm(false);
                             DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
                             DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
                             DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
@@ -1020,7 +1022,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         boolean isAgreedBenefit = jsonObject.getBoolean("agreedBenefit");
 
-                        DailyPreference.getInstance(LoginActivity.this).setUserBenefitAlarm(isAgreedBenefit);
+                        DailyUserPreference.getInstance(LoginActivity.this).setBenefitAlarm(isAgreedBenefit);
                         AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(isAgreedBenefit, null);
 
                         String userIndex = jsonObject.getString("userIdx");

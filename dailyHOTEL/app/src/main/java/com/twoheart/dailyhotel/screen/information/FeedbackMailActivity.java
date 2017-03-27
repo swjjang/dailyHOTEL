@@ -14,11 +14,13 @@ import com.appboy.Appboy;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+import java.util.Locale;
 
 public class FeedbackMailActivity extends BaseActivity implements Constants, OnClickListener
 {
@@ -54,7 +56,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
     private void initLayout()
     {
         mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
-        mEmailEditText.setText(DailyPreference.getInstance(this).getUserEmail());
+        mEmailEditText.setText(DailyUserPreference.getInstance(this).getEmail());
 
         final View sendFeedbackView = findViewById(R.id.sendFeedbackView);
         sendFeedbackView.setOnClickListener(this);
@@ -80,7 +82,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         });
 
         TextView informationTextView = (TextView) findViewById(R.id.informationTextView);
-        String formText = getString(R.string.mail_base_information, String.format("Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersionCode(this)));
+        String formText = getString(R.string.mail_base_information, String.format(Locale.KOREA, "Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersionCode(this)));
         informationTextView.setText(formText);
 
         // 기본 정보를 태그에 넣음.

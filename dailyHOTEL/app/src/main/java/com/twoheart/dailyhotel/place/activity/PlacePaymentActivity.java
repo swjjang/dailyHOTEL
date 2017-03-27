@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActi
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -654,7 +655,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
     private void requestLogin()
     {
         // 세션이 종료되어있으면 다시 로그인한다.
-        DailyPreference.getInstance(this).removeUserInformation();
+        DailyUserPreference.getInstance(this).clear();
 
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);

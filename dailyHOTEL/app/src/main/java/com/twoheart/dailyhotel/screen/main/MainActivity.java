@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.screen.main;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -19,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.twoheart.dailyhotel.DailyHotel;
@@ -38,6 +35,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -46,6 +44,7 @@ import com.twoheart.dailyhotel.widget.DailyImageView;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -155,7 +154,7 @@ public class MainActivity extends BaseActivity implements Constants
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
 
         // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
-        if (DailyPreference.getInstance(this).isUserBenefitAlarm() == true)
+        if (DailyUserPreference.getInstance(this).isBenefitAlarm() == true)
         {
             AnalyticsManager.getInstance(this).setPushEnabled(true, null);
         } else
@@ -342,7 +341,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                 if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
                 } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     if (mMainFragmentManager != null)
@@ -354,7 +353,7 @@ public class MainActivity extends BaseActivity implements Constants
                             fragment.onActivityResult(requestCode, resultCode, data);
                         } else
                         {
-                            mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                            mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                         }
                     }
                 } else
@@ -374,7 +373,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                 if (data == null && (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY))
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
                 } else
                 {
                     mMainFragmentManager.getCurrentFragment().onActivityResult(requestCode, resultCode, data);
@@ -409,17 +408,17 @@ public class MainActivity extends BaseActivity implements Constants
                 {
                     case Activity.RESULT_OK:
                     case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
                         break;
 
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false);
 
                         startActivityForResult(StayMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_STAY);
                         break;
 
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false);
 
                         startActivityForResult(GourmetMainActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
                         break;
@@ -435,7 +434,7 @@ public class MainActivity extends BaseActivity implements Constants
                                 fragment.onActivityResult(requestCode, resultCode, data);
                             } else
                             {
-                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                             }
                         }
                         break;
@@ -471,7 +470,7 @@ public class MainActivity extends BaseActivity implements Constants
                                 fragment.onActivityResult(requestCode, resultCode, data);
                             } else
                             {
-                                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false);
                             }
                         }
                         break;
@@ -515,7 +514,7 @@ public class MainActivity extends BaseActivity implements Constants
             }
         } else
         {
-            mMainFragmentManager.select(mMainFragmentManager.getLastMainIndexFragment(), false);
+            mMainFragmentManager.select(false, mMainFragmentManager.getLastMainIndexFragment(), false);
         }
     }
 
@@ -542,7 +541,7 @@ public class MainActivity extends BaseActivity implements Constants
         {
             super.onError();
 
-            mMainFragmentManager.select(MainFragmentManager.INDEX_ERROR_FRAGMENT, false);
+            mMainFragmentManager.select(false, MainFragmentManager.INDEX_ERROR_FRAGMENT, false);
         }
     }
 
@@ -741,7 +740,7 @@ public class MainActivity extends BaseActivity implements Constants
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
     {
         @Override
-        public void onMenuSelected(int index, int previousIndex)
+        public void onMenuSelected(boolean isCallMenuBar, int index, int previousIndex)
         {
             if (mMainFragmentManager.getLastIndexFragment() == index || lockUiComponentAndIsLockUiComponent() == true)
             {
@@ -758,7 +757,7 @@ public class MainActivity extends BaseActivity implements Constants
             {
                 // 홈
                 case 0:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                    mMainFragmentManager.select(isCallMenuBar, MainFragmentManager.INDEX_HOME_FRAGMENT, false);
 
                     if (DailyHotel.isLogin() == true && DailyPreference.getInstance(MainActivity.this).isRequestReview() == false)
                     {
@@ -772,7 +771,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                 // 예약내역
                 case 1:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
+                    mMainFragmentManager.select(isCallMenuBar, MainFragmentManager.INDEX_BOOKING_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.BOOKINGSTATUS_CLICK, getIndexName(previousIndex), null);
@@ -780,7 +779,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                 // 마이데일리
                 case 2:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, false);
+                    mMainFragmentManager.select(isCallMenuBar, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.MYDAILY_CLICK, getIndexName(previousIndex), null);
@@ -788,7 +787,7 @@ public class MainActivity extends BaseActivity implements Constants
 
                 // 더보기
                 case 3:
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, false);
+                    mMainFragmentManager.select(isCallMenuBar, MainFragmentManager.INDEX_INFORMATION_FRAGMENT, false);
 
                     AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.MENU_CLICK, getIndexName(previousIndex), null);
@@ -797,12 +796,12 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
-        public void onMenuUnselected(int index)
+        public void onMenuUnselected(boolean isCallMenuBar, int index)
         {
         }
 
         @Override
-        public void onMenuReselected(int index)
+        public void onMenuReselected(boolean isCallMenuBar, int index)
         {
             if (isLockUiComponent() == true)
             {
@@ -987,12 +986,12 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isWishListGourmetView() == true//
                     )
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true);
 
                 } else if (DailyDeepLink.getInstance().isBookingView() == true //
                     || DailyDeepLink.getInstance().isBookingDetailView() == true)
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_BOOKING_FRAGMENT, true);
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isMyDailyView() == true //
                     || DailyDeepLink.getInstance().isBonusView() == true//
                     || DailyDeepLink.getInstance().isCouponView() == true //
@@ -1003,16 +1002,16 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isStampView() == true//
                     )
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true);
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true);
                 } else if (DailyDeepLink.getInstance().isSingUpView() == true)
                 {
                     if (DailyHotel.isLogin() == false)
                     {
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true);
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true);
                     } else
                     {
                         DailyDeepLink.getInstance().clear();
-                        mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true);
                     }
                 } else if (DailyDeepLink.getInstance().isEventView() == true//
                     || DailyDeepLink.getInstance().isEventDetailView() == true//
@@ -1022,16 +1021,16 @@ public class MainActivity extends BaseActivity implements Constants
                     || DailyDeepLink.getInstance().isTermsNPolicyView() == true//
                     )
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_INFORMATION_FRAGMENT, true);
                 } else
                 {
-                    mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, true);
+                    mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true);
                 }
 
                 AnalyticsManager.getInstance(MainActivity.this).startApplication();
             } else
             {
-                mMainFragmentManager.select(MainFragmentManager.INDEX_HOME_FRAGMENT, false);
+                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false);
 
                 if (DailyHotel.isLogin() == true)
                 {
@@ -1042,7 +1041,7 @@ public class MainActivity extends BaseActivity implements Constants
                 } else
                 {
                     // 헤택이 Off 되어있는 경우 On으로 수정
-                    boolean isUserBenefitAlarm = DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm();
+                    boolean isUserBenefitAlarm = DailyUserPreference.getInstance(MainActivity.this).isBenefitAlarm();
                     if (isUserBenefitAlarm == false//
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
@@ -1062,7 +1061,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onNoticeAgreement(String message, boolean isFirstTimeBuyer)
         {
-            if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == true)
+            if (DailyUserPreference.getInstance(MainActivity.this).isBenefitAlarm() == true)
             {
                 AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
                 return;
@@ -1125,7 +1124,7 @@ public class MainActivity extends BaseActivity implements Constants
         public void onNoticeAgreementResult(final String agreeMessage, final String cancelMessage)
         {
             DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
-            DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(mIsBenefitAlarm);
+            DailyUserPreference.getInstance(MainActivity.this).setBenefitAlarm(mIsBenefitAlarm);
             AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(mIsBenefitAlarm, AnalyticsManager.ValueType.LAUNCH);
 
             if (mIsBenefitAlarm == true)
@@ -1166,7 +1165,7 @@ public class MainActivity extends BaseActivity implements Constants
                 String startHour = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
                 String endtHour = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
 
-                DailyPreference.getInstance(MainActivity.this).setOperationTime(String.format("%s,%s", startHour, endtHour));
+                DailyPreference.getInstance(MainActivity.this).setOperationTime(String.format(Locale.KOREA, "%s,%s", startHour, endtHour));
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1223,7 +1222,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onUserProfileBenefit(boolean isExceedBonus)
         {
-            DailyPreference.getInstance(MainActivity.this).setUserExceedBonus(isExceedBonus);
+            DailyUserPreference.getInstance(MainActivity.this).setExceedBonus(isExceedBonus);
             AnalyticsManager.getInstance(MainActivity.this).setExceedBonus(isExceedBonus);
 
             mNetworkController.requestReviewStay();

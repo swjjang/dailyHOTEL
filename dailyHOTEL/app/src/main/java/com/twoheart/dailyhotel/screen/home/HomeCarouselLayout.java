@@ -227,10 +227,9 @@ public class HomeCarouselLayout extends LinearLayout
             return;
         }
 
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
             mValueAnimator.cancel();
-            mValueAnimator = null;
         }
 
         final int gap = mMaxHeight - mMinHeight;
@@ -263,21 +262,16 @@ public class HomeCarouselLayout extends LinearLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                clearAnimation();
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+                mValueAnimator = null;
 
                 setHeight(mMaxHeight);
-
-                mValueAnimator = null;
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                clearAnimation();
-
-                setHeight(mMaxHeight);
-
-                mValueAnimator = null;
             }
 
             @Override
@@ -297,10 +291,9 @@ public class HomeCarouselLayout extends LinearLayout
             return;
         }
 
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
             mValueAnimator.cancel();
-            mValueAnimator = null;
         }
 
         final int height = getHeight();
@@ -331,21 +324,16 @@ public class HomeCarouselLayout extends LinearLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                clearAnimation();
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+                mValueAnimator = null;
 
                 setHeight(mMinHeight);
-
-                mValueAnimator = null;
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                clearAnimation();
-
-                setHeight(mMinHeight);
-
-                mValueAnimator = null;
             }
 
             @Override

@@ -33,7 +33,7 @@ public class HappyTalkCategoryDialogNetworkController extends BaseNetworkControl
         DailyMobileAPI.getInstance(mContext).requestHappyTalkCategory(mNetworkTag, mHappyTalkCategoryCallback);
     }
 
-    public void requestUserProfie()
+    public void requestUserProfile()
     {
         DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
     }

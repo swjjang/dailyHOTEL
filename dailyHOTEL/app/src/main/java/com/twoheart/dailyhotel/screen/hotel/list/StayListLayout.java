@@ -80,6 +80,7 @@ public class StayListLayout extends PlaceListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
+                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
@@ -104,6 +105,7 @@ public class StayListLayout extends PlaceListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
+                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
@@ -116,10 +118,12 @@ public class StayListLayout extends PlaceListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
 
                 mMapLayout.setVisibility(View.GONE);

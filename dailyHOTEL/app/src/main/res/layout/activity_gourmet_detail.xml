@@ -195,6 +195,12 @@
         android:background="@color/textView_textColor_shadow_soldout"
         android:visibility="gone"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gradient_2dp_line_height_over_21"
+        android:layout_above="@+id/bottomLayout"
+        android:background="@drawable/shape_gradient_bottom_up"/>
+
     <RelativeLayout
         android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
@@ -204,7 +210,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="@dimen/gradient_1dp_line_height_under_21"
             android:background="@color/default_line_ce7e7e7"/>
 
         <com.twoheart.dailyhotel.widget.DailyTextView

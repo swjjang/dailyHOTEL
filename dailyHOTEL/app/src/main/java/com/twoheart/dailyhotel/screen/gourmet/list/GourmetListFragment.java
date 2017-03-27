@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -173,6 +174,23 @@ public class GourmetListFragment extends PlaceListFragment
         mPlaceListLayout.setSwipeRefreshing(false);
     }
 
+    @Override
+    public boolean isDefaultFilter()
+    {
+        if (mGourmetCuration == null)
+        {
+            return true;
+        }
+
+        PlaceCurationOption placeCurationOption = mGourmetCuration.getCurationOption();
+        if (placeCurationOption == null)
+        {
+            return true;
+        }
+
+        return placeCurationOption.isDefaultFilter();
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////   Listener   //////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////
@@ -215,6 +233,12 @@ public class GourmetListFragment extends PlaceListFragment
         public void onFilterClick()
         {
             mOnPlaceListFragmentListener.onFilterClick();
+        }
+
+        @Override
+        public void onUpdateFilterEnabled(boolean isEnabled)
+        {
+            mOnPlaceListFragmentListener.onUpdateFilterEnabled(isEnabled);
         }
 
         @Override

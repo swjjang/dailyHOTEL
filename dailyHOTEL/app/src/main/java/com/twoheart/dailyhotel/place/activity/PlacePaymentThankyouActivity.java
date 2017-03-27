@@ -156,9 +156,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     {
         mStampLayout = findViewById(R.id.stampLayout);
         mStampLayout.setVisibility(View.GONE);
-
-        View message3TextView = findViewById(R.id.message3TextView);
-        message3TextView.setOnClickListener(this);
+        mStampLayout.setOnClickListener(this);
     }
 
     public void setStampLayout(String message1, String message2, String message3)
@@ -372,9 +370,12 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 finish();
                 break;
 
-            case R.id.message3TextView:
+            case R.id.stampLayout:
                 Intent intent = StampActivity.newInstance(this);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+
+                AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                    AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_THANKYOU, null);
                 break;
         }
     }

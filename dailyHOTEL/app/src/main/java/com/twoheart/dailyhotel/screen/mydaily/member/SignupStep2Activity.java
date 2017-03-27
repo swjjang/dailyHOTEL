@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -146,7 +147,7 @@ public class SignupStep2Activity extends BaseActivity
 
     void signupAndFinish()
     {
-        DailyPreference.getInstance(this).setUserBenefitAlarm(false);
+        DailyUserPreference.getInstance(this).setBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarm(false);
         DailyPreference.getInstance(this).setShowBenefitAlarmFirstBuyer(false);
         DailyPreference.getInstance(this).setLastestCouponTime("");
@@ -333,11 +334,11 @@ public class SignupStep2Activity extends BaseActivity
         {
             unLockUI();
 
-            DailyPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
-            DailyPreference.getInstance(SignupStep2Activity.this).setUserInformation(userType, email, name, birthday, recommender);
+            DailyUserPreference.getInstance(SignupStep2Activity.this).setAuthorization(authorization);
+            DailyUserPreference.getInstance(SignupStep2Activity.this).setInformation(userType, email, name, birthday, recommender);
 
             // 혜택 알림 체크
-            DailyPreference.getInstance(SignupStep2Activity.this).setUserBenefitAlarm(isBenefit);
+            DailyUserPreference.getInstance(SignupStep2Activity.this).setBenefitAlarm(isBenefit);
             AnalyticsManager.getInstance(SignupStep2Activity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
 
             AnalyticsManager.getInstance(SignupStep2Activity.this).setUserInformation(userIndex, userType);

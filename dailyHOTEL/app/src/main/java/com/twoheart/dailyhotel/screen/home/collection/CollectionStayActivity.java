@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -97,7 +98,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             int nights = stayBookingDay.getNights();
 
-            return String.format("%s - %s, %d박", checkInDate, checkOutDate, nights);
+            return String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -109,7 +110,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
     @Override
     protected void setPlaceBookingDay(TodayDateTime todayDateTime)
     {
-        if(todayDateTime == null)
+        if (todayDateTime == null)
         {
             return;
         }

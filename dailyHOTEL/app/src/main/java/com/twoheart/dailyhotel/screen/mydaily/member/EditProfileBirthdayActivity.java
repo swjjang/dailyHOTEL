@@ -24,7 +24,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -202,7 +203,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     return;
                 }
 
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileBirthdayActivity.this).getUserType()) == true)
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyUserPreference.getInstance(EditProfileBirthdayActivity.this).getType()) == true)
                 {
                     Map<String, String> params = Collections.singletonMap("birthday", birthday);
                     DailyMobileAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateCallback);
@@ -238,7 +239,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (resultCode == RESULT_OK)
                 {
-                    setBirthdayText(DailyPreference.getInstance(this).getUserBirthday());
+                    setBirthdayText(DailyUserPreference.getInstance(this).getBirthday());
                 } else
                 {
                     finish();
@@ -344,7 +345,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         Calendar calendar = DailyCalendar.getInstance();
         calendar.set(year, month, dayOfMonth, 0, 0, 0);
 
-        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setText(String.format(Locale.KOREA, "%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
     }
 

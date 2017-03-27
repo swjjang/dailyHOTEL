@@ -840,6 +840,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
+        public void onUpdateFilterEnabled(boolean isShowFilterEnabled)
+        {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
+
+            mPlaceSearchResultLayout.setOptionFilterEnabled(isShowFilterEnabled);
+        }
+
+        @Override
         public void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled)
         {
             if (mPlaceSearchResultLayout == null)

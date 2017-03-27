@@ -71,15 +71,13 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
         });
     }
 
-    public void setStampDate(String date1, String date2, String date3)
+    public void setStampDate(String date1, String date2)
     {
         TextView stampDate01TextView = (TextView) mRootView.findViewById(R.id.stampDate01TextView);
         TextView stampDate02TextView = (TextView) mRootView.findViewById(R.id.stampDate02TextView);
-        TextView stampDate03TextView = (TextView) mRootView.findViewById(R.id.stampDate03TextView);
 
-        stampDate01TextView.setText(mContext.getString(R.string.label_stamp_event_date1, date1));
-        stampDate02TextView.setText(mContext.getString(R.string.label_stamp_event_date2, date2));
-        stampDate03TextView.setText(mContext.getString(R.string.label_stamp_event_date3, date3));
+        stampDate01TextView.setText(date1);
+        stampDate02TextView.setText(date2);
     }
 
     public void setHistoryList(List<StampHistory> stampHistoryList)
@@ -91,13 +89,15 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
 
         mStampHistoryLayout.removeAllViews();
 
-        for (StampHistory stampHistory : stampHistoryList)
+        int size = stampHistoryList.size();
+
+        for (int i = 0; i < size; i++)
         {
-            mStampHistoryLayout.addView(addHistory(stampHistory, mStampHistoryLayout));
+            mStampHistoryLayout.addView(addHistory(size - i, stampHistoryList.get(i), mStampHistoryLayout));
         }
     }
 
-    private View addHistory(final StampHistory stampHistory, ViewGroup viewGroup)
+    private View addHistory(int order, final StampHistory stampHistory, ViewGroup viewGroup)
     {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_stamp_history, viewGroup, false);
 
@@ -105,11 +105,11 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
         TextView stampDateTextView = (TextView) view.findViewById(R.id.stampDateTextView);
         TextView bookingGoTextView = (TextView) view.findViewById(R.id.bookingGoTextView);
 
-        stayNameTextView.setText(stampHistory.placeName);
+        stayNameTextView.setText(stampHistory.reservationName);
 
         try
         {
-            stampDateTextView.setText(mContext.getString(R.string.label_stamphistory_date, DailyCalendar.convertDateFormatString(stampHistory.date, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")));
+            stampDateTextView.setText(mContext.getString(R.string.label_stamphistory_date, DailyCalendar.convertDateFormatString(stampHistory.publishedAt, "yyyy-MM-dd", "yyyy.MM.dd(EEE)")));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -121,25 +121,25 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
 
         ImageView stampImageView = (ImageView) view.findViewById(R.id.stampImageView);
 
-        switch (stampHistory.nights)
+        switch (order)
         {
-            case 1:
+            case 0:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_01);
                 break;
 
-            case 2:
+            case 1:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_02);
                 break;
 
-            case 3:
+            case 2:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_03);
                 break;
 
-            case 4:
+            case 3:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_04);
                 break;
 
-            case 5:
+            case 4:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_05);
                 break;
         }

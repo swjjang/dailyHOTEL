@@ -13,9 +13,6 @@ public class StayPaymentInformation extends PlacePaymentInformation
 
     private StayProduct mStayProduct;
 
-    //    public String checkInDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
-    //    public String checkOutDateFormat; // yyyy-MM-dd'T'HH:mm:ssZZZZZ , 쿠폰 요청시 사용
-
     //
     public String visitType = VISIT_TYPE_NONE; // 방문 형태로
     public boolean isVisitWalking = true; // 방문 방법 : 기본이 도보(visitType == "NONE", "NO_PARKING" 이면 서버로 아무것도 전송하지 않음)
