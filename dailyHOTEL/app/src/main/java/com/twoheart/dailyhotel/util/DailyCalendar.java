@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 public class DailyCalendar
 {
+    public static final long NINE_HOUR_MILLISECOND = 3600 * 9 * 1000;
     public static final long DAY_MILLISECOND = 3600 * 24 * 1000;
 
     public static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";

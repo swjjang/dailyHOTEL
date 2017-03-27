@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -2272,6 +2273,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                                 Util.restartExitApp(HotelPaymentActivity.this);
                                 return;
                             }
+
+                            checkInDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
+                            checkOutDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
+
+                            stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
+                            stayBookingDay.setCheckOutDay(DailyCalendar.format(checkOutDate, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
 
                             setReservationInformation(stayBookingDay);
 
