@@ -100,11 +100,13 @@ public interface Constants
 
     // Payment App GoogleStore URL
     String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
+    String URL_STORE_PAYMENT_PAYPIN = "market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k";
     String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
     String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
 
     // Payment App PackageName
     String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
+    String PACKAGE_NAME_PAYPIN = "com.skp.android.paypin";
     String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android";
     String PACKAGE_NAME_MPOCKET = "kr.co.samsungcard.mpocket";
 

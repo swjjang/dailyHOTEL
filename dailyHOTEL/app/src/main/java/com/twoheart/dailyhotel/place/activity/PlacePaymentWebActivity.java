@@ -123,7 +123,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             cookieManager.setAcceptThirdPartyCookies(mWebView, true);
         }
 
-        mWebView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp");
+        mWebView.addJavascriptInterface(new KCPPayBridge(), "KCPPayApp"); //
         // 하나SK 카드 선택시 User가 선택한 기본 정보를 가지고 오기위해 사용
         mWebView.addJavascriptInterface(new KCPPayCardInfoBridge(), "KCPPayCardInfo");
         mWebView.addJavascriptInterface(new KCPPayPinInfoBridge(), "KCPPayPinInfo"); // 페이핀 기능 추가
@@ -237,6 +237,14 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 try
                 {
                     startActivity(intent);
+
+                    /** 가맹점의 사정에 따라 현재 화면을 종료하지 않아도 됩니다.
+                        삼성카드 기타 안심클릭에서는 종료되면 안되기 때문에
+                        조건을 걸어 종료하도록 하였습니다.*/
+                    if (url.startsWith("ispmobile://"))
+                    {
+                        finish();
+                    }
                 } catch (ActivityNotFoundException e)
                 {
                     Util.installPackage(this, intent.getPackage());
@@ -244,7 +252,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 }
             }
         }
-        // 기존 방식
+        // 기존 방식 - 이니시스의 경우 대부분 이쪽으로 들어
         else
         {
             if (url.startsWith("ispmobile"))
@@ -255,6 +263,15 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                     {
                         DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
+
+                        /*가맹점의 사정에 따라 현재 화면을 종료하지 않아도 됩니다.
+	    			    삼성카드 기타 안심클릭에서는 종료되면 안되기 때문에
+	    			    조건을 걸어 종료하도록 하였습니다.*/
+                        if (url.startsWith("ispmobile://"))
+                        {
+                            finish();
+                        }
+
                         view.goBack();
                         return true;
                     } catch (ActivityNotFoundException e)
@@ -264,7 +281,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                     }
                 }
             } else if (url.startsWith("kftc-bankpay"))
-            { // 7.9 이니시스 모듈 연동 테스트
+            { // 7.9 이니시스 모듈 연동 테스트 - 계좌이체
                 if (!new PackageState(this).getPackageDownloadInstallState(PACKAGE_NAME_KFTC))
                 {
                     try
