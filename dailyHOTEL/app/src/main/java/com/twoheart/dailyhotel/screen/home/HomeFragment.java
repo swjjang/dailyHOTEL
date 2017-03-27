@@ -747,7 +747,7 @@ public class HomeFragment extends BaseFragment
                     android.support.v4.util.Pair.create(titleTextView, getString(R.string.transition_title)),//
                     android.support.v4.util.Pair.create(subTitleTextView, getString(R.string.transition_subtitle)));
 
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION, options.toBundle());
+                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COLLECTION, options.toBundle());
             } else
             {
                 switch (recommendation.serviceType)
