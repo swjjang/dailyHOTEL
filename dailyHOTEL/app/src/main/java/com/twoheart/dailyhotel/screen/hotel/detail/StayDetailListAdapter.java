@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -39,6 +40,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
     private StayDetail mStayDetail;
     private StayBookingDay mStayBookingDay;
+    private PlaceReviewScores mPlaceReviewScores;
     private Context mContext;
     private View[] mDetailViews;
     private int mImageHeight;
@@ -47,13 +49,13 @@ public class StayDetailListAdapter extends BaseAdapter
     StayDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public StayDetailListAdapter(Context context, StayBookingDay stayBookingDay, StayDetail stayDetail,//
-                                 StayDetailLayout.OnEventListener onEventListener,//
-                                 View.OnTouchListener emptyViewOnTouchListener)
+    public StayDetailListAdapter(Context context, StayBookingDay stayBookingDay, StayDetail stayDetail//
+        , PlaceReviewScores placeReviewScores//
+        , StayDetailLayout.OnEventListener onEventListener//
+        , View.OnTouchListener emptyViewOnTouchListener)
     {
         mContext = context;
-        mStayBookingDay = stayBookingDay;
-        mStayDetail = stayDetail;
+        setData(stayBookingDay, stayDetail, placeReviewScores);
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(mContext);
 
@@ -61,10 +63,11 @@ public class StayDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(StayBookingDay stayBookingDay, StayDetail stayDetail)
+    public void setData(StayBookingDay stayBookingDay, StayDetail stayDetail, PlaceReviewScores placeReviewScores)
     {
         mStayBookingDay = stayBookingDay;
         mStayDetail = stayDetail;
+        mPlaceReviewScores = placeReviewScores;
     }
 
     @Override
@@ -250,7 +253,14 @@ public class StayDetailListAdapter extends BaseAdapter
 
         // 리뷰
         TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
-        trueReviewTextView.setVisibility(View.GONE);
+
+        if (mPlaceReviewScores == null)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
+        }
 
         // 할인 쿠폰
         View couponLayout = view.findViewById(R.id.couponLayout);

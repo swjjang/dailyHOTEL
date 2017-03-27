@@ -88,12 +88,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new GourmetDetailListAdapter(mContext, gourmetBookingDay, (GourmetDetail) mPlaceDetail,//
-                (GourmetDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
+            mListAdapter = new GourmetDetailListAdapter(mContext, gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores//
+                , (OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail);
+            mListAdapter.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores);
         }
 
         setCurrentImage(imagePosition);

@@ -182,11 +182,11 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         if (mListAdapter == null)
         {
-            mListAdapter = new StayDetailListAdapter(mContext, stayBookingDay, stayDetail, (StayDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
+            mListAdapter = new StayDetailListAdapter(mContext, stayBookingDay, stayDetail, placeReviewScores, (StayDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(stayBookingDay, stayDetail);
+            mListAdapter.setData(stayBookingDay, stayDetail, placeReviewScores);
         }
 
         setCurrentImage(imagePosition);

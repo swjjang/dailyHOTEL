@@ -1,11 +1,9 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -690,9 +688,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     {
         GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
 
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this
-            , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL
-            , gourmetDetailParams.index, 0, gourmetDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL, gourmetDetailParams.index, 0, gourmetDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
         //        try
         //        {
@@ -1161,14 +1157,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onReviewClick()
         {
-            if(lockUiComponentAndIsLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-
-
-
+            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
         }
 
         //        @Override
@@ -1730,6 +1724,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onPlaceReviewScores(PlaceReviewScores placeReviewScores)
         {
+            if (placeReviewScores == null)
+            {
+                return;
+            }
+
             mPlaceReviewScores = placeReviewScores;
 
             mPlaceDetailLayout.setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);

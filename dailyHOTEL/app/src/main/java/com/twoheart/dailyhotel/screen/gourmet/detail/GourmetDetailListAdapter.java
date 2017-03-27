@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -33,6 +34,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
     private GourmetDetail mGourmetDetail;
     private GourmetBookingDay mGourmetBookingDay;
+    private PlaceReviewScores mPlaceReviewScores;
     private Context mContext;
     private View[] mDetailViews;
     private int mImageHeight;
@@ -41,13 +43,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
     GourmetDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public GourmetDetailListAdapter(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, //
-                                    GourmetDetailLayout.OnEventListener onEventListener, //
-                                    View.OnTouchListener emptyViewOnTouchListener)
+    public GourmetDetailListAdapter(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail //
+        , PlaceReviewScores placeReviewScores//
+        , GourmetDetailLayout.OnEventListener onEventListener//
+        , View.OnTouchListener emptyViewOnTouchListener)
     {
         mContext = context;
-        mGourmetDetail = gourmetDetail;
-        mGourmetBookingDay = gourmetBookingDay;
+        setData(gourmetBookingDay, gourmetDetail, placeReviewScores);
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(context);
 
@@ -55,10 +57,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
+    public void setData(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, PlaceReviewScores placeReviewScores)
     {
         mGourmetBookingDay = gourmetBookingDay;
         mGourmetDetail = gourmetDetail;
+        mPlaceReviewScores = placeReviewScores;
     }
 
     @Override
@@ -260,7 +263,14 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         // 리뷰
         TextView trueReviewTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.trueReviewTextView);
-        trueReviewTextView.setVisibility(View.GONE);
+
+        if (mPlaceReviewScores == null)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
+        }
 
         // 할인 쿠폰
         View couponLayout = view.findViewById(R.id.couponLayout);
