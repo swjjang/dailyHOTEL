@@ -76,8 +76,6 @@ public class StampActivity extends BaseActivity
             {
                 mNetworkController.requestUserStamps(false);
             }
-
-            mNetworkController.requestPushBenefit(false);
         } else
         {
             showFinishDialog();
