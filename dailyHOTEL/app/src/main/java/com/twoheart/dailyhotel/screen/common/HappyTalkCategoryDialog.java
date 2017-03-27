@@ -194,7 +194,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         // https://docs.google.com/spreadsheets/d/1rB-bDASf80h8cW5lIX9kzrnuw0da-S65PJbEQ3lXeoU/edit#gid=0
         StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
         urlStringBuilder.append("?yid=%40hailey099"); // 객사 옐로우 아이디
-        urlStringBuilder.append("&site_id=4000000120"); // 사이트 아이디
+        urlStringBuilder.append("&site_id=4000000190"); // 사이트 아이디
         urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
         urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
         urlStringBuilder.append("&title="); // 상담제목
