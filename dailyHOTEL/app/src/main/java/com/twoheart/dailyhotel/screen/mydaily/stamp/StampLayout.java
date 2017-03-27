@@ -75,7 +75,7 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         View toolbar = view.findViewById(R.id.toolbar);
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(mContext, toolbar);
-        dailyToolbarLayout.initToolbar(mContext.getString(R.string.actionbar_title_stamp), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(mContext.getString(R.string.label_stamp_mydaily_title), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -117,15 +117,13 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         }
     }
 
-    public void setStampDate(String date1, String date2, String date3)
+    public void setStampDate(String date1, String date2)
     {
         TextView stampDate01TextView = (TextView) mRootView.findViewById(R.id.stampDate01TextView);
         TextView stampDate02TextView = (TextView) mRootView.findViewById(R.id.stampDate02TextView);
-        TextView stampDate03TextView = (TextView) mRootView.findViewById(R.id.stampDate03TextView);
 
-        stampDate01TextView.setText(mContext.getString(R.string.label_stamp_event_date1, date1));
-        stampDate02TextView.setText(mContext.getString(R.string.label_stamp_event_date2, date2));
-        stampDate03TextView.setText(mContext.getString(R.string.label_stamp_event_date3, date3));
+        stampDate01TextView.setText(date1);
+        stampDate02TextView.setText(date2);
     }
 
     public void setNights(int nights)

@@ -43,9 +43,8 @@ public class StampActivity extends BaseActivity
 
         String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
         String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
-        String stampDate3 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
 
-        mStampLayout.setStampDate(stampDate1, stampDate2, stampDate3);
+        mStampLayout.setStampDate(stampDate1, stampDate2);
 
         if (DailyHotel.isLogin() == true)
         {
@@ -69,7 +68,7 @@ public class StampActivity extends BaseActivity
 
         AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_DETAIL, null);
 
-        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
+        if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
         {
             lockUI();
 

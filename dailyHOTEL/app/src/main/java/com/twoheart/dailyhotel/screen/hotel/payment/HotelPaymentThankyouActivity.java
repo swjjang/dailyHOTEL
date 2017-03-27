@@ -165,6 +165,6 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
     @Override
     protected boolean isStampEnabled()
     {
-        return DailyPreference.getInstance(this).getRemoteConfigStampEnabled();
+        return DailyPreference.getInstance(this).isRemoteConfigStampEnabled();
     }
 }

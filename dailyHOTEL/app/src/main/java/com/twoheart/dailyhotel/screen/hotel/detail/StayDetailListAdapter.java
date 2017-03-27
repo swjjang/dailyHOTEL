@@ -274,7 +274,7 @@ public class StayDetailListAdapter extends BaseAdapter
         View stampLayout = view.findViewById(R.id.stampLayout);
         View stampClickLayout = stampLayout.findViewById(R.id.stampClickLayout);
 
-        if (DailyPreference.getInstance(mContext).getRemoteConfigStampEnabled() == true)
+        if (DailyPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
         {
             // 테블릿 높이 수정 필요한지 확인
             stampLayout.setVisibility(View.VISIBLE);
