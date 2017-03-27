@@ -346,6 +346,15 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     }
 
     @Override
+    public void onBackPressed()
+    {
+        recordEvent(AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED);
+        setResult(RESULT_OK);
+
+        super.onBackPressed();
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
