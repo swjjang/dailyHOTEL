@@ -36,10 +36,10 @@ public class DailyCalendar
 
         if (isClearTField == true)
         {
-            calendar.clear(Calendar.HOUR_OF_DAY);
-            calendar.clear(Calendar.MINUTE);
-            calendar.clear(Calendar.SECOND);
-            calendar.clear(Calendar.MILLISECOND);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
         }
 
         return calendar;
