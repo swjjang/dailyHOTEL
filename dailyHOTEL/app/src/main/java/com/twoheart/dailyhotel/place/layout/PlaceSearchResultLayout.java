@@ -656,16 +656,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             return;
         }
 
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-            }
-
-            mValueAnimator.removeAllListeners();
-            mValueAnimator.removeAllUpdateListeners();
-            mValueAnimator = null;
+            mValueAnimator.cancel();
         }
 
         if (isAnimation == true)
@@ -699,6 +692,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
@@ -712,8 +709,6 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 public void onAnimationCancel(Animator animation)
                 {
                     mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-
-                    setMenuBarLayoutEnabled(true);
                 }
 
                 @Override
@@ -739,16 +734,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             return;
         }
 
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-            }
-
-            mValueAnimator.removeAllListeners();
-            mValueAnimator.removeAllUpdateListeners();
-            mValueAnimator = null;
+            mValueAnimator.cancel();
         }
 
         if (isAnimation == true)
@@ -783,6 +771,10 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;

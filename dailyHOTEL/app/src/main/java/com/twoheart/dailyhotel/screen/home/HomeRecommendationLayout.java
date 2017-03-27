@@ -241,12 +241,9 @@ public class HomeRecommendationLayout extends LinearLayout
             return;
         }
 
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
             mValueAnimator.cancel();
-            mValueAnimator.removeAllUpdateListeners();
-            mValueAnimator.removeAllListeners();
-            mValueAnimator = null;
         }
 
         final int alphaGap = height != 0 && expectedHeight != 0 ? 0 : Math.abs(expectedHeight - height);
@@ -283,11 +280,11 @@ public class HomeRecommendationLayout extends LinearLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                clearAnimation();
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+                mValueAnimator = null;
 
                 setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                mValueAnimator = null;
             }
 
             @Override

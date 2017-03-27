@@ -1030,12 +1030,9 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        if (mErrorPopupAnimator != null)
+        if (mErrorPopupAnimator != null && mErrorPopupAnimator.isRunning() == true)
         {
             mErrorPopupAnimator.cancel();
-            mErrorPopupAnimator.removeAllListeners();
-            mErrorPopupAnimator.removeAllUpdateListeners();
-            mErrorPopupAnimator = null;
         }
 
         float oldTranslationY = mErrorPopupLayout.getTranslationY();
@@ -1064,13 +1061,16 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                mErrorPopupAnimator.removeAllListeners();
+                mErrorPopupAnimator.removeAllUpdateListeners();
+                mErrorPopupAnimator = null;
+
                 mErrorPopupLayout.setTranslationY(end);
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                mErrorPopupLayout.setTranslationY(end);
             }
 
             @Override
@@ -1133,8 +1133,6 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                view.setVisibility(View.VISIBLE);
-                view.clearAnimation();
             }
 
             @Override
@@ -1191,14 +1189,11 @@ public class HomeLayout extends BaseLayout
                 closeValueAnimator.removeAllListeners();
 
                 view.setVisibility(View.GONE);
-                view.clearAnimation();
             }
 
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                view.setVisibility(View.GONE);
-                view.clearAnimation();
             }
 
             @Override
