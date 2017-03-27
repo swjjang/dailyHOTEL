@@ -70,11 +70,13 @@ public class StampActivity extends BaseActivity
 
         if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
         {
-            lockUI();
-
             if (DailyHotel.isLogin() == true)
             {
+                lockUI();
                 mNetworkController.requestUserStamps(false);
+            } else
+            {
+                mStampLayout.setNights(0);
             }
         } else
         {
