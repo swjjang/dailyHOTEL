@@ -924,14 +924,17 @@ public class StayDetailActivity extends PlaceDetailActivity
                     }
                 });
 
-            if (isDeepLink == true)
+            if (stayDetailParams != null)
             {
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                    Action.SOLDOUT_DEEPLINK, stayDetailParams.name, null);
-            } else
-            {
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                    Action.SOLDOUT, stayDetailParams.name, null);
+                if (isDeepLink == true)
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT_DEEPLINK, stayDetailParams.name, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT, stayDetailParams.name, null);
+                }
             }
         } else
         {
