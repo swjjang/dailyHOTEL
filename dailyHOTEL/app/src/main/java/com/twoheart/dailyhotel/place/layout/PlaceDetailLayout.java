@@ -412,11 +412,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
             //            mWishPopupTextView.setVisibility(View.GONE);
             mWishPopupScrollView.setVisibility(View.GONE);
 
-            if (mWishPopupAnimatorSet != null)
+            if (mWishPopupAnimatorSet != null && mWishPopupAnimatorSet.isRunning() == true)
             {
                 mWishPopupAnimatorSet.cancel();
-                mWishPopupAnimatorSet.removeAllListeners();
-                mWishPopupAnimatorSet = null;
             }
         } else
         {
@@ -475,6 +473,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mWishPopupAnimatorSet.removeAllListeners();
+                    mWishPopupAnimatorSet = null;
+
                     mWishPopupScrollView.setVisibility(View.INVISIBLE);
                     ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
@@ -482,8 +483,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 @Override
                 public void onAnimationCancel(Animator animation)
                 {
-                    mWishPopupScrollView.setVisibility(View.INVISIBLE);
-                    ((OnEventListener) mOnEventListener).releaseUiComponent();
                 }
 
                 @Override
@@ -499,11 +498,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void showWishButton()
     {
-        if (mBookingTextViewAnimator != null)
+        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
         {
             mBookingTextViewAnimator.cancel();
-            mBookingTextViewAnimator.removeAllListeners();
-            mBookingTextViewAnimator = null;
         }
 
         if (mBookingTextView == null)
@@ -520,11 +517,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void hideWishButton()
     {
-        if (mBookingTextViewAnimator != null)
+        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
         {
             mBookingTextViewAnimator.cancel();
-            mBookingTextViewAnimator.removeAllListeners();
-            mBookingTextViewAnimator = null;
         }
 
         final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
@@ -552,11 +547,9 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     private void startWishButtonAnimation(final int start, final int end)
     {
-        if (mBookingTextViewAnimator != null)
+        if (mBookingTextViewAnimator != null && mBookingTextViewAnimator.isRunning() == true)
         {
             mBookingTextViewAnimator.cancel();
-            mBookingTextViewAnimator.removeAllListeners();
-            mBookingTextViewAnimator = null;
         }
 
         mBookingTextViewAnimator = ValueAnimator.ofInt(start, end);
@@ -586,6 +579,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                mBookingTextViewAnimator.removeAllListeners();
+                mBookingTextViewAnimator.removeAllUpdateListeners();
+                mBookingTextViewAnimator = null;
+
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
                 params.leftMargin = end;
                 mBookingTextView.setLayoutParams(params);
@@ -594,9 +591,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBookingTextView.getLayoutParams();
-                params.leftMargin = end;
-                mBookingTextView.setLayoutParams(params);
             }
 
             @Override

@@ -265,7 +265,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                 if (mSelectedEmoticonView != null)
                 {
                     ValueAnimator valueAnimator = (ValueAnimator) mSelectedEmoticonView.getTag();
-                    if (valueAnimator != null)
+                    if (valueAnimator != null && valueAnimator.isRunning() == true)
                     {
                         valueAnimator.cancel();
                     }
@@ -282,7 +282,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                 if (selectedEmoticonView != null)
                 {
                     ValueAnimator valueAnimator = (ValueAnimator) selectedEmoticonView.getTag();
-                    if (valueAnimator != null)
+                    if (valueAnimator != null && valueAnimator.isRunning() == true)
                     {
                         valueAnimator.cancel();
                     }
