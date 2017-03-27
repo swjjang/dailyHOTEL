@@ -1188,6 +1188,7 @@
     <string name="label_stamp_4_nights">4박</string>
     <string name="label_stamp_5_nights">1박무료</string>
     <string name="label_stamp_nights">%1$d/5박</string>
+    <string name="label_stamp_event_title">5 + 1 스테이 프리패스 이벤트</string>
     <string name="label_stamphistory_date">스탬프 발행일: %1$s</string>
     <string name="message_stamp_explanation1">2박엔 5,000원 프리덤 쿠폰,\n5박엔 1박 프리패스 쿠폰을 드려요</string>
     <string name="message_stamp_explanation2">1박 무료 프리패스 쿠폰은 5박 평균 결제 금액에\n해당하는 쿠폰으로 드립니다.</string>

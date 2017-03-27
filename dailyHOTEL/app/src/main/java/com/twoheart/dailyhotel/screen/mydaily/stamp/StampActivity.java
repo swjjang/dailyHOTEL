@@ -10,7 +10,9 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -163,6 +165,14 @@ public class StampActivity extends BaseActivity
         @Override
         public void onStampEventDetailClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(EventWebActivity.newInstance(StampActivity.this, EventWebActivity.SourceType.EVENT//
+                , "http://m.dailyhotel.co.kr/banner/dailystamp_home", getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
+
             AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAMP_DETAIL, null);
         }
