@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.util;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * CountryCodeHeadNumber      v 1.0.1<br>
@@ -353,7 +354,7 @@ public class CountryCodeNumber
         {
             if (isoString.equalsIgnoreCase(codeNumber[0]))
             {
-                result = String.format("%s\n+%s", codeNumber[3], codeNumber[1]);
+                result = String.format(Locale.KOREA, "%s\n+%s", codeNumber[3], codeNumber[1]);
                 break;
             }
         }

@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -290,7 +291,7 @@ public class StayAutoRefundActivity extends BaseActivity
             @Override
             public void afterTextChanged(Editable s)
             {
-                messageCountTextView.setText(String.format("(%d/300자)", s.length()));
+                messageCountTextView.setText(String.format(Locale.KOREA, "(%d/300자)", s.length()));
             }
         });
 

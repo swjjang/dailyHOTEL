@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class GoogleAnalyticsManager extends BaseAnalyticsManager
@@ -489,7 +490,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
             .setTransactionId(transId)//
             .setTransactionRevenue(paymentPrice)//
-            .setTransactionCouponCode(String.format("credit_%s", credit));
+            .setTransactionCouponCode(String.format(Locale.KOREA, "credit_%s", credit));
 
         HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
@@ -531,7 +532,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
             .setTransactionId(transId)//
             .setTransactionRevenue(paymentPrice)//
-            .setTransactionCouponCode(String.format("credit_%s", credit));
+            .setTransactionCouponCode(String.format(Locale.KOREA, "credit_%s", credit));
 
         HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);
 
@@ -554,7 +555,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
         String ticketCount = params.get(AnalyticsManager.KeyType.QUANTITY);
 
-        String label = String.format("%s-%s(%s)", placeName, ticketName, ticketCount);
+        String label = String.format(Locale.KOREA, "%s-%s(%s)", placeName, ticketName, ticketCount);
         recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_PAYMENT_COMPLETED, label, null);
 
         if (DEBUG == true)
@@ -796,7 +797,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (Util.isTextEmpty(credit) == false)
         {
-            productAction.setTransactionCouponCode(String.format("credit_%s", credit));
+            productAction.setTransactionCouponCode(String.format(Locale.KOREA, "credit_%s", credit));
         }
 
         HitBuilders.ScreenViewBuilder screenViewBuilder = getScreenViewBuilder(params, product, productAction);

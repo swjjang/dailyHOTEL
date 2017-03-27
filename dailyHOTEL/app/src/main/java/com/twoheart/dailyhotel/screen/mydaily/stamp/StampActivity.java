@@ -255,6 +255,14 @@ public class StampActivity extends BaseActivity
             }
 
             mStampLayout.setNights(stamp.count);
+
+            if (stamp.count > 0)
+            {
+                mStampLayout.setStampHistoryEnabled(true);
+            } else
+            {
+                mStampLayout.setStampHistoryEnabled(false);
+            }
         }
 
         @Override

@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.widget.DailyToast;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class StayCalendarActivity extends PlaceCalendarActivity
@@ -266,7 +267,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
                         DailyCalendar.setCalendarDateString(calendar, mTodayDateTime.dailyDateTime, checkOutDay.dayOffset);
                         String checkOutDate = DailyCalendar.format(calendar.getTime(), "yyyy.MM.dd(EEE)");
 
-                        String title = String.format("%s - %s, %d박", checkInDate, checkOutDate, nights);
+                        String title = String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
                         setToolbarText(title);
 
                         setRangeDaysAlpha(mCheckOutDayView);

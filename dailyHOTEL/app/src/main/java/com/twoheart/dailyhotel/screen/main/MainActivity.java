@@ -43,6 +43,7 @@ import com.twoheart.dailyhotel.widget.DailyImageView;
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -1163,7 +1164,7 @@ public class MainActivity extends BaseActivity implements Constants
                 String startHour = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
                 String endtHour = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
 
-                DailyPreference.getInstance(MainActivity.this).setOperationTime(String.format("%s,%s", startHour, endtHour));
+                DailyPreference.getInstance(MainActivity.this).setOperationTime(String.format(Locale.KOREA, "%s,%s", startHour, endtHour));
             } catch (Exception e)
             {
                 ExLog.d(e.toString());

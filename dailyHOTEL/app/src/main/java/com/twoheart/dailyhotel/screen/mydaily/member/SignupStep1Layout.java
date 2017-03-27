@@ -26,6 +26,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
@@ -214,7 +215,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         Calendar calendar = DailyCalendar.getInstance();
         calendar.set(year, month, dayOfMonth, 0, 0, 0);
 
-        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setText(String.format(Locale.KOREA, "%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(calendar);
     }
 

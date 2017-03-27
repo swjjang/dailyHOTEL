@@ -58,6 +58,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -1614,7 +1615,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             gourmetPaymentInformation.setGuest(guest);
             processAgreeTermDialog();
 
-            String label = String.format("%s-%s", gourmetPaymentInformation.placeName, gourmetPaymentInformation.getTicket().ticketName);
+            String label = String.format(Locale.KOREA, "%s-%s", gourmetPaymentInformation.placeName, gourmetPaymentInformation.getTicket().ticketName);
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                 , AnalyticsManager.Action.PAYMENT_CLICKED, label, null);
         }

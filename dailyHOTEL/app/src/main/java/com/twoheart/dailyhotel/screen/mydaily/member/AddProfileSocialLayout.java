@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AddProfileSocialLayout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
 {
@@ -240,7 +241,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     } else
                     {
                         String countryCode = tag.substring(tag.indexOf('\n') + 1);
-                        phoneNumber = String.format("%s %s", countryCode, phoneNumber);
+                        phoneNumber = String.format(Locale.KOREA, "%s %s", countryCode, phoneNumber);
                     }
                 }
 
@@ -478,7 +479,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         Calendar calendar = DailyCalendar.getInstance();
         calendar.set(year, month, dayOfMonth, 0, 0, 0);
 
-        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setText(String.format(Locale.KOREA, "%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(calendar);
     }
 

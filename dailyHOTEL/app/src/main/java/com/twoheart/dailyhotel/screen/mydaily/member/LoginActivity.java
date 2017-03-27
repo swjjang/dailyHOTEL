@@ -57,6 +57,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -494,7 +495,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         //        String phoneNumber = userJSONObject.getString("phone");
         String birthday = userJSONObject.getString("birthday");
 
-        DailyPreference.getInstance(this).setAuthorization(String.format("%s %s", tokenType, accessToken));
+        DailyPreference.getInstance(this).setAuthorization(String.format(Locale.KOREA, "%s %s", tokenType, accessToken));
         DailyPreference.getInstance(this).setUserInformation(userType, email, name, birthday, recommender);
 
         AnalyticsManager.getInstance(this).setUserInformation(userIndex, userType);

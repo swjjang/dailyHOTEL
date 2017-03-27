@@ -215,32 +215,32 @@ public class DailyCalendar
             {
                 // yyyy
                 case 0:
-                    formatStringBuilder.replace(start, end, String.format("%04d", calendar.get(Calendar.YEAR)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%04d", calendar.get(Calendar.YEAR)));
                     break;
 
                 // yy
                 case 1:
-                    formatStringBuilder.replace(start, end, String.format("%02d", (calendar.get(Calendar.YEAR) % 100)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%02d", (calendar.get(Calendar.YEAR) % 100)));
                     break;
 
                 // MM
                 case 2:
-                    formatStringBuilder.replace(start, end, String.format("%02d", (calendar.get(Calendar.MONTH) + 1)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%02d", (calendar.get(Calendar.MONTH) + 1)));
                     break;
 
                 // M
                 case 3:
-                    formatStringBuilder.replace(start, end, String.format("%d", (calendar.get(Calendar.MONTH) + 1)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%d", (calendar.get(Calendar.MONTH) + 1)));
                     break;
 
                 // dd
                 case 4:
-                    formatStringBuilder.replace(start, end, String.format("%02d", calendar.get(Calendar.DAY_OF_MONTH)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%02d", calendar.get(Calendar.DAY_OF_MONTH)));
                     break;
 
                 // d
                 case 5:
-                    formatStringBuilder.replace(start, end, String.format("%d", calendar.get(Calendar.DAY_OF_MONTH)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%d", calendar.get(Calendar.DAY_OF_MONTH)));
                     break;
 
                 // EEE 1 : 일, 2 : 월 ... 7 : 토
@@ -250,22 +250,22 @@ public class DailyCalendar
 
                 // HH
                 case 7:
-                    formatStringBuilder.replace(start, end, String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%02d", calendar.get(Calendar.HOUR_OF_DAY)));
                     break;
 
                 // H
                 case 8:
-                    formatStringBuilder.replace(start, end, String.format("%d", calendar.get(Calendar.HOUR_OF_DAY)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%d", calendar.get(Calendar.HOUR_OF_DAY)));
                     break;
 
                 // mm
                 case 9:
-                    formatStringBuilder.replace(start, end, String.format("%02d", calendar.get(Calendar.MINUTE)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%02d", calendar.get(Calendar.MINUTE)));
                     break;
 
                 // ss
                 case 10:
-                    formatStringBuilder.replace(start, end, String.format("%02d", calendar.get(Calendar.SECOND)));
+                    formatStringBuilder.replace(start, end, String.format(Locale.KOREA, "%02d", calendar.get(Calendar.SECOND)));
                     break;
 
                 // ZZZZZ

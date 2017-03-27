@@ -4,6 +4,7 @@ import com.twoheart.dailyhotel.model.Keyword;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DailyRecentSearches
 {
@@ -71,7 +72,7 @@ public class DailyRecentSearches
 
         for (Keyword keyword : mKeywordList)
         {
-            result.append(String.format("%d%c%s", keyword.icon, ICON_DELIMITER, keyword.name));
+            result.append(String.format(Locale.KOREA, "%d%c%s", keyword.icon, ICON_DELIMITER, keyword.name));
             result.append(KEYWORD_DELIMITER);
         }
 
@@ -153,7 +154,7 @@ public class DailyRecentSearches
 
         for (String keyword : keywords)
         {
-            values = keyword.split(String.format("\\%c", ICON_DELIMITER));
+            values = keyword.split(String.format(Locale.KOREA, "\\%c", ICON_DELIMITER));
 
             try
             {

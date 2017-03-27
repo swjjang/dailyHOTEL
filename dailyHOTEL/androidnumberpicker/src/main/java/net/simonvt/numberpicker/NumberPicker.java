@@ -2673,6 +2673,6 @@ public class NumberPicker extends LinearLayout {
     }
 
     static private String formatNumberWithLocale(int value) {
-        return String.format(Locale.getDefault(), "%d", value);
+        return String.format(Locale.KOREA, "%d", value);
     }
 }

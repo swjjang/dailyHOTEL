@@ -27,7 +27,7 @@ public class StampTermsActivity extends WebViewActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_term);
-        setWebView(Crypto.getUrlDecoderEx(URL_WEB_LOCATION_TERMS));
+        setWebView(Crypto.getUrlDecoderEx(URL_WEB_STAMP_TERMS));
 
         initToolbar();
         initLayout((DailyWebView) mWebView);

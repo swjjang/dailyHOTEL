@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -365,7 +366,7 @@ public class GourmetProductDetailActivity extends BaseActivity
 
             if (gourmetDetailParams != null)
             {
-                String label = String.format("%s-%s", gourmetDetailParams.name, gourmetProduct.ticketName);
+                String label = String.format(Locale.KOREA, "%s-%s", gourmetDetailParams.name, gourmetProduct.ticketName);
                 AnalyticsManager.getInstance(GourmetProductDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                     , AnalyticsManager.Action.BOOKING_CLICKED, label, recordAnalyticsBooking(mGourmetBookingDay, mGourmetDetail, mSelectedProductPosition));
             }

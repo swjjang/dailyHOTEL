@@ -51,6 +51,7 @@ import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -809,7 +810,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 if (Setting.RELEASE_STORE == Setting.Stores.PLAY_STORE)
                 {
-                    marketUrl = String.format("https://play.google.com/store/apps/details?id=%s", packageName);
+                    marketUrl = String.format(Locale.KOREA, "https://play.google.com/store/apps/details?id=%s", packageName);
                     marketLaunch.setData(Uri.parse(marketUrl));
                 }
             }

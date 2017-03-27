@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -176,7 +177,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         try
         {
-            mPlaceSearchLayout.setDataText(String.format("%s - %s, %d박"//
+            mPlaceSearchLayout.setDataText(String.format(Locale.KOREA, "%s - %s, %d박"//
                 , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)")//
                 , stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), stayBookingDay.getNights()));
         } catch (Exception e)

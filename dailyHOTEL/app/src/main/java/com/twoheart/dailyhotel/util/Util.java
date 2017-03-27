@@ -985,7 +985,7 @@ public class Util implements Constants
         }
 
         final String packageName = "net.daum.android.map";
-        String url = String.format("daummaps://look?p=%s,%s", latitude, longitude);
+        String url = String.format(Locale.KOREA, "daummaps://look?p=%s,%s", latitude, longitude);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
@@ -1009,7 +1009,7 @@ public class Util implements Constants
         try
         {
             final String packageName = "com.nhn.android.nmap";
-            String url = String.format("navermaps://?menu=location&lat=%s&lng=%s&title=%s", latitude, longitude, URLEncoder.encode(name, "UTF-8"));
+            String url = String.format(Locale.KOREA, "navermaps://?menu=location&lat=%s&lng=%s&title=%s", latitude, longitude, URLEncoder.encode(name, "UTF-8"));
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));
@@ -1066,7 +1066,7 @@ public class Util implements Constants
         {
             final String packageName = "com.google.android.apps.maps";
             //            String url = String.format("http://maps.google.com/maps?q=%s&ll=%s,%s&z=14", placeName, latitude, longitude);
-            String url = String.format("https://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, URLEncoder.encode(placeName, "UTF-8"));
+            String url = String.format(Locale.KOREA, "https://maps.google.com/maps?q=loc:%s,%s(%s)&z=14", latitude, longitude, URLEncoder.encode(placeName, "UTF-8"));
 
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(url));

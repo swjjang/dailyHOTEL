@@ -282,7 +282,7 @@ public class DailyMobileAPITest
                     assertThat(accessToken, isNotEmpty());
                     assertThat(tokenType, isNotEmpty());
 
-                    mAuthorization = String.format("%s %s", tokenType, accessToken);
+                    mAuthorization = String.format(Locale.KOREA, "%s %s", tokenType, accessToken);
 
                     JSONObject userJSONObject = dataJSONObject.getJSONObject("user");
                     assertThat(userJSONObject, notNullValue());
