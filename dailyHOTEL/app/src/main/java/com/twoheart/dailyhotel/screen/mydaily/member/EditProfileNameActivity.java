@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
@@ -188,7 +189,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                 lockUI();
 
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileNameActivity.this).getUserType()) == true)
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyUserPreference.getInstance(EditProfileNameActivity.this).getType()) == true)
                 {
                     Map<String, String> params = Collections.singletonMap("name", name);
                     DailyMobileAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateCallback);

@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.network.RetrofitHttpClient;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -85,7 +86,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         VERSION_CODE = Util.getAppVersionCode(getApplicationContext());
         VERSION = Util.getAppVersionName(getApplicationContext());
 
-        AUTHORIZATION = DailyPreference.getInstance(getApplicationContext()).getAuthorization();
+        AUTHORIZATION = DailyUserPreference.getInstance(getApplicationContext()).getAuthorization();
 
         String preferenceVersion = DailyPreference.getInstance( //
             getApplicationContext()).getFirstAppVersion();

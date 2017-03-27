@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -73,7 +74,7 @@ public class ProfileActivity extends BaseActivity
             {
                 if (DailyHotel.isLogin() == true)
                 {
-                    mOnEventListener.startEditBirthday(DailyPreference.getInstance(this).getUserBirthday());
+                    mOnEventListener.startEditBirthday(DailyUserPreference.getInstance(this).getBirthday());
                 } else
                 {
                     mOnEventListener.startEditBirthday(null);
@@ -278,6 +279,7 @@ public class ProfileActivity extends BaseActivity
                 public void onClick(View view)
                 {
                     DailyPreference.getInstance(ProfileActivity.this).clear();
+                    DailyUserPreference.getInstance(ProfileActivity.this).clear();
 
                     try
                     {
@@ -342,7 +344,7 @@ public class ProfileActivity extends BaseActivity
             , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
-            String userType = DailyPreference.getInstance(ProfileActivity.this).getUserType();
+            String userType = DailyUserPreference.getInstance(ProfileActivity.this).getType();
 
             mProfileLayout.updateUserInformation(userType, email, name, Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
 

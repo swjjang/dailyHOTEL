@@ -52,6 +52,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -549,7 +550,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String name = DailyPreference.getInstance(StayDetailActivity.this).getUserName();
+        String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
 
         if (Util.isTextEmpty(name) == true)
         {
@@ -597,7 +598,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            String name = DailyPreference.getInstance(StayDetailActivity.this).getUserName();
+            String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
 
             if (Util.isTextEmpty(name) == true)
             {
@@ -649,7 +650,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
 
-                switch (DailyPreference.getInstance(this).getUserType())
+                switch (DailyUserPreference.getInstance(this).getType())
                 {
                     case Constants.DAILY_USER:
                         params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
@@ -673,7 +674,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
             }
 
-            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(this).isBenefitAlarm() ? "on" : "off");
             params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
             params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(stayDetail.index));
             params.put(AnalyticsManager.KeyType.VENDOR_NAME, stayDetailParams.name);

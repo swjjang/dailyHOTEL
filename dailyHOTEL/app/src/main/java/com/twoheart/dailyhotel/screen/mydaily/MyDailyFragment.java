@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
@@ -175,7 +176,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
                 mMyDailyLayout.updateLoginLayout(false, false);
                 mMyDailyLayout.updateAccountLayout(false, 0, 0);
 
-                boolean isBenefitAlarm = DailyPreference.getInstance(getActivity()).isUserBenefitAlarm();
+                boolean isBenefitAlarm = DailyUserPreference.getInstance(getActivity()).isBenefitAlarm();
 
                 mMyDailyLayout.updatePushIcon(isBenefitAlarm);
 
@@ -441,8 +442,8 @@ public class MyDailyFragment extends BaseFragment implements Constants
                 startActivity(InviteFriendsActivity.newInstance(baseActivity));
             } else
             {
-                String recommender = DailyPreference.getInstance(baseActivity).getUserRecommender();
-                String name = DailyPreference.getInstance(baseActivity).getUserName();
+                String recommender = DailyUserPreference.getInstance(baseActivity).getRecommender();
+                String name = DailyUserPreference.getInstance(baseActivity).getName();
 
                 startActivity(InviteFriendsActivity.newInstance(baseActivity, recommender, name));
             }
@@ -494,7 +495,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             final BaseActivity baseActivity = (BaseActivity) getActivity();
-            boolean isBenefitAlarm = DailyPreference.getInstance(baseActivity).isUserBenefitAlarm(); // 클릭이므로 상태값 변경!
+            boolean isBenefitAlarm = DailyUserPreference.getInstance(baseActivity).isBenefitAlarm(); // 클릭이므로 상태값 변경!
             boolean onOff = !isBenefitAlarm; // 클릭이므로 상태값 변경!
 
             if (onOff == true)
@@ -593,12 +594,12 @@ public class MyDailyFragment extends BaseFragment implements Constants
         @Override
         public void onUserProfile(String type, String email, String name, String birthday, String recommender, boolean isAgreedBenefit)
         {
-            DailyPreference.getInstance(getContext()).setUserInformation(type, email, name, birthday, recommender);
+            DailyUserPreference.getInstance(getContext()).setInformation(type, email, name, birthday, recommender);
 
             boolean isLogin = DailyHotel.isLogin();
             if (isLogin == true)
             {
-                DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgreedBenefit);
+                DailyUserPreference.getInstance(getContext()).setBenefitAlarm(isAgreedBenefit);
                 AnalyticsManager.getInstance(getContext()).setPushEnabled(isAgreedBenefit, null);
 
                 mMyDailyLayout.updatePushIcon(isAgreedBenefit);
@@ -654,7 +655,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
             final BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            DailyPreference.getInstance(getContext()).setUserBenefitAlarm(isAgree);
+            DailyUserPreference.getInstance(getContext()).setBenefitAlarm(isAgree);
             mMyDailyLayout.updatePushIcon(isAgree);
             AnalyticsManager.getInstance(baseActivity).setPushEnabled(isAgree, AnalyticsManager.ValueType.OTHER);
 

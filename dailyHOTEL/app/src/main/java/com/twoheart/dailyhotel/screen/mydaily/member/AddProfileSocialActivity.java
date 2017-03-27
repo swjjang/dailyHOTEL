@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -464,7 +465,7 @@ public class AddProfileSocialActivity extends BaseActivity
             {
                 boolean isBenefit = mAddProfileSocialLayout.isCheckedBenefit();
 
-                DailyPreference.getInstance(AddProfileSocialActivity.this).setUserBenefitAlarm(isBenefit);
+                DailyUserPreference.getInstance(AddProfileSocialActivity.this).setBenefitAlarm(isBenefit);
                 AnalyticsManager.getInstance(AddProfileSocialActivity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
 
                 AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.ACCOUNT_DETAIL, "Confirm", null);

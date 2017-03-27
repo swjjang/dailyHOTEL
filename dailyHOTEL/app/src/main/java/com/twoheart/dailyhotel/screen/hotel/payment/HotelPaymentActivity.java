@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -1884,7 +1885,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 if (stayPaymentInformation.isOverSeas == true)
                 {
-                    DailyPreference.getInstance(HotelPaymentActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
+                    DailyUserPreference.getInstance(HotelPaymentActivity.this).setOverseasInformation(guest.name, guest.phone, guest.email);
                 }
             }
 
@@ -2132,9 +2133,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             guest = new Guest();
                         }
 
-                        String overseasName = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
-                        String overseasPhone = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
-                        String overseasEmail = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
+                        String overseasName = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
+                        String overseasPhone = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
+                        String overseasEmail = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
 
                         guest.name = overseasName;
 

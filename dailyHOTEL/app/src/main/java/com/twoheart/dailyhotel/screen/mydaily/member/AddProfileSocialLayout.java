@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
@@ -194,7 +195,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mTermsOfServiceCheckBox.setOnClickListener(this);
         mBenefitCheckBox.setOnClickListener(this);
 
-        if (DailyPreference.getInstance(mContext).isUserBenefitAlarm() == true)
+        if (DailyUserPreference.getInstance(mContext).isBenefitAlarm() == true)
         {
             mBenefitCheckBox.setVisibility(View.GONE);
         } else

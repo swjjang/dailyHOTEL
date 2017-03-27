@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -56,7 +57,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
     private void initLayout()
     {
         mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
-        mEmailEditText.setText(DailyPreference.getInstance(this).getUserEmail());
+        mEmailEditText.setText(DailyUserPreference.getInstance(this).getEmail());
 
         final View sendFeedbackView = findViewById(R.id.sendFeedbackView);
         sendFeedbackView.setOnClickListener(this);

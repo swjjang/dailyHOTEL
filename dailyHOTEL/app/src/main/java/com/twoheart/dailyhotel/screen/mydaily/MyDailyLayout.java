@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -119,7 +120,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         updateLoginLayout(isLogin, true);
         updateAccountLayout(isLogin, -1, -1);
 
-        boolean isAllowBenefitAlarm = DailyPreference.getInstance(mContext).isUserBenefitAlarm();
+        boolean isAllowBenefitAlarm = DailyUserPreference.getInstance(mContext).isBenefitAlarm();
         updatePushIcon(isAllowBenefitAlarm);
 
         mLinkAlarmLayoutView = view.findViewById(R.id.linkAlarmLayout);
@@ -226,8 +227,8 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         if (isLogin == true)
         {
-            String userName = DailyPreference.getInstance(mContext).getUserName();
-            String userEmail = DailyPreference.getInstance(mContext).getUserEmail();
+            String userName = DailyUserPreference.getInstance(mContext).getName();
+            String userEmail = DailyUserPreference.getInstance(mContext).getEmail();
 
             boolean isEmptyName = Util.isTextEmpty(userName) == true;
             boolean isEmptyEmail = Util.isTextEmpty(userEmail) == true;

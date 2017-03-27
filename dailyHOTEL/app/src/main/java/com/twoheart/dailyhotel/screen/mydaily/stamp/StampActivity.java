@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import retrofit2.Call;
@@ -56,7 +57,7 @@ public class StampActivity extends BaseActivity
             mStampLayout.setStampHistoryEnabled(false);
         }
 
-        boolean isBenefitAlarm = DailyPreference.getInstance(StampActivity.this).isUserBenefitAlarm();
+        boolean isBenefitAlarm = DailyUserPreference.getInstance(StampActivity.this).isBenefitAlarm();
 
         mStampLayout.setPushLayout(isBenefitAlarm == false);
     }
@@ -218,7 +219,7 @@ public class StampActivity extends BaseActivity
         @Override
         public void onBenefitAgreement(boolean isAgree, String updateDate)
         {
-            DailyPreference.getInstance(StampActivity.this).setUserBenefitAlarm(isAgree);
+            DailyUserPreference.getInstance(StampActivity.this).setBenefitAlarm(isAgree);
             AnalyticsManager.getInstance(StampActivity.this).setPushEnabled(isAgree, AnalyticsManager.ValueType.OTHER);
 
             if (isAgree == true)

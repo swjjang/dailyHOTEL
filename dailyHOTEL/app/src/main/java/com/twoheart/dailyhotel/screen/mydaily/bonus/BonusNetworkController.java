@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import org.json.JSONArray;
@@ -130,7 +131,7 @@ public class BonusNetworkController extends BaseNetworkController
 
                         String recommendCode = jsonObject.getString("referralCode");
                         String name = jsonObject.getString("name");
-                        boolean isExceedBonus = DailyPreference.getInstance(mContext).isUserExceedBonus();
+                        boolean isExceedBonus = DailyUserPreference.getInstance(mContext).isExceedBonus();
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserInformation(recommendCode, name, isExceedBonus);
 
@@ -180,7 +181,7 @@ public class BonusNetworkController extends BaseNetworkController
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onBonus(bonus);
 
-                        DailyPreference.getInstance(mContext).setUserExceedBonus(isExceedBonus);
+                        DailyUserPreference.getInstance(mContext).setExceedBonus(isExceedBonus);
                         DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
                     } else
                     {

@@ -46,6 +46,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -562,7 +563,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String name = DailyPreference.getInstance(GourmetDetailActivity.this).getUserName();
+        String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
 
         if (Util.isTextEmpty(name) == true)
         {
@@ -600,7 +601,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         try
         {
-            String name = DailyPreference.getInstance(GourmetDetailActivity.this).getUserName();
+            String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
 
             if (Util.isTextEmpty(name) == true)
             {
@@ -646,7 +647,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
 
-                switch (DailyPreference.getInstance(this).getUserType())
+                switch (DailyUserPreference.getInstance(this).getType())
                 {
                     case Constants.DAILY_USER:
                         params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
@@ -670,7 +671,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
             }
 
-            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(this).isBenefitAlarm() ? "on" : "off");
             params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
             params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(placeDetail.index));
             params.put(AnalyticsManager.KeyType.VENDOR_NAME, gourmetDetailParams.name);
