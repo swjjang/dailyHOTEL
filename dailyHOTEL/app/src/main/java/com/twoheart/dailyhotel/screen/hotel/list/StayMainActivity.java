@@ -1018,6 +1018,17 @@ public class StayMainActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onUpdateFilterEnabled(boolean isShowFilterEnabled)
+        {
+            if (mPlaceMainLayout == null)
+            {
+                return;
+            }
+
+            mPlaceMainLayout.setOptionFilterEnabled(isShowFilterEnabled);
+        }
+
+        @Override
         public void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled)
         {
             if (mPlaceMainLayout == null)

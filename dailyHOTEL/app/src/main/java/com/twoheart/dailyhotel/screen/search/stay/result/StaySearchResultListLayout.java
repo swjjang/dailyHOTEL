@@ -58,6 +58,7 @@ public class StaySearchResultListLayout extends StayListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
@@ -83,6 +84,7 @@ public class StaySearchResultListLayout extends StayListLayout
 
                 mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                 break;
 
@@ -95,10 +97,12 @@ public class StaySearchResultListLayout extends StayListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
 
                 mMapLayout.setVisibility(View.GONE);

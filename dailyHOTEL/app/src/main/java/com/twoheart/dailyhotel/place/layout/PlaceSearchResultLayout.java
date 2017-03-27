@@ -247,6 +247,15 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void setOptionFilterEnabled(boolean isFilterEnabled)
     {
+        // disable opacity 40% - 0 ~ 255
+        if (isFilterEnabled == true)
+        {
+            mFilterOptionImageView.getBackground().setAlpha(255);
+        } else
+        {
+            mFilterOptionImageView.getBackground().setAlpha(102);
+        }
+
         mFilterOptionImageView.setEnabled(isFilterEnabled);
     }
 
@@ -347,7 +356,12 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
                 prevPosition = position;
 
-                setOptionViewTypeEnabled(getPlaceListFragment().get(position).getViewType() != Constants.ViewType.GONE);
+                PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
+
+                boolean isViewTypeEnabled = placeListFragment.getViewType() != Constants.ViewType.GONE;
+
+                setOptionViewTypeEnabled(isViewTypeEnabled);
+                setOptionFilterEnabled(isViewTypeEnabled || placeListFragment.isDefaultFilter() == false);
             }
 
             @Override

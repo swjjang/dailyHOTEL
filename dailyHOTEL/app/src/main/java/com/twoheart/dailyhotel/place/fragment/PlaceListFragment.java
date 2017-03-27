@@ -55,6 +55,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
         void onShowMenuBar();
 
+        void onUpdateFilterEnabled(boolean isShowFilterEnabled);
+
         void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled);
 
         void onFilterClick();
@@ -75,6 +77,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     protected abstract void refreshList(boolean isShowProgress, int page);
 
     public abstract void setPlaceCuration(PlaceCuration curation);
+
+    public abstract boolean isDefaultFilter();
 
     public void setPlaceOnListFragmentListener(OnPlaceListFragmentListener listener)
     {
