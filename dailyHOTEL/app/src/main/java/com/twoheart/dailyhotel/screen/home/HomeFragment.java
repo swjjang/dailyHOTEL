@@ -197,7 +197,7 @@ public class HomeFragment extends BaseFragment
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
             {
-                mDontReload = false;
+                mDontReload = true;
                 mHomeLayout.setScrollTop();
 
                 forceRefreshing();
@@ -227,7 +227,7 @@ public class HomeFragment extends BaseFragment
             case Constants.CODE_REQUEST_ACTIVITY_STAMP:
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
-                    mDontReload = false;
+                    mDontReload = true;
                     mHomeLayout.setScrollTop();
 
                     forceRefreshing();
