@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by android_sam on 2016. 6. 20..
@@ -309,7 +310,7 @@ public class CouponUtil
             String strStart = DailyCalendar.convertDateFormatString(startTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
             String strEnd = DailyCalendar.convertDateFormatString(endTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
 
-            availableDatesString = String.format("%s - %s", strStart, strEnd);
+            availableDatesString = String.format(Locale.KOREA, "%s - %s", strStart, strEnd);
 
         } catch (Exception e)
         {

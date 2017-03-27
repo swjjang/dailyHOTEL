@@ -66,6 +66,7 @@ import com.twoheart.dailyhotel.widget.TextTransition;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -928,14 +929,17 @@ public class StayDetailActivity extends PlaceDetailActivity
                     }
                 });
 
-            if (isDeepLink == true)
+            if (stayDetailParams != null)
             {
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                    Action.SOLDOUT_DEEPLINK, stayDetailParams.name, null);
-            } else
-            {
-                AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
-                    Action.SOLDOUT, stayDetailParams.name, null);
+                if (isDeepLink == true)
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT_DEEPLINK, stayDetailParams.name, null);
+                } else
+                {
+                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                        Action.SOLDOUT, stayDetailParams.name, null);
+                }
             }
         } else
         {
@@ -1474,7 +1478,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            String label = String.format("%s-%s", stayDetailParams.name, mSelectedStayProduct.roomName);
+            String label = String.format(Locale.KOREA, "%s-%s", stayDetailParams.name, mSelectedStayProduct.roomName);
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.BOOKING_CLICKED, label, recordAnalyticsBooking((StayBookingDay) mPlaceBookingDay, (StayDetail) mPlaceDetail, stayProduct));
         }

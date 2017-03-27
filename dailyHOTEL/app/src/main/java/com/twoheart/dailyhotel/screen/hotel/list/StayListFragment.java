@@ -58,6 +58,11 @@ public class StayListFragment extends PlaceListFragment
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
+        if (mPlaceListLayout == null)
+        {
+            return;
+        }
+
         mStayCuration = (StayCuration) curation;
         ((StayListLayout) mPlaceListLayout).setStayCuration(mStayCuration);
     }

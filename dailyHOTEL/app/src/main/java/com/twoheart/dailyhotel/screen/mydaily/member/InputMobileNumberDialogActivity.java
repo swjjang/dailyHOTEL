@@ -25,6 +25,8 @@ import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToast;
 
+import java.util.Locale;
+
 public class InputMobileNumberDialogActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_MOBILE_NUMBER = "mobileNumber";
@@ -201,12 +203,12 @@ public class InputMobileNumberDialogActivity extends BaseActivity
                 String countryCode = mCountryCode.substring(mCountryCode.indexOf('\n') + 1);
                 mMobileNumber = mobileEditText.getText().toString();
 
-                String phoneNumber = String.format("%s %s", countryCode, mMobileNumber);
+                String phoneNumber = String.format(Locale.KOREA, "%s %s", countryCode, mMobileNumber);
 
                 if (Util.isValidatePhoneNumber(phoneNumber) == true)
                 {
                     Intent intent = new Intent();
-                    intent.putExtra(INTENT_EXTRA_MOBILE_NUMBER, String.format("%s %s", countryCode, mMobileNumber));
+                    intent.putExtra(INTENT_EXTRA_MOBILE_NUMBER, String.format(Locale.KOREA, "%s %s", countryCode, mMobileNumber));
 
                     setResult(RESULT_OK, intent);
                     finish();

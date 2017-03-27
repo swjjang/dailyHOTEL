@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Locale;
 import java.util.Map;
 
 public class FacebookManager extends BaseAnalyticsManager
@@ -224,7 +225,7 @@ public class FacebookManager extends BaseAnalyticsManager
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format("%s_%s", mContext.getString(R.string.label_hotel), label.replaceAll("-", "_"));
+                String value = String.format(Locale.KOREA, "%s_%s", mContext.getString(R.string.label_hotel), label.replaceAll("-", "_"));
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);
@@ -239,7 +240,7 @@ public class FacebookManager extends BaseAnalyticsManager
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format("%s_%s", mContext.getString(R.string.label_fnb), label.replaceAll("-", "_"));
+                String value = String.format(Locale.KOREA, "%s_%s", mContext.getString(R.string.label_fnb), label.replaceAll("-", "_"));
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);

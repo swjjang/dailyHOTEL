@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class StayMainLayout extends PlaceMainLayout
 {
@@ -70,6 +71,6 @@ public class StayMainLayout extends PlaceMainLayout
         String checkInDay = stayBookingDay.getCheckInDay("M.d(EEE)");
         String checkOutDay = stayBookingDay.getCheckOutDay("M.d(EEE)");
 
-        setToolbarDateText(String.format("%s - %s", checkInDay, checkOutDay));
+        setToolbarDateText(String.format(Locale.KOREA, "%s - %s", checkInDay, checkOutDay));
     }
 }

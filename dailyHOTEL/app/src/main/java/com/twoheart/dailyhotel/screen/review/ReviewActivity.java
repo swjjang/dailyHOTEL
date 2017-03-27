@@ -47,6 +47,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -332,7 +333,7 @@ public class ReviewActivity extends BaseActivity
             {
                 try
                 {
-                    String periodDate = String.format("%s - %s"//
+                    String periodDate = String.format(Locale.KOREA, "%s - %s"//
                         , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
                         , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
 
@@ -500,7 +501,7 @@ public class ReviewActivity extends BaseActivity
             {
                 case HOTEL:
                 {
-                    String periodDate = String.format("%s - %s"//
+                    String periodDate = String.format(Locale.KOREA, "%s - %s"//
                         , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
                         , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
                     periodTextView.setText(getString(R.string.message_review_date, periodDate));

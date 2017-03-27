@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
@@ -49,7 +50,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 
     public void requestAddress(double latitude, double longitude)
     {
-        final String url = String.format("https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
+        final String url = String.format(Locale.KOREA, "https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko"//
             , Double.toString(latitude)//
             , Double.toString(longitude)//
             , Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));

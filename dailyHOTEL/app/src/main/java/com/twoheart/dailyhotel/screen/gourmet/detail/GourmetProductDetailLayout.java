@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
+import java.util.Locale;
 
 public class GourmetProductDetailLayout extends BaseLayout
 {
@@ -174,7 +175,7 @@ public class GourmetProductDetailLayout extends BaseLayout
 
             TextView timeTextView = (TextView) timeLayout.findViewById(R.id.timeTextView);
 
-            String timeFormat = String.format("%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
+            String timeFormat = String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
 
             if (Util.isTextEmpty(gourmetProduct.lastOrderTime) == false)
             {

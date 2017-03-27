@@ -17,6 +17,8 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.Locale;
+
 /**
  * Created by sam on 2016. 5. 18..
  */
@@ -83,7 +85,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
-        String dotVersion = String.format("%s.%d.%d.%s", DailyHotel.VERSION_CODE.substring(0, 1) //
+        String dotVersion = String.format(Locale.KOREA, "%s.%d.%d.%s", DailyHotel.VERSION_CODE.substring(0, 1) //
             , Integer.parseInt(DailyHotel.VERSION_CODE.substring(1, 3))//
             , Integer.parseInt(DailyHotel.VERSION_CODE.substring(3, 5)) //
             , DailyHotel.VERSION_CODE.substring(5, 7));

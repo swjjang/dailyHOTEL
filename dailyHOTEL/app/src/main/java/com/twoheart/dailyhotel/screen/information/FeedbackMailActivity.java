@@ -20,6 +20,8 @@ import com.twoheart.dailyhotel.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
+import java.util.Locale;
+
 public class FeedbackMailActivity extends BaseActivity implements Constants, OnClickListener
 {
     DailyEditText mEmailEditText, mMessageEditText;
@@ -80,7 +82,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         });
 
         TextView informationTextView = (TextView) findViewById(R.id.informationTextView);
-        String formText = getString(R.string.mail_base_information, String.format("Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersionCode(this)));
+        String formText = getString(R.string.mail_base_information, String.format(Locale.KOREA, "Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersionCode(this)));
         informationTextView.setText(formText);
 
         // 기본 정보를 태그에 넣음.

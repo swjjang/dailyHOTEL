@@ -38,6 +38,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -344,7 +345,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         Calendar calendar = DailyCalendar.getInstance();
         calendar.set(year, month, dayOfMonth, 0, 0, 0);
 
-        mBirthdayEditText.setText(String.format("%4d.%02d.%02d", year, month + 1, dayOfMonth));
+        mBirthdayEditText.setText(String.format(Locale.KOREA, "%4d.%02d.%02d", year, month + 1, dayOfMonth));
         mBirthdayEditText.setTag(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
     }
 

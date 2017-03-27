@@ -65,6 +65,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -1238,7 +1239,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        String label = String.format("%s-%s", mPlaceName, stayPaymentInformation.getSaleRoomInformation().roomName);
+        String label = String.format(Locale.KOREA, "%s-%s", mPlaceName, stayPaymentInformation.getSaleRoomInformation().roomName);
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
     }
@@ -2404,7 +2405,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     Intent intent = new Intent();
                     intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPaymentInformation);
-                    intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, String.format("%d^%s", msgCode, message));
+                    intent.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, String.format(Locale.KOREA, "%d^%s", msgCode, message));
 
                     onActivityPaymentResult(CODE_REQUEST_ACTIVITY_PAYMENT, CODE_RESULT_ACTIVITY_PAYMENT_PRECHECK, intent);
                 } catch (Exception e)

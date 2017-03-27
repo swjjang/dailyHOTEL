@@ -43,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -399,9 +400,9 @@ public class PaymentWaitActivity extends BaseActivity
         String[] dateSlice = jsonObject.getString("date").split("/");
         String[] timeSlice = jsonObject.getString("time").split(":");
 
-        String date = String.format("%s년 %s월 %s일", dateSlice[0], dateSlice[1], dateSlice[2]);
+        String date = String.format(Locale.KOREA, "%s년 %s월 %s일", dateSlice[0], dateSlice[1], dateSlice[2]);
 
-        mDeadlineTextView.setText(String.format("%s %s시 %s분 까지", date, timeSlice[0], timeSlice[1]));
+        mDeadlineTextView.setText(String.format(Locale.KOREA, "%s %s시 %s분 까지", date, timeSlice[0], timeSlice[1]));
 
         int coupon = jsonObject.getInt("coupon_amount");
 
