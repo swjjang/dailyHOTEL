@@ -104,7 +104,7 @@ public class StampActivity extends BaseActivity
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_LOGIN:
+            case Constants.CODE_REQUEST_ACTIVITY_LOGIN:
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
@@ -113,8 +113,9 @@ public class StampActivity extends BaseActivity
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_STAMP_TERMS:
-            case CODE_REQUEST_ACTIVITY_STAMP_HISTORY:
+            case Constants.CODE_RESULT_ACTIVITY_EVENT:
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP_TERMS:
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP_HISTORY:
                 if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     setResult(resultCode);
