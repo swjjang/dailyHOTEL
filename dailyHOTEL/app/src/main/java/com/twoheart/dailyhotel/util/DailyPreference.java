@@ -144,7 +144,6 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
-    private static final String KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE = "332";
 
     private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
     private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
@@ -1102,16 +1101,6 @@ public class DailyPreference
     public boolean isRemoteConfigStampEnabled()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_ENABLED, false);
-    }
-
-    public void setRemoteConfigStampTitle(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE, value);
-    }
-
-    public String getRemoteConfigStampTitle()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE, null);
     }
 
     public void setRemoteConfigStampStayDetailMessage(String message1, String message2, String message3, boolean message3Enabled)

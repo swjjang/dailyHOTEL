@@ -436,10 +436,6 @@ public class DailyRemoteConfig
 
             DailyPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
 
-            String myDailyTitle = jsonObject.getString("myDailyTitle");
-
-            DailyPreference.getInstance(context).setRemoteConfigStampTitle(myDailyTitle);
-
             JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
 
             String stayDetailMessage1 = stayDetailJSONObject.getString("message1");
