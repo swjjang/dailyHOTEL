@@ -20,7 +20,7 @@ import java.util.Map;
 public class StayParams extends PlaceParams
 {
     protected String dateCheckIn;
-    protected int stays = 1;
+    protected int stays;
     protected Category category;
 
     protected List<String> mBedTypeList;
