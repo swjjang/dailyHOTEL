@@ -258,7 +258,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 mDontReload = true;
 
-                recordPaymentInformation();
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    recordPaymentInformation();
+                }
 
                 setResult(resultCode);
                 finish();
