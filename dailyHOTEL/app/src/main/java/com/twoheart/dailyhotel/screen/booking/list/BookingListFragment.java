@@ -580,16 +580,20 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                                 final int reservationIndex = DailyDeepLink.getInstance().getReservationIndex();
 
-                                if (placeType != null && reservationIndex > 0)
+                                if (placeType != null)
                                 {
+                                    String imageUrl = null;
+
                                     for (Booking booking : bookingArrayList)
                                     {
                                         if (booking.reservationIndex == reservationIndex)
                                         {
-                                            startBookingDetail(baseActivity, placeType, reservationIndex, booking.hotelImageUrl, true);
+                                            imageUrl = booking.hotelImageUrl;
                                             break;
                                         }
                                     }
+
+                                    startBookingDetail(baseActivity, placeType, reservationIndex, imageUrl, true);
                                 }
                             }
 
