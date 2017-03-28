@@ -1533,6 +1533,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     mResultIntent = new Intent();
                     mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
                 }
+
                 setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             }
 
@@ -1709,14 +1710,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onError(Throwable e)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
             GourmetDetailActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {
@@ -1753,7 +1761,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorToastMessage(String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
             GourmetDetailActivity.this.onErrorToastMessage(message);
             finish();
         }
@@ -1761,7 +1773,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorResponse(final Call call, final Response response)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {
