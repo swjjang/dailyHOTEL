@@ -5,6 +5,7 @@ public class PlaceReviewItem
     public static final int TYPE_ENTRY = 0;
     public static final int TYPE_HEADER_VIEW = 1;
     public static final int TYPE_FOOTER_VIEW = 2;
+    public static final int TYPE_LOADING_VIEW = 3;
 
     public int mType;
     private Object mItem;

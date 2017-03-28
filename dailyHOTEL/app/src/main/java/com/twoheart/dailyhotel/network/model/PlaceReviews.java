@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 
 import java.util.List;
 
@@ -23,7 +24,16 @@ public class PlaceReviews
     @JsonField(name = "number")
     public int page;
 
+    public int loadingPage;
+
     public PlaceReviews()
     {
+    }
+
+    @OnJsonParseComplete
+    void onParseComplete()
+    {
+        page++;
+        loadingPage = 0;
     }
 }

@@ -41,7 +41,7 @@ public class PlaceReviewLayout extends BaseLayout
     {
         void onTermsClick();
 
-        void onScrollStateChanged(RecyclerView recyclerView, int newState);
+        void onScroll(RecyclerView recyclerView, int dx, int dy);
     }
 
     public PlaceReviewLayout(Context context, OnBaseEventListener listener)
@@ -61,9 +61,9 @@ public class PlaceReviewLayout extends BaseLayout
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
-                ((OnEventListener) mOnEventListener).onScrollStateChanged(recyclerView, newState);
+                ((OnEventListener)mOnEventListener).onScroll(recyclerView, dx, dy);
             }
         });
     }
@@ -122,7 +122,7 @@ public class PlaceReviewLayout extends BaseLayout
         mReviewListAdapter.notifyDataSetChanged();
     }
 
-    public void addFooterView()
+    public void addDailyFooter()
     {
         if (mReviewListAdapter == null)
         {
@@ -141,6 +141,44 @@ public class PlaceReviewLayout extends BaseLayout
 
         mReviewListAdapter.addAll(placeReviewItemList);
         mReviewListAdapter.notifyDataSetChanged();
+    }
+
+    public void addLoadingFooter()
+    {
+        if (mReviewListAdapter == null)
+        {
+            return;
+        }
+
+        PlaceReviewItem placeReviewItem = mReviewListAdapter.getItem(mReviewListAdapter.getItemCount() - 1);
+
+        if (placeReviewItem != null && placeReviewItem.mType == PlaceReviewItem.TYPE_LOADING_VIEW)
+        {
+            return;
+        }
+
+        List<PlaceReviewItem> placeReviewItemList = new ArrayList<>();
+        placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_LOADING_VIEW, null));
+
+        mReviewListAdapter.addAll(placeReviewItemList);
+        mReviewListAdapter.notifyDataSetChanged();
+    }
+
+    public void removeLoadingFooter()
+    {
+        if (mReviewListAdapter == null)
+        {
+            return;
+        }
+
+        int position = mReviewListAdapter.getItemCount() - 1;
+        PlaceReviewItem placeReviewItem = mReviewListAdapter.getItem(position);
+
+        if (placeReviewItem != null && placeReviewItem.mType == PlaceReviewItem.TYPE_LOADING_VIEW)
+        {
+            mReviewListAdapter.removeItem(position);
+            mReviewListAdapter.notifyDataSetChanged();
+        }
     }
 
     class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
@@ -198,6 +236,16 @@ public class PlaceReviewLayout extends BaseLayout
             mPlaceReviewItemList.addAll(placeReviewItemList);
         }
 
+        public void removeItem(int position)
+        {
+            if (position < 0 || mPlaceReviewItemList.size() <= position)
+            {
+                return;
+            }
+
+            mPlaceReviewItemList.remove(position);
+        }
+
         public void setTotalCount(int totalCount)
         {
             mTotalCount = totalCount;
@@ -250,6 +298,13 @@ public class PlaceReviewLayout extends BaseLayout
 
                     return new FooterViewHolder(view);
                 }
+
+                case PlaceReviewItem.TYPE_LOADING_VIEW:
+                {
+                    View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
+
+                    return new FooterViewHolder(view);
+                }
             }
 
             return null;
@@ -276,6 +331,7 @@ public class PlaceReviewLayout extends BaseLayout
                     break;
 
                 case PlaceReviewItem.TYPE_FOOTER_VIEW:
+                case PlaceReviewItem.TYPE_LOADING_VIEW:
                     break;
             }
         }

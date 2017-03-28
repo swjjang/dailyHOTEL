@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.twoheart.dailyhotel.R;
@@ -92,11 +93,13 @@ public abstract class PlaceReviewActivity extends BaseActivity
             return;
         }
 
+        mPlaceReviewLayout.removeLoadingFooter();
+
         mPlaceReviews = placeReviews;
 
         if (placeReviews.numberOfElements == 0)
         {
-            mPlaceReviewLayout.addFooterView();
+            mPlaceReviewLayout.addDailyFooter();
         } else
         {
             mPlaceReviewLayout.addReviewList(placeReviews.content, placeReviews.totalElements);
@@ -122,32 +125,33 @@ public abstract class PlaceReviewActivity extends BaseActivity
         }
 
         @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        public void onScroll(RecyclerView recyclerView, int dx, int dy)
         {
-            if (mPlaceReviews == null)
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+            if (linearLayoutManager == null || mPlaceReviews == null)
             {
                 return;
             }
 
-            switch (newState)
+            final int LOAD_MORE_POSITION_GAP = Constants.PAGENATION_LIST_SIZE / 3;
+
+            int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+            int itemCount = linearLayoutManager.getItemCount();
+
+            int loadMorePosition = itemCount > LOAD_MORE_POSITION_GAP //
+                ? lastVisibleItemPosition + LOAD_MORE_POSITION_GAP //
+                : lastVisibleItemPosition + (itemCount / 3);
+
+            if (itemCount > 0 && (itemCount - 1) <= loadMorePosition)
             {
-                case RecyclerView.SCROLL_STATE_IDLE:
+                if (mPlaceReviews.page <= mPlaceReviews.totalPages && mPlaceReviews.page + 1 != mPlaceReviews.loadingPage)
                 {
-                    if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
-                    {
-                        if (mPlaceReviews.page < mPlaceReviews.totalPages)
-                        {
-                            mPlaceReviewNetworkController.requestPlaceReviews(getPlaceType(), mPlaceIndex, mPlaceReviews.page + 1, MAX_COUNT);
-                        }
-                    }
-                    break;
+                    mPlaceReviewLayout.addLoadingFooter();
+
+                    mPlaceReviews.loadingPage = mPlaceReviews.page + 1;
+                    mPlaceReviewNetworkController.requestPlaceReviews(getPlaceType(), mPlaceIndex, mPlaceReviews.page + 1, MAX_COUNT);
                 }
-
-                case RecyclerView.SCROLL_STATE_DRAGGING:
-                    break;
-
-                case RecyclerView.SCROLL_STATE_SETTLING:
-                    break;
             }
         }
 
