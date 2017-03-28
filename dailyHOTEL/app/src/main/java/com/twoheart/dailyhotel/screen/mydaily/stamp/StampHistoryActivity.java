@@ -40,8 +40,8 @@ public class StampHistoryActivity extends BaseActivity
 
         setContentView(mStampHistoryLayout.onCreateView(R.layout.activity_stamp_history));
 
-        String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
-        String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
+        String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
+        String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
 
         mStampHistoryLayout.setStampDate(stampDate1, stampDate2);
     }

@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class StayAutoRefundLayout extends BaseLayout implements Constants, View.OnClickListener

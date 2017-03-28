@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout

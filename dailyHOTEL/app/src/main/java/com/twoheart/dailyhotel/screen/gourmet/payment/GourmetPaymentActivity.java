@@ -465,7 +465,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
-        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay)mPlaceBookingDay;
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
 
         String discountType = AnalyticsManager.Label.FULL_PAYMENT;
 
@@ -959,7 +959,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected void recordPaymentInformation()
     {
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
-        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay)mPlaceBookingDay;
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
 
         DailyPreference.getInstance(GourmetPaymentActivity.this)//
             .setPaymentInformation(PlaceType.FNB,//
@@ -1369,7 +1369,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     void startCouponPopup(GourmetPaymentInformation gourmetPaymentInformation)
     {
         GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
-        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay)mPlaceBookingDay;
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
 
         int placeIndex = gourmetPaymentInformation.placeIndex;
         int ticketIndex = gourmetProduct.saleIdx;
