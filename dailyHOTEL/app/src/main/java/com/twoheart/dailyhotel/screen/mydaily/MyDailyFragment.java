@@ -76,7 +76,6 @@ public class MyDailyFragment extends BaseFragment implements Constants
         boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
 
         mMyDailyLayout.updateNewIconView(hasNewCoupon);
-        mMyDailyLayout.setStampTitle(DailyPreference.getInstance(context).getRemoteConfigStampTitle());
 
         AnalyticsManager.getInstance(context).recordScreen(getActivity(), AnalyticsManager.Screen.MYDAILY, null);
 

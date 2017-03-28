@@ -314,7 +314,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
-                    android:text="@string/actionbar_title_stamp"
+                    android:text="@string/label_stamp_mydaily_title"
                     android:textColor="@color/information_title"
                     android:textSize="15dp"/>
 
