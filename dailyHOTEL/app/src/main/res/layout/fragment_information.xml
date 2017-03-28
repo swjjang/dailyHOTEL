@@ -339,10 +339,10 @@
                     android:id="@+id/versionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="18dp"
                     android:gravity="center_vertical"
-                    android:layout_alignParentRight="true"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="12dp"/>
             </RelativeLayout>
@@ -364,9 +364,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
+                    android:background="@drawable/shape_dialog_button01"
                     android:padding="10dp"
                     android:text="Prod Server"
-                    android:background="@drawable/shape_dialog_button01"
                     android:textColor="@color/white"
                     android:textSize="12dp"/>
 
@@ -375,9 +375,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
+                    android:background="@drawable/shape_dialog_button01"
                     android:padding="10dp"
                     android:text="Dev Server"
-                    android:background="@drawable/shape_dialog_button01"
                     android:textColor="@color/white"
                     android:textSize="12dp"/>
 

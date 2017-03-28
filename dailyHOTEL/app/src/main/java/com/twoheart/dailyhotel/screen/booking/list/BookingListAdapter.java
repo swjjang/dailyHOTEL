@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.TimeZone;
