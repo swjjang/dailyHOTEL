@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.network.model.PlaceReviews;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -1153,7 +1154,7 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestPlaceReviews(String tag, String type, int itemIdx, Object listener)
+    public void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}"//
             : "NDkkNzAkMzgkNDgkNDAkNzMkODEkNTIkMjAkNjMkNzQkNDkkNDIkNzMkNDIkMzkk$MzVFQTAzNTlGNTkzNjk3BRTIzRjQ1QTQ1NzZDQTIFIVQZzNEExQkOENzQNTjg5QzFBQRUI0RTgzFQTABzQAFzM4REQK1ODdEMjRGNw==$";
@@ -1162,9 +1163,9 @@ public class DailyMobileAPI implements IDailyNetwork
         urlParams.put("{type}", type);
         urlParams.put("{itemIdx}", Integer.toString(itemIdx));
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviewScores(Crypto.getUrlDecoderEx(URL, urlParams));
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviews(Crypto.getUrlDecoderEx(URL, urlParams), page, limit, "createdAt", "DESC");
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviews>>) listener);
     }
 
     @Override

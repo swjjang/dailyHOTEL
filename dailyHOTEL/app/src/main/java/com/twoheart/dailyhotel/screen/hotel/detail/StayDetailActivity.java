@@ -1345,12 +1345,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onReviewClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
+            if (mPlaceDetail == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
         }
 
         @Override

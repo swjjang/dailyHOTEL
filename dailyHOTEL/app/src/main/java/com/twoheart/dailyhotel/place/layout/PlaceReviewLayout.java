@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.StaticLayout;
@@ -30,7 +32,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PlaceReviewLayout extends BaseLayout
+public class PlaceReviewLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
     private ReviewListAdapter mReviewListAdapter;
@@ -38,13 +40,13 @@ public abstract class PlaceReviewLayout extends BaseLayout
     public interface OnEventListener extends OnBaseEventListener
     {
         void onTermsClick();
+
+        void onScrollStateChanged(RecyclerView recyclerView, int newState);
     }
 
     public PlaceReviewLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
-
-
     }
 
     @Override
@@ -55,6 +57,15 @@ public abstract class PlaceReviewLayout extends BaseLayout
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                ((OnEventListener) mOnEventListener).onScrollStateChanged(recyclerView, newState);
+            }
+        });
     }
 
     private void initToolbar(View view, String title)
@@ -88,11 +99,11 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
         placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_HEADER_VIEW, placeReviewScoreList));
 
-        mReviewListAdapter.setAll(placeReviewItemList);
+        mReviewListAdapter.setHeader(placeReviewItemList);
         mReviewListAdapter.notifyDataSetChanged();
     }
 
-    public void addReviewList(List<PlaceReview> placeReviewList)
+    public void addReviewList(List<PlaceReview> placeReviewList, int totalCount)
     {
         if (mReviewListAdapter == null || placeReviewList == null || placeReviewList.size() == 0)
         {
@@ -106,6 +117,28 @@ public abstract class PlaceReviewLayout extends BaseLayout
             placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_ENTRY, placeReview));
         }
 
+        mReviewListAdapter.setTotalCount(totalCount);
+        mReviewListAdapter.addAll(placeReviewItemList);
+        mReviewListAdapter.notifyDataSetChanged();
+    }
+
+    public void addFooterView()
+    {
+        if (mReviewListAdapter == null)
+        {
+            return;
+        }
+
+        PlaceReviewItem placeReviewItem = mReviewListAdapter.getItem(mReviewListAdapter.getItemCount() - 1);
+
+        if (placeReviewItem.mType == PlaceReviewItem.TYPE_FOOTER_VIEW)
+        {
+            return;
+        }
+
+        List<PlaceReviewItem> placeReviewItemList = new ArrayList<>();
+        placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_FOOTER_VIEW, null));
+
         mReviewListAdapter.addAll(placeReviewItemList);
         mReviewListAdapter.notifyDataSetChanged();
     }
@@ -116,6 +149,18 @@ public abstract class PlaceReviewLayout extends BaseLayout
         private Context mContext;
         private LayoutInflater mInflater;
         private List<PlaceReviewItem> mPlaceReviewItemList;
+        private int mTotalCount;
+
+        private Handler mHandler = new Handler()
+        {
+            @Override
+            public void handleMessage(Message msg)
+            {
+                mShowtProgressbarAnimation = true;
+
+                startAnimation((ViewGroup) msg.obj);
+            }
+        };
 
         public ReviewListAdapter(Context context)
         {
@@ -135,7 +180,7 @@ public abstract class PlaceReviewLayout extends BaseLayout
             return mPlaceReviewItemList.get(position);
         }
 
-        public void setAll(List<PlaceReviewItem> placeReviewItemList)
+        public void setHeader(List<PlaceReviewItem> placeReviewItemList)
         {
             clear();
             addAll(placeReviewItemList);
@@ -151,6 +196,11 @@ public abstract class PlaceReviewLayout extends BaseLayout
             }
 
             mPlaceReviewItemList.addAll(placeReviewItemList);
+        }
+
+        public void setTotalCount(int totalCount)
+        {
+            mTotalCount = totalCount;
         }
 
         public void clear()
@@ -232,6 +282,8 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
         private void onBindViewHolder(final HeaderViewHolder headerViewHolder, int position, PlaceReviewItem placeViewItem)
         {
+            mHandler.removeMessages(0);
+
             List<PlaceReviewScore> placeReviewScoreList = placeViewItem.getItem();
 
             headerViewHolder.termsView.setOnClickListener(new View.OnClickListener()
@@ -242,6 +294,8 @@ public abstract class PlaceReviewLayout extends BaseLayout
                     ((OnEventListener) mOnEventListener).onTermsClick();
                 }
             });
+
+            headerViewHolder.progressBarLayout.removeAllViews();
 
             for (PlaceReviewScore placeReviewScore : placeReviewScoreList)
             {
@@ -269,20 +323,14 @@ public abstract class PlaceReviewLayout extends BaseLayout
                 headerViewHolder.progressBarLayout.addView(view);
             }
 
-            headerViewHolder.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, getItemCount() - 1));
+            headerViewHolder.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, mTotalCount));
 
             if (mShowtProgressbarAnimation == false)
             {
-                mShowtProgressbarAnimation = true;
-
-                headerViewHolder.progressBarLayout.post(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        startAnimation(headerViewHolder.progressBarLayout);
-                    }
-                });
+                Message message = new Message();
+                message.arg1 = 0;
+                message.obj = headerViewHolder.progressBarLayout;
+                mHandler.sendMessageDelayed(message, 300);
             }
         }
 
@@ -295,14 +343,14 @@ public abstract class PlaceReviewLayout extends BaseLayout
 
             try
             {
-                reviewViewHolder.dateTextView.setText(DailyCalendar.convertDateFormatString(placeReview.date, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                reviewViewHolder.dateTextView.setText(DailyCalendar.convertDateFormatString(placeReview.createdAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }
 
-            reviewViewHolder.reviewTextView.setText(placeReview.message);
-            reviewViewHolder.reviewTextView.setTag(placeReview.message);
+            reviewViewHolder.reviewTextView.setText(placeReview.comment);
+            reviewViewHolder.reviewTextView.setTag(placeReview.comment);
 
             Paint paint = reviewViewHolder.reviewTextView.getPaint();
 

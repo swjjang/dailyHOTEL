@@ -1157,12 +1157,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onReviewClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
+            if (mPlaceDetail == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
 
-            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
         }
 
         //        @Override

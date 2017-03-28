@@ -6,23 +6,16 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class PlaceReview
 {
-    @JsonField
+    @JsonField(name = "userId")
     public String email;
 
     @JsonField
-    public String date; // ISO-8601
+    public String comment;
 
     @JsonField
-    public String message;
+    public String createdAt; // ISO-8601
 
     public PlaceReview()
     {
-    }
-
-    public PlaceReview(String email, String date, String message)
-    {
-        this.email = email;
-        this.date = date;
-        this.message = message;
     }
 }

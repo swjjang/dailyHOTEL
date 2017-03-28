@@ -2,6 +2,9 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -332,7 +335,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
         } else
         {
             trueReviewTextView.setVisibility(View.VISIBLE);
-            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, count));
+
+            SpannableString spannableString = new SpannableString(mContext.getString(R.string.label_detail_view_review_go, count));
+            spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            trueReviewTextView.setText(spannableString);
+
             trueReviewTextView.setOnClickListener(new View.OnClickListener()
             {
                 @Override

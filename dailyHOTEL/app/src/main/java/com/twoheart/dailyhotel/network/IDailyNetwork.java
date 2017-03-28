@@ -563,7 +563,7 @@ public interface IDailyNetwork
 
     void requestUserStamps(String tag, boolean details, Object listener);
 
-    void requestPlaceReviews(String tag, String type, int itemIdx, Object listener);
+    void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener);
 
     void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener);
 }
