@@ -380,7 +380,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 break;
 
             case R.id.stampLayout:
-                Intent intent = StampActivity.newInstance(this);
+                Intent intent = StampActivity.newInstance(this, StampActivity.CallScreen.THANKYOU);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//

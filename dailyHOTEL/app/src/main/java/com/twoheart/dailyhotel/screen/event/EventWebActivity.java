@@ -76,6 +76,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         EVENT,
         HOME_EVENT,
+        STAMP,
     }
 
     Handler mHandler = new Handler();
@@ -651,8 +652,14 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         DailyDeepLink.getInstance().clear();
 
-        Intent intent = StampActivity.newInstance(context);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+        if (mSourceType == SourceType.STAMP)
+        {
+            finish();
+        } else
+        {
+            Intent intent = StampActivity.newInstance(context, StampActivity.CallScreen.EVENT);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+        }
 
         return true;
     }

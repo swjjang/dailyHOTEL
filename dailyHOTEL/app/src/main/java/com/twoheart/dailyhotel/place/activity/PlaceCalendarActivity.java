@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {

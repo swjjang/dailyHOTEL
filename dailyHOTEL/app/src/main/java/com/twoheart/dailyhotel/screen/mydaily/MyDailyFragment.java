@@ -403,7 +403,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_STAMP);
+            baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity, StampActivity.CallScreen.MYDAILY), Constants.CODE_REQUEST_ACTIVITY_STAMP);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.STAMP_MENU_CLICK, AnalyticsManager.ValueType.EMPTY, null);

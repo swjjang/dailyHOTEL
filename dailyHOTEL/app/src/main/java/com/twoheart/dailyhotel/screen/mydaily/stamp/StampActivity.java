@@ -24,10 +24,19 @@ public class StampActivity extends BaseActivity
 {
     StampLayout mStampLayout;
     private StampNetworkController mNetworkController;
+    private CallScreen mCallScreen;
 
-    public static Intent newInstance(Context context)
+    public enum CallScreen
+    {
+        MYDAILY,
+        THANKYOU,
+        EVENT,
+    }
+
+    public static Intent newInstance(Context context, CallScreen callScreen)
     {
         Intent intent = new Intent(context, StampActivity.class);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, callScreen);
         return intent;
     }
 
@@ -37,6 +46,15 @@ public class StampActivity extends BaseActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            return;
+        }
+
+        mCallScreen = (CallScreen) intent.getSerializableExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN);
 
         mStampLayout = new StampLayout(this, mOnEventListener);
         mNetworkController = new StampNetworkController(this, mNetworkTag, mNetworkControllerListener);
@@ -172,8 +190,14 @@ public class StampActivity extends BaseActivity
                 return;
             }
 
-            startActivityForResult(EventWebActivity.newInstance(StampActivity.this, EventWebActivity.SourceType.EVENT//
-                , "http://m.dailyhotel.co.kr/banner/dailystamp_home", getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
+            if (mCallScreen == CallScreen.EVENT)
+            {
+                finish();
+            } else
+            {
+                startActivityForResult(EventWebActivity.newInstance(StampActivity.this, EventWebActivity.SourceType.STAMP//
+                    , "http://m.dailyhotel.co.kr/banner/dailystamp_home", getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
+            }
 
             AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAMP_DETAIL, null);

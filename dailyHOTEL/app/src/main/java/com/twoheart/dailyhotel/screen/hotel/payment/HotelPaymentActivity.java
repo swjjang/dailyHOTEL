@@ -2265,15 +2265,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             stayProduct.totalDiscount = discount;
 
-                            if (DEBUG == false && (checkInDate == 0 || checkOutDate == 0))
-                            {
-                                Crashlytics.log(responseJSONObject.toString());
-                                Crashlytics.logException(new RuntimeException(call.request().url().toString()));
-
-                                Util.restartExitApp(HotelPaymentActivity.this);
-                                return;
-                            }
-
                             checkInDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
                             checkOutDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
 
