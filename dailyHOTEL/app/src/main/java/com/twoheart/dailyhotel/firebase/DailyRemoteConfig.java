@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -469,12 +470,16 @@ public class DailyRemoteConfig
 
             DailyPreference.getInstance(context).setRemoteConfigStampStayEndEventPopupEnabled(endEventPopupEnabled);
 
-            JSONObject stampDateJSONObject = jsonObject.getJSONObject("dates");
+            JSONArray stampDetailJSONArray = jsonObject.getJSONArray("stampDetail");
 
-            String date1 = stampDateJSONObject.getString("date1");
-            String date2 = stampDateJSONObject.getString("date2");
+            String date1 = stampDetailJSONArray.getString(0);
 
-            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2);
+            JSONArray stampHistoryJSONArray = jsonObject.getJSONArray("stampHistory");
+
+            String date2 = stampHistoryJSONArray.getString(0);
+            String date3 = stampHistoryJSONArray.getString(1);
+
+            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
 
         } catch (Exception e)
         {
