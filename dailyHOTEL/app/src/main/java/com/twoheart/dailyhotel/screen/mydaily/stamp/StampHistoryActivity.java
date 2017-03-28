@@ -42,9 +42,8 @@ public class StampHistoryActivity extends BaseActivity
 
         String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
         String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
-        String stampDate3 = DailyPreference.getInstance(this).getRemoteConfigStampDate3();
 
-        mStampHistoryLayout.setStampDate(stampDate1, stampDate2, stampDate3);
+        mStampHistoryLayout.setStampDate(stampDate1, stampDate2);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class StampHistoryActivity extends BaseActivity
 
         AnalyticsManager.getInstance(StampHistoryActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_HISTORY, null);
 
-        if (DailyPreference.getInstance(this).getRemoteConfigStampEnabled() == true)
+        if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
         {
             lockUI();
             DailyMobileAPI.getInstance(this).requestUserStamps(mNetworkTag, true, mStampHistoryCallback);

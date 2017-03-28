@@ -10,7 +10,6 @@ import java.util.TimeZone;
 public class GourmetPaymentInformation extends PlacePaymentInformation
 {
     public String placeName;
-    public String dateTime;
     public int ticketCount;
     public int ticketMaxCount; // 최대 결제 가능한 티켓 개수
     public long ticketTime;
@@ -38,7 +37,6 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         super.writeToParcel(dest, flags);
 
         dest.writeString(placeName);
-        dest.writeString(dateTime);
         dest.writeInt(ticketCount);
         dest.writeInt(ticketMaxCount);
         dest.writeLong(ticketTime);
@@ -53,7 +51,6 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         super.readFromParcel(in);
 
         placeName = in.readString();
-        dateTime = in.readString();
         ticketCount = in.readInt();
         ticketMaxCount = in.readInt();
         ticketTime = in.readLong();
@@ -82,17 +79,9 @@ public class GourmetPaymentInformation extends PlacePaymentInformation
         int length = ticketTimes.length;
         String[] times = new String[length];
 
-        //        Calendar calendarTime = DailyCalendar.getInstance();
-        //        calendarTime.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        SimpleDateFormat formatDay = new SimpleDateFormat("HH:mm", Locale.KOREA);
-        //        formatDay.setTimeZone(TimeZone.getTimeZone("GMT"));
-
         for (int i = 0; i < length; i++)
         {
-            //            calendarTime.setTimeInMillis(ticketTimes[i]);
-            //            times[i] = formatDay.format(calendarTime.getTime());
-            times[i] = DailyCalendar.format(ticketTimes[i], "HH:mm", TimeZone.getTimeZone("GMT"));
+            times[i] = DailyCalendar.format(ticketTimes[i], "HH:mm", TimeZone.getTimeZone("GMT+09:00"));
         }
 
         return times;

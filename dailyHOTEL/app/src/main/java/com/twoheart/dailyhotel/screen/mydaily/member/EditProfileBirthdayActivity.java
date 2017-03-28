@@ -24,7 +24,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -203,7 +203,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                     return;
                 }
 
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfileBirthdayActivity.this).getUserType()) == true)
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyUserPreference.getInstance(EditProfileBirthdayActivity.this).getType()) == true)
                 {
                     Map<String, String> params = Collections.singletonMap("birthday", birthday);
                     DailyMobileAPI.getInstance(this).requestUserInformationUpdate(mNetworkTag, params, mDailyUserUpdateCallback);
@@ -239,7 +239,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 if (resultCode == RESULT_OK)
                 {
-                    setBirthdayText(DailyPreference.getInstance(this).getUserBirthday());
+                    setBirthdayText(DailyUserPreference.getInstance(this).getBirthday());
                 } else
                 {
                     finish();

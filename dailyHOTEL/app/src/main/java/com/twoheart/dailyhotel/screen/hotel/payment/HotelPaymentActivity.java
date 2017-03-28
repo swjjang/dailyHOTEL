@@ -51,6 +51,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -67,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -1884,7 +1886,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 if (stayPaymentInformation.isOverSeas == true)
                 {
-                    DailyPreference.getInstance(HotelPaymentActivity.this).setOverseasUserInformation(guest.name, guest.phone, guest.email);
+                    DailyUserPreference.getInstance(HotelPaymentActivity.this).setOverseasInformation(guest.name, guest.phone, guest.email);
                 }
             }
 
@@ -2132,9 +2134,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             guest = new Guest();
                         }
 
-                        String overseasName = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
-                        String overseasPhone = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
-                        String overseasEmail = DailyPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
+                        String overseasName = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasName();
+                        String overseasPhone = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasPhone();
+                        String overseasEmail = DailyUserPreference.getInstance(HotelPaymentActivity.this).getOverseasEmail();
 
                         guest.name = overseasName;
 
@@ -2263,14 +2265,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             stayProduct.totalDiscount = discount;
 
-                            if (DEBUG == false && (checkInDate == 0 || checkOutDate == 0))
-                            {
-                                Crashlytics.log(responseJSONObject.toString());
-                                Crashlytics.logException(new RuntimeException(call.request().url().toString()));
+                            checkInDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
+                            checkOutDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
 
-                                Util.restartExitApp(HotelPaymentActivity.this);
-                                return;
-                            }
+                            stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
+                            stayBookingDay.setCheckOutDay(DailyCalendar.format(checkOutDate, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
 
                             setReservationInformation(stayBookingDay);
 

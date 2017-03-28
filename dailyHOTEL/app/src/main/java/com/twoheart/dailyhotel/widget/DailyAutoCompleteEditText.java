@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.AutoCompleteTextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;

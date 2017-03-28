@@ -37,7 +37,7 @@ import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivit
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -76,6 +76,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         EVENT,
         HOME_EVENT,
+        STAMP,
     }
 
     Handler mHandler = new Handler();
@@ -651,8 +652,14 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         DailyDeepLink.getInstance().clear();
 
-        Intent intent = StampActivity.newInstance(context);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+        if (mSourceType == SourceType.STAMP)
+        {
+            finish();
+        } else
+        {
+            Intent intent = StampActivity.newInstance(context, StampActivity.CallScreen.EVENT);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+        }
 
         return true;
     }
@@ -947,7 +954,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 return;
             }
 
-            boolean isBenefitAlarm = DailyPreference.getInstance(EventWebActivity.this).isUserBenefitAlarm();
+            boolean isBenefitAlarm = DailyUserPreference.getInstance(EventWebActivity.this).isBenefitAlarm();
 
             if (isBenefitAlarm == false)
             {
@@ -1014,7 +1021,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                             public void onBenefitAgreement(final boolean isAgree, String updateDate)
                             {
-                                DailyPreference.getInstance(EventWebActivity.this).setUserBenefitAlarm(isAgree);
+                                DailyUserPreference.getInstance(EventWebActivity.this).setBenefitAlarm(isAgree);
                                 AnalyticsManager.getInstance(EventWebActivity.this).setPushEnabled(isAgree, AnalyticsManager.ValueType.LAUNCH);
 
                                 if (isAgree == true)

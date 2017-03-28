@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -46,6 +47,13 @@ public class LauncherActivity extends Activity
         Util.initializeMemory();
 
         DailyDeepLink.getInstance().clear();
+
+        // 개인 정보 방침에 따른 개인 정보 암호화.
+        if (Util.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
+        {
+            DailyUserPreference.getInstance(this).requestMigration(this);
+            DailyPreference.getInstance(this).clearUserInformation();
+        }
 
         // 리뷰 초기화
         DailyPreference.getInstance(this).setIsRequestReview(false);
@@ -94,6 +102,7 @@ public class LauncherActivity extends Activity
     private void logOut()
     {
         DailyPreference.getInstance(this).clear();
+        DailyUserPreference.getInstance(this).clear();
 
         try
         {

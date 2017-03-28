@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -172,7 +173,7 @@ public class SignupStep1Activity extends BaseActivity
 
     public void removeUserInformation()
     {
-        DailyPreference.getInstance(SignupStep1Activity.this).removeUserInformation();
+        DailyUserPreference.getInstance(SignupStep1Activity.this).clear();
     }
 
     private SignupStep1Layout.OnEventListener mOnEventListener = new SignupStep1Layout.OnEventListener()

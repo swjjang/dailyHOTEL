@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -401,9 +402,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         }
     }
 
-    public void setTicketInformation(GourmetPaymentInformation gourmetPaymentInformation)
+    public void setTicketInformation(GourmetPaymentInformation gourmetPaymentInformation, GourmetBookingDay gourmetBookingDay)
     {
-        if (gourmetPaymentInformation == null)
+        if (gourmetPaymentInformation == null || gourmetBookingDay == null)
         {
             return;
         }
@@ -419,14 +420,14 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mTicketTypeTextView.setText(gourmetProduct.ticketName);
 
         // 날짜
-        mTicketDateTextView.setText(gourmetPaymentInformation.dateTime);
+        mTicketDateTextView.setText(gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
 
         //
         mPlaceNameTextView.setText(gourmetPaymentInformation.placeName);
 
         if (gourmetPaymentInformation.ticketTime != 0)
         {
-            mTicketTimeTextView.setText(DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT")));
+            mTicketTimeTextView.setText(DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT+09:00")));
         }
 
         // 수량
@@ -634,7 +635,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        mTicketTimeTextView.setText(DailyCalendar.format(time, "HH:mm", TimeZone.getTimeZone("GMT")));
+        mTicketTimeTextView.setText(DailyCalendar.format(time, "HH:mm", TimeZone.getTimeZone("GMT+09:00")));
     }
 
     public Guest getGuest()
@@ -877,16 +878,9 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     @Override
     public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked)
     {
-        if (mValueAnimator != null)
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {
-            if (mValueAnimator.isRunning() == true)
-            {
-                mValueAnimator.cancel();
-            }
-
-            mValueAnimator.removeAllUpdateListeners();
-            mValueAnimator.removeAllListeners();
-            mValueAnimator = null;
+            mValueAnimator.cancel();
         }
 
         if (isChecked == true)
@@ -953,6 +947,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+                mValueAnimator = null;
+
                 if (mIsAnimationCancel == false)
                 {
                     mGuestNameEditText.setEnabled(true);

@@ -308,6 +308,7 @@
                 android:visibility="gone">
 
                 <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:id="@+id/stampTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"

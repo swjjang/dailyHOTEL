@@ -30,7 +30,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,8 +123,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
     private void initToolbar(String title)
     {
         mToolbarView = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, mToolbarView);
-        dailyToolbarLayout.initToolbar(title, new View.OnClickListener()
+
+        TextView titleTextView = (TextView) mToolbarView.findViewById(R.id.titleTextView);
+        titleTextView.setText(title);
+
+        View closeImageView = mToolbarView.findViewById(R.id.closeImageView);
+        closeImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,7 +54,10 @@ public class Booking implements Parcelable
         comment = jsonObject.getString("comment");
         tid = jsonObject.getString("tid");
         checkinTime = jsonObject.getLong("checkin_time");
+        checkinTime -= DailyCalendar.NINE_HOUR_MILLISECOND;
+
         checkoutTime = jsonObject.getLong("checkout_time");
+        checkoutTime -= DailyCalendar.NINE_HOUR_MILLISECOND;
 
         JSONArray jsonArray = jsonObject.getJSONArray("img");
         hotelImageUrl = jsonArray.getJSONObject(0).getString("path");

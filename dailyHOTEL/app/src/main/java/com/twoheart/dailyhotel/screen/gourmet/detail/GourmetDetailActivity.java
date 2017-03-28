@@ -45,7 +45,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -562,7 +562,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String name = DailyPreference.getInstance(GourmetDetailActivity.this).getUserName();
+        String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
 
         if (Util.isTextEmpty(name) == true)
         {
@@ -600,7 +600,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         try
         {
-            String name = DailyPreference.getInstance(GourmetDetailActivity.this).getUserName();
+            String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
 
             if (Util.isTextEmpty(name) == true)
             {
@@ -646,7 +646,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
 
-                switch (DailyPreference.getInstance(this).getUserType())
+                switch (DailyUserPreference.getInstance(this).getType())
                 {
                     case Constants.DAILY_USER:
                         params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
@@ -670,7 +670,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
             }
 
-            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyPreference.getInstance(this).isUserBenefitAlarm() ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, DailyUserPreference.getInstance(this).isBenefitAlarm() ? "on" : "off");
             params.put(AnalyticsManager.KeyType.SHARE_METHOD, label);
             params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(placeDetail.index));
             params.put(AnalyticsManager.KeyType.VENDOR_NAME, gourmetDetailParams.name);
@@ -1548,6 +1548,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     mResultIntent = new Intent();
                     mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
                 }
+
                 setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             }
 
@@ -1737,14 +1738,21 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onError(Throwable e)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
             GourmetDetailActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {
@@ -1781,7 +1789,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorToastMessage(String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
             GourmetDetailActivity.this.onErrorToastMessage(message);
             finish();
         }
@@ -1789,7 +1801,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorResponse(final Call call, final Response response)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {

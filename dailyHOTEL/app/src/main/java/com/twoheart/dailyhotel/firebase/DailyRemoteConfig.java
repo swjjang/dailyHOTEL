@@ -435,6 +435,10 @@ public class DailyRemoteConfig
 
             DailyPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
 
+            String myDailyTitle = jsonObject.getString("myDailyTitle");
+
+            DailyPreference.getInstance(context).setRemoteConfigStampTitle(myDailyTitle);
+
             JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
 
             String stayDetailMessage1 = stayDetailJSONObject.getString("message1");
@@ -469,9 +473,8 @@ public class DailyRemoteConfig
 
             String date1 = stampDateJSONObject.getString("date1");
             String date2 = stampDateJSONObject.getString("date2");
-            String date3 = stampDateJSONObject.getString("date3");
 
-            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
+            DailyPreference.getInstance(context).setRemoteConfigStampDate(date1, date2);
 
         } catch (Exception e)
         {

@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -168,7 +169,7 @@ public class IssuingReceiptActivity extends BaseActivity
                 inputMethodManager.showSoftInput(dailyEditText, InputMethodManager.SHOW_IMPLICIT);
             }
         });
-        emailEditTExt.setText(DailyPreference.getInstance(this).getUserEmail());
+        emailEditTExt.setText(DailyUserPreference.getInstance(this).getEmail());
         emailEditTExt.setSelection(emailEditTExt.length());
 
         // 버튼

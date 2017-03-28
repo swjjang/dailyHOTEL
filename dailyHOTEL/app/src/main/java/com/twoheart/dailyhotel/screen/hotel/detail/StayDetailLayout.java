@@ -451,15 +451,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             return;
         }
 
-        if (mObjectAnimator != null)
+        if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
         {
-            if (mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-                mObjectAnimator.removeAllListeners();
-            }
-
-            mObjectAnimator = null;
+            mObjectAnimator.cancel();
         }
 
         mProductTypeBackgroundView.setAnimation(null);
@@ -487,15 +481,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             return;
         }
 
-        if (mObjectAnimator != null)
+        if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
         {
-            if (mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-                mObjectAnimator.removeAllListeners();
-            }
-
-            mObjectAnimator = null;
+            mObjectAnimator.cancel();
         }
 
         mProductTypeBackgroundView.setAnimation(null);
@@ -528,16 +516,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         {
             final float fromAnimationY = mBottomLayout.getTop();
 
-            if (mObjectAnimator != null)
+            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                }
-
-                mObjectAnimator.removeAllListeners();
-                mObjectAnimator.removeAllUpdateListeners();
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
@@ -570,6 +551,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mObjectAnimator.removeAllListeners();
+                    mObjectAnimator.removeAllUpdateListeners();
+                    mObjectAnimator = null;
+
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
@@ -626,16 +611,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         {
             final float y = mBottomLayout.getTop();
 
-            if (mObjectAnimator != null)
+            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                }
-
-                mObjectAnimator.removeAllListeners();
-                mObjectAnimator.removeAllUpdateListeners();
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
@@ -662,6 +640,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mObjectAnimator.removeAllListeners();
+                    mObjectAnimator.removeAllUpdateListeners();
+                    mObjectAnimator = null;
+
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
@@ -724,16 +706,9 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         final float y = mProductTypeLayout.getY();
 
-        if (mObjectAnimator != null)
+        if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
         {
-            if (mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-            }
-
-            mObjectAnimator.removeAllListeners();
-            mObjectAnimator.removeAllUpdateListeners();
-            mObjectAnimator = null;
+            mObjectAnimator.cancel();
         }
 
         mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
@@ -753,6 +728,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                mObjectAnimator.removeAllListeners();
+                mObjectAnimator.removeAllUpdateListeners();
+                mObjectAnimator = null;
+
                 if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                 {
                     mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;

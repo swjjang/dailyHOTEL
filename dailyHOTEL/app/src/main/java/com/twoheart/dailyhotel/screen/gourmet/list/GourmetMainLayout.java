@@ -59,6 +59,6 @@ public class GourmetMainLayout extends PlaceMainLayout
 
     protected void setToolbarDateText(GourmetBookingDay gourmetBookingDay)
     {
-        setToolbarDateText(gourmetBookingDay.getVisitDay("M.d(EEE"));
+        setToolbarDateText(gourmetBookingDay.getVisitDay("M.d(EEE)"));
     }
 }

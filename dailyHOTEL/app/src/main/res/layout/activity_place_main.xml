@@ -19,7 +19,7 @@
             android:layout_height="52dp"
             app:layout_scrollFlags="scroll|snap|enterAlways">
 
-            <ImageView
+            <com.twoheart.dailyhotel.widget.DailyImageView
                 android:id="@+id/backImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

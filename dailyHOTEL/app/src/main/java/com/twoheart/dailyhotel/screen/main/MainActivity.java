@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -153,7 +154,7 @@ public class MainActivity extends BaseActivity implements Constants
         mDelayTimeHandler.sendEmptyMessageDelayed(0, 3000);
 
         // 로그인한 유저와 로그인하지 않은 유저의 판단값이 다르다.
-        if (DailyPreference.getInstance(this).isUserBenefitAlarm() == true)
+        if (DailyUserPreference.getInstance(this).isBenefitAlarm() == true)
         {
             AnalyticsManager.getInstance(this).setPushEnabled(true, null);
         } else
@@ -1040,7 +1041,7 @@ public class MainActivity extends BaseActivity implements Constants
                 } else
                 {
                     // 헤택이 Off 되어있는 경우 On으로 수정
-                    boolean isUserBenefitAlarm = DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm();
+                    boolean isUserBenefitAlarm = DailyUserPreference.getInstance(MainActivity.this).isBenefitAlarm();
                     if (isUserBenefitAlarm == false//
                         && DailyPreference.getInstance(MainActivity.this).isShowBenefitAlarm() == false)
                     {
@@ -1060,7 +1061,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onNoticeAgreement(String message, boolean isFirstTimeBuyer)
         {
-            if (DailyPreference.getInstance(MainActivity.this).isUserBenefitAlarm() == true)
+            if (DailyUserPreference.getInstance(MainActivity.this).isBenefitAlarm() == true)
             {
                 AnalyticsManager.getInstance(MainActivity.this).recordEvent(AnalyticsManager.Screen.APP_LAUNCHED, null, null, null);
                 return;
@@ -1123,7 +1124,7 @@ public class MainActivity extends BaseActivity implements Constants
         public void onNoticeAgreementResult(final String agreeMessage, final String cancelMessage)
         {
             DailyPreference.getInstance(MainActivity.this).setShowBenefitAlarm(true);
-            DailyPreference.getInstance(MainActivity.this).setUserBenefitAlarm(mIsBenefitAlarm);
+            DailyUserPreference.getInstance(MainActivity.this).setBenefitAlarm(mIsBenefitAlarm);
             AnalyticsManager.getInstance(MainActivity.this).setPushEnabled(mIsBenefitAlarm, AnalyticsManager.ValueType.LAUNCH);
 
             if (mIsBenefitAlarm == true)
@@ -1221,7 +1222,7 @@ public class MainActivity extends BaseActivity implements Constants
         @Override
         public void onUserProfileBenefit(boolean isExceedBonus)
         {
-            DailyPreference.getInstance(MainActivity.this).setUserExceedBonus(isExceedBonus);
+            DailyUserPreference.getInstance(MainActivity.this).setExceedBonus(isExceedBonus);
             AnalyticsManager.getInstance(MainActivity.this).setExceedBonus(isExceedBonus);
 
             mNetworkController.requestReviewStay();

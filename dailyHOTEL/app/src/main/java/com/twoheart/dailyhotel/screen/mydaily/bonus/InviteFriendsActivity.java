@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -139,7 +139,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             mSigninButtonLayout.setVisibility(View.VISIBLE);
             mNoSigninButtonLayout.setVisibility(View.GONE);
 
-            boolean isExceedBonus = DailyPreference.getInstance(InviteFriendsActivity.this).isUserExceedBonus();
+            boolean isExceedBonus = DailyUserPreference.getInstance(InviteFriendsActivity.this).isExceedBonus();
 
             mExceedMessageTextView.setText(isExceedBonus == true ? //
                 R.string.act_credit_line4_is_exceed_bonus : R.string.act_credit_line4);
@@ -212,8 +212,8 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             case REQUEST_ACTIVITY_SIGNUP:
                 if (resultCode == RESULT_OK)
                 {
-                    mName = DailyPreference.getInstance(this).getUserName();
-                    mRecommendCode = DailyPreference.getInstance(this).getUserRecommender();
+                    mName = DailyUserPreference.getInstance(this).getName();
+                    mRecommendCode = DailyUserPreference.getInstance(this).getRecommender();
 
                     inviteFriendsKakao(mName, mRecommendCode);
                 }
@@ -222,8 +222,8 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             case REQUEST_ACTIVITY_LOGIN:
                 if (resultCode == RESULT_OK)
                 {
-                    mName = DailyPreference.getInstance(this).getUserName();
-                    mRecommendCode = DailyPreference.getInstance(this).getUserRecommender();
+                    mName = DailyUserPreference.getInstance(this).getName();
+                    mRecommendCode = DailyUserPreference.getInstance(this).getRecommender();
                 }
                 break;
         }

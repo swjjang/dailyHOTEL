@@ -21,7 +21,6 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 {
@@ -59,7 +58,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                 Date checkInDate = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate);
                 Date currentDate = DailyCalendar.convertStringToDate(todayDateTime.currentDateTime);
 
-                int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+                int dayOfDays = (int) ((DailyCalendar.clearTField(checkInDate.getTime()) - DailyCalendar.clearTField(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
                 if (dayOfDays < 0 || dayOfDays > 3)
                 {
                     remainedDayText = null;
@@ -148,7 +147,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
             Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
 
-            int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
             nightsTextView.setText(context.getString(R.string.label_nights, nights));
         } catch (Exception e)
         {
@@ -404,19 +403,5 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             mRefundPolicyLayout.setVisibility(View.GONE);
             mButtonBottomMarginView.setVisibility(View.VISIBLE);
         }
-    }
-
-    private long getCompareDate(long timeInMillis)
-    {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTimeInMillis();
     }
 }

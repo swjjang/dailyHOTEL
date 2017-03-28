@@ -1141,6 +1141,7 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>) listener);
     }
 
+    @Override
     public void requestUserStamps(String tag, boolean details, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/stamps"//
@@ -1151,10 +1152,26 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Stamp>>) listener);
     }
 
-    public void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener)
+    @Override
+    public void requestPlaceReviews(String tag, String type, int itemIdx, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}"//
             : "NDkkNzAkMzgkNDgkNDAkNzMkODEkNTIkMjAkNjMkNzQkNDkkNDIkNzMkNDIkMzkk$MzVFQTAzNTlGNTkzNjk3BRTIzRjQ1QTQ1NzZDQTIFIVQZzNEExQkOENzQNTjg5QzFBQRUI0RTgzFQTABzQAFzM4REQK1ODdEMjRGNw==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", type);
+        urlParams.put("{itemIdx}", Integer.toString(itemIdx));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviewScores(Crypto.getUrlDecoderEx(URL, urlParams));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
+    }
+
+    @Override
+    public void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}/statistic"//
+            : "NjkkOSQxMDEkNjYkNTMkNzgkNzAkNzUkNzEkMzYkODAkNDAkNDAkMTI0JDIwJDc2JA==$MkY1RUE2RLENGOEMxQTdMENUExNjNDQkM4ODkI4NTOSI2RkUwREU0RkJCKRTA5OTg4NEQwNRkUATV4OPUKJCINDAU4MDM4MjQ3MDlENzRBOTY1RjUPyNTVBNDMyM0FZGMjk5QzdCMjQ3QzY3$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{type}", type);

@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="false"
         android:layout_centerVertical="true"
-        android:paddingLeft="72dp"
-        android:layout_toLeftOf="@+id/backImageView"
+        android:paddingLeft="15dp"
+        android:layout_toLeftOf="@+id/closeImageView"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
@@ -23,8 +23,8 @@
         android:textColor="@color/actionbar_title"
         android:textSize="18dp"/>
 
-    <ImageView
-        android:id="@+id/backImageView"
+    <com.twoheart.dailyhotel.widget.DailyImageView
+        android:id="@+id/closeImageView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"

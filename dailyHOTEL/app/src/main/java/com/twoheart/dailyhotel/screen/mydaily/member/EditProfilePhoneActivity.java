@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -119,7 +120,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         switch (type)
         {
             case EDIT_PROFILE:
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(this).getUserType()) == true)
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyUserPreference.getInstance(this).getType()) == true)
                 {
                     mEditProfilePhoneLayout.setGuideText(getString(R.string.message_edit_phone_guide));
                     mEditProfilePhoneLayout.showCertificationLayout();
@@ -221,7 +222,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         {
             mEditProfilePhoneLayout.hideKeypad();
 
-            if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
+            if (Constants.DAILY_USER.equalsIgnoreCase(DailyUserPreference.getInstance(EditProfilePhoneActivity.this).getType()) == true)
             {
                 finish();
             } else
@@ -233,7 +234,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         @Override
         public void doConfirm(String phoneNumber, String verificationNumber)
         {
-            if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(EditProfilePhoneActivity.this).getUserType()) == true)
+            if (Constants.DAILY_USER.equalsIgnoreCase(DailyUserPreference.getInstance(EditProfilePhoneActivity.this).getType()) == true)
             {
                 mNetworkController.requestUpdateDailyUserInformation(phoneNumber, verificationNumber);
             }

@@ -16,7 +16,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 {
@@ -45,7 +44,7 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
             Date checkInDate = DailyCalendar.convertStringToDate(gourmetBookingDetail.reservationTime);
             Date currentDate = DailyCalendar.convertStringToDate(todayDateTime.currentDateTime);
 
-            int dayOfDays = (int) ((getCompareDate(checkInDate.getTime()) - getCompareDate(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+            int dayOfDays = (int) ((DailyCalendar.clearTField(checkInDate.getTime()) - DailyCalendar.clearTField(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
             if (dayOfDays < 0 || dayOfDays > 3)
             {
                 remainedDayText = null;
@@ -191,19 +190,5 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
     protected void initRefundPolicyLayout(Context context, View view, PlaceBookingDetail placeBookingDetail)
     {
 
-    }
-
-    private long getCompareDate(long timeInMillis)
-    {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTimeInMillis();
     }
 }

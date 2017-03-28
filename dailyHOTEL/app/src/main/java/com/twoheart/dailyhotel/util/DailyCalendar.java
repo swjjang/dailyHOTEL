@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 public class DailyCalendar
 {
+    public static final long NINE_HOUR_MILLISECOND = 3600 * 9 * 1000;
     public static final long DAY_MILLISECOND = 3600 * 24 * 1000;
 
     public static final String ISO_8601_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ";
@@ -36,10 +37,10 @@ public class DailyCalendar
 
         if (isClearTField == true)
         {
-            calendar.clear(Calendar.HOUR_OF_DAY);
-            calendar.clear(Calendar.MINUTE);
-            calendar.clear(Calendar.SECOND);
-            calendar.clear(Calendar.MILLISECOND);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
         }
 
         return calendar;
@@ -87,6 +88,19 @@ public class DailyCalendar
     public static Date convertDate(final String dateString, final String format) throws ParseException, NullPointerException
     {
         return convertDate(dateString, format, TimeZone.getTimeZone("GMT+09:00"));
+    }
+
+    public static long clearTField(long millis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeInMillis(millis);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
     }
 
     /**

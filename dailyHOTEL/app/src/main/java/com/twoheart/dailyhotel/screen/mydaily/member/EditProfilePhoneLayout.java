@@ -20,7 +20,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
@@ -302,7 +302,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
                 String phoneNumber = getPhoneNumber();
 
-                if (Constants.DAILY_USER.equalsIgnoreCase(DailyPreference.getInstance(mContext).getUserType()) == true)
+                if (Constants.DAILY_USER.equalsIgnoreCase(DailyUserPreference.getInstance(mContext).getType()) == true)
                 {
                     if (isUsedVerification() == true)
                     {

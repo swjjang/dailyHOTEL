@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public abstract class PlaceCalendarActivity extends BaseActivity implements View.OnClickListener
 {
@@ -154,8 +153,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 dayOffset += maxDayOfMonth - day + 1;
                 maxDay = dayCountOfMax - dayOffset;
 
-                calendar.add(Calendar.MONTH, 1);
                 calendar.set(Calendar.DAY_OF_MONTH, 1);
+                calendar.add(Calendar.MONTH, 1);
             }
         } catch (Exception e)
         {
@@ -183,7 +182,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         TextView monthTextView = (TextView) calendarLayout.findViewById(R.id.monthTextView);
         android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) calendarLayout.findViewById(R.id.calendarGridLayout);
 
-        monthTextView.setText(DailyCalendar.format(calendar.getTimeInMillis(), "yyyy.MM", TimeZone.getTimeZone("GMT")));
+        monthTextView.setText(DailyCalendar.format(calendar.getTime(), "yyyy.MM"));
 
         // dayString
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -392,17 +391,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             final float y = mAnimationLayout.getBottom();
 
-            if (mObjectAnimator != null)
+            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                }
-
-                mObjectAnimator.removeAllListeners();
-                mObjectAnimator.removeAllUpdateListeners();
-
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
             }
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
@@ -432,6 +423,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mObjectAnimator.removeAllListeners();
+                    mObjectAnimator.removeAllUpdateListeners();
+                    mObjectAnimator = null;
+
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = ANIMATION_STATUS.SHOW_END;
@@ -488,17 +483,9 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         {
             final float y = mAnimationLayout.getTop();
 
-            if (mObjectAnimator != null)
+            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
             {
-                if (mObjectAnimator.isRunning() == true)
-                {
-                    mObjectAnimator.cancel();
-                }
-
-                mObjectAnimator.removeAllListeners();
-                mObjectAnimator.removeAllUpdateListeners();
-
-                mObjectAnimator = null;
+                mObjectAnimator.cancel();
             }
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, mAnimationLayout.getBottom());
@@ -519,6 +506,10 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
+                    mObjectAnimator.removeAllListeners();
+                    mObjectAnimator.removeAllUpdateListeners();
+                    mObjectAnimator = null;
+
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {
                         mAnimationStatus = ANIMATION_STATUS.HIDE_END;

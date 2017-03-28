@@ -68,8 +68,10 @@ public class DailyPreference
     private static final String KEY_GOURMET_RECENT_PLACES = "211";
     private static final String KEY_ALL_RECENT_PLACES = "212";
 
-
+    // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
+    // <-----
+
     private static final String KEY_VERIFICATION = "1001";
     private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
 
@@ -140,8 +142,8 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3 = "327";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1 = "328";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
+    private static final String KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE = "332";
 
     private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
     private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
@@ -166,6 +168,7 @@ public class DailyPreference
     private static final String KEY_SETTING_HOME_MESSAGE_AREA_ENABLED = "1201";
 
     // User
+    // -----> DailyUserPreference 로 이동
     private static final String KEY_USER_EMAIL = "2001";
     private static final String KEY_USER_TYPE = "2002";
     private static final String KEY_USER_NAME = "2003";
@@ -174,10 +177,13 @@ public class DailyPreference
     private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
     private static final String KEY_USER_BIRTHDAY = "2007";
 
-    // Payment
+
     private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
     private static final String KEY_PAYMENT_OVERSEAS_PHONE = "4001";
     private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "4002";
+    // <------
+
+    // Payment
     private static final String KEY_PAYMENT_INFORMATION = "4003";
 
 
@@ -224,7 +230,6 @@ public class DailyPreference
     public void clear()
     {
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
-        boolean isUserBenefitAlarm = isUserBenefitAlarm();
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
         boolean isShowSearchToolTip = isViewSearchTooltip();
 
@@ -240,7 +245,6 @@ public class DailyPreference
             mEditor.apply();
         }
 
-        setUserBenefitAlarm(isUserBenefitAlarm);
         setShowBenefitAlarm(isShowBenefitAlarm);
         setIsViewSearchTooltip(isShowSearchToolTip);
 
@@ -570,28 +574,6 @@ public class DailyPreference
                 setValue(mEditor, KEY_GOURMET_REGION_ISOVERSEA, value);
                 break;
         }
-    }
-
-    public String getAuthorization()
-    {
-        try
-        {
-            return Crypto.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
-        } catch (Exception e)
-        {
-            String authorization = Crypto.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
-
-            setValue(mEditor, KEY_AUTHORIZATION, authorization);
-
-            return authorization;
-        }
-    }
-
-    public void setAuthorization(String value)
-    {
-        DailyHotel.AUTHORIZATION = value;
-
-        setValue(mEditor, KEY_AUTHORIZATION, Crypto.urlEncrypt(value));
     }
 
     public boolean isVerification()
@@ -1116,9 +1098,19 @@ public class DailyPreference
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_ENABLED, enabled);
     }
 
-    public boolean getRemoteConfigStampEnabled()
+    public boolean isRemoteConfigStampEnabled()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_ENABLED, false);
+    }
+
+    public void setRemoteConfigStampTitle(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE, value);
+    }
+
+    public String getRemoteConfigStampTitle()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE, null);
     }
 
     public void setRemoteConfigStampStayDetailMessage(String message1, String message2, String message3, boolean message3Enabled)
@@ -1197,11 +1189,10 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, true);
     }
 
-    public void setRemoteConfigStampDate(String date1, String date2, String date3)
+    public void setRemoteConfigStampDate(String date1, String date2)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, date1);
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, date2);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, date3);
     }
 
     public String getRemoteConfigStampDate1()
@@ -1212,11 +1203,6 @@ public class DailyPreference
     public String getRemoteConfigStampDate2()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, null);
-    }
-
-    public String getRemoteConfigStampDate3()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, null);
     }
 
     public void setRemoteConfigABTestGourmetProductList(String value)
@@ -1440,17 +1426,6 @@ public class DailyPreference
         return getValue(mPreferences, KEY_PAYMENT_OVERSEAS_EMAIL, null);
     }
 
-    public void setOverseasUserInformation(String name, String phone, String email)
-    {
-        if (mEditor != null)
-        {
-            mEditor.putString(KEY_PAYMENT_OVERSEAS_NAME, name);
-            mEditor.putString(KEY_PAYMENT_OVERSEAS_PHONE, phone);
-            mEditor.putString(KEY_PAYMENT_OVERSEAS_EMAIL, email);
-            mEditor.apply();
-        }
-    }
-
     public String getUserType()
     {
         return getValue(mPreferences, KEY_USER_TYPE, null);
@@ -1481,45 +1456,41 @@ public class DailyPreference
         return getValue(mPreferences, KEY_USER_BENEFIT_ALARM, false);
     }
 
-    public void setUserBenefitAlarm(boolean value)
-    {
-        setValue(mEditor, KEY_USER_BENEFIT_ALARM, value);
-    }
-
     public boolean isUserExceedBonus()
     {
         return getValue(mPreferences, KEY_USER_IS_EXCEED_BONUS, false);
     }
 
-    public void setUserExceedBonus(boolean value)
+    public String getAuthorization()
     {
-        setValue(mEditor, KEY_USER_IS_EXCEED_BONUS, value);
-    }
-
-    public void setUserInformation(String type, String email, String name, String birthday, String recommender)
-    {
-        if (mEditor != null)
+        try
         {
-            mEditor.putString(KEY_USER_TYPE, type);
-            mEditor.putString(KEY_USER_EMAIL, email);
-            mEditor.putString(KEY_USER_NAME, name);
-            mEditor.putString(KEY_USER_BIRTHDAY, birthday);
-            mEditor.putString(KEY_USER_RECOMMENDER, recommender);
-            mEditor.apply();
+            return Crypto.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+        } catch (Exception e)
+        {
+            String authorization = Crypto.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
+
+            setValue(mEditor, KEY_AUTHORIZATION, authorization);
+
+            return authorization;
         }
     }
 
-    public void removeUserInformation()
+    public void clearUserInformation()
     {
         if (mEditor != null)
         {
-            mEditor.remove(KEY_USER_TYPE);
             mEditor.remove(KEY_USER_EMAIL);
+            mEditor.remove(KEY_USER_TYPE);
             mEditor.remove(KEY_USER_NAME);
+            mEditor.remove(KEY_USER_RECOMMENDER);
+            mEditor.remove(KEY_USER_BENEFIT_ALARM);
+            mEditor.remove(KEY_USER_IS_EXCEED_BONUS);
             mEditor.remove(KEY_USER_BIRTHDAY);
+            mEditor.remove(KEY_PAYMENT_OVERSEAS_NAME);
+            mEditor.remove(KEY_PAYMENT_OVERSEAS_PHONE);
+            mEditor.remove(KEY_PAYMENT_OVERSEAS_EMAIL);
             mEditor.remove(KEY_AUTHORIZATION);
-
-            DailyHotel.AUTHORIZATION = null;
 
             mEditor.apply();
         }
