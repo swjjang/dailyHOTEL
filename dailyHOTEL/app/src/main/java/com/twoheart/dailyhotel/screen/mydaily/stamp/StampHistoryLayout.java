@@ -123,23 +123,23 @@ public class StampHistoryLayout extends BaseLayout implements View.OnClickListen
 
         switch (order)
         {
-            case 0:
+            case 1:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_01);
                 break;
 
-            case 1:
+            case 2:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_02);
                 break;
 
-            case 2:
+            case 3:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_03);
                 break;
 
-            case 3:
+            case 4:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_04);
                 break;
 
-            case 4:
+            case 5:
                 stampImageView.setImageResource(R.drawable.ic_stamp_achieved_05);
                 break;
         }
