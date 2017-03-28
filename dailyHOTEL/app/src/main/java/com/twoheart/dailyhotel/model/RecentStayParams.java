@@ -35,9 +35,10 @@ public class RecentStayParams extends StayParams
             return;
         }
 
+        dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
+
         try
         {
-            dateCheckIn = stayBookingDay.getCheckInDay("yyyy-MM-dd");
             stays = stayBookingDay.getNights();
         } catch (Exception e)
         {
