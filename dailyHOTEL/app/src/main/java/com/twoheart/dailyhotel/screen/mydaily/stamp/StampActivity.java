@@ -78,7 +78,8 @@ public class StampActivity extends BaseActivity
                 mNetworkController.requestUserStamps(false);
             } else
             {
-                mStampLayout.setNights(0);
+                // 로그인 하지 않은 경우 멘트가 다름
+                mStampLayout.setNights(-1);
             }
         } else
         {

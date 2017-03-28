@@ -191,6 +191,10 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
             case 5:
                 mStampEventMessageTextView.setText(R.string.message_stamp_title_message5);
                 break;
+
+            default:
+                mStampEventMessageTextView.setText(R.string.message_stamp_login);
+                break;
         }
     }
 
