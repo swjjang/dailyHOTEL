@@ -62,9 +62,8 @@ public class StampActivity extends BaseActivity
         setContentView(mStampLayout.onCreateView(R.layout.activity_stamp));
 
         String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
-        String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
 
-        mStampLayout.setStampDate(stampDate1, stampDate2);
+        mStampLayout.setStampDate(stampDate1);
 
         if (DailyHotel.isLogin() == true)
         {

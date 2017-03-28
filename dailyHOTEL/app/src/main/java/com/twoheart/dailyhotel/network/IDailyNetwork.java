@@ -560,4 +560,6 @@ public interface IDailyNetwork
     void requestHomeWishList(String tag, Object listener);
 
     void requestHomeRecentList(String tag, JSONObject jsonObject, Object listener);
+
+    void requestUserStamps(String tag, boolean details, Object listener);
 }

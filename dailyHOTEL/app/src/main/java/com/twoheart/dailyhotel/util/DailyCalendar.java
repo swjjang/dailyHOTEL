@@ -90,6 +90,19 @@ public class DailyCalendar
         return convertDate(dateString, format, TimeZone.getTimeZone("GMT+09:00"));
     }
 
+    public static long clearTField(long millis)
+    {
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTimeInMillis(millis);
+
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        return calendar.getTimeInMillis();
+    }
+
     /**
      * 이 메소드는 기존과 동일하지만 타임존을 받지 않아서 dateString에 존재하는 Time존을 사용하도록 한다.
      *

@@ -465,6 +465,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) paymentInformation;
         GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay)mPlaceBookingDay;
 
         String discountType = AnalyticsManager.Label.FULL_PAYMENT;
 
@@ -482,8 +483,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String placeType = gourmetProduct.ticketName;
         int productCount = gourmetPaymentInformation.ticketCount;
 
-        String date = gourmetPaymentInformation.dateTime;
-        String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT"));
+        String date = gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)");
+        String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT+09:00"));
 
         String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
         String userIndex = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getUserIdx();
@@ -958,12 +959,13 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     protected void recordPaymentInformation()
     {
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay)mPlaceBookingDay;
 
         DailyPreference.getInstance(GourmetPaymentActivity.this)//
             .setPaymentInformation(PlaceType.FNB,//
                 gourmetPaymentInformation.placeName,//
                 gourmetPaymentInformation.paymentType,//
-                gourmetPaymentInformation.dateTime);
+                gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
     }
 
     private void setAvailableDefaultPaymentType()
@@ -1142,8 +1144,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetPaymentInformation.category);
             params.put(AnalyticsManager.KeyType.DBENEFIT, gourmetPaymentInformation.isDBenefit ? "yes" : "no");
             params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, gourmetPaymentInformation.paymentType.getName());
-            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT")));
-            params.put(AnalyticsManager.KeyType.VISIT_HOUR, Long.toString(gourmetPaymentInformation.ticketTime));
+            params.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT+09:00")));
+            params.put(AnalyticsManager.KeyType.VISIT_HOUR, DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HHmm", TimeZone.getTimeZone("GMT+09:00")));
 
             params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mSelectedCreditCard != null ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, Integer.toString(gourmetPaymentInformation.ratingValue));
@@ -1367,11 +1369,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     void startCouponPopup(GourmetPaymentInformation gourmetPaymentInformation)
     {
         GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
+        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay)mPlaceBookingDay;
 
         int placeIndex = gourmetPaymentInformation.placeIndex;
         int ticketIndex = gourmetProduct.saleIdx;
 
-        String dateTime = gourmetPaymentInformation.dateTime;
+        String dateTime = gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)");
 
         String placeName = gourmetPaymentInformation.placeName;
         int ticketCount = gourmetPaymentInformation.ticketCount;
@@ -1817,6 +1820,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         for (int i = 0; i < length; i++)
                         {
                             times[i] = timeJSONArray.getLong(i);
+                            times[i] -= DailyCalendar.NINE_HOUR_MILLISECOND;
                         }
 
                         if (gourmetPaymentInformation.ticketTime == 0)
@@ -1842,6 +1846,12 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                             }
                         }
 
+                        GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
+
+                        sday -= DailyCalendar.NINE_HOUR_MILLISECOND;
+
+                        gourmetBookingDay.setVisitDay(DailyCalendar.format(sday, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
+
                         gourmetPaymentInformation.ticketTimes = times;
                         GourmetProduct gourmetProduct = gourmetPaymentInformation.getTicket();
 
@@ -1853,7 +1863,6 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                         gourmetProduct.discountPrice = discountPrice;
                         gourmetPaymentInformation.ticketMaxCount = maxCount;
-                        gourmetPaymentInformation.dateTime = DailyCalendar.format(sday, "yyyy.MM.dd (EEE)", TimeZone.getTimeZone("GMT"));
 
                         if (gourmetPaymentInformation.ticketTime == 0)
                         {
@@ -1864,7 +1873,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                             requestValidateTicketPayment(gourmetPaymentInformation, (GourmetBookingDay) mPlaceBookingDay);
                         }
 
-                        mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation);
+                        mGourmetPaymentLayout.setTicketInformation(gourmetPaymentInformation, gourmetBookingDay);
                         setPaymentInformation(gourmetPaymentInformation);
                     } else
                     {
@@ -1981,6 +1990,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                         for (int i = 0; i < length; i++)
                         {
                             times[i] = timeJSONArray.getLong(i);
+                            times[i] -= DailyCalendar.NINE_HOUR_MILLISECOND;
                         }
 
                         if (gourmetPaymentInformation.ticketTime == 0)

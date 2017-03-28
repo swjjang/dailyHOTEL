@@ -1140,7 +1140,7 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>) listener);
     }
 
-
+    @Override
     public void requestUserStamps(String tag, boolean details, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/stamps"//
