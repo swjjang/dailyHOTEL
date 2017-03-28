@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
@@ -9,7 +11,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
@@ -94,8 +98,37 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         if (Constants.DEBUG == true)
         {
-            TextView debugTextView = (TextView) view.findViewById(R.id.debugTextView);
-            debugTextView.setVisibility(View.VISIBLE);
+            View debugLayout = view.findViewById(R.id.debugLayout);
+            debugLayout.setVisibility(View.VISIBLE);
+
+            TextView productServerTextView = (TextView) debugLayout.findViewById(R.id.productServerTextView);
+            TextView devServerTextView = (TextView) debugLayout.findViewById(R.id.devServerTextView);
+
+            productServerTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Intent intent = new Intent(mContext, LauncherActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=https%3A%2F%2Fprod-mobileapi.dailyhotel.kr%2Fgoodnight%2F"));
+                    ((BaseActivity) mContext).startActivity(intent);
+                }
+            });
+
+            devServerTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    Intent intent = new Intent(mContext, LauncherActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=11&baseUrl=http%3A%2F%2Fdev-mobileapi.dailyhotel.me%2Fgoodnight%2F"));
+                    ((BaseActivity) mContext).startActivity(intent);
+                }
+            });
+
+            TextView debugTextView = (TextView) debugLayout.findViewById(R.id.debugTextView);
 
             WebView webView = new WebView(mContext);
             String webViewVersion = webView.getSettings().getUserAgentString();
