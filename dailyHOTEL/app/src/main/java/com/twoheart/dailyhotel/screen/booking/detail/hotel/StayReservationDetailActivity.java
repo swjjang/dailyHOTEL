@@ -1038,7 +1038,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 @Override
                 public void onClick(View v)
                 {
-                    Util.restartApp(StayReservationDetailActivity.this);
+                    StayReservationDetailActivity.this.onBackPressed();
                 }
             });
         }
