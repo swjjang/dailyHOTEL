@@ -8,6 +8,8 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.network.model.PlaceReviews;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -382,8 +384,8 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseListDto<Holiday>> requestHoliday(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                              @Query("from") String startDay, @Query("to") String endDay, @Query("isNationalHoliday") boolean isNationalHoliday);
+    Call<BaseListDto<Holiday>> requestHoliday(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("from") String startDay, @Query("to") String endDay, @Query("isNationalHoliday") boolean isNationalHoliday);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -396,13 +398,13 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseDto<RecommendationPlaceList<RecommendationStay>>> requestRecommendationStayList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                                                             @Query("salesDate") String salesDate, @Query("period") int period);
+    Call<BaseDto<RecommendationPlaceList<RecommendationStay>>> requestRecommendationStayList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("salesDate") String salesDate, @Query("period") int period);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<BaseDto<RecommendationPlaceList<RecommendationGourmet>>> requestRecommendationGourmetList(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
-                                                                                                   @Query("salesDate") String salesDate, @Query("period") int period);
+    Call<BaseDto<RecommendationPlaceList<RecommendationGourmet>>> requestRecommendationGourmetList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("salesDate") String salesDate, @Query("period") int period);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
@@ -417,4 +419,13 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<BaseDto<Stamp>> requestUserStamps(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
                                            @Query("details") boolean details);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<BaseDto<PlaceReviewScores>> requestPlaceReviewScores(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<BaseDto<PlaceReviews>> requestPlaceReviews(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("page") int page, @Query("limit") int limit, @Query("sortProperty") String sortProperty, @Query("sortDirection") String sortDirection);
 }

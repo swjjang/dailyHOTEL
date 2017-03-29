@@ -76,7 +76,6 @@ public class MyDailyFragment extends BaseFragment implements Constants
         boolean hasNewCoupon = DailyPreference.getInstance(context).hasNewCoupon();
 
         mMyDailyLayout.updateNewIconView(hasNewCoupon);
-        mMyDailyLayout.setStampTitle(DailyPreference.getInstance(context).getRemoteConfigStampTitle());
 
         AnalyticsManager.getInstance(context).recordScreen(getActivity(), AnalyticsManager.Screen.MYDAILY, null);
 
@@ -403,7 +402,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_STAMP);
+            baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity, StampActivity.CallScreen.MYDAILY), Constants.CODE_REQUEST_ACTIVITY_STAMP);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.STAMP_MENU_CLICK, AnalyticsManager.ValueType.EMPTY, null);

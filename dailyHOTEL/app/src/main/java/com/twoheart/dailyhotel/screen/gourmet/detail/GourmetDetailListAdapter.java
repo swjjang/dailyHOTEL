@@ -2,6 +2,9 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -33,6 +37,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
     private GourmetDetail mGourmetDetail;
     private GourmetBookingDay mGourmetBookingDay;
+    private PlaceReviewScores mPlaceReviewScores;
     private Context mContext;
     private View[] mDetailViews;
     private int mImageHeight;
@@ -41,13 +46,13 @@ public class GourmetDetailListAdapter extends BaseAdapter
     GourmetDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public GourmetDetailListAdapter(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, //
-                                    GourmetDetailLayout.OnEventListener onEventListener, //
-                                    View.OnTouchListener emptyViewOnTouchListener)
+    public GourmetDetailListAdapter(Context context, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail //
+        , PlaceReviewScores placeReviewScores//
+        , GourmetDetailLayout.OnEventListener onEventListener//
+        , View.OnTouchListener emptyViewOnTouchListener)
     {
         mContext = context;
-        mGourmetDetail = gourmetDetail;
-        mGourmetBookingDay = gourmetBookingDay;
+        setData(gourmetBookingDay, gourmetDetail, placeReviewScores);
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(context);
 
@@ -55,10 +60,11 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
+    public void setData(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, PlaceReviewScores placeReviewScores)
     {
         mGourmetBookingDay = gourmetBookingDay;
         mGourmetDetail = gourmetDetail;
+        mPlaceReviewScores = placeReviewScores;
     }
 
     @Override
@@ -215,10 +221,9 @@ public class GourmetDetailListAdapter extends BaseAdapter
         GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
         mGourmetTitleLayout = view.findViewById(R.id.gourmetTitleLayout);
-        mGourmetTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         // 등급
-        TextView gradeTextView = (TextView) view.findViewById(R.id.gourmetGradeTextView);
+        TextView gradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetGradeTextView);
 
         if (Util.isTextEmpty(gourmetDetailParams.category) == true)
         {
@@ -230,7 +235,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         }
 
         // 소분류 등급
-        TextView subGradeTextView = (TextView) view.findViewById(R.id.gourmetSubGradeTextView);
+        TextView subGradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetSubGradeTextView);
 
         if (Util.isTextEmpty(gourmetDetailParams.categorySub) == true)
         {
@@ -242,12 +247,12 @@ public class GourmetDetailListAdapter extends BaseAdapter
         }
 
         // 호텔명
-        TextView placeNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
+        TextView placeNameTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetNameTextView);
         placeNameTextView.setText(gourmetDetailParams.name);
 
-        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
-
         // 만족도
+        TextView satisfactionView = (TextView) mGourmetTitleLayout.findViewById(R.id.satisfactionView);
+
         if (gourmetDetailParams.ratingShow == false)
         {
             satisfactionView.setVisibility(View.GONE);
@@ -257,6 +262,17 @@ public class GourmetDetailListAdapter extends BaseAdapter
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             satisfactionView.setText(mContext.getString(R.string.label_gourmet_detail_satisfaction, //
                 gourmetDetailParams.ratingValue, decimalFormat.format(gourmetDetailParams.ratingPersons)));
+        }
+
+        // 리뷰
+        TextView trueReviewTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (mPlaceReviewScores == null)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
         }
 
         // 할인 쿠폰
@@ -302,6 +318,37 @@ public class GourmetDetailListAdapter extends BaseAdapter
         });
 
         return view;
+    }
+
+    public void setTrueReviewCount(int count)
+    {
+        if (mGourmetTitleLayout == null)
+        {
+            return;
+        }
+
+        TextView trueReviewTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (count == 0)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            trueReviewTextView.setVisibility(View.VISIBLE);
+
+            SpannableString spannableString = new SpannableString(mContext.getString(R.string.label_detail_view_review_go, count));
+            spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            trueReviewTextView.setText(spannableString);
+
+            trueReviewTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.onReviewClick();
+                }
+            });
+        }
     }
 
     /**

@@ -142,8 +142,8 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3 = "327";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1 = "328";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
+    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
-    private static final String KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE = "332";
 
     private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
     private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
@@ -1103,16 +1103,6 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_ENABLED, false);
     }
 
-    public void setRemoteConfigStampTitle(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE, value);
-    }
-
-    public String getRemoteConfigStampTitle()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_MYDAILY_TITLE, null);
-    }
-
     public void setRemoteConfigStampStayDetailMessage(String message1, String message2, String message3, boolean message3Enabled)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1, message1);
@@ -1189,10 +1179,11 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, true);
     }
 
-    public void setRemoteConfigStampDate(String date1, String date2)
+    public void setRemoteConfigStampDate(String date1, String date2, String date3)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, date1);
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, date2);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, date3);
     }
 
     public String getRemoteConfigStampDate1()
@@ -1203,6 +1194,11 @@ public class DailyPreference
     public String getRemoteConfigStampDate2()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, null);
+    }
+
+    public String getRemoteConfigStampDate3()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, null);
     }
 
     public void setRemoteConfigABTestGourmetProductList(String value)
@@ -1490,6 +1486,7 @@ public class DailyPreference
             mEditor.remove(KEY_PAYMENT_OVERSEAS_NAME);
             mEditor.remove(KEY_PAYMENT_OVERSEAS_PHONE);
             mEditor.remove(KEY_PAYMENT_OVERSEAS_EMAIL);
+            mEditor.remove(KEY_AUTHORIZATION);
 
             mEditor.apply();
         }

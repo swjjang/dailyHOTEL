@@ -45,7 +45,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
     private TextView mPushTextView;
     private TextView mPushBenefitTextView;
-    private TextView mStampTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -94,8 +93,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         initAccountInfoLayout(mContext, view);
 
         View stampLayout = view.findViewById(R.id.stampLayout);
-        mStampTextView = (TextView) stampLayout.findViewById(R.id.stampTextView);
-
         View recommendLayout = view.findViewById(R.id.recommendLayout);
         View wishListLayout = view.findViewById(R.id.wishListLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
@@ -151,22 +148,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         View toolbar = view.findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(context, toolbar);
         dailyToolbarLayout.initToolbar(mContext.getResources().getString(R.string.menu_item_title_mydaily), null, false);
-    }
-
-    public void setStampTitle(String title)
-    {
-        if (mStampTextView == null)
-        {
-            return;
-        }
-
-        if (Util.isTextEmpty(title) == true)
-        {
-            mStampTextView.setText(R.string.label_stamp_mydaily_title);
-        } else
-        {
-            mStampTextView.setText(title);
-        }
     }
 
     private void initProfileLayout(Context context, View view)

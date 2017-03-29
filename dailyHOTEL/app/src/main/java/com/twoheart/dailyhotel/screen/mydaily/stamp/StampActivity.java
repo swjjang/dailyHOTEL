@@ -10,7 +10,9 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -22,10 +24,19 @@ public class StampActivity extends BaseActivity
 {
     StampLayout mStampLayout;
     private StampNetworkController mNetworkController;
+    private CallScreen mCallScreen;
 
-    public static Intent newInstance(Context context)
+    public enum CallScreen
+    {
+        MYDAILY,
+        THANKYOU,
+        EVENT,
+    }
+
+    public static Intent newInstance(Context context, CallScreen callScreen)
     {
         Intent intent = new Intent(context, StampActivity.class);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, callScreen);
         return intent;
     }
 
@@ -36,15 +47,23 @@ public class StampActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            return;
+        }
+
+        mCallScreen = (CallScreen) intent.getSerializableExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN);
+
         mStampLayout = new StampLayout(this, mOnEventListener);
         mNetworkController = new StampNetworkController(this, mNetworkTag, mNetworkControllerListener);
 
         setContentView(mStampLayout.onCreateView(R.layout.activity_stamp));
 
         String stampDate1 = DailyPreference.getInstance(this).getRemoteConfigStampDate1();
-        String stampDate2 = DailyPreference.getInstance(this).getRemoteConfigStampDate2();
 
-        mStampLayout.setStampDate(stampDate1, stampDate2);
+        mStampLayout.setStampDate(stampDate1);
 
         if (DailyHotel.isLogin() == true)
         {
@@ -70,14 +89,15 @@ public class StampActivity extends BaseActivity
 
         if (DailyPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
         {
-            lockUI();
-
             if (DailyHotel.isLogin() == true)
             {
+                lockUI();
                 mNetworkController.requestUserStamps(false);
+            } else
+            {
+                // 로그인 하지 않은 경우 멘트가 다름
+                mStampLayout.setNights(-1);
             }
-
-            mNetworkController.requestPushBenefit(false);
         } else
         {
             showFinishDialog();
@@ -101,7 +121,7 @@ public class StampActivity extends BaseActivity
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_LOGIN:
+            case Constants.CODE_REQUEST_ACTIVITY_LOGIN:
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
@@ -110,8 +130,9 @@ public class StampActivity extends BaseActivity
                 break;
             }
 
-            case CODE_REQUEST_ACTIVITY_STAMP_TERMS:
-            case CODE_REQUEST_ACTIVITY_STAMP_HISTORY:
+            case Constants.CODE_RESULT_ACTIVITY_EVENT:
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP_TERMS:
+            case Constants.CODE_REQUEST_ACTIVITY_STAMP_HISTORY:
                 if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     setResult(resultCode);
@@ -163,6 +184,20 @@ public class StampActivity extends BaseActivity
         @Override
         public void onStampEventDetailClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            if (mCallScreen == CallScreen.EVENT)
+            {
+                finish();
+            } else
+            {
+                startActivityForResult(EventWebActivity.newInstance(StampActivity.this, EventWebActivity.SourceType.STAMP//
+                    , "http://m.dailyhotel.co.kr/banner/dailystamp_home", getString(R.string.label_stamp_event_title)), Constants.CODE_RESULT_ACTIVITY_EVENT);
+            }
+
             AnalyticsManager.getInstance(StampActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
                 AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAMP_DETAIL, null);
         }

@@ -12,6 +12,8 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.network.model.PlaceReviews;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -1140,7 +1142,7 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<HomePlaces<HomePlace>>>) listener);
     }
 
-
+    @Override
     public void requestUserStamps(String tag, boolean details, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/stamps"//
@@ -1149,5 +1151,35 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserStamps(Crypto.getUrlDecoderEx(URL), details);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Stamp>>) listener);
+    }
+
+    @Override
+    public void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}"//
+            : "NDkkNzAkMzgkNDgkNDAkNzMkODEkNTIkMjAkNjMkNzQkNDkkNDIkNzMkNDIkMzkk$MzVFQTAzNTlGNTkzNjk3BRTIzRjQ1QTQ1NzZDQTIFIVQZzNEExQkOENzQNTjg5QzFBQRUI0RTgzFQTABzQAFzM4REQK1ODdEMjRGNw==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", type);
+        urlParams.put("{itemIdx}", Integer.toString(itemIdx));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviews(Crypto.getUrlDecoderEx(URL, urlParams), page, limit, "createdAt", "DESC");
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviews>>) listener);
+    }
+
+    @Override
+    public void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}/statistic"//
+            : "NjkkOSQxMDEkNjYkNTMkNzgkNzAkNzUkNzEkMzYkODAkNDAkNDAkMTI0JDIwJDc2JA==$MkY1RUE2RLENGOEMxQTdMENUExNjNDQkM4ODkI4NTOSI2RkUwREU0RkJCKRTA5OTg4NEQwNRkUATV4OPUKJCINDAU4MDM4MjQ3MDlENzRBOTY1RjUPyNTVBNDMyM0FZGMjk5QzdCMjQ3QzY3$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", type);
+        urlParams.put("{itemIdx}", Integer.toString(itemIdx));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviewScores(Crypto.getUrlDecoderEx(URL, urlParams));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
     }
 }

@@ -2,12 +2,10 @@ package com.twoheart.dailyhotel.screen.hotel.detail;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -34,6 +32,7 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
@@ -41,6 +40,7 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
@@ -690,23 +690,27 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        //        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL, ((StayDetail) mPlaceDetail).getStayDetailParams().index, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        StayDetailParams stayDetailParams = ((StayDetail) mPlaceDetail).getStayDetailParams();
 
-        try
-        {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-        } catch (ActivityNotFoundException e)
-        {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
-        }
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
+            , stayDetailParams.index, 0, stayDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+
+        //        try
+        //        {
+        //            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+        //        } catch (ActivityNotFoundException e)
+        //        {
+        //            try
+        //            {
+        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+        //            } catch (ActivityNotFoundException e1)
+        //            {
+        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+        //                startActivity(marketLaunch);
+        //            }
+        //        }
     }
 
     void processBooking(StayBookingDay stayBookingDay, StayDetail stayDetail, StayProduct stayProduct)
@@ -883,7 +887,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
-            ((StayDetailLayout) mPlaceDetailLayout).setDetail(stayBookingDay, stayDetail, mCurrentImage);
+            ((StayDetailLayout) mPlaceDetailLayout).setDetail(stayBookingDay, stayDetail, mPlaceReviewScores, mCurrentImage);
         }
 
         if (mCheckPrice == false)
@@ -1339,6 +1343,17 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void onReviewClick()
+        {
+            if (mPlaceDetail == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+        }
+
+        @Override
         public void showMap()
         {
             if (Util.isInstallGooglePlayService(StayDetailActivity.this) == true)
@@ -1552,6 +1567,8 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                 ((StayDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                     stayBookingDay.getCheckInDay("yyyy-MM-dd"), stayBookingDay.getNights());
+
+                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, mPlaceDetail.index);
             } catch (Exception e)
             {
                 onError(e);
@@ -1838,6 +1855,19 @@ public class StayDetailActivity extends PlaceDetailActivity
                 showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
                     , getResources().getString(R.string.dialog_btn_text_confirm), null);
             }
+        }
+
+        @Override
+        public void onPlaceReviewScores(PlaceReviewScores placeReviewScores)
+        {
+            if (placeReviewScores == null)
+            {
+                return;
+            }
+
+            mPlaceReviewScores = placeReviewScores;
+
+            mPlaceDetailLayout.setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
         }
 
         @Override

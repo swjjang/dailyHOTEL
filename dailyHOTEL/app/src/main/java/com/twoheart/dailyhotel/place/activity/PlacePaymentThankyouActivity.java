@@ -346,6 +346,15 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
     }
 
     @Override
+    public void onBackPressed()
+    {
+        recordEvent(AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED);
+        setResult(RESULT_OK);
+
+        super.onBackPressed();
+    }
+
+    @Override
     public void finish()
     {
         super.finish();
@@ -371,7 +380,8 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 break;
 
             case R.id.stampLayout:
-                Intent intent = StampActivity.newInstance(this);
+                Intent intent = StampActivity.newInstance(this, StampActivity.CallScreen.THANKYOU);
+                setResult(RESULT_CANCELED);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//

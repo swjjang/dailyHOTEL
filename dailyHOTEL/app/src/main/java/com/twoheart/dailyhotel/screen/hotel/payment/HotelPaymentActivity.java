@@ -68,6 +68,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -2264,14 +2265,11 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                             stayProduct.totalDiscount = discount;
 
-                            if (DEBUG == false && (checkInDate == 0 || checkOutDate == 0))
-                            {
-                                Crashlytics.log(responseJSONObject.toString());
-                                Crashlytics.logException(new RuntimeException(call.request().url().toString()));
+                            checkInDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
+                            checkOutDate -= DailyCalendar.NINE_HOUR_MILLISECOND;
 
-                                Util.restartExitApp(HotelPaymentActivity.this);
-                                return;
-                            }
+                            stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
+                            stayBookingDay.setCheckOutDay(DailyCalendar.format(checkOutDate, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
 
                             setReservationInformation(stayBookingDay);
 

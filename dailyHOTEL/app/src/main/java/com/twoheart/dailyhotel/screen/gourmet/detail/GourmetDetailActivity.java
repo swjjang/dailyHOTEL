@@ -1,11 +1,9 @@
 package com.twoheart.dailyhotel.screen.gourmet.detail;
 
 import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -30,11 +28,13 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
@@ -686,23 +686,25 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        //        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().index, 0), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
 
-        try
-        {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        } catch (ActivityNotFoundException e)
-        {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
-        }
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL, gourmetDetailParams.index, 0, gourmetDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+
+        //        try
+        //        {
+        //            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+        //        } catch (ActivityNotFoundException e)
+        //        {
+        //            try
+        //            {
+        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+        //            } catch (ActivityNotFoundException e1)
+        //            {
+        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+        //                startActivity(marketLaunch);
+        //            }
+        //        }
     }
 
     protected void processBooking(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int ticketIndex)
@@ -858,7 +860,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (mPlaceDetailLayout != null)
         {
-            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(gourmetBookingDay, gourmetDetail, mCurrentImage);
+            ((GourmetDetailLayout) mPlaceDetailLayout).setDetail(gourmetBookingDay, gourmetDetail, mPlaceReviewScores, mCurrentImage);
         }
 
         if (mFirstCheckPrice == false)
@@ -1150,6 +1152,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             recordAnalyticsGourmetDetail(AnalyticsManager.Screen.DAILYGOURMET_DETAIL_TICKETTYPE, (GourmetBookingDay) mPlaceBookingDay, (GourmetDetail) mPlaceDetail);
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
                 , AnalyticsManager.Action.TICKET_TYPE_CLICKED, gourmetDetailParams.name, null);
+        }
+
+        @Override
+        public void onReviewClick()
+        {
+            if (mPlaceDetail == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
         }
 
         //        @Override
@@ -1447,6 +1460,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                     gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
+
+                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.FNB, mPlaceDetail.index);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
@@ -1533,6 +1548,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     mResultIntent = new Intent();
                     mResultIntent.putExtra(NAME_INTENT_EXTRA_DATA_IS_CHANGE_WISHLIST, true);
                 }
+
                 setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
             }
 
@@ -1707,16 +1723,36 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void onPlaceReviewScores(PlaceReviewScores placeReviewScores)
+        {
+            if (placeReviewScores == null)
+            {
+                return;
+            }
+
+            mPlaceReviewScores = placeReviewScores;
+
+            mPlaceDetailLayout.setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
             GourmetDetailActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {
@@ -1753,7 +1789,11 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorToastMessage(String message)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
             GourmetDetailActivity.this.onErrorToastMessage(message);
             finish();
         }
@@ -1761,7 +1801,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         @Override
         public void onErrorResponse(final Call call, final Response response)
         {
-            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
 
             if (mIsUsedMultiTransition == true && mIsTransitionEnd == false)
             {

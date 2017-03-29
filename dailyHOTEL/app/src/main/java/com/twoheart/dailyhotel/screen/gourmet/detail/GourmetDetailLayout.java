@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -23,6 +24,8 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener
     {
         void onProductListClick();
+
+        void onReviewClick();
     }
 
     public GourmetDetailLayout(Context context, OnBaseEventListener listener)
@@ -58,7 +61,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         }
     }
 
-    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int imagePosition)
+    public void setDetail(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, PlaceReviewScores placeReviewScores, int imagePosition)
     {
         if (gourmetBookingDay == null || gourmetDetail == null || gourmetDetail.getGourmetDetailParmas() == null)
         {
@@ -85,12 +88,12 @@ public class GourmetDetailLayout extends PlaceDetailLayout
 
         if (mListAdapter == null)
         {
-            mListAdapter = new GourmetDetailListAdapter(mContext, gourmetBookingDay, (GourmetDetail) mPlaceDetail,//
-                (GourmetDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
+            mListAdapter = new GourmetDetailListAdapter(mContext, gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores//
+                , (OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail);
+            mListAdapter.setData(gourmetBookingDay, (GourmetDetail) mPlaceDetail, placeReviewScores);
         }
 
         setCurrentImage(imagePosition);
@@ -127,7 +130,21 @@ public class GourmetDetailLayout extends PlaceDetailLayout
         setWishButtonSelected(gourmetDetailParams.myWish);
         setWishButtonCount(gourmetDetailParams.wishCount);
 
+        if (placeReviewScores != null)
+        {
+            setTrueReviewCount(placeReviewScores.reviewScoreTotalCount);
+        }
+
         mListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setTrueReviewCount(int count)
+    {
+        if (mListAdapter != null)
+        {
+            mListAdapter.setTrueReviewCount(count);
+        }
     }
 
     @Override

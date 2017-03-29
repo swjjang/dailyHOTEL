@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -40,7 +41,6 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -344,7 +344,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
                     Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
 
-                    int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+                    int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
 
                     KakaoLinkManager.newInstance(StayReservationDetailActivity.this).shareBookingStay(message, stayBookingDetail.placeIndex,//
                         mImageUrl, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
@@ -654,30 +654,34 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
         }
 
-        //        if (isRefund == true)
-        //        {
-        //            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_REFUND, mPlaceBookingDetail.placeIndex, mReservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-        //        } else
-        //        {
-        //            startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING, mPlaceBookingDetail.placeIndex, mReservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-        //        }
-
-
-        try
+        if (isRefund == true)
         {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
-        } catch (ActivityNotFoundException e)
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_REFUND//
+                , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        } else
         {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING//
+                , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
         }
+
+
+        //        try
+        //        {
+        //            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94")));
+        //        } catch (ActivityNotFoundException e)
+        //        {
+        //            try
+        //            {
+        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+        //            } catch (ActivityNotFoundException e1)
+        //            {
+        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+        //                startActivity(marketLaunch);
+        //            }
+        //        }
     }
 
     String getRefundPolicyStatus(StayBookingDetail bookingDetail)
@@ -696,20 +700,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return StayBookingDetail.STATUS_SURCHARGE_REFUND;
             }
         }
-    }
-
-    long getCompareDate(long timeInMillis)
-    {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTimeInMillis();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

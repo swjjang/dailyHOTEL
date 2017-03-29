@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView.PinnedSectionListAdapter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -207,12 +206,12 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             case HOTEL:
             {
                 String period = String.format(Locale.KOREA, "%s - %s"//
-                    , DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"))//
-                    , DailyCalendar.format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT")));
+                    , DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00"))//
+                    , DailyCalendar.format(booking.checkoutTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
 
                 day.setText(period);
 
-                int nightsCount = (int) ((getCompareDate(booking.checkoutTime) - getCompareDate(booking.checkinTime)) / DailyCalendar.DAY_MILLISECOND);
+                int nightsCount = (int) ((DailyCalendar.clearTField(booking.checkoutTime) - DailyCalendar.clearTField(booking.checkinTime)) / DailyCalendar.DAY_MILLISECOND);
 
                 nights.setVisibility(View.VISIBLE);
                 nights.setText(mContext.getString(R.string.label_nights, nightsCount));
@@ -221,7 +220,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
             case FNB:
             {
-                String period = DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT"));
+                String period = DailyCalendar.format(booking.checkinTime, BOOKING_DATE_FORMAT, TimeZone.getTimeZone("GMT+09:00"));
 
                 day.setText(period);
 
@@ -336,19 +335,5 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
 
         ColorMatrixColorFilter colorFilter = new ColorMatrixColorFilter(matrix);
         imageView.setColorFilter(colorFilter);
-    }
-
-    private long getCompareDate(long timeInMillis)
-    {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTimeInMillis();
     }
 }

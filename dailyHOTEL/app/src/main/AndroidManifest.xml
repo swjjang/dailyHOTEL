@@ -29,6 +29,10 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="com.twoheart.dailyhotel.permission.C2D_MESSAGE"/>
 
+    <!-- 테블릿 지원하지 않음 -->
+    <supports-screens android:xlargeScreens="false"/>
+    <uses-feature android:name="android.hardware.telephony" android:required="true" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true"/>
@@ -604,6 +608,22 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.hotel.detail.StayReviewActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.gourmet.detail.GourmetReviewActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".screen.common.ReviewTermsActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

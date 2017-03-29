@@ -117,13 +117,11 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
         }
     }
 
-    public void setStampDate(String date1, String date2)
+    public void setStampDate(String date1)
     {
         TextView stampDate01TextView = (TextView) mRootView.findViewById(R.id.stampDate01TextView);
-        TextView stampDate02TextView = (TextView) mRootView.findViewById(R.id.stampDate02TextView);
 
         stampDate01TextView.setText(date1);
-        stampDate02TextView.setText(date2);
     }
 
     public void setNights(int nights)
@@ -190,6 +188,10 @@ public class StampLayout extends BaseLayout implements View.OnClickListener
 
             case 5:
                 mStampEventMessageTextView.setText(R.string.message_stamp_title_message5);
+                break;
+
+            default:
+                mStampEventMessageTextView.setText(R.string.message_stamp_login);
                 break;
         }
     }

@@ -269,28 +269,6 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        app:srcCompat="@drawable/info_ic_text_dot_black"/>
-
-                    <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/stampDate01TextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:freezesText="true"
-                        android:lineSpacingExtra="-2dp"
-                        android:textColor="@color/default_background_section_c323232"
-                        android:textSize="13dp"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <ImageView
@@ -300,7 +278,7 @@
                         app:srcCompat="@drawable/info_ic_text_dot_black"/>
 
                     <com.twoheart.dailyhotel.widget.DailyTextView
-                        android:id="@+id/stampDate02TextView"
+                        android:id="@+id/stampDate01TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"

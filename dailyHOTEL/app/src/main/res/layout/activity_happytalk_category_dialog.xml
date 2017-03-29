@@ -41,7 +41,7 @@
         android:layout_marginTop="16dp"
         android:paddingLeft="1px"
         android:paddingRight="1px"
-        android:prompt="@string/label_select_main_category"
+        android:prompt="@string/label_select_category"
         android:spinnerMode="dropdown"/>
 
     <com.twoheart.dailyhotel.widget.DailyHintSpinner
@@ -51,7 +51,7 @@
         android:layout_marginTop="16dp"
         android:paddingLeft="1px"
         android:paddingRight="1px"
-        android:prompt="@string/label_select_sub_category"
+        android:prompt="@string/label_select_category"
         android:spinnerMode="dropdown"/>
 
     <RelativeLayout

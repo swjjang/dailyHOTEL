@@ -53,7 +53,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -279,19 +278,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         {
             releaseUiComponent();
         }
-
-        //        HashMap<String, String> params = new HashMap<String, String>();
-        //        params.put(Label.TYPE, String.valueOf(item.payType));
-        //        params.put(Label.ISUSED, String.valueOf(item.isUsed));
-        //
-        //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd", Locale.KOREA);
-        //        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        //
-        //        params.put(Label.CHECK_IN, simpleDateFormat.format(item.checkinTime));
-        //        params.put(Label.CHECK_OUT, simpleDateFormat.format(item.checkoutTime));
-        //        params.put(Label.RESERVATION_INDEX, String.valueOf(item.reservationIndex));
-        //
-        //        AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, item.placeName, params);
     }
 
     @Override
@@ -370,8 +356,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             if (booking.type == Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
                                 && booking.placeName.equalsIgnoreCase(placeName)//
                                 && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkInDate) == true//
-                                && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkOutDate) == true)
+                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true//
+                                && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkOutDate) == true)
                             {
                                 return i;
                             }
@@ -381,8 +367,8 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                 && booking.readyForRefund == false//
                                 && booking.placeName.equalsIgnoreCase(placeName)//
                                 && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkInDate) == true//
-                                && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkOutDate) == true)
+                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true//
+                                && DailyCalendar.format(booking.checkoutTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkOutDate) == true)
                             {
                                 return i;
                             }
@@ -403,7 +389,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             if (booking.type == Booking.TYPE_ENTRY && booking.payType == CODE_PAY_TYPE_ACCOUNT_WAIT//
                                 && booking.placeName.equalsIgnoreCase(placeName)//
                                 && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkInDate) == true)
+                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true)
                             {
                                 return i;
                             }
@@ -413,7 +399,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                 && booking.readyForRefund == false//
                                 && booking.placeName.equalsIgnoreCase(placeName)//
                                 && booking.placeType == placeType//
-                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT")).equalsIgnoreCase(checkInDate) == true)
+                                && DailyCalendar.format(booking.checkinTime, "yyyy.MM.dd", TimeZone.getTimeZone("GMT+09:00")).equalsIgnoreCase(checkInDate) == true)
                             {
                                 return i;
                             }
@@ -454,20 +440,6 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
 
         return true;
-    }
-
-    private long getCompareDate(long timeInMillis)
-    {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTimeInMillis();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -607,16 +579,20 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                                 final int reservationIndex = DailyDeepLink.getInstance().getReservationIndex();
 
-                                if (placeType != null && reservationIndex > 0)
+                                if (placeType != null)
                                 {
+                                    String imageUrl = null;
+
                                     for (Booking booking : bookingArrayList)
                                     {
                                         if (booking.reservationIndex == reservationIndex)
                                         {
-                                            startBookingDetail(baseActivity, placeType, reservationIndex, booking.hotelImageUrl, true);
+                                            imageUrl = booking.hotelImageUrl;
                                             break;
                                         }
                                     }
+
+                                    startBookingDetail(baseActivity, placeType, reservationIndex, imageUrl, true);
                                 }
                             }
 
@@ -690,7 +666,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                 Booking booking = new Booking(jsonObject);
 
-                booking.leftFromToDay = (int) ((getCompareDate(booking.checkinTime) - getCompareDate(currentTime)) / DailyCalendar.DAY_MILLISECOND);
+                booking.leftFromToDay = (int) ((DailyCalendar.clearTField(booking.checkinTime) - DailyCalendar.clearTField(currentTime)) / DailyCalendar.DAY_MILLISECOND);
 
                 if (booking.readyForRefund == true)
                 {

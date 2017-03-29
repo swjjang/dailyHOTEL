@@ -20,9 +20,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.FontManager;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class StayAutoRefundLayout extends BaseLayout implements Constants, View.OnClickListener
 {
@@ -175,7 +173,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             Date checkInDate = DailyCalendar.convertDate(bookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
             Date checkOutDate = DailyCalendar.convertDate(bookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
 
-            int nights = (int) ((getCompareDate(checkOutDate.getTime()) - getCompareDate(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
             nightsTextView.setText(context.getString(R.string.label_nights, nights));
         } catch (Exception e)
         {
@@ -316,19 +314,5 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         }
 
         return mAccountNameEditText.getText().toString();
-    }
-
-    private long getCompareDate(long timeInMillis)
-    {
-        Calendar calendar = DailyCalendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT"));
-        calendar.setTimeInMillis(timeInMillis);
-
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-
-        return calendar.getTimeInMillis();
     }
 }
