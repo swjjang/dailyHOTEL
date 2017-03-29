@@ -128,7 +128,7 @@
         <LinearLayout
             android:id="@+id/twoButtonLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/negativeTextView"
@@ -142,14 +142,11 @@
                 android:textSize="14dp"
                 dailyFont:style="Medium"/>
 
-            <View
-                android:layout_width="10dp"
-                android:layout_height="match_parent"/>
-
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/positiveTextView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/selector_dialog_button01"
                 android:gravity="center"

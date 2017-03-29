@@ -177,7 +177,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                     finish(RESULT_OK);
                 } else
                 {
-                    showPermissionGuidePopupBySetting(mPermissionType);
+                    showPermissionGuidePopupBySetting(mPermissionType, false);
                 }
                 break;
             }
@@ -213,7 +213,8 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                     finish(RESULT_OK);
                 } else
                 {
-                    finish(RESULT_CANCELED);
+
+                    showPermissionGuidePopupBySetting(mPermissionType, false);
                 }
                 break;
             }
@@ -252,12 +253,14 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
         {
+            // 다시 보지 않기 체크
             if (shouldShowRequestPermissionRationale(permission) == false)
             {
-                showPermissionGuidePopup(permissionType);
+                showPermissionGuidePopupBySetting(mPermissionType, true);
+
             } else
             {
-                showPermissionGuidePopupBySetting(permissionType);
+                showPermissionGuidePopup(permissionType);
             }
         }
     }
@@ -375,7 +378,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         }
     }
 
-    public void showPermissionGuidePopupBySetting(final PermissionType permissionType)
+    public void showPermissionGuidePopupBySetting(final PermissionType permissionType, boolean goSetting)
     {
         mDialog = new Dialog(this);
         mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -416,6 +419,11 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         View positiveTextView = view.findViewById(R.id.positiveTextView);
         View negativeTextView = view.findViewById(R.id.negativeTextView);
+
+        if (goSetting == false)
+        {
+            positiveTextView.setVisibility(View.GONE);
+        }
 
         positiveTextView.setOnClickListener(new View.OnClickListener()
         {
