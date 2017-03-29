@@ -1461,7 +1461,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 ((GourmetDetailNetworkController) mPlaceDetailNetworkController).requestHasCoupon(mPlaceDetail.index,//
                     gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
 
-                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, mPlaceDetail.index);
+                mPlaceDetailNetworkController.requestPlaceReviewScores(PlaceType.FNB, mPlaceDetail.index);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
