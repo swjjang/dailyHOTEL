@@ -483,29 +483,29 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         String placeType = gourmetProduct.ticketName;
         int productCount = gourmetPaymentInformation.ticketCount;
 
-        String date = gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)");
+        //        String date = gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)");
         String visitTime = DailyCalendar.format(gourmetPaymentInformation.ticketTime, "HH:mm", TimeZone.getTimeZone("GMT+09:00"));
 
         String userName = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getName();
         String userIndex = gourmetPaymentInformation.getCustomer() == null ? "" : gourmetPaymentInformation.getCustomer().getUserIdx();
 
-        if (Util.isTextEmpty(userName) == true)
-        {
-            try
-            {
-                String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
-                    + ",ticketIndex:" + gourmetProduct.saleIdx + ",checkIn:" + date//
-                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType + ",userIndex:" + userIndex;
-                Crashlytics.logException(new NullPointerException(message));
-            } catch (Exception e)
-            {
-            }
-        }
+        //        if (Util.isTextEmpty(userName) == true)
+        //        {
+        //            try
+        //            {
+        //                String message = "Empty UserName :: placeIndex:" + gourmetPaymentInformation.placeIndex //
+        //                    + ",ticketIndex:" + gourmetProduct.saleIdx + ",checkIn:" + date//
+        //                    + ",visitTime:" + visitTime + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType + ",userIndex:" + userIndex;
+        //                Crashlytics.logException(new NullPointerException(message));
+        //            } catch (Exception e)
+        //            {
+        //            }
+        //        }
 
         Map<String, String> params = getMapPaymentInformation(gourmetPaymentInformation, placeBookingDay);
 
         Intent intent = GourmetPaymentThankyouActivity.newInstance(this, imageUrl, placeName, placeType, //
-            userName, date, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
+            userName, gourmetBookingDay, visitTime, productCount, paymentInformation.paymentType.getName(), discountType, params);
 
         startActivityForResult(intent, REQUEST_CODE_PAYMETRESULT_ACTIVITY);
     }

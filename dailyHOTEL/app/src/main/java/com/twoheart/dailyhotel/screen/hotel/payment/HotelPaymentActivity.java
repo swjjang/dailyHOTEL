@@ -583,24 +583,24 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         String placeName = mPlaceName;
         String placeType = stayProduct.roomName;
-        String checkInDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
-        String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.M.d (EEE) HH시");
+        //        String checkInDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
+        //        String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.M.d (EEE) HH시");
         String userName = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getName();
         String userIndex = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getUserIdx();
 
-        if (Util.isTextEmpty(userName) == true)
-        {
-            try
-            {
-                String message = "Empty UserName :: placeIndex:" + stayPaymentInformation.placeIndex //
-                    + ",roomIndex:" + stayProduct.roomIndex + ",checkIn:" + checkInDate//
-                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType//
-                    + ",userIndex:" + userIndex;
-                Crashlytics.logException(new NullPointerException(message));
-            } catch (Exception e)
-            {
-            }
-        }
+        //        if (Util.isTextEmpty(userName) == true)
+        //        {
+        //            try
+        //            {
+        //                String message = "Empty UserName :: placeIndex:" + stayPaymentInformation.placeIndex //
+        //                    + ",roomIndex:" + stayProduct.roomIndex + ",checkIn:" + checkInDate//
+        //                    + ",checkOut:" + checkOutDate + ",placeName:" + placeName + ",payType:" + paymentInformation.paymentType//
+        //                    + ",userIndex:" + userIndex;
+        //                Crashlytics.logException(new NullPointerException(message));
+        //            } catch (Exception e)
+        //            {
+        //            }
+        //        }
 
         if (StayPaymentInformation.VISIT_TYPE_PARKING.equalsIgnoreCase(stayPaymentInformation.visitType) == true)
         {

@@ -83,7 +83,7 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         checkOutDateTitleView.setText(R.string.act_booking_chkout);
 
         String checkInDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
-        String checkOutDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
+        String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.M.d (EEE) HH시");
 
         SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDate);
         checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(this).getMediumTypeface()),//

@@ -698,7 +698,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 @Override
                 public void onClick(View v)
                 {
-                    Util.restartApp(GourmetReservationDetailActivity.this);
+                    GourmetReservationDetailActivity.this.onBackPressed();
                 }
             });
         }
