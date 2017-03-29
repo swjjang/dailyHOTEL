@@ -21,8 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            app:srcCompat="@drawable/ic_banner_signup"
-            />
+            app:srcCompat="@drawable/ic_banner_signup"/>
 
         <com.twoheart.dailyhotel.widget.DailyImageView
             android:id="@+id/closeImageView"

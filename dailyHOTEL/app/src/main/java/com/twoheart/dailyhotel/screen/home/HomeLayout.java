@@ -19,6 +19,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -944,7 +945,10 @@ public class HomeLayout extends BaseLayout
         DailyTextView descriptionView = (DailyTextView) mTextMessageLayout.findViewById(R.id.descriptionTextView);
 
         titleView.setText(title);
-        descriptionView.setText(description);
+
+        SpannableString spannableString = new SpannableString(description);
+        spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        descriptionView.setText(spannableString);
 
         if (mTextMessageLayout.getVisibility() == View.VISIBLE)
         {
