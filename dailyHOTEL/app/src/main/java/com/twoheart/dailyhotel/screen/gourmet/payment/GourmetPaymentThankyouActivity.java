@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -18,7 +19,7 @@ import java.util.Map;
 public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity implements OnClickListener
 {
     public static Intent newInstance(Context context, String imageUrl, String placeName, String placeType, //
-                                     String userName, String date, String visitTime, int productCount, //
+                                     String userName, GourmetBookingDay gourmetBookingDay, String visitTime, int productCount, //
                                      String paymentType, String discountType, Map<String, String> map)
     {
         Intent intent = new Intent(context, GourmetPaymentThankyouActivity.class);
@@ -27,7 +28,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_NAME, placeName);
         intent.putExtra(INTENT_EXTRA_DATA_PLACE_TYPE, placeType);
         intent.putExtra(INTENT_EXTRA_DATA_USER_NAME, userName);
-        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DAY, date);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_TIME, visitTime);
         intent.putExtra(INTENT_EXTRA_DATA_PRODUCT_COUNT, productCount);
         intent.putExtra(INTENT_EXTRA_DATA_PAYMENT_TYPE, paymentType);
@@ -50,25 +51,25 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
             return;
         }
 
-        String date = intent.getStringExtra(INTENT_EXTRA_DATA_VISIT_DAY);
+        GourmetBookingDay gourmetBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         String visitTime = intent.getStringExtra(INTENT_EXTRA_DATA_VISIT_TIME);
         int productCount = intent.getIntExtra(INTENT_EXTRA_DATA_PRODUCT_COUNT, 0);
 
         View dateLayout = findViewById(R.id.dateInformationLayout);
-        initDateLayout(dateLayout, date, visitTime, productCount);
+        initDateLayout(dateLayout, gourmetBookingDay, visitTime, productCount);
 
         View textLayout = findViewById(R.id.textInformationLayout);
         initTextLayout(textLayout, productCount);
     }
 
-    private void initDateLayout(View view, String date, String visitTime, int productCount)
+    private void initDateLayout(View view, GourmetBookingDay gourmetBookingDay, String visitTime, int productCount)
     {
-        if (view == null)
+        if (view == null || gourmetBookingDay == null)
         {
             return;
         }
 
-        if (Util.isTextEmpty(date, visitTime) == true)
+        if (Util.isTextEmpty(visitTime) == true)
         {
             return;
         }
@@ -83,7 +84,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
         visitTimeTitleView.setText(R.string.label_booking_select_ticket_time);
         nightsTextView.setVisibility(View.GONE);
 
-        dateTextView.setText(date);
+        dateTextView.setText(gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
         visitTimeTextView.setText(visitTime);
     }
 
