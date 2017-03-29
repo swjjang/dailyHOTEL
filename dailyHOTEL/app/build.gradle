@@ -211,7 +211,7 @@ dependencies {
     compile project(':androidnumberpicker')
     compile project(':keyframes')
 
-    compile files('libs/com.skp.Tmap_1.0.44.jar')
+    compile files('libs/com.skp.Tmap_1.0.46.jar')
 
     compile 'com.google.android.gms:play-services-base:10.2.1'
     compile 'com.google.android.gms:play-services-maps:10.2.1'

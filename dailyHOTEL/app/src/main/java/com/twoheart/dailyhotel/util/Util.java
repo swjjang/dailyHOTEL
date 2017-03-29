@@ -1146,6 +1146,18 @@ public class Util implements Constants
                             });
                         }
                     }
+
+                    @Override
+                    public void SKPMapBizAppIdSucceed()
+                    {
+                        // do nothing 삭제된 API - Callback Listener 오류로 추가
+                    }
+
+                    @Override
+                    public void SKPMapBizAppIdFailed(String s)
+                    {
+                        // do nothing 삭제된 API - Callback Listener 오류로 추가
+                    }
                 });
             } else
             {
