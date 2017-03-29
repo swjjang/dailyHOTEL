@@ -62,6 +62,13 @@ public interface Constants
         LOCATION
     }
 
+    enum PgType
+    {
+        INICIS,
+        KCP,
+        ETC
+    }
+
     String DAILY_USER = "normal";
     String KAKAO_USER = "kakao_talk";
     String FACEBOOK_USER = "facebook";

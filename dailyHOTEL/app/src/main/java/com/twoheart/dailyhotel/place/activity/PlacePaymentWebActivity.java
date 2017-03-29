@@ -196,7 +196,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 } catch (ActivityNotFoundException e)
                 {
                     Util.installPackage(this, "com.lotte.lottesmartpay");
-                    return false;
+                    return true;
                 }
             }
             // ILK 용
@@ -211,7 +211,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                 } catch (ActivityNotFoundException e)
                 {
                     Util.installPackage(this, "com.ahnlab.v3mobileplus");
-                    return false;
+                    return true;
                 }
             } else
             {
@@ -222,7 +222,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                     intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 } catch (URISyntaxException ex)
                 {
-                    return false;
+                    return true;
                 }
 
                 // 앱설치 체크를 합니다.

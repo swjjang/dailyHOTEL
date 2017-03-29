@@ -69,7 +69,8 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
     }
 
     @Override
-    protected void requestPostPaymentWebView(WebView webView, PlacePaymentInformation placePaymentInformation, PlaceBookingDay placeBookingDay)
+    protected void requestPostPaymentWebView(WebView webView //
+        , PlacePaymentInformation placePaymentInformation, PlaceBookingDay placeBookingDay)
     {
         if (placePaymentInformation == null)
         {
