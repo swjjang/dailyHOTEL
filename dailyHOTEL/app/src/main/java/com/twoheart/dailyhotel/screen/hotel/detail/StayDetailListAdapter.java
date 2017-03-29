@@ -383,11 +383,7 @@ public class StayDetailListAdapter extends BaseAdapter
         } else
         {
             trueReviewTextView.setVisibility(View.VISIBLE);
-
-            SpannableString spannableString = new SpannableString(mContext.getString(R.string.label_detail_view_review_go, count));
-            spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            trueReviewTextView.setText(spannableString);
-
+            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, count));
             trueReviewTextView.setOnClickListener(new OnClickListener()
             {
                 @Override

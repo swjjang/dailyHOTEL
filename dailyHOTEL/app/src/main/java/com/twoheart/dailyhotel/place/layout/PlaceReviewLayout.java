@@ -63,7 +63,7 @@ public class PlaceReviewLayout extends BaseLayout
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
-                ((OnEventListener)mOnEventListener).onScroll(recyclerView, dx, dy);
+                ((OnEventListener) mOnEventListener).onScroll(recyclerView, dx, dy);
             }
         });
     }
@@ -188,6 +188,7 @@ public class PlaceReviewLayout extends BaseLayout
         private LayoutInflater mInflater;
         private List<PlaceReviewItem> mPlaceReviewItemList;
         private int mTotalCount;
+        private LinearLayout mProgressBarLayout;
 
         private Handler mHandler = new Handler()
         {
@@ -353,30 +354,46 @@ public class PlaceReviewLayout extends BaseLayout
 
             headerViewHolder.progressBarLayout.removeAllViews();
 
-            for (PlaceReviewScore placeReviewScore : placeReviewScoreList)
+            if (mProgressBarLayout == null)
             {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.view_progress_layout, headerViewHolder.progressBarLayout, false);
+                mProgressBarLayout = new LinearLayout(mContext);
+                mProgressBarLayout.setOrientation(LinearLayout.VERTICAL);
 
-                TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-                ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-                TextView valueTextView = (TextView) view.findViewById(R.id.valueTextView);
-
-                titleTextView.setText(placeReviewScore.type);
-
-                int progress = (int) (10.0f * placeReviewScore.scoreAvg);
-
-                if (mShowtProgressbarAnimation == true)
+                for (PlaceReviewScore placeReviewScore : placeReviewScoreList)
                 {
-                    progressBar.setProgress(progress);
-                } else
-                {
-                    progressBar.setProgress(0);
+                    View view = LayoutInflater.from(mContext).inflate(R.layout.view_progress_layout, mProgressBarLayout, false);
+
+                    TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
+                    ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+                    TextView valueTextView = (TextView) view.findViewById(R.id.valueTextView);
+
+                    titleTextView.setText(placeReviewScore.type);
+
+                    int progress = (int) (10.0f * placeReviewScore.scoreAvg);
+
+                    if (mShowtProgressbarAnimation == true)
+                    {
+                        progressBar.setProgress(progress);
+                    } else
+                    {
+                        progressBar.setProgress(0);
+                    }
+
+                    progressBar.setTag(progress);
+                    valueTextView.setText(Float.toString(placeReviewScore.scoreAvg));
+
+                    mProgressBarLayout.addView(view);
                 }
+            }
 
-                progressBar.setTag(progress);
-                valueTextView.setText(Float.toString(placeReviewScore.scoreAvg));
+            headerViewHolder.progressBarLayout.addView(mProgressBarLayout);
 
-                headerViewHolder.progressBarLayout.addView(view);
+            if (mTotalCount == 0)
+            {
+                headerViewHolder.reviewCountTextView.setVisibility(View.GONE);
+            } else
+            {
+                headerViewHolder.reviewCountTextView.setVisibility(View.VISIBLE);
             }
 
             headerViewHolder.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, mTotalCount));
@@ -385,7 +402,7 @@ public class PlaceReviewLayout extends BaseLayout
             {
                 Message message = new Message();
                 message.arg1 = 0;
-                message.obj = headerViewHolder.progressBarLayout;
+                message.obj = mProgressBarLayout;
                 mHandler.sendMessageDelayed(message, 300);
             }
         }
