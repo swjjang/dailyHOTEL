@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.HappyTalkCategory;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
@@ -22,6 +23,7 @@ import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -88,7 +90,7 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "https://customer.happytalk.io/public_v1/chat_v4/get_category/?site_id="//
             : "MTg0JDE0NSQxNzYkNTIkMTU0JDg2JDE1MSQxNjckMTI5JDIwMSQ0NyQ5NCQ5MyQxNzgkMTQ3JDk1JA==$QzhGNjA2QTU5QkU1RkVFNUFFMkY5RkYxMzgxMzlCMjg3NDhQGMTEyLQjUxMkMyRTIzN0U4NTc2NTU1RTk3RkU5MQTI5MzCUNCzODFBOEVCNUVGQ0MwQTUxRDUyRDc0NDk2NzcY4MTREQTczMkJENLkU4QEkEyKQUVFZMTNEMUU3RkKNEN0FBPQjdGMUZQFNjFGQ0U2BQjYxRDFGFMjNCQkE2RjU4N0UwQTA1Qw==$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHappyTalkCategory(Crypto.getUrlDecoderEx(URL) + "4000000120");
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHappyTalkCategory(Crypto.getUrlDecoderEx(URL) + HappyTalkCategoryDialog.SITE_ID);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
