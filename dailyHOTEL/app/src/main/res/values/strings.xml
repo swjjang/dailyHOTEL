@@ -1202,6 +1202,7 @@
     <string name="message_stamp_title_message4">드디어 다왔어요.\n두근두근 1박 무료 프리패스가 눈앞에!</string>
     <string name="message_stamp_title_message5">5+1 스테이 프리패스 쿠폰 도착!\n원하는 호텔로 떠나보세요!</string>
     <string name="message_stamp_login">회원가입하고 1박 무료 프리패스\n이벤트에 참여해보세요!</string>
+    <string name="message_stamp_history_guide">최근 획득한 스탬프 순으로 제공됩니다.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

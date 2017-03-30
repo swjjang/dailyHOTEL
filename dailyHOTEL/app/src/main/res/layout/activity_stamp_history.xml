@@ -84,7 +84,9 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="최근 획득한 스탬프 순으로 제공됩니다."/>
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="14dp"
+                android:text="@string/message_stamp_history_guide"/>
 
             <LinearLayout
                 android:id="@+id/stampHistoryLayout"
