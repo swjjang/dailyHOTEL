@@ -40,6 +40,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
     private PermissionType mPermissionType;
     Dialog mDialog;
+    private boolean mHasNotAllow;
 
     public enum PermissionType
     {
@@ -172,12 +173,30 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
             case Constants.REQUEST_CODE_PERMISSIONS_READ_PHONE_STATE:
             case Constants.REQUEST_CODE_PERMISSIONS_ACCESS_FINE_LOCATION:
             {
-                if (grantResults != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults != null && grantResults.length > 0)
                 {
-                    finish(RESULT_OK);
-                } else
-                {
-                    showPermissionGuidePopupBySetting(mPermissionType, false);
+                    switch (grantResults[0])
+                    {
+                        case PackageManager.PERMISSION_GRANTED:
+                            finish(RESULT_OK);
+                            break;
+
+                        case PackageManager.PERMISSION_DENIED:
+                        {
+                            if (permissions != null && permissions.length > 0)
+                            {
+                                // 다시 보지 않기 체크
+                                if (mHasNotAllow == false && shouldShowRequestPermissionRationale(permissions[0]) == false)
+                                {
+                                    showPermissionGuidePopupBySetting(mPermissionType, true);
+                                } else
+                                {
+                                    showPermissionGuidePopupBySetting(mPermissionType, false);
+                                }
+                            }
+                            break;
+                        }
+                    }
                 }
                 break;
             }
@@ -213,8 +232,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                     finish(RESULT_OK);
                 } else
                 {
-
-                    showPermissionGuidePopupBySetting(mPermissionType, false);
+                    finish(RESULT_CANCELED);
                 }
                 break;
             }
@@ -253,15 +271,9 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED)
         {
-            // 다시 보지 않기 체크
-            if (shouldShowRequestPermissionRationale(permission) == false)
-            {
-                showPermissionGuidePopupBySetting(mPermissionType, true);
+            mHasNotAllow = shouldShowRequestPermissionRationale(permission);
 
-            } else
-            {
-                showPermissionGuidePopup(permissionType);
-            }
+            showPermissionGuidePopup(permissionType);
         }
     }
 
