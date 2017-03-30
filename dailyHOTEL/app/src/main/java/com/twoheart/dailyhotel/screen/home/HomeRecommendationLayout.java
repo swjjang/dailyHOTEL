@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class HomeRecommendationLayout extends LinearLayout
 {
     private static final int LAYOUT_ANIMATION_DURATION = 200;
-    private static final int MAX_RECOMMENDATION_SIZE = 6;
+    private static final int MAX_RECOMMENDATION_SIZE = Integer.MAX_VALUE;
 
     private Context mContext;
     private LinearLayout mContentLayout;
