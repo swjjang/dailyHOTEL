@@ -20,7 +20,15 @@
             android:background="@color/white"
             android:orientation="vertical">
 
-            <include layout="@layout/view_separate_line_no_linear"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/default_background"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_line_cf0f0f0"/>
 
             <LinearLayout
                 android:id="@+id/stampDateLayout"
@@ -84,7 +92,9 @@
                 android:gravity="center_vertical"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:text="최근 획득한 스탬프 순으로 제공됩니다."/>
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="14dp"
+                android:text="@string/message_stamp_history_guide"/>
 
             <LinearLayout
                 android:id="@+id/stampHistoryLayout"
