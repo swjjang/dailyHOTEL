@@ -130,11 +130,10 @@
             android:id="@+id/stampClickLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="87dp"
             android:background="@color/white"
-            android:paddingBottom="14dp"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="14dp">
+            android:paddingRight="15dp">
 
             <ImageView
                 android:id="@+id/stampImageView"
@@ -162,7 +161,7 @@
                     android:id="@+id/stampMessage2TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
                     android:textColor="@color/default_text_c666666"
                     android:textSize="12dp"/>
 
@@ -170,7 +169,7 @@
                     android:id="@+id/stampMessage3TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/label_view_detail"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="12dp"

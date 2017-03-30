@@ -42,7 +42,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="5dp"
+            android:layout_height="10dp"
             android:background="@color/default_background"/>
     </LinearLayout>
 

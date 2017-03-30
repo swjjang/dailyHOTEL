@@ -159,6 +159,7 @@
                 android:id="@+id/stampMessageLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="132dp"
                 android:paddingBottom="16dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
@@ -170,39 +171,40 @@
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_stamp_info_01_coupon"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/stampMessage01TextView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/iconImageView01"
-                    android:text="@string/message_stamp_explanation1"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="13dp"/>
+                    android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/stampMessage02TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/stampMessage01TextView"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_toRightOf="@+id/iconImageView01"
-                    android:text="@string/message_stamp_explanation2"
-                    android:textColor="@color/default_text_c666666"
-                    android:textSize="12dp"/>
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/stampMessage01TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/message_stamp_explanation1"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
-                    android:id="@+id/stampMessage03TextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/stampMessage02TextView"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_toRightOf="@+id/iconImageView01"
-                    android:text="@string/message_stamp_explanation3"
-                    android:textColor="@color/default_text_c929292"
-                    android:textSize="12dp"/>
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/stampMessage02TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/message_stamp_explanation2"
+                        android:textColor="@color/default_text_c666666"
+                        android:textSize="12dp"/>
+
+                    <com.twoheart.dailyhotel.widget.DailyTextView
+                        android:id="@+id/stampMessage03TextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="@string/message_stamp_explanation3"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="12dp"/>
+                </LinearLayout>
             </RelativeLayout>
 
             <LinearLayout
@@ -262,10 +264,10 @@
                 android:layout_height="wrap_content"
                 android:background="@color/default_background"
                 android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="19dp"
-                android:paddingBottom="19dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="19dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -292,7 +294,6 @@
                     android:id="@+id/stampBottomLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginTop="19dp">
 
                     <com.twoheart.dailyhotel.widget.DailyTextView

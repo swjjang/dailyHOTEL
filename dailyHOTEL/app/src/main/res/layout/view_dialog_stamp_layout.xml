@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/default_background_ce4e4e9"
+        android:background="@drawable/shape_round_top_left_right_2dp"
         android:src="@drawable/img_popup_detail_stamp"/>
 
     <com.twoheart.dailyhotel.widget.DailyTextView
