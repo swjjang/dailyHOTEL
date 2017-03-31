@@ -82,9 +82,33 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         StringFilter stringFilter1 = new StringFilter(this);
         InputFilter[] allowPassword1 = new InputFilter[2];
         allowPassword1[0] = stringFilter1.allowPassword;
-        allowPassword1[1] = new InputFilter.LengthFilter(getResources().getInteger(R.integer.max_password));
+        allowPassword1[1] = new InputFilter.LengthFilter(getResources().getInteger(R.integer.max_password) + 1);
 
         mPasswordEditText.setFilters(allowPassword1);
+
+        mPasswordEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (s.length() > getResources().getInteger(R.integer.max_password))
+                {
+                    s.delete(s.length() - 1, s.length());
+
+                    DailyToast.showToast(EditProfilePasswordActivity.this, getString(R.string.toast_msg_wrong_max_password_length), Toast.LENGTH_SHORT);
+                }
+            }
+        });
 
         mConfirmPasswordView = findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (DailyEditText) findViewById(R.id.confirmPasswordEditText);
@@ -94,7 +118,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         StringFilter stringFilter2 = new StringFilter(this);
         InputFilter[] allowPassword2 = new InputFilter[2];
         allowPassword2[0] = stringFilter2.allowPassword;
-        allowPassword2[1] = new InputFilter.LengthFilter(getResources().getInteger(R.integer.max_password));
+        allowPassword2[1] = new InputFilter.LengthFilter(getResources().getInteger(R.integer.max_password) + 1);
 
         mConfirmPasswordEditText.setFilters(allowPassword2);
 
@@ -121,6 +145,13 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 } else
                 {
                     mConfirmView.setEnabled(false);
+                }
+
+                if (s.length() > getResources().getInteger(R.integer.max_password))
+                {
+                    s.delete(s.length() - 1, s.length());
+
+                    DailyToast.showToast(EditProfilePasswordActivity.this, getString(R.string.toast_msg_wrong_max_password_length), Toast.LENGTH_SHORT);
                 }
             }
         });

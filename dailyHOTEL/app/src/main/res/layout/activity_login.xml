@@ -134,7 +134,6 @@
                 android:background="@drawable/selector_edittext_background"
                 android:hint="@string/label_necessary"
                 android:inputType="textPassword"
-                android:maxLength="@integer/max_password"
                 android:maxLines="1"
                 android:nextFocusDown="@+id/confirmPasswordEditText"
                 android:singleLine="true"

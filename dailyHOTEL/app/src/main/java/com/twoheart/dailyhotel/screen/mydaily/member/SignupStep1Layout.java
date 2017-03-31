@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.screen.mydaily.member;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -22,6 +25,7 @@ import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
 import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Arrays;
@@ -126,9 +130,33 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         StringFilter stringFilter1 = new StringFilter(mContext);
         InputFilter[] allowPassword1 = new InputFilter[2];
         allowPassword1[0] = stringFilter1.allowPassword;
-        allowPassword1[1] = new InputFilter.LengthFilter(mContext.getResources().getInteger(R.integer.max_password));
+        allowPassword1[1] = new InputFilter.LengthFilter(mContext.getResources().getInteger(R.integer.max_password) + 1);
 
         mPasswordEditText.setFilters(allowPassword1);
+
+        mPasswordEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (s.length() > mContext.getResources().getInteger(R.integer.max_password))
+                {
+                    s.delete(s.length() - 1, s.length());
+
+                    DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_wrong_max_password_length), Toast.LENGTH_SHORT);
+                }
+            }
+        });
 
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (DailyEditText) view.findViewById(R.id.confirmPasswordEditText);
@@ -138,9 +166,33 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         StringFilter stringFilter2 = new StringFilter(mContext);
         InputFilter[] allowPassword2 = new InputFilter[2];
         allowPassword2[0] = stringFilter2.allowPassword;
-        allowPassword2[1] = new InputFilter.LengthFilter(mContext.getResources().getInteger(R.integer.max_password));
+        allowPassword2[1] = new InputFilter.LengthFilter(mContext.getResources().getInteger(R.integer.max_password) + 1);
 
         mConfirmPasswordEditText.setFilters(allowPassword2);
+
+        mConfirmPasswordEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (s.length() > mContext.getResources().getInteger(R.integer.max_password))
+                {
+                    s.delete(s.length() - 1, s.length());
+
+                    DailyToast.showToast(mContext, mContext.getString(R.string.toast_msg_wrong_max_password_length), Toast.LENGTH_SHORT);
+                }
+            }
+        });
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
