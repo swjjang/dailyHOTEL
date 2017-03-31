@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
@@ -64,6 +65,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected String mArea; // Analytics용 소지역
     protected int mViewPrice; // Analytics용 리스트 가격
     protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
+    protected PlaceReviewScores mPlaceReviewScores;
 
     protected Handler mHandler = new Handler();
 

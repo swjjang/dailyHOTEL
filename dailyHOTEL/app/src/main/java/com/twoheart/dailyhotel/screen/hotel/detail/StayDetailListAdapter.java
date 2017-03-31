@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.util.DailyPreference;
@@ -39,6 +40,7 @@ public class StayDetailListAdapter extends BaseAdapter
 
     private StayDetail mStayDetail;
     private StayBookingDay mStayBookingDay;
+    private PlaceReviewScores mPlaceReviewScores;
     private Context mContext;
     private View[] mDetailViews;
     private int mImageHeight;
@@ -47,13 +49,13 @@ public class StayDetailListAdapter extends BaseAdapter
     StayDetailLayout.OnEventListener mOnEventListener;
     private View.OnTouchListener mEmptyViewOnTouchListener;
 
-    public StayDetailListAdapter(Context context, StayBookingDay stayBookingDay, StayDetail stayDetail,//
-                                 StayDetailLayout.OnEventListener onEventListener,//
-                                 View.OnTouchListener emptyViewOnTouchListener)
+    public StayDetailListAdapter(Context context, StayBookingDay stayBookingDay, StayDetail stayDetail//
+        , PlaceReviewScores placeReviewScores//
+        , StayDetailLayout.OnEventListener onEventListener//
+        , View.OnTouchListener emptyViewOnTouchListener)
     {
         mContext = context;
-        mStayBookingDay = stayBookingDay;
-        mStayDetail = stayDetail;
+        setData(stayBookingDay, stayDetail, placeReviewScores);
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
         mImageHeight = Util.getLCDWidth(mContext);
 
@@ -61,10 +63,11 @@ public class StayDetailListAdapter extends BaseAdapter
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
     }
 
-    public void setData(StayBookingDay stayBookingDay, StayDetail stayDetail)
+    public void setData(StayBookingDay stayBookingDay, StayDetail stayDetail, PlaceReviewScores placeReviewScores)
     {
         mStayBookingDay = stayBookingDay;
         mStayDetail = stayDetail;
+        mPlaceReviewScores = placeReviewScores;
     }
 
     @Override
@@ -224,18 +227,18 @@ public class StayDetailListAdapter extends BaseAdapter
         mHotelTitleLayout = view.findViewById(R.id.hotelTitleLayout);
 
         // 등급
-        TextView hotelGradeTextView = (TextView) view.findViewById(R.id.hotelGradeTextView);
+        TextView hotelGradeTextView = (TextView) mHotelTitleLayout.findViewById(R.id.hotelGradeTextView);
         hotelGradeTextView.setVisibility(View.VISIBLE);
 
         hotelGradeTextView.setText(stayDetailParams.getGrade().getName(mContext));
         hotelGradeTextView.setBackgroundResource(stayDetailParams.getGrade().getColorResId());
 
         // 호텔명
-        TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
+        TextView hotelNameTextView = (TextView) mHotelTitleLayout.findViewById(R.id.hotelNameTextView);
         hotelNameTextView.setText(stayDetailParams.name);
 
         // 만족도
-        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+        TextView satisfactionView = (TextView) mHotelTitleLayout.findViewById(R.id.satisfactionView);
 
         if (stayDetailParams.ratingValue == 0)
         {
@@ -246,6 +249,17 @@ public class StayDetailListAdapter extends BaseAdapter
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             satisfactionView.setText(mContext.getString(R.string.label_stay_detail_satisfaction, //
                 stayDetailParams.ratingValue, decimalFormat.format(stayDetailParams.ratingPersons)));
+        }
+
+        // 리뷰
+        TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (mPlaceReviewScores == null)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
         }
 
         // 할인 쿠폰
@@ -352,6 +366,33 @@ public class StayDetailListAdapter extends BaseAdapter
         });
 
         return view;
+    }
+
+    public void setTrueReviewCount(int count)
+    {
+        if (mHotelTitleLayout == null)
+        {
+            return;
+        }
+
+        TextView trueReviewTextView = (TextView) mHotelTitleLayout.findViewById(R.id.trueReviewTextView);
+
+        if (count == 0)
+        {
+            trueReviewTextView.setVisibility(View.GONE);
+        } else
+        {
+            trueReviewTextView.setVisibility(View.VISIBLE);
+            trueReviewTextView.setText(mContext.getString(R.string.label_detail_view_review_go, count));
+            trueReviewTextView.setOnClickListener(new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mOnEventListener.onReviewClick();
+                }
+            });
+        }
     }
 
     /**

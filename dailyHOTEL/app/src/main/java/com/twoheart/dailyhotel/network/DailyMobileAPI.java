@@ -9,9 +9,12 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.HappyTalkCategory;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.network.model.PlaceReviews;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
@@ -20,6 +23,7 @@ import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
@@ -86,7 +90,7 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "https://customer.happytalk.io/public_v1/chat_v4/get_category/?site_id="//
             : "MTg0JDE0NSQxNzYkNTIkMTU0JDg2JDE1MSQxNjckMTI5JDIwMSQ0NyQ5NCQ5MyQxNzgkMTQ3JDk1JA==$QzhGNjA2QTU5QkU1RkVFNUFFMkY5RkYxMzgxMzlCMjg3NDhQGMTEyLQjUxMkMyRTIzN0U4NTc2NTU1RTk3RkU5MQTI5MzCUNCzODFBOEVCNUVGQ0MwQTUxRDUyRDc0NDk2NzcY4MTREQTczMkJENLkU4QEkEyKQUVFZMTNEMUU3RkKNEN0FBPQjdGMUZQFNjFGQ0U2BQjYxRDFGFMjNCQkE2RjU4N0UwQTA1Qw==$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHappyTalkCategory(Crypto.getUrlDecoderEx(URL) + "4000000120");
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHappyTalkCategory(Crypto.getUrlDecoderEx(URL) + HappyTalkCategoryDialog.SITE_ID);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
@@ -1149,5 +1153,35 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserStamps(Crypto.getUrlDecoderEx(URL), details);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Stamp>>) listener);
+    }
+
+    @Override
+    public void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}"//
+            : "NDkkNzAkMzgkNDgkNDAkNzMkODEkNTIkMjAkNjMkNzQkNDkkNDIkNzMkNDIkMzkk$MzVFQTAzNTlGNTkzNjk3BRTIzRjQ1QTQ1NzZDQTIFIVQZzNEExQkOENzQNTjg5QzFBQRUI0RTgzFQTABzQAFzM4REQK1ODdEMjRGNw==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", type);
+        urlParams.put("{itemIdx}", Integer.toString(itemIdx));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviews(Crypto.getUrlDecoderEx(URL, urlParams), page, limit, "createdAt", "DESC");
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviews>>) listener);
+    }
+
+    @Override
+    public void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{itemIdx}/statistic"//
+            : "NjkkOSQxMDEkNjYkNTMkNzgkNzAkNzUkNzEkMzYkODAkNDAkNDAkMTI0JDIwJDc2JA==$MkY1RUE2RLENGOEMxQTdMENUExNjNDQkM4ODkI4NTOSI2RkUwREU0RkJCKRTA5OTg4NEQwNRkUATV4OPUKJCINDAU4MDM4MjQ3MDlENzRBOTY1RjUPyNTVBNDMyM0FZGMjk5QzdCMjQ3QzY3$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", type);
+        urlParams.put("{itemIdx}", Integer.toString(itemIdx));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviewScores(Crypto.getUrlDecoderEx(URL, urlParams));
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
     }
 }

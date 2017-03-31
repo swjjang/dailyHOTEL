@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.place.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ public abstract class BaseLayout
 
     protected abstract void initLayout(View view);
 
-    public BaseLayout(Context context, OnBaseEventListener listener)
+    public BaseLayout(Context context, @NonNull OnBaseEventListener listener)
     {
         if (context == null || listener == null)
         {

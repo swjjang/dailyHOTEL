@@ -96,9 +96,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         versionTextView.setText(dotVersion);
 
+        View debugLayout = view.findViewById(R.id.debugLayout);
+
         if (Constants.DEBUG == true)
         {
-            View debugLayout = view.findViewById(R.id.debugLayout);
             debugLayout.setVisibility(View.VISIBLE);
 
             TextView productServerTextView = (TextView) debugLayout.findViewById(R.id.productServerTextView);
@@ -145,6 +146,9 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 "xxxhdpi 640dpi";
 
             debugTextView.setText(DailyPreference.getInstance(mContext).getBaseUrl() + "\n" + webViewVersion + "\n\nDPI : " + displayMetrics.densityDpi + dpiText);
+        } else
+        {
+            debugLayout.setVisibility(View.GONE);
         }
     }
 

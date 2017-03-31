@@ -403,6 +403,11 @@ public class Util implements Constants
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
     }
 
+    public static boolean isOverAPI14()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    }
+
     public static boolean isOverAPI15()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
@@ -1140,6 +1145,18 @@ public class Util implements Constants
                                 }
                             });
                         }
+                    }
+
+                    @Override
+                    public void SKPMapBizAppIdSucceed()
+                    {
+                        // do nothing 삭제된 API - Callback Listener 오류로 추가
+                    }
+
+                    @Override
+                    public void SKPMapBizAppIdFailed(String s)
+                    {
+                        // do nothing 삭제된 API - Callback Listener 오류로 추가
                     }
                 });
             } else

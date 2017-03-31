@@ -562,4 +562,8 @@ public interface IDailyNetwork
     void requestHomeRecentList(String tag, JSONObject jsonObject, Object listener);
 
     void requestUserStamps(String tag, boolean details, Object listener);
+
+    void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener);
+
+    void requestPlaceReviewScores(String tag, String type, int itemIdx, Object listener);
 }

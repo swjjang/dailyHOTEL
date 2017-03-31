@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Pair;
 import android.view.View;
 
@@ -20,7 +22,9 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -29,6 +33,9 @@ import retrofit2.Response;
 
 public class HappyTalkCategoryDialog extends BaseActivity
 {
+    public static final String SITE_ID = "4000000190";
+    public static final String YELLOW_ID = "40hailey099";
+
     public enum CallScreen
     {
         SCREEN_STAY_DETAIL("호텔상세"),
@@ -58,14 +65,16 @@ public class HappyTalkCategoryDialog extends BaseActivity
     private HappyTalkCategoryDialogNetworkController mNetworkController;
     private CallScreen mCallScreen;
     private int mPlaceIndex, mBookingIndex;
-    private String mPlaceType, mMainCategoryId;
+    private String mPlaceType, mMainCategoryId, mPlaceName;
+    private HashMap<String, String> mSubCategoryId;
 
-    public static Intent newInstance(Context context, CallScreen callScreen, int placeIndex, int bookingIndex)
+    public static Intent newInstance(Context context, CallScreen callScreen, int placeIndex, int bookingIndex, String placeName)
     {
         Intent intent = new Intent(context, HappyTalkCategoryDialog.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN, callScreen.name());
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, bookingIndex);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
 
         return intent;
     }
@@ -82,6 +91,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
             mCallScreen = CallScreen.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CALL_SCREEN));
             mPlaceIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, 0);
             mBookingIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, 0);
+            mPlaceName = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACENAME);
         } else
         {
             finish();
@@ -182,12 +192,14 @@ public class HappyTalkCategoryDialog extends BaseActivity
         super.onBackPressed();
     }
 
-    private void startHappyTalk(String userIndex, String placeType, String mainId)
+    private void startHappyTalk(String userIndex, String name, String phone, String email)
     {
+        // https://docs.google.com/spreadsheets/d/1rB-bDASf80h8cW5lIX9kzrnuw0da-S65PJbEQ3lXeoU/edit#gid=0
         StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
-        urlStringBuilder.append("?yid=%40hailey099"); // 객사 옐로우 아이디
-        urlStringBuilder.append("&category_id=" + mainId); // 대분류
-        //            urlStringBuilder.append("&division_id=" + subId); // 중분류
+        urlStringBuilder.append("?yid=%" + YELLOW_ID); // 객사 옐로우 아이디
+        urlStringBuilder.append("&site_id=" + SITE_ID); // 사이트 아이디
+        urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
+        urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
         urlStringBuilder.append("&title="); // 상담제목
 
         if (mBookingIndex > 0)
@@ -200,17 +212,24 @@ public class HappyTalkCategoryDialog extends BaseActivity
             urlStringBuilder.append("&product_number=" + mPlaceIndex); // 상품번호
         }
 
-        urlStringBuilder.append("&parameter1=" + placeType); // 커스텀 파라미터1
-        urlStringBuilder.append("&parameter2=" + userIndex); // 커스텀 파라미터2
-        urlStringBuilder.append("&parameter3=" + mCallScreen.getName()); // 커스텀 파라미터3
-
-        urlStringBuilder.append("&parameter4="); // 커스텀 파라미터4
-        urlStringBuilder.append("&parameter5="); // 커스텀 파라미터5
-        urlStringBuilder.append("&parameter6="); // 커스텀 파라미터6
-        urlStringBuilder.append("&parameter7="); // 커스텀 파라미터7
-        urlStringBuilder.append("&parameter8="); // 커스텀 파라미터8
-        urlStringBuilder.append("&parameter9="); // 커스텀 파라미터9
+        urlStringBuilder.append("&parameter1=" + userIndex); // user Index
+        urlStringBuilder.append("&parameter2=" + URLEncoder.encode(name)); //고객명
+        urlStringBuilder.append("&parameter3=" + URLEncoder.encode(phone)); // 전화번호
+        urlStringBuilder.append("&parameter4=" + URLEncoder.encode(email)); // 이메일
+        urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
+        urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
+        urlStringBuilder.append("&parameter7=" + URLEncoder.encode(mPlaceName)); // 호텔명
+        urlStringBuilder.append("&parameter8=" + mPlaceType); // 카테고리 분류
+        urlStringBuilder.append("&parameter9=" + URLEncoder.encode(DailyPreference.getInstance(HappyTalkCategoryDialog.this).getUserType())); // 가입방법
         urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
+
+        urlStringBuilder.append("&app_ver=" + DailyHotel.VERSION_CODE);
+        urlStringBuilder.append("&phone_os=" + "A");
+        urlStringBuilder.append("&phone_model=" + URLEncoder.encode(Build.MODEL));
+        urlStringBuilder.append("&phone_os_ver=" + URLEncoder.encode(Build.VERSION.RELEASE));
+
+        TelephonyManager telephonyManager = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
+        urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
 
         try
         {
@@ -244,8 +263,13 @@ public class HappyTalkCategoryDialog extends BaseActivity
             final String STAY_PREFIX = "S_";
             final String GOURMET_PREFIX = "G_";
 
-            mainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, STAY_PREFIX));
-            mainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, GOURMET_PREFIX));
+            final String hotel = getString(R.string.label_daily_hotel);
+            final String gourmet = getString(R.string.label_daily_gourmet);
+
+            mSubCategoryId = new HashMap<>();
+
+            mainCategoryMap.put(STAY_PREFIX, new Pair(STAY_PREFIX, hotel));
+            mainCategoryMap.put(GOURMET_PREFIX, new Pair(GOURMET_PREFIX, gourmet));
 
             List<Pair<String, String>> subStayCategoryList = new ArrayList<>();
             subCategoryMap.put(STAY_PREFIX, subStayCategoryList);
@@ -266,9 +290,19 @@ public class HappyTalkCategoryDialog extends BaseActivity
                     if (happyTalkCategory.name.startsWith(STAY_PREFIX) == true)
                     {
                         subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(STAY_PREFIX.length())));
+
+                        if (mSubCategoryId.containsKey(happyTalkCategory.id) == false)
+                        {
+                            mSubCategoryId.put(happyTalkCategory.id, happyTalkCategory.id2);
+                        }
                     } else if (happyTalkCategory.name.startsWith(GOURMET_PREFIX) == true)
                     {
                         subGourmetCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name.substring(GOURMET_PREFIX.length())));
+
+                        if (mSubCategoryId.containsKey(happyTalkCategory.id) == false)
+                        {
+                            mSubCategoryId.put(happyTalkCategory.id, happyTalkCategory.id2);
+                        }
                     } else
                     {
                         subStayCategoryList.add(new Pair(happyTalkCategory.id, happyTalkCategory.name));
@@ -314,9 +348,9 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
 
         @Override
-        public void onUserProfile(String userIndex)
+        public void onUserProfile(String userIndex, String name, String phone, String email)
         {
-            startHappyTalk(userIndex, mPlaceType, mMainCategoryId);
+            startHappyTalk(userIndex, name, phone, email);
         }
 
         @Override

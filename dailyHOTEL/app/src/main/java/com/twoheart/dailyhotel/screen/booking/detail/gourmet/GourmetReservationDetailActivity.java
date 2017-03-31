@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceReservationDetailActivity;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
@@ -466,23 +467,25 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
             AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
 
-        //        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING, mPlaceBookingDetail.placeIndex, mReservationIndex), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+            , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING//
+            , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
 
-        try
-        {
-            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
-        } catch (ActivityNotFoundException e)
-        {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
-        }
+        //        try
+        //        {
+        //            startActivity(new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94")));
+        //        } catch (ActivityNotFoundException e)
+        //        {
+        //            try
+        //            {
+        //                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
+        //            } catch (ActivityNotFoundException e1)
+        //            {
+        //                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
+        //                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
+        //                startActivity(marketLaunch);
+        //            }
+        //        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

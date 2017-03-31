@@ -79,6 +79,7 @@
     <string name="label_product_detail">상품 상세</string>
     <string name="label_office_hours">이용시간</string>
     <string name="label_checklist">확인사항</string>
+    <string name="label_truereview">트루리뷰</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -194,6 +195,7 @@
     <string name="actionbar_title_wishList">위시리스트</string>
     <string name="actionbar_title_stamp_history">스탬프 내역</string>
     <string name="actionbar_title_stamp_terms_activity">스탬프 유의사항</string>
+    <string name="actionbar_title_review_terms_activity">트루리뷰 운영정책</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
@@ -1014,6 +1016,7 @@
     <string name="label_detail_view_price_option">가격 보기 옵션</string>
     <string name="label_detail_view_average_price">1박 평균 가격</string>
     <string name="label_detail_view_total_price">총가격</string>
+    <string name="label_detail_view_review_go">%1$d개의 트루리뷰 보기</string>
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="message_stay_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
@@ -1170,8 +1173,7 @@
     <string name="label_gourmet_product_lastorder">(라스트 오더 %1$s)</string>
 
     <!-- Happy Talk -->
-    <string name="label_select_main_category">대분류 항목 선택</string>
-    <string name="label_select_sub_category">중분류 항목 선택</string>
+    <string name="label_select_category">선택</string>
     <string name="label_consulting">상담 시작</string>
     <string name="message_happytalk_login">원활한 상담 진행을 위해\n앱 로그인을 해주세요.</string>
 
@@ -1203,6 +1205,12 @@
     <string name="message_stamp_title_message5">5+1 스테이 프리패스 쿠폰 도착!\n원하는 호텔로 떠나보세요!</string>
     <string name="message_stamp_login">회원가입하고 1박 무료 프리패스\n이벤트에 참여해보세요!</string>
     <string name="message_stamp_history_guide">최근 획득한 스탬프 순으로 제공됩니다.</string>
+
+    <!-- True Review -->
+    <string name="label_detail_review_count">%1$d개의 리뷰</string>
+    <string name="label_detail_review_terms_go">운영정책 보기</string>
+    <string name="label_detail_review_more_read">더 읽어보기</string>
+    <string name="message_detail_review_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

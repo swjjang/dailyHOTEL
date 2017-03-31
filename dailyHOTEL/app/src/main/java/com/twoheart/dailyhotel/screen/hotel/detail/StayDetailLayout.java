@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
@@ -67,6 +68,8 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         void hideProductInformationLayout(boolean isAnimation);
 
         void onStampClick();
+
+        void onReviewClick();
     }
 
     public StayDetailLayout(Context context, OnBaseEventListener listener)
@@ -143,7 +146,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         }
     }
 
-    public void setDetail(StayBookingDay stayBookingDay, StayDetail stayDetail, int imagePosition)
+    public void setDetail(StayBookingDay stayBookingDay, StayDetail stayDetail, PlaceReviewScores placeReviewScores, int imagePosition)
     {
         if (stayDetail == null)
         {
@@ -179,11 +182,11 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         if (mListAdapter == null)
         {
-            mListAdapter = new StayDetailListAdapter(mContext, stayBookingDay, stayDetail, (StayDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
+            mListAdapter = new StayDetailListAdapter(mContext, stayBookingDay, stayDetail, placeReviewScores, (StayDetailLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
             mListView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(stayBookingDay, stayDetail);
+            mListAdapter.setData(stayBookingDay, stayDetail, placeReviewScores);
         }
 
         setCurrentImage(imagePosition);
@@ -251,7 +254,21 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         setWishButtonSelected(stayDetailParams.myWish);
         setWishButtonCount(stayDetailParams.wishCount);
 
+        if (placeReviewScores != null)
+        {
+            setTrueReviewCount(placeReviewScores.reviewScoreTotalCount);
+        }
+
         mListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setTrueReviewCount(int count)
+    {
+        if (mListAdapter != null)
+        {
+            mListAdapter.setTrueReviewCount(count);
+        }
     }
 
     private void updateRoomTypeInformationLayout(StayBookingDay stayBookingDay, List<StayProduct> stayProductList)

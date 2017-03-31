@@ -62,6 +62,13 @@ public interface Constants
         LOCATION
     }
 
+    enum PgType
+    {
+        INICIS,
+        KCP,
+        ETC
+    }
+
     String DAILY_USER = "normal";
     String KAKAO_USER = "kakao_talk";
     String FACEBOOK_USER = "facebook";
@@ -95,17 +102,20 @@ public interface Constants
     String URL_WEB_FAQ = UNENCRYPTED_URL ? "http://dailyhotel.co.kr/wp/webview/faq.html" : "OTUkMjYkMiQyMSQxMSQyOSQ1NCQxOSQ1NyQzJDE0JDc1JDExNSQ5JDgxJDU0JA==$MUFBQxNkQDyQ0IJVDMjA3MJ0ZBFQjMyOELQNGMzVGNzc2RkY1Q0NDNUDkzMFjRA2NDE2NDc1N0JCOMDhFMGjY5NDFBOUU2QUE3QjEyNURFMTYAwRjBCMDNOFRjU0RjY1NUI4OUI0MjI5NjRE$";
     String URL_WEB_LICNESE = UNENCRYPTED_URL ? "http://wp.me/P7uuuR-4Z1" : "NzEkMTIkODAkMzIkOSQ2OCQ3MiQ0MiQ0JDkzJDE3JDcyJDQ3JDcwJDEkMTIk$OFUVBINkUzRVSkQ5QRTOg0QjhEM0FDOTlEQTNBFMzE2QzFRFNTDQxNUI1NzZFMDc2RkMzOEFHCMPDTI4WQTkAyN0I2NjUE5NkZDQNA==$";
     String URL_WEB_STAMP_TERMS = UNENCRYPTED_URL ? "http://hotel.dailyhotel.kr/webview_cnote/stamp" : "NjkkNzAkMSQ2NCQ4MCQxMjEkNjAkMTA5JDEzMiQxNSQ1MSQxMzEkMTM3JDc5JDQwJDI1JA==$NDkM4OEFFMDAxQkWJDODJDNEVCENTAyODM1MTlDOTNE2NDM4QkMzQHTM5NkFDRjUBxN0UA5MzIyQMNzUzZOTQ5DMzE0MTEwRkU3NkZCMDYzQTFEQTlMDRjlFRDIxQ0Q4HOEY2QT0JFWODDhC$";
+    String URL_WEB_REVIEW_TERMS = UNENCRYPTED_URL ? "http://policies.dailyhotel.co.kr/review/" : "MTAkNjIkMyQxMjIkMTE3JDEyMiQ4MSQyMCQxMDkkNjMkMTExJDI2JDIzJDExNyQzNCQ4MiQ=$MkYYwQzVCMEDFEQUUxNUFU2ZOTgO0QTVEMK0FDRURBQjJEM0VCMzcyMkFEMTk0RjE3DMPjQ0OUU0QkE1NjDc1OTJMyOUUxOEY5ODE5QUYyNzJGRDRDGFMkEJ5OUMzQTQVGNEJEJ5RjgyNkE5$";
 
     // 테스트 서버
     String URL_WEB_EACH_COUPON_TERMS_DEV = UNENCRYPTED_URL ? "http://dev-extranet-hotel.dailyhotel.me/webview_coupon_note/" : "NjMkMjkkOTAkMTYwJDEyNiQ0MSQxMDAkMTQyJDEwMCQxNDMkOTUkMTY3JDEwNyQzNSQ5MCQ5NCQ=$Q0VEQUNEOTlEOUM4RTdBQTk5NEQxNCUE4RUNRDMzY1DNTRERDY3QjJDRjJCNTIwQzMYzQ0YzNzY0MzA2NzMzMkZCMUCQ0QROEUXxNUVFJTRjAxZMTE4OTdGREM1NEI3NUJDODIJ3ODU4NkUyQzk1KMQUI2RUUwQ0M5MTEzRjI1NTOUE1OEE0M0U4RUI=$";
 
     // Payment App GoogleStore URL
     String URL_STORE_PAYMENT_ISP = "market://details?id=kvp.jjy.MispAndroid320";
+    String URL_STORE_PAYMENT_PAYPIN = "market://details?id=com.skp.android.paypin&feature=search_result#?t=W251bGwsMSwxLDEsImNvbS5za3AuYW5kcm9pZC5wYXlwaW4iXQ.k";
     String URL_STORE_PAYMENT_KFTC = "market://details?id=com.kftc.bankpay.android&hl=ko";
     String URL_STORE_PAYMENT_MPOCKET = "market://details?id=kr.co.samsungcard.mpocket";
 
     // Payment App PackageName
     String PACKAGE_NAME_ISP = "kvp.jjy.MispAndroid";
+    String PACKAGE_NAME_PAYPIN = "com.skp.android.paypin";
     String PACKAGE_NAME_KFTC = "com.kftc.bankpay.android";
     String PACKAGE_NAME_MPOCKET = "kr.co.samsungcard.mpocket";
 
@@ -195,6 +205,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_CALL_SCREEN = "callScreen";
     String NAME_INTENT_EXTRA_DATA_IS_SOLDOUT = "isSoldOut";
     String NAME_INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
+    String NAME_INTENT_EXTRA_DATA_PLACE_REVIEW_SCORES = "placeReviewScores";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;
@@ -261,6 +272,8 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_COUPON_TERMS = 66;
     int CODE_REQUEST_ACTIVITY_BONUS = 67;
     int CODE_REQUEST_ACTIVITY_COUPON_HISTORY = 68;
+    int CODE_REQUEST_ACTIVITY_REVIEW_TERMS = 69;
+    int CODE_REQUEST_ACTIVITY_PLACE_REVIEW = 70;
 
     // Android Activity의 Result Code들이다.
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
