@@ -139,6 +139,12 @@ public class HomeFragment extends BaseFragment
             } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
             {
                 startWishList(PlaceType.FNB);
+            } else if (DailyDeepLink.getInstance().isStampView() == true)
+            {
+                if (DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampStayEndEventPopupEnabled() == true)
+                {
+                    mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
+                }
             }
 
             DailyDeepLink.getInstance().clear();
