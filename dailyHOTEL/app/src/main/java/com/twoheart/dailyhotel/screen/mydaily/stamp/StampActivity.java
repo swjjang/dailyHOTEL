@@ -155,6 +155,8 @@ public class StampActivity extends BaseActivity
     {
         if (DailyPreference.getInstance(this).isRemoteConfigStampStayEndEventPopupEnabled() == false)
         {
+            setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+            onBackPressed();
             return;
         }
 
@@ -163,6 +165,7 @@ public class StampActivity extends BaseActivity
             @Override
             public void onDismiss(DialogInterface dialog)
             {
+                setResult(CODE_RESULT_ACTIVITY_GO_HOME);
                 StampActivity.this.onBackPressed();
             }
         });

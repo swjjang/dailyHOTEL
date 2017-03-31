@@ -880,7 +880,10 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (mIsDeepLink == true)
         {
             // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
-            stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
+            if (Util.isTextEmpty(stayDetailParams.category) == true)
+            {
+                stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
+            }
 
             mDailyToolbarLayout.setToolbarText(stayDetailParams.name);
         }
