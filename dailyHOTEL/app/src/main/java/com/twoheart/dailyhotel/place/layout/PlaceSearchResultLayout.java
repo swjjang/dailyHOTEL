@@ -49,7 +49,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private boolean mUpScrolling;
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {

@@ -421,7 +421,7 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writeStamp(final Context context, String androidStamp)
+    void writeStamp(final Context context, String androidStamp)
     {
         if (context == null || Util.isTextEmpty(androidStamp) == true)
         {
@@ -483,7 +483,7 @@ public class DailyRemoteConfig
         }
     }
 
-    private void writeABTestHome(Context context, String abTest)
+    void writeABTestHome(Context context, String abTest)
     {
         if (context == null)
         {

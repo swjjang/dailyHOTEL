@@ -83,7 +83,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     private View mSelectedSimpleCardLayout;
     //
     int mAnimationValue;
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
     boolean mIsAnimationCancel;
     //
     Rect mGuestFrameLayoutRect = new Rect();

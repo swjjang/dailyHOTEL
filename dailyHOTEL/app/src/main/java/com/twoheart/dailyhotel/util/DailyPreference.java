@@ -1464,11 +1464,7 @@ public class DailyPreference
             return Crypto.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
         } catch (Exception e)
         {
-            String authorization = Crypto.oldUrlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
-
-            setValue(mEditor, KEY_AUTHORIZATION, authorization);
-
-            return authorization;
+            return null;
         }
     }
 

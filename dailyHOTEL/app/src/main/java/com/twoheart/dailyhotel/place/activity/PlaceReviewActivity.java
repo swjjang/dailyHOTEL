@@ -23,10 +23,10 @@ public abstract class PlaceReviewActivity extends BaseActivity
 {
     private static final int MAX_COUNT = 50;
 
-    private PlaceReviewLayout mPlaceReviewLayout;
-    private PlaceReviewNetworkController mPlaceReviewNetworkController;
-    private PlaceReviews mPlaceReviews;
-    private int mPlaceIndex;
+    PlaceReviewLayout mPlaceReviewLayout;
+    PlaceReviewNetworkController mPlaceReviewNetworkController;
+    PlaceReviews mPlaceReviews;
+    int mPlaceIndex;
 
     protected abstract PlaceType getPlaceType();
 

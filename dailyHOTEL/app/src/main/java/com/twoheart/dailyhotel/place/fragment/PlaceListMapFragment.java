@@ -86,7 +86,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
 
     public interface OnPlaceListMapFragmentListener
     {

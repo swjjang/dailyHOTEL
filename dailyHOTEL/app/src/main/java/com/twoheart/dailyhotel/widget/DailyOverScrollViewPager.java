@@ -47,7 +47,7 @@ public class DailyOverScrollViewPager extends ViewPager
     private class OverScrollEffect
     {
         float mOverScroll;
-        private Animator mAnimator;
+        Animator mAnimator;
 
         OverScrollEffect()
         {

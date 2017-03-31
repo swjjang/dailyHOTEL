@@ -26,15 +26,15 @@ import java.util.List;
 public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.OnClickListener
 {
     private LinkedHashMap<String, Pair<String, String>> mMainCategoryMap;
-    private LinkedHashMap<String, List<Pair<String, String>>> mSubCategoryMap;
+    LinkedHashMap<String, List<Pair<String, String>>> mSubCategoryMap;
 
     private DailyHintSpinner mMainCategorySpinner;
-    private DailyHintSpinner mSubCategorySpinner;
+    DailyHintSpinner mSubCategorySpinner;
 
-    private CategoryArrayAdapter mMainCategoryArrayAdapter;
-    private CategoryArrayAdapter mSubCategoryArrayAdapter;
+    CategoryArrayAdapter mMainCategoryArrayAdapter;
+    CategoryArrayAdapter mSubCategoryArrayAdapter;
 
-    private String mSelectedPlaceType, mSelectedMainCategoryId;
+    String mSelectedPlaceType, mSelectedMainCategoryId;
 
     public interface OnEventListener extends OnBaseEventListener
     {

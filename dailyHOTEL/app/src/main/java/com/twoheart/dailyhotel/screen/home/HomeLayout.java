@@ -93,7 +93,7 @@ public class HomeLayout extends BaseLayout
     HomeCarouselLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
 
-    private ObjectAnimator mErrorPopupAnimator;
+    ObjectAnimator mErrorPopupAnimator;
 
     LinearLayout mProviderInfoView;
 

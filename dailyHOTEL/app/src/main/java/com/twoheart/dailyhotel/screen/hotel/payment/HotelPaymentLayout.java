@@ -107,7 +107,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
     private View mRefundPolicyLayout;
     //
     int mAnimationValue;
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
     boolean mIsAnimationCancel;
     //
     Rect mGuestFrameLayoutRect = new Rect();

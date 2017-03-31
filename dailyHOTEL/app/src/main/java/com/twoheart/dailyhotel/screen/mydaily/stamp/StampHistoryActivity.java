@@ -97,7 +97,7 @@ public class StampHistoryActivity extends BaseActivity
         });
     }
 
-    private void onStampHistory(Stamp stamp)
+    void onStampHistory(Stamp stamp)
     {
         unLockUI();
 

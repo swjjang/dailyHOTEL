@@ -56,7 +56,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     ANIMATION_STATUS mAnimationStatus = ANIMATION_STATUS.HIDE_END;
     ANIMATION_STATE mAnimationState = ANIMATION_STATE.END;
-    private ObjectAnimator mObjectAnimator;
+    ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
 
     private int[] mHolidays;

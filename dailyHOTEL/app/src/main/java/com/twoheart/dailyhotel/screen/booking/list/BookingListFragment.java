@@ -73,7 +73,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     private View mLoginView;
     boolean mDontReload;
 
-    private TodayDateTime mTodayDateTime;
+    TodayDateTime mTodayDateTime;
 
     public interface OnUserActionListener
     {
@@ -645,6 +645,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         private ArrayList<Booking> makeBookingList(JSONArray jsonArray) throws Exception
         {
+            //noinspection PrivateMemberAccessBetweenOuterAndInnerClass
             if (jsonArray == null || jsonArray.length() == 0 || mTodayDateTime == null)
             {
                 return null;

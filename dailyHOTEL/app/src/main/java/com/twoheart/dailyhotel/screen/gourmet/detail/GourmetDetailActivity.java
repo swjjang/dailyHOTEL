@@ -67,7 +67,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     int mSelectedTicketIndex;
     private boolean mFirstCheckPrice;
     private boolean mRefreshCheckPrice;
-    private boolean mIsListSoldOut; // 리스테어서 솔드아웃인지 체크한다.
+    boolean mIsListSoldOut; // 리스테어서 솔드아웃인지 체크한다.
 
     /**
      * 리스트에서 호출

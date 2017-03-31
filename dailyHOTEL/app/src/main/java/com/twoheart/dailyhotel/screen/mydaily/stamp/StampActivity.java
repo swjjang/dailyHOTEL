@@ -23,8 +23,8 @@ import retrofit2.Response;
 public class StampActivity extends BaseActivity
 {
     StampLayout mStampLayout;
-    private StampNetworkController mNetworkController;
-    private CallScreen mCallScreen;
+    StampNetworkController mNetworkController;
+    CallScreen mCallScreen;
 
     public enum CallScreen
     {
@@ -145,7 +145,7 @@ public class StampActivity extends BaseActivity
         }
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(this);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);

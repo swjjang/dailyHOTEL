@@ -62,10 +62,10 @@ public class HappyTalkCategoryDialog extends BaseActivity
     }
 
     private HappyTalkCategoryDialogLayout mLayout;
-    private HappyTalkCategoryDialogNetworkController mNetworkController;
-    private CallScreen mCallScreen;
+    HappyTalkCategoryDialogNetworkController mNetworkController;
+    CallScreen mCallScreen;
     private int mPlaceIndex, mBookingIndex;
-    private String mPlaceType, mMainCategoryId, mPlaceName;
+    String mPlaceType, mMainCategoryId, mPlaceName;
     private HashMap<String, String> mSubCategoryId;
 
     public static Intent newInstance(Context context, CallScreen callScreen, int placeIndex, int bookingIndex, String placeName)
@@ -175,7 +175,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
     }
 
-    private void onHappyTalkCategory(CallScreen callScreen, String category)
+    void onHappyTalkCategory(CallScreen callScreen, String category)
     {
         LinkedHashMap<String, Pair<String, String>> mainCategoryMap = new LinkedHashMap<>();
         LinkedHashMap<String, List<Pair<String, String>>> subCategoryMap = new LinkedHashMap<>();
@@ -192,7 +192,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         super.onBackPressed();
     }
 
-    private void startHappyTalk(String userIndex, String name, String phone, String email)
+    void startHappyTalk(String userIndex, String name, String phone, String email)
     {
         // https://docs.google.com/spreadsheets/d/1rB-bDASf80h8cW5lIX9kzrnuw0da-S65PJbEQ3lXeoU/edit#gid=0
         StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");

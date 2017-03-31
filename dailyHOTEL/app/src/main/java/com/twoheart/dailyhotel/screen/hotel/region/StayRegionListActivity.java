@@ -46,7 +46,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     PlaceRegionFragmentPagerAdapter mFragmentPagerAdapter;
 
     private StayRegionListNetworkController mNetworkController;
-    private StayBookingDay mStayBookingDay;
+    StayBookingDay mStayBookingDay;
     Province mSelectedProvince;
     private TabLayout mTabLayout;
 

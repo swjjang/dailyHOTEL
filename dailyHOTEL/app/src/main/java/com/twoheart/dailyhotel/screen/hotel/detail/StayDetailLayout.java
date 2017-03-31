@@ -54,7 +54,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
     Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    private ObjectAnimator mObjectAnimator;
+    ObjectAnimator mObjectAnimator;
     private AlphaAnimation mAlphaAnimation;
 
     public interface OnEventListener extends PlaceDetailLayout.OnEventListener

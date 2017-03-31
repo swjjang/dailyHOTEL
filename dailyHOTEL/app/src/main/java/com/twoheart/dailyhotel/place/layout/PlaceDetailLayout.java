@@ -72,7 +72,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
 
     protected View mBottomLayout;
-    private AnimatorSet mWishPopupAnimatorSet;
+    AnimatorSet mWishPopupAnimatorSet;
     int mStatusBarHeight;
 
     protected com.facebook.drawee.view.SimpleDraweeView mTransSimpleDraweeView;

@@ -213,7 +213,7 @@ public class AddProfileSocialActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (dialog != null && dialog.isShowing())
+                if (dialog.isShowing())
                 {
                     dialog.dismiss();
                 }
@@ -331,7 +331,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 @Override
                 public void onClick(View v)
                 {
-                    if (dialog != null && dialog.isShowing())
+                    if (dialog.isShowing())
                     {
                         dialog.dismiss();
                     }
@@ -343,7 +343,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 @Override
                 public void onClick(View v)
                 {
-                    if (dialog != null && dialog.isShowing())
+                    if (dialog.isShowing())
                     {
                         dialog.dismiss();
                     }

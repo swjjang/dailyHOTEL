@@ -183,7 +183,7 @@ public class PlaceReviewLayout extends BaseLayout
 
     class ReviewListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     {
-        private boolean mShowtProgressbarAnimation;
+        boolean mShowtProgressbarAnimation;
         private Context mContext;
         private LayoutInflater mInflater;
         private List<PlaceReviewItem> mPlaceReviewItemList;
@@ -481,7 +481,7 @@ public class PlaceReviewLayout extends BaseLayout
             }
         }
 
-        private void startAnimation(ViewGroup viewGroup)
+        void startAnimation(ViewGroup viewGroup)
         {
             int childCount = viewGroup.getChildCount();
 

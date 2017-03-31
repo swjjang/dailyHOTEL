@@ -58,7 +58,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
     public int m_nStat = PROGRESS_STAT_NOT_START; // KCP Progress state
 
     protected WebView mWebView;
-    private final Handler handler = new Handler(); // KCP Bridge 용 Handler
+    final Handler handler = new Handler(); // KCP Bridge 용 Handler
 
     protected PlacePaymentInformation mPlacePaymentInformation;
 
@@ -227,7 +227,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
 
     // JavaScript Interface - KCP
     @JavascriptInterface
-    private boolean url_scheme_intent(WebView view, String url)
+    boolean url_scheme_intent(WebView view, String url)
     {
         // KCP Message - chrome 버젼 방식 : 2014.01 추가
         if (url.startsWith("intent"))
@@ -604,6 +604,10 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
 
     private class DailyWebViewClient extends WebViewClient
     {
+        DailyWebViewClient()
+        {
+        }
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url)
         {
@@ -1146,7 +1150,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         }
 
         @JavascriptInterface
-        private void alertToNext()
+        void alertToNext()
         {
             if (isFinishing() == true)
             {
@@ -1201,7 +1205,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         }
 
         @JavascriptInterface
-        private void paypinConfim()
+        void paypinConfim()
         {
             if (isFinishing() == true)
             {

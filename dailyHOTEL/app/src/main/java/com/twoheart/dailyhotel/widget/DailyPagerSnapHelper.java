@@ -25,7 +25,7 @@ public class DailyPagerSnapHelper extends SnapHelper
     @Nullable
     private OrientationHelper mHorizontalHelper;
 
-    private RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
 
     private int mCenterPosition;
     private boolean mForwardDirection;

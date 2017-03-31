@@ -340,7 +340,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
         postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
     }
 
-    private void postAndNotifyAdapter(final RecyclerView recyclerView, final RecyclerView.Adapter adapter)
+    void postAndNotifyAdapter(final RecyclerView recyclerView, final RecyclerView.Adapter adapter)
     {
         mHandler.postDelayed(new Runnable()
         {

@@ -53,7 +53,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     private String mCategoryCode;
     private String mHotelName;
     String mCallByScreen;
-    private StayBookingDay mStayBookingDay;
+    StayBookingDay mStayBookingDay;
 
     public static Intent newInstance(Context context, int hotelIdx, int roomIdx, StayBookingDay stayBookingDay//
         , String categoryCode, String hotelName, String roomPrice)

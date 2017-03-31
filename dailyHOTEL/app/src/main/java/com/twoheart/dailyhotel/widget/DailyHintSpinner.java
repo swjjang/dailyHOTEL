@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 public class DailyHintSpinner extends AppCompatSpinner
 {
-    private int mResourceId;
+    int mResourceId;
 
     public DailyHintSpinner(Context context)
     {
