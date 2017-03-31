@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -81,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:text="@string/label_password_4over"
+                        android:text="@string/label_password_8over"
                         android:textColor="@color/selector_label_textcolor"
                         android:textSize="12dp"/>
 
@@ -93,7 +94,7 @@
                         android:background="@drawable/selector_edittext_background"
                         android:hint="@string/label_necessary"
                         android:inputType="textPassword"
-                        android:maxLength="20"
+                        android:maxLength="@integer/max_password"
                         android:maxLines="1"
                         android:nextFocusDown="@+id/confirmPasswordEditText"
                         android:singleLine="true"
@@ -120,7 +121,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:text="@string/label_confirm_password_4over"
+                        android:text="@string/label_confirm_password_8over"
                         android:textColor="@color/selector_label_textcolor"
                         android:textSize="12dp"/>
 
@@ -132,7 +133,7 @@
                         android:background="@drawable/selector_edittext_background"
                         android:hint="@string/label_necessary"
                         android:inputType="textPassword"
-                        android:maxLength="20"
+                        android:maxLength="@integer/max_password"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/default_text_c323232"
@@ -142,13 +143,37 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="7dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_payment_notice"/>
+
+                <com.twoheart.dailyhotel.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:freezesText="true"
+                    android:lineSpacingExtra="-2dp"
+                    android:text="@string/message_signup_step1_password_guide"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="11dp"/>
+            </LinearLayout>
+
             <com.twoheart.dailyhotel.widget.DailyTextView
                 android:id="@+id/nameView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/label_name"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>

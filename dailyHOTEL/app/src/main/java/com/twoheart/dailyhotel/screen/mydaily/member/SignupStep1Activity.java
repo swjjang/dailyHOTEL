@@ -40,6 +40,7 @@ import retrofit2.Response;
 
 public class SignupStep1Activity extends BaseActivity
 {
+    public static final int PASSWORD_MIN_COUNT = 8;
     private static final int REQUEST_CODE_ACTIVITY = 100;
     private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
@@ -195,9 +196,9 @@ public class SignupStep1Activity extends BaseActivity
             }
 
             // 패스워드 유효성 체크
-            if (password.length() < 4)
+            if (password.length() < PASSWORD_MIN_COUNT)
             {
-                DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
+                DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_please_input_password_more_than_8chars, Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -205,6 +206,12 @@ public class SignupStep1Activity extends BaseActivity
             if (password.equals(confirmPassword) == false)
             {
                 DailyToast.showToast(SignupStep1Activity.this, R.string.message_please_enter_the_same_password, Toast.LENGTH_SHORT);
+                return;
+            }
+
+            if (Util.verifyPassword(email, password) == false)
+            {
+                DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);
                 return;
             }
 

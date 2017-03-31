@@ -9,7 +9,6 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
-import com.twoheart.dailyhotel.network.model.HappyTalkCategory;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.HomePlaces;

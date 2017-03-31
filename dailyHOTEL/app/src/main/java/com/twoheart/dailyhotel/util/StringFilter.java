@@ -21,6 +21,7 @@ public class StringFilter
     private static final int ALLOW_SEARCH_FILTER = 4;
     private static final int ALLOW_REGISTER_COUPON_FILTER = 5;
     private static final int ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS = 6;
+    private static final int ALLOW_PASSWORD = 7;
 
     private Context mContext;
     // Allows only alphanumeric characters. Filters special and hangul
@@ -80,6 +81,14 @@ public class StringFilter
         }
     };
 
+    public InputFilter allowPassword = new InputFilter()
+    {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend)
+        {
+            return filteredString(source, start, end, ALLOW_PASSWORD);
+        }
+    };
+
     public StringFilter(Context context)
     {
         mContext = context;
@@ -113,6 +122,10 @@ public class StringFilter
 
             case ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS:
                 pattern = Pattern.compile("^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55\\s\\n`~!@#$%^&*()-=_+\\[\\]{}:;',./<>?\\\\|]+$");
+                break;
+
+            case ALLOW_PASSWORD:
+                pattern = Pattern.compile("^[a-zA-Z0-9`~!@#$%^&*()-=_+\\[\\]{}:;',./<>?\\\\|\"]+$");
                 break;
 
             case ALLOW_ALPHANUMERIC:
@@ -151,6 +164,10 @@ public class StringFilter
                         break;
 
                     case ALLOW_ALPHANUMERIC_HANGUL_SPECIAL_CHARACTERS:
+                        DailyToast.showToast(mContext, R.string.toast_msg_input_error_write_review, Toast.LENGTH_SHORT);
+                        break;
+
+                    case ALLOW_PASSWORD:
                         DailyToast.showToast(mContext, R.string.toast_msg_input_error_write_review, Toast.LENGTH_SHORT);
                         break;
 

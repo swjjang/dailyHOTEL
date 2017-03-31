@@ -123,10 +123,24 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
+        StringFilter stringFilter1 = new StringFilter(mContext);
+        InputFilter[] allowPassword1 = new InputFilter[2];
+        allowPassword1[0] = stringFilter1.allowPassword;
+        allowPassword1[1] = new InputFilter.LengthFilter(mContext.getResources().getInteger(R.integer.max_password));
+
+        mPasswordEditText.setFilters(allowPassword1);
+
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (DailyEditText) view.findViewById(R.id.confirmPasswordEditText);
         mConfirmPasswordEditText.setDeleteButtonVisible(null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
+
+        StringFilter stringFilter2 = new StringFilter(mContext);
+        InputFilter[] allowPassword2 = new InputFilter[2];
+        allowPassword2[0] = stringFilter2.allowPassword;
+        allowPassword2[1] = new InputFilter.LengthFilter(mContext.getResources().getInteger(R.integer.max_password));
+
+        mConfirmPasswordEditText.setFilters(allowPassword2);
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
         mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);

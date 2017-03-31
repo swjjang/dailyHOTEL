@@ -80,6 +80,7 @@
     <string name="label_office_hours">이용시간</string>
     <string name="label_checklist">확인사항</string>
     <string name="label_truereview">트루리뷰</string>
+    <string name="label_password">비밀번호</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -224,7 +225,8 @@
     <string name="toast_msg_please_input_name">이름을 입력해주세요.</string>
     <string name="toast_msg_please_input_passwd">비밀번호를 입력해주세요.</string>
     <string name="toast_msg_please_input_required_infos">필수 입력사항은 모두 입력해주세요.</string>
-    <string name="toast_msg_please_input_password_more_than_4chars">비밀번호를 4글자 이상 입력해주세요.</string>
+    <string name="toast_msg_please_input_password_more_than_8chars">비밀번호를 8글자 이상 입력해주세요.</string>
+    <string name="toast_msg_failed_paswword_verify">회원님의 개인정보 보호를 위해\n보다 안전한 비밀번호를 사용해주세요.</string>
     <string name="toast_msg_success_to_signup">회원가입을 완료했습니다.</string>
     <string name="toast_msg_failed_to_signup">회원가입에 실패했습니다. 다시 시도해주세요.</string>
     <string name="toast_msg_already_latest_version">이미 최신버전입니다.</string>
@@ -611,8 +613,8 @@
     <string name="label_necessary">필수 입력</string>
     <string name="label_name">이름</string>
     <string name="label_birthday">생일</string>
-    <string name="label_password_4over">비밀번호 (4자이상)</string>
-    <string name="label_confirm_password_4over">비밀번호 확인 (4자이상)</string>
+    <string name="label_password_8over">비밀번호 (8자이상)</string>
+    <string name="label_confirm_password_8over">비밀번호 확인 (8자이상)</string>
     <string name="label_necessary_reservation">필수 입력 (예약시 사용)</string>
     <string name="label_option_benefit">선택 입력 (추후 혜택 제공시 사용)</string>
     <string name="label_recommender_code_ex">추천인 코드 (예시:123456789)</string>
@@ -641,6 +643,7 @@
     <string name="message_signup_step2_already_verification">다른 계정에 등록되어 있는 휴대폰 번호입니다.\n계속 진행할까요?</string>
     <string name="message_signup_step2_check_your_phonenumber">짧은 시간 내 인증번호를\n여러번 요청할 수 없습니다.\n입력하신 전화번호(%1$s)가\n맞는지 확인해주시거나\nSMS 수신이 시간이 걸릴 수 있으니\n잠시만 기다려주세요.</string>
     <string name="message_signup_completed_alarm_on_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보, 예약 알림 등\n혜택 알림 수신에 동의하였습니다.\n%s</string>
+    <string name="message_signup_step1_password_guide">추측이 너무 쉬운 문자열은 비밀번호로 사용하실 수 없습니다.\n(연속/반복되는 문자열, 이메일주소와 동일한 문자열 등)</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
     <string name="frag_booking_tab_title">예약</string>

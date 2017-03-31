@@ -120,7 +120,7 @@
                 android:layout_marginTop="14dp"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="@string/label_password_4over"
+                android:text="@string/label_password"
                 android:textColor="@color/selector_label_textcolor"
                 android:textSize="12dp"/>
 
@@ -134,7 +134,7 @@
                 android:background="@drawable/selector_edittext_background"
                 android:hint="@string/label_necessary"
                 android:inputType="textPassword"
-                android:maxLength="20"
+                android:maxLength="@integer/max_password"
                 android:maxLines="1"
                 android:nextFocusDown="@+id/confirmPasswordEditText"
                 android:singleLine="true"

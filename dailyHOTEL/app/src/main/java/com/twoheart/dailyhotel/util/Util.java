@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Telephony;
+import android.support.annotation.NonNull;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -56,6 +57,7 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.FontManager;
@@ -1935,5 +1937,75 @@ public class Util implements Constants
     public static String getResolutionImageUrl(Context context, String defaultImageUrl, String lowResolutionImageUrl)
     {
         return Util.getLCDWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;
+    }
+
+    public static boolean verifyPassword(String email, @NonNull final String password)
+    {
+        // 둘중에 한개라도 없으면 안됨.
+        if (Util.isTextEmpty(password) == true)
+        {
+            return false;
+        }
+
+        int length = password.length();
+
+        if (length < SignupStep1Activity.PASSWORD_MIN_COUNT)
+        {
+            return false;
+        }
+
+        boolean verified = false;
+
+        if (length == SignupStep1Activity.PASSWORD_MIN_COUNT)
+        {
+            // 8자이면서 한개의 영문(대소문자 구분)이나 숫자, 특수문자로만 입력된 경우
+            for (int i = 1; i < length; i++)
+            {
+                if (password.charAt(0) != password.charAt(i))
+                {
+                    verified = true;
+                    break;
+                }
+            }
+
+            if (verified == false)
+            {
+                return false;
+            }
+
+            // 8자이면서 두개의 숫자가 반복적으로 입력된 경우 (12121212, 82828282…)
+            for (int i = 2; i < length; i += 2)
+            {
+                if (password.charAt(0) != password.charAt(i) && password.charAt(1) != password.charAt(i + 1))
+                {
+                    verified = true;
+                    break;
+                }
+            }
+
+            if (verified == false)
+            {
+                return false;
+            }
+        }
+
+        // 이메일주소와 동일한 경우
+        if (password.equalsIgnoreCase(email) == true)
+        {
+            return false;
+        }
+
+        //  특정 문자열의 경우
+        final String[] patterns = {"12345678"};
+
+        for (String pattern : patterns)
+        {
+            if (pattern.equalsIgnoreCase(password) == true)
+            {
+                return false;
+            }
+        }
+
+        return verified;
     }
 }

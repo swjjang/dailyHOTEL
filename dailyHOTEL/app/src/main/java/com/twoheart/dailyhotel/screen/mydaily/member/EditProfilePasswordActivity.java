@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyEditText;
@@ -77,10 +79,25 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
+        StringFilter stringFilter1 = new StringFilter(this);
+        InputFilter[] allowPassword1 = new InputFilter[2];
+        allowPassword1[0] = stringFilter1.allowPassword;
+        allowPassword1[1] = new InputFilter.LengthFilter(getResources().getInteger(R.integer.max_password));
+
+        mPasswordEditText.setFilters(allowPassword1);
+
         mConfirmPasswordView = findViewById(R.id.confirmPasswordView);
         mConfirmPasswordEditText = (DailyEditText) findViewById(R.id.confirmPasswordEditText);
         mConfirmPasswordEditText.setDeleteButtonVisible(null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
+
+        StringFilter stringFilter2 = new StringFilter(this);
+        InputFilter[] allowPassword2 = new InputFilter[2];
+        allowPassword2[0] = stringFilter2.allowPassword;
+        allowPassword2[1] = new InputFilter.LengthFilter(getResources().getInteger(R.integer.max_password));
+
+        mConfirmPasswordEditText.setFilters(allowPassword2);
+
         mConfirmPasswordEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
@@ -153,9 +170,9 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 String confirmPassword = mConfirmPasswordEditText.getText().toString();
 
                 // 패스워드 유효성 체크
-                if (Util.isTextEmpty(password) == true || password.length() < 4)
+                if (Util.isTextEmpty(password) == true || password.length() < SignupStep1Activity.PASSWORD_MIN_COUNT)
                 {
-                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
+                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_password_more_than_8chars, Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -169,6 +186,13 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 if (password.equals(confirmPassword) == false)
                 {
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.message_please_enter_the_same_password, Toast.LENGTH_SHORT);
+                    return;
+                }
+
+                // 패스워드 검증
+                if (Util.verifyPassword(null, password) == false)
+                {
+                    DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);
                     return;
                 }
 

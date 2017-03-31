@@ -453,11 +453,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             return;
         }
 
-        if (password.length() < 4)
-        {
-            DailyToast.showToast(this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
-            return;
-        }
+        //        if (password.length() < 4)
+        //        {
+        //            DailyToast.showToast(this, R.string.toast_msg_please_input_password_more_than_4chars, Toast.LENGTH_SHORT);
+        //            return;
+        //        }
 
         lockUI();
 
