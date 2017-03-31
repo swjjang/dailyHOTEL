@@ -193,7 +193,7 @@
     <string name="actionbar_title_register_coupon">할인쿠폰 코드 등록</string>
     <string name="actionbar_title_wishList">위시리스트</string>
     <string name="actionbar_title_stamp_history">스탬프 내역</string>
-    <string name="actionbar_title_stamp_terms_activity">스탬프 유의사항</string>
+    <string name="actionbar_title_stamp_terms_activity">스탬프 유의사항 안내</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
