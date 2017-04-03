@@ -123,16 +123,6 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         }
     }
 
-    protected void setAnalyticsListener(OnBaseAnalyticsListener listener)
-    {
-        if (listener == null || mPresenter == null)
-        {
-            return;
-        }
-
-        mPresenter.setOnAnalyticsListener(listener);
-    }
-
     /**
      * Fragment 컨테이너의 표시되는 Fragment를 변경할 때 Fragment 컨테이너에 적재된 Fragment들을 정리한다.
      */

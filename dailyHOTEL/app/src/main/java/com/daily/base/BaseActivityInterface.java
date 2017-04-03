@@ -18,6 +18,4 @@ public interface BaseActivityInterface
     void onSaveInstanceState(Bundle outState);
 
     void onRestoreInstanceState(Bundle savedInstanceState);
-
-    void setOnAnalyticsListener(OnBaseAnalyticsListener listener);
 }

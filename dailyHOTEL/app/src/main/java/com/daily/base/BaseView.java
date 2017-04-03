@@ -4,15 +4,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class BaseView implements BaseViewInterface
+public abstract class BaseView<T extends OnBaseEventListener> implements BaseViewInterface
 {
     protected BaseActivity mActivity;
     protected View mRootView;
-    protected OnBaseEventListener mOnEventListener;
+    protected T mOnEventListener;
 
     protected abstract void initLayout(View view);
 
-    public BaseView(BaseActivity activity, OnBaseEventListener listener)
+    public BaseView(BaseActivity activity, T listener)
     {
         if (mActivity == null || listener == null)
         {

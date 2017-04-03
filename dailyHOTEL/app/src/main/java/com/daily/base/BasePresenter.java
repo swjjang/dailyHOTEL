@@ -3,28 +3,32 @@ package com.daily.base;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
-public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> implements BaseActivityInterface, OnBaseEventListener
+public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> implements BaseActivityInterface
 {
-    private BaseActivity mActivity;
+    private T1 mActivity;
 
-    private BaseViewInterface mOnViewInterface;
+    private T2 mOnViewInterface;
 
-    public BasePresenter(BaseActivity activity)
+    public BasePresenter(@NonNull T1 activity)
     {
         mActivity = activity;
 
         createInstanceViewInterface();
+
+        initialize(activity);
     }
 
     protected abstract
     @NonNull
-    BaseViewInterface createInstanceViewInterface();
+    T2 createInstanceViewInterface();
 
-    public abstract void setOnAnalyticsListener(OnBaseAnalyticsListener listener);
+    public abstract void initialize(T1 activity);
+
+    public abstract void setOnAnalyticsListener(OnBaseAnalyticsInterface listener);
 
     public T1 getActivity()
     {
-        return (T1) mActivity;
+        return mActivity;
     }
 
     public void setContentView(@LayoutRes int layoutResID)
@@ -47,6 +51,6 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
             mOnViewInterface = createInstanceViewInterface();
         }
 
-        return (T2) mOnViewInterface;
+        return mOnViewInterface;
     }
 }
