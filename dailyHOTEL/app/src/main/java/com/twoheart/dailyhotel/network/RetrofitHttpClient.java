@@ -19,6 +19,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 public class RetrofitHttpClient implements Constants
 {
@@ -54,6 +55,7 @@ public class RetrofitHttpClient implements Constants
                 .client(mOkHttpClient)//
                 .addConverterFactory(JSONConverterFactory.create())//
                 .addConverterFactory(LoganSquareConverterFactory.create())//
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//
                 .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
         } else
         {
@@ -61,6 +63,7 @@ public class RetrofitHttpClient implements Constants
                 .client(mOkHttpClient)//
                 .addConverterFactory(JSONConverterFactory.create())//
                 .addConverterFactory(LoganSquareConverterFactory.create())//
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//
                 .addCallAdapterFactory(mTagCancellableCallAdapterFactory).build();
         }
 

@@ -24,7 +24,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
 
     public abstract void initialize(T1 activity);
 
-    public abstract void setOnAnalyticsListener(OnBaseAnalyticsInterface listener);
+    public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 
     public T1 getActivity()
     {

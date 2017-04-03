@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.daily.dailyhotel.network.model.UserData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -32,6 +33,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class DailyMobileAPI implements IDailyNetwork
 {
@@ -125,6 +130,16 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserProfile(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    public Flowable<BaseDto<UserData>> getUserProfile()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
+            : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
+
+        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(URL))//
+            .subscribeOn(Schedulers.io())//
+            .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

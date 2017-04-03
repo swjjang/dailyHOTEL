@@ -1,13 +1,20 @@
 package com.daily.dailyhotel.screen.mydaily.profile;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.daily.base.BasePresenter;
-import com.daily.base.OnBaseAnalyticsInterface;
+import com.daily.base.BaseAnalyticsInterface;
+import com.daily.dailyhotel.entity.User;
+import com.twoheart.dailyhotel.R;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -15,11 +22,24 @@ import com.daily.base.OnBaseAnalyticsInterface;
  */
 public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileViewInterface> implements ProfileView.OnEventListener
 {
-    private OnProfileAnalyticsInterface mOnProfileAnalyticsListener;
+    private ProfileAnalyticsInterface mProfileAnalytics;
 
-    public interface OnProfileAnalyticsInterface extends OnBaseAnalyticsInterface
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    private ProfileNetworkImpl mProfileNetworkImpl;
+
+    public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void analyticsStayClick();
+        void screenProfile(Activity activity);
+
+        void screenLogOut(Activity activity);
+
+        void clearUserInformation(Context context);
+
+        void eventCopyReferralCode(Context context);
+
+        // 보너스 초과 여부
+        void setExceedBonus(Context context, boolean isExceedBonus);
     }
 
     public ProfilePresenter(@NonNull ProfileActivity activity)
@@ -50,13 +70,30 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void initialize(ProfileActivity activity)
     {
-        setOnAnalyticsListener(new ProfileAnalyticsImpl());
+        setContentView(R.layout.activity_profile);
+
+        setAnalytics(new ProfileAnalyticsImpl());
+
+        mProfileAnalytics.screenProfile(activity);
+
+        mProfileNetworkImpl = new ProfileNetworkImpl(activity);
+
+        mCompositeDisposable.add(mProfileNetworkImpl.getProfile().subscribe(new Consumer<User>()
+        {
+            @Override
+            public void accept(User user) throws Exception
+            {
+
+            }
+
+
+        }));
     }
 
     @Override
-    public void setOnAnalyticsListener(OnBaseAnalyticsInterface listener)
+    public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mOnProfileAnalyticsListener = (OnProfileAnalyticsInterface) listener;
+        mProfileAnalytics = (ProfileAnalyticsInterface) analytics;
     }
 
     @Override
@@ -86,7 +123,8 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void onDestroy()
     {
-
+        mCompositeDisposable.clear();
+        mCompositeDisposable.dispose();
     }
 
     @Override

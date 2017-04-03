@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.network;
 
+import com.daily.dailyhotel.network.model.UserData;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Flowable;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -62,6 +64,10 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestUserProfile(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Flowable<BaseDto<UserData>> getUserProfile(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @GET("{mobileAPI}")
     Call<JSONObject> requestUserBonus(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
