@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.widget.DailyImageView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -190,73 +191,104 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         if (hasThumbnail == false)
         {
             productInformationViewHolder.simpleDraweeView.setVisibility(View.GONE);
-
-            productInformationViewHolder.contentsList.removeAllViews();
-
-            if (Util.isTextEmpty(gourmetProduct.menuBenefit) == true && Util.isTextEmpty(gourmetProduct.needToKnow) == true)
-            {
-                productInformationViewHolder.contentsList.setVisibility(View.GONE);
-            } else
-            {
-                productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
-
-                // 베네핏
-                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
-                {
-                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
-                }
-
-                // 확인 사항
-                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
-                {
-                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
-                }
-            }
         } else
         {
             productInformationViewHolder.simpleDraweeView.setVisibility(View.VISIBLE);
+        }
 
-            productInformationViewHolder.contentsList.removeAllViews();
+        productInformationViewHolder.contentsList.removeAllViews();
 
-            if (Util.isTextEmpty(gourmetProduct.menuBenefit) == true && Util.isTextEmpty(gourmetProduct.needToKnow) == true)
+        if (Util.isTextEmpty(gourmetProduct.menuBenefit) == true && Util.isTextEmpty(gourmetProduct.needToKnow) == true//
+            && Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
+        {
+            productInformationViewHolder.contentsList.setVisibility(View.GONE);
+        } else
+        {
+            productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
+
+            // 베네핏
+            if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
             {
-                productInformationViewHolder.contentsList.setVisibility(View.GONE);
-            } else
-            {
-                productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
+                addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
+            }
 
-                // 베네핏
-                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
+            // 이용 시간
+            if (Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
+            {
+                String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
+
+                if (Util.isTextEmpty(gourmetProduct.lastOrderTime) == false)
                 {
-                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
+                    timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
                 }
 
-                // 확인 사항
-                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
-                {
-                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
-                }
+                addProductSubInformation(mInflater, productInformationViewHolder.contentsList, timeFormat, R.drawable.ic_detail_item_03_time, true);
+            }
 
-                //                int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 98);
-                //                float titleTextViewHeight = Util.getTextViewHeight(productInformationViewHolder.productNameTextView, titleTextViewWidth);
-                //
-                //                float startY = titleTextViewHeight + Util.dpToPx(mContext, 8);
-                //                Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 98), Util.dpToPx(mContext, 98));
-                //                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 39) - Util.dpToPx(mContext, 15);
-                //
-                //                // 베네핏
-                //                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
-                //                {
-                //                    startY = addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, startY, textViewWidth, rect, false);
-                //                }
-                //
-                //                // 확인 사항
-                //                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
-                //                {
-                //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, startY, textViewWidth, rect, true);
-                //                }
+            // 확인 사항
+            if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
+            {
+                addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
             }
         }
+        
+        //        } else
+        //        {
+        //
+        //
+        //            if (Util.isTextEmpty(gourmetProduct.menuBenefit) == true && Util.isTextEmpty(gourmetProduct.needToKnow) == true//
+        //                && Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
+        //            {
+        //                productInformationViewHolder.contentsList.setVisibility(View.GONE);
+        //            } else
+        //            {
+        //                productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
+        //
+        //                // 베네핏
+        //                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
+        //                {
+        //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
+        //                }
+        //
+        //                // 이용 시간
+        //                if (Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
+        //                {
+        //                    String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
+        //
+        //                    if (Util.isTextEmpty(gourmetProduct.lastOrderTime) == false)
+        //                    {
+        //                        timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
+        //                    }
+        //
+        //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, timeFormat, R.drawable.ic_detail_item_03_time, true);
+        //                }
+        //
+        //                // 확인 사항
+        //                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
+        //                {
+        //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
+        //                }
+
+        //                int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 98);
+        //                float titleTextViewHeight = Util.getTextViewHeight(productInformationViewHolder.productNameTextView, titleTextViewWidth);
+        //
+        //                float startY = titleTextViewHeight + Util.dpToPx(mContext, 8);
+        //                Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 98), Util.dpToPx(mContext, 98));
+        //                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 39) - Util.dpToPx(mContext, 15);
+        //
+        //                // 베네핏
+        //                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
+        //                {
+        //                    startY = addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, startY, textViewWidth, rect, false);
+        //                }
+        //
+        //                // 확인 사항
+        //                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
+        //                {
+        //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, startY, textViewWidth, rect, true);
+        //                }
+        //            }
+        //        }
 
         String price = Util.getPriceFormat(mContext, gourmetProduct.price, false);
         String discountPrice = Util.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
