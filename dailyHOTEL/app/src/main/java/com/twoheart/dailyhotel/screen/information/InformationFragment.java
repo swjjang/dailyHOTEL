@@ -120,7 +120,7 @@ public class InformationFragment extends BaseFragment implements Constants
     private InformationLayout.OnEventListener mOnEventListener = new InformationLayout.OnEventListener()
     {
         @Override
-        public void startAbout()
+        public void startGuide()
         {
             if (isLockUiComponent() == true || mIsAttach == false)
             {
@@ -130,7 +130,7 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(new Intent(baseActivity, AboutActivity.class), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
+            baseActivity.startActivityForResult(GuideActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_GUIDE);
         }
 
         @Override
@@ -211,122 +211,6 @@ public class InformationFragment extends BaseFragment implements Constants
             AnalyticsManager.getInstance(baseActivity).recordScreen(baseActivity, AnalyticsManager.Screen.TERMS_AND_CONDITION, null);
         }
 
-        @Override
-        public void startFacebook()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
-            try
-            {
-                intent.setData(Uri.parse("fb://facewebmodal/f?href=https://www.facebook.com/Dailyhotel.Korea"));
-                baseActivity.startActivity(intent);
-            } catch (Exception e)
-            {
-                try
-                {
-                    intent.setData(Uri.parse("http://www.facebook.com/dailyhotel"));
-                    baseActivity.startActivity(intent);
-                } catch (ActivityNotFoundException e1)
-                {
-                    ExLog.d(e.toString());
-                }
-            }
-        }
-
-        @Override
-        public void startInstagram()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
-            try
-            {
-                intent.setData(Uri.parse("instagram://user?username=dailyhotel_korea"));
-                baseActivity.startActivity(intent);
-            } catch (Exception e)
-            {
-                try
-                {
-                    intent.setData(Uri.parse("http://www.instagram.com/dailyhotel_korea"));
-                    baseActivity.startActivity(intent);
-                } catch (ActivityNotFoundException e1)
-                {
-                }
-            }
-        }
-
-        @Override
-        public void startNaverBlog()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
-            try
-            {
-                intent.setData(Uri.parse("naversearchapp://inappbrowser?url=http%3A%2F%2Fblog.naver.com%2Fdailyhotel&target=new&version=6"));
-                baseActivity.startActivity(intent);
-            } catch (Exception e)
-            {
-                try
-                {
-                    intent.setData(Uri.parse("http://blog.naver.com/dailyhotel"));
-                    baseActivity.startActivity(intent);
-                } catch (ActivityNotFoundException e1)
-                {
-                }
-            }
-        }
-
-        @Override
-        public void startYouTube()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-
-            try
-            {
-                intent.setData(Uri.parse("youtube://channel/UCNJASbBThd0TFo3qLgl1wuw"));
-                baseActivity.startActivity(intent);
-            } catch (Exception e)
-            {
-                try
-                {
-                    intent.setData(Uri.parse("https://www.youtube.com/channel/UCNJASbBThd0TFo3qLgl1wuw"));
-                    baseActivity.startActivity(intent);
-                } catch (ActivityNotFoundException e1)
-                {
-                }
-            }
-        }
 
         @Override
         public void finish()

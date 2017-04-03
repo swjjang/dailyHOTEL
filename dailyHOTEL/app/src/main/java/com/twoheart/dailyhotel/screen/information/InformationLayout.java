@@ -31,7 +31,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void startAbout();
+        void startGuide();
 
         void startEvent();
 
@@ -42,14 +42,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         void startContactUs();
 
         void startTermsNPolicy();
-
-        void startFacebook();
-
-        void startInstagram();
-
-        void startNaverBlog();
-
-        void startYouTube();
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -83,8 +75,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
-
-        initSnsLayout(view);
 
         TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
 
@@ -158,19 +148,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         dailyToolbarLayout.initToolbar(mContext.getResources().getString(R.string.actionbar_title_setting_frag), null, false);
     }
 
-    private void initSnsLayout(View view)
-    {
-        View facebookView = view.findViewById(R.id.facebookLinkView);
-        View instagramView = view.findViewById(R.id.instagramLinkView);
-        View naverView = view.findViewById(R.id.naverLinkView);
-        View youtubeLinkView = view.findViewById(R.id.youtubeLinkView);
-
-        facebookView.setOnClickListener(this);
-        instagramView.setOnClickListener(this);
-        naverView.setOnClickListener(this);
-        youtubeLinkView.setOnClickListener(this);
-    }
-
     public void updateNewIconView(boolean hasNewEvent, boolean hasNewNotice)
     {
         if (mNewEventIconView == null)
@@ -201,7 +178,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         switch (v.getId())
         {
             case R.id.aboutLayout:
-                ((OnEventListener) mOnEventListener).startAbout();
+                ((OnEventListener) mOnEventListener).startGuide();
                 break;
 
             case R.id.eventLayout:
@@ -222,22 +199,6 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.termsNpolicyLayout:
                 ((OnEventListener) mOnEventListener).startTermsNPolicy();
-                break;
-
-            case R.id.facebookLinkView:
-                ((OnEventListener) mOnEventListener).startFacebook();
-                break;
-
-            case R.id.instagramLinkView:
-                ((OnEventListener) mOnEventListener).startInstagram();
-                break;
-
-            case R.id.naverLinkView:
-                ((OnEventListener) mOnEventListener).startNaverBlog();
-                break;
-
-            case R.id.youtubeLinkView:
-                ((OnEventListener) mOnEventListener).startYouTube();
                 break;
 
             default:

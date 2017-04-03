@@ -14,11 +14,11 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
-public class AboutActivity extends WebViewActivity
+public class AboutTrueReviewActivity extends WebViewActivity
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, AboutActivity.class);
+        Intent intent = new Intent(context, AboutTrueReviewActivity.class);
         return intent;
     }
 
@@ -38,7 +38,7 @@ public class AboutActivity extends WebViewActivity
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.frag_about), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.label_daily_truereview), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -92,7 +92,7 @@ public class AboutActivity extends WebViewActivity
     @Override
     protected void onStart()
     {
-        AnalyticsManager.getInstance(this).recordScreen(this, Screen.ABOUT, null);
+//        AnalyticsManager.getInstance(this).recordScreen(this, Screen.ABOUT, null);
 
         super.onStart();
     }
