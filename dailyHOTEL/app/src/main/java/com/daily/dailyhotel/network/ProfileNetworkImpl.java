@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.profile;
+package com.daily.dailyhotel.network;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -23,30 +23,6 @@ public class ProfileNetworkImpl implements ProfileInterface
     public Observable<User> getProfile()
     {
         //        return DailyMobileAPI.getInstance(mContext).getUserProfile().map(new Function<BaseDto<UserData>, User>()
-        //        {
-        //            @Override
-        //            public User apply(BaseDto<UserData> userDataBaseDto) throws Exception
-        //            {
-        //                User user = null;
-        //
-        //                if (userDataBaseDto != null)
-        //                {
-        //                    if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
-        //                    {
-        //                        user = userDataBaseDto.data.getUser();
-        //                    } else
-        //                    {
-        //                        throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
-        //                    }
-        //                } else
-        //                {
-        //                    throw new BaseException(-1, null);
-        //                }
-        //
-        //                return user;
-        //            }
-        //        });
-
         return DailyMobileAPI.getInstance(mContext).getUserProfile().map((userDataBaseDto) ->
         {
             User user = null;

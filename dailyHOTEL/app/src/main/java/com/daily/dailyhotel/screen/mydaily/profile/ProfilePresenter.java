@@ -11,6 +11,7 @@ import android.view.View;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BasePresenter;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.network.ProfileNetworkImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 
