@@ -3,14 +3,12 @@ package com.daily.dailyhotel.screen.mydaily.profile;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseException;
 import com.daily.dailyhotel.domain.ProfileInterface;
 import com.daily.dailyhotel.entity.User;
-import com.daily.dailyhotel.network.model.UserData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 
-import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
+import io.reactivex.Observable;
 
 public class ProfileNetworkImpl implements ProfileInterface
 {
@@ -22,25 +20,52 @@ public class ProfileNetworkImpl implements ProfileInterface
     }
 
     @Override
-    public Flowable<User> getProfile()
+    public Observable<User> getProfile()
     {
-        return DailyMobileAPI.getInstance(mContext).getUserProfile().map(new Function<BaseDto<UserData>, User>()
+        //        return DailyMobileAPI.getInstance(mContext).getUserProfile().map(new Function<BaseDto<UserData>, User>()
+        //        {
+        //            @Override
+        //            public User apply(BaseDto<UserData> userDataBaseDto) throws Exception
+        //            {
+        //                User user = null;
+        //
+        //                if (userDataBaseDto != null)
+        //                {
+        //                    if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
+        //                    {
+        //                        user = userDataBaseDto.data.getUser();
+        //                    } else
+        //                    {
+        //                        throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
+        //                    }
+        //                } else
+        //                {
+        //                    throw new BaseException(-1, null);
+        //                }
+        //
+        //                return user;
+        //            }
+        //        });
+
+        return DailyMobileAPI.getInstance(mContext).getUserProfile().map((userDataBaseDto) ->
         {
-            @Override
-            public User apply(BaseDto<UserData> userBaseDto) throws Exception
+            User user = null;
+
+            if (userDataBaseDto != null)
             {
-                User user = null;
-
-                if (userBaseDto != null)
+                if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
                 {
-                    if (userBaseDto.msgCode == 100 && userBaseDto.data != null)
-                    {
-                        user = userBaseDto.data.getUser();
-                    }
+                    user = userDataBaseDto.data.getUser();
+                } else
+                {
+                    throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
                 }
-
-                return user;
+            } else
+            {
+                throw new BaseException(-1, null);
             }
-        }).s;
+
+            return user;
+        });
     }
 }

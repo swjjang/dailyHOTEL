@@ -50,19 +50,19 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-//        jackOptions {
-//            enabled true
+        jackOptions {
+            enabled true
 //            additionalParameters("jack.dex.output.policy" : "multidex")
 //            additionalParameters("jack.preprocessor.file" : "legacyMultidexInstallation.jpp")
 //            additionalParameters("jack.preprocessor" : "true")
 //            additionalParameters("jack.dex.output.multidex.legacy": "true")
-//        }
+        }
     }
 
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     buildTypes {
         release {

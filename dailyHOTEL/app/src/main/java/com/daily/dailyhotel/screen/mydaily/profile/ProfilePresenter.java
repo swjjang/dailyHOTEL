@@ -8,13 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.daily.base.BasePresenter;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.BasePresenter;
 import com.daily.dailyhotel.entity.User;
 import com.twoheart.dailyhotel.R;
-
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
+import com.twoheart.dailyhotel.util.ExLog;
 
 /**
  * Created by sheldon
@@ -23,8 +21,6 @@ import io.reactivex.functions.Consumer;
 public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileViewInterface> implements ProfileView.OnEventListener
 {
     private ProfileAnalyticsInterface mProfileAnalytics;
-
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     private ProfileNetworkImpl mProfileNetworkImpl;
 
@@ -78,16 +74,7 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
 
         mProfileNetworkImpl = new ProfileNetworkImpl(activity);
 
-        mCompositeDisposable.add(mProfileNetworkImpl.getProfile().subscribe(new Consumer<User>()
-        {
-            @Override
-            public void accept(User user) throws Exception
-            {
-
-            }
-
-
-        }));
+        addCompositeDisposable(mProfileNetworkImpl.getProfile().doOnError(this::onObservableError).doOnNext(this::onUserProfile).subscribe());
     }
 
     @Override
@@ -111,43 +98,54 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void onResume()
     {
-
+        super.onResume();
     }
 
     @Override
     public void onPause()
     {
-
+        super.onPause();
     }
 
     @Override
     public void onDestroy()
     {
-        mCompositeDisposable.clear();
-        mCompositeDisposable.dispose();
+        // 꼭 호출해 주세요.
+        super.onDestroy();
     }
 
     @Override
     public boolean onBackPressed()
     {
-        return false;
+        return super.onBackPressed();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
-
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     public void onClick(View view)
     {
 
+    }
+
+    public void onUserProfile(User user)
+    {
+        if (user == null)
+        {
+            ExLog.d("pinkred : user == null");
+            return;
+        }
+
+        ExLog.d("pinkred : " + user.name);
     }
 }

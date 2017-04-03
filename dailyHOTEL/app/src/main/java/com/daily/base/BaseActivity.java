@@ -23,7 +23,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
         mFragmentManager = getSupportFragmentManager();
 
-        createInstancePresenter();
+        mPresenter = createInstancePresenter();
 
         mPresenter.onIntent(getIntent());
     }

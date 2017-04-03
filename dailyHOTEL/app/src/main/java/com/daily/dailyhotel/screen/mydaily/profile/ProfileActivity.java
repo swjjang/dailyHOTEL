@@ -1,6 +1,8 @@
 package com.daily.dailyhotel.screen.mydaily.profile;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -14,6 +16,12 @@ import com.twoheart.dailyhotel.R;
  */
 public class ProfileActivity extends BaseActivity<ProfilePresenter>
 {
+    public static Intent newInstance(Context context)
+    {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

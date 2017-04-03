@@ -129,8 +129,12 @@ public class InformationFragment extends BaseFragment implements Constants
 
             lockUiComponent();
 
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(GuideActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_GUIDE);
+
+            startActivity(com.daily.dailyhotel.screen.mydaily.profile.ProfileActivity.newInstance(getContext()));
+
+
+//            BaseActivity baseActivity = (BaseActivity) getActivity();
+//            baseActivity.startActivityForResult(GuideActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_GUIDE);
         }
 
         @Override

@@ -14,7 +14,7 @@ public abstract class BaseView<T extends OnBaseEventListener> implements BaseVie
 
     public BaseView(BaseActivity activity, T listener)
     {
-        if (mActivity == null || listener == null)
+        if (activity == null || listener == null)
         {
             throw new NullPointerException();
         }
