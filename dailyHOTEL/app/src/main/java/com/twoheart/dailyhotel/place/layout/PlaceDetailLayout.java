@@ -68,7 +68,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected View mPriceOptionLayout;
     protected RadioGroup mPriceRadioGroup;
 
-    protected int mImageHeight;
     protected int mBookingStatus; // 예약 진행 상태로 객실 찾기, 없음, 예약 진행
 
     protected View mBottomLayout;
@@ -131,6 +130,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public abstract void setBookingStatus(int status);
 
+    public static int getImageLayoutHeight(Context context)
+    {
+        return Util.getRatioHeightType4x3(Util.getLCDWidth(context));
+    }
+
     public PlaceDetailLayout(Context context, OnBaseEventListener listener)
     {
         super(context, listener);
@@ -164,9 +168,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
         mDailyLineIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
-        mImageHeight = Util.getLCDWidth(mContext);
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
-        layoutParams.height = mImageHeight;
+        layoutParams.height = getImageLayoutHeight(mContext);
         mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = view.findViewById(R.id.moreIconView);
@@ -200,10 +203,10 @@ public abstract class PlaceDetailLayout extends BaseLayout
             setTransImageVisibility(true);
             mTransTitleLayout.setVisibility(View.VISIBLE);
 
-            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransSimpleDraweeView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
             mTransSimpleDraweeView.setTransitionName(mContext.getString(R.string.transition_place_image));
 
-            mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(mContext)));
+            mTransGradientView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getImageLayoutHeight(mContext)));
             mTransGradientView.setTransitionName(mContext.getString(R.string.transition_gradient_bottom_view));
             mTransGradientView.setBackground(makeShaderFactory());
 
