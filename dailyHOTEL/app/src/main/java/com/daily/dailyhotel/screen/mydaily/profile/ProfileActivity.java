@@ -3,8 +3,10 @@ package com.daily.dailyhotel.screen.mydaily.profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BasePresenter;

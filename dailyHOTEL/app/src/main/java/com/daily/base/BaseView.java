@@ -1,5 +1,7 @@
 package com.daily.base;
 
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +10,10 @@ public abstract class BaseView<T extends OnBaseEventListener> implements BaseVie
 {
     protected BaseActivity mActivity;
     protected View mRootView;
+    protected ViewDataBinding mViewDataBinding;
     protected T mOnEventListener;
 
-    protected abstract void initLayout(View view);
+    protected abstract void initLayout(View view, ViewDataBinding viewDataBinding);
 
     public BaseView(BaseActivity activity, T listener)
     {
@@ -23,22 +26,20 @@ public abstract class BaseView<T extends OnBaseEventListener> implements BaseVie
         mOnEventListener = listener;
     }
 
-    public final View onCreateView(int layoutResID)
+    public final void setContentView(int layoutResID)
     {
-        mRootView = LayoutInflater.from(mActivity).inflate(layoutResID, null, false);
+        mViewDataBinding = DataBindingUtil.setContentView(mActivity, layoutResID);
+        mRootView = mViewDataBinding.getRoot();
 
-        initLayout(mRootView);
-
-        return mRootView;
+        initLayout(mRootView, mViewDataBinding);
     }
 
-    public final View onCreateView(int layoutResID, ViewGroup viewGroup)
+    public final void setContentView(int layoutResID, ViewGroup viewGroup)
     {
-        mRootView = LayoutInflater.from(mActivity).inflate(layoutResID, viewGroup, false);
+        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), layoutResID, viewGroup, false);
+        mRootView = mViewDataBinding.getRoot();
 
-        initLayout(mRootView);
-
-        return mRootView;
+        initLayout(mRootView, mViewDataBinding);
     }
 
     protected void setVisibility(int visibility)

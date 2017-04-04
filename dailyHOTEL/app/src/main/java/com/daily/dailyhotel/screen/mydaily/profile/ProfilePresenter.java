@@ -11,7 +11,7 @@ import android.view.View;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BasePresenter;
 import com.daily.dailyhotel.entity.User;
-import com.daily.dailyhotel.network.ProfileNetworkImpl;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 
@@ -23,7 +23,7 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
 {
     private ProfileAnalyticsInterface mProfileAnalytics;
 
-    private ProfileNetworkImpl mProfileNetworkImpl;
+    private ProfileRemoteImpl mProfileRemoteImpl;
 
     public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -73,9 +73,9 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
 
         mProfileAnalytics.screenProfile(activity);
 
-        mProfileNetworkImpl = new ProfileNetworkImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
-        addCompositeDisposable(mProfileNetworkImpl.getProfile().doOnError(this::onObservableError).doOnNext(this::onUserProfile).subscribe());
+        addCompositeDisposable(mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile).subscribe());
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
-import com.daily.dailyhotel.network.model.UserData;
+import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -34,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

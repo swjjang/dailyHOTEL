@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 public interface BaseViewInterface
 {
-    View onCreateView(int layoutResID);
+    void setContentView(int layoutResID);
 
-    View onCreateView(int layoutResID, ViewGroup viewGroup);
+    void setContentView(int layoutResID, ViewGroup viewGroup);
 }

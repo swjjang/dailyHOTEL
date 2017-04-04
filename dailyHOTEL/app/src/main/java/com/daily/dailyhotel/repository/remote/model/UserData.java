@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.network.model;
+package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;

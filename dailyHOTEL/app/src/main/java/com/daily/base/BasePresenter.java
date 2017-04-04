@@ -46,7 +46,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
             throw new NullPointerException("mOnViewInterface is null");
         } else
         {
-            getActivity().setContentView(mOnViewInterface.onCreateView(layoutResID));
+            mOnViewInterface.setContentView(layoutResID);
         }
     }
 
@@ -108,17 +108,24 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mCompositeDisposable.add(disposable);
     }
 
-    public void onObservableError(Throwable throwable)
+    public void onHandleError(Throwable throwable)
     {
         if (throwable instanceof BaseException)
         {
+            // 팝업 에러 보여주기
+            BaseException baseException = (BaseException)throwable;
+
 
         } else if (throwable instanceof HttpException)
         {
-            if (((HttpException) throwable).code() == BaseException.CODE_UNAUTHORIZED)
-            {
+            retrofit2.HttpException httpException = (HttpException)throwable;
 
+            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+            {
             }
+        } else
+        {
+
         }
     }
 }

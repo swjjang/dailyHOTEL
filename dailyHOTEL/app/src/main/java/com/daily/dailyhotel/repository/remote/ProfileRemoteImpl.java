@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.network;
+package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,11 +10,11 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import io.reactivex.Observable;
 
-public class ProfileNetworkImpl implements ProfileInterface
+public class ProfileRemoteImpl implements ProfileInterface
 {
     private Context mContext;
 
-    public ProfileNetworkImpl(@NonNull Context context)
+    public ProfileRemoteImpl(@NonNull Context context)
     {
         mContext = context;
     }
