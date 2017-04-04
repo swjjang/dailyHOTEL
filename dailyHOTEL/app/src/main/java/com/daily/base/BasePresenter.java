@@ -1,6 +1,5 @@
 package com.daily.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -37,6 +36,16 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     public T1 getActivity()
     {
         return mActivity;
+    }
+
+    protected String getString(int resId)
+    {
+        return mActivity.getString(resId);
+    }
+
+    protected String getString(int resId, Object... formatArgs)
+    {
+        return mActivity.getString(resId, formatArgs);
     }
 
     public void setContentView(@LayoutRes int layoutResID)
@@ -100,7 +109,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
 
     protected void addCompositeDisposable(Disposable disposable)
     {
-        if(disposable == null)
+        if (disposable == null)
         {
             return;
         }
@@ -113,12 +122,12 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         if (throwable instanceof BaseException)
         {
             // 팝업 에러 보여주기
-            BaseException baseException = (BaseException)throwable;
+            BaseException baseException = (BaseException) throwable;
 
 
         } else if (throwable instanceof HttpException)
         {
-            retrofit2.HttpException httpException = (HttpException)throwable;
+            retrofit2.HttpException httpException = (HttpException) throwable;
 
             if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
             {

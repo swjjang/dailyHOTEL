@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseException;
 import com.daily.dailyhotel.domain.ProfileInterface;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.entity.UserBenefit;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import io.reactivex.Observable;
@@ -43,5 +44,42 @@ public class ProfileRemoteImpl implements ProfileInterface
 
             return user;
         });
+    }
+
+    @Override
+    public Observable<UserBenefit> getBenefit()
+    {
+        return DailyMobileAPI.getInstance(mContext).getUserBenefit().map((userBenefitDataBaseDto) ->
+        {
+            UserBenefit userBenefit = null;
+
+            if (userBenefitDataBaseDto != null)
+            {
+                if (userBenefitDataBaseDto.msgCode == 100 && userBenefitDataBaseDto.data != null)
+                {
+                    userBenefit = userBenefitDataBaseDto.data.getUserBenefit();
+                } else
+                {
+                    throw new BaseException(userBenefitDataBaseDto.msgCode, userBenefitDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return userBenefit;
+        });
+    }
+
+    @Override
+    public void setVerified(boolean verify)
+    {
+
+    }
+
+    @Override
+    public boolean isVerified()
+    {
+        return false;
     }
 }

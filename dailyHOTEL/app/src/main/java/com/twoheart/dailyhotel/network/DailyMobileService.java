@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.network;
 
+import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -79,6 +80,10 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Call<JSONObject> requestUserProfileBenefit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<UserBenefitData>> getUserBenefit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @FormUrlEncoded
     @POST("{mobileAPI}")

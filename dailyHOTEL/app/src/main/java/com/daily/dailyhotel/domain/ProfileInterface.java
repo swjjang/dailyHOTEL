@@ -1,12 +1,17 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.entity.UserBenefit;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 public interface ProfileInterface
 {
     Observable<User> getProfile();
+
+    Observable<UserBenefit> getBenefit();
+
+    void setVerified(boolean verify);
+
+    boolean isVerified();
 }

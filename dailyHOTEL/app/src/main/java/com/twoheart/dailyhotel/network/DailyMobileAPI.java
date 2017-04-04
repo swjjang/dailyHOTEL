@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -173,6 +174,16 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserProfileBenefit(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    public Observable<BaseDto<UserBenefitData>> getUserBenefit()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
+            : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
+
+        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(URL))//
+            .subscribeOn(Schedulers.io())//
+            .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

@@ -3,14 +3,12 @@ package com.daily.dailyhotel.screen.mydaily.profile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BasePresenter;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityProfileDataBinding;
 
 /**
  * Created by sheldon

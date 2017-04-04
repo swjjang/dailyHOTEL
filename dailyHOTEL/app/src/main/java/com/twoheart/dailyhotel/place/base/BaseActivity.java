@@ -698,15 +698,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             return;
         }
 
-        if (mDialog != null)
-        {
-            if (mDialog.isShowing())
-            {
-                mDialog.dismiss();
-            }
-
-            mDialog = null;
-        }
+        hideSimpleDialog();
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);

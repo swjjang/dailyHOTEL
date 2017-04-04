@@ -6,13 +6,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BasePresenter;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.entity.UserBenefit;
+import com.daily.dailyhotel.repository.local.ProfileLocalImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 
 /**
@@ -24,6 +27,7 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     private ProfileAnalyticsInterface mProfileAnalytics;
 
     private ProfileRemoteImpl mProfileRemoteImpl;
+    private ProfileLocalImpl mProfileLocalImpl;
 
     private User mUser;
 
@@ -60,11 +64,12 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
 
         setAnalytics(new ProfileAnalyticsImpl());
 
-        mProfileAnalytics.screenProfile(activity);
-
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mProfileLocalImpl = new ProfileLocalImpl(activity);
 
         addCompositeDisposable(mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile).subscribe());
+
+        mProfileAnalytics.screenProfile(activity);
     }
 
     @Override
@@ -76,7 +81,7 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void finish()
     {
-
+        onBackPressed();
     }
 
     @Override
@@ -122,41 +127,80 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    public void onUserProfile(User user)
+    private void onUserProfile(User user)
     {
         if (user == null)
         {
-            ExLog.d("pinkred : user == null");
+            ExLog.d("user == null");
             return;
         }
 
         mUser = user;
-        
-        ExLog.d("pinkred : " + user.name);
 
-        mUserIndex = userIndex;
-        String userType = DailyUserPreference.getInstance(ProfileActivity.this).getType();
+        getViewInterface().setEmail(user.userType, user.email);
 
-        mProfileLayout.updateUserInformation(userType, email, name, Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
-
-        if (isVerified == true)
+        switch (user.userType)
         {
-            if (isPhoneVerified == true)
+            case Constants.DAILY_USER:
+                getViewInterface().setPasswordVisible(true);
+                getViewInterface().setPhoneNumberVerifiedVisible(true);
+
+                String verifiedDate = null;
+
+                if (user.verified == true && user.phoneVerified == true)
+                {
+                    try
+                    {
+                        verifiedDate = DailyCalendar.convertDateFormatString(user.phoneVerifiedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+                    } catch (Exception e)
+                    {
+                        verifiedDate = null;
+                    }
+                }
+
+                getViewInterface().setPhoneNumberVerified(user.phoneVerified, verifiedDate);
+                break;
+
+            default:
+                getViewInterface().setPasswordVisible(false);
+                getViewInterface().setPhoneNumberVerifiedVisible(false);
+                break;
+        }
+
+        getViewInterface().setName(user.name);
+        getViewInterface().setPhoneNumber(user.phone);
+        getViewInterface().setBirthday(user.birthday);
+        getViewInterface().setReferralCode(user.referralCode);
+
+        if (user.verified == true)
+        {
+            if (user.phoneVerified == true)
             {
-                DailyPreference.getInstance(ProfileActivity.this).setVerification(true);
+                mProfileLocalImpl.setVerified(true);
             } else
             {
                 // 인증 후 인증이 해지된 경우
-                if (DailyPreference.getInstance(ProfileActivity.this).isVerification() == true)
+                if (mProfileLocalImpl.isVerified() == true)
                 {
-                    showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
                 }
 
-                DailyPreference.getInstance(ProfileActivity.this).setVerification(false);
+                mProfileLocalImpl.setVerified(false);
             }
         }
 
-        mNetworkController.requestUserProfileBenefit();
+        addCompositeDisposable(mProfileRemoteImpl.getBenefit().doOnError(this::onHandleError).doOnNext(this::onUserBenefit).subscribe());
+    }
+
+    private void onUserBenefit(UserBenefit userBenefit)
+    {
+        if (userBenefit == null)
+        {
+            ExLog.d("userBenefit == null");
+            return;
+        }
+
+        mProfileAnalytics.setExceedBonus(getActivity(), userBenefit.exceedLimitedBonus);
     }
 
     @Override
@@ -192,12 +236,13 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void onLogOutClick()
     {
-
+        mProfileAnalytics.clearUserInformation(getActivity());
+        mProfileAnalytics.screenLogOut(getActivity());
     }
 
     @Override
     public void onCodeCopyClick(String code)
     {
-
+        mProfileAnalytics.eventCopyReferralCode(getActivity());
     }
 }

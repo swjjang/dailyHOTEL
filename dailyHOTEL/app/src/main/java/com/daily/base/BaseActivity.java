@@ -28,15 +28,6 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         mPresenter.onIntent(getIntent());
     }
 
-    @Override
-    public void setContentView(@LayoutRes int layoutResID)
-    {
-        if (mPresenter != null)
-        {
-            mPresenter.setContentView(layoutResID);
-        }
-    }
-
     protected abstract
     @NonNull
     BasePresenter createInstancePresenter();
