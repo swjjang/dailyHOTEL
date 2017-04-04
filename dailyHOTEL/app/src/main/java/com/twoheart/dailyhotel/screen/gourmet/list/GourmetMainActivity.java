@@ -661,6 +661,12 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            GourmetMainActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             GourmetMainActivity.this.onError(e);

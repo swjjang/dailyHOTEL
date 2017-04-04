@@ -91,7 +91,7 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -146,11 +146,7 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            if (Constants.DEBUG == false)
-            {
-                Crashlytics.logException(t);
-            }
-
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onPolicyRefund(false, null, null, false, null);
         }
     };
@@ -206,6 +202,7 @@ public class StayReservationDetailNetworkController extends BaseNetworkControlle
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onReservationDetailError(t);
         }
     };

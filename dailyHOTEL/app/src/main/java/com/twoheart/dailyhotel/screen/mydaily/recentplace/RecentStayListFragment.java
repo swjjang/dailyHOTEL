@@ -120,30 +120,32 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            RecentStayListFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
-            unLockUI();
             RecentStayListFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            unLockUI();
             RecentStayListFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            unLockUI();
             RecentStayListFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call call, Response response)
         {
-            unLockUI();
             RecentStayListFragment.this.onErrorResponse(call, response);
         }
     };

@@ -106,6 +106,12 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            GourmetSearchResultListFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             GourmetSearchResultListFragment.this.onError(e);

@@ -499,30 +499,32 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StayRegionListActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
-            unLockUI();
             StayRegionListActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            unLockUI();
             StayRegionListActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            unLockUI();
             StayRegionListActivity.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call call, Response response)
         {
-            unLockUI();
             StayRegionListActivity.this.onErrorResponse(call, response);
         }
     };

@@ -76,7 +76,7 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 }

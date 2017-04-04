@@ -44,6 +44,23 @@ public abstract class BaseFragment extends Fragment implements Constants
         super.onDestroy();
     }
 
+    public void onError(Call call, Throwable e, boolean onlyReport)
+    {
+        if (onlyReport == false)
+        {
+            unLockUI();
+        }
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        if (baseActivity == null)
+        {
+            return;
+        }
+
+        baseActivity.onError(call, e, onlyReport);
+    }
+
     public void onError(Throwable e)
     {
         unLockUI();

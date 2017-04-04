@@ -239,6 +239,12 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StaySearchResultCurationActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StaySearchResultCurationActivity.this.onError(e);

@@ -411,6 +411,12 @@ public class RecentPlacesTabActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            RecentPlacesTabActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             RecentPlacesTabActivity.this.onError(e);

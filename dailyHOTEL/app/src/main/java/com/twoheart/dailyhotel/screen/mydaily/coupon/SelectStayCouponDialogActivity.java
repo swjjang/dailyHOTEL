@@ -316,6 +316,12 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            SelectStayCouponDialogActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             SelectStayCouponDialogActivity.this.onError(e);

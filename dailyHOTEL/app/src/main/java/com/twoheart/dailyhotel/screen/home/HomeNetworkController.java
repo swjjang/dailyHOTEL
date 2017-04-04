@@ -162,7 +162,7 @@ public class HomeNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -200,6 +200,7 @@ public class HomeNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onEventList(null);
         }
     };
@@ -238,6 +239,7 @@ public class HomeNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecommendationList(null, true);
         }
     };
@@ -287,6 +289,7 @@ public class HomeNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
         }
     };
@@ -336,6 +339,7 @@ public class HomeNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onRecentList(null, true);
         }
     };

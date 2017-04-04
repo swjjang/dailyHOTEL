@@ -354,6 +354,13 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            HappyTalkCategoryDialog.this.onError(call, e, onlyReport);
+            finish();
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             HappyTalkCategoryDialog.this.onError(e);

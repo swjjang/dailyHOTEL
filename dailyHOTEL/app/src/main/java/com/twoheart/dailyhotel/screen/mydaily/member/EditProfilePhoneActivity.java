@@ -346,6 +346,12 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            EditProfilePhoneActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             EditProfilePhoneActivity.this.onError(e);

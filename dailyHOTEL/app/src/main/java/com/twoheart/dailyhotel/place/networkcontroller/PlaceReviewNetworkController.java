@@ -65,6 +65,7 @@ public class PlaceReviewNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseDto<PlaceReviews>> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviews(null);
         }
     };

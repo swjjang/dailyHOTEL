@@ -846,6 +846,12 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            GourmetCurationActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             GourmetCurationActivity.this.onError(e);

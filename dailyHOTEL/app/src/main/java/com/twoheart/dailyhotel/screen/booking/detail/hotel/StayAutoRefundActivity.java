@@ -815,6 +815,12 @@ public class StayAutoRefundActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StayAutoRefundActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StayAutoRefundActivity.this.onError(e);

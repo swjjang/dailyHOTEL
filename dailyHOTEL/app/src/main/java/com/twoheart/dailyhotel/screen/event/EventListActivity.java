@@ -211,30 +211,32 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            EventListActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
-            unLockUI();
             EventListActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            unLockUI();
             EventListActivity.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            unLockUI();
             EventListActivity.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call call, Response response)
         {
-            unLockUI();
             EventListActivity.this.onErrorResponse(call, response);
         }
     };

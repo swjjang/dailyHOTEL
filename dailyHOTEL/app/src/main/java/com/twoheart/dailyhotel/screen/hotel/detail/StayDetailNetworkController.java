@@ -156,6 +156,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
         }
     };

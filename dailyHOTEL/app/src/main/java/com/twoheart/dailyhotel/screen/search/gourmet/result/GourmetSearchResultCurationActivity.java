@@ -219,6 +219,12 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            GourmetSearchResultCurationActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             GourmetSearchResultCurationActivity.this.onError(e);

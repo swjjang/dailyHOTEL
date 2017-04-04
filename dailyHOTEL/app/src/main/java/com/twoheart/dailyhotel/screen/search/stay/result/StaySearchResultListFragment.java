@@ -124,6 +124,12 @@ public class StaySearchResultListFragment extends StayListFragment
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StaySearchResultListFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StaySearchResultListFragment.this.onError(e);
