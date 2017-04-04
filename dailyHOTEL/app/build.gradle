@@ -96,9 +96,13 @@ android {
 
     applicationVariants.all { variant ->
 
-        // ./gradlew assembleDebug -Pqa
-        if (project.hasProperty('qa') == false) {
-            return
+        if (variant.buildType.name == "release") {
+
+        } else {
+            // ./gradlew assembleDebug -Pqa
+            if (project.hasProperty('qa') == false) {
+                return
+            }
         }
 
         def simpleDateFormat = new SimpleDateFormat("yyMMdd");
