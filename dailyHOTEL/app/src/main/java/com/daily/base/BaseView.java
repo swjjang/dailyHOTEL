@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.twoheart.dailyhotel.R;
+
 public abstract class BaseView<T extends OnBaseEventListener> implements BaseViewInterface
 {
     protected BaseActivity mActivity;

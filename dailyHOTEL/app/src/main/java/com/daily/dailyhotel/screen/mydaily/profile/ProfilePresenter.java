@@ -25,6 +25,8 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
 
     private ProfileRemoteImpl mProfileRemoteImpl;
 
+    private User mUser;
+
     public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
     {
         void screenProfile(Activity activity);
@@ -48,26 +50,13 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     protected ProfileViewInterface createInstanceViewInterface()
     {
-        return new ProfileView(getActivity(), new ProfileView.OnEventListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-
-            }
-
-            @Override
-            public void finish()
-            {
-
-            }
-        });
+        return new ProfileView(getActivity(), this);
     }
 
     @Override
     public void initialize(ProfileActivity activity)
     {
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_profile_data);
 
         setAnalytics(new ProfileAnalyticsImpl());
 
@@ -133,12 +122,6 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    @Override
-    public void onClick(View view)
-    {
-
-    }
-
     public void onUserProfile(User user)
     {
         if (user == null)
@@ -147,6 +130,74 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
             return;
         }
 
+        mUser = user;
+        
         ExLog.d("pinkred : " + user.name);
+
+        mUserIndex = userIndex;
+        String userType = DailyUserPreference.getInstance(ProfileActivity.this).getType();
+
+        mProfileLayout.updateUserInformation(userType, email, name, Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
+
+        if (isVerified == true)
+        {
+            if (isPhoneVerified == true)
+            {
+                DailyPreference.getInstance(ProfileActivity.this).setVerification(true);
+            } else
+            {
+                // 인증 후 인증이 해지된 경우
+                if (DailyPreference.getInstance(ProfileActivity.this).isVerification() == true)
+                {
+                    showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+                }
+
+                DailyPreference.getInstance(ProfileActivity.this).setVerification(false);
+            }
+        }
+
+        mNetworkController.requestUserProfileBenefit();
+    }
+
+    @Override
+    public void startEditEmail()
+    {
+
+    }
+
+    @Override
+    public void startEditName(String name)
+    {
+
+    }
+
+    @Override
+    public void startEditPhone(String phoneNumber)
+    {
+
+    }
+
+    @Override
+    public void startEditPassword()
+    {
+
+    }
+
+    @Override
+    public void startEditBirthday(String birthday)
+    {
+
+    }
+
+    @Override
+    public void onLogOutClick()
+    {
+
+    }
+
+    @Override
+    public void onCodeCopyClick(String code)
+    {
+
     }
 }
