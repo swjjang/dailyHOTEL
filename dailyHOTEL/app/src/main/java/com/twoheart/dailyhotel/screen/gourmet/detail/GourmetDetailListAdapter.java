@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
@@ -37,7 +38,6 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private PlaceReviewScores mPlaceReviewScores;
     private Context mContext;
     private View[] mDetailViews;
-    private int mImageHeight;
     protected View mGourmetTitleLayout;
 
     GourmetDetailLayout.OnEventListener mOnEventListener;
@@ -51,7 +51,6 @@ public class GourmetDetailListAdapter extends BaseAdapter
         mContext = context;
         setData(gourmetBookingDay, gourmetDetail, placeReviewScores);
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
-        mImageHeight = Util.getLCDWidth(context);
 
         mOnEventListener = onEventListener;
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
@@ -199,7 +198,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
     private View getEmptyView(View view)
     {
         View emptyView = view.findViewById(R.id.imageEmptyHeight);
-        emptyView.getLayoutParams().height = mImageHeight;
+        emptyView.getLayoutParams().height = PlaceDetailLayout.getImageLayoutHeight(mContext);
 
         emptyView.setClickable(true);
         emptyView.setOnTouchListener(mEmptyViewOnTouchListener);

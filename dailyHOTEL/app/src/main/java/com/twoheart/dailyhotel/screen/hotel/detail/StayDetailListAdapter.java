@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -43,7 +44,6 @@ public class StayDetailListAdapter extends BaseAdapter
     private PlaceReviewScores mPlaceReviewScores;
     private Context mContext;
     private View[] mDetailViews;
-    private int mImageHeight;
     private View mHotelTitleLayout;
 
     StayDetailLayout.OnEventListener mOnEventListener;
@@ -57,7 +57,6 @@ public class StayDetailListAdapter extends BaseAdapter
         mContext = context;
         setData(stayBookingDay, stayDetail, placeReviewScores);
         mDetailViews = new View[NUMBER_OF_ROWSLIST];
-        mImageHeight = Util.getLCDWidth(mContext);
 
         mOnEventListener = onEventListener;
         mEmptyViewOnTouchListener = emptyViewOnTouchListener;
@@ -205,7 +204,7 @@ public class StayDetailListAdapter extends BaseAdapter
     private View getDetail00View(View view)
     {
         View emptyView = view.findViewById(R.id.imageEmptyHeight);
-        emptyView.getLayoutParams().height = mImageHeight;
+        emptyView.getLayoutParams().height = PlaceDetailLayout.getImageLayoutHeight(mContext);
 
         emptyView.setClickable(true);
         emptyView.setOnTouchListener(mEmptyViewOnTouchListener);
