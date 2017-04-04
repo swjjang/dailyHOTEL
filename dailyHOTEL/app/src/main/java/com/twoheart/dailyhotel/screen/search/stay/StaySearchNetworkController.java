@@ -74,6 +74,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
         @Override
         public void onFailure(Call<BaseListDto<Keyword>> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAutoComplete(null, null);
         }
     };

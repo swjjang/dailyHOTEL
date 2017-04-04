@@ -343,23 +343,26 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            GourmetSearchFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
-            unLockUI();
             GourmetSearchFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            unLockUI();
             GourmetSearchFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            unLockUI();
             GourmetSearchFragment.this.onErrorToastMessage(message);
         }
 

@@ -434,6 +434,12 @@ public class SignupStep2Activity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            SignupStep2Activity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             SignupStep2Activity.this.onError(e);

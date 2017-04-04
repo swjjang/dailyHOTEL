@@ -124,7 +124,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 }

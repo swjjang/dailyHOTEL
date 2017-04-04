@@ -1736,6 +1736,17 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            if (mIsListSoldOut == false)
+            {
+                setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            }
+
+            GourmetDetailActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             if (mIsListSoldOut == false)

@@ -83,7 +83,7 @@ public class GourmetReservationDetailNetworkController extends BaseNetworkContro
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -137,6 +137,7 @@ public class GourmetReservationDetailNetworkController extends BaseNetworkContro
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onReservationDetailError(t);
         }
     };

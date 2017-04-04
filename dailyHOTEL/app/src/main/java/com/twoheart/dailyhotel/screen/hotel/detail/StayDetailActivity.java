@@ -1874,6 +1874,13 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
+            StayDetailActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);

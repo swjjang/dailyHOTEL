@@ -346,6 +346,12 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            SelectGourmetCouponDialogActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             SelectGourmetCouponDialogActivity.this.onError(e);

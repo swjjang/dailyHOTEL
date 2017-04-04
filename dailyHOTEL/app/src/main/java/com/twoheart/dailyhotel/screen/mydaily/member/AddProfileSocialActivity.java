@@ -490,6 +490,12 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            AddProfileSocialActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             AddProfileSocialActivity.this.onError(e);

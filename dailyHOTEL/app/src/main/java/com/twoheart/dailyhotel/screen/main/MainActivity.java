@@ -891,6 +891,15 @@ public class MainActivity extends BaseActivity implements Constants
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            mDelayTimeHandler.removeMessages(0);
+            unLockUI();
+
+            MainActivity.this.onError(call, e, false);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             mDelayTimeHandler.removeMessages(0);

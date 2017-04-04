@@ -110,6 +110,7 @@ public class MainNetworkController extends BaseNetworkController
             @Override
             public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
             {
+                mOnNetworkControllerListener.onError(call, t, true);
             }
         });
     }
@@ -188,6 +189,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseDto<Status>> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onCheckServerResponse(null, null);
         }
     };
@@ -246,7 +248,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -290,7 +292,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-
+            mOnNetworkControllerListener.onError(call, t, true);
         }
     };
 
@@ -331,7 +333,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-
+            mOnNetworkControllerListener.onError(call, t, true);
         }
     };
 
@@ -371,7 +373,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-
+            mOnNetworkControllerListener.onError(call, t, true);
         }
     };
 
@@ -428,7 +430,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -469,7 +471,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            // do nothing
+            mOnNetworkControllerListener.onError(call, t, true);
         }
     };
 
@@ -511,7 +513,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -559,7 +561,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -600,6 +602,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseListDto<Holiday>> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
         }
     };
 
@@ -636,7 +639,7 @@ public class MainNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-
+            mOnNetworkControllerListener.onError(call, t, true);
         }
     };
 }

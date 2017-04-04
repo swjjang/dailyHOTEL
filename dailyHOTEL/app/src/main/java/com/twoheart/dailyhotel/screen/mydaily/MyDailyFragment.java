@@ -714,6 +714,12 @@ public class MyDailyFragment extends BaseFragment implements Constants
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            MyDailyFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             MyDailyFragment.this.onError(e);

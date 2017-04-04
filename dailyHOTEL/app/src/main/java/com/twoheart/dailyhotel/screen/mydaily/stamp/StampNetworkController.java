@@ -70,7 +70,7 @@ public class StampNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseDto<Stamp>> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -125,7 +125,7 @@ public class StampNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 }

@@ -759,6 +759,12 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StayCurationActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StayCurationActivity.this.onError(e);

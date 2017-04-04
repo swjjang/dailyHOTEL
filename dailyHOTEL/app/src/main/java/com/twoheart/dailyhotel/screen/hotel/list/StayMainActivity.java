@@ -739,6 +739,12 @@ public class StayMainActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StayMainActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StayMainActivity.this.onError(e);

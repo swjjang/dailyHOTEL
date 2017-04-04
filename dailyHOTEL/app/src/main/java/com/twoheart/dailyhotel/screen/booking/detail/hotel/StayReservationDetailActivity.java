@@ -1057,6 +1057,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StayReservationDetailActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StayReservationDetailActivity.this.onError(e);

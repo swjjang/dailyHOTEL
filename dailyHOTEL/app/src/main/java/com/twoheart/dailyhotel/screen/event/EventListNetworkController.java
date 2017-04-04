@@ -88,7 +88,7 @@ public class EventListNetworkController extends BaseNetworkController
         @Override
         public void onFailure(Call<BaseListDto<Event>> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 }

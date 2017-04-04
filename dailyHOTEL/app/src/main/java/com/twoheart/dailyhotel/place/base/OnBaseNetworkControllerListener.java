@@ -5,6 +5,8 @@ import retrofit2.Response;
 
 public interface OnBaseNetworkControllerListener
 {
+    void onError(Call call, Throwable e, boolean onlyReport);
+
     void onError(Throwable e);
 
     void onErrorPopupMessage(int msgCode, String message);

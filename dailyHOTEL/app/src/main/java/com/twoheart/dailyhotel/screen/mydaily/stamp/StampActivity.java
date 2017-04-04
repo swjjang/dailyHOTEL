@@ -304,6 +304,12 @@ public class StampActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            StampActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             StampActivity.this.onError(e);

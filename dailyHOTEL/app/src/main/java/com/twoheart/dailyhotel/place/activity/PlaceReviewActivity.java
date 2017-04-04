@@ -173,6 +173,12 @@ public abstract class PlaceReviewActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            PlaceReviewActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             PlaceReviewActivity.this.onError(e);

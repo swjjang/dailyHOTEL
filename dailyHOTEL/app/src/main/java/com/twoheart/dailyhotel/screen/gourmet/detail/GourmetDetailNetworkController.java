@@ -98,7 +98,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
         @Override
         public void onFailure(Call<BaseDto<GourmetDetailParams>> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(t);
+            mOnNetworkControllerListener.onError(call, t, false);
         }
     };
 
@@ -139,6 +139,7 @@ public class GourmetDetailNetworkController extends PlaceDetailNetworkController
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
+            mOnNetworkControllerListener.onError(call, t, true);
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
         }
     };

@@ -198,30 +198,32 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            GourmetWishListFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
-            unLockUI();
             GourmetWishListFragment.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(int msgCode, String message)
         {
-            unLockUI();
             GourmetWishListFragment.this.onErrorPopupMessage(msgCode, message);
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            unLockUI();
             GourmetWishListFragment.this.onErrorToastMessage(message);
         }
 
         @Override
         public void onErrorResponse(Call call, Response response)
         {
-            unLockUI();
             GourmetWishListFragment.this.onErrorResponse(call, response);
         }
     };

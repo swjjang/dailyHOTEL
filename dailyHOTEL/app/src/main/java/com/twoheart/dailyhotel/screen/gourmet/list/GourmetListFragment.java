@@ -278,13 +278,19 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
-        public void onError(Throwable e)
+        public void onError(Call call, Throwable e, boolean onlyReport)
         {
-            if (DEBUG == false && e != null)
+            if (mPlaceListLayout.isRefreshing() == true)
             {
-                Crashlytics.logException(e);
+                mPlaceListLayout.setSwipeRefreshing(false);
             }
 
+            GourmetListFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
+        public void onError(Throwable e)
+        {
             if (mPlaceListLayout.isRefreshing() == true)
             {
                 mPlaceListLayout.setSwipeRefreshing(false);

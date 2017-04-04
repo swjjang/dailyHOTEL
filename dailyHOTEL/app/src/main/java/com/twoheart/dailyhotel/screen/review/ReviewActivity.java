@@ -1010,6 +1010,17 @@ public class ReviewActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            ReviewActivity.this.onError(call, e, onlyReport);
+
+            if (Review.GRADE_NONE.equalsIgnoreCase(mReviewGrade) == true)
+            {
+                finish();
+            }
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             ReviewActivity.this.onError(e);

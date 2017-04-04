@@ -720,6 +720,12 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            GourmetReservationDetailActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             GourmetReservationDetailActivity.this.onError(e);

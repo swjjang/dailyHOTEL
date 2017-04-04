@@ -226,6 +226,12 @@ public class RegisterCouponActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            RegisterCouponActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             RegisterCouponActivity.this.onError(e);

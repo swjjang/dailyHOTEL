@@ -957,6 +957,12 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            HomeFragment.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             HomeFragment.this.onError(e);

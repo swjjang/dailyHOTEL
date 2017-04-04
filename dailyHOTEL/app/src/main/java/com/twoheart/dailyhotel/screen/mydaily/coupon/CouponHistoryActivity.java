@@ -102,6 +102,12 @@ public class CouponHistoryActivity extends BaseActivity
         }
 
         @Override
+        public void onError(Call call, Throwable e, boolean onlyReport)
+        {
+            CouponHistoryActivity.this.onError(call, e, onlyReport);
+        }
+
+        @Override
         public void onError(Throwable e)
         {
             CouponHistoryActivity.this.onError(e);
