@@ -11,6 +11,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BasePresenter;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
+import com.daily.dailyhotel.parcel.UserParcel;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
@@ -119,12 +120,16 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
+
+        outState.putParcelable("user", new UserParcel(mUser));
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
+
+        mUser = ((UserParcel) savedInstanceState.getParcelable("user")).getUser();
     }
 
     private void onUserProfile(User user)
