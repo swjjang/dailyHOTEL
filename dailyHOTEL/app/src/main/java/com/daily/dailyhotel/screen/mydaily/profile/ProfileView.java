@@ -37,7 +37,6 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         super(baseActivity, listener);
     }
 
-
     @Override
     protected void initLayout(ActivityProfileDataBinding viewDataBinding)
     {

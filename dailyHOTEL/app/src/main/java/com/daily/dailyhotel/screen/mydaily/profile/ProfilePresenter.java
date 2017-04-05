@@ -185,15 +185,14 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
             } else
             {
                 // 인증 후 인증이 해지된 경우
-                addCompositeDisposable(mConfigLocalImpl.isVerified().doOnNext(verify ->
-                {
-                    addCompositeDisposable(mConfigLocalImpl.setVerified(false).subscribe());
-                }).subscribe(verify ->
+                addCompositeDisposable(mConfigLocalImpl.isVerified().subscribe(verify ->
                 {
                     if (verify.booleanValue() == true)
                     {
                         getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
                     }
+
+                    addCompositeDisposable(mConfigLocalImpl.setVerified(false).subscribe());
                 }));
             }
         }
