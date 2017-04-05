@@ -11,7 +11,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BasePresenter;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
-import com.daily.dailyhotel.repository.local.ProfileLocalImpl;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -27,7 +27,7 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     private ProfileAnalyticsInterface mProfileAnalytics;
 
     private ProfileRemoteImpl mProfileRemoteImpl;
-    private ProfileLocalImpl mProfileLocalImpl;
+    private ConfigLocalImpl mConfigLocalImpl;
 
     private User mUser;
 
@@ -65,7 +65,7 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
         setAnalytics(new ProfileAnalyticsImpl());
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mProfileLocalImpl = new ProfileLocalImpl(activity);
+        mConfigLocalImpl = new ConfigLocalImpl(activity);
 
         addCompositeDisposable(mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile).subscribe());
 
@@ -176,16 +176,20 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
         {
             if (user.phoneVerified == true)
             {
-                mProfileLocalImpl.setVerified(true);
+                addCompositeDisposable(mConfigLocalImpl.setVerified(true).subscribe());
             } else
             {
                 // 인증 후 인증이 해지된 경우
-                if (mProfileLocalImpl.isVerified() == true)
+                addCompositeDisposable(mConfigLocalImpl.isVerified().doOnNext(verify ->
                 {
-                    getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
-                }
-
-                mProfileLocalImpl.setVerified(false);
+                    addCompositeDisposable(mConfigLocalImpl.setVerified(false).subscribe());
+                }).subscribe(verify ->
+                {
+                    if (verify.booleanValue() == true)
+                    {
+                        getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+                    }
+                }));
             }
         }
 

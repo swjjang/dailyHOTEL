@@ -5,9 +5,9 @@ import com.daily.dailyhotel.entity.UserBenefit;
 
 import io.reactivex.Observable;
 
-public interface ProfileInterface
+public interface ConfigInterface
 {
-    Observable<User> getProfile();
+    Observable setVerified(boolean verify);
 
-    Observable<UserBenefit> getBenefit();
+    Observable<Boolean> isVerified();
 }

@@ -70,16 +70,4 @@ public class ProfileRemoteImpl implements ProfileInterface
             return userBenefit;
         });
     }
-
-    @Override
-    public void setVerified(boolean verify)
-    {
-
-    }
-
-    @Override
-    public boolean isVerified()
-    {
-        return false;
-    }
 }

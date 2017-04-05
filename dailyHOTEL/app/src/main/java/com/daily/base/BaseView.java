@@ -99,6 +99,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         return mActivity.getString(resId, formatArgs);
     }
 
+    @Override
     public void hideSimpleDialog()
     {
         if (mDialog != null)
@@ -110,6 +111,16 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
 
             mDialog = null;
         }
+    }
+
+    public void showLoadingBar()
+    {
+
+    }
+
+    public void hideLoadingBar()
+    {
+
     }
 
     @Override
