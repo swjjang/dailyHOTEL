@@ -12,19 +12,19 @@ public class ProductImageInformation implements Parcelable
     @JsonField(name = "idx")
     public int index;
 
-    @JsonField
+    @JsonField(name = "imageDescription")
     public String imageDescription;
 
-    @JsonField
+    @JsonField(name = "imageUrl")
     public String imageUrl;
 
-    @JsonField
+    @JsonField(name = "isPrimary")
     public boolean isPrimary;
 
-    @JsonField
+    @JsonField(name = "restaurantTicketIdx")
     public int restaurantTicketIdx;
 
-    @JsonField
+    @JsonField(name = "seq")
     public int seq;
 
     public ProductImageInformation()

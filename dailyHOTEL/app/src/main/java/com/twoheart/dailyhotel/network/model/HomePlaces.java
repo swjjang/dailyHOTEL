@@ -11,7 +11,7 @@ import java.util.List;
 @JsonObject
 public class HomePlaces<E>
 {
-    @JsonField
+    @JsonField(name = "items")
     public List<E> items;
 
     @JsonField(name = "imgUrl")

@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.network.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import java.util.Map;
@@ -8,43 +9,45 @@ import java.util.Map;
 @JsonObject
 public abstract class RecommendationPlace
 {
-    @JsonField
+    @JsonField(name = "name")
     public String name;
 
-    @JsonField
+    @JsonField(name = "addrSummary")
     public String addrSummary;
 
-    @JsonField
+    @JsonField(name = "category")
     public String category;
 
-    @JsonField
+    @JsonField(name = "discount")
     public int discount;
 
-    @JsonField
+    @JsonField(name = "price")
     public int price;
 
-    @JsonField
+    @JsonField(name = "imgPathMain")
     public Map<String, Object> imgPathMain;
 
-    @JsonField
+    @JsonField(name = "latitude")
     public double latitude;
 
-    @JsonField
+    @JsonField(name = "longitude")
     public double longitude;
 
-    @JsonField
+    @JsonField(name = "districtName")
     public String districtName;
 
-    @JsonField
+    @JsonField(name = "rating")
     public int rating;
 
-    @JsonField
+    @JsonField(name = "benefit")
     public String benefit;
 
-    @JsonField
+    @JsonField(name = "isSoldOut")
     public boolean isSoldOut;
 
+    @JsonIgnore
     public String imageUrl;
 
+    @JsonIgnore
     public int entryPosition;
 }

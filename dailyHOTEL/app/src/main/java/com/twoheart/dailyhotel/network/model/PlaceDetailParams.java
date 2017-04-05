@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.twoheart.dailyhotel.model.DetailInformation;
 
@@ -20,60 +21,63 @@ public abstract class PlaceDetailParams<E> implements Parcelable
     @JsonField(name = "idx")
     public int index;
 
-    @JsonField
+    @JsonField(name = "name")
     public String name;
 
-    @JsonField
+    @JsonField(name = "latitude")
     public double latitude;
 
-    @JsonField
+    @JsonField(name = "longitude")
     public double longitude;
 
-    @JsonField
+    @JsonField(name = "address")
     public String address;
 
     // 직접 접근 금지
     // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    @JsonField
+    @JsonField(name = "imgPath")
     public Map<String, List<ImageInformation>> imgPath;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "grade")
     public String grade;
 
-    @JsonField
+    @JsonField(name = "ratingPersons")
     public int ratingPersons;
 
-    @JsonField
+    @JsonField(name = "ratingValue")
     public int ratingValue;
 
-    @JsonField
+    @JsonField(name = "ratingShow")
     public boolean ratingShow;
 
-    @JsonField
+    @JsonField(name = "category")
     public String category;
 
-    @JsonField
+    @JsonField(name = "benefit")
     public String benefit;
 
-    @JsonField
+    @JsonField(name = "benefitContents")
     public List<String> benefitContents;
 
     // 직접 접근 금지
     // 주의 : Parcelable 후에 해당 값은 사라집니다.
-    @JsonField
+    @JsonField(name = "details")
     public List<Map<String, List<String>>> details;
 
-    @JsonField
+    @JsonField(name = "imgUrl")
     public String imgUrl;
 
-    @JsonField
+    @JsonField(name = "wishCount")
     public int wishCount; // 위시리스트 카운트
 
-    @JsonField
+    @JsonField(name = "myWish")
     public boolean myWish; // 위시리스트 클릭 상태
 
+    @JsonIgnore
     protected ArrayList<ImageInformation> mImageList;
+
+    @JsonIgnore
     protected ArrayList<DetailInformation> mDetailList;
 
     public abstract List<E> getProductList();

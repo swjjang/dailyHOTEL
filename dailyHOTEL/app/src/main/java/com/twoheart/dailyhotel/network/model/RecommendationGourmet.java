@@ -17,10 +17,10 @@ public class RecommendationGourmet extends RecommendationPlace
     @JsonField(name = "isDailychoice")
     public boolean isDailyChoice;
 
-    @JsonField
+    @JsonField(name = "persons")
     public int persons;
 
-    @JsonField
+    @JsonField(name = "categorySub")
     public String categorySub;
 
     @OnJsonParseComplete

@@ -8,12 +8,12 @@ import java.util.List;
 @JsonObject
 public class BaseListDto<E>
 {
-    @JsonField
+    @JsonField(name = "msgCode")
     public int msgCode;
 
-    @JsonField
+    @JsonField(name = "msg")
     public String msg;
 
-    @JsonField
+    @JsonField(name = "data")
     public List<E> data;
 }

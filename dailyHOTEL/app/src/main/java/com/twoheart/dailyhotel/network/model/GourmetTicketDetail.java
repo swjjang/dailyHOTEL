@@ -9,10 +9,10 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class GourmetTicketDetail implements Parcelable
 {
-    @JsonField
+    @JsonField(name = "primaryTicketImageDescription")
     public String primaryTicketImageDescription;
 
-    @JsonField
+    @JsonField(name = "primaryTicketImageUrl")
     public String primaryTicketImageUrl;
 
     public GourmetTicketDetail()

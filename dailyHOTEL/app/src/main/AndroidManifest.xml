@@ -680,6 +680,8 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key"/>
 
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
+
         <!--
          Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable
          installation campaign reporting

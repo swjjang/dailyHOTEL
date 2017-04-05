@@ -9,10 +9,10 @@ public class PlaceReview
     @JsonField(name = "userId")
     public String email;
 
-    @JsonField
+    @JsonField(name = "comment")
     public String comment;
 
-    @JsonField
+    @JsonField(name = "createdAt")
     public String createdAt; // ISO-8601
 
     public PlaceReview()

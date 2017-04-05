@@ -9,10 +9,10 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class PlaceReviewScore implements Parcelable
 {
-    @JsonField
+    @JsonField(name = "type")
     public String type;
 
-    @JsonField
+    @JsonField(name = "scoreAvg")
     public float scoreAvg;
 
     public PlaceReviewScore()

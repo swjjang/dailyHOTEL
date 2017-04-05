@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.twoheart.dailyhotel.model.DetailInformation;
@@ -36,7 +37,7 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
     //    @JsonField
     //    public String category;
 
-    @JsonField
+    @JsonField(name = "categorySub")
     public String categorySub;
     //
     //    // 직접 접근 금지
@@ -64,31 +65,31 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
     //    public boolean ratingShow;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "parking")
     public boolean parking;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "valet")
     public boolean valet;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "babySeat")
     public boolean babySeat;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "privateRoom")
     public boolean privateRoom;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "groupBooking")
     public boolean groupBooking;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "corkage")
     public boolean corkage;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "tickets")
     public List<GourmetProduct> tickets;
     //
     //    // 직접 접근 금지
@@ -112,6 +113,8 @@ public class GourmetDetailParams extends PlaceDetailParams<GourmetProduct>
     //    public boolean myWish;
 
     //    protected ArrayList<DetailInformation> mDetailList;
+
+    @JsonIgnore
     private ArrayList<GourmetDetail.Pictogram> mPictogramList;
     //    private ArrayList<ImageInformation> mImageList;
 

@@ -11,10 +11,10 @@ import java.util.List;
 @JsonObject
 public class PlaceReviewScores implements Parcelable
 {
-    @JsonField
+    @JsonField(name = "reviewScoreAvgs")
     public List<PlaceReviewScore> reviewScoreAvgs;
 
-    @JsonField
+    @JsonField(name = "reviewScoreTotalCount")
     public int reviewScoreTotalCount;
 
     public PlaceReviewScores()

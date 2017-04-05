@@ -9,9 +9,9 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class Prices
 {
-    @JsonField
+    @JsonField(name = "normalPrice")
     public int normalPrice;
 
-    @JsonField
+    @JsonField(name = "discountPrice")
     public int discountPrice;
 }

@@ -19,22 +19,22 @@ public class HomePlace
     @JsonField(name = "idx")
     public int index;
 
-    @JsonField
+    @JsonField(name = "title")
     public String title;
 
-    @JsonField
+    @JsonField(name = "serviceType")
     public String serviceType;
 
-    @JsonField
+    @JsonField(name = "regionName")
     public String regionName;
 
-    @JsonField
+    @JsonField(name = "prices")
     public Prices prices;
 
-    @JsonField
+    @JsonField(name = "imgPathMain")
     public Map<String, Object> imgPathMain;
 
-    @JsonField
+    @JsonField(name = "details")
     public HomeDetails details;
 
     @JsonIgnore
