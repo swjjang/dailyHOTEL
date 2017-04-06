@@ -6,12 +6,12 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class BaseDto<T>
 {
-    @JsonField
+    @JsonField(name = "msgCode")
     public int msgCode;
 
-    @JsonField
+    @JsonField(name = "msg")
     public String msg;
 
-    @JsonField
+    @JsonField(name = "data")
     public T data;
 }
