@@ -34,7 +34,7 @@ import retrofit2.Response;
 public class HappyTalkCategoryDialog extends BaseActivity
 {
     public static final String SITE_ID = "4000000190";
-    public static final String YELLOW_ID = "40hailey099";
+    public static final String YELLOW_ID = "%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"; // @데일리호텔
 
     public enum CallScreen
     {
