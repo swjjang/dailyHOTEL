@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.twoheart.dailyhotel.util.Util;
@@ -16,22 +17,22 @@ public class GourmetProduct implements Parcelable
     @JsonField(name = "idx")
     public int index;
 
-    @JsonField
+    @JsonField(name = "saleIdx")
     public int saleIdx;
 
-    @JsonField
+    @JsonField(name = "ticketName")
     public String ticketName;
 
-    @JsonField
+    @JsonField(name = "price")
     public int price;
 
     @JsonField(name = "discount")
     public int discountPrice;
 
-    @JsonField
+    @JsonField(name = "menuBenefit")
     public String menuBenefit;
 
-    @JsonField
+    @JsonField(name = "needToKnow")
     public String needToKnow;
 
     //    @JsonField
@@ -43,28 +44,29 @@ public class GourmetProduct implements Parcelable
     //    @JsonField
     //    public int timeInterval;
     //
-    @JsonField
+    @JsonField(name = "openTime")
     public String openTime;
 
-    @JsonField
+    @JsonField(name = "closeTime")
     public String closeTime;
 
-    @JsonField
+    @JsonField(name = "lastOrderTime")
     public String lastOrderTime;
 
     //
     //    @JsonField
     //    public String expiryTime;
 
-    @JsonField
+    @JsonField(name = "images")
     public List<ProductImageInformation> images;
 
-    @JsonField
+    @JsonField(name = "menuSummary")
     public String menuSummary;
 
-    @JsonField
+    @JsonField(name = "menuDetail")
     public List<String> menuDetail;
 
+    @JsonIgnore
     private int mDefaultImageIndex;
 
     public GourmetProduct()

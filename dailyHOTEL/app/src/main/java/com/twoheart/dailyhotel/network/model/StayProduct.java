@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.twoheart.dailyhotel.util.Util;
@@ -34,22 +35,22 @@ public class StayProduct implements Parcelable
     @JsonField(name = "pc")
     public boolean hasPC;
 
-    @JsonField
+    @JsonField(name = "price")
     public int price;
 
     @JsonField(name = "privateBbq")
     public boolean hasPrivateBBQ;
 
-    @JsonField
+    @JsonField(name = "refundType")
     public String refundType;
 
-    @JsonField
+    @JsonField(name = "roomBenefit")
     public String roomBenefit;
 
     @JsonField(name = "roomIdx")
     public int roomIndex;
 
-    @JsonField
+    @JsonField(name = "roomName")
     public String roomName;
 
     @JsonField(name = "spaWallpool")
@@ -58,6 +59,7 @@ public class StayProduct implements Parcelable
     @JsonField(name = "tv")
     public boolean hasTV;
     //
+    @JsonIgnore
     public boolean isNRD;
     //
 

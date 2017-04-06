@@ -12,13 +12,13 @@ import com.twoheart.dailyhotel.model.Stay;
 @JsonObject
 public class HomeDetails
 {
-    @JsonField
+    @JsonField(name = "grade")
     public String grade;
 
-    @JsonField
+    @JsonField(name = "category")
     public String category;
 
-    @JsonField
+    @JsonField(name = "persons")
     public int persons;
 
     @JsonIgnore

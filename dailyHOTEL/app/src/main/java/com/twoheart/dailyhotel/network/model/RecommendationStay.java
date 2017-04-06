@@ -14,16 +14,16 @@ public class RecommendationStay extends RecommendationPlace
     @JsonField(name = "hotelIdx")
     public int index;
 
-    @JsonField
+    @JsonField(name = "displayText")
     public String displayText;
 
-    @JsonField
+    @JsonField(name = "grade")
     public String grade;
 
-    @JsonField
+    @JsonField(name = "isDailyChoice")
     public boolean isDailyChoice;
 
-    @JsonField
+    @JsonField(name = "overseas")
     public boolean overseas;
 
     @OnJsonParseComplete

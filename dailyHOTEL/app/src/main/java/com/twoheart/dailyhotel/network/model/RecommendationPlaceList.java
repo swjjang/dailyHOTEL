@@ -8,10 +8,10 @@ import java.util.List;
 @JsonObject
 public class RecommendationPlaceList<E>
 {
-    @JsonField
+    @JsonField(name = "recommendation")
     public Recommendation recommendation;
 
-    @JsonField
+    @JsonField(name = "items")
     public List<E> items;
 
     @JsonField(name = "imgUrl")

@@ -6,12 +6,12 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class Holiday
 {
-    @JsonField
+    @JsonField(name = "date")
     public String date;
 
-    @JsonField
+    @JsonField(name = "description")
     public String description;
 
-    @JsonField
+    @JsonField(name = "holiday")
     public boolean holiday;
 }

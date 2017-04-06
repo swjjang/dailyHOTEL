@@ -4,17 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 @JsonObject
 public class ImageInformation implements Parcelable
 {
-    @JsonField
+    @JsonField(name = "description")
     public String description;
 
-    @JsonField
+    @JsonField(name = "name")
     public String name;
 
+    @JsonIgnore
     private String mUrl;
 
     public ImageInformation()

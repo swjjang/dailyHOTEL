@@ -6,12 +6,12 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class Status
 {
-    @JsonField
+    @JsonField(name = "isSuspend")
     public boolean isSuspend;
 
-    @JsonField
+    @JsonField(name = "messageTitle")
     public String messageTitle;
 
-    @JsonField
+    @JsonField(name = "messageBody")
     public String messageBody;
 }

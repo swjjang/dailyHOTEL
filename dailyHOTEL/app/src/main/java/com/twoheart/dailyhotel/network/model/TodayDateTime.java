@@ -16,16 +16,16 @@ import java.util.TimeZone;
 @JsonObject
 public class TodayDateTime implements Parcelable
 {
-    @JsonField
+    @JsonField(name = "openDateTime")
     public String openDateTime; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "closeDateTime")
     public String closeDateTime; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "currentDateTime")
     public String currentDateTime; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "dailyDateTime")
     public String dailyDateTime; // ISO-8601
 
     public TodayDateTime()

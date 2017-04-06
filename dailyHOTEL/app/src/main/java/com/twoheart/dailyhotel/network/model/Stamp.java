@@ -8,10 +8,10 @@ import java.util.List;
 @JsonObject
 public class Stamp
 {
-    @JsonField
+    @JsonField(name = "list")
     public List<StampHistory> list;
 
-    @JsonField
+    @JsonField(name = "count")
     public int count;
 
     public Stamp()

@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.twoheart.dailyhotel.model.DetailInformation;
@@ -58,23 +59,23 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     //    public String category;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "parking")
     public boolean parking;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "noParking")
     public boolean noParking;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "pool")
     public boolean pool;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "fitness")
     public boolean fitness;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "pet")
     public boolean pet;
 
     // 직접 접근 금지
@@ -82,11 +83,11 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     public boolean sharedBBQ;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "businessCenter")
     public boolean businessCenter;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "sauna")
     public boolean sauna;
 
     // 직접 접근 금지
@@ -99,7 +100,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     //    @JsonField
     //    public List<String> benefitContents;
 
-    @JsonField
+    @JsonField(name = "benefitWarning")
     public String benefitWarning;
     //
     //    // 직접 접근 금지
@@ -108,7 +109,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     //    public List<Map<String, List<String>>> details;
 
     // 직접 접근 금지
-    @JsonField
+    @JsonField(name = "rooms")
     public List<StayProduct> rooms;
     //
     //    @JsonField
@@ -127,8 +128,12 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     public boolean isOverseas; // 0 : 국내 , 1 : 해외
 
     //    protected ArrayList<DetailInformation> mDetailList;
+
+    @JsonIgnore
     private ArrayList<StayDetail.Pictogram> mPictogramList;
     //    private ArrayList<ImageInformation> mImageList;
+
+    @JsonIgnore
     private ArrayList<String> mBenefitInformation;
 
     public StayDetailParams()

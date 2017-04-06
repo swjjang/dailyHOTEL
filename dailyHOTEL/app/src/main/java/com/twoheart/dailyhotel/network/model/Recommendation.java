@@ -9,33 +9,33 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class Recommendation
 {
-    @JsonField
+    @JsonField(name = "idx")
     public int idx;
 
-    @JsonField
+    @JsonField(name = "serviceType")
     public String serviceType;
 
-    @JsonField
+    @JsonField(name = "title")
     public String title;
 
-    @JsonField
+    @JsonField(name = "subtitle")
     public String subtitle;
 
-    @JsonField
+    @JsonField(name = "defaultImageUrl")
     public String defaultImageUrl;
 
-    @JsonField
+    @JsonField(name = "lowResolutionImageUrl")
     public String lowResolutionImageUrl;
 
-    @JsonField
+    @JsonField(name = "linkUrl")
     public String linkUrl;
 
-    @JsonField
+    @JsonField(name = "startedAt")
     public String startedAt; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "endedAt")
     public String endedAt; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "countOfItems")
     public int countOfItems;
 }
