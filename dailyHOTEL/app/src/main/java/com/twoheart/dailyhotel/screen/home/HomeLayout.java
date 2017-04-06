@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -25,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
@@ -38,8 +38,8 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+import com.twoheart.dailyhotel.widget.DailyHomeScrollView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
-import com.twoheart.dailyhotel.widget.DailyNestedScrollView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
 
@@ -82,7 +82,7 @@ public class HomeLayout extends BaseLayout
 
     private View mActionButtonLayout;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    DailyNestedScrollView mNestedScrollView;
+    DailyHomeScrollView mDailyHomeScrollView;
     View mErrorPopupLayout;
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
@@ -723,10 +723,10 @@ public class HomeLayout extends BaseLayout
 
     private void initNestedScrollLayout(View view)
     {
-        mNestedScrollView = (DailyNestedScrollView) view.findViewById(R.id.nestedScrollView);
-        mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        mNestedScrollView.setOnScrollChangeListener(mOnScrollChangeListener);
-        mNestedScrollView.addOnLayoutChangeListener(mOnLayoutChangeListener);
+        mDailyHomeScrollView = (DailyHomeScrollView) view.findViewById(R.id.nestedScrollView);
+        mDailyHomeScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        mDailyHomeScrollView.setOnScrollChangedListener(mScrollChangedListener);
+        mDailyHomeScrollView.addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     // Event area
@@ -1262,14 +1262,14 @@ public class HomeLayout extends BaseLayout
 
     public void setScrollTop()
     {
-        if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
+        if (mDailyHomeScrollView != null && mDailyHomeScrollView.getChildCount() != 0)
         {
-            mNestedScrollView.postDelayed(new Runnable()
+            mDailyHomeScrollView.postDelayed(new Runnable()
             {
                 @Override
                 public void run()
                 {
-                    mNestedScrollView.fullScroll(View.FOCUS_UP);
+                    mDailyHomeScrollView.fullScroll(View.FOCUS_UP);
                 }
             }, 50);
         }
@@ -1277,16 +1277,16 @@ public class HomeLayout extends BaseLayout
 
     public void setScrollBottom()
     {
-        if (mNestedScrollView != null && mNestedScrollView.getChildCount() != 0)
+        if (mDailyHomeScrollView != null && mDailyHomeScrollView.getChildCount() != 0)
         {
-            mNestedScrollView.postDelayed(new Runnable()
+            mDailyHomeScrollView.postDelayed(new Runnable()
             {
                 @Override
                 public void run()
                 {
                     // 간헐적으로 2번 해줘야 동작하는 경우로 인하여 2번 처리
-                    mNestedScrollView.fullScroll(View.FOCUS_DOWN);
-                    mNestedScrollView.scrollBy(0, 10000);
+                    mDailyHomeScrollView.fullScroll(View.FOCUS_DOWN);
+                    mDailyHomeScrollView.scrollBy(0, 10000);
                 }
             }, 50);
         }
@@ -1294,12 +1294,12 @@ public class HomeLayout extends BaseLayout
 
     public void removeOnLayoutChangeListener()
     {
-        if (mNestedScrollView == null)
+        if (mDailyHomeScrollView == null)
         {
             return;
         }
 
-        mNestedScrollView.removeOnLayoutChangeListener(mOnLayoutChangeListener);
+        mDailyHomeScrollView.removeOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     Drawable getRotateDrawable(Drawable drawable, final float degrees)
@@ -1361,10 +1361,10 @@ public class HomeLayout extends BaseLayout
         }
     }
 
-    private NestedScrollView.OnScrollChangeListener mOnScrollChangeListener = new NestedScrollView.OnScrollChangeListener()
+    private DailyHomeScrollView.OnScrollChangedListener mScrollChangedListener = new DailyHomeScrollView.OnScrollChangedListener()
     {
         @Override
-        public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+        public void onScrollChanged(ScrollView scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
         {
             if (mEventImageHeight == 0)
             {
@@ -1419,17 +1419,11 @@ public class HomeLayout extends BaseLayout
             {
                 // show
                 setActionButtonVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setEnabled(true);
             } else
             {
                 // hide
                 setActionButtonVisibility(View.GONE);
-            }
-
-            if (scrollY < mEventImageHeight)
-            {
-                mSwipeRefreshLayout.setEnabled(true);
-            } else
-            {
                 mSwipeRefreshLayout.setEnabled(false);
             }
         }
@@ -1447,7 +1441,7 @@ public class HomeLayout extends BaseLayout
 
             boolean isCanScroll = false;
 
-            View child = ((NestedScrollView) v).getChildAt(0);
+            View child = ((DailyHomeScrollView) v).getChildAt(0);
             if (child != null)
             {
                 int childHeight = child.getHeight();

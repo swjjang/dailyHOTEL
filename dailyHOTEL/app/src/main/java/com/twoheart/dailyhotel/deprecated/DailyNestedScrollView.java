@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.widget;
+package com.twoheart.dailyhotel.deprecated;
 
 import android.content.Context;
 import android.support.v4.widget.NestedScrollView;
@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 /**
  * Created by android_sam on 2017. 3. 8..
  */
-
+@Deprecated
 public class DailyNestedScrollView extends NestedScrollView
 {
     private float mDistanceX;
