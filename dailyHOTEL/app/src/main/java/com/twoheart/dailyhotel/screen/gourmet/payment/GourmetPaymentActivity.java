@@ -257,7 +257,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_name", guest.name);
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
-        params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime));
+        params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime + DailyCalendar.NINE_HOUR_MILLISECOND));
         params.put("customer_msg", "");
 
         if (DEBUG == false)
@@ -325,7 +325,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         params.put("customer_name", guest.name);
         params.put("customer_phone", guest.phone.replace("-", ""));
         params.put("customer_email", guest.email);
-        params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime));
+        params.put("arrival_time", Long.toString(gourmetPaymentInformation.ticketTime + DailyCalendar.NINE_HOUR_MILLISECOND));
         params.put("customer_msg", "");
 
         if (DEBUG == false)
