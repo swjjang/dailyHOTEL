@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -188,7 +189,7 @@ public class GourmetPaymentWebActivity extends BaseActivity implements Constants
         builder.add("customer_name", name);
         builder.add("customer_phone", phone.replace("-", ""));
         builder.add("customer_email", email);
-        builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime));
+        builder.add("arrival_time", String.valueOf(gourmetPaymentInformation.ticketTime + DailyCalendar.NINE_HOUR_MILLISECOND));
 
         switch (gourmetPaymentInformation.discountType)
         {
