@@ -15,13 +15,13 @@ import com.daily.base.BaseActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
 
-public class Lock
+public class DailyLock
 {
     private boolean mIsLock = false;
     private BaseActivity mActivity;
     private ProgressBarDialog mProgressBarDialog;
 
-    public Lock(BaseActivity activity)
+    public DailyLock(BaseActivity activity)
     {
         mActivity = activity;
 
@@ -133,29 +133,21 @@ public class Lock
             mDialog.setCancelable(false);
             mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
-            mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+            mDialog.setOnCancelListener(dialog ->
             {
-                @Override
-                public void onCancel(DialogInterface dialog)
-                {
-                    hide();
+                hide();
 
-                    mActivity.onBackPressed();
-                }
+                mActivity.onBackPressed();
             });
 
-            mDialog.setOnKeyListener(new DialogInterface.OnKeyListener()
+            mDialog.setOnKeyListener((dialog, keyCode, event) ->
             {
-                @Override
-                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event)
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled())
                 {
-                    if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled())
-                    {
-                        mActivity.onBackPressed();
-                    }
-
-                    return false;
+                    mActivity.onBackPressed();
                 }
+
+                return false;
             });
         }
 

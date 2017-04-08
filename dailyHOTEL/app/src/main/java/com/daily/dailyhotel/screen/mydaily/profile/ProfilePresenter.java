@@ -3,9 +3,11 @@ package com.daily.dailyhotel.screen.mydaily.profile;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BasePresenter;
@@ -13,6 +15,8 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.parcel.UserParcel;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.FacebookImpl;
+import com.daily.dailyhotel.repository.remote.KakaoImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -67,6 +71,8 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mConfigLocalImpl = new ConfigLocalImpl(activity);
+
+        screenLock(true);
 
         addCompositeDisposable(mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile).subscribe());
 
@@ -130,6 +136,12 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
         super.onRestoreInstanceState(savedInstanceState);
 
         mUser = ((UserParcel) savedInstanceState.getParcelable("user")).getUser();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
     }
 
     private void onUserProfile(User user)
@@ -244,8 +256,32 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void onLogOutClick()
     {
-        mProfileAnalytics.clearUserInformation(getActivity());
-        mProfileAnalytics.screenLogOut(getActivity());
+        if (lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().showSimpleDialog(getString(R.string.act_profile_btn_logout), getString(R.string.dialog_msg_chk_wanna_login),//
+            getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel)//
+            , new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    mProfileAnalytics.clearUserInformation(getActivity());
+                    mProfileAnalytics.screenLogOut(getActivity());
+
+                    new FacebookImpl().logOut();
+                    new KakaoImpl().logOut();
+                }
+            }, null, null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    unLock();
+                }
+            }, false);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.domain.ConfigInterface;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -32,5 +33,15 @@ public class ConfigLocalImpl implements ConfigInterface
     {
         return Observable.create((ObservableOnSubscribe<Boolean>) emitter -> emitter.onNext(DailyPreference.getInstance(mContext).isVerification()))//
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable clear()
+    {
+        return Observable.empty().doOnNext(object ->
+        {
+            DailyPreference.getInstance(mContext).clear();
+            DailyUserPreference.getInstance(mContext).clear();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 }

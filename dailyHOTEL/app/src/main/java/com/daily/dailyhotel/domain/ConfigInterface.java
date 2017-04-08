@@ -7,4 +7,6 @@ public interface ConfigInterface
     Observable setVerified(boolean verify);
 
     Observable<Boolean> isVerified();
+
+    Observable clear();
 }

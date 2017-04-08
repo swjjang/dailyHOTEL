@@ -18,4 +18,6 @@ public interface BaseActivityInterface
     void onSaveInstanceState(Bundle outState);
 
     void onRestoreInstanceState(Bundle savedInstanceState);
+
+    void onActivityResult(int requestCode, int resultCode, Intent data);
 }

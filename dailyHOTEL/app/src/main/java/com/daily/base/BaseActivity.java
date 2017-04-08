@@ -1,5 +1,6 @@
 package com.daily.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -110,6 +111,17 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         } else
         {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (mPresenter != null)
+        {
+            mPresenter.onActivityResult(requestCode, resultCode, data);
         }
     }
 
