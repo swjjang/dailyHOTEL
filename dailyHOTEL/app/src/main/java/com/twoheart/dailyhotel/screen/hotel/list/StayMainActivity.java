@@ -696,11 +696,12 @@ public class StayMainActivity extends PlaceMainActivity
             }
 
             // 처음 시작시에는 지역이 Area로 저장된 경우 Province로 변경하기 위한 저장값.
-            boolean mIsProvinceSetting = DailyPreference.getInstance(StayMainActivity.this).isSettingRegion(PlaceType.HOTEL);
-            DailyPreference.getInstance(StayMainActivity.this).setSettingRegion(PlaceType.HOTEL, true);
+//            boolean mIsProvinceSetting = DailyPreference.getInstance(StayMainActivity.this).isSettingRegion(PlaceType.HOTEL);
+//            DailyPreference.getInstance(StayMainActivity.this).setSettingRegion(PlaceType.HOTEL, true);
 
             // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
-            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+//            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+            if (selectedProvince instanceof Area)
             {
                 int provinceIndex = selectedProvince.getProvinceIndex();
 

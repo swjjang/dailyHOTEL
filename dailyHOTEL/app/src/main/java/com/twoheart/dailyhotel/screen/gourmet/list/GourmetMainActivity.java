@@ -618,11 +618,12 @@ public class GourmetMainActivity extends PlaceMainActivity
                 selectedProvince = provinceList.get(0);
             }
 
-            boolean mIsProvinceSetting = DailyPreference.getInstance(GourmetMainActivity.this).isSettingRegion(PlaceType.FNB);
-            DailyPreference.getInstance(GourmetMainActivity.this).setSettingRegion(PlaceType.FNB, true);
+//            boolean mIsProvinceSetting = DailyPreference.getInstance(GourmetMainActivity.this).isSettingRegion(PlaceType.FNB);
+//            DailyPreference.getInstance(GourmetMainActivity.this).setSettingRegion(PlaceType.FNB, true);
 
             // 마지막으로 지역이 Area로 되어있으면 Province
-            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+//            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+            if (selectedProvince instanceof Area)
             {
                 int provinceIndex = selectedProvince.getProvinceIndex();
 

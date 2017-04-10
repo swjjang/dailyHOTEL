@@ -1329,6 +1329,8 @@ public class DailyPreference
         setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, value);
     }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public String getSelectedRegion(Constants.PlaceType placeType)
     {
         switch (placeType)
@@ -1342,6 +1344,8 @@ public class DailyPreference
         }
     }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public void setSelectedRegion(Constants.PlaceType placeType, String value)
     {
         switch (placeType)
@@ -1358,9 +1362,10 @@ public class DailyPreference
 
     /**
      * 선택된 대지역 저장값 - Adjust 용
-     *
+     * // version - 2.0.4 로 강업 이후 삭제 필요 부분
      * @return
      */
+    @Deprecated
     public String getSelectedRegionTypeProvince(Constants.PlaceType placeType)
     {
         switch (placeType)
@@ -1374,6 +1379,8 @@ public class DailyPreference
         }
     }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public void setSelectedRegionTypeProvince(Constants.PlaceType placeType, String value)
     {
         switch (placeType)
@@ -1389,32 +1396,36 @@ public class DailyPreference
         }
     }
 
-    public boolean isSettingRegion(Constants.PlaceType placeType)
-    {
-        switch (placeType)
-        {
-            case FNB:
-                return getValue(mPreferences, KEY_SETTING_REGION_FNB_SETTING, false);
-
-            case HOTEL:
-            default:
-                return getValue(mPreferences, KEY_SETTING_REGION_STAY_SETTING, false);
-        }
-    }
-
-    public void setSettingRegion(Constants.PlaceType placeType, boolean value)
-    {
-        switch (placeType)
-        {
-            case HOTEL:
-                setValue(mEditor, KEY_SETTING_REGION_STAY_SETTING, value);
-                break;
-
-            case FNB:
-                setValue(mEditor, KEY_SETTING_REGION_FNB_SETTING, value);
-                break;
-        }
-    }
+//    // version - 2.0.4 로 강업 이후 삭제 필요 부분 - 기존 부터 아예 사용 안함
+//    @Deprecated
+//    public boolean isSettingRegion(Constants.PlaceType placeType)
+//    {
+//        switch (placeType)
+//        {
+//            case FNB:
+//                return getValue(mPreferences, KEY_SETTING_REGION_FNB_SETTING, false);
+//
+//            case HOTEL:
+//            default:
+//                return getValue(mPreferences, KEY_SETTING_REGION_STAY_SETTING, false);
+//        }
+//    }
+//
+//    // version - 2.0.4 로 강업 이후 삭제 필요 부분 - 기존 부터 아예 사용 안함
+//    @Deprecated
+//    public void setSettingRegion(Constants.PlaceType placeType, boolean value)
+//    {
+//        switch (placeType)
+//        {
+//            case HOTEL:
+//                setValue(mEditor, KEY_SETTING_REGION_STAY_SETTING, value);
+//                break;
+//
+//            case FNB:
+//                setValue(mEditor, KEY_SETTING_REGION_FNB_SETTING, value);
+//                break;
+//        }
+//    }
 
     public JSONObject getDailyRegion(Constants.DailyCategoryType type)
     {
