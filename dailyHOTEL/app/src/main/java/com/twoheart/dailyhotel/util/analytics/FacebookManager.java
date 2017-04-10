@@ -240,7 +240,7 @@ public class FacebookManager extends BaseAnalyticsManager
 
                 Bundle parameters = new Bundle();
 
-                String value = String.format(Locale.KOREA, "%s_%s", mContext.getString(R.string.label_fnb), label.replaceAll("-", "_"));
+                String value = String.format(Locale.KOREA, "%s_%s", mContext.getString(R.string.label_gourmet), label.replaceAll("-", "_"));
                 parameters.putString(AppEventsConstants.EVENT_PARAM_DESCRIPTION, value);
 
                 appEventsLogger.logEvent(AppEventsConstants.EVENT_NAME_SEARCHED, parameters);

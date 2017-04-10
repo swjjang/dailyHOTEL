@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -185,9 +184,10 @@ public class HappyTalkCategoryDialog extends BaseActivity
         // 환불인 경우 바로 연동한다.
         if (mCallScreen == CallScreen.SCREEN_STAY_REFUND)
         {
+            final String STAY_PREFIX = "S_";
             final String STAY_REFUND = "64796";
 
-            mOnEventListener.onHappyTalk(getString(R.string.label_daily_hotel), STAY_REFUND);
+            mOnEventListener.onHappyTalk(STAY_PREFIX, STAY_REFUND);
         } else
         {
             mLayout.setVisibility(View.VISIBLE);
@@ -338,9 +338,29 @@ public class HappyTalkCategoryDialog extends BaseActivity
         @Override
         public void onHappyTalk(String placeType, String mainId)
         {
-            mPlaceType = placeType;
-            mMainCategoryId = mainId;
+            if (placeType == null || mainId == null)
+            {
+                return;
+            }
 
+            final String STAY_PREFIX = "S_";
+            final String GOURMET_PREFIX = "G_";
+
+            switch (placeType)
+            {
+                case STAY_PREFIX:
+                    mPlaceType = getString(R.string.label_stay);
+                    break;
+
+                case GOURMET_PREFIX:
+                    mPlaceType = getString(R.string.label_gourmet);
+                    break;
+
+                default:
+                    return;
+            }
+
+            mMainCategoryId = mainId;
             mNetworkController.requestUserProfile();
         }
     };
