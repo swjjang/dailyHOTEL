@@ -7,6 +7,8 @@ public interface BaseActivityInterface
 {
     void onIntent(Intent intent);
 
+    void onStart();
+
     void onResume();
 
     void onPause();

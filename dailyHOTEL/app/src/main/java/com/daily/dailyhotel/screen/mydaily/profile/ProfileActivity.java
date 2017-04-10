@@ -22,6 +22,13 @@ public class ProfileActivity extends BaseActivity<ProfilePresenter>
         return intent;
     }
 
+    public static Intent newInstance(Context context, String deepLink)
+    {
+        Intent intent = new Intent(context, ProfileActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BasePresenter;
 import com.daily.dailyhotel.entity.User;
@@ -18,9 +20,11 @@ import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookImpl;
 import com.daily.dailyhotel.repository.remote.KakaoImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 
 /**
@@ -71,12 +75,6 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
 
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mConfigLocalImpl = new ConfigLocalImpl(activity);
-
-        screenLock(true);
-
-        addCompositeDisposable(mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile).subscribe());
-
-        mProfileAnalytics.screenProfile(activity);
     }
 
     @Override
@@ -94,13 +92,57 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void onIntent(Intent intent)
     {
+        if(intent == null)
+        {
+            return;
+        }
 
+        if(intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
+        {
+        }
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        mProfileAnalytics.screenProfile(getActivity());
+
+        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        {
+            if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
+            {
+                if (DailyHotel.isLogin() == true)
+                {
+                    mOnEventListener.startEditBirthday(DailyUserPreference.getInstance(this).getBirthday());
+                } else
+                {
+                    mOnEventListener.startEditBirthday(null);
+                }
+            }
+
+            DailyDeepLink.getInstance().clear();
+        } else
+        {
+            if (DailyHotel.isLogin() == false)
+            {
+                showLoginDialog();
+            }
+        }
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
+
+        if (DailyHotel.isLogin() == true)
+        {
+            screenLock(true);
+
+            addCompositeDisposable(mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile).subscribe());
+        }
     }
 
     @Override

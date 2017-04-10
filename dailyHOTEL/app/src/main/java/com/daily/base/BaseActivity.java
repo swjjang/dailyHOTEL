@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 
 public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatActivity
 {
+    public static final String INTENT_EXTRA_DATA_DEEPLINK = "nameDeepLink";
+
     private BasePresenter mPresenter;
 
     private FragmentManager mFragmentManager;
@@ -42,6 +44,17 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         }
 
         return (T1) mPresenter;
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        if (mPresenter != null)
+        {
+            mPresenter.onStart();
+        }
     }
 
     @Override
