@@ -223,6 +223,8 @@ public class HomeFragment extends BaseFragment
             case Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE:
             case Constants.CODE_REQUEST_ACTIVITY_GUIDE:
             case Constants.CODE_REQUEST_ACTIVITY_ABOUT:
+            case Constants.CODE_REQUEST_ACTIVITY_SNS:
+            case Constants.CODE_REQUEST_ACTIVITY_LIFESTYLE:
             case Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST:
             case Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST:
             case Constants.CODE_REQUEST_ACTIVITY_FAQ:
