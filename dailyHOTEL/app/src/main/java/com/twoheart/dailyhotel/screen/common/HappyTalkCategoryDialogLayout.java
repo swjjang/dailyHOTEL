@@ -126,7 +126,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
                 Pair<String, String> pair = mMainCategoryArrayAdapter.getItem(position);
 
-                mSelectedPlaceType = pair.first;
+                mSelectedPlaceType = pair.second;
                 List<Pair<String, String>> pairList = mSubCategoryMap.get(mSelectedPlaceType);
 
                 mSubCategoryArrayAdapter.clear();
@@ -183,11 +183,13 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
                 mMainCategorySpinner.setSelection(1);
                 break;
 
+            case SCREEN_STAY_REFUND:
+                mMainCategorySpinner.setSelection(0);
+                break;
+
             case SCREEN_FAQ:
             case SCREEN_CONTACT_US:
-            case SCREEN_STAY_REFUND:
             default:
-
                 break;
         }
     }

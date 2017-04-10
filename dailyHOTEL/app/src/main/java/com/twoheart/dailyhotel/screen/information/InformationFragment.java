@@ -130,7 +130,35 @@ public class InformationFragment extends BaseFragment implements Constants
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(GuideActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_GUIDE);
+            baseActivity.startActivityForResult(AboutActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
+        }
+
+        @Override
+        public void startLifeStyle()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.startActivityForResult(LifeStyleActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_LIFESTYLE);
+        }
+
+        @Override
+        public void startSNS()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.startActivityForResult(SnsActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_SNS);
         }
 
         @Override

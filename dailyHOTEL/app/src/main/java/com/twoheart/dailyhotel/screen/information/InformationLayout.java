@@ -33,6 +33,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     {
         void startGuide();
 
+        void startLifeStyle();
+
+        void startSNS();
+
         void startEvent();
 
         void startNotice();
@@ -58,6 +62,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         View aboutLayout = view.findViewById(R.id.aboutLayout);
+        View lifeStyleLayout = view.findViewById(R.id.lifeStyleLayout);
+        View snsLayout = view.findViewById(R.id.snsLayout);
         View eventLayout = view.findViewById(R.id.eventLayout);
         View noticeLayout = view.findViewById(R.id.noticeLayout);
 
@@ -66,6 +72,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View termsNpolicyLayout = view.findViewById(R.id.termsNpolicyLayout);
 
         aboutLayout.setOnClickListener(this);
+        lifeStyleLayout.setOnClickListener(this);
+        snsLayout.setOnClickListener(this);
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
 
@@ -179,6 +187,14 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         {
             case R.id.aboutLayout:
                 ((OnEventListener) mOnEventListener).startGuide();
+                break;
+
+            case R.id.lifeStyleLayout:
+                ((OnEventListener) mOnEventListener).startLifeStyle();
+                break;
+
+            case R.id.snsLayout:
+                ((OnEventListener) mOnEventListener).startSNS();
                 break;
 
             case R.id.eventLayout:

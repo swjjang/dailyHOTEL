@@ -449,6 +449,8 @@ public class MainActivity extends BaseActivity implements Constants
             // 해당 go home 목록이 HomeFragment 목록과 동일해야함.
             case Constants.CODE_REQUEST_ACTIVITY_GUIDE:
             case Constants.CODE_REQUEST_ACTIVITY_ABOUT:
+            case Constants.CODE_REQUEST_ACTIVITY_SNS:
+            case Constants.CODE_REQUEST_ACTIVITY_LIFESTYLE:
             case Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST:
             case Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST:
             case Constants.CODE_REQUEST_ACTIVITY_FAQ:

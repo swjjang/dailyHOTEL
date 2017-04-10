@@ -36,12 +36,17 @@ public class PlaceReviewLayout extends BaseLayout
 {
     private RecyclerView mRecyclerView;
     private ReviewListAdapter mReviewListAdapter;
+    private View mTopButton;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onTermsClick();
 
+        void onTopClick();
+
         void onScroll(RecyclerView recyclerView, int dx, int dy);
+
+        void onScrollStateChanged(RecyclerView recyclerView, int newState);
     }
 
     public PlaceReviewLayout(Context context, OnBaseEventListener listener)
@@ -63,9 +68,113 @@ public class PlaceReviewLayout extends BaseLayout
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
+                if (recyclerView.isComputingLayout() == true)
+                {
+                    return;
+                }
+
                 ((OnEventListener) mOnEventListener).onScroll(recyclerView, dx, dy);
             }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (recyclerView.isComputingLayout() == true)
+                {
+                    return;
+                }
+
+                ((OnEventListener) mOnEventListener).onScrollStateChanged(recyclerView, newState);
+            }
         });
+
+        mTopButton = view.findViewById(R.id.topButtonView);
+        mTopButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onTopClick();
+            }
+        });
+    }
+
+    public void smoothScrollTop(final Animator.AnimatorListener animatorListener)
+    {
+        mRecyclerView.setEnabled(false);
+
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(linearLayoutManager.findFirstVisibleItemPosition(), 0);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                int value = (int) animation.getAnimatedValue();
+                mRecyclerView.scrollToPosition(value);
+            }
+        });
+
+        long duration = linearLayoutManager.findFirstVisibleItemPosition() * 2000 / mRecyclerView.getHeight();
+
+        if (duration > 200)
+        {
+            duration = 200;
+        }
+
+        valueAnimator.setDuration(duration);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                if(animatorListener != null)
+                {
+                    animatorListener.onAnimationStart(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                valueAnimator.removeAllUpdateListeners();
+                valueAnimator.removeAllListeners();
+
+                mRecyclerView.setEnabled(true);
+
+                if(animatorListener != null)
+                {
+                    animatorListener.onAnimationEnd(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                if(animatorListener != null)
+                {
+                    animatorListener.onAnimationCancel(animation);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+                if(animatorListener != null)
+                {
+                    animatorListener.onAnimationRepeat(animation);
+                }
+            }
+        });
+
+        valueAnimator.start();
     }
 
     private void initToolbar(View view, String title)
@@ -80,6 +189,22 @@ public class PlaceReviewLayout extends BaseLayout
                 mOnEventListener.finish();
             }
         }, false);
+    }
+
+    public void setTopButtonVisible(boolean visible)
+    {
+        if (mTopButton == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            mTopButton.setVisibility(View.VISIBLE);
+        } else
+        {
+            mTopButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void setReviewScores(List<PlaceReviewScore> placeReviewScoreList)
@@ -582,5 +707,4 @@ public class PlaceReviewLayout extends BaseLayout
             }
         }
     }
-
 }

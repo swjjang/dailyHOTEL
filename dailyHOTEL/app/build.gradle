@@ -136,7 +136,7 @@ android {
             }
         }
 
-        apkName += "-v" + defaultConfig.versionName;
+        apkName += "-v" + defaultConfig.versionCode;
 
         def getGitName = { ->
             def stdout = new ByteArrayOutputStream()

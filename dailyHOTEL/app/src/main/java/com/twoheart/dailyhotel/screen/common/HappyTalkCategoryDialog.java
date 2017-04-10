@@ -182,8 +182,17 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         parseCategory(category, mainCategoryMap, subCategoryMap);
 
-        mLayout.setVisibility(View.VISIBLE);
-        mLayout.setCategory(callScreen, mainCategoryMap, subCategoryMap);
+        // 환불인 경우 바로 연동한다.
+        if (mCallScreen == CallScreen.SCREEN_STAY_REFUND)
+        {
+            final String STAY_REFUND = "64796";
+
+            mOnEventListener.onHappyTalk(getString(R.string.label_daily_hotel), STAY_REFUND);
+        } else
+        {
+            mLayout.setVisibility(View.VISIBLE);
+            mLayout.setCategory(callScreen, mainCategoryMap, subCategoryMap);
+        }
     }
 
     @Override
@@ -249,7 +258,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
      * @param mainCategoryMap get Data
      * @param subCategoryMap  get Data
      */
-    private void parseCategory(String categoryData, LinkedHashMap<String, Pair<String, String>> mainCategoryMap, LinkedHashMap<String, List<Pair<String, String>>> subCategoryMap)
+    private void parseCategory(String categoryData, LinkedHashMap<String, Pair<String, String>> mainCategoryMap//
+        , LinkedHashMap<String, List<Pair<String, String>>> subCategoryMap)
     {
         if (mainCategoryMap == null || subCategoryMap == null)
         {
