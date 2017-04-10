@@ -13,11 +13,11 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class GuideActivity extends BaseActivity implements View.OnClickListener
+public class SnsActivity extends BaseActivity implements View.OnClickListener
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, GuideActivity.class);
+        Intent intent = new Intent(context, SnsActivity.class);
         return intent;
     }
 
@@ -28,7 +28,7 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_guide);
+        setContentView(R.layout.activity_sns);
 
         initToolbar();
         initLayout();
@@ -38,7 +38,7 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener
     {
         View toolbar = findViewById(R.id.toolbar);
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_dailyhotel_guide), new View.OnClickListener()
+        dailyToolbarLayout.initToolbar(getString(R.string.label_dailyh_sns), new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -50,12 +50,6 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener
 
     private void initLayout()
     {
-        View aboutLayout = findViewById(R.id.aboutLayout);
-        View trueReviewLayout = findViewById(R.id.trueReviewLayout);
-
-        aboutLayout.setOnClickListener(this);
-        trueReviewLayout.setOnClickListener(this);
-
         initSnsLayout();
 
         View homeButtonView = findViewById(R.id.homeButtonView);
@@ -89,24 +83,6 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener
         super.onResume();
 
         unLockUI();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode)
-        {
-            case Constants.CODE_REQUEST_ACTIVITY_ABOUT:
-            case Constants.CODE_REQUEST_ACTIVITY_ABOUT_TRUEREVIEW:
-                if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
-                {
-                    setResult(resultCode);
-                    finish();
-                }
-                break;
-        }
     }
 
     @Override
@@ -223,14 +199,6 @@ public class GuideActivity extends BaseActivity implements View.OnClickListener
     {
         switch (v.getId())
         {
-            case R.id.aboutLayout:
-                startActivityForResult(AboutActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
-                break;
-
-            case R.id.trueReviewLayout:
-                startActivityForResult(AboutTrueReviewActivity.newInstance(this), Constants.CODE_REQUEST_ACTIVITY_ABOUT_TRUEREVIEW);
-                break;
-
             case R.id.facebookLinkView:
                 startFacebook();
                 break;
