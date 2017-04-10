@@ -160,10 +160,10 @@ public class DailyPreference
 
     // Setting - Region - Old 2017.04.07
         private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
-        private static final String KEY_SETTING_REGION_STAY_SETTING = "1111";
+//        private static final String KEY_SETTING_REGION_STAY_SETTING = "1111"; // home 이후 사용안하는 부분
         private static final String KEY_SETTING_REGION_PROVINCE_STAY_SELECT = "1112"; // adjust
         private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
-        private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
+//        private static final String KEY_SETTING_REGION_FNB_SETTING = "1121"; // home 이후 사용안하는 부분
         private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122"; // adjust
     // Setting - Region New 2017.04.07 - 스테이 호텔 구분 안하고 전체를 다 개별 카테고리로 봄
     private static final String KEY_SETTING_REGION_STAY_ALL = "1130";
@@ -1395,37 +1395,6 @@ public class DailyPreference
                 break;
         }
     }
-
-//    // version - 2.0.4 로 강업 이후 삭제 필요 부분 - 기존 부터 아예 사용 안함
-//    @Deprecated
-//    public boolean isSettingRegion(Constants.PlaceType placeType)
-//    {
-//        switch (placeType)
-//        {
-//            case FNB:
-//                return getValue(mPreferences, KEY_SETTING_REGION_FNB_SETTING, false);
-//
-//            case HOTEL:
-//            default:
-//                return getValue(mPreferences, KEY_SETTING_REGION_STAY_SETTING, false);
-//        }
-//    }
-//
-//    // version - 2.0.4 로 강업 이후 삭제 필요 부분 - 기존 부터 아예 사용 안함
-//    @Deprecated
-//    public void setSettingRegion(Constants.PlaceType placeType, boolean value)
-//    {
-//        switch (placeType)
-//        {
-//            case HOTEL:
-//                setValue(mEditor, KEY_SETTING_REGION_STAY_SETTING, value);
-//                break;
-//
-//            case FNB:
-//                setValue(mEditor, KEY_SETTING_REGION_FNB_SETTING, value);
-//                break;
-//        }
-//    }
 
     public JSONObject getDailyRegion(Constants.DailyCategoryType type)
     {
