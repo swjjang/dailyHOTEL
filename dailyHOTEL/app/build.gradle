@@ -40,7 +40,7 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 2000300
+        versionCode 2000301
         versionName "2.0.3"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
