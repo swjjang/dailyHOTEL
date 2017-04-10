@@ -39,11 +39,16 @@ public class DailyHintSpinner extends AppCompatSpinner
     }
 
     @Override
-    public void setAdapter(SpinnerAdapter orig)
+    public void setAdapter(SpinnerAdapter adapter)
     {
-        final SpinnerAdapter adapter = newProxy(orig);
-
-        super.setAdapter(adapter);
+        if (adapter == null)
+        {
+            super.setAdapter(null);
+        } else
+        {
+            final SpinnerAdapter spinnerAdapter = newProxy(adapter);
+            super.setAdapter(spinnerAdapter);
+        }
 
         try
         {
@@ -72,13 +77,13 @@ public class DailyHintSpinner extends AppCompatSpinner
     protected class SpinnerAdapterProxy implements InvocationHandler
     {
 
-        protected SpinnerAdapter obj;
+        protected SpinnerAdapter mSpinnerAdapter;
         protected Method getView;
 
 
-        protected SpinnerAdapterProxy(SpinnerAdapter obj)
+        protected SpinnerAdapterProxy(SpinnerAdapter spinnerAdapter)
         {
-            this.obj = obj;
+            this.mSpinnerAdapter = spinnerAdapter;
             try
             {
                 this.getView = SpinnerAdapter.class.getMethod("getView", int.class, View.class, ViewGroup.class);
@@ -92,7 +97,7 @@ public class DailyHintSpinner extends AppCompatSpinner
         {
             try
             {
-                return m.equals(getView) && (Integer) (args[0]) < 0 ? getView((Integer) args[0], (View) args[1], (ViewGroup) args[2]) : m.invoke(obj, args);
+                return m.equals(getView) && (Integer) (args[0]) < 0 ? getView((Integer) args[0], (View) args[1], (ViewGroup) args[2]) : m.invoke(mSpinnerAdapter, args);
             } catch (InvocationTargetException e)
             {
                 throw e.getTargetException();
@@ -111,7 +116,7 @@ public class DailyHintSpinner extends AppCompatSpinner
                 v.setText(getPrompt());
                 return v;
             }
-            return obj.getView(position, convertView, parent);
+            return mSpinnerAdapter.getView(position, convertView, parent);
         }
     }
 }

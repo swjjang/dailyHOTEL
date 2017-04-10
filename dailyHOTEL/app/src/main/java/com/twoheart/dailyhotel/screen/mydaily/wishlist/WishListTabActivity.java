@@ -218,8 +218,8 @@ public class WishListTabActivity extends BaseActivity
     {
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_accommodate));
-        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_fnb));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_stay));
+        mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_gourmet));
         //        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
