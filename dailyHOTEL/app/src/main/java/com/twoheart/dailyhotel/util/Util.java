@@ -64,6 +64,9 @@ import com.twoheart.dailyhotel.widget.FontManager;
 
 import net.simonvt.numberpicker.NumberPicker;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.ref.SoftReference;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
@@ -1795,6 +1798,130 @@ public class Util implements Constants
         return realProvinceName;
     }
 
+    /**
+     * 신규 저장용 지역 JSONObject
+     *
+     * @param province
+     * @return
+     */
+    public static JSONObject getDailyRegionJSONObject(Province province)
+    {
+        JSONObject jsonObject;
+        try
+        {
+            String areaName;
+            String provinceName;
+            boolean isOverSeas;
+
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+
+                areaName = area.name;
+                provinceName = area.getProvince().name;
+                isOverSeas = area.getProvince().isOverseas;
+            } else
+            {
+                provinceName = province.name;
+                areaName = "";
+                isOverSeas = province.isOverseas;
+            }
+
+            jsonObject = getDailyRegionJSONObject(provinceName, areaName, isOverSeas);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            jsonObject = null;
+        }
+
+        return jsonObject;
+    }
+
+    /**
+     * 신규 저장용 지역 JSONObject
+     *
+     * @param provinceName
+     * @param areaName
+     * @param isOverSeas
+     * @return
+     */
+    public static JSONObject getDailyRegionJSONObject(String provinceName, String areaName, boolean isOverSeas)
+    {
+        JSONObject jsonObject;
+        try
+        {
+            jsonObject = new JSONObject();
+            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, Util.isTextEmpty(provinceName) ? "" : provinceName);
+            jsonObject.put(Constants.JSON_KEY_AREA_NAME, Util.isTextEmpty(areaName) ? "" : areaName);
+            jsonObject.put(Constants.JSON_KEY_IS_OVER_SEAS, isOverSeas);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            jsonObject = null;
+        }
+
+        return jsonObject;
+    }
+
+    public static String getDailyAreaString(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            return "";
+        }
+
+        String areaName;
+        try
+        {
+            areaName = jsonObject.getString(Constants.JSON_KEY_AREA_NAME);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+            areaName = "";
+        }
+
+        return areaName;
+    }
+
+    public static String getDailyProvinceString(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            return "";
+        }
+
+        String provinceName;
+        try
+        {
+            provinceName = jsonObject.getString(Constants.JSON_KEY_PROVINCE_NAME);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+            provinceName = "";
+        }
+
+        return provinceName;
+    }
+
+    public static boolean isDailyOverSeas(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            return false;
+        }
+
+        boolean isOverSeas;
+        try
+        {
+            isOverSeas = jsonObject.getBoolean(Constants.JSON_KEY_IS_OVER_SEAS);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+            isOverSeas = false;
+        }
+
+        return isOverSeas;
+    }
 
     public static String trim(String text)
     {

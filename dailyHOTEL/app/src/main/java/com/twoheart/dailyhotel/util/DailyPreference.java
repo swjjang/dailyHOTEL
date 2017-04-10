@@ -9,6 +9,8 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
+import org.json.JSONObject;
+
 /**
  */
 public class DailyPreference
@@ -156,13 +158,20 @@ public class DailyPreference
     private static final String KEY_SETTING_GCM_ID = "1002";
     private static final String KEY_SETTING_VERSION_SKIP_MAX_VERSION = "1004";
 
-    // Setting - Region
-    private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
-    private static final String KEY_SETTING_REGION_STAY_SETTING = "1111";
-    private static final String KEY_SETTING_REGION_PROVINCE_STAY_SELECT = "1112";
-    private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
-    private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
-    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122";
+    // Setting - Region - Old 2017.04.07
+        private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
+        private static final String KEY_SETTING_REGION_STAY_SETTING = "1111";
+        private static final String KEY_SETTING_REGION_PROVINCE_STAY_SELECT = "1112"; // adjust
+        private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
+        private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
+        private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122"; // adjust
+    // Setting - Region New 2017.04.07 - 스테이 호텔 구분 안하고 전체를 다 개별 카테고리로 봄
+    private static final String KEY_SETTING_REGION_STAY_ALL = "1130";
+    private static final String KEY_SETTING_REGION_GOURMET_ALL = "1131";
+    private static final String KEY_SETTING_REGION_STAY_HOTEL = "1132";
+    private static final String KEY_SETTING_REGION_STAY_BOUTIQUE = "1133";
+    private static final String KEY_SETTING_REGION_STAY_PENSION = "1134";
+    private static final String KEY_SETTING_REGION_STAY_RESORT = "1135";
 
     // Setting - Home
     private static final String KEY_SETTING_HOME_MESSAGE_AREA_ENABLED = "1201";
@@ -1404,6 +1413,75 @@ public class DailyPreference
             case FNB:
                 setValue(mEditor, KEY_SETTING_REGION_FNB_SETTING, value);
                 break;
+        }
+    }
+
+    public JSONObject getDailyRegion(Constants.DailyCategoryType type)
+    {
+        String value = getValue(mPreferences, getDailyRegionKey(type), null);
+        if (Util.isTextEmpty(value) == true)
+        {
+            return null;
+        }
+
+        JSONObject jsonObject = null;
+        try
+        {
+            jsonObject = new JSONObject(value);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return jsonObject;
+    }
+
+    public void setDailyRegion(Constants.DailyCategoryType type, JSONObject jsonObject)
+    {
+        String value;
+
+        if (jsonObject == null)
+        {
+            value = "";
+        } else {
+            value = jsonObject.toString();
+        }
+
+        setValue(mEditor, getDailyRegionKey(type), value);
+    }
+
+    public void setDailyRegion(Constants.DailyCategoryType type //
+        , String provinceName, String areaName, boolean isOverSeas)
+    {
+        JSONObject jsonObject = Util.getDailyRegionJSONObject(provinceName, areaName, isOverSeas);
+
+        setDailyRegion(type, jsonObject);
+    }
+
+    private String getDailyRegionKey(Constants.DailyCategoryType type)
+    {
+        switch (type)
+        {
+            case STAY_ALL:
+                return KEY_SETTING_REGION_STAY_ALL;
+
+            case GOURMET_ALL:
+                return KEY_SETTING_REGION_GOURMET_ALL;
+
+            case STAY_HOTEL:
+                return KEY_SETTING_REGION_STAY_HOTEL;
+
+            case STAY_BOUTIQUE:
+                return KEY_SETTING_REGION_STAY_BOUTIQUE;
+
+            case STAY_PENSION:
+                return KEY_SETTING_REGION_STAY_PENSION;
+
+            case STAY_RESORT:
+                return KEY_SETTING_REGION_STAY_RESORT;
+
+            default:
+                return null;
         }
     }
 

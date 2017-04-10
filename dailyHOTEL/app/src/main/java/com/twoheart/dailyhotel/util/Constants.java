@@ -69,6 +69,16 @@ public interface Constants
         ETC
     }
 
+    enum DailyCategoryType
+    {
+        STAY_ALL,
+        GOURMET_ALL,
+        STAY_HOTEL,
+        STAY_BOUTIQUE,
+        STAY_PENSION,
+        STAY_RESORT
+    }
+
     String DAILY_USER = "normal";
     String KAKAO_USER = "kakao_talk";
     String FACEBOOK_USER = "facebook";
@@ -325,4 +335,9 @@ public interface Constants
 
     // 리스트 페이지 사이즈
     int PAGENATION_LIST_SIZE = 200;
+
+    // Setting region JSONObject Key - not preference
+    String JSON_KEY_PROVINCE_NAME = "region";
+    String JSON_KEY_AREA_NAME = "area";
+    String JSON_KEY_IS_OVER_SEAS = "isOverSeas";
 }
