@@ -88,7 +88,6 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
             punchMaskLayout.setBackgroundDrawable(new BackgroundDrawable(mContext, punchMaskLayout));
         }
 
-
         setVisibility(false);
     }
 
@@ -228,6 +227,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     {
         private View mView;
         private Paint mPaint;
+        private Paint mOverPaint;
         private Bitmap mCircleBitmap;
 
         public BackgroundDrawable(Context context, View view)
@@ -236,8 +236,10 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
             mCircleBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.circle);
 
             mPaint = new Paint();
-            mPaint.setAlpha(0x99);
-            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
+            mOverPaint = new Paint();
+            mOverPaint.setAlpha(0x99);
         }
 
         @Override
@@ -248,6 +250,9 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
             canvas.drawBitmap(mCircleBitmap, cX, cY, mPaint);
             canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mPaint);
+
+            canvas.drawBitmap(mCircleBitmap, cX, cY, mOverPaint);
+            canvas.drawBitmap(mCircleBitmap, cX + mView.getWidth(), cY, mOverPaint);
         }
 
         @Override

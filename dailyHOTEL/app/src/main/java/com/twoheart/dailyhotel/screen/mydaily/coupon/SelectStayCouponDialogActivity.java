@@ -34,9 +34,6 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
     public static final String INTENT_EXTRA_HOTEL_IDX = "hotelIdx";
     public static final String INTENT_EXTRA_ROOM_IDX = "roomIdx";
-    public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
-    public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
-    public static final String INTENT_EXTRA_NIGHTS = "nights";
     public static final String INTENT_EXTRA_CATEGORY_CODE = "categoryCode";
     public static final String INTENT_EXTRA_HOTEL_NAME = "hotelName";
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
@@ -145,9 +142,22 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             return;
         }
 
-        mNetworkController.requestCouponList(mHotelIdx, mRoomIdx//
-            , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-            , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+        try
+        {
+            switch (mCallByScreen)
+            {
+                case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                    mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+                    break;
+
+                case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                    mNetworkController.requestCouponList(mHotelIdx, mStayBookingDay.getCheckInDay("yyyy-MM-dd"), mStayBookingDay.getNights());
+                    break;
+            }
+        } catch (Exception e)
+        {
+            Util.restartApp(this);
+        }
     }
 
     @Override
@@ -310,9 +320,22 @@ public class SelectStayCouponDialogActivity extends BaseActivity
             Coupon coupon = mLayout.getCoupon(userCouponCode);
             recordAnalytics(coupon);
 
-            mNetworkController.requestCouponList(mHotelIdx, mRoomIdx//
-                , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+            try
+            {
+                switch (mCallByScreen)
+                {
+                    case AnalyticsManager.Screen.DAILYHOTEL_PAYMENT:
+                        mNetworkController.requestCouponList(mHotelIdx, mRoomIdx, mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+                        break;
+
+                    case AnalyticsManager.Screen.DAILYHOTEL_DETAIL:
+                        mNetworkController.requestCouponList(mHotelIdx, mStayBookingDay.getCheckInDay("yyyy-MM-dd"), mStayBookingDay.getNights());
+                        break;
+                }
+            } catch (Exception e)
+            {
+                Util.restartApp(SelectStayCouponDialogActivity.this);
+            }
         }
 
         @Override
