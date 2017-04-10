@@ -67,7 +67,6 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
                 , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage2()//
                 , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
         }
-
     }
 
     private void initDateLayout(View view, StayBookingDay stayBookingDay)
