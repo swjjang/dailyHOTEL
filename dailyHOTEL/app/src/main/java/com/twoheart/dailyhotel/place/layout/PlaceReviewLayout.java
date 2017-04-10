@@ -135,7 +135,7 @@ public class PlaceReviewLayout extends BaseLayout
             @Override
             public void onAnimationStart(Animator animation)
             {
-                if(animatorListener != null)
+                if (animatorListener != null)
                 {
                     animatorListener.onAnimationStart(animation);
                 }
@@ -149,7 +149,7 @@ public class PlaceReviewLayout extends BaseLayout
 
                 mRecyclerView.setEnabled(true);
 
-                if(animatorListener != null)
+                if (animatorListener != null)
                 {
                     animatorListener.onAnimationEnd(animation);
                 }
@@ -158,7 +158,7 @@ public class PlaceReviewLayout extends BaseLayout
             @Override
             public void onAnimationCancel(Animator animation)
             {
-                if(animatorListener != null)
+                if (animatorListener != null)
                 {
                     animatorListener.onAnimationCancel(animation);
                 }
@@ -167,7 +167,7 @@ public class PlaceReviewLayout extends BaseLayout
             @Override
             public void onAnimationRepeat(Animator animation)
             {
-                if(animatorListener != null)
+                if (animatorListener != null)
                 {
                     animatorListener.onAnimationRepeat(animation);
                 }
@@ -534,8 +534,13 @@ public class PlaceReviewLayout extends BaseLayout
 
         private void onBindViewHolder(final ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
         {
-            final int MAXLINE = 11;
+            final int MAX_LINE = 11;
             PlaceReview placeReview = placeViewItem.getItem();
+
+            if (Util.isTextEmpty(placeReview.email) == true)
+            {
+                placeReview.email = mContext.getString(R.string.label_customer);
+            }
 
             reviewViewHolder.emailTextView.setText(placeReview.email);
 
@@ -559,13 +564,13 @@ public class PlaceReviewLayout extends BaseLayout
 
             int lineCount = reviewViewHolder.reviewTextView.getLineCount();
 
-            if (lineCount > MAXLINE)
+            if (lineCount > MAX_LINE)
             {
                 final String expandText = "...  더 읽어보기";
 
                 StaticLayout layout = (StaticLayout) reviewViewHolder.reviewTextView.getLayout();
-                int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAXLINE - 1);
-                int lineEndIndex = reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAXLINE - 1);
+                int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAX_LINE - 1);
+                int lineEndIndex = reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1);
 
                 CharSequence text = reviewViewHolder.reviewTextView.getText().subSequence(lineStartIndex, lineEndIndex);
 
