@@ -82,7 +82,9 @@
     <string name="label_truereview">트루리뷰</string>
     <string name="label_password">비밀번호</string>
     <string name="label_daily_truereview">데일리 트루리뷰</string>
-    <string name="label_dailyhotel_guide">데일리호텔 안내</string>
+    <string name="label_dailyhotel_guide">데일리호텔 소개</string>
+    <string name="label_dailyh_lifestyle">데일리 라이프스타일 프로젝트</string>
+    <string name="label_dailyh_sns">데일리 SNS</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
