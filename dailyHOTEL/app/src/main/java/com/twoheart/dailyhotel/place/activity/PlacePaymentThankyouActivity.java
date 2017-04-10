@@ -161,22 +161,34 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     public void setStampLayout(String message1, String message2, String message3)
     {
-        TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
-        TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
-        TextView message3TextView = (TextView) mStampLayout.findViewById(R.id.message3TextView);
-
         if (mStampLayout == null)
         {
             return;
         }
 
+        if (isStampEnabled() == false)
+        {
+            mStampLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        TextView message1TextView = (TextView) mStampLayout.findViewById(R.id.message1TextView);
+        TextView message2TextView = (TextView) mStampLayout.findViewById(R.id.message2TextView);
+        TextView message3TextView = (TextView) mStampLayout.findViewById(R.id.message3TextView);
+
         message1TextView.setText(message1);
         message2TextView.setText(message2);
 
-        SpannableString spannableString3 = new SpannableString(message3);
-        spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        message3TextView.setText(spannableString3);
+        // SpannableString 자체가 null을 허용하지 않
+        if (Util.isTextEmpty(message3) == false)
+        {
+            SpannableString spannableString3 = new SpannableString(message3);
+            spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            message3TextView.setText(spannableString3);
+        } else
+        {
+            message3TextView.setText("");
+        }
     }
 
     private void startReceiptAnimation()

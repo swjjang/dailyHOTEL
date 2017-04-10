@@ -61,9 +61,12 @@ public class HotelPaymentThankyouActivity extends PlacePaymentThankyouActivity i
         View textLayout = findViewById(R.id.textInformationLayout);
         initTextLayout(textLayout);
 
-        setStampLayout(DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage1()//
-            , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage2()//
-            , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
+        if (isStampEnabled() == true)
+        {
+            setStampLayout(DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage1()//
+                , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage2()//
+                , DailyPreference.getInstance(this).getRemoteConfigStampStayThankYouMessage3());
+        }
     }
 
     private void initDateLayout(View view, StayBookingDay stayBookingDay)
