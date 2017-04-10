@@ -1923,6 +1923,39 @@ public class Util implements Constants
         return isOverSeas;
     }
 
+    public static boolean isSameProvinceName(Province province, JSONObject saveProvinceJsonObject)
+    {
+        if (province == null && saveProvinceJsonObject == null)
+        {
+            return true;
+        } else if (province == null || saveProvinceJsonObject == null)
+        {
+            return false;
+        }
+
+        String saveProvinceName = getDailyProvinceString(saveProvinceJsonObject);
+        String saveAreaName = getDailyAreaString(saveProvinceJsonObject);
+
+        boolean isSameProvince = false;
+        try
+        {
+            String regionName = province.name;
+
+            if (province instanceof Area)
+            {
+                isSameProvince = regionName.equalsIgnoreCase(saveAreaName);
+            } else
+            {
+                isSameProvince = regionName.equalsIgnoreCase(saveProvinceName);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return isSameProvince;
+    }
+
     public static String trim(String text)
     {
         if (Util.isTextEmpty(text) == true)
