@@ -658,7 +658,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             ArrayList<Booking> paymentBookingList = new ArrayList<>();
             ArrayList<Booking> usedBookingList = new ArrayList<>();
 
-            long currentTime = mTodayDateTime.getCurrentTime(TimeZone.getTimeZone("GMT+09:00"));
+            long currentTime = mTodayDateTime.getCurrentTime();
 
             for (int i = 0; i < length; i++)
             {

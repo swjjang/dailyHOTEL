@@ -16,16 +16,16 @@ import java.util.TimeZone;
 @JsonObject
 public class TodayDateTime implements Parcelable
 {
-    @JsonField
+    @JsonField(name = "openDateTime")
     public String openDateTime; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "closeDateTime")
     public String closeDateTime; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "currentDateTime")
     public String currentDateTime; // ISO-8601
 
-    @JsonField
+    @JsonField(name = "dailyDateTime")
     public String dailyDateTime; // ISO-8601
 
     public TodayDateTime()
@@ -59,21 +59,15 @@ public class TodayDateTime implements Parcelable
      * getTime 시에 Java에서는 GMT 0시간으로 처리 되도록 되어있다. 특정 시간을 부여하면 해당 long값에 더해진 값으로 반환된다.
      * 기존에 시간값을 정리하는데 미정리된 부분들을 처리하기 위한 메소드.
      *
-     * @param timeZone
      * @return
      */
-    public long getCurrentTime(@NonNull TimeZone timeZone)
+    public long getCurrentTime()
     {
-        if (timeZone == null)
-        {
-            return 0;
-        }
-
         try
         {
-            Date date = DailyCalendar.convertDate(currentDateTime, DailyCalendar.ISO_8601_FORMAT, timeZone);
+            Date date = DailyCalendar.convertDate(currentDateTime, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00"));
 
-            return date.getTime() + timeZone.getRawOffset();
+            return date.getTime();
         } catch (Exception e)
         {
             ExLog.d(e.toString());
