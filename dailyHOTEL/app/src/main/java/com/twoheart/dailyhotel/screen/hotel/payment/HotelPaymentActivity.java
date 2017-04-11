@@ -8,6 +8,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
@@ -44,12 +45,15 @@ import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -931,7 +935,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                  * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
                  * 리스트 갱신 후 최상단 아이템 인텐트
                  */
-                DailyPreference.getInstance(HotelPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                //                DailyPreference.getInstance(HotelPaymentActivity.this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 
                 msg = getString(R.string.dialog_msg_issuing_account);
 
@@ -941,19 +945,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     public void onClick(View v)
                     {
                         recordPaymentInformation();
-
-                        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
-                        StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
-
-                        DailyPreference.getInstance(HotelPaymentActivity.this)//
-                            .setPaymentInformation(PlaceType.HOTEL//
-                                , mPlaceName//
-                                , stayPaymentInformation.paymentType//
-                                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
-
-                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                        finish();
+                        //
+                        //                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                        //                        finish();
                     }
                 };
                 break;
@@ -1163,12 +1157,23 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        DailyPreference.getInstance(this)//
-            .setPaymentInformation(PlaceType.HOTEL//
-                , mPlaceName//
-                , stayPaymentInformation.paymentType//
-                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+        Intent intent = new Intent(HotelPaymentActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Uri uri = Uri.parse(DailyInternalDeepLink.getStayBookingDetailScreenLink(mPlaceName//
+            , stayPaymentInformation.paymentType//
+            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)));
+
+        intent.setData(uri);
+        startActivity(intent);
+
+        //        DailyPreference.getInstance(this)//
+        //            .setPaymentInformation(PlaceType.HOTEL//
+        //                , mPlaceName//
+        //                , stayPaymentInformation.paymentType//
+        //                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+        //                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
     }
 
     private void setAvailableDefaultPaymentType()
