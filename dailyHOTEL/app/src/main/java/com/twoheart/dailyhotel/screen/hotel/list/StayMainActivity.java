@@ -836,9 +836,9 @@ public class StayMainActivity extends PlaceMainActivity
             } else
             {
                 // Old version preference value 사용
-                String oldAreaName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
-                String oldProvinceName = DailyPreference.getInstance(baseActivity).getSelectedRegionTypeProvince(PlaceType.FNB);
-                boolean isOldOverSea = DailyPreference.getInstance(baseActivity).isSelectedOverseaRegion(PlaceType.FNB);
+                String oldAreaName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
+                String oldProvinceName = DailyPreference.getInstance(baseActivity).getSelectedRegionTypeProvince(PlaceType.HOTEL);
+                boolean isOldOverSea = DailyPreference.getInstance(baseActivity).isSelectedOverseaRegion(PlaceType.HOTEL);
 
                 if (Util.isTextEmpty(oldAreaName) == false)
                 {
@@ -849,11 +849,11 @@ public class StayMainActivity extends PlaceMainActivity
                     }
 
                     // 신규 저장
-                    DailyPreference.getInstance(baseActivity).setDailyRegion(DailyCategoryType.GOURMET_ALL, oldProvinceName, oldAreaName, isOldOverSea);
+                    DailyPreference.getInstance(baseActivity).setDailyRegion(DailyCategoryType.STAY_ALL, oldProvinceName, oldAreaName, isOldOverSea);
                     // 기존 초기화
-                    DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.FNB, null);
-                    DailyPreference.getInstance(baseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, null);
-                    DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.FNB, false);
+                    DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.HOTEL, null);
+                    DailyPreference.getInstance(baseActivity).setSelectedRegionTypeProvince(PlaceType.HOTEL, null);
+                    DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, false);
                 }
 
                 areaName = oldAreaName;
