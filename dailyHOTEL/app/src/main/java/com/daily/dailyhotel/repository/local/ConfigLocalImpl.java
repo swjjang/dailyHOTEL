@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.domain.ConfigInterface;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 
@@ -22,6 +23,13 @@ public class ConfigLocalImpl implements ConfigInterface
     }
 
     @Override
+    public Observable<Boolean> isLogin()
+    {
+        return Observable.create((ObservableOnSubscribe<Boolean>) emitter -> emitter.onNext(DailyHotel.isLogin()))//
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public Observable setVerified(boolean verify)
     {
         return Observable.just(verify).doOnNext(isVerify -> DailyPreference.getInstance(mContext).setVerification(isVerify))//
@@ -34,6 +42,8 @@ public class ConfigLocalImpl implements ConfigInterface
         return Observable.create((ObservableOnSubscribe<Boolean>) emitter -> emitter.onNext(DailyPreference.getInstance(mContext).isVerification()))//
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
+
+
 
     @Override
     public Observable clear()
