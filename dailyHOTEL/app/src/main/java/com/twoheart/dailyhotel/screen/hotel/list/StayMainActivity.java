@@ -827,7 +827,7 @@ public class StayMainActivity extends PlaceMainActivity
             String regionName;
 
             // 마지막으로 선택한 지역을 가져온다. - old and new 추후 2.0.4로 강업 이후 Old 부분 삭제 필요
-            JSONObject saveRegionJsonObject = DailyPreference.getInstance(baseActivity).getDailyRegion(DailyCategoryType.GOURMET_ALL);
+            JSONObject saveRegionJsonObject = DailyPreference.getInstance(baseActivity).getDailyRegion(DailyCategoryType.STAY_ALL);
             if (saveRegionJsonObject != null)
             {
                 // new version preference value 사용
