@@ -42,7 +42,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="11dp"
                 android:gravity="center_vertical"
-                android:text="@string/label_accommodate"
+                android:text="@string/label_stay"
                 android:textColor="@color/default_text_c454545"
                 android:textSize="13dp"
                 app:drawableCompatLeft="@drawable/toggle_ic_03_hotel"/>
@@ -55,7 +55,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="24dp"
                 android:gravity="center_vertical"
-                android:text="@string/label_fnb"
+                android:text="@string/label_gourmet"
                 android:textColor="@color/default_text_c454545"
                 android:textSize="13dp"
                 app:drawableCompatLeft="@drawable/toggle_ic_04_gourmet"/>
