@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -21,7 +22,8 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
-import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -373,9 +375,18 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 break;
 
             case R.id.stampLayout:
-                Intent intent = StampActivity.newInstance(this, StampActivity.CallScreen.THANKYOU);
-                setResult(RESULT_CANCELED);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+                Intent intent = new Intent(PlacePaymentThankyouActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                Uri uri = Uri.parse(DailyInternalDeepLink.getStampScreenLink());
+
+                intent.setData(uri);
+                startActivity(intent);
+
+
+                //                Intent intent = StampActivity.newInstance(this, StampActivity.CallScreen.THANKYOU);
+                //                setResult(RESULT_CANCELED);
+                //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
                     AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_THANKYOU, null);
