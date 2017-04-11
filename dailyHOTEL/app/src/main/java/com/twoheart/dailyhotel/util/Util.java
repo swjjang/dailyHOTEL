@@ -2006,6 +2006,6 @@ public class Util implements Constants
             }
         }
 
-        return verified;
+        return true;
     }
 }
