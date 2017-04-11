@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -157,14 +158,43 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
     }
 
+    private void onChangePassword(boolean isSuccess, String message)
+    {
+        unLockUI();
+
+        if (isSuccess == true)
+        {
+            mEmailEditText.setText(null);
+
+            showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    finish();
+                }
+            }, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    finish();
+                }
+            });
+        } else
+        {
+            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    retrofit2.Callback mUserChangePwCallback = new retrofit2.Callback<JSONObject>()
+    retrofit2.Callback mUserChangePwCallback = new retrofit2.Callback<BaseDto<Object>>()
     {
         @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        public void onResponse(Call<BaseDto<Object>> call, Response<BaseDto<Object>> response)
         {
             if (isFinishing() == true)
             {
@@ -173,43 +203,9 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
             if (response != null && response.isSuccessful() && response.body() != null)
             {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
+                BaseDto baseDto = response.body();
 
-                    String result = responseJSONObject.getString("isSuccess");
-
-                    if ("true".equalsIgnoreCase(result) == true)
-                    {
-                        mEmailEditText.setText(null);
-
-                        showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, new DialogInterface.OnCancelListener()
-                        {
-                            @Override
-                            public void onCancel(DialogInterface dialog)
-                            {
-                                finish();
-                            }
-                        });
-                    } else
-                    {
-                        String message = responseJSONObject.getString("msg");
-                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                    }
-                } catch (JSONException e)
-                {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
+                onChangePassword(baseDto.msgCode == 100, baseDto.msg);
             } else
             {
                 ForgotPasswordActivity.this.onErrorResponse(call, response);
@@ -217,9 +213,9 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
 
         @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+        public void onFailure(Call<BaseDto<Object>> call, Throwable t)
         {
-            ForgotPasswordActivity.this.onError(t);
+            ForgotPasswordActivity.this.onError(call, t, false);
         }
     };
 
@@ -271,7 +267,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            ForgotPasswordActivity.this.onError(t);
+            ForgotPasswordActivity.this.onError(call, t, false);
         }
     };
 }
