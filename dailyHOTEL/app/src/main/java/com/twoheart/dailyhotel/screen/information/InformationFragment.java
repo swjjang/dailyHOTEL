@@ -131,6 +131,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(AboutActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.DAILY_INFO_CLICK, null, null);
         }
 
         @Override
@@ -145,6 +148,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(LifeStyleActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_LIFESTYLE);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.DAILY_LIFESTYLE_PROJECT_CLICK, null, null);
         }
 
         @Override
@@ -159,6 +165,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(SnsActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_SNS);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.DAILY_SNS_CLICK, null, null);
         }
 
         @Override
@@ -173,9 +182,6 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, EventListActivity.class), Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST);
-
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
         }
 
         @Override
@@ -191,8 +197,8 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, NoticeListActivity.class), Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST);
 
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.NOTICE_CLICK, null, null);
         }
 
         @Override
@@ -207,6 +213,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, FAQActivity.class), Constants.CODE_REQUEST_ACTIVITY_FAQ);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.FNQ_CLICK, null, null);
         }
 
         @Override
@@ -221,6 +230,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, ContactUsActivity.class), Constants.CODE_REQUEST_ACTIVITY_CONTACTUS);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.INQUIRY_CLICK, null, null);
         }
 
         @Override
@@ -236,7 +248,8 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, TermsNPolicyActivity.class), Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
 
-            AnalyticsManager.getInstance(baseActivity).recordScreen(baseActivity, AnalyticsManager.Screen.TERMS_AND_CONDITION, null);
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.TNC_CLICK, null, null);
         }
 
 

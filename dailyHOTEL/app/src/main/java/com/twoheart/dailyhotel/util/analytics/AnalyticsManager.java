@@ -922,6 +922,18 @@ public class AnalyticsManager
         public static final String TRUE_REVIEW_CLICK = "true_review_click";
         public static final String TRUE_REVIEW_BACK_BUTTON_CLICK = "true_review_back_button_click";
         public static final String TRUE_REVIEW_POLICY_CLICK = "true_review_policy_click";
+
+        public static final String DAILY_INFO_CLICK = "daily_info_click";
+        public static final String NOTICE_CLICK = "notice_click";
+        public static final String FNQ_CLICK = "fnq_click";
+        public static final String TNC_CLICK = "tnc_click";
+        public static final String INQUIRY_CLICK = "inquiry_click";
+        public static final String DAILY_SNS_CLICK = "daily_sns_click";
+        public static final String DAILY_LIFESTYLE_PROJECT_CLICK = "daily_lifestyle_project_click";
+        public static final String FACEBOOK_CLICK = "facebook_click";
+        public static final String INSTAGRAM_CLICK = "instagram_click";
+        public static final String BLOG_CLICK = "blog_click";
+        public static final String YOUTUBE_CLICK = "youtube_click";
     }
 
     public static class Category
