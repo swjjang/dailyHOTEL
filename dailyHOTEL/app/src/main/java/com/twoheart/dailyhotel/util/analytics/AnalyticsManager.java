@@ -677,6 +677,9 @@ public class AnalyticsManager
         // Stamp
         public static final String STAMP_DETAIL = "stamp_detail";
         public static final String STAMP_HISTORY = "stamp_history";
+
+        // TRUEREVIEW
+        public static final String TRUE_REVIEW_LIST = "true_review_list";
     }
 
     public static class Action
@@ -915,6 +918,10 @@ public class AnalyticsManager
         // AB Test
         public static final String HOME_MENU_BUTTON = "home_menu_button";
 
+        // Review
+        public static final String TRUE_REVIEW_CLICK = "true_review_click";
+        public static final String TRUE_REVIEW_BACK_BUTTON_CLICK = "true_review_back_button_click";
+        public static final String TRUE_REVIEW_POLICY_CLICK = "true_review_policy_click";
     }
 
     public static class Category

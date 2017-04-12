@@ -86,12 +86,4 @@ public class ReviewTermsActivity extends WebViewActivity
             }
         });
     }
-
-    @Override
-    protected void onStart()
-    {
-        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.TERMSOFUSE, null);
-
-        super.onStart();
-    }
 }

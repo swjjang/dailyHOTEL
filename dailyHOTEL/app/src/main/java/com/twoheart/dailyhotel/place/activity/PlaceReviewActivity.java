@@ -12,8 +12,10 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceReviewLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceReviewNetworkController;
 import com.twoheart.dailyhotel.screen.common.ReviewTermsActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 
@@ -126,6 +128,11 @@ public abstract class PlaceReviewActivity extends BaseActivity
             }
 
             startActivityForResult(ReviewTermsActivity.newInstance(PlaceReviewActivity.this), Constants.CODE_REQUEST_ACTIVITY_REVIEW_TERMS);
+
+            String label = PlaceReviewActivity.this instanceof StayReviewActivity ? AnalyticsManager.Label.STAY : AnalyticsManager.Label.GOURMET;
+
+            AnalyticsManager.getInstance(PlaceReviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.TRUE_REVIEW_POLICY_CLICK, label, null);
         }
 
         @Override

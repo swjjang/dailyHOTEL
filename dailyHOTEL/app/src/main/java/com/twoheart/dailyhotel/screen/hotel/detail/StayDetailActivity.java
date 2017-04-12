@@ -587,7 +587,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 , (StayBookingDay) placeBookingDay);
 
             recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.KAKAO);
-        }catch (Exception e)
+        } catch (Exception e)
         {
             showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
                 , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
@@ -1372,7 +1372,13 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+            String category = ((StayDetail) mPlaceDetail).getStayDetailParams().category;
+
+            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this//
+                , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.STAY, null);
         }
 
         @Override

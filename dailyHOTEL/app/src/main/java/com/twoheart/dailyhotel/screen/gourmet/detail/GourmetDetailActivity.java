@@ -591,7 +591,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 , (GourmetBookingDay) placeBookingDay);
 
             recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
-        }catch (Exception e)
+        } catch (Exception e)
         {
             showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
                 , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
@@ -1181,7 +1181,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+            String category = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category;
+
+            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this//
+                , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+
+            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.GOURMET, null);
         }
 
         //        @Override
