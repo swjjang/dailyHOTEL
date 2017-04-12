@@ -16,7 +16,12 @@ public class DailyDeepLink
         LOCATION
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////
+    // DAILYHOTEL EXTERNAL DEEP LINK
+    ///////////////////////////////////////////////////////////////////////////////////
+
     private static final String HOST_DAILYHOTEL = "dailyhotel.co.kr";
+
     private static final String HOST_KAKAOLINK = "kakaolink";
 
     private static final String PARAM_V2_VIEW = "view"; // view
@@ -129,6 +134,7 @@ public class DailyDeepLink
     private Uri mDeepLinkUri;
     private Map<String, String> mParams;
     private int mVersionCode;
+    private DailyInternalDeepLink mDailyInternalDeepLink;
 
     public static synchronized DailyDeepLink getInstance()
     {
@@ -168,13 +174,18 @@ public class DailyDeepLink
         String scheme = uri.getScheme();
         String host = uri.getHost();
 
-        if (HOST_DAILYHOTEL.equalsIgnoreCase(host) == false && HOST_KAKAOLINK.equalsIgnoreCase(host) == false)
+        if (HOST_DAILYHOTEL.equalsIgnoreCase(host) == true || HOST_KAKAOLINK.equalsIgnoreCase(host) == true)
+        {
+            decodingLink(uri);
+        } else if (DailyInternalDeepLink.HOST_INTERNAL_DAILYHOTEL.equalsIgnoreCase(host) == true)
+        {
+            mDailyInternalDeepLink = new DailyInternalDeepLink();
+            mDailyInternalDeepLink.decodingInternalLink(uri);
+        } else
         {
             clear();
             return;
         }
-
-        decodingLink(uri);
     }
 
     public String getDeepLink()
@@ -186,7 +197,18 @@ public class DailyDeepLink
     {
         mVersionCode = 0;
         mDeepLinkUri = null;
+        mDailyInternalDeepLink = null;
         mParams.clear();
+    }
+
+    public boolean isInternalLink()
+    {
+        return mDailyInternalDeepLink != null;
+    }
+
+    public DailyInternalDeepLink getInternalDeepLink()
+    {
+        return mDailyInternalDeepLink;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -1163,8 +1185,6 @@ public class DailyDeepLink
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 2
-    ///////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
 
     private boolean putParams(Uri uri, String param)

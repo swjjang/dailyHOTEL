@@ -95,7 +95,7 @@ public interface IDailyNetwork
      *
      * @return
      */
-    void requestUserChangePassword(String tag, String userEmail, Object listener);
+    void requestUserChangePassword(String tag, String email, Object listener);
 
     /**
      * api/user/information

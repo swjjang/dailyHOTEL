@@ -929,23 +929,21 @@ public class DailyMobileAPITest
     {
         mLock = new CountDownLatch(1);
 
-        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
+        retrofit2.Callback networkCallback = new retrofit2.Callback<BaseDto<Object>>()
         {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+            public void onResponse(Call<BaseDto<Object>> call, Response<BaseDto<Object>> response)
             {
                 try
                 {
                     assertThat(response, notNullValue());
                     assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
+                    assertThat(response.body(), allOf(notNullValue(), isA(BaseDto.class)));
 
-                    JSONObject responseJSONObject = response.body();
+                    BaseDto baseDto = response.body();
 
-                    String result = responseJSONObject.getString("isSuccess");
-
-                    assertThat(responseJSONObject.getString("msg"), allOf(notNullValue(), isA(String.class)));
-                    assertThat(result, is("true"));
+                    assertThat(baseDto.msg, allOf(notNullValue(), isA(String.class)));
+                    assertThat(baseDto.msgCode, is(100));
                 } catch (Throwable t)
                 {
                     addException(call, response, t);
@@ -956,7 +954,7 @@ public class DailyMobileAPITest
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
+            public void onFailure(Call<BaseDto<Object>> call, Throwable t)
             {
                 addException(call, null, t);
                 mLock.countDown();

@@ -261,6 +261,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 if (resultCode == Activity.RESULT_OK)
                 {
                     recordPaymentInformation();
+                    return;
                 }
 
                 setResult(resultCode);

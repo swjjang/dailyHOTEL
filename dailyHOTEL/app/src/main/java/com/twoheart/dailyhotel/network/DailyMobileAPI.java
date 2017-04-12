@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class DailyMobileAPI implements IDailyNetwork
 {
@@ -172,14 +173,14 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     @Override
-    public void requestUserChangePassword(String tag, String userEmail, Object listener)
+    public void requestUserChangePassword(String tag, String email, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "user/change_pw"//
-            : "NDMkNDEkMjAkMTQkNiQ0MSQzOSQzMCQ0NyQ0MyQ0MCQ0NyQyNCQwJDUzJDE2JA==$VMjM3MUWE5M0VBMzRJAwRjM3LMVjM3Q0RIGNjc3OEJBPUNTIHUV3MGPWDUB=$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/password/email"//
+            : "MjgkODgkNzIkMTckOCQ1JDc1JDU0JDYwJDYkNDkkNDYkNDUkNyQ5NSQ2NyQ=$RDE2MLRNjFBRMTM2QjZDMJjk2MDQ1QzVBSOUE0NzJCMjM0BOXUVEPRjMwNTTA3NzgD3VMTMyOTU1N0E0Q0ILN4OUM5QzY2REYI4NQ=W=$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserChangePassword(Crypto.getUrlDecoderEx(URL), userEmail);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserChangePassword(Crypto.getUrlDecoderEx(URL), email);
         executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Object>>) listener);
     }
 
     @Override

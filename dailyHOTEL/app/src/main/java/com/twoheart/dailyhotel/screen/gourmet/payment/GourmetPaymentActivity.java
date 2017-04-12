@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
@@ -45,6 +47,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActi
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -809,7 +812,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                  * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
                  * 리스트 갱신 후 최상단 아이템 인텐트
                  */
-                DailyPreference.getInstance(this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+//                DailyPreference.getInstance(this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 
                 if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
                 {
@@ -826,8 +829,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     {
                         recordPaymentInformation();
 
-                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-                        finish();
+//                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+//                        finish();
                     }
                 };
                 break;
@@ -961,11 +964,21 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
         GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
 
-        DailyPreference.getInstance(GourmetPaymentActivity.this)//
-            .setPaymentInformation(PlaceType.FNB,//
-                gourmetPaymentInformation.placeName,//
-                gourmetPaymentInformation.paymentType,//
-                gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
+        Intent intent = new Intent(GourmetPaymentActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        Uri uri = Uri.parse(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(gourmetPaymentInformation.placeName//
+            , gourmetPaymentInformation.paymentType//
+            , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)));
+
+        intent.setData(uri);
+        startActivity(intent);
+
+//        DailyPreference.getInstance(GourmetPaymentActivity.this)//
+//            .setPaymentInformation(PlaceType.FNB,//
+//                gourmetPaymentInformation.placeName,//
+//                gourmetPaymentInformation.paymentType,//
+//                gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
     }
 
     private void setAvailableDefaultPaymentType()

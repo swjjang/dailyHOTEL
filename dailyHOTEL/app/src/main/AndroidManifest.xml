@@ -144,6 +144,10 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">
+
+            <data
+                android:host="internal.dailyhotel.co.kr"
+                android:scheme="dailyhotel"/>
         </activity>
         <activity
             android:name=".screen.hotel.list.StayMainActivity"

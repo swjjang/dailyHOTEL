@@ -80,7 +80,7 @@ public interface DailyMobileService
 
     @FormUrlEncoded
     @POST("{mobileAPI}")
-    Call<JSONObject> requestUserChangePassword(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("userEmail") String userEmail);
+    Call<BaseDto<Object>> requestUserChangePassword(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("email") String userEmail);
 
     @GET("{mobileAPI}")
     Call<JSONObject> requestUserInformationForPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
