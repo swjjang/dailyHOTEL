@@ -87,6 +87,7 @@ public class HomeLayout extends BaseLayout
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
     View mScrollButtonLayout;
+    private HomeCategoryLayout mCategoryLayout;
     View mTextMessageLayout;
     View mTopButtonLayout;
     HomeCarouselLayout mRecentListLayout;
@@ -306,6 +307,7 @@ public class HomeLayout extends BaseLayout
 
         initEventLayout(mHomeContentLayout);
         initScrollButtonLayout(mHomeContentLayout);
+        initCategoryLayout(mHomeContentLayout);
         initTextMessageLayout(mHomeContentLayout);
         initRecentListLayout(mHomeContentLayout);
         initWishListLayout(mHomeContentLayout);
@@ -444,6 +446,17 @@ public class HomeLayout extends BaseLayout
         {
             ExLog.d(e.toString());
         }
+    }
+
+    private void initCategoryLayout(LinearLayout layout)
+    {
+        if (layout == null || mContext == null)
+        {
+            return;
+        }
+
+        mCategoryLayout = new HomeCategoryLayout(mContext);
+        layout.addView(mCategoryLayout);
     }
 
     private void initTextMessageLayout(LinearLayout layout)
@@ -997,6 +1010,11 @@ public class HomeLayout extends BaseLayout
         }
     }
 
+    public void setCategoryEnabled(boolean isEnabled)
+    {
+        mCategoryLayout.setCategoryEnabled(isEnabled);
+    }
+
     public boolean hasWishListData()
     {
         return mWishListLayout.hasData();
@@ -1209,7 +1227,6 @@ public class HomeLayout extends BaseLayout
 
         closeValueAnimator.start();
     }
-
 
     public void setActionButtonVisibility(int visibility)
     {

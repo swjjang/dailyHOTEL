@@ -313,12 +313,15 @@ public class DailyRemoteConfig
             JSONObject messageAreaJSONObject = homeJSONObject.getJSONObject("messageArea");
             JSONObject loginJSONObject = messageAreaJSONObject.getJSONObject("login");
             JSONObject logoutJSONObject = messageAreaJSONObject.getJSONObject("logout");
+            JSONObject categoryAreaJsonObject = homeJSONObject.getJSONObject("categoryArea");
 
             DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLoginEnabled(loginJSONObject.getBoolean("enabled"));
 
             DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutEnabled(logoutJSONObject.getBoolean("enabled"));
             DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutTitle(logoutJSONObject.getString("title"));
             DailyPreference.getInstance(context).setRemoteConfigHomeMessageAreaLogoutCallToAction(logoutJSONObject.getString("callToAction"));
+
+            DailyPreference.getInstance(context).setRemoteConfigHomeCategoryEnabled(categoryAreaJsonObject.getBoolean("enabled"));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

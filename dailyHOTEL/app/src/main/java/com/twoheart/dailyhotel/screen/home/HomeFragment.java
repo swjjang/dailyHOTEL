@@ -292,6 +292,16 @@ public class HomeFragment extends BaseFragment
         }
     }
 
+    private void requestCategoryEnabled()
+    {
+        boolean isEnabled = DailyPreference.getInstance(mBaseActivity).getRemoteConfigHomeCategoryEnabled();
+
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.setCategoryEnabled(isEnabled);
+        }
+    }
+
     void startSignUp(String recommenderCode)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
@@ -582,6 +592,7 @@ public class HomeFragment extends BaseFragment
             mNetworkRunState = IS_RUNNED_NONE;
 
             mNetworkController.requestCommonDateTime();
+            requestCategoryEnabled();
             requestMessageData();
             mNetworkController.requestEventList();
             mNetworkController.requestRecommendationList();

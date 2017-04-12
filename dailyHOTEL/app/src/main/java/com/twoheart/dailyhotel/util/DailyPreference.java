@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
 import org.json.JSONObject;
@@ -150,6 +151,9 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
+
+    // Home - Category
+    private static final String KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED = "332";
 
     private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
     private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
@@ -1118,6 +1122,16 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_INDEX, -1);
     }
 
+    public void setRemoteConfigHomeCategoryEnabled(boolean enabled)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED, enabled);
+    }
+
+    public boolean getRemoteConfigHomeCategoryEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED, false);
+    }
+
     public void setRemoteConfigStampEnabled(boolean enabled)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_ENABLED, enabled);
@@ -1412,7 +1426,7 @@ public class DailyPreference
         }
     }
 
-    public JSONObject getDailyRegion(Constants.DailyCategoryType type)
+    public JSONObject getDailyRegion(DailyCategoryType type)
     {
         String value = getValue(mPreferences, getDailyRegionKey(type), null);
         if (Util.isTextEmpty(value) == true)
@@ -1432,7 +1446,7 @@ public class DailyPreference
         return jsonObject;
     }
 
-    public void setDailyRegion(Constants.DailyCategoryType type, JSONObject jsonObject)
+    public void setDailyRegion(DailyCategoryType type, JSONObject jsonObject)
     {
         String value;
 
@@ -1447,7 +1461,7 @@ public class DailyPreference
         setValue(mEditor, getDailyRegionKey(type), value);
     }
 
-    public void setDailyRegion(Constants.DailyCategoryType type //
+    public void setDailyRegion(DailyCategoryType type //
         , String provinceName, String areaName, boolean isOverSeas)
     {
         JSONObject jsonObject = Util.getDailyRegionJSONObject(provinceName, areaName, isOverSeas);
@@ -1455,7 +1469,7 @@ public class DailyPreference
         setDailyRegion(type, jsonObject);
     }
 
-    private String getDailyRegionKey(Constants.DailyCategoryType type)
+    private String getDailyRegionKey(DailyCategoryType type)
     {
         switch (type)
         {

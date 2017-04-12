@@ -69,16 +69,6 @@ public interface Constants
         ETC
     }
 
-    enum DailyCategoryType
-    {
-        STAY_ALL,
-        GOURMET_ALL,
-        STAY_HOTEL,
-        STAY_BOUTIQUE,
-        STAY_PENSION,
-        STAY_RESORT
-    }
-
     String DAILY_USER = "normal";
     String KAKAO_USER = "kakao_talk";
     String FACEBOOK_USER = "facebook";
