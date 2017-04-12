@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.information;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -182,8 +183,26 @@ public class FAQActivity extends WebViewActivity
 
     void startKakao()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-            , HappyTalkCategoryDialog.CallScreen.SCREEN_FAQ, 0, 0, null), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_FAQ, 0, 0, null), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        } catch (Exception e)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(FAQActivity.this, "com.kakao.talk");
+                    }
+                }, null);
+        }
 
         //        try
         //        {

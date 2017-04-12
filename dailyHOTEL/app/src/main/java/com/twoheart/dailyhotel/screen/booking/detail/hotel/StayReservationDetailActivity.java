@@ -659,26 +659,44 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
     void startKakao(boolean isRefund)
     {
-        if (isRefund == true)
+        try
         {
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.KAKAO, null);
-        } else
-        {
-            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-                AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
-        }
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-        if (isRefund == true)
+            if (isRefund == true)
+            {
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                    , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.KAKAO, null);
+            } else
+            {
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                    AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+            }
+
+            if (isRefund == true)
+            {
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                    , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_REFUND//
+                    , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+            } else
+            {
+                startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                    , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING//
+                    , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+            }
+        } catch (Exception e)
         {
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-                , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_REFUND//
-                , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-        } else
-        {
-            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-                , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING//
-                , mPlaceBookingDetail.placeIndex, mReservationIndex, mPlaceBookingDetail.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(StayReservationDetailActivity.this, "com.kakao.talk");
+                    }
+                }, null);
         }
 
 

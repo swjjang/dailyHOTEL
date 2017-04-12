@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -210,10 +211,10 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         if (getString(R.string.label_gourmet).equalsIgnoreCase(mPlaceType) == true)
         {
-            urlStringBuilder.append("?yid=%" + GOURMET_YELLOW_ID);
+            urlStringBuilder.append("?yid=" + GOURMET_YELLOW_ID);
         } else
         {
-            urlStringBuilder.append("?yid=%" + STAY_YELLOW_ID);
+            urlStringBuilder.append("?yid=" + STAY_YELLOW_ID);
         }
 
         urlStringBuilder.append("&site_id=" + SITE_ID); // 사이트 아이디
@@ -232,15 +233,45 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
 
         urlStringBuilder.append("&parameter1=" + userIndex); // user Index
-        urlStringBuilder.append("&parameter2=" + URLEncoder.encode(name)); //고객명
-        urlStringBuilder.append("&parameter3=" + URLEncoder.encode(phone)); // 전화번호
-        urlStringBuilder.append("&parameter4=" + URLEncoder.encode(email)); // 이메일
-        urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
+
+        if (Util.isTextEmpty(name) == false)
+        {
+            urlStringBuilder.append("&parameter2=" + URLEncoder.encode(name)); //고객명
+        }
+
+        if (Util.isTextEmpty(phone) == false)
+        {
+            urlStringBuilder.append("&parameter3=" + URLEncoder.encode(phone)); // 전화번호
+        }
+
+        if (Util.isTextEmpty(email) == false)
+        {
+            urlStringBuilder.append("&parameter4=" + URLEncoder.encode(email)); // 이메일
+        }
+
+        if (mCallScreen != null && Util.isTextEmpty(mCallScreen.getName()) == false)
+        {
+            urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
+        }
+
         urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
-        urlStringBuilder.append("&parameter7=" + URLEncoder.encode(mPlaceName)); // 호텔명
-        urlStringBuilder.append("&parameter8=" + mPlaceType); // 카테고리 분류
-        urlStringBuilder.append("&parameter9=" + URLEncoder.encode(DailyPreference.getInstance(HappyTalkCategoryDialog.this).getUserType())); // 가입방법
-        urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
+
+        if (Util.isTextEmpty(mPlaceName) == false)
+        {
+            urlStringBuilder.append("&parameter7=" + URLEncoder.encode(mPlaceName)); // 호텔명
+        }
+
+        if (Util.isTextEmpty(mPlaceType) == false)
+        {
+            urlStringBuilder.append("&parameter8=" + mPlaceType); // 카테고리 분류
+        }
+
+        if (Util.isTextEmpty(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType()) == false)
+        {
+            urlStringBuilder.append("&parameter9=" + URLEncoder.encode(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType())); // 가입방법
+        }
+
+        //        urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
 
         urlStringBuilder.append("&app_ver=" + DailyHotel.VERSION_CODE);
         urlStringBuilder.append("&phone_os=" + "A");
@@ -248,7 +279,11 @@ public class HappyTalkCategoryDialog extends BaseActivity
         urlStringBuilder.append("&phone_os_ver=" + URLEncoder.encode(Build.VERSION.RELEASE));
 
         TelephonyManager telephonyManager = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
-        urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
+
+        if (Util.isTextEmpty(telephonyManager.getNetworkOperatorName()) == false)
+        {
+            urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
+        }
 
         try
         {
