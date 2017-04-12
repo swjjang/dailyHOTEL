@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -562,29 +563,47 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-        if (Util.isTextEmpty(name) == true)
+            String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
+
+            if (Util.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
+
+            if (gourmetDetailParams == null)
+            {
+                return;
+            }
+
+            KakaoLinkManager.newInstance(this).shareGourmet(name, gourmetDetailParams.name, gourmetDetailParams.address//
+                , placeDetail.index //
+                , imageUrl //
+                , (GourmetBookingDay) placeBookingDay);
+
+            recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
+        }catch (Exception e)
         {
-            name = getString(R.string.label_friend) + "가";
-        } else
-        {
-            name += "님이";
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(GourmetDetailActivity.this, "com.kakao.talk");
+                    }
+                }, null);
         }
-
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
-
-        if (gourmetDetailParams == null)
-        {
-            return;
-        }
-
-        KakaoLinkManager.newInstance(this).shareGourmet(name, gourmetDetailParams.name, gourmetDetailParams.address//
-            , placeDetail.index //
-            , imageUrl //
-            , (GourmetBookingDay) placeBookingDay);
-
-        recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
     }
 
     @Override

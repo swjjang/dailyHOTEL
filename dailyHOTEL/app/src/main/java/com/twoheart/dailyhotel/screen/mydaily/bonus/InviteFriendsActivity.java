@@ -1,10 +1,8 @@
 package com.twoheart.dailyhotel.screen.mydaily.bonus;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -252,15 +250,16 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
                 Action.KAKAO_FRIEND_INVITED, mRecommendCode, null);
         } catch (Exception e)
         {
-            try
-            {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_GOOGLE_KAKAOTALK)));
-            } catch (ActivityNotFoundException e1)
-            {
-                Intent marketLaunch = new Intent(Intent.ACTION_VIEW);
-                marketLaunch.setData(Uri.parse(URL_STORE_GOOGLE_KAKAOTALK_WEB));
-                startActivity(marketLaunch);
-            }
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(InviteFriendsActivity.this, "com.kakao.talk");
+                    }
+                }, null);
         }
     }
 

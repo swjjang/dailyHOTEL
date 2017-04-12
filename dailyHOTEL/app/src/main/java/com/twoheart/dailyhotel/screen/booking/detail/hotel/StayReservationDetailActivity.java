@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -329,6 +330,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 try
                 {
+                    // 카카오톡 패키지 설치 여부
+                    getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
                     StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
 
                     String message = getString(R.string.message_booking_stay_share_kakao, //
@@ -348,13 +352,24 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                     KakaoLinkManager.newInstance(StayReservationDetailActivity.this).shareBookingStay(message, stayBookingDetail.placeIndex,//
                         mImageUrl, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                        , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
-                }
 
-                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
+                    showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                        , new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.installPackage(StayReservationDetailActivity.this, "com.kakao.talk");
+                            }
+                        }, null);
+                }
             }
         });
 

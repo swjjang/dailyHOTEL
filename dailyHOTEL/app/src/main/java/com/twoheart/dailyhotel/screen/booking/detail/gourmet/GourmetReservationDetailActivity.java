@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -302,6 +303,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
                 try
                 {
+                    // 카카오톡 패키지 설치 여부
+                    getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
                     GourmetBookingDetail gourmetBookingDetail = ((GourmetBookingDetail) mPlaceBookingDetail);
 
                     String message = getString(R.string.message_booking_gourmet_share_kakao, //
@@ -314,13 +318,24 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
                     KakaoLinkManager.newInstance(GourmetReservationDetailActivity.this).shareBookingGourmet(message, gourmetBookingDetail.placeIndex,//
                         mImageUrl, DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+
+                    AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                        , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
-                }
 
-                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
+                    showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                        , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                        , new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Util.installPackage(GourmetReservationDetailActivity.this, "com.kakao.talk");
+                            }
+                        }, null);
+                }
             }
         });
 
