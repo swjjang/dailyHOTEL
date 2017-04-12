@@ -34,7 +34,8 @@ import retrofit2.Response;
 public class HappyTalkCategoryDialog extends BaseActivity
 {
     public static final String SITE_ID = "4000000190";
-    public static final String YELLOW_ID = "%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"; // @데일리호텔
+    public static final String STAY_YELLOW_ID = "%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"; // @데일리호텔
+    public static final String GOURMET_YELLOW_ID = "%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94"; // @데일리고메
 
     public enum CallScreen
     {
@@ -206,7 +207,15 @@ public class HappyTalkCategoryDialog extends BaseActivity
     {
         // https://docs.google.com/spreadsheets/d/1rB-bDASf80h8cW5lIX9kzrnuw0da-S65PJbEQ3lXeoU/edit#gid=0
         StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
-        urlStringBuilder.append("?yid=%" + YELLOW_ID); // 객사 옐로우 아이디
+
+        if (getString(R.string.label_gourmet).equalsIgnoreCase(mPlaceType) == true)
+        {
+            urlStringBuilder.append("?yid=%" + GOURMET_YELLOW_ID);
+        } else
+        {
+            urlStringBuilder.append("?yid=%" + STAY_YELLOW_ID);
+        }
+
         urlStringBuilder.append("&site_id=" + SITE_ID); // 사이트 아이디
         urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
         urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
