@@ -1274,6 +1274,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             lockUiComponent();
 
             showCallDialog();
+
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION
+            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);
         }
 
         @Override

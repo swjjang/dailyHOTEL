@@ -1307,6 +1307,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             lockUiComponent();
 
             showCallDialog();
+
+            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_DETAIL, null);
         }
 
         //        @Override

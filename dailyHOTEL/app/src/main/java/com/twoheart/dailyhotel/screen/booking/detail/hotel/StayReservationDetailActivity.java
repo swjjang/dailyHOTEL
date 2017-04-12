@@ -875,6 +875,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             }
 
             StayReservationDetailActivity.this.showCallDialog();
+
+            AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_BOOKING_DETAIL, null);
         }
 
         @Override

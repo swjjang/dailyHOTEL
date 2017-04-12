@@ -934,6 +934,9 @@ public class AnalyticsManager
         public static final String INSTAGRAM_CLICK = "instagram_click";
         public static final String BLOG_CLICK = "blog_click";
         public static final String YOUTUBE_CLICK = "youtube_click";
+
+        // Happy Talk
+        public static final String CONTACT_DAILY_CONCIERGE = "contact_daily_concierge";
     }
 
     public static class Category
@@ -1146,6 +1149,17 @@ public class AnalyticsManager
 
         // AB Test
         public static final String CTA_VARIATION_A = "cta_variation_a";
+
+        public static final String STAY_DETAIL = "stay_detail";
+        public static final String STAY_BOOKING_INITIALISE = "stay_booking_initialise";
+        public static final String STAY_DEPOSIT_WAITING = "stay_deposit_waiting";
+        public static final String STAY_BOOKING_DETAIL = "stay_booking_detail";
+
+
+        public static final String GOURMET_DETAIL = "gourmet_detail";
+        public static final String GOURMET_BOOKING_INITIALISE = "gourmet_booking_initialise";
+        public static final String GOURMET_DEPOSIT_WAITING = "gourmet_deposit_waiting";
+        public static final String GOURMET_BOOKING_DETAIL = "gourmet_booking_detail";
     }
 
     public static class UserType

@@ -1942,6 +1942,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         public void showCallDialog()
         {
             HotelPaymentActivity.this.showCallDialog();
+
+            AnalyticsManager.getInstance(HotelPaymentActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_BOOKING_INITIALISE, null);
         }
 
         @Override

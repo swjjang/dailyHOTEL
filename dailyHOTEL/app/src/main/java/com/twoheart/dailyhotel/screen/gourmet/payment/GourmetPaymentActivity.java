@@ -1654,6 +1654,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         public void showCallDialog()
         {
             GourmetPaymentActivity.this.showCallDialog();
+
+            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_BOOKING_INITIALISE, null);
         }
 
         @Override

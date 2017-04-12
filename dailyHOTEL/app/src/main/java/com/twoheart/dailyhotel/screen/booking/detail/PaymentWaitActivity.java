@@ -147,6 +147,19 @@ public class PaymentWaitActivity extends BaseActivity
             public void onClick(View v)
             {
                 showCallDialog();
+
+                switch (mBooking.placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
     }

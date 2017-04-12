@@ -637,6 +637,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             }
 
             GourmetReservationDetailActivity.this.showCallDialog();
+
+            AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_BOOKING_DETAIL, null);
         }
 
         @Override
