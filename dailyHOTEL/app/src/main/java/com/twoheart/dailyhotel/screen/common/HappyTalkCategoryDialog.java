@@ -22,6 +22,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         } else
         {
             finish();
+            return;
         }
 
         mLayout = new HappyTalkCategoryDialogLayout(this, mOnEventListener);
@@ -119,20 +121,29 @@ public class HappyTalkCategoryDialog extends BaseActivity
                     {
                         Intent intent = LoginActivity.newInstance(HappyTalkCategoryDialog.this, null);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+
+                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.LOGIN, null);
                     }
                 }, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        onBackPressed();
+                        finish();
+
+                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
                     @Override
                     public void onCancel(DialogInterface dialog)
                     {
-                        onBackPressed();
+                        finish();
+
+                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
                     }
                 }, null, true);
         }
@@ -202,6 +213,9 @@ public class HappyTalkCategoryDialog extends BaseActivity
     public void onBackPressed()
     {
         super.onBackPressed();
+
+        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.CLOSE_HAPPYTALK, AnalyticsManager.Label.BACKKEY, null);
     }
 
     void startHappyTalk(String userIndex, String name, String phone, String email)
@@ -377,7 +391,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         @Override
         public void finish()
         {
-            HappyTalkCategoryDialog.this.onBackPressed();
+            HappyTalkCategoryDialog.this.finish();
         }
 
         @Override
@@ -408,6 +422,15 @@ public class HappyTalkCategoryDialog extends BaseActivity
             mMainCategoryId = mainId;
             mNetworkController.requestUserProfile();
         }
+
+        @Override
+        public void onCancel()
+        {
+            HappyTalkCategoryDialog.this.finish();
+
+            AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                , AnalyticsManager.Action.CLOSE_HAPPYTALK, AnalyticsManager.Label.CANCEL, null);
+        }
     };
 
     private HappyTalkCategoryDialogNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new HappyTalkCategoryDialogNetworkController.OnNetworkControllerListener()
@@ -426,6 +449,53 @@ public class HappyTalkCategoryDialog extends BaseActivity
         public void onUserProfile(String userIndex, String name, String phone, String email)
         {
             startHappyTalk(userIndex, name, phone, email);
+
+            String label = null;
+
+            switch (mCallScreen)
+            {
+                case SCREEN_STAY_DETAIL:
+                    label = AnalyticsManager.Label.STAY_DETAIL;
+                    break;
+
+                case SCREEN_GOURMET_DETAIL:
+                    label = AnalyticsManager.Label.GOURMET_DETAIL;
+                    break;
+
+                case SCREEN_STAY_PAYMENT_WAIT:
+                    label = AnalyticsManager.Label.STAY_DEPOSIT_WAITING;
+                    break;
+
+                case SCREEN_GOURMET_PAYMENT_WAIT:
+                    label = AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING;
+                    break;
+
+                case SCREEN_STAY_BOOKING:
+                    label = AnalyticsManager.Label.STAY_BOOKING_DETAIL;
+                    break;
+
+                case SCREEN_GOURMET_BOOKING:
+                    label = AnalyticsManager.Label.GOURMET_BOOKING_DETAIL;
+                    break;
+
+                case SCREEN_FAQ:
+                    label = AnalyticsManager.Label.MENU_FNQ;
+                    break;
+
+                case SCREEN_CONTACT_US:
+                    label = AnalyticsManager.Label.MENU_INQUIRY;
+                    break;
+
+                case SCREEN_STAY_REFUND:
+                    label = AnalyticsManager.Label.STAY_BOOKING_DETAIL_REFUND;
+                    break;
+
+                default:
+                    return;
+            }
+
+            AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                , AnalyticsManager.Action.HAPPYTALK_START, label, null);
         }
 
         @Override

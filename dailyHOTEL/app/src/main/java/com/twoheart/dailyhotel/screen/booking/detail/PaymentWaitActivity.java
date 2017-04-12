@@ -146,7 +146,7 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                showCallDialog();
+                showCallDialog(mBooking.placeType);
 
                 switch (mBooking.placeType)
                 {
@@ -224,7 +224,7 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
-    void showCallDialog()
+    void showCallDialog(final PlaceType placeType)
     {
         if (isFinishing())
         {
@@ -259,6 +259,19 @@ public class PaymentWaitActivity extends BaseActivity
                 }
 
                 startFAQ();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
 
@@ -276,6 +289,19 @@ public class PaymentWaitActivity extends BaseActivity
                 }
 
                 startKakao();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
 
@@ -476,7 +502,7 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
                     AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
-                    AnalyticsManager.Label.CANCEL, null);
+                    AnalyticsManager.Label.CANCEL_, null);
             }
         });
     }

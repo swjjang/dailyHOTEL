@@ -588,7 +588,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (resultCode == Constants.CODE_RESULT_ACTIVITY_HOME)
             {
                 AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CANCEL, null);
+                    , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CANCEL_, null);
             } else
             {
                 AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//

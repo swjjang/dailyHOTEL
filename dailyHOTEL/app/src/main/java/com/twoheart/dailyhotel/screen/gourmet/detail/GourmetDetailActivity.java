@@ -835,7 +835,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN, null);
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN_, null);
 
                         Intent intent = LoginActivity.newInstance(GourmetDetailActivity.this, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
@@ -1306,7 +1306,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            showCallDialog();
+            showCallDialog(PlaceType.FNB);
 
             AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_DETAIL, null);

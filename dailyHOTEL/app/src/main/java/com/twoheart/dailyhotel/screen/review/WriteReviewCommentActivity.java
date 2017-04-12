@@ -142,12 +142,12 @@ public class WriteReviewCommentActivity extends BaseActivity
                                 {
                                     case HOTEL:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
                                         break;
 
                                     case FNB:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
                                         break;
                                 }
                             } catch (Exception e)
@@ -208,12 +208,12 @@ public class WriteReviewCommentActivity extends BaseActivity
                                 {
                                     case HOTEL:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
                                         break;
 
                                     case FNB:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
                                         break;
                                 }
                             } catch (Exception e)

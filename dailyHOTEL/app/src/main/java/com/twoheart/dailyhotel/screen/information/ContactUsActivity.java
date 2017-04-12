@@ -90,6 +90,9 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
         {
             case R.id.kakaoLayout:
                 startKakaoTalkConsult();
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.MENU_INQUIRY, null);
                 break;
 
             case R.id.callLayout:
@@ -114,7 +117,7 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
                     {
                         AnalyticsManager.getInstance(ContactUsActivity.this).recordEvent(//
                             AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU,//
-                            AnalyticsManager.Label.CANCEL, null);
+                            AnalyticsManager.Label.CANCEL_, null);
                     }
                 });
                 break;

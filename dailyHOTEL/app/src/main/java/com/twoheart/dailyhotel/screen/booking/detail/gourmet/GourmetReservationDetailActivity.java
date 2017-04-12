@@ -139,6 +139,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 }
 
                 startFAQ();
+
+                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.GOURMET_BOOKING_DETAIL, null);
             }
         });
 
@@ -196,6 +199,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 }
 
                 startKakao();
+
+                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.GOURMET_BOOKING_DETAIL, null);
             }
         });
 

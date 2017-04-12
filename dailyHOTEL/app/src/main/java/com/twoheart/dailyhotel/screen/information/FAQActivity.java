@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -127,6 +128,9 @@ public class FAQActivity extends WebViewActivity
                 }
 
                 startKakao();
+
+                AnalyticsManager.getInstance(FAQActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.MENU_FNQ, null);
             }
         });
 

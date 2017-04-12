@@ -855,7 +855,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN, null);
+                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN_, null);
 
                         Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
@@ -1273,7 +1273,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            showCallDialog();
+            showCallDialog(PlaceType.HOTEL);
 
             AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION
             , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);

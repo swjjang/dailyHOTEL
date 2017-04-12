@@ -144,6 +144,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
 
                 startFAQ();
+
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.STAY_BOOKING_DETAIL, null);
             }
         });
 
@@ -223,6 +226,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
 
                 startKakao(false);
+
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.STAY_BOOKING_DETAIL, null);
             }
         });
 

@@ -281,7 +281,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
                 Intent intent = LoginActivity.newInstance(this);
                 startActivityForResult(intent, REQUEST_ACTIVITY_LOGIN);
 
-                //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN, 0L);
+                //            AnalyticsManager.getInstance(this).recordEvent(Screen.BONUS, Action.CLICK, Label.LOGIN_, 0L);
                 break;
             }
 
