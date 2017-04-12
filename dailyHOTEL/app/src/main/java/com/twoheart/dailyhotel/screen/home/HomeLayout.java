@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
@@ -133,6 +134,8 @@ public class HomeLayout extends BaseLayout
         void onLocationTermsClick();
 
         void onProtectedYouthClick();
+
+        void onCategoryItemClick(DailyCategoryType categoryType);
     }
 
     public enum MessageType
@@ -457,6 +460,15 @@ public class HomeLayout extends BaseLayout
 
         mCategoryLayout = new HomeCategoryLayout(mContext);
         layout.addView(mCategoryLayout);
+
+        mCategoryLayout.setOnItemClickListener(new HomeCategoryLayout.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(DailyCategoryType dailyCategoryType)
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onCategoryItemClick(dailyCategoryType);
+            }
+        });
     }
 
     private void initTextMessageLayout(LinearLayout layout)

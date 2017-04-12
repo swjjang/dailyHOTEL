@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -892,6 +893,12 @@ public class HomeFragment extends BaseFragment
         {
             Intent intent = new Intent(mBaseActivity, ProtectYouthTermsActivity.class);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onCategoryItemClick(DailyCategoryType categoryType)
+        {
+            // TODO : category 클릭시 연결 할 화면 이벤트 처리
         }
 
         @Override

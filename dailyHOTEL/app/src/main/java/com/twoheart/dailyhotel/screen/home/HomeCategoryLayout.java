@@ -26,6 +26,11 @@ import com.twoheart.dailyhotel.widget.DailyTextView;
 
 public class HomeCategoryLayout extends RelativeLayout
 {
+    public interface OnItemClickListener
+    {
+        void onItemClick(DailyCategoryType dailyCategoryType);
+    }
+
     private static final int MAX_COLUMN_COUNT = 5;
     private static final int ANIMATION_DURATION = 200;
 
@@ -38,7 +43,8 @@ public class HomeCategoryLayout extends RelativeLayout
     private Context mContext;
     private RelativeLayout mLayout;
     private android.support.v7.widget.GridLayout mItemGridLayout;
-    private boolean mIsEnabled;
+
+    private OnItemClickListener mOnItemClickListener;
 
 
     public HomeCategoryLayout(Context context)
@@ -148,7 +154,15 @@ public class HomeCategoryLayout extends RelativeLayout
 
         dailyTextView.setLayoutParams(layoutParams);
 
+        dailyTextView.setTag(categoryType);
+        dailyTextView.setOnClickListener(mItemClickListener);
+
         return dailyTextView;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener itemClickListener)
+    {
+        mOnItemClickListener = itemClickListener;
     }
 
     @Override
@@ -300,4 +314,23 @@ public class HomeCategoryLayout extends RelativeLayout
 
         closeValueAnimator.start();
     }
+
+    private View.OnClickListener mItemClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View v)
+        {
+            DailyCategoryType categoryType = (DailyCategoryType) v.getTag();
+            if (categoryType == null)
+            {
+                ExLog.e("onItemClick : categoryType is null, tag error");
+                return;
+            }
+
+            if (mOnItemClickListener != null)
+            {
+                mOnItemClickListener.onItemClick(categoryType);
+            }
+        }
+    };
 }
