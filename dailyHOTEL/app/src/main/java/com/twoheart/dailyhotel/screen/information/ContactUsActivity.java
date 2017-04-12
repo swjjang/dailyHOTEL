@@ -120,6 +120,9 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
                             AnalyticsManager.Label.CANCEL_, null);
                     }
                 });
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.MENU_INQUIRY, null);
                 break;
 
             case R.id.mailLayout:

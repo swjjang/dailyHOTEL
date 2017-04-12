@@ -941,6 +941,7 @@ public class AnalyticsManager
         public static final String LOGIN_HAPPYTALK = "login_happytalk";
         public static final String CLOSE_HAPPYTALK = "close_happytalk";
         public static final String HAPPYTALK_START = "happytalk_start";
+        public static final String CALL_CLICK = "call_click";
     }
 
     public static class Category

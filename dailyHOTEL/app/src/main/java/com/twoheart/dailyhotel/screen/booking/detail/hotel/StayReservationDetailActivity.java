@@ -264,6 +264,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                     }
                 });
+
+                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.STAY_BOOKING_DETAIL, null);
             }
         });
 

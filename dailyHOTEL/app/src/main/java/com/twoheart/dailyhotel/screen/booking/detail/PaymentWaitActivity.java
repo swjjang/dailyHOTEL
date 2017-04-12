@@ -316,6 +316,19 @@ public class PaymentWaitActivity extends BaseActivity
                 }
 
                 startCall();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
 

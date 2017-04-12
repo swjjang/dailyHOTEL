@@ -501,6 +501,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 }
 
                 showDailyCallDialog(null);
+
+                switch(placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.STAY_DETAIL, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.GOURMET_DETAIL, null);
+                        break;
+                }
             }
         });
 

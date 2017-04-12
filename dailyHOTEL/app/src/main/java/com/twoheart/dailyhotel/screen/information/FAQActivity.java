@@ -145,6 +145,9 @@ public class FAQActivity extends WebViewActivity
                 }
 
                 showDailyCallDialog(null);
+
+                AnalyticsManager.getInstance(FAQActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.MENU_FNQ, null);
             }
         });
 
