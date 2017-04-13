@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.screen.event;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +13,7 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -31,6 +34,19 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     EventListAdapter mEventListAdapter;
     private EventListNetworkController mEventListNetworkController;
     private boolean mDontReload;
+    private DailyDeepLink mDailyDeepLink;
+
+    public static Intent newInstance(Context context, String deepLink)
+    {
+        Intent intent = new Intent(context, EventListActivity.class);
+
+        if (Util.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,6 +54,10 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        initDeepLink(intent);
 
         setContentView(R.layout.activity_eventlist);
 
@@ -48,6 +68,30 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         initToolbar();
         initLayout();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        initDeepLink(intent);
+    }
+
+    private void initDeepLink(Intent intent)
+    {
+        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        {
+            return;
+        }
+
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
+        }
     }
 
     private void initToolbar()
@@ -92,14 +136,23 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
         super.onStart();
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isEventDetailView() == true)
+            if (mDailyDeepLink.isExternalDeepLink() == true)
             {
-                startEventWeb(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                if (externalDeepLink.isEventDetailView() == true)
+                {
+                    startEventWeb(externalDeepLink.getUrl(), externalDeepLink.getTitle());
+                }
+            } else
+            {
+
             }
 
-            DailyDeepLink.getInstance().clear();
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
         }
     }
 

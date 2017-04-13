@@ -75,13 +75,14 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     }
 
     @Override
-    protected void initTabLayout(TabLayout tabLayout)
+    protected void initTabLayout(TabLayout tabLayout, View tabUpperLineView)
     {
         if (tabLayout == null)
         {
             return;
         }
 
+        tabUpperLineView.setVisibility(View.GONE);
         tabLayout.setVisibility(ViewPager.GONE);
     }
 

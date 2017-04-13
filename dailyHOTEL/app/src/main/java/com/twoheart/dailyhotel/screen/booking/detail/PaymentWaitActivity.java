@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -145,7 +146,20 @@ public class PaymentWaitActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                showCallDialog();
+                showCallDialog(mBooking.placeType);
+
+                switch (mBooking.placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
     }
@@ -210,7 +224,7 @@ public class PaymentWaitActivity extends BaseActivity
         }
     }
 
-    void showCallDialog()
+    void showCallDialog(final PlaceType placeType)
     {
         if (isFinishing())
         {
@@ -245,6 +259,19 @@ public class PaymentWaitActivity extends BaseActivity
                 }
 
                 startFAQ();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
 
@@ -262,6 +289,19 @@ public class PaymentWaitActivity extends BaseActivity
                 }
 
                 startKakao();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
 
@@ -276,6 +316,19 @@ public class PaymentWaitActivity extends BaseActivity
                 }
 
                 startCall();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.STAY_DEPOSIT_WAITING, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING, null);
+                        break;
+                }
             }
         });
 
@@ -462,30 +515,48 @@ public class PaymentWaitActivity extends BaseActivity
             {
                 AnalyticsManager.getInstance(PaymentWaitActivity.this).recordEvent(//
                     AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
-                    AnalyticsManager.Label.CANCEL, null);
+                    AnalyticsManager.Label.CANCEL_, null);
             }
         });
     }
 
     void startKakao()
     {
-        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
-
-        switch (mBooking.placeType)
+        try
         {
-            case HOTEL:
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-                    , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAYMENT_WAIT, 0//
-                    , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-                break;
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            case FNB:
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-                    , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAYMENT_WAIT, 0//
-                    , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
-                break;
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+                AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+
+            switch (mBooking.placeType)
+            {
+                case HOTEL:
+                    startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                        , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_PAYMENT_WAIT, 0//
+                        , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                    break;
+
+                case FNB:
+                    startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                        , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_PAYMENT_WAIT, 0//
+                        , mBooking.reservationIndex, mBooking.placeName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                    break;
+            }
+        } catch (Exception e)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(PaymentWaitActivity.this, "com.kakao.talk");
+                    }
+                }, null);
         }
+
 
         //        try
         //        {

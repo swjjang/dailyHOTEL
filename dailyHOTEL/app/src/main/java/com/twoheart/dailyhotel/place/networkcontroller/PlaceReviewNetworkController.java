@@ -28,8 +28,6 @@ public class PlaceReviewNetworkController extends BaseNetworkController
     {
         String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
 
-        placeIndex = 1087;
-
         DailyMobileAPI.getInstance(mContext).requestPlaceReviews(mNetworkTag, type, placeIndex, page, limit, mPlaceReviewsCallback);
     }
 

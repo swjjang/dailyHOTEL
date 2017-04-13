@@ -231,7 +231,7 @@ public class CreditCardListActivity extends BaseActivity
                     unLockUI();
 
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
+                        , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL_, null);
                 }
             };
 
@@ -243,7 +243,7 @@ public class CreditCardListActivity extends BaseActivity
                     unLockUI();
 
                     AnalyticsManager.getInstance(CreditCardListActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                        , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL, null);
+                        , AnalyticsManager.Action.REGISTERED_CARD_DELETE_POPPEDUP, AnalyticsManager.Label.CANCEL_, null);
                 }
             };
 

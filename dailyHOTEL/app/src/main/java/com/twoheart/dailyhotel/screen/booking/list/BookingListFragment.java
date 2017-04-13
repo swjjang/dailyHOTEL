@@ -14,6 +14,7 @@ package com.twoheart.dailyhotel.screen.booking.list;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,8 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -74,6 +77,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
     boolean mDontReload;
 
     TodayDateTime mTodayDateTime;
+    private DailyDeepLink mDailyDeepLink;
 
     public interface OnUserActionListener
     {
@@ -91,6 +95,26 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         initLayout(view);
 
         return view;
+    }
+
+    @Override
+    public void onNewBundle(Bundle bundle)
+    {
+        if (bundle == null)
+        {
+            return;
+        }
+
+        if (bundle.containsKey(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == true)
+        {
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(bundle.getString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+            }
+        }
     }
 
     private void initToolbar(BaseActivity baseActivity, View view)
@@ -169,7 +193,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
         if (DailyHotel.isLogin() == false)
         {
-            DailyDeepLink.getInstance().clear();
+            if (mDailyDeepLink != null)
+            {
+                mDailyDeepLink.clear();
+            }
 
             AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), Screen.BOOKING_BEFORE_LOGIN_BOOKING_LIST, null);
         }
@@ -219,7 +246,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
             Intent intent = LoginActivity.newInstance(baseActivity);
             startActivity(intent);
 
-            //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN, 0L);
+            //            AnalyticsManager.getInstance(getActivity()).recordEvent(Screen.BOOKING_LIST, Action.CLICK, Label.LOGIN_, 0L);
         }
     }
 
@@ -669,39 +696,41 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
 
                         try
                         {
-                            if (DailyDeepLink.getInstance().isValidateLink() == true)
+                            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
                             {
-                                if (DailyDeepLink.getInstance().isInternalLink() == true)
+                                if (mDailyDeepLink.isInternalDeepLink() == true)
                                 {
-                                    if (DailyDeepLink.getInstance().getInternalDeepLink().isBookingDetailView() == true && length != 0)
+                                    DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
+
+                                    if (internalDeepLink.isBookingDetailView() == true && length != 0)
                                     {
                                         PlaceType placeType = null;
 
-                                        if ("stay".equalsIgnoreCase(DailyDeepLink.getInstance().getInternalDeepLink().getPlaceType()) == true)
+                                        if ("stay".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
                                         {
                                             placeType = PlaceType.HOTEL;
-                                        } else if ("gourmet".equalsIgnoreCase(DailyDeepLink.getInstance().getInternalDeepLink().getPlaceType()) == true)
+                                        } else if ("gourmet".equalsIgnoreCase(internalDeepLink.getPlaceType()) == true)
                                         {
                                             placeType = PlaceType.FNB;
                                         }
 
-                                        PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(DailyDeepLink.getInstance().getInternalDeepLink().getPaymentType());
-                                        String placeName = DailyDeepLink.getInstance().getInternalDeepLink().getPlaceName();
+                                        PlacePaymentInformation.PaymentType paymentType = PlacePaymentInformation.PaymentType.valueOf(internalDeepLink.getPaymentType());
+                                        String placeName = internalDeepLink.getPlaceName();
 
                                         int index = -1;
 
                                         switch (placeType)
                                         {
                                             case HOTEL:
-                                                String checkInTime = DailyDeepLink.getInstance().getInternalDeepLink().getCheckInTime();
-                                                String checkOutTime = DailyDeepLink.getInstance().getInternalDeepLink().getCheckOutTime();
+                                                String checkInTime = internalDeepLink.getCheckInTime();
+                                                String checkOutTime = internalDeepLink.getCheckOutTime();
 
                                                 index = searchStayFromPaymentInformation(baseActivity//
                                                     , placeName, paymentType, checkInTime, checkOutTime, bookingArrayList);
                                                 break;
 
                                             case FNB:
-                                                String visitTime = DailyDeepLink.getInstance().getInternalDeepLink().getVisitTime();
+                                                String visitTime = internalDeepLink.getVisitTime();
 
                                                 index = searchGourmetFromPaymentInformation(baseActivity//
                                                     , placeName, paymentType, visitTime, bookingArrayList);
@@ -716,19 +745,21 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                                     }
                                 } else
                                 {
-                                    if (DailyDeepLink.getInstance().isBookingDetailView() == true && length != 0)
+                                    DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                                    if (externalDeepLink.isBookingDetailView() == true && length != 0)
                                     {
                                         PlaceType placeType = null;
 
-                                        if ("stay".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
+                                        if ("stay".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
                                         {
                                             placeType = PlaceType.HOTEL;
-                                        } else if ("gourmet".equalsIgnoreCase(DailyDeepLink.getInstance().getPlaceType()) == true)
+                                        } else if ("gourmet".equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
                                         {
                                             placeType = PlaceType.FNB;
                                         }
 
-                                        final int reservationIndex = DailyDeepLink.getInstance().getReservationIndex();
+                                        final int reservationIndex = externalDeepLink.getReservationIndex();
 
                                         if (placeType != null)
                                         {
@@ -753,7 +784,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             ExLog.e(e.toString());
                         } finally
                         {
-                            DailyDeepLink.getInstance().clear();
+                            mDailyDeepLink.clear();
                         }
 
                         // 사용자 정보 요청.

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -562,29 +563,47 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-        if (Util.isTextEmpty(name) == true)
+            String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
+
+            if (Util.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
+
+            if (gourmetDetailParams == null)
+            {
+                return;
+            }
+
+            KakaoLinkManager.newInstance(this).shareGourmet(name, gourmetDetailParams.name, gourmetDetailParams.address//
+                , placeDetail.index //
+                , imageUrl //
+                , (GourmetBookingDay) placeBookingDay);
+
+            recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
+        } catch (Exception e)
         {
-            name = getString(R.string.label_friend) + "가";
-        } else
-        {
-            name += "님이";
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(GourmetDetailActivity.this, "com.kakao.talk");
+                    }
+                }, null);
         }
-
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) placeDetail).getGourmetDetailParmas();
-
-        if (gourmetDetailParams == null)
-        {
-            return;
-        }
-
-        KakaoLinkManager.newInstance(this).shareGourmet(name, gourmetDetailParams.name, gourmetDetailParams.address//
-            , placeDetail.index //
-            , imageUrl //
-            , (GourmetBookingDay) placeBookingDay);
-
-        recordAnalyticsShared(placeDetail, AnalyticsManager.ValueType.KAKAO);
     }
 
     @Override
@@ -686,9 +705,31 @@ public class GourmetDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this, HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL, gourmetDetailParams.index, 0, gourmetDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+            GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
+
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_DETAIL//
+                , gourmetDetailParams.index, 0, gourmetDetailParams.name)//
+                , Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        } catch (Exception e)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(GourmetDetailActivity.this, "com.kakao.talk");
+                    }
+                }, null);
+        }
+
 
         //        try
         //        {
@@ -794,7 +835,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN, null);
+                        AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN_, null);
 
                         Intent intent = LoginActivity.newInstance(GourmetDetailActivity.this, AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
@@ -1162,7 +1203,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+            String category = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category;
+
+            startActivityForResult(GourmetReviewActivity.newInstance(GourmetDetailActivity.this//
+                , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+
+            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.GOURMET, null);
         }
 
         //        @Override
@@ -1259,7 +1306,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            showCallDialog();
+            showCallDialog(PlaceType.FNB);
+
+            AnalyticsManager.getInstance(GourmetDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_DETAIL, null);
         }
 
         //        @Override

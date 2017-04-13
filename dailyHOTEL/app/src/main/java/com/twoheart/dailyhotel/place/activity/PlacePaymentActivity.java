@@ -483,7 +483,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             public void onCancel(DialogInterface dialog)
             {
                 AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
+                    , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL_, null);
             }
         });
 
@@ -541,7 +541,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 unLockUI();
 
                 AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                    , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL, null);
+                    , Action.PAYMENT_AGREEMENT_POPPEDUP, Label.CANCEL_, null);
             }
         });
 
@@ -585,7 +585,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
             {
                 AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(//
                     AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
-                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL, null);
+                    AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL_, null);
             }
         });
     }

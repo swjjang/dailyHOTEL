@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.transition.Transition;
@@ -550,37 +551,55 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-        if (Util.isTextEmpty(name) == true)
+            String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
+
+            if (Util.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            StayDetail stayDetail = (StayDetail) placeDetail;
+
+            if (stayDetail == null)
+            {
+                return;
+            }
+
+            StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+            if (stayDetailParams == null)
+            {
+                return;
+            }
+
+            KakaoLinkManager.newInstance(StayDetailActivity.this).shareStay(name//
+                , stayDetailParams.name//
+                , stayDetailParams.address//
+                , stayDetail.index//
+                , imageUrl//
+                , (StayBookingDay) placeBookingDay);
+
+            recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.KAKAO);
+        } catch (Exception e)
         {
-            name = getString(R.string.label_friend) + "가";
-        } else
-        {
-            name += "님이";
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(StayDetailActivity.this, "com.kakao.talk");
+                    }
+                }, null);
         }
-
-        StayDetail stayDetail = (StayDetail) placeDetail;
-
-        if (stayDetail == null)
-        {
-            return;
-        }
-
-        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
-        if (stayDetailParams == null)
-        {
-            return;
-        }
-
-        KakaoLinkManager.newInstance(StayDetailActivity.this).shareStay(name//
-            , stayDetailParams.name//
-            , stayDetailParams.address//
-            , stayDetail.index//
-            , imageUrl//
-            , (StayBookingDay) placeBookingDay);
-
-        recordAnalyticsShared(stayDetail, AnalyticsManager.ValueType.KAKAO);
     }
 
     @Override
@@ -690,11 +709,29 @@ public class StayDetailActivity extends PlaceDetailActivity
     @Override
     protected void startKakao()
     {
-        StayDetailParams stayDetailParams = ((StayDetail) mPlaceDetail).getStayDetailParams();
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-            , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
-            , stayDetailParams.index, 0, stayDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+            StayDetailParams stayDetailParams = ((StayDetail) mPlaceDetail).getStayDetailParams();
+
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_DETAIL//
+                , stayDetailParams.index, 0, stayDetailParams.name), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        } catch (Exception e)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(StayDetailActivity.this, "com.kakao.talk");
+                    }
+                }, null);
+        }
 
         //        try
         //        {
@@ -818,7 +855,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN, null);
+                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN_, null);
 
                         Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
@@ -1236,7 +1273,9 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            showCallDialog();
+            showCallDialog(PlaceType.HOTEL);
+
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);
         }
 
         @Override
@@ -1353,7 +1392,13 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+            String category = ((StayDetail) mPlaceDetail).getStayDetailParams().category;
+
+            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this//
+                , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
+
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.STAY, null);
         }
 
         @Override

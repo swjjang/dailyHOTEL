@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.information;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -88,6 +90,9 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
         {
             case R.id.kakaoLayout:
                 startKakaoTalkConsult();
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.MENU_INQUIRY, null);
                 break;
 
             case R.id.callLayout:
@@ -112,9 +117,12 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
                     {
                         AnalyticsManager.getInstance(ContactUsActivity.this).recordEvent(//
                             AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU,//
-                            AnalyticsManager.Label.CANCEL, null);
+                            AnalyticsManager.Label.CANCEL_, null);
                     }
                 });
+
+                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.MENU_INQUIRY, null);
                 break;
 
             case R.id.mailLayout:
@@ -125,8 +133,26 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
 
     private void startKakaoTalkConsult()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-            , HappyTalkCategoryDialog.CallScreen.SCREEN_CONTACT_US, 0, 0, null), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_CONTACT_US, 0, 0, null), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        } catch (Exception e)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(ContactUsActivity.this, "com.kakao.talk");
+                    }
+                }, null);
+        }
 
         //        Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("kakaolink://friend/@%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"));
         //        if (intent.resolveActivity(getPackageManager()) == null)

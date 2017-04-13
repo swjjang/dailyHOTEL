@@ -83,7 +83,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     }
 
     @Override
-    protected void initTabLayout(TabLayout tabLayout)
+    protected void initTabLayout(TabLayout tabLayout, View tabUpperLineView)
     {
         if (tabLayout == null)
         {
@@ -96,10 +96,18 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTabLayout.getLayoutParams();
-        layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+        if (Util.isOverAPI21() == true)
+        {
+            tabUpperLineView.setVisibility(View.VISIBLE);
+        } else
+        {
+            tabUpperLineView.setVisibility(View.GONE);
 
-        mTabLayout.setLayoutParams(layoutParams);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTabLayout.getLayoutParams();
+            layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+
+            mTabLayout.setLayoutParams(layoutParams);
+        }
 
         hideTabLayout();
 

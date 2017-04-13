@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.information;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.DailyWebView;
 
@@ -126,6 +128,9 @@ public class FAQActivity extends WebViewActivity
                 }
 
                 startKakao();
+
+                AnalyticsManager.getInstance(FAQActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.MENU_FNQ, null);
             }
         });
 
@@ -140,6 +145,9 @@ public class FAQActivity extends WebViewActivity
                 }
 
                 showDailyCallDialog(null);
+
+                AnalyticsManager.getInstance(FAQActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                    , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.MENU_FNQ, null);
             }
         });
 
@@ -182,8 +190,26 @@ public class FAQActivity extends WebViewActivity
 
     void startKakao()
     {
-        startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
-            , HappyTalkCategoryDialog.CallScreen.SCREEN_FAQ, 0, 0, null), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(this//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_FAQ, 0, 0, null), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+        } catch (Exception e)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(FAQActivity.this, "com.kakao.talk");
+                    }
+                }, null);
+        }
 
         //        try
         //        {

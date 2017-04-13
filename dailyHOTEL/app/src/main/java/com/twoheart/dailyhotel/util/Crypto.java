@@ -12,19 +12,15 @@
  */
 package com.twoheart.dailyhotel.util;
 
-import android.os.Build;
 import android.util.Base64;
 
 import java.security.InvalidParameterException;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto

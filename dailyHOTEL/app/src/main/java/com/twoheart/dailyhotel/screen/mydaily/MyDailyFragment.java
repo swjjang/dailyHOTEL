@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -48,6 +49,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
     private BroadcastReceiver mNewCouponBroadcastReceiver;
     boolean mIsAttach;
     private boolean mDontReload;
+    private DailyDeepLink mDailyDeepLink;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -67,6 +69,26 @@ public class MyDailyFragment extends BaseFragment implements Constants
     }
 
     @Override
+    public void onNewBundle(Bundle bundle)
+    {
+        if (bundle == null)
+        {
+            return;
+        }
+
+        if (bundle.containsKey(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == true)
+        {
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(bundle.getString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+            }
+        }
+    }
+
+    @Override
     public void onStart()
     {
         super.onStart();
@@ -79,72 +101,79 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
         AnalyticsManager.getInstance(context).recordScreen(getActivity(), AnalyticsManager.Screen.MYDAILY, null);
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isMyDailyView() == true)
+            if (mDailyDeepLink.isExternalDeepLink() == true)
             {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-            } else if (DailyDeepLink.getInstance().isBonusView() == true)
-            {
-                mOnEventListener.startBonusList();
-            } else if (DailyDeepLink.getInstance().isSingUpView() == true)
-            {
-                startSignUp(DailyDeepLink.getInstance().getRecommenderCode());
-            } else if (DailyDeepLink.getInstance().isCouponView() == true)
-            {
-                CouponListActivity.SortType sortType;
-
-                String placeType = DailyDeepLink.getInstance().getPlaceType();
-
-                if (Util.isTextEmpty(placeType) == true)
+                if (externalDeepLink.isMyDailyView() == true)
                 {
-                    sortType = CouponListActivity.SortType.ALL;
-                } else
+
+                } else if (externalDeepLink.isBonusView() == true)
                 {
-                    try
-                    {
-                        sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
-                    } catch (Exception e)
+                    mOnEventListener.startBonusList();
+                } else if (externalDeepLink.isSingUpView() == true)
+                {
+                    startSignUp(externalDeepLink.getRecommenderCode());
+                } else if (externalDeepLink.isCouponView() == true)
+                {
+                    CouponListActivity.SortType sortType;
+
+                    String placeType = externalDeepLink.getPlaceType();
+
+                    if (Util.isTextEmpty(placeType) == true)
                     {
                         sortType = CouponListActivity.SortType.ALL;
+                    } else
+                    {
+                        try
+                        {
+                            sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
+                        } catch (Exception e)
+                        {
+                            sortType = CouponListActivity.SortType.ALL;
+                        }
                     }
+
+                    mOnEventListener.startCouponList(sortType);
+                } else if (externalDeepLink.isRecommendFriendView() == true)
+                {
+                    mOnEventListener.startInviteFriend();
+                } else if (externalDeepLink.isRegisterCouponView() == true)
+                {
+                    onStartCouponList(CouponListActivity.SortType.ALL, externalDeepLink);
+                    //            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
+                    //            {
+                    //                mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
+                    //            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
+                    //            {
+                    //                mOnEventListener.startRecentPlaces(PlaceType.FNB);
+                } else if (externalDeepLink.isProfileView() == true)
+                {
+                    mOnEventListener.startEditProfile();
+                } else if (externalDeepLink.isProfileBirthdayView() == true)
+                {
+                    onStartEditProfile(externalDeepLink);
+                    return;
+                } else if (externalDeepLink.isStampView() == true)
+                {
+                    mOnEventListener.startStamp();
                 }
 
-                mOnEventListener.startCouponList(sortType);
-            } else if (DailyDeepLink.getInstance().isRecommendFriendView() == true)
-            {
-                mOnEventListener.startInviteFriend();
-            } else if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
-            {
-                mOnEventListener.startCouponList(CouponListActivity.SortType.ALL);
-                return;
-                //            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
+                //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
                 //            {
-                //                mOnEventListener.startRecentPlaces(PlaceType.HOTEL);
-                //            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
+                //                mOnEventListener.startWishList(PlaceType.HOTEL);
+                //            } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
                 //            {
-                //                mOnEventListener.startRecentPlaces(PlaceType.FNB);
-            } else if (DailyDeepLink.getInstance().isProfileView() == true)
+                //                mOnEventListener.startWishList(PlaceType.FNB);
+                //            }
+
+                externalDeepLink.clear();
+            } else
             {
-                mOnEventListener.startEditProfile();
-            } else if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
-            {
-                mOnEventListener.startEditProfile();
-                return;
-            } else if (DailyDeepLink.getInstance().isStampView() == true)
-            {
-                mOnEventListener.startStamp();
+
             }
-
-            //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
-            //            {
-            //                mOnEventListener.startWishList(PlaceType.HOTEL);
-            //            } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
-            //            {
-            //                mOnEventListener.startWishList(PlaceType.FNB);
-            //            }
-
-            DailyDeepLink.getInstance().clear();
         }
     }
 
@@ -305,6 +334,41 @@ public class MyDailyFragment extends BaseFragment implements Constants
         mMyDailyLayout.updateNewIconView(hasNewCoupon);
     }
 
+    public void onStartEditProfile(DailyDeepLink dailyDeepLink)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+        startActivity(new Intent(ProfileActivity.newInstance(baseActivity//
+            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null)));
+
+        //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
+    }
+
+    public void onStartCouponList(CouponListActivity.SortType sortType, DailyDeepLink dailyDeepLink)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+
+        Intent intent = CouponListActivity.newInstance(baseActivity, sortType, dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null);
+        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
+
+        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
+            Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
+
+    }
+
     /////////////////////////////////////////////////////////////////
     // EventListener
     /////////////////////////////////////////////////////////////////
@@ -341,37 +405,13 @@ public class MyDailyFragment extends BaseFragment implements Constants
         @Override
         public void startEditProfile()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            startActivity(new Intent(baseActivity, ProfileActivity.class));
-
-            //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
+            onStartEditProfile(null);
         }
 
         @Override
         public void startCouponList(CouponListActivity.SortType sortType)
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            Intent intent = CouponListActivity.newInstance(baseActivity, sortType);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
-
-            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.COUPON_BOX, //
-                Action.COUPON_BOX_CLICKED, AnalyticsManager.Label.COUPON_BOX_CLICKED, null);
-
+            onStartCouponList(sortType, null);
         }
 
         @Override

@@ -11,6 +11,7 @@ package com.twoheart.dailyhotel.screen.mydaily.member;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -20,7 +21,9 @@ import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -40,10 +43,16 @@ public class ProfileActivity extends BaseActivity
     ProfileLayout mProfileLayout;
     ProfileNetworkController mNetworkController;
     String mUserIndex;
+    private DailyDeepLink mDailyDeepLink;
 
-    public static Intent newInstance(Context context)
+    public static Intent newInstance(Context context, String deepLink)
     {
         Intent intent = new Intent(context, ProfileActivity.class);
+
+        if (Util.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
 
         return intent;
     }
@@ -55,10 +64,38 @@ public class ProfileActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+
+        initDeepLink(intent);
+
         mProfileLayout = new ProfileLayout(this, mOnEventListener);
         mNetworkController = new ProfileNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         setContentView(mProfileLayout.onCreateView(R.layout.activity_profile));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        initDeepLink(intent);
+    }
+
+    private void initDeepLink(Intent intent)
+    {
+        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        {
+            return;
+        }
+
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
+        }
     }
 
     @Override
@@ -68,20 +105,28 @@ public class ProfileActivity extends BaseActivity
 
         super.onStart();
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
+            if (mDailyDeepLink.isExternalDeepLink() == true)
             {
-                if (DailyHotel.isLogin() == true)
-                {
-                    mOnEventListener.startEditBirthday(DailyUserPreference.getInstance(this).getBirthday());
-                } else
-                {
-                    mOnEventListener.startEditBirthday(null);
-                }
-            }
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-            DailyDeepLink.getInstance().clear();
+                if (externalDeepLink.isProfileBirthdayView() == true)
+                {
+                    if (DailyHotel.isLogin() == true)
+                    {
+                        mOnEventListener.startEditBirthday(DailyUserPreference.getInstance(this).getBirthday());
+                    } else
+                    {
+                        mOnEventListener.startEditBirthday(null);
+                    }
+                }
+
+                externalDeepLink.clear();
+            } else
+            {
+
+            }
         } else
         {
             if (DailyHotel.isLogin() == false)
