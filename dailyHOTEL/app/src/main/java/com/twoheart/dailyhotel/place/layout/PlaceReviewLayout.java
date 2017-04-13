@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.network.model.PlaceReview;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScore;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -207,7 +208,7 @@ public class PlaceReviewLayout extends BaseLayout
         }
     }
 
-    public void setReviewScores(List<PlaceReviewScore> placeReviewScoreList)
+    public void setReviewScores(Constants.PlaceType placeType, List<PlaceReviewScore> placeReviewScoreList)
     {
         if (placeReviewScoreList == null || placeReviewScoreList.size() == 0)
         {
@@ -224,7 +225,7 @@ public class PlaceReviewLayout extends BaseLayout
 
         placeReviewItemList.add(new PlaceReviewItem(PlaceReviewItem.TYPE_HEADER_VIEW, placeReviewScoreList));
 
-        mReviewListAdapter.setHeader(placeReviewItemList);
+        mReviewListAdapter.setHeader(placeType, placeReviewItemList);
         mReviewListAdapter.notifyDataSetChanged();
     }
 
@@ -314,6 +315,7 @@ public class PlaceReviewLayout extends BaseLayout
         private List<PlaceReviewItem> mPlaceReviewItemList;
         private int mTotalCount;
         private LinearLayout mProgressBarLayout;
+        private Constants.PlaceType mPlaceType;
 
         private Handler mHandler = new Handler()
         {
@@ -344,9 +346,11 @@ public class PlaceReviewLayout extends BaseLayout
             return mPlaceReviewItemList.get(position);
         }
 
-        public void setHeader(List<PlaceReviewItem> placeReviewItemList)
+        public void setHeader(Constants.PlaceType placeType, List<PlaceReviewItem> placeReviewItemList)
         {
             clear();
+
+            mPlaceType = placeType;
             addAll(placeReviewItemList);
 
             mShowtProgressbarAnimation = false;
@@ -476,6 +480,17 @@ public class PlaceReviewLayout extends BaseLayout
                     ((OnEventListener) mOnEventListener).onTermsClick();
                 }
             });
+
+            switch(mPlaceType)
+            {
+                case HOTEL:
+                    headerViewHolder.trueReviewGuideTextView.setText(R.string.message_detail_review_stay_explain);
+                    break;
+
+                case FNB:
+                    headerViewHolder.trueReviewGuideTextView.setText(R.string.message_detail_review_gourmet_explain);
+                    break;
+            }
 
             headerViewHolder.progressBarLayout.removeAllViews();
 
@@ -675,6 +690,7 @@ public class PlaceReviewLayout extends BaseLayout
             View termsView;
             LinearLayout progressBarLayout;
             TextView reviewCountTextView;
+            TextView trueReviewGuideTextView;
 
             public HeaderViewHolder(View view)
             {
@@ -683,6 +699,7 @@ public class PlaceReviewLayout extends BaseLayout
                 termsView = itemView.findViewById(R.id.termsView);
                 progressBarLayout = (LinearLayout) itemView.findViewById(R.id.progressBarLayout);
                 reviewCountTextView = (TextView) itemView.findViewById(R.id.reviewCountTextView);
+                trueReviewGuideTextView = (TextView)itemView.findViewById(R.id.trueReviewGuideTextView);
             }
         }
 

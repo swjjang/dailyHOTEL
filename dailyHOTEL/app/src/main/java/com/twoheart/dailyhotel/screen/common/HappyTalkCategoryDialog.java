@@ -299,6 +299,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
             urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
         }
 
+
+
         try
         {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlStringBuilder.toString()));

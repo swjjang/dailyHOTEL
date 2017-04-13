@@ -12,10 +12,11 @@
         android:padding="15dp">
 
         <com.twoheart.dailyhotel.widget.DailyTextView
+            android:id="@+id/trueReviewGuideTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/termsView"
-            android:text="@string/message_detail_review_explain"
+            android:text="@string/message_detail_review_stay_explain"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 

@@ -48,7 +48,7 @@ public class GourmetReviewActivity extends PlaceReviewActivity
         }
 
         setPlaceIndex(placeIndex);
-        setReviewScores(placeReviewScores.reviewScoreAvgs);
+        setReviewScores(getPlaceType(), placeReviewScores.reviewScoreAvgs);
     }
 
     @Override

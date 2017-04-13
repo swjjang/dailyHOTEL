@@ -79,14 +79,14 @@ public abstract class PlaceReviewActivity extends BaseActivity
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-    protected void setReviewScores(List<PlaceReviewScore> placeReviewScoreList)
+    protected void setReviewScores(PlaceType placeType, List<PlaceReviewScore> placeReviewScoreList)
     {
         if (mPlaceReviewLayout == null)
         {
             return;
         }
 
-        mPlaceReviewLayout.setReviewScores(placeReviewScoreList);
+        mPlaceReviewLayout.setReviewScores(placeType, placeReviewScoreList);
     }
 
     public void addReviewList(PlaceReviews placeReviews)
