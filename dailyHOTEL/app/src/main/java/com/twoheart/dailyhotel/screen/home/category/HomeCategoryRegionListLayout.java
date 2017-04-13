@@ -175,7 +175,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
 
         String categoryName = mContext.getResources().getString(mDailyCategoryType.getNameResId());
 
-        return mContext.getResources().getString(R.string.label_select_area_daily_category_format, categoryName);
+        return mContext.getResources().getString(R.string.label_view_my_around_daily_category_format, categoryName);
     }
 
     private View getGroupView(int groupPosition)

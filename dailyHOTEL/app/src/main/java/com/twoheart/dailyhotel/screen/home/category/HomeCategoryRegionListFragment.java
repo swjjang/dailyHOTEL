@@ -98,6 +98,8 @@ public class HomeCategoryRegionListFragment extends BaseFragment
             Province previousProvince = searchPreviousProvince(arrayList, mDailyCategoryType);
             mLayout.setSelectedProvince(previousProvince);
 
+            mLayout.setDailyCategoryType(mDailyCategoryType);
+
             mLayout.setRegionViewList(baseActivity, arrayList, isAgreed);
         }
     }
