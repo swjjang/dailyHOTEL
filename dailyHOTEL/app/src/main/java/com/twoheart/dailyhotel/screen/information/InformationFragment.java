@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.information;
 
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,17 +20,17 @@ import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 
 public class InformationFragment extends BaseFragment implements Constants
 {
     InformationLayout mInformationLayout;
     private BroadcastReceiver mNewEventBroadcastReceiver;
     boolean mIsAttach;
+    private DailyDeepLink mDailyDeepLink;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -50,34 +49,60 @@ public class InformationFragment extends BaseFragment implements Constants
     }
 
     @Override
+    public void onNewBundle(Bundle bundle)
+    {
+        if (bundle == null)
+        {
+            return;
+        }
+
+        if (bundle.containsKey(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == true)
+        {
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(bundle.getString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+            }
+        }
+    }
+
+    @Override
     public void onStart()
     {
         super.onStart();
 
         updateNewIcon();
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isEventView() == true)
+            if (mDailyDeepLink.isExternalDeepLink() == true)
             {
-                mOnEventListener.startEvent();
-            } else if (DailyDeepLink.getInstance().isEventDetailView() == true)
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                if (externalDeepLink.isEventView() == true)
+                {
+                    mOnEventListener.startEvent();
+                } else if (externalDeepLink.isEventDetailView() == true)
+                {
+                    onStartEvent(externalDeepLink);
+                } else if (externalDeepLink.isNoticeDetailView() == true)
+                {
+                    onStartNotice(externalDeepLink);
+                } else if (externalDeepLink.isFAQView() == true)
+                {
+                    mOnEventListener.startFAQ();
+                } else if (externalDeepLink.isTermsNPolicyView() == true)
+                {
+                    mOnEventListener.startTermsNPolicy();
+                }
+            } else
             {
-                mOnEventListener.startEvent();
-                return;
-            } else if (DailyDeepLink.getInstance().isNoticeDetailView() == true)
-            {
-                mOnEventListener.startNotice();
-                return;
-            } else if (DailyDeepLink.getInstance().isFAQView() == true)
-            {
-                mOnEventListener.startFAQ();
-            } else if (DailyDeepLink.getInstance().isTermsNPolicyView() == true)
-            {
-                mOnEventListener.startTermsNPolicy();
+
             }
 
-            DailyDeepLink.getInstance().clear();
+            mDailyDeepLink.clear();
         }
 
         AnalyticsManager.getInstance(getContext()).recordScreen(getActivity(), AnalyticsManager.Screen.MENU, null);
@@ -113,6 +138,37 @@ public class InformationFragment extends BaseFragment implements Constants
         mInformationLayout.updateNewIconView(hasNewEvent, hasNewNotice);
     }
 
+    private void onStartEvent(DailyDeepLink dailyDeepLink)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+        baseActivity.startActivityForResult(EventListActivity.newInstance(baseActivity//
+            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST);
+    }
+
+    public void onStartNotice(DailyDeepLink dailyDeepLink)
+    {
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        lockUiComponent();
+
+        BaseActivity baseActivity = (BaseActivity) getActivity();
+        baseActivity.startActivityForResult(NoticeListActivity.newInstance(baseActivity//
+            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST);
+
+        AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.NOTICE_CLICK, null, null);
+    }
+
     /////////////////////////////////////////////////////////////////
     // EventListener
     /////////////////////////////////////////////////////////////////
@@ -131,6 +187,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(AboutActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.DAILY_INFO_CLICK, null, null);
         }
 
         @Override
@@ -145,6 +204,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(LifeStyleActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_LIFESTYLE);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.DAILY_LIFESTYLE_PROJECT_CLICK, null, null);
         }
 
         @Override
@@ -159,40 +221,21 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(SnsActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_SNS);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.DAILY_SNS_CLICK, null, null);
         }
 
         @Override
         public void startEvent()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(new Intent(baseActivity, EventListActivity.class), Constants.CODE_REQUEST_ACTIVITY_EVENT_LIST);
-
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
+            onStartEvent(null);
         }
 
         @Override
         public void startNotice()
         {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(new Intent(baseActivity, NoticeListActivity.class), Constants.CODE_REQUEST_ACTIVITY_NOTICE_LIST);
-
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                , Action.EVENT_CLICKED, AnalyticsManager.Label.EVENT_CLICKED, null);
+            onStartNotice(null);
         }
 
         @Override
@@ -207,6 +250,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, FAQActivity.class), Constants.CODE_REQUEST_ACTIVITY_FAQ);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.FNQ_CLICK, null, null);
         }
 
         @Override
@@ -221,6 +267,9 @@ public class InformationFragment extends BaseFragment implements Constants
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, ContactUsActivity.class), Constants.CODE_REQUEST_ACTIVITY_CONTACTUS);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.INQUIRY_CLICK, null, null);
         }
 
         @Override
@@ -236,7 +285,8 @@ public class InformationFragment extends BaseFragment implements Constants
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(new Intent(baseActivity, TermsNPolicyActivity.class), Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
 
-            AnalyticsManager.getInstance(baseActivity).recordScreen(baseActivity, AnalyticsManager.Screen.TERMS_AND_CONDITION, null);
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.TNC_CLICK, null, null);
         }
 
 

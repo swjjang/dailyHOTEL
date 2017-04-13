@@ -677,6 +677,9 @@ public class AnalyticsManager
         // Stamp
         public static final String STAMP_DETAIL = "stamp_detail";
         public static final String STAMP_HISTORY = "stamp_history";
+
+        // TRUEREVIEW
+        public static final String TRUE_REVIEW_LIST = "true_review_list";
     }
 
     public static class Action
@@ -915,6 +918,30 @@ public class AnalyticsManager
         // AB Test
         public static final String HOME_MENU_BUTTON = "home_menu_button";
 
+        // Review
+        public static final String TRUE_REVIEW_CLICK = "true_review_click";
+        public static final String TRUE_REVIEW_BACK_BUTTON_CLICK = "true_review_back_button_click";
+        public static final String TRUE_REVIEW_POLICY_CLICK = "true_review_policy_click";
+
+        public static final String DAILY_INFO_CLICK = "daily_info_click";
+        public static final String NOTICE_CLICK = "notice_click";
+        public static final String FNQ_CLICK = "fnq_click";
+        public static final String TNC_CLICK = "tnc_click";
+        public static final String INQUIRY_CLICK = "inquiry_click";
+        public static final String DAILY_SNS_CLICK = "daily_sns_click";
+        public static final String DAILY_LIFESTYLE_PROJECT_CLICK = "daily_lifestyle_project_click";
+        public static final String FACEBOOK_CLICK = "facebook_click";
+        public static final String INSTAGRAM_CLICK = "instagram_click";
+        public static final String BLOG_CLICK = "blog_click";
+        public static final String YOUTUBE_CLICK = "youtube_click";
+
+        // Happy Talk
+        public static final String CONTACT_DAILY_CONCIERGE = "contact_daily_concierge";
+        public static final String HAPPYTALK_CLICK = "happytalk_click";
+        public static final String LOGIN_HAPPYTALK = "login_happytalk";
+        public static final String CLOSE_HAPPYTALK = "close_happytalk";
+        public static final String HAPPYTALK_START = "happytalk_start";
+        public static final String CALL_CLICK = "call_click";
     }
 
     public static class Category
@@ -950,6 +977,8 @@ public class AnalyticsManager
 
         // AB Test
         public static final String EXPERIMENT = "experiment";
+
+        public static final String CONTACT_DAILY_CONCIERGE = "contact_daily_concierge";
     }
 
     public static class Label
@@ -966,7 +995,8 @@ public class AnalyticsManager
         public static final String PAYMENT_CARD_EDIT = "PaymentCardEdit";
         public static final String PAYMENT_CARD_REGISTRATION = "PaymentCardRegistration";
         public static final String AGREE = "Agree";
-        public static final String CANCEL = "Cancel";
+        public static final String CANCEL_ = "Cancel";
+        public static final String CANCEL = "cancel";
         public static final String OK = "Okay";
         public static final String FACEBOOK_LOGIN = "FacebookLogin";
         public static final String KAKAO_LOGIN = "KakaoLogin";
@@ -1064,7 +1094,8 @@ public class AnalyticsManager
         public static final String SEARCH_AGAIN = "SearchAgain";
         public static final String BACK_BUTTON = "BackButton";
         public static final String CLOSED = "Closed";
-        public static final String LOGIN = "Login";
+        public static final String LOGIN_ = "Login";
+        public static final String LOGIN = "login";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String EVENT = "event";
         public static final String SEARCH_RESULT_VIEW = "SearchResultView";
@@ -1093,7 +1124,8 @@ public class AnalyticsManager
         public static final String NO = "No";
         public static final String BACK = "Back";
         public static final String CONFIRM = "Confirm";
-        public static final String CLOSE = "Close";
+        public static final String CLOSE_ = "Close";
+        public static final String CLOSE = "close";
         public static final String SWIPE = "Swipe";
         public static final String WALK = "Walk";
         public static final String CAR = "Car";
@@ -1127,6 +1159,21 @@ public class AnalyticsManager
 
         // AB Test
         public static final String CTA_VARIATION_A = "cta_variation_a";
+
+        public static final String STAY_DETAIL = "stay_detail";
+        public static final String STAY_BOOKING_INITIALISE = "stay_booking_initialise";
+        public static final String STAY_DEPOSIT_WAITING = "stay_deposit_waiting";
+        public static final String STAY_BOOKING_DETAIL = "stay_booking_detail";
+
+
+        public static final String GOURMET_DETAIL = "gourmet_detail";
+        public static final String GOURMET_BOOKING_INITIALISE = "gourmet_booking_initialise";
+        public static final String GOURMET_DEPOSIT_WAITING = "gourmet_deposit_waiting";
+        public static final String GOURMET_BOOKING_DETAIL = "gourmet_booking_detail";
+        public static final String MENU_FNQ = "menu_fnq";
+        public static final String MENU_INQUIRY = "menu_inquiry";
+        public static final String BACKKEY = "backkey";
+        public static final String STAY_BOOKING_DETAIL_REFUND = "stay_booking_detail_refund";
     }
 
     public static class UserType

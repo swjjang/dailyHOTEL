@@ -39,6 +39,8 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
     public interface OnEventListener extends OnBaseEventListener
     {
         void onHappyTalk(String placeType, String mainId);
+
+        void onCancel();
     }
 
     public HappyTalkCategoryDialogLayout(Context context, OnBaseEventListener listener)
@@ -201,7 +203,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
         switch (v.getId())
         {
             case R.id.negativeTextView:
-                mOnEventListener.finish();
+                ((OnEventListener) mOnEventListener).onCancel();
                 break;
 
             case R.id.positiveTextView:

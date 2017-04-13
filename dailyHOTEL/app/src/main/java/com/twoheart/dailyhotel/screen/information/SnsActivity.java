@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class SnsActivity extends BaseActivity implements View.OnClickListener
@@ -117,6 +118,9 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
                 ExLog.d(e.toString());
             }
         }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.FACEBOOK_CLICK, null, null);
     }
 
     public void startInstagram()
@@ -142,6 +146,9 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             {
             }
         }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.INSTAGRAM_CLICK, null, null);
     }
 
     public void startNaverBlog()
@@ -167,6 +174,9 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             {
             }
         }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.BLOG_CLICK, null, null);
     }
 
     public void startYouTube()
@@ -192,6 +202,9 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             {
             }
         }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.YOUTUBE_CLICK, null, null);
     }
 
     @Override

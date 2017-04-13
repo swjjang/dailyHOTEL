@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -42,6 +43,7 @@ import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultA
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -64,10 +66,16 @@ import retrofit2.Response;
 public class GourmetMainActivity extends PlaceMainActivity
 {
     GourmetCuration mGourmetCuration;
+    private DailyDeepLink mDailyDeepLink;
 
-    public static Intent newInstance(Context context)
+    public static Intent newInstance(Context context, String deepLink)
     {
         Intent intent = new Intent(context, GourmetMainActivity.class);
+
+        if (Util.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
 
         return intent;
     }
@@ -78,6 +86,34 @@ public class GourmetMainActivity extends PlaceMainActivity
         super.onCreate(savedInstanceState);
 
         mGourmetCuration = new GourmetCuration();
+
+        Intent intent = getIntent();
+
+        initDeepLink(intent);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        initDeepLink(intent);
+    }
+
+    private void initDeepLink(Intent intent)
+    {
+        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        {
+            return;
+        }
+
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
+        }
     }
 
     @Override
@@ -578,8 +614,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                     }
                 }
 
-                if (DailyDeepLink.getInstance().isValidateLink() == true //
-                    && processDeepLinkByDateTime(GourmetMainActivity.this, mTodayDateTime) == true)
+                if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
+                    && processDeepLinkByDateTime(GourmetMainActivity.this, mTodayDateTime, mDailyDeepLink) == true)
                 {
                     // 딥링크 이동
                 } else
@@ -651,8 +687,8 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             mGourmetCuration.setProvince(selectedProvince);
 
-            if (DailyDeepLink.getInstance().isValidateLink() == true//
-                && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList, mTodayDateTime) == true)
+            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true//
+                && processDeepLinkByRegionList(GourmetMainActivity.this, provinceList, areaList, mTodayDateTime, mDailyDeepLink) == true)
             {
 
             } else
@@ -694,45 +730,71 @@ public class GourmetMainActivity extends PlaceMainActivity
             GourmetMainActivity.this.onErrorResponse(call, response);
         }
 
-        private boolean processDeepLinkByDateTime(BaseActivity baseActivity, TodayDateTime todayDateTime)
+        private boolean processDeepLinkByDateTime(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
         {
-            if (DailyDeepLink.getInstance().isGourmetDetailView() == true)
+            if (dailyDeepLink == null)
             {
-                unLockUI();
+                return false;
+            }
 
-                return moveDeepLinkDetail(baseActivity, todayDateTime);
-            } else if (DailyDeepLink.getInstance().isGourmetSearchView() == true)
+            if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                unLockUI();
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                return moveDeepLinkSearch(baseActivity, todayDateTime);
-            } else if (DailyDeepLink.getInstance().isGourmetSearchResultView() == true)
-            {
-                unLockUI();
+                if (externalDeepLink.isGourmetDetailView() == true)
+                {
+                    unLockUI();
 
-                return moveDeepLinkSearchResult(baseActivity, todayDateTime);
+                    return moveDeepLinkDetail(baseActivity, todayDateTime, externalDeepLink);
+                } else if (externalDeepLink.isGourmetSearchView() == true)
+                {
+                    unLockUI();
+
+                    return moveDeepLinkSearch(baseActivity, todayDateTime, externalDeepLink);
+                } else if (externalDeepLink.isGourmetSearchResultView() == true)
+                {
+                    unLockUI();
+
+                    return moveDeepLinkSearchResult(baseActivity, todayDateTime, externalDeepLink);
+                } else
+                {
+                    // 더이상 진입은 없다.
+                    if (externalDeepLink.isGourmetListView() == false)
+                    {
+                        externalDeepLink.clear();
+                    }
+                }
             } else
             {
-                // 더이상 진입은 없다.
-                if (DailyDeepLink.getInstance().isGourmetListView() == false)
-                {
-                    DailyDeepLink.getInstance().clear();
-                }
+
             }
 
             return false;
         }
 
-        private boolean processDeepLinkByRegionList(BaseActivity baseActivity, List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime)
+        private boolean processDeepLinkByRegionList(BaseActivity baseActivity, List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
         {
-            if (DailyDeepLink.getInstance().isGourmetListView() == true)
+            if (dailyDeepLink == null)
             {
-                unLockUI();
+                return false;
+            }
 
-                return moveDeepLinkGourmetList(provinceList, areaList, todayDateTime);
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (externalDeepLink.isGourmetListView() == true)
+                {
+                    unLockUI();
+
+                    return moveDeepLinkGourmetList(provinceList, areaList, todayDateTime, externalDeepLink);
+                } else
+                {
+                    externalDeepLink.clear();
+                }
             } else
             {
-                DailyDeepLink.getInstance().clear();
+
             }
 
             return false;
@@ -1066,46 +1128,59 @@ public class GourmetMainActivity extends PlaceMainActivity
     // Deep Link
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    boolean moveDeepLinkDetail(BaseActivity baseActivity, TodayDateTime todayDateTime)
+    boolean moveDeepLinkDetail(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
         try
         {
-            int gourmetIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-
-            String date = DailyDeepLink.getInstance().getDate();
-            int datePlus = DailyDeepLink.getInstance().getDatePlus();
-            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
-            int productIndex = DailyDeepLink.getInstance().getProductIndex();
-
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-
-            if (Util.isTextEmpty(date) == false)
+            if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                int gourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
+
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+                boolean isShowCalendar = externalDeepLink.isShowCalendar();
+                int productIndex = externalDeepLink.getProductIndex();
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+                if (Util.isTextEmpty(date) == false)
+                {
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+                }
+
+                mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+
+                Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, productIndex, isShowCalendar, false);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+                mIsDeepLink = true;
             } else
             {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+
             }
-
-            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
-
-            Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, productIndex, isShowCalendar, false);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-            mIsDeepLink = true;
         } catch (Exception e)
         {
-            ExLog.d(e.toString());
+            ExLog.e(e.toString());
             return false;
         } finally
         {
-            DailyDeepLink.getInstance().clear();
+            dailyDeepLink.clear();
         }
 
         return true;
@@ -1163,181 +1238,221 @@ public class GourmetMainActivity extends PlaceMainActivity
         return selectedProvince;
     }
 
-    boolean moveDeepLinkSearch(BaseActivity baseActivity, TodayDateTime todayDateTime)
+    boolean moveDeepLinkSearch(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
-        String date = DailyDeepLink.getInstance().getDate();
-        int datePlus = DailyDeepLink.getInstance().getDatePlus();
-        String word = DailyDeepLink.getInstance().getSearchWord();
-
-        DailyDeepLink.getInstance().clear();
-
-        try
+        if (dailyDeepLink == null)
         {
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-
-            if (Util.isTextEmpty(date) == false)
-            {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-            } else
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-            }
-
-            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
-
-            Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, word);
-            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
-
-            mIsDeepLink = true;
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
             return false;
         }
 
-        return true;
-    }
-
-    boolean moveDeepLinkSearchResult(BaseActivity baseActivity, TodayDateTime todayDateTime)
-    {
-        String word = DailyDeepLink.getInstance().getSearchWord();
-        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
-        LatLng latLng = DailyDeepLink.getInstance().getLatLng();
-        double radius = DailyDeepLink.getInstance().getRadius();
-
-        String date = DailyDeepLink.getInstance().getDate();
-        int datePlus = DailyDeepLink.getInstance().getDatePlus();
-
-        DailyDeepLink.getInstance().clear();
-
         try
         {
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-            if (Util.isTextEmpty(date) == false)
-            {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-            } else
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-            }
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+                String word = externalDeepLink.getSearchWord();
 
-            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-            switch (searchType)
-            {
-                case LOCATION:
+                if (Util.isTextEmpty(date) == false)
                 {
-                    if (latLng != null)
-                    {
-                        Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, latLng, radius, true);
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                    } else
-                    {
-                        return false;
-                    }
-                    break;
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
                 }
 
-                default:
-                    if (Util.isTextEmpty(word) == false)
-                    {
-                        Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                    } else
-                    {
-                        return false;
-                    }
-                    break;
-            }
+                mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
 
-            mIsDeepLink = true;
+                Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, word);
+                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+                mIsDeepLink = true;
+            } else
+            {
+
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-
             return false;
+        } finally
+        {
+            dailyDeepLink.clear();
         }
 
         return true;
     }
 
-    boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime)
+    boolean moveDeepLinkSearchResult(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
-        String date = DailyDeepLink.getInstance().getDate();
-        int datePlus = DailyDeepLink.getInstance().getDatePlus();
-
-        GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
-        gourmetCurationOption.setSortType(DailyDeepLink.getInstance().getSorting());
-
-        mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
-
-        int provinceIndex;
-        int areaIndex;
-
-        try
+        if (dailyDeepLink == null)
         {
-            provinceIndex = Integer.parseInt(DailyDeepLink.getInstance().getProvinceIndex());
-        } catch (Exception e)
-        {
-            provinceIndex = -1;
+            return false;
         }
 
         try
         {
-            areaIndex = Integer.parseInt(DailyDeepLink.getInstance().getAreaIndex());
-        } catch (Exception e)
-        {
-            areaIndex = -1;
-        }
-
-        // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-        Province selectedProvince = searchDeeLinkRegion(provinceIndex, areaIndex, provinceList, areaList);
-
-        if (selectedProvince == null)
-        {
-            selectedProvince = mGourmetCuration.getProvince();
-        }
-
-        mGourmetCuration.setProvince(selectedProvince);
-        mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
-        DailyDeepLink.getInstance().clear();
-
-        try
-        {
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-
-            if (Util.isTextEmpty(date) == false)
+            if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                String word = externalDeepLink.getSearchWord();
+                DailyExternalDeepLink.SearchType searchType = externalDeepLink.getSearchLocationType();
+                LatLng latLng = externalDeepLink.getLatLng();
+                double radius = externalDeepLink.getRadius();
+
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+                if (Util.isTextEmpty(date) == false)
+                {
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+                }
+
+                mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+
+                switch (searchType)
+                {
+                    case LOCATION:
+                    {
+                        if (latLng != null)
+                        {
+                            Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, latLng, radius, true);
+                            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } else
+                        {
+                            return false;
+                        }
+                        break;
+                    }
+
+                    default:
+                        if (Util.isTextEmpty(word) == false)
+                        {
+                            Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                            baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } else
+                        {
+                            return false;
+                        }
+                        break;
+                }
+
+                mIsDeepLink = true;
             } else
             {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+
             }
-
-            mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
-
-            ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
-
-            mPlaceMainNetworkController.requestRegionList();
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-
             return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+
+                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
+                gourmetCurationOption.setSortType(externalDeepLink.getSorting());
+
+                mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
+
+                int provinceIndex;
+                int areaIndex;
+
+                try
+                {
+                    provinceIndex = Integer.parseInt(externalDeepLink.getProvinceIndex());
+                } catch (Exception e)
+                {
+                    provinceIndex = -1;
+                }
+
+                try
+                {
+                    areaIndex = Integer.parseInt(externalDeepLink.getAreaIndex());
+                } catch (Exception e)
+                {
+                    areaIndex = -1;
+                }
+
+                // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
+                Province selectedProvince = searchDeeLinkRegion(provinceIndex, areaIndex, provinceList, areaList);
+
+                if (selectedProvince == null)
+                {
+                    selectedProvince = mGourmetCuration.getProvince();
+                }
+
+                mGourmetCuration.setProvince(selectedProvince);
+                mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+                if (Util.isTextEmpty(date) == false)
+                {
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+                }
+
+                mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
+
+                ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
+
+                mPlaceMainNetworkController.requestRegionList();
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
         }
 
         return true;

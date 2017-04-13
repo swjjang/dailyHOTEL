@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -40,6 +41,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -59,6 +61,10 @@ public class HomeFragment extends BaseFragment
 {
     private static final int MAX_REQUEST_SIZE = 10;
 
+    private static final int IS_RUNNED_NONE = 0;
+    private static final int IS_RUNNED_WISHLIST = 1 << 1;
+    private static final int IS_RUNNED_RECENTLIST = 1 << 2;
+
     HomeLayout mHomeLayout;
     BaseActivity mBaseActivity;
     PlaceType mPlaceType = PlaceType.HOTEL;
@@ -71,9 +77,7 @@ public class HomeFragment extends BaseFragment
 
     int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
-    private static final int IS_RUNNED_NONE = 0;
-    private static final int IS_RUNNED_WISHLIST = 1 << 1;
-    private static final int IS_RUNNED_RECENTLIST = 1 << 2;
+    private DailyDeepLink mDailyDeepLink;
 
     @Nullable
     @Override
@@ -96,62 +100,31 @@ public class HomeFragment extends BaseFragment
     }
 
     @Override
+    public void onNewBundle(Bundle bundle)
+    {
+        if (bundle == null)
+        {
+            return;
+        }
+
+        if (bundle.containsKey(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == true)
+        {
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(bundle.getString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+            }
+        }
+    }
+
+    @Override
     public void onStart()
     {
         super.onStart();
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
-        {
-            if (DailyDeepLink.getInstance().isHomeEventDetailView() == true)
-            {
-                startEventWebActivity(DailyDeepLink.getInstance().getUrl(), DailyDeepLink.getInstance().getTitle());
-            } else if (DailyDeepLink.getInstance().isHomeRecommendationPlaceListView() == true)
-            {
-                String serviceType = DailyDeepLink.getInstance().getPlaceType();
-                String stringIndex = DailyDeepLink.getInstance().getIndex();
-
-                int idx;
-
-                try
-                {
-                    idx = Integer.parseInt(stringIndex);
-                    startDeepLinkRecommendationActivity(serviceType, idx);
-                } catch (Exception e)
-                {
-                    ExLog.e(e.toString());
-                }
-            } else if (DailyDeepLink.getInstance().isHotelView() == true)
-            {
-                mOnEventListener.onStayButtonClick(true);
-
-                return;
-            } else if (DailyDeepLink.getInstance().isGourmetView() == true)
-            {
-                mOnEventListener.onGourmetButtonClick(true);
-
-                return;
-            } else if (DailyDeepLink.getInstance().isRecentlyWatchHotelView() == true)
-            {
-                startRecentList(PlaceType.HOTEL);
-            } else if (DailyDeepLink.getInstance().isRecentlyWatchGourmetView() == true)
-            {
-                startRecentList(PlaceType.FNB);
-            } else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
-            {
-                startWishList(PlaceType.HOTEL);
-            } else if (DailyDeepLink.getInstance().isWishListGourmetView() == true)
-            {
-                startWishList(PlaceType.FNB);
-            } else if (DailyDeepLink.getInstance().isStampView() == true)
-            {
-                if (DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampStayEndEventPopupEnabled() == true)
-                {
-                    mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
-                }
-            }
-
-            DailyDeepLink.getInstance().clear();
-        }
+        moveDeepLink(mDailyDeepLink);
     }
 
     @Override
@@ -262,6 +235,68 @@ public class HomeFragment extends BaseFragment
                 break;
             }
         }
+    }
+
+    private void moveDeepLink(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null || dailyDeepLink.isValidateLink() == false)
+        {
+            return;
+        }
+
+        if (dailyDeepLink.isExternalDeepLink() == true)
+        {
+            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+            if (externalDeepLink.isHomeEventDetailView() == true)
+            {
+                startEventWebActivity(externalDeepLink.getUrl(), externalDeepLink.getTitle());
+            } else if (externalDeepLink.isHomeRecommendationPlaceListView() == true)
+            {
+                String serviceType = externalDeepLink.getPlaceType();
+                String stringIndex = externalDeepLink.getIndex();
+
+                int idx;
+
+                try
+                {
+                    idx = Integer.parseInt(stringIndex);
+                    startDeepLinkRecommendationActivity(serviceType, idx);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+            } else if (externalDeepLink.isHotelView() == true)
+            {
+                onStayClick(true, externalDeepLink);
+            } else if (externalDeepLink.isGourmetView() == true)
+            {
+                onGourmetClick(true, externalDeepLink);
+            } else if (externalDeepLink.isRecentlyWatchHotelView() == true)
+            {
+                startRecentList(PlaceType.HOTEL);
+            } else if (externalDeepLink.isRecentlyWatchGourmetView() == true)
+            {
+                startRecentList(PlaceType.FNB);
+            } else if (externalDeepLink.isWishListHotelView() == true)
+            {
+                startWishList(PlaceType.HOTEL);
+            } else if (externalDeepLink.isWishListGourmetView() == true)
+            {
+                startWishList(PlaceType.FNB);
+            } else if (externalDeepLink.isStampView() == true)
+            {
+                if (DailyPreference.getInstance(mBaseActivity).isRemoteConfigStampStayEndEventPopupEnabled() == true)
+                {
+                    mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
+                }
+            }
+        } else
+        {
+
+        }
+
+        dailyDeepLink.clear();
     }
 
     private void requestMessageData()
@@ -620,6 +655,52 @@ public class HomeFragment extends BaseFragment
         }
     }
 
+    private void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
+    {
+        if (mBaseActivity == null)
+        {
+            return;
+        }
+
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        mBaseActivity.startActivityForResult(StayMainActivity.newInstance(mBaseActivity//
+            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+
+        if (isDeepLink == false)
+        {
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_LIST_CLICK,//
+                AnalyticsManager.Label.HOME, null);
+        }
+    }
+
+    private void onGourmetClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
+    {
+        if (mBaseActivity == null)
+        {
+            return;
+        }
+
+        if (isLockUiComponent() == true || mIsAttach == false)
+        {
+            return;
+        }
+
+        mBaseActivity.startActivityForResult(GourmetMainActivity.newInstance(mBaseActivity//
+            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
+
+        if (isDeepLink == false)
+        {
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_LIST_CLICK,//
+                AnalyticsManager.Label.HOME, null);
+        }
+    }
+
     private HomeLayout.OnEventListener mOnEventListener = new HomeLayout.OnEventListener()
     {
         @Override
@@ -674,49 +755,15 @@ public class HomeFragment extends BaseFragment
         }
 
         @Override
-        public void onStayButtonClick(boolean isDeepLink)
+        public void onStayButtonClick()
         {
-            if (mBaseActivity == null)
-            {
-                return;
-            }
-
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            mBaseActivity.startActivityForResult(StayMainActivity.newInstance(mBaseActivity), Constants.CODE_REQUEST_ACTIVITY_STAY);
-
-            if (isDeepLink == false)
-            {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_LIST_CLICK,//
-                    AnalyticsManager.Label.HOME, null);
-            }
+            onStayClick(false, null);
         }
 
         @Override
-        public void onGourmetButtonClick(boolean isDeepLink)
+        public void onGourmetButtonClick()
         {
-            if (mBaseActivity == null)
-            {
-                return;
-            }
-
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            mBaseActivity.startActivityForResult(GourmetMainActivity.newInstance(getContext()), Constants.CODE_REQUEST_ACTIVITY_GOURMET);
-
-            if (isDeepLink == false)
-            {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_LIST_CLICK,//
-                    AnalyticsManager.Label.HOME, null);
-            }
+            onGourmetClick(false, null);
         }
 
         @Override

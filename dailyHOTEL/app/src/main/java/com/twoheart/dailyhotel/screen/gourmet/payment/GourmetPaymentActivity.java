@@ -812,7 +812,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                  * 플로우) 예약 액티비티 => 호텔탭 액티비티 => 메인액티비티 => 예약 리스트 프래그먼트 => 예약
                  * 리스트 갱신 후 최상단 아이템 인텐트
                  */
-//                DailyPreference.getInstance(this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                //                DailyPreference.getInstance(this).setVirtualAccountReadyFlag(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
 
                 if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_RESULT) == true)
                 {
@@ -829,8 +829,8 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     {
                         recordPaymentInformation();
 
-//                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
-//                        finish();
+                        //                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
+                        //                        finish();
                     }
                 };
                 break;
@@ -974,11 +974,11 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         intent.setData(uri);
         startActivity(intent);
 
-//        DailyPreference.getInstance(GourmetPaymentActivity.this)//
-//            .setPaymentInformation(PlaceType.FNB,//
-//                gourmetPaymentInformation.placeName,//
-//                gourmetPaymentInformation.paymentType,//
-//                gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
+        //        DailyPreference.getInstance(GourmetPaymentActivity.this)//
+        //            .setPaymentInformation(PlaceType.FNB,//
+        //                gourmetPaymentInformation.placeName,//
+        //                gourmetPaymentInformation.paymentType,//
+        //                gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
     }
 
     private void setAvailableDefaultPaymentType()
@@ -1654,6 +1654,9 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         public void showCallDialog()
         {
             GourmetPaymentActivity.this.showCallDialog();
+
+            AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_BOOKING_INITIALISE, null);
         }
 
         @Override

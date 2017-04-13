@@ -231,7 +231,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
                 addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
             }
         }
-        
+
         //        } else
         //        {
         //

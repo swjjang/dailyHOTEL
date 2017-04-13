@@ -137,12 +137,12 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(ImageDetailListActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-                            AnalyticsManager.Action.HOTEL_IMAGE_CLOSED, AnalyticsManager.Label.CLOSE, null);
+                            AnalyticsManager.Action.HOTEL_IMAGE_CLOSED, AnalyticsManager.Label.CLOSE_, null);
                         break;
 
                     case FNB:
                         AnalyticsManager.getInstance(ImageDetailListActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
-                            AnalyticsManager.Action.GOURMET_IMAGE_CLOSED, AnalyticsManager.Label.CLOSE, null);
+                            AnalyticsManager.Action.GOURMET_IMAGE_CLOSED, AnalyticsManager.Label.CLOSE_, null);
                         break;
                 }
 

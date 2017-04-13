@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
@@ -408,7 +409,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_USERINFO_UPDATE);
     }
 
-    public void showCallDialog()
+    public void showCallDialog(final PlaceType placeType)
     {
         if (isFinishing())
         {
@@ -443,6 +444,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 }
 
                 startFAQ();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.STAY_DETAIL, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.GOURMET_DETAIL, null);
+                        break;
+                }
             }
         });
 
@@ -460,6 +474,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 }
 
                 startKakao();
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.STAY_DETAIL, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.GOURMET_DETAIL, null);
+                        break;
+                }
             }
         });
 
@@ -474,6 +501,19 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 }
 
                 showDailyCallDialog(null);
+
+                switch (placeType)
+                {
+                    case HOTEL:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.STAY_DETAIL, null);
+                        break;
+
+                    case FNB:
+                        AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.GOURMET_DETAIL, null);
+                        break;
+                }
             }
         });
 

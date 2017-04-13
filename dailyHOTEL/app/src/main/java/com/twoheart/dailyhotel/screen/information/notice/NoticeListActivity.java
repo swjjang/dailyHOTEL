@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.screen.information.notice;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
@@ -33,6 +36,19 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     NoticeListAdapter mNoticeListAdapter;
 
     private boolean mDontReload;
+    private DailyDeepLink mDailyDeepLink;
+
+    public static Intent newInstance(Context context, String deepLink)
+    {
+        Intent intent = new Intent(context, NoticeListActivity.class);
+
+        if (Util.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,12 +57,40 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
 
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+
+        initDeepLink(intent);
+
         setContentView(R.layout.activity_notice);
 
         DailyPreference.getInstance(this).setViewedNoticeTime(DailyPreference.getInstance(this).getLastestNoticeTime());
 
         initToolbar();
         initLayout();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        initDeepLink(intent);
+    }
+
+    private void initDeepLink(Intent intent)
+    {
+        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        {
+            return;
+        }
+
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
+        }
     }
 
     private void initToolbar()
@@ -90,25 +134,33 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     {
         super.onStart();
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isNoticeDetailView() == true)
+            if (mDailyDeepLink.isExternalDeepLink() == true)
             {
-                int index = DailyDeepLink.getInstance().getNoticeIndex();
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-                if (index > 0)
+                if (externalDeepLink.isNoticeDetailView() == true)
                 {
-                    Util.removeNoticeNewList(this, index);
+                    int index = externalDeepLink.getNoticeIndex();
+
+                    if (index > 0)
+                    {
+                        Util.removeNoticeNewList(this, index);
+                    }
+
+                    String title = externalDeepLink.getTitle();
+                    String url = externalDeepLink.getUrl();
+
+                    Intent intent = NoticeWebActivity.newInstance(this, title, url);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_NOTICEWEB);
                 }
+            } else
+            {
 
-                String title = DailyDeepLink.getInstance().getTitle();
-                String url = DailyDeepLink.getInstance().getUrl();
-
-                Intent intent = NoticeWebActivity.newInstance(this, title, url);
-                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_NOTICEWEB);
             }
 
-            DailyDeepLink.getInstance().clear();
+            mDailyDeepLink.clear();
         }
 
         AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.MENU_NOTICELIST, null);

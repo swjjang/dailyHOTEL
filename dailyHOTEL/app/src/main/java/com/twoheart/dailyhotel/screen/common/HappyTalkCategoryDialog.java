@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.common;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +9,8 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Pair;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -19,8 +20,10 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -34,7 +37,8 @@ import retrofit2.Response;
 public class HappyTalkCategoryDialog extends BaseActivity
 {
     public static final String SITE_ID = "4000000190";
-    public static final String YELLOW_ID = "%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"; // @데일리호텔
+    public static final String STAY_YELLOW_ID = "%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%ED%98%B8%ED%85%94"; // @데일리호텔
+    public static final String GOURMET_YELLOW_ID = "%40%EB%8D%B0%EC%9D%BC%EB%A6%AC%EA%B3%A0%EB%A9%94"; // @데일리고메
 
     public enum CallScreen
     {
@@ -95,6 +99,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         } else
         {
             finish();
+            return;
         }
 
         mLayout = new HappyTalkCategoryDialogLayout(this, mOnEventListener);
@@ -117,20 +122,29 @@ public class HappyTalkCategoryDialog extends BaseActivity
                     {
                         Intent intent = LoginActivity.newInstance(HappyTalkCategoryDialog.this, null);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+
+                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.LOGIN, null);
                     }
                 }, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        onBackPressed();
+                        finish();
+
+                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
                     @Override
                     public void onCancel(DialogInterface dialog)
                     {
-                        onBackPressed();
+                        finish();
+
+                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
                     }
                 }, null, true);
         }
@@ -200,13 +214,24 @@ public class HappyTalkCategoryDialog extends BaseActivity
     public void onBackPressed()
     {
         super.onBackPressed();
+
+        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.CLOSE_HAPPYTALK, AnalyticsManager.Label.BACKKEY, null);
     }
 
     void startHappyTalk(String userIndex, String name, String phone, String email)
     {
         // https://docs.google.com/spreadsheets/d/1rB-bDASf80h8cW5lIX9kzrnuw0da-S65PJbEQ3lXeoU/edit#gid=0
         StringBuilder urlStringBuilder = new StringBuilder("https://api.happytalk.io/api/kakao/chat_open");
-        urlStringBuilder.append("?yid=%" + YELLOW_ID); // 객사 옐로우 아이디
+
+        if (getString(R.string.label_gourmet).equalsIgnoreCase(mPlaceType) == true)
+        {
+            urlStringBuilder.append("?yid=" + GOURMET_YELLOW_ID);
+        } else
+        {
+            urlStringBuilder.append("?yid=" + STAY_YELLOW_ID);
+        }
+
         urlStringBuilder.append("&site_id=" + SITE_ID); // 사이트 아이디
         urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
         urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
@@ -223,15 +248,45 @@ public class HappyTalkCategoryDialog extends BaseActivity
         }
 
         urlStringBuilder.append("&parameter1=" + userIndex); // user Index
-        urlStringBuilder.append("&parameter2=" + URLEncoder.encode(name)); //고객명
-        urlStringBuilder.append("&parameter3=" + URLEncoder.encode(phone)); // 전화번호
-        urlStringBuilder.append("&parameter4=" + URLEncoder.encode(email)); // 이메일
-        urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
+
+        if (Util.isTextEmpty(name) == false)
+        {
+            urlStringBuilder.append("&parameter2=" + URLEncoder.encode(name)); //고객명
+        }
+
+        if (Util.isTextEmpty(phone) == false)
+        {
+            urlStringBuilder.append("&parameter3=" + URLEncoder.encode(phone)); // 전화번호
+        }
+
+        if (Util.isTextEmpty(email) == false)
+        {
+            urlStringBuilder.append("&parameter4=" + URLEncoder.encode(email)); // 이메일
+        }
+
+        if (mCallScreen != null && Util.isTextEmpty(mCallScreen.getName()) == false)
+        {
+            urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
+        }
+
         urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
-        urlStringBuilder.append("&parameter7=" + URLEncoder.encode(mPlaceName)); // 호텔명
-        urlStringBuilder.append("&parameter8=" + mPlaceType); // 카테고리 분류
-        urlStringBuilder.append("&parameter9=" + URLEncoder.encode(DailyPreference.getInstance(HappyTalkCategoryDialog.this).getUserType())); // 가입방법
-        urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
+
+        if (Util.isTextEmpty(mPlaceName) == false)
+        {
+            urlStringBuilder.append("&parameter7=" + URLEncoder.encode(mPlaceName)); // 호텔명
+        }
+
+        if (Util.isTextEmpty(mPlaceType) == false)
+        {
+            urlStringBuilder.append("&parameter8=" + mPlaceType); // 카테고리 분류
+        }
+
+        if (Util.isTextEmpty(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType()) == false)
+        {
+            urlStringBuilder.append("&parameter9=" + URLEncoder.encode(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType())); // 가입방법
+        }
+
+        //        urlStringBuilder.append("&parameter10="); // 커스텀 파라미터10
 
         urlStringBuilder.append("&app_ver=" + DailyHotel.VERSION_CODE);
         urlStringBuilder.append("&phone_os=" + "A");
@@ -239,19 +294,39 @@ public class HappyTalkCategoryDialog extends BaseActivity
         urlStringBuilder.append("&phone_os_ver=" + URLEncoder.encode(Build.VERSION.RELEASE));
 
         TelephonyManager telephonyManager = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
-        urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
 
-        try
+        if (Util.isTextEmpty(telephonyManager.getNetworkOperatorName()) == false)
         {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlStringBuilder.toString()));
-            startActivity(intent);
-        } catch (ActivityNotFoundException e)
-        {
-            // 연결 가능한 웹 브라우저가 없습니다.
-
+            urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
         }
 
-        finish();
+
+        WebView webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient()
+        {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            {
+                if (url.startsWith("intent://"))
+                {
+                    String host = url.substring("intent://".length(), url.indexOf("#Intent"));
+                    int schemeIndex = url.indexOf("scheme=");
+                    String scheme = url.substring(schemeIndex + "scheme=".length(), url.indexOf(';', schemeIndex));
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme + "://" + host));
+                    startActivity(intent);
+                    finish();
+                } else
+                {
+                    view.loadUrl(url);
+                }
+
+                return true;
+            }
+        });
+
+        webView.loadUrl(urlStringBuilder.toString());
     }
 
     /**
@@ -333,7 +408,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         @Override
         public void finish()
         {
-            HappyTalkCategoryDialog.this.onBackPressed();
+            HappyTalkCategoryDialog.this.finish();
         }
 
         @Override
@@ -362,7 +437,18 @@ public class HappyTalkCategoryDialog extends BaseActivity
             }
 
             mMainCategoryId = mainId;
+
+            lockUI();
             mNetworkController.requestUserProfile();
+        }
+
+        @Override
+        public void onCancel()
+        {
+            HappyTalkCategoryDialog.this.finish();
+
+            AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                , AnalyticsManager.Action.CLOSE_HAPPYTALK, AnalyticsManager.Label.CANCEL, null);
         }
     };
 
@@ -382,6 +468,53 @@ public class HappyTalkCategoryDialog extends BaseActivity
         public void onUserProfile(String userIndex, String name, String phone, String email)
         {
             startHappyTalk(userIndex, name, phone, email);
+
+            String label = null;
+
+            switch (mCallScreen)
+            {
+                case SCREEN_STAY_DETAIL:
+                    label = AnalyticsManager.Label.STAY_DETAIL;
+                    break;
+
+                case SCREEN_GOURMET_DETAIL:
+                    label = AnalyticsManager.Label.GOURMET_DETAIL;
+                    break;
+
+                case SCREEN_STAY_PAYMENT_WAIT:
+                    label = AnalyticsManager.Label.STAY_DEPOSIT_WAITING;
+                    break;
+
+                case SCREEN_GOURMET_PAYMENT_WAIT:
+                    label = AnalyticsManager.Label.GOURMET_DEPOSIT_WAITING;
+                    break;
+
+                case SCREEN_STAY_BOOKING:
+                    label = AnalyticsManager.Label.STAY_BOOKING_DETAIL;
+                    break;
+
+                case SCREEN_GOURMET_BOOKING:
+                    label = AnalyticsManager.Label.GOURMET_BOOKING_DETAIL;
+                    break;
+
+                case SCREEN_FAQ:
+                    label = AnalyticsManager.Label.MENU_FNQ;
+                    break;
+
+                case SCREEN_CONTACT_US:
+                    label = AnalyticsManager.Label.MENU_INQUIRY;
+                    break;
+
+                case SCREEN_STAY_REFUND:
+                    label = AnalyticsManager.Label.STAY_BOOKING_DETAIL_REFUND;
+                    break;
+
+                default:
+                    return;
+            }
+
+            AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                , AnalyticsManager.Action.HAPPYTALK_START, label, null);
         }
 
         @Override
