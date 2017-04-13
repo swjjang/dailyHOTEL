@@ -550,7 +550,7 @@ public class PlaceReviewLayout extends BaseLayout
         private void onBindViewHolder(final ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
         {
             final int MAX_LINE = 11;
-            PlaceReview placeReview = placeViewItem.getItem();
+            final PlaceReview placeReview = placeViewItem.getItem();
 
             if (Util.isTextEmpty(placeReview.email) == true)
             {
@@ -572,57 +572,57 @@ public class PlaceReviewLayout extends BaseLayout
 
             Paint paint = reviewViewHolder.reviewTextView.getPaint();
 
-            int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
-            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.EXACTLY);
-            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-            reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
-
-            int lineCount = reviewViewHolder.reviewTextView.getLineCount();
-
-            if (lineCount > MAX_LINE)
+            if(placeReview.isMore == true)
             {
-                final String expandText = "...  더 읽어보기";
-
-                StaticLayout layout = (StaticLayout) reviewViewHolder.reviewTextView.getLayout();
-                int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAX_LINE - 1);
-                int lineEndIndex = reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1);
-
-                CharSequence text = reviewViewHolder.reviewTextView.getText().subSequence(lineStartIndex, lineEndIndex);
-
-                int length = text.length();
-                float moreReadWidth = paint.measureText(expandText);
-
-                int count = 0, readCount = 0;
-
-                for (int i = length - 1; i >= 0; i--)
-                {
-                    readCount = paint.breakText(text, i, length, false, moreReadWidth, null);
-
-                    if (readCount != count)
-                    {
-                        count = readCount;
-                    } else
-                    {
-                        break;
-                    }
-                }
-
-                reviewViewHolder.reviewTextView.setText(reviewViewHolder.reviewTextView.getText().subSequence(0, lineEndIndex - count - 1) + "...");
-                reviewViewHolder.moreReadTextView.setVisibility(View.VISIBLE);
-                reviewViewHolder.moreReadTextView.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        reviewViewHolder.reviewTextView.setText((String) reviewViewHolder.reviewTextView.getTag());
-                        reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
-                        reviewViewHolder.moreReadTextView.setOnClickListener(null);
-                    }
-                });
-            } else
-            {
+                reviewViewHolder.reviewTextView.setText((String) reviewViewHolder.reviewTextView.getTag());
                 reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
                 reviewViewHolder.moreReadTextView.setOnClickListener(null);
+            } else
+            {
+                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
+                int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.EXACTLY);
+                int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+                reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
+
+                int lineCount = reviewViewHolder.reviewTextView.getLineCount();
+
+                if (lineCount > MAX_LINE)
+                {
+                    reviewViewHolder.reviewTextView.setText(placeReview.comment.substring(0, reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1)));
+                    reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);
+
+                    final String expandText = "...  더 읽어보기";
+
+                    StaticLayout layout = (StaticLayout) reviewViewHolder.reviewTextView.getLayout();
+                    int lineStartIndex = reviewViewHolder.reviewTextView.getLayout().getLineStart(MAX_LINE - 1);
+                    int lineEndIndex = reviewViewHolder.reviewTextView.getLayout().getLineEnd(MAX_LINE - 1);
+
+                    String text = placeReview.comment.substring(lineStartIndex, lineEndIndex);
+
+                    int length = text.length();
+                    float moreReadWidth = paint.measureText(expandText);
+
+                    int count = paint.breakText(text, true, textViewWidth - moreReadWidth, null);
+
+                    reviewViewHolder.reviewTextView.setText(placeReview.comment.substring(0, lineStartIndex + count) + "...");
+                    reviewViewHolder.moreReadTextView.setVisibility(View.VISIBLE);
+                    reviewViewHolder.moreReadTextView.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            reviewViewHolder.reviewTextView.setText((String) reviewViewHolder.reviewTextView.getTag());
+                            reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
+                            reviewViewHolder.moreReadTextView.setOnClickListener(null);
+
+                            placeReview.isMore = true;
+                        }
+                    });
+                } else
+                {
+                    reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
+                    reviewViewHolder.moreReadTextView.setOnClickListener(null);
+                }
             }
         }
 
