@@ -784,7 +784,10 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
                             ExLog.e(e.toString());
                         } finally
                         {
-                            mDailyDeepLink.clear();
+                            if (mDailyDeepLink != null)
+                            {
+                                mDailyDeepLink.clear();
+                            }
                         }
 
                         // 사용자 정보 요청.
