@@ -5,13 +5,11 @@ import android.net.Uri;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
-public class DailyInternalDeepLink
+public class DailyInternalDeepLink extends DailyDeepLink
 {
-    public static final String HOST_INTERNAL_DAILYHOTEL = "internal.dailyhotel.co.kr";
+
 
     ///////////////////////////////////////////////////////////////////////////////////
     // DAILYHOTEL INTERNAL DEEP LINK
@@ -28,30 +26,92 @@ public class DailyInternalDeepLink
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
     private static final String VIEW_STAMP = "stamp"; // 스탬프.
 
-    private Uri mDeepLinkUri;
-    private Map<String, String> mParams;
-    private int mVersionCode;
-    private boolean isInternalDeepLink;
-
-    public DailyInternalDeepLink()
+    public DailyInternalDeepLink(Uri uri)
     {
-        mParams = new HashMap<>();
+        super(uri);
     }
 
-    /**
-     * 꼭 setDeepLink 후에 호출해야한다
-     *
-     * @return
-     */
-    public boolean isValidateLink()
+    @Override
+    public void setDeepLink(Uri uri)
     {
-        return mDeepLinkUri != null;
+        if (uri == null)
+        {
+            clear();
+            return;
+        }
+
+        mDeepLinkUri = uri;
+
+        String scheme = uri.getScheme();
+        String host = uri.getHost();
+
+        if (HOST_INTERNAL_DAILYHOTEL.equalsIgnoreCase(host) == true)
+        {
+            decodingLink(uri);
+        } else
+        {
+            clear();
+        }
     }
 
-
-    boolean decodingInternalLink(Uri uri)
+    @Override
+    public void clear()
     {
-        mParams.clear();
+        super.clear();
+    }
+
+    private String getView()
+    {
+        return mParamsMap.get(PARAM_VIEW);
+    }
+
+    public boolean isBookingDetailView()
+    {
+        String view = getView();
+
+        return VIEW_BOOKING_DETAIL.equalsIgnoreCase(view);
+    }
+
+    public boolean isStampView()
+    {
+        String view = getView();
+
+        return VIEW_STAMP.equalsIgnoreCase(view);
+    }
+
+    public String getPlaceType()
+    {
+        return mParamsMap.get(PARAM_PLACE_TYPE);
+    }
+
+    public String getPlaceName()
+    {
+        return mParamsMap.get(PARAM_PLACE_NAME);
+    }
+
+    public String getPaymentType()
+    {
+        return mParamsMap.get(PARAM_PAYMENT_METHOD);
+    }
+
+    public String getCheckInTime()
+    {
+        return mParamsMap.get(PARAM_CHECK_IN_TIME);
+    }
+
+    public String getCheckOutTime()
+    {
+        return mParamsMap.get(PARAM_CHECK_OUT_TIME);
+    }
+
+    public String getVisitTime()
+    {
+        return mParamsMap.get(PARAM_VISIT_TIME);
+    }
+
+    private boolean decodingLink(Uri uri)
+    {
+        mParamsMap.clear();
 
         if (uri == null)
         {
@@ -72,76 +132,6 @@ public class DailyInternalDeepLink
         }
 
         return true;
-    }
-
-    public void clear()
-    {
-        mVersionCode = 0;
-        mDeepLinkUri = null;
-        mParams.clear();
-    }
-
-    private String getView()
-    {
-        return mParams.get(PARAM_VIEW);
-    }
-
-    private boolean putParams(Uri uri, String param)
-    {
-        String value = uri.getQueryParameter(param);
-
-        if (Util.isTextEmpty(value) == false)
-        {
-            mParams.put(param, value);
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
-
-    public boolean isBookingDetailView()
-    {
-        String view = getView();
-
-        return VIEW_BOOKING_DETAIL.equalsIgnoreCase(view);
-    }
-
-    public boolean isStampView()
-    {
-        String view = getView();
-
-        return VIEW_STAMP.equalsIgnoreCase(view);
-    }
-
-    public String getPlaceType()
-    {
-        return mParams.get(PARAM_PLACE_TYPE);
-    }
-
-    public String getPlaceName()
-    {
-        return mParams.get(PARAM_PLACE_NAME);
-    }
-
-    public String getPaymentType()
-    {
-        return mParams.get(PARAM_PAYMENT_METHOD);
-    }
-
-    public String getCheckInTime()
-    {
-        return mParams.get(PARAM_CHECK_IN_TIME);
-    }
-
-    public String getCheckOutTime()
-    {
-        return mParams.get(PARAM_CHECK_OUT_TIME);
-    }
-
-    public String getVisitTime()
-    {
-        return mParams.get(PARAM_VISIT_TIME);
     }
 
     public static String getStayBookingDetailScreenLink(String placeName//

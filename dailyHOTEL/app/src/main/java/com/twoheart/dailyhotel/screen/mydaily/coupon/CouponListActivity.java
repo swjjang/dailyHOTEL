@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -16,8 +17,10 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.ParseException;
@@ -39,6 +42,7 @@ public class CouponListActivity extends BaseActivity
     CouponListNetworkController mCouponListNetworkController;
     ArrayList<Coupon> mCouponList;
     SortType mSortType;
+    private DailyDeepLink mDailyDeepLink;
 
     public enum SortType
     {
@@ -47,13 +51,18 @@ public class CouponListActivity extends BaseActivity
         GOURMET
     }
 
-    public static Intent newInstance(Context context, SortType sortType)
+    public static Intent newInstance(Context context, SortType sortType, String deepLink)
     {
         Intent intent = new Intent(context, CouponListActivity.class);
 
         if (sortType != null)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, sortType.name());
+        }
+
+        if (Util.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
 
         return intent;
@@ -85,6 +94,8 @@ public class CouponListActivity extends BaseActivity
             mSortType = SortType.ALL;
         }
 
+        initDeepLink(intent);
+
         DailyPreference.getInstance(this).setNewCoupon(false);
         DailyPreference.getInstance(this).setViewedCouponTime(DailyPreference.getInstance(this).getLastestCouponTime());
 
@@ -94,20 +105,52 @@ public class CouponListActivity extends BaseActivity
     }
 
     @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        initDeepLink(intent);
+    }
+
+    private void initDeepLink(Intent intent)
+    {
+        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        {
+            return;
+        }
+
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
+        }
+    }
+
+    @Override
     protected void onStart()
     {
         super.onStart();
 
         AnalyticsManager.getInstance(CouponListActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_BOX, null);
 
-        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
         {
-            if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
+            if (mDailyDeepLink.isExternalDeepLink() == true)
             {
-                startRegisterCoupon();
-            }
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-            DailyDeepLink.getInstance().clear();
+                if (externalDeepLink.isRegisterCouponView() == true)
+                {
+                    startRegisterCoupon();
+                }
+
+                externalDeepLink.clear();
+            } else
+            {
+
+            }
         } else
         {
             if (DailyHotel.isLogin() == false)

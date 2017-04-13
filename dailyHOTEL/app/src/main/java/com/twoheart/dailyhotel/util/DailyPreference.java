@@ -1409,6 +1409,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getOverseasName()
+     *
      * @return
      */
     @Deprecated
@@ -1419,6 +1420,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getOverseasPhone()
+     *
      * @return
      */
     @Deprecated
@@ -1429,6 +1431,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getOverseasEmail()
+     *
      * @return
      */
     @Deprecated
@@ -1439,6 +1442,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getType()
+     *
      * @return
      */
     @Deprecated
@@ -1449,6 +1453,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getName()
+     *
      * @return
      */
     @Deprecated
@@ -1459,6 +1464,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getEmail()
+     *
      * @return
      */
     @Deprecated
@@ -1469,6 +1475,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getBirthday()
+     *
      * @return
      */
     @Deprecated
@@ -1479,6 +1486,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getRecommender()
+     *
      * @return
      */
     @Deprecated
@@ -1489,6 +1497,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.isBenefitAlarm()
+     *
      * @return
      */
     @Deprecated
@@ -1499,6 +1508,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.isExceedBonus()
+     *
      * @return
      */
     @Deprecated
@@ -1509,6 +1519,7 @@ public class DailyPreference
 
     /**
      * DailyUserPreference.getAuthorization()
+     *
      * @return
      */
     @Deprecated

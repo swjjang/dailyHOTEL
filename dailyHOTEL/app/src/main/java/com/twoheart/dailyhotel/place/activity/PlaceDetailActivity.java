@@ -445,7 +445,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 startFAQ();
 
-                switch(placeType)
+                switch (placeType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
@@ -475,7 +475,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 startKakao();
 
-                switch(placeType)
+                switch (placeType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
@@ -502,7 +502,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
                 showDailyCallDialog(null);
 
-                switch(placeType)
+                switch (placeType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(PlaceDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//

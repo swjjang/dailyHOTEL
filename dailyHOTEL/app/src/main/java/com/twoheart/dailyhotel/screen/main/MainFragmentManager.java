@@ -1,11 +1,12 @@
 package com.twoheart.dailyhotel.screen.main;
 
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
 import com.twoheart.dailyhotel.screen.home.HomeFragment;
@@ -23,7 +24,7 @@ public class MainFragmentManager
     public static final int INDEX_INFORMATION_FRAGMENT = 3;
 
     private FragmentManager mFragmentManager;
-    private Fragment mFragment;
+    private BaseFragment mFragment;
     private ViewGroup mContentLayout;
     private int mIndexLastFragment;
     private int mIndexMainLastFragment; // 호텔, 고메
@@ -55,7 +56,7 @@ public class MainFragmentManager
         return mIndexMainLastFragment;
     }
 
-    public Fragment getCurrentFragment()
+    public BaseFragment getCurrentFragment()
     {
         return mFragment;
     }
@@ -67,7 +68,7 @@ public class MainFragmentManager
      * @param index Fragment 리스트에 해당하는 index를 받는다.
      * @return 요청한 index에 해당하는 Fragment를 반환한다. => 기능 변경, 누를때마다 리프레시
      */
-    public Fragment getFragment(int index)
+    public BaseFragment getFragment(int index)
     {
         switch (index)
         {
@@ -107,7 +108,7 @@ public class MainFragmentManager
      *
      * @param fragment Fragment 리스트에 보관된 Fragement들을 받는 것이 좋다.
      */
-    public void replaceFragment(Fragment fragment, String tag)
+    public void replaceFragment(BaseFragment fragment, String tag)
     {
         if (mBaseActivity.isFinishing() == true)
         {
@@ -154,7 +155,7 @@ public class MainFragmentManager
         }
     }
 
-    public void select(boolean isCallMenuBar, int index, boolean isRefresh)
+    public void select(boolean isCallMenuBar, int index, boolean isRefresh, Bundle bundle)
     {
         if (index != mIndexLastFragment || isRefresh == true)
         {
@@ -183,7 +184,20 @@ public class MainFragmentManager
                     break;
             }
 
-            replaceFragment(getFragment(mIndexLastFragment), String.valueOf(mIndexLastFragment));
+            BaseFragment fragment = getFragment(mIndexLastFragment);
+
+            if (bundle != null)
+            {
+                fragment.onNewBundle(bundle);
+            }
+
+            replaceFragment(fragment, String.valueOf(mIndexLastFragment));
+        } else
+        {
+            if (bundle != null)
+            {
+                getCurrentFragment().onNewBundle(bundle);
+            }
         }
 
         if (mMenuBarLayoutOnPageChangeListener != null)

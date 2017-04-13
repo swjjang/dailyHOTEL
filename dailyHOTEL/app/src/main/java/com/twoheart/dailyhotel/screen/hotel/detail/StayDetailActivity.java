@@ -1275,8 +1275,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             showCallDialog(PlaceType.HOTEL);
 
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION
-            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);
         }
 
         @Override

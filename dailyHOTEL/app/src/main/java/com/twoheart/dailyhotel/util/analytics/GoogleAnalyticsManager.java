@@ -13,6 +13,7 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -333,12 +334,19 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             return;
         }
 
+        if (dailyDeepLink.isExternalDeepLink() == false)
+        {
+            return;
+        }
+
+        DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
         String screenName = null;
 
-        if (dailyDeepLink.isHotelListView() == true)
+        if (externalDeepLink.isHotelListView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYHOTEL_LIST;
-        } else if (dailyDeepLink.isHotelDetailView() == true)
+        } else if (externalDeepLink.isHotelDetailView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYHOTEL_DETAIL;
             //        } else if (dailyDeepLink.isHotelRegionListView() == true)
@@ -347,10 +355,10 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             //        } else if (dailyDeepLink.isHotelEventBannerWebView() == true)
             //        {
             //            screenName = AnalyticsManager.Screen.DAILYHOTEL_BANNER_DETAIL;
-        } else if (dailyDeepLink.isGourmetListView() == true)
+        } else if (externalDeepLink.isGourmetListView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYGOURMET_LIST;
-        } else if (dailyDeepLink.isGourmetDetailView() == true)
+        } else if (externalDeepLink.isGourmetDetailView() == true)
         {
             screenName = AnalyticsManager.Screen.DAILYGOURMET_DETAIL;
             //        } else if (dailyDeepLink.isGourmetRegionListView() == true)
@@ -359,31 +367,31 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             //        } else if (dailyDeepLink.isGourmetEventBannerWebView() == true)
             //        {
             //            screenName = AnalyticsManager.Screen.DAILYGOURMET_BANNER_DETAIL;
-        } else if (dailyDeepLink.isBookingView() == true)
+        } else if (externalDeepLink.isBookingView() == true)
         {
             screenName = AnalyticsManager.Screen.BOOKING_LIST;
-        } else if (dailyDeepLink.isEventView() == true)
+        } else if (externalDeepLink.isEventView() == true)
         {
             screenName = AnalyticsManager.Screen.EVENT_LIST;
-        } else if (dailyDeepLink.isEventDetailView() == true)
+        } else if (externalDeepLink.isEventDetailView() == true)
         {
             screenName = AnalyticsManager.Screen.EVENT_DETAIL;
-        } else if (dailyDeepLink.isBonusView() == true)
+        } else if (externalDeepLink.isBonusView() == true)
         {
             screenName = AnalyticsManager.Screen.BONUS;
-        } else if (dailyDeepLink.isSingUpView() == true)
+        } else if (externalDeepLink.isSingUpView() == true)
         {
             screenName = AnalyticsManager.Screen.MENU_REGISTRATION;
-        } else if (dailyDeepLink.isInformationView() == true)
+        } else if (externalDeepLink.isInformationView() == true)
         {
 
-        } else if (dailyDeepLink.isCouponView() == true)
+        } else if (externalDeepLink.isCouponView() == true)
         {
             screenName = AnalyticsManager.Screen.MENU_COUPON_BOX;
-        } else if (dailyDeepLink.isRecommendFriendView() == true)
+        } else if (externalDeepLink.isRecommendFriendView() == true)
         {
             screenName = AnalyticsManager.Screen.MENU_INVITE_FRIENDS;
-        } else if (dailyDeepLink.isRegisterCouponView() == true)
+        } else if (externalDeepLink.isRegisterCouponView() == true)
         {
             //            screenName = AnalyticsManager.Screen.
         }

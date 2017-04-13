@@ -29,6 +29,11 @@ public abstract class BaseFragment extends Fragment implements Constants
         mNetworkTag = getClass().getName();
     }
 
+    public void onNewBundle(Bundle bundle)
+    {
+
+    }
+
     @Override
     public void onDestroy()
     {

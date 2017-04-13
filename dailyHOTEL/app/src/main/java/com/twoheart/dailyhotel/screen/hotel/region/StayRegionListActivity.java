@@ -96,7 +96,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        if(Util.isOverAPI21() == true)
+        if (Util.isOverAPI21() == true)
         {
             tabUpperLineView.setVisibility(View.VISIBLE);
         } else

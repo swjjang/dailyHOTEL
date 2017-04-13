@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivit
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
@@ -339,326 +340,431 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
     }
 
-    boolean deepLinkStayDetail(TodayDateTime todayDateTime)
+    boolean moveDeepLinkStayDetail(TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
-        boolean result = true;
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
 
         try
         {
-            // 신규 타입의 화면이동
-            int hotelIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-            int nights = 1;
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-            try
-            {
-                nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            } finally
-            {
-                if (nights <= 0)
+                // 신규 타입의 화면이동
+                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
+                int nights = 1;
+
+                try
                 {
-                    nights = 1;
-                }
-            }
-
-            String date = DailyDeepLink.getInstance().getDate();
-            int datePlus = DailyDeepLink.getInstance().getDatePlus();
-            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
-            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
-
-            DailyDeepLink.getInstance().clear();
-
-            StayBookingDay stayBookingDay = new StayBookingDay();
-
-            if (Util.isTextEmpty(date) == false)
-            {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-            } else
-            {
-                stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-            }
-
-            stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
-            Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, false);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-            if (isShowCalendar == true)
-            {
-                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
-            }
-        } catch (Exception e)
-        {
-            result = false;
-            ExLog.d(e.toString());
-        } finally
-        {
-            DailyDeepLink.getInstance().clear();
-        }
-
-        return result;
-    }
-
-    boolean deepLinkGourmetDetail(TodayDateTime todayDateTime)
-    {
-        boolean result = true;
-
-        try
-        {
-            int gourmetIndex = Integer.parseInt(DailyDeepLink.getInstance().getIndex());
-
-            String date = DailyDeepLink.getInstance().getDate();
-            int datePlus = DailyDeepLink.getInstance().getDatePlus();
-            boolean isShowCalendar = DailyDeepLink.getInstance().isShowCalendar();
-            int ticketIndex = DailyDeepLink.getInstance().getOpenTicketIndex();
-
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-
-            if (Util.isTextEmpty(date) == false)
-            {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-            } else
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-            }
-
-            Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                gourmetBookingDay, gourmetIndex, ticketIndex, isShowCalendar, false);
-
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
-            overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-            if (isShowCalendar == true)
-            {
-                AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                    , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
-            }
-        } catch (Exception e)
-        {
-            result = false;
-            ExLog.d(e.toString());
-        } finally
-        {
-            DailyDeepLink.getInstance().clear();
-        }
-
-        return result;
-    }
-
-    boolean moveDeepLinkStaySearchResult(Context context, TodayDateTime todayDateTime)
-    {
-        boolean result = true;
-
-        String word = DailyDeepLink.getInstance().getSearchWord();
-        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
-        LatLng latLng = DailyDeepLink.getInstance().getLatLng();
-        double radius = DailyDeepLink.getInstance().getRadius();
-
-        String date = DailyDeepLink.getInstance().getDate();
-        int datePlus = DailyDeepLink.getInstance().getDatePlus();
-        int nights = 1;
-
-        try
-        {
-            nights = Integer.parseInt(DailyDeepLink.getInstance().getNights());
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        } finally
-        {
-            if (nights <= 0)
-            {
-                nights = 1;
-            }
-        }
-
-        DailyDeepLink.getInstance().clear();
-
-        try
-        {
-            StayBookingDay stayBookingDay = new StayBookingDay();
-
-            if (Util.isTextEmpty(date) == false)
-            {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-            } else
-            {
-                stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-            }
-
-            stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
-            switch (searchType)
-            {
-                case LOCATION:
+                    nights = Integer.parseInt(externalDeepLink.getNights());
+                } catch (Exception e)
                 {
-                    if (latLng != null)
+                    ExLog.d(e.toString());
+                } finally
+                {
+                    if (nights <= 0)
                     {
-                        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, latLng, radius, true);
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                    } else
-                    {
-                        return false;
+                        nights = 1;
                     }
-                    break;
                 }
 
-                default:
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+                boolean isShowCalendar = externalDeepLink.isShowCalendar();
+                int ticketIndex = externalDeepLink.getOpenTicketIndex();
+
+                StayBookingDay stayBookingDay = new StayBookingDay();
+
+                if (Util.isTextEmpty(date) == false)
                 {
-                    if (Util.isTextEmpty(word) == false)
-                    {
-                        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, new Keyword(0, word), SearchType.SEARCHES);
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                    } else
-                    {
-                        return false;
-                    }
-                    break;
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
                 }
+
+                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
+
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, false);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+                if (isShowCalendar == true)
+                {
+                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
+                }
+            } else
+            {
+
             }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-
-            result = false;
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
         }
 
-        return result;
+        return true;
     }
 
-    boolean moveDeepLinkGourmetSearchResult(Context context, TodayDateTime todayDateTime)
+    boolean moveDeepLinkGourmetDetail(TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
-        boolean result = true;
-
-        String word = DailyDeepLink.getInstance().getSearchWord();
-        DailyDeepLink.SearchType searchType = DailyDeepLink.getInstance().getSearchLocationType();
-        LatLng latLng = DailyDeepLink.getInstance().getLatLng();
-        double radius = DailyDeepLink.getInstance().getRadius();
-
-        String date = DailyDeepLink.getInstance().getDate();
-        int datePlus = DailyDeepLink.getInstance().getDatePlus();
-
-        DailyDeepLink.getInstance().clear();
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
 
         try
         {
-            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-            if (Util.isTextEmpty(date) == false)
-            {
-                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            } else if (datePlus >= 0)
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-            } else
-            {
-                gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-            }
+                int gourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
 
-            switch (searchType)
-            {
-                case LOCATION:
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+                boolean isShowCalendar = externalDeepLink.isShowCalendar();
+                int ticketIndex = externalDeepLink.getOpenTicketIndex();
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+                if (Util.isTextEmpty(date) == false)
                 {
-                    if (latLng != null)
-                    {
-                        Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, latLng, radius, true);
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                    } else
-                    {
-                        return false;
-                    }
-                    break;
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
                 }
 
-                default:
-                    if (Util.isTextEmpty(word) == false)
-                    {
-                        Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                    } else
-                    {
-                        return false;
-                    }
-                    break;
+                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
+                    gourmetBookingDay, gourmetIndex, ticketIndex, isShowCalendar, false);
+
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+                if (isShowCalendar == true)
+                {
+                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
+                }
+            } else
+            {
+
             }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-
-            result = false;
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
         }
 
-        return result;
+        return true;
     }
 
-    boolean moveDeepLinkCouponList(Context context)
+    boolean moveDeepLinkStaySearchResult(Context context, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
-        CouponListActivity.SortType sortType;
-
-        String placeType = DailyDeepLink.getInstance().getPlaceType();
-
-        if (Util.isTextEmpty(placeType) == true)
+        if (dailyDeepLink == null)
         {
-            sortType = CouponListActivity.SortType.ALL;
-        } else
+            return false;
+        }
+
+        try
         {
-            try
+            if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
-            } catch (Exception e)
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                String word = externalDeepLink.getSearchWord();
+                DailyExternalDeepLink.SearchType searchType = externalDeepLink.getSearchLocationType();
+                LatLng latLng = externalDeepLink.getLatLng();
+                double radius = externalDeepLink.getRadius();
+
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+                int nights = 1;
+
+                try
+                {
+                    nights = Integer.parseInt(externalDeepLink.getNights());
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                } finally
+                {
+                    if (nights <= 0)
+                    {
+                        nights = 1;
+                    }
+                }
+
+                StayBookingDay stayBookingDay = new StayBookingDay();
+
+                if (Util.isTextEmpty(date) == false)
+                {
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+                }
+
+                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
+
+                switch (searchType)
+                {
+                    case LOCATION:
+                    {
+                        if (latLng != null)
+                        {
+                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, latLng, radius, true);
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } else
+                        {
+                            return false;
+                        }
+                        break;
+                    }
+
+                    default:
+                    {
+                        if (Util.isTextEmpty(word) == false)
+                        {
+                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } else
+                        {
+                            return false;
+                        }
+                        break;
+                    }
+                }
+            } else
             {
-                sortType = CouponListActivity.SortType.ALL;
+
             }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
         }
 
-        DailyDeepLink.getInstance().clear();
+        return true;
+    }
 
-        Intent intent = CouponListActivity.newInstance(context, sortType);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
+    boolean moveDeepLinkGourmetSearchResult(Context context, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                String word = externalDeepLink.getSearchWord();
+                DailyExternalDeepLink.SearchType searchType = externalDeepLink.getSearchLocationType();
+                LatLng latLng = externalDeepLink.getLatLng();
+                double radius = externalDeepLink.getRadius();
+
+                String date = externalDeepLink.getDate();
+                int datePlus = externalDeepLink.getDatePlus();
+
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+                if (Util.isTextEmpty(date) == false)
+                {
+                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                } else if (datePlus >= 0)
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
+                } else
+                {
+                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
+                }
+
+                switch (searchType)
+                {
+                    case LOCATION:
+                    {
+                        if (latLng != null)
+                        {
+                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, latLng, radius, true);
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } else
+                        {
+                            return false;
+                        }
+                        break;
+                    }
+
+                    default:
+                        if (Util.isTextEmpty(word) == false)
+                        {
+                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } else
+                        {
+                            return false;
+                        }
+                        break;
+                }
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
 
         return true;
     }
 
-    boolean moveDeepLinkRegisterCoupon(Context context)
+    boolean moveDeepLinkCouponList(Context context, DailyDeepLink dailyDeepLink)
     {
-        DailyDeepLink.getInstance().clear();
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
 
-        Intent intent = RegisterCouponActivity.newInstance(context, Screen.EVENT_DETAIL);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                CouponListActivity.SortType sortType;
+
+                String placeType = externalDeepLink.getPlaceType();
+
+                if (Util.isTextEmpty(placeType) == true)
+                {
+                    sortType = CouponListActivity.SortType.ALL;
+                } else
+                {
+                    try
+                    {
+                        sortType = CouponListActivity.SortType.valueOf(placeType.toUpperCase());
+                    } catch (Exception e)
+                    {
+                        sortType = CouponListActivity.SortType.ALL;
+                    }
+                }
+
+                Intent intent = CouponListActivity.newInstance(context, sortType, dailyDeepLink.getDeepLink());
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPONLIST);
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
 
         return true;
     }
 
-    boolean moveDeepLinkStamp(Context context)
+    boolean moveDeepLinkRegisterCoupon(Context context, DailyDeepLink dailyDeepLink)
     {
-        DailyDeepLink.getInstance().clear();
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
 
-        if (mSourceType == SourceType.STAMP)
+        try
         {
-            finish();
-        } else
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                Intent intent = RegisterCouponActivity.newInstance(context, Screen.EVENT_DETAIL);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGISTER_COUPON);
+            } else
+            {
+
+            }
+        } catch (Exception e)
         {
-            Intent intent = StampActivity.newInstance(context, StampActivity.CallScreen.EVENT);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
+    boolean moveDeepLinkStamp(Context context, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (mSourceType == SourceType.STAMP)
+                {
+                    finish();
+                } else
+                {
+                    Intent intent = StampActivity.newInstance(context, StampActivity.CallScreen.EVENT);
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+                }
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
         }
 
         return true;
@@ -843,54 +949,63 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         break;
                     }
 
-                    DailyDeepLink.getInstance().setDeepLink(Uri.parse(uri));
+                    DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(uri));
 
-                    if (DailyDeepLink.getInstance().isValidateLink() == true)
+
+                    if (dailyDeepLink != null && dailyDeepLink.isValidateLink() == true)
                     {
-                        AnalyticsManager.getInstance(EventWebActivity.this).recordDeepLink(DailyDeepLink.getInstance());
+                        if (dailyDeepLink.isExternalDeepLink() == true)
+                        {
+                            DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                        if (DailyDeepLink.getInstance().isHotelDetailView() == true)
-                        {
-                            if (deepLinkStayDetail(mTodayDateTime) == true)
+                            AnalyticsManager.getInstance(EventWebActivity.this).recordDeepLink(externalDeepLink);
+
+                            if (externalDeepLink.isHotelDetailView() == true)
                             {
-                                return;
-                            }
-                        } else if (DailyDeepLink.getInstance().isGourmetDetailView() == true)
-                        {
-                            if (deepLinkGourmetDetail(mTodayDateTime) == true)
+                                if (moveDeepLinkStayDetail(mTodayDateTime, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isGourmetDetailView() == true)
                             {
-                                return;
-                            }
-                        } else if (DailyDeepLink.getInstance().isHotelSearchResultView() == true)
-                        {
-                            if (moveDeepLinkStaySearchResult(EventWebActivity.this, mTodayDateTime) == true)
+                                if (moveDeepLinkGourmetDetail(mTodayDateTime, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isHotelSearchResultView() == true)
                             {
-                                return;
-                            }
-                        } else if (DailyDeepLink.getInstance().isGourmetSearchResultView() == true)
-                        {
-                            if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mTodayDateTime) == true)
+                                if (moveDeepLinkStaySearchResult(EventWebActivity.this, mTodayDateTime, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isGourmetSearchResultView() == true)
                             {
-                                return;
-                            }
-                        } else if (DailyDeepLink.getInstance().isCouponView() == true)
-                        {
-                            if (moveDeepLinkCouponList(EventWebActivity.this) == true)
+                                if (moveDeepLinkGourmetSearchResult(EventWebActivity.this, mTodayDateTime, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isCouponView() == true)
                             {
-                                return;
-                            }
-                        } else if (DailyDeepLink.getInstance().isRegisterCouponView() == true)
-                        {
-                            if (moveDeepLinkRegisterCoupon(EventWebActivity.this) == true)
+                                if (moveDeepLinkCouponList(EventWebActivity.this, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isRegisterCouponView() == true)
                             {
-                                return;
-                            }
-                        } else if (DailyDeepLink.getInstance().isStampView() == true)
-                        {
-                            if (moveDeepLinkStamp(EventWebActivity.this) == true)
+                                if (moveDeepLinkRegisterCoupon(EventWebActivity.this, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isStampView() == true)
                             {
-                                return;
+                                if (moveDeepLinkStamp(EventWebActivity.this, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
                             }
+                        } else
+                        {
+
                         }
                     }
                     break;

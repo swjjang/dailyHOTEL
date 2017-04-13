@@ -13,6 +13,7 @@ import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -46,8 +47,6 @@ public class LauncherActivity extends Activity
 
         Util.initializeMemory();
 
-        DailyDeepLink.getInstance().clear();
-
         // 개인 정보 방침에 따른 개인 정보 암호화.
         if (Util.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
         {
@@ -67,30 +66,35 @@ public class LauncherActivity extends Activity
 
         if (uri != null)
         {
-            AnalyticsManager.getInstance(this).startDeepLink(uri);
+            DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(uri);
 
-            DailyDeepLink.getInstance().setDeepLink(uri);
-
-            if (DailyDeepLink.getInstance().isValidateLink() == true)
+            if (dailyDeepLink != null && dailyDeepLink.isExternalDeepLink() == true)
             {
-                if (Constants.DEBUG == true)
+                AnalyticsManager.getInstance(this).startDeepLink(uri);
+
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (externalDeepLink.isValidateLink() == true)
                 {
-                    String baseURL = DailyDeepLink.getInstance().getBaseUrl();
-
-                    if (Util.isTextEmpty(baseURL) == false)
+                    if (Constants.DEBUG == true)
                     {
-                        logOut();
-                        DailyPreference.getInstance(this).setBaseUrl(baseURL);
-                        DailyDeepLink.getInstance().clear();
-                        Util.restartExitApp(this);
-                        return;
+                        String baseURL = externalDeepLink.getBaseUrl();
+
+                        if (Util.isTextEmpty(baseURL) == false)
+                        {
+                            logOut();
+                            DailyPreference.getInstance(this).setBaseUrl(baseURL);
+                            externalDeepLink.clear();
+                            Util.restartExitApp(this);
+                            return;
+                        }
                     }
+
+                    AnalyticsManager.getInstance(this).recordDeepLink(externalDeepLink);
+
+                    newIntent.setData(uri);
+                    newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
-
-                AnalyticsManager.getInstance(this).recordDeepLink(DailyDeepLink.getInstance());
-
-                newIntent.setData(uri);
-                newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
         }
 
