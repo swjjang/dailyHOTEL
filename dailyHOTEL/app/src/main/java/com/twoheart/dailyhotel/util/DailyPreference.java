@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 public class DailyPreference
 {
     public static final String DAILYHOTEL_SHARED_PREFERENCE_V1 = "dailyHOTEL_v1"; // 새로 만든
-
     public static final String PREFERENCE_REMOTE_CONFIG = "DH_RemoteConfig";
 
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -147,6 +146,9 @@ public class DailyPreference
 
     private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
     private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
+
+    private static final String KEY_REMOTE_CONFIG_UPDATE_OPTIONAL = "342";
+    private static final String KEY_REMOTE_CONFIG_UPDATE_FORCE = "343";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -1219,6 +1221,26 @@ public class DailyPreference
     public String getRemoteConfigABTestHomeButton()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON, null);
+    }
+
+    public void setRemoteConfigUpdateOptional(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_UPDATE_OPTIONAL, value);
+    }
+
+    public String getRemoteConfigUpdateOptional()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_UPDATE_OPTIONAL, null);
+    }
+
+    public void setRemoteConfigUpdateForce(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_UPDATE_FORCE, value);
+    }
+
+    public String getRemoteConfigUpdateForce()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_UPDATE_FORCE, null);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

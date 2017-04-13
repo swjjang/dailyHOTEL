@@ -43,6 +43,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyImageView;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
@@ -633,7 +635,29 @@ public class MainActivity extends BaseActivity implements Constants
                 }
             };
 
-            showSimpleDialog(getString(R.string.label_alarm_update), getString(R.string.dialog_msg_please_update_new_version), getString(R.string.dialog_btn_text_update), posListener, cancelListener);
+            String title;
+            String message;
+
+            try
+            {
+                String forceString = DailyPreference.getInstance(MainActivity.this).getRemoteConfigUpdateForce();
+
+                if (Util.isTextEmpty(forceString) == true)
+                {
+                    throw new NullPointerException();
+                }
+
+                JSONObject jsonObject = new JSONObject(forceString);
+
+                title = jsonObject.getString("title");
+                message = jsonObject.getString("message");
+            } catch (Exception e)
+            {
+                title = getString(R.string.label_force_update);
+                message = getString(R.string.dialog_msg_please_update_new_version);
+            }
+
+            showSimpleDialog(title, message, getString(R.string.dialog_btn_text_update), posListener, cancelListener);
 
         } else if (isUpdate == true && skipMaxVersion != currentVersionNumber)
         {
@@ -678,10 +702,31 @@ public class MainActivity extends BaseActivity implements Constants
                 }
             };
 
-            showSimpleDialog(getString(R.string.label_alarm_update)//
-                , getString(R.string.dialog_msg_update_now)//
+            String title;
+            String message;
+
+            try
+            {
+                String optionalString = DailyPreference.getInstance(MainActivity.this).getRemoteConfigUpdateOptional();
+
+                if (Util.isTextEmpty(optionalString) == true)
+                {
+                    throw new NullPointerException();
+                }
+
+                JSONObject jsonObject = new JSONObject(optionalString);
+
+                title = jsonObject.getString("title");
+                message = jsonObject.getString("message");
+            } catch (Exception e)
+            {
+                title = getString(R.string.label_option_update);
+                message = getString(R.string.dialog_msg_update_now);
+            }
+
+            showSimpleDialog(title, message//
                 , getString(R.string.dialog_btn_text_update)//
-                , getString(R.string.dialog_btn_text_cancel)//
+                , getString(R.string.dialog_btn_text_update_next)//
                 , posListener, negListener, cancelListener, null, false);
         } else
         {
