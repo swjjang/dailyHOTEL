@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseFragment;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
@@ -18,7 +17,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +30,6 @@ public class HomeCategoryRegionListFragment extends BaseFragment
     private OnFragmentListener mOnFragmentListener;
 
     private DailyCategoryType mDailyCategoryType;
-    private Province mSelectedProvince;
 
     public interface OnFragmentListener
     {
@@ -86,16 +83,6 @@ public class HomeCategoryRegionListFragment extends BaseFragment
         }
     }
 
-    public void setSelectedProvince(Province province)
-    {
-        mSelectedProvince = province;
-
-        if (mLayout != null)
-        {
-            mLayout.setSelectedProvince(province);
-        }
-    }
-
     public void updateTermsOfLocationView()
     {
         if (mLayout != null)
@@ -106,11 +93,11 @@ public class HomeCategoryRegionListFragment extends BaseFragment
 
     public void setRegionViewList(BaseActivity baseActivity, List<RegionViewItem> arrayList, boolean isAgreed)
     {
-        Province selectedProvince = searchLastProvince(arrayList, mDailyCategoryType);
-        setSelectedProvince(selectedProvince);
-
         if (mLayout != null)
         {
+            Province previousProvince = searchPreviousProvince(arrayList, mDailyCategoryType);
+            mLayout.setSelectedProvince(previousProvince);
+
             mLayout.setRegionViewList(baseActivity, arrayList, isAgreed);
         }
     }
@@ -139,7 +126,7 @@ public class HomeCategoryRegionListFragment extends BaseFragment
         return mDailyCategoryType == null ? DailyCategoryType.NONE.name() : mDailyCategoryType.name();
     }
 
-    private Province searchLastProvince(List<RegionViewItem> regionViewItemList, DailyCategoryType categoryType)
+    private Province searchPreviousProvince(List<RegionViewItem> regionViewItemList, DailyCategoryType categoryType)
     {
         if (regionViewItemList == null || regionViewItemList.size() == 0)
         {
@@ -149,69 +136,29 @@ public class HomeCategoryRegionListFragment extends BaseFragment
         JSONObject saveRegionJsonObject = DailyPreference.getInstance(mBaseActivity).getDailyRegion(categoryType);
         if (saveRegionJsonObject == null)
         {
-//            return regionViewItemList.get(0).getProvince();
-            return null;
+            return regionViewItemList.get(0).getProvince();
         }
 
         String oldProvinceName = Util.getDailyProvinceString(saveRegionJsonObject);
-        String oldAreaName = Util.getDailyAreaString(saveRegionJsonObject);
 
         if (Util.isTextEmpty(oldProvinceName) == true)
         {
-//            return regionViewItemList.get(0).getProvince();
-            return null;
+            return regionViewItemList.get(0).getProvince();
         }
 
         for (RegionViewItem regionViewItem : regionViewItemList)
         {
             Province province = regionViewItem.getProvince();
 
-            // 저장된 대지역과 리스트의 대지역이 다르면 스킵
-            if (oldProvinceName.equalsIgnoreCase(province.name) == false)
-            {
-                continue;
-            }
-
-            // 저장된 대지역과 같으나 저장된 소지역이 없으면 리턴
-            if (Util.isTextEmpty(oldAreaName) == true)
+            // 저장된 대지역과 리스트의 대지역이 같으면 리턴
+            if (oldProvinceName.equalsIgnoreCase(province.name) == true)
             {
                 return province;
             }
-
-            ArrayList<Area[]> areasList = regionViewItem.getAreaList();
-
-            // 저장된 대지역과 같으나 리스트의 소지역이 비었으면 대지역 리턴
-            if (areasList == null || areasList.size() == 0)
-            {
-                return province;
-            }
-
-            for (Area[] areas : areasList)
-            {
-
-                // 저장된 대지역과 같으나 소지역 리스트의 내부가 비었으면 스킵
-                if (areas == null || areas.length == 0)
-                {
-                    continue;
-                }
-
-                for (Area area : areas)
-                {
-                    // 저장된 소지역 이름과 리스트의 소지역 이름이 같으면 리턴
-                    if (oldAreaName.equalsIgnoreCase(area.name) == true)
-                    {
-                        return area;
-                    }
-                }
-            }
-
-            // 소지역을 다 찾아봤으나 소지역이 저장된 소지역과 다르면 대지역 리턴
-            return province;
         }
 
-        // 다 찾아도 맞는게 없으면 리스트의 처음 대지역을 리턴 ??? 일단은 없는 상태로 리턴하기로 함
-        //        return regionViewItemList.get(0).getProvince();
-        return null;
+        // 다 찾아도 맞는게 없으면 리스트의 처음 대지역을 리턴
+        return regionViewItemList.get(0).getProvince();
     }
 
 
@@ -222,19 +169,19 @@ public class HomeCategoryRegionListFragment extends BaseFragment
         @Override
         public boolean isLockUiComponent()
         {
-            return isLockUiComponent();
+            return mBaseActivity.isLockUiComponent();
         }
 
         @Override
         public void lockUiComponent()
         {
-            lockUiComponent();
+            mBaseActivity.lockUiComponent();
         }
 
         @Override
         public void releaseUiComponent()
         {
-            releaseUiComponent();
+            mBaseActivity.releaseUiComponent();
         }
 
         @Override

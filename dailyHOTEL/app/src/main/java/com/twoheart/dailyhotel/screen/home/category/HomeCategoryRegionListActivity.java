@@ -40,7 +40,6 @@ import retrofit2.Response;
 public class HomeCategoryRegionListActivity extends BaseActivity
 {
     private DailyCategoryType mDailyCategoryType;
-//    private Province mSelectedProvince;
     private StayBookingDay mStayBookingDay;
 
     private DailyViewPager mViewPager;
@@ -50,11 +49,9 @@ public class HomeCategoryRegionListActivity extends BaseActivity
 
     public static Intent newInstance(Context context //
         , DailyCategoryType categoryType, StayBookingDay stayBookingDay)
-//        , DailyCategoryType categoryType, Province province, StayBookingDay stayBookingDay)
     {
         Intent intent = new Intent(context, HomeCategoryRegionListActivity.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) categoryType);
-//        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         return intent;
     }
@@ -97,7 +94,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     private void initIntent(Intent intent)
     {
         mDailyCategoryType = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
-//        mSelectedProvince = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PROVINCE);
         mStayBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
     }
 
@@ -411,18 +407,17 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         {
             Intent intent = new Intent();
 
-            // TODO : 지역 선택 완료 시 HomeFragment에서 스테이 카테고리 리스트로 넘겨주는 기능 추가 필요.
-            //
-            //            if (province == null)
-            //            {
-            //                setResult(RESULT_CANCELED, intent);
-            //            } else
-            //            {
-            //                intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-            //                setResult(RESULT_OK, intent);
-            //
-            //                recordEvent(province);
-            //            }
+            if (province == null)
+            {
+                setResult(RESULT_CANCELED, intent);
+            } else
+            {
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
+                setResult(RESULT_OK, intent);
+
+                recordEvent(province);
+            }
 
             finish();
         }
@@ -449,8 +444,6 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         @Override
         public void onRegionListResponse(List<RegionViewItem> regionViewList, List<RegionViewItem> subwayViewList)
         {
-//            mSelectedProvince = searchLastProvince(regionViewList, mDailyCategoryType);
-
             ArrayList<HomeCategoryRegionListFragment> arrayList = mFragmentPagerAdapter.getFragmentList();
 
             arrayList.get(0).setRegionViewList(HomeCategoryRegionListActivity.this, regionViewList //

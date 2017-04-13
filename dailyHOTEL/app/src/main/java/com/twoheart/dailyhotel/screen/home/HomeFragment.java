@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -24,6 +25,7 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.home.category.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -243,6 +245,22 @@ public class HomeFragment extends BaseFragment
                     forceRefreshing();
                 }
                 break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
+                    {
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                        DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+
+                        DailyPreference.getInstance(mBaseActivity).setDailyRegion(categoryType, Util.getDailyRegionJSONObject(province));
+                    }
+                }
+
+                break;
+            }
         }
     }
 
@@ -898,7 +916,19 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onCategoryItemClick(DailyCategoryType categoryType)
         {
-            // TODO : category 클릭시 연결 할 화면 이벤트 처리
+            try
+            {
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                mBaseActivity.startActivityForResult( //
+                    HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
+                    , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         @Override
