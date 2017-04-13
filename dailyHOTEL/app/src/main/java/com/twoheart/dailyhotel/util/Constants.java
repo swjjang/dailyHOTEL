@@ -207,6 +207,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_IS_SOLDOUT = "isSoldOut";
     String NAME_INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
     String NAME_INTENT_EXTRA_DATA_PLACE_REVIEW_SCORES = "placeReviewScores";
+    String NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE = "dailyCategoryType";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

@@ -12,7 +12,7 @@ import com.twoheart.dailyhotel.R;
 public enum DailyCategoryType implements Parcelable
 {
     // 기존 버튼 용 카테고리
-    STAY_ALL(0, 0, 0),
+    STAY_ALL(R.string.label_home_category_stay_all, 0, 0),
     // 기존 버튼 용 카테고리
     GOURMET_ALL(0, 0, 0),
     // 신규 홈 카테고리 버튼 용 카테고리
