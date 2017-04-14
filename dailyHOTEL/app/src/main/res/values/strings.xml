@@ -1221,7 +1221,7 @@
     <string name="label_detail_review_terms_go">운영정책 보기</string>
     <string name="label_detail_review_more_read">더 읽어보기</string>
     <string name="message_detail_review_stay_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>
-    <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 실제 방문객이 남겨주신 리뷰입니다.</string>
+    <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

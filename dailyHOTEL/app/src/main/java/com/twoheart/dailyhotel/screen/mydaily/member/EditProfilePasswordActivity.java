@@ -108,7 +108,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 {
                     mConfirmView.setEnabled(false);
                 }
-                
+
                 if (s.length() > getResources().getInteger(R.integer.max_password))
                 {
                     s.delete(s.length() - 1, s.length());
