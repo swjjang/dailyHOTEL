@@ -99,6 +99,9 @@ public class DailyRemoteConfig
                         if (Constants.DEBUG == false)
                         {
                             Crashlytics.logException(e1);
+                        } else
+                        {
+                            ExLog.e(e1.toString());
                         }
                     }
                 } else
@@ -106,6 +109,9 @@ public class DailyRemoteConfig
                     if (Constants.DEBUG == false)
                     {
                         Crashlytics.logException(e);
+                    } else
+                    {
+                        ExLog.e(e.toString());
                     }
                 }
 

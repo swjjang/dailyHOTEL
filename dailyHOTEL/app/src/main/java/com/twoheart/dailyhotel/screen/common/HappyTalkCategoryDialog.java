@@ -269,7 +269,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
             urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
         }
 
-        urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
+        //        urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
 
         if (Util.isTextEmpty(mPlaceName) == false)
         {
@@ -299,7 +299,6 @@ public class HappyTalkCategoryDialog extends BaseActivity
         {
             urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
         }
-
 
         WebView webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
