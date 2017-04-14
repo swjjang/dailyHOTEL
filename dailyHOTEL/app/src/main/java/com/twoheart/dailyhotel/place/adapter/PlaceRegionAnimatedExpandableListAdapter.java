@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
-import android.net.Uri;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
+import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 
@@ -24,7 +25,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
     private LayoutInflater mInflater;
     private List<RegionViewItem> items;
     private View.OnClickListener mOnItemClickListener;
-    private boolean mIsTable;
+    private boolean mIsTablet;
 
     public PlaceRegionAnimatedExpandableListAdapter(Context context)
     {
@@ -60,7 +61,106 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
     public void setIsTablet(boolean isTablet)
     {
-        mIsTable = isTablet;
+        mIsTablet = isTablet;
+    }
+
+    /**
+     * AreaName 이 멀티라인으로 나올때 단말자체에서 우측에 여백을 발생시켜
+     * areaName 과 areaCount 의 사이가 넓게 띄어져 보이는 이슈로인한 처리
+     * 여백이 발생하는 위치(즉 1줄의 끝부분)에 \n 을 삽입해 강제로 2줄로 만드는 방법 사용
+     *
+     * @param textView
+     * @param areaName
+     */
+    private void setAreaNameText(TextView textView, String areaName)
+    {
+        textView.setText(areaName);
+
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        textView.measure(widthMeasureSpec, heightMeasureSpec);
+
+        Layout layout = textView.getLayout();
+        if (layout == null)
+        {
+            ExLog.w("layout is null");
+            return;
+        }
+
+        int lineCount = layout.getLineCount();
+        if (lineCount > 1)
+        {
+            int firstLineEndIndex = layout.getLineEnd(0);
+
+            StringBuilder builder = new StringBuilder(areaName);
+            builder.insert(firstLineEndIndex, "\n");
+
+            textView.setText(builder.toString());
+        }
+    }
+
+    /**
+     * 소지역 이름 뷰의 최대 넓이 셋팅하는 메소드
+     * @param layout
+     * @param nameTextView
+     * @param countTextView
+     */
+    private void setNameTextViewMaxWidth(View layout, TextView nameTextView, TextView countTextView) {
+        // 전체 레이아웃 넓이
+        int layoutWidth = (Util.getLCDWidth(mContext) / 2) - 1;
+        int widthMeasureSpec1 = View.MeasureSpec.makeMeasureSpec(layoutWidth, View.MeasureSpec.EXACTLY);
+        int heightMeasureSpec1 = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        layout.measure(widthMeasureSpec1, heightMeasureSpec1);
+
+        int maxWidth = layout.getMeasuredWidth() - layout.getPaddingLeft() - layout.getPaddingRight();
+
+        // 숫자 레이아웃 넓이
+        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        countTextView.measure(widthMeasureSpec, heightMeasureSpec);
+
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) countTextView.getLayoutParams();
+
+        int countWidth = countTextView.getMeasuredWidth() + params.leftMargin + params.rightMargin;
+
+        nameTextView.setMaxWidth(maxWidth - countWidth);
+    }
+
+    private void setRealChildView(View convertView, int groupPosition, Area[] areas, int index)
+    {
+        View layout = convertView.findViewById(index == 0 ? R.id.areaLayout1 : R.id.areaLayout2);
+        TextView nameTextView = (TextView) convertView.findViewById(index == 0 ? R.id.areaNameTextView1 : R.id.areaNameTextView2);
+        TextView countTextView = (TextView) convertView.findViewById(index == 0 ? R.id.areaCountTextView1 : R.id.areaCountTextView2);
+
+        layout.setOnClickListener(mOnItemClickListener);
+
+        Area area = areas[index];
+
+        layout.setTag(area);
+        layout.setTag(nameTextView.getId(), area != null ? groupPosition : null);
+        layout.setEnabled(area != null);
+
+        if (area != null)
+        {
+            layout.setTag(area);
+            layout.setTag(nameTextView.getId(), groupPosition);
+            layout.setEnabled(true);
+
+            int random = (int) (Math.random() * 1000);
+            countTextView.setText(Integer.toString(random));
+
+            setNameTextViewMaxWidth(layout, nameTextView, countTextView);
+            setAreaNameText(nameTextView, area.name);
+        } else
+        {
+            layout.setTag(null);
+            layout.setTag(nameTextView.getId(), null);
+            layout.setEnabled(false);
+
+            countTextView.setText(null);
+            nameTextView.setMaxWidth(-1);
+            nameTextView.setText(null);
+        }
     }
 
     @Override
@@ -72,7 +172,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
     @Override
     public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
     {
-        Area[] area = getChild(groupPosition, childPosition);
+        Area[] areas = getChild(groupPosition, childPosition);
 
         if (convertView == null)
         {
@@ -89,31 +189,8 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
         convertView.setTag(parent.getId(), R.layout.list_row_area);
 
-        TextView areaTextView1 = (TextView) convertView.findViewById(R.id.areaTextView1);
-        TextView areaTextView2 = (TextView) convertView.findViewById(R.id.areaTextView2);
-
-        areaTextView1.setOnClickListener(mOnItemClickListener);
-        areaTextView2.setOnClickListener(mOnItemClickListener);
-
-        areaTextView1.setTag(area[0]);
-        areaTextView1.setTag(areaTextView1.getId(), groupPosition);
-        areaTextView1.setText(area[0].name);
-
-        if (area[1] != null)
-        {
-            areaTextView2.setTag(area[1]);
-            areaTextView2.setTag(areaTextView2.getId(), groupPosition);
-            areaTextView2.setEnabled(true);
-
-            areaTextView2.setText(area[1].name);
-        } else
-        {
-            areaTextView2.setTag(null);
-            areaTextView2.setTag(areaTextView2.getId(), null);
-            areaTextView2.setEnabled(false);
-
-            areaTextView2.setText(null);
-        }
+        setRealChildView(convertView, groupPosition, areas, 0);
+        setRealChildView(convertView, groupPosition, areas, 1);
 
         return convertView;
     }
@@ -174,7 +251,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
             }
         }
 
-        if (mIsTable == true)
+        if (mIsTablet == true)
         {
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
             layoutParams.height = Util.getLCDWidth(mContext) * 10 / 36;
@@ -183,16 +260,12 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         convertView.setTag(parent.getId(), R.layout.list_row_province);
         convertView.setTag(groupPosition);
 
-        com.facebook.drawee.view.SimpleDraweeView provinceImageView = (com.facebook.drawee.view.SimpleDraweeView) convertView.findViewById(R.id.provinceImageView);
         ImageView arrowImageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
-        TextView englishTextView = (TextView) convertView.findViewById(R.id.provinceEnglishTextView);
-
-        Uri uri = Util.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
-        provinceImageView.setImageURI(uri);
+        View expandBottomLineView = convertView.findViewById(R.id.expandBottomLine);
+        View collapseBottomLineView = convertView.findViewById(R.id.collapseBottomLine);
 
         textView.setText(getInsertSpaceName(province.name));
-        englishTextView.setText(getInsertSpaceName(province.englishName));
 
         boolean hasChildren = getRealChildrenCount(groupPosition) > 0;
 
@@ -205,16 +278,23 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
             arrowImageView.setVisibility(View.GONE);
         }
 
+        boolean isExpandGroup = false;
+
         if (hasChildren == true)
         {
-            if (getAreaItem(groupPosition).isExpandGroup == true)
+            isExpandGroup = getAreaItem(groupPosition).isExpandGroup;
+
+            if (isExpandGroup == true)
             {
-                arrowImageView.setImageResource(R.drawable.region_ic_sub_v_top);
+                arrowImageView.setImageResource(R.drawable.ic_region_ic_sub_v_top);
             } else
             {
-                arrowImageView.setImageResource(R.drawable.region_ic_sub_v);
+                arrowImageView.setImageResource(R.drawable.ic_region_ic_sub_v);
             }
         }
+
+        expandBottomLineView.setVisibility(hasChildren == true && isExpandGroup == true ? View.VISIBLE : View.GONE);
+        collapseBottomLineView.setVisibility(hasChildren == true && isExpandGroup == true ? View.GONE : View.VISIBLE);
 
         return convertView;
     }

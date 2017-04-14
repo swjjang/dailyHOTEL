@@ -317,7 +317,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                     {
                         releaseUiComponent();
                         imageView.setAnimation(null);
-                        imageView.setImageResource(R.drawable.region_ic_sub_v_top);
+                        imageView.setImageResource(R.drawable.ic_region_ic_sub_v_top);
 
                         regionViewItem.isExpandGroup = true;
                     }
@@ -381,7 +381,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                         releaseUiComponent();
 
                         imageView.setAnimation(null);
-                        imageView.setImageResource(R.drawable.region_ic_sub_v);
+                        imageView.setImageResource(R.drawable.ic_region_ic_sub_v);
 
                         regionViewItem.isExpandGroup = false;
                     }
