@@ -88,25 +88,31 @@ public class DailyRemoteConfig
             @Override
             public void onFailure(@NonNull Exception e)
             {
-                if (Constants.DEBUG == false)
+                if (e instanceof FirebaseRemoteConfigFetchThrottledException == true)
                 {
-                    if (e instanceof FirebaseRemoteConfigFetchThrottledException == true)
+                    try
                     {
-                        try
-                        {
-                            setConfig(listener);
-                            return;
-                        }catch (Exception e1)
+                        setConfig(listener);
+                        return;
+                    } catch (Exception e1)
+                    {
+                        if (Constants.DEBUG == false)
                         {
                             Crashlytics.logException(e1);
+                        } else
+                        {
+                            ExLog.e(e1.toString());
                         }
-                    } else
-                    {
-                        Crashlytics.logException(e);
                     }
                 } else
                 {
-                    ExLog.e(e.toString());
+                    if (Constants.DEBUG == false)
+                    {
+                        Crashlytics.logException(e);
+                    } else
+                    {
+                        ExLog.e(e.toString());
+                    }
                 }
 
                 // 버전이 업데이트 되는 경우 텍스트의 내용을 다시 넣는 것을 수행한다.

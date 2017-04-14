@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -98,6 +99,8 @@ public class HomeLayout extends BaseLayout
     ObjectAnimator mErrorPopupAnimator;
 
     LinearLayout mProviderInfoView;
+    private BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
+
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -1390,17 +1393,22 @@ public class HomeLayout extends BaseLayout
         }
     }
 
+    public void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener)
+    {
+        mOnScreenScrollChangeListener = listener;
+    }
+
     private DailyHomeScrollView.OnScrollChangedListener mScrollChangedListener = new DailyHomeScrollView.OnScrollChangedListener()
     {
         @Override
         public void onScrollChanged(ScrollView scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
         {
-            if (mEventImageHeight == 0)
+            if (mOnScreenScrollChangeListener != null)
             {
-                return;
+                mOnScreenScrollChangeListener.onScrollChange(scrollView, scrollX, scrollY, oldScrollX, oldScrollY);
             }
 
-            if (mScrollButtonLayout == null)
+            if (mEventImageHeight == 0 || mScrollButtonLayout == null)
             {
                 return;
             }

@@ -244,6 +244,10 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.kakao.talk")));
                 }
                 return true;
+            } else if (url.startsWith("mailto:") == true)
+            {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
             } else
             {
                 view.loadUrl(url);

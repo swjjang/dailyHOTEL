@@ -28,6 +28,7 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
@@ -65,7 +66,7 @@ import retrofit2.Response;
  * Created by android_sam on 2017. 1. 11..
  */
 
-public class HomeFragment extends BaseFragment
+public class HomeFragment extends BaseMenuNavigationFragment
 {
     private static final int MAX_REQUEST_SIZE = 10;
 
@@ -95,6 +96,8 @@ public class HomeFragment extends BaseFragment
 
         mIsLogin = DailyHotel.isLogin();
         mHomeLayout = new HomeLayout(mBaseActivity, mOnEventListener);
+        mHomeLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
+
         mNetworkController = new HomeNetworkController(mBaseActivity, mNetworkTag, mNetworkControllerListener);
         return mHomeLayout.onCreateView(R.layout.fragment_home_main, container);
     }
@@ -840,6 +843,26 @@ public class HomeFragment extends BaseFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.GOURMET_LIST_CLICK,//
                 AnalyticsManager.Label.HOME, null);
+        }
+    }
+
+    @Override
+    public void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener)
+    {
+        mOnScreenScrollChangeListener = listener;
+
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.setOnScrollChangedListener(listener);
+        }
+    }
+
+    @Override
+    public void scrollTop()
+    {
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.setScrollTop();
         }
     }
 

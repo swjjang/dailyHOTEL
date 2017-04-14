@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.bonus.BonusActivity;
 import com.twoheart.dailyhotel.screen.mydaily.bonus.InviteFriendsActivity;
@@ -42,7 +42,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MyDailyFragment extends BaseFragment implements Constants
+public class MyDailyFragment extends BaseMenuNavigationFragment implements Constants
 {
     MyDailyLayout mMyDailyLayout;
     MyDailyNetworkController mNetworkController;
@@ -55,6 +55,7 @@ public class MyDailyFragment extends BaseFragment implements Constants
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         mMyDailyLayout = new MyDailyLayout(getActivity(), mOnEventListener);
+        mMyDailyLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
         mNetworkController = new MyDailyNetworkController(getActivity(), mNetworkTag, mNetworkControllerListener);
 
         return mMyDailyLayout.onCreateView(R.layout.fragment_mydaily);
@@ -619,6 +620,28 @@ public class MyDailyFragment extends BaseFragment implements Constants
 
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mNewCouponBroadcastReceiver);
         mNewCouponBroadcastReceiver = null;
+    }
+
+    @Override
+    public void setOnScrollChangedListener(OnScreenScrollChangeListener listener)
+    {
+        mOnScreenScrollChangeListener = listener;
+
+        if (mMyDailyLayout != null)
+        {
+            mMyDailyLayout.setOnScrollChangedListener(listener);
+        }
+    }
+
+    @Override
+    public void scrollTop()
+    {
+        if (mMyDailyLayout == null)
+        {
+            return;
+        }
+
+        mMyDailyLayout.scrollTop();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

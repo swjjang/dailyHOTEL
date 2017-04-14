@@ -7,7 +7,7 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <ScrollView
+    <com.twoheart.dailyhotel.widget.DailyScrollView
         android:id="@+id/myDailyScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -417,7 +417,7 @@
             <RelativeLayout
                 android:id="@+id/pushBenefitLayout"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white">
 
                 <View
@@ -460,6 +460,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_toLeftOf="@id/pushTextView"
                     android:gravity="center_vertical"
+                    android:paddingBottom="9dp"
                     android:text="@string/frag_push_alert_subtext"
                     android:textColor="@color/information_push_subtext"
                     android:textSize="10dp"/>
@@ -493,6 +494,10 @@
                     android:textColor="@color/default_text_c929292"
                     android:textSize="10dp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="62dp"/>
         </LinearLayout>
-    </ScrollView>
+    </com.twoheart.dailyhotel.widget.DailyScrollView>
 </RelativeLayout>
