@@ -481,7 +481,7 @@ public class PlaceReviewLayout extends BaseLayout
                 }
             });
 
-            switch(mPlaceType)
+            switch (mPlaceType)
             {
                 case HOTEL:
                     headerViewHolder.trueReviewGuideTextView.setText(R.string.message_detail_review_stay_explain);
@@ -572,7 +572,7 @@ public class PlaceReviewLayout extends BaseLayout
 
             Paint paint = reviewViewHolder.reviewTextView.getPaint();
 
-            if(placeReview.isMore == true)
+            if (placeReview.isMore == true)
             {
                 reviewViewHolder.reviewTextView.setText((String) reviewViewHolder.reviewTextView.getTag());
                 reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
@@ -623,6 +623,14 @@ public class PlaceReviewLayout extends BaseLayout
                     reviewViewHolder.moreReadTextView.setVisibility(View.GONE);
                     reviewViewHolder.moreReadTextView.setOnClickListener(null);
                 }
+            }
+
+            if (position == getItemCount() - 1)
+            {
+                reviewViewHolder.underLineView.setVisibility(View.INVISIBLE);
+            } else
+            {
+                reviewViewHolder.underLineView.setVisibility(View.VISIBLE);
             }
         }
 
@@ -699,7 +707,7 @@ public class PlaceReviewLayout extends BaseLayout
                 termsView = itemView.findViewById(R.id.termsView);
                 progressBarLayout = (LinearLayout) itemView.findViewById(R.id.progressBarLayout);
                 reviewCountTextView = (TextView) itemView.findViewById(R.id.reviewCountTextView);
-                trueReviewGuideTextView = (TextView)itemView.findViewById(R.id.trueReviewGuideTextView);
+                trueReviewGuideTextView = (TextView) itemView.findViewById(R.id.trueReviewGuideTextView);
             }
         }
 
@@ -710,6 +718,8 @@ public class PlaceReviewLayout extends BaseLayout
             TextView reviewTextView;
             TextView moreReadTextView;
 
+            View underLineView;
+
             public ReviewViewHolder(View view)
             {
                 super(view);
@@ -718,6 +728,7 @@ public class PlaceReviewLayout extends BaseLayout
                 dateTextView = (TextView) view.findViewById(R.id.dateTextView);
                 reviewTextView = (TextView) view.findViewById(R.id.reviewTextView);
                 moreReadTextView = (TextView) view.findViewById(R.id.moreReadTextView);
+                underLineView = view.findViewById(R.id.underLineView);
             }
         }
 
