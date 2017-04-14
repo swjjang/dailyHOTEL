@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
@@ -68,7 +69,7 @@ import retrofit2.Response;
  *
  * @author jangjunho
  */
-public class BookingListFragment extends BaseFragment implements Constants, OnItemClickListener, OnClickListener
+public class BookingListFragment extends BaseMenuNavigationFragment implements Constants, OnItemClickListener, OnClickListener
 {
     private BookingListAdapter mAdapter;
     private RelativeLayout mEmptyLayout;
@@ -129,6 +130,7 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         mListView = (PinnedSectionListView) view.findViewById(R.id.listview_booking);
         mListView.setShadowVisible(false);
         mListView.setTag("BookingListFragment");
+        mListView.setOnScrollChangedListener(mOnScreenScrollChangeListener);
 
         mEmptyLayout = (RelativeLayout) view.findViewById(R.id.emptyLayout);
         mLoginView = view.findViewById(R.id.loginView);
@@ -571,6 +573,26 @@ public class BookingListFragment extends BaseFragment implements Constants, OnIt
         baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
 
         return true;
+    }
+
+    @Override
+    public void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener)
+    {
+        mOnScreenScrollChangeListener = listener;
+
+        if (mListView != null)
+        {
+            mListView.setOnScrollChangedListener(listener);
+        }
+    }
+
+    @Override
+    public void scrollTop()
+    {
+        if (mListView != null)
+        {
+            mListView.smoothScrollToPosition(0);
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

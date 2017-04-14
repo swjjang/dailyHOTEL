@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
@@ -53,7 +54,7 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class MainActivity extends BaseActivity implements Constants
+public class MainActivity extends BaseActivity implements Constants, BaseMenuNavigationFragment.OnScreenScrollChangeListener
 {
     public static final String BROADCAST_EVENT_UPDATE = " com.twoheart.dailyhotel.broadcastreceiver.EVENT_UPDATE";
 
@@ -68,6 +69,8 @@ public class MainActivity extends BaseActivity implements Constants
 
     boolean mIsInitialization;
     boolean mIsBenefitAlarm;
+    private int mDistance;
+
     Handler mDelayTimeHandler = new Handler()
     {
         @Override
@@ -225,8 +228,8 @@ public class MainActivity extends BaseActivity implements Constants
 
         loadSplash(mSplashLayout);
 
-        ViewGroup bottomMenuBarLayout = (ViewGroup) findViewById(R.id.bottomMenuBarLayout);
-        mMenuBarLayout = new MenuBarLayout(this, bottomMenuBarLayout, onMenuBarSelectedListener);
+        ViewGroup bottomNavigationLayout = (ViewGroup) findViewById(R.id.bottomNavigationLayout);
+        mMenuBarLayout = new MenuBarLayout(this, bottomNavigationLayout, onMenuBarSelectedListener);
 
         ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, contentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
@@ -821,6 +824,60 @@ public class MainActivity extends BaseActivity implements Constants
         mNetworkController.requestCommonDatetime();
     }
 
+    @Override
+    public void onScrollChange(ViewGroup scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+    {
+        if (mMenuBarLayout == null)
+        {
+            return;
+        }
+
+        final int MAX_MOVE_DISTANCE = Util.dpToPx(this, 20);
+        final int MIN_MOVE_DISTANCE = 2;
+
+        if (Math.abs(mDistance) > MAX_MOVE_DISTANCE)
+        {
+            if (mDistance > 0)
+            {
+                mMenuBarLayout.hideMenuBarAnimation();
+                mDistance = 0;
+            } else if (mDistance < 0)
+            {
+                mMenuBarLayout.showMenuBarAnimation(false);
+                mDistance = 0;
+            }
+        } else
+        {
+            mDistance += (scrollY - oldScrollY);
+
+            if (Math.abs(scrollY - oldScrollY) <= MIN_MOVE_DISTANCE)
+            {
+                mDistance = 0;
+            }
+        }
+
+        // 하단에 도챡했는지..
+        if (scrollView.getChildCount() > 0)
+        {
+            View view = scrollView.getChildAt(scrollView.getChildCount() - 1);
+            if (view != null && view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY()) == 0)
+            {
+                mMenuBarLayout.showMenuBarAnimation(true);
+                mDistance = 0;
+            }
+        }
+    }
+
+    public void showMenuBar()
+    {
+        if (mMenuBarLayout != null)
+        {
+            mMenuBarLayout.showMenuBar();
+        }
+
+        mDistance = 0;
+    }
+
     private MenuBarLayout.OnMenuBarSelectedListener onMenuBarSelectedListener = new MenuBarLayout.OnMenuBarSelectedListener()
     {
         @Override
@@ -903,6 +960,20 @@ public class MainActivity extends BaseActivity implements Constants
                         if (fragment instanceof HomeFragment && fragment.isResumed())
                         {
                             ((HomeFragment) fragment).forceRefreshing();
+                        }
+                    }
+                    break;
+
+                case 1:
+                case 2:
+                case 3:
+                    if (mMainFragmentManager != null)
+                    {
+                        Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                        if (fragment instanceof BaseMenuNavigationFragment && fragment.isResumed())
+                        {
+                            ((BaseMenuNavigationFragment) fragment).scrollTop();
                         }
                     }
                     break;

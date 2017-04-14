@@ -6,7 +6,7 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <ScrollView
+    <com.twoheart.dailyhotel.widget.DailyScrollView
         android:id="@+id/informationScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -300,6 +300,10 @@
                     android:textColor="@color/default_text_c323232"
                     android:textSize="12dp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="62dp"/>
         </LinearLayout>
-    </ScrollView>
+    </com.twoheart.dailyhotel.widget.DailyScrollView>
 </RelativeLayout>
