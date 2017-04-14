@@ -1,14 +1,18 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -23,6 +27,7 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
@@ -39,13 +44,16 @@ import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,6 +240,27 @@ public class HomeFragment extends BaseFragment
                     }
                 }
 
+                break;
+            }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                searchMyLocation();
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    searchMyLocation();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    mDontReload = true;
+                    mHomeLayout.setScrollTop();
+
+                    forceRefreshing();
+                }
                 break;
             }
         }
@@ -447,6 +476,7 @@ public class HomeFragment extends BaseFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void startPlaceDetail(View view, HomePlace place, TodayDateTime todayDateTime)
     {
         if (place == null || todayDateTime == null)
@@ -655,6 +685,118 @@ public class HomeFragment extends BaseFragment
         }
     }
 
+    protected void searchMyLocation()
+    {
+        lockUI();
+
+        DailyLocationFactory.getInstance(mBaseActivity) //
+            .startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+            {
+                @Override
+                public void onRequirePermission()
+                {
+                    unLockUI();
+
+                    Intent intent = PermissionManagerActivity.newInstance( //
+                        mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                }
+
+                @Override
+                public void onFailed()
+                {
+                    unLockUI();
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider)
+                {
+                    unLockUI();
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                    mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                            }
+                        }, null, false);
+                }
+
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    unLockUI();
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                    if (location == null)
+                    {
+                        DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    } else
+                    {
+                        // Location
+                        onSearch(location);
+                    }
+                }
+            });
+    }
+
+    private void onSearch(Location location)
+    {
+        if (mTodayDateTime == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, location, AnalyticsManager.Screen.HOME);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+    }
+
     private void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
     {
         if (mBaseActivity == null)
@@ -799,6 +941,7 @@ public class HomeFragment extends BaseFragment
                 Integer.toString(event.index), null);
         }
 
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onRecommendationClick(View view, Recommendation recommendation)
         {
@@ -963,6 +1106,19 @@ public class HomeFragment extends BaseFragment
         @Override
         public void onCategoryItemClick(DailyCategoryType categoryType)
         {
+            if (DailyCategoryType.STAY_AROUND_SEARCH == categoryType)
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity //
+                    , PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                return;
+            }
+
             try
             {
                 StayBookingDay stayBookingDay = new StayBookingDay();
