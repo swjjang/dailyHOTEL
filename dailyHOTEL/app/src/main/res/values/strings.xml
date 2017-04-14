@@ -1185,14 +1185,14 @@
     <string name="label_home_category_pension">펜션</string>
     <string name="label_home_category_resort">리조트</string>
     <string name="label_home_category_guest_house">게스트하우스</string>
-    <string name="label_home_category_search_location">내주변</string>
+    <string name="label_home_category_around_search">내주변</string>
 
     <string name="code_home_category_hotel">hotel</string>
     <string name="code_home_category_boutique">boutique</string>
     <string name="code_home_category_pension">pension</string>
     <string name="code_home_category_resort">resort</string>
     <string name="code_home_category_guest_house">guest_house</string>
-    <!--<string name="code_home_category_search_location">0</string>-->
+    <!--<string name="code_home_category_around_search">0</string>-->
 
 
 
