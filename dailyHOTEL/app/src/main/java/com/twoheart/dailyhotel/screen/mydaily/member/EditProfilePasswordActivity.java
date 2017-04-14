@@ -101,6 +101,14 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
             @Override
             public void afterTextChanged(Editable s)
             {
+                if (mPasswordEditText.length() > 0 && mConfirmPasswordEditText.length() > 0)
+                {
+                    mConfirmView.setEnabled(true);
+                } else
+                {
+                    mConfirmView.setEnabled(false);
+                }
+                
                 if (s.length() > getResources().getInteger(R.integer.max_password))
                 {
                     s.delete(s.length() - 1, s.length());
