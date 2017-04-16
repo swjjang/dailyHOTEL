@@ -38,13 +38,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
+
 /**
  * ListView, which is capable to pin section views at its top while the rest is
  * still scrolled.
  */
 public class PinnedSectionListView extends ListView
 {
-
     //-- inner classes
 
     // fields used for handling touch events
@@ -56,6 +57,7 @@ public class PinnedSectionListView extends ListView
      * Delegating listener, can be null.
      */
     OnScrollListener mDelegateOnScrollListener;
+    BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
     /**
      * Shadow for being recycled, can be null.
      */
@@ -80,6 +82,7 @@ public class PinnedSectionListView extends ListView
      */
     private final OnScrollListener mOnScrollListener = new OnScrollListener()
     {
+        int mPrevScrollY;
 
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState)
@@ -93,10 +96,18 @@ public class PinnedSectionListView extends ListView
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount)
         {
-
             if (mDelegateOnScrollListener != null)
-            { // delegate
+            {
                 mDelegateOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+            }
+
+            if (mOnScreenScrollChangeListener != null && view.getChildCount() > 0)
+            {
+                View childView = view.getChildAt(0);
+                int scrollY = -childView.getTop() + view.getFirstVisiblePosition() * view.getHeight();
+
+                mOnScreenScrollChangeListener.onScrollChange(view, 0, scrollY, 0, mPrevScrollY);
+                mPrevScrollY = scrollY;
             }
 
             // get expected adapter or fail fast
@@ -132,6 +143,7 @@ public class PinnedSectionListView extends ListView
             }
         }
     };
+
     /**
      * Default change observer.
      */
@@ -419,6 +431,11 @@ public class PinnedSectionListView extends ListView
         {
             mDelegateOnScrollListener = listener;
         }
+    }
+
+    public void setOnScrollChangedListener(BaseMenuNavigationFragment.OnScreenScrollChangeListener listener)
+    {
+        mOnScreenScrollChangeListener = listener;
     }
 
     @Override

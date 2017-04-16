@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
-import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
 import com.twoheart.dailyhotel.screen.common.ErrorFragment;
 import com.twoheart.dailyhotel.screen.home.HomeFragment;
@@ -29,10 +29,10 @@ public class MainFragmentManager
     private int mIndexLastFragment;
     private int mIndexMainLastFragment; // 호텔, 고메
 
-    private BaseActivity mBaseActivity;
+    private MainActivity mMainActivity;
     private MenuBarLayout.MenuBarLayoutOnPageChangeListener mMenuBarLayoutOnPageChangeListener;
 
-    public MainFragmentManager(BaseActivity activity, ViewGroup viewGroup, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
+    public MainFragmentManager(MainActivity activity, ViewGroup viewGroup, MenuBarLayout.MenuBarLayoutOnPageChangeListener listener)
     {
         if (activity == null || viewGroup == null)
         {
@@ -40,7 +40,7 @@ public class MainFragmentManager
         }
 
         mIndexLastFragment = -1;
-        mBaseActivity = activity;
+        mMainActivity = activity;
         mFragmentManager = activity.getSupportFragmentManager();
         mContentLayout = viewGroup;
         mMenuBarLayoutOnPageChangeListener = listener;
@@ -110,14 +110,14 @@ public class MainFragmentManager
      */
     public void replaceFragment(BaseFragment fragment, String tag)
     {
-        if (mBaseActivity.isFinishing() == true)
+        if (mMainActivity.isFinishing() == true)
         {
             return;
         }
 
         if (Util.isOverAPI17() == true)
         {
-            if (mBaseActivity.isDestroyed() == true)
+            if (mMainActivity.isDestroyed() == true)
             {
                 return;
             }
@@ -140,7 +140,7 @@ public class MainFragmentManager
         } catch (Exception e)
         {
             // 에러가 나는 경우 앱을 재부팅 시킨다.
-            Util.restartApp(mBaseActivity);
+            Util.restartApp(mMainActivity);
         }
     }
 
@@ -184,7 +184,14 @@ public class MainFragmentManager
                     break;
             }
 
+            mMainActivity.showMenuBar();
+
             BaseFragment fragment = getFragment(mIndexLastFragment);
+
+            if (fragment instanceof BaseMenuNavigationFragment == true)
+            {
+                ((BaseMenuNavigationFragment) fragment).setOnScrollChangedListener(mMainActivity);
+            }
 
             if (bundle != null)
             {

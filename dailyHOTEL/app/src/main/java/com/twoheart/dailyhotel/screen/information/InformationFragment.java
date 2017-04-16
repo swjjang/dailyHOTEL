@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
+import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
@@ -25,7 +26,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-public class InformationFragment extends BaseFragment implements Constants
+public class InformationFragment extends BaseMenuNavigationFragment implements Constants
 {
     InformationLayout mInformationLayout;
     private BroadcastReceiver mNewEventBroadcastReceiver;
@@ -36,6 +37,7 @@ public class InformationFragment extends BaseFragment implements Constants
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         mInformationLayout = new InformationLayout(getActivity(), mOnEventListener);
+        mInformationLayout.setOnScrollChangedListener(mOnScreenScrollChangeListener);
 
         return mInformationLayout.onCreateView(R.layout.fragment_information);
     }
@@ -338,6 +340,28 @@ public class InformationFragment extends BaseFragment implements Constants
 
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mNewEventBroadcastReceiver);
         mNewEventBroadcastReceiver = null;
+    }
+
+    @Override
+    public void setOnScrollChangedListener(OnScreenScrollChangeListener listener)
+    {
+        mOnScreenScrollChangeListener = listener;
+
+        if (mInformationLayout != null)
+        {
+            mInformationLayout.setOnScrollChangedListener(listener);
+        }
+    }
+
+    @Override
+    public void scrollTop()
+    {
+        if (mInformationLayout == null)
+        {
+            return;
+        }
+
+        mInformationLayout.scrollTop();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

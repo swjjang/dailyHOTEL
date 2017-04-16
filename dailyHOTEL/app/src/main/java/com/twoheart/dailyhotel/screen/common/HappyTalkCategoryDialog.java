@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.common;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +9,8 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Pair;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -268,7 +269,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
             urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
         }
 
-        urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
+        //        urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
 
         if (Util.isTextEmpty(mPlaceName) == false)
         {
@@ -299,19 +300,32 @@ public class HappyTalkCategoryDialog extends BaseActivity
             urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
         }
 
-
-
-        try
+        WebView webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient()
         {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlStringBuilder.toString()));
-            startActivity(intent);
-        } catch (ActivityNotFoundException e)
-        {
-            // 연결 가능한 웹 브라우저가 없습니다.
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            {
+                if (url.startsWith("intent://"))
+                {
+                    String host = url.substring("intent://".length(), url.indexOf("#Intent"));
+                    int schemeIndex = url.indexOf("scheme=");
+                    String scheme = url.substring(schemeIndex + "scheme=".length(), url.indexOf(';', schemeIndex));
 
-        }
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(scheme + "://" + host));
+                    startActivity(intent);
+                    finish();
+                } else
+                {
+                    view.loadUrl(url);
+                }
 
-        finish();
+                return true;
+            }
+        });
+
+        webView.loadUrl(urlStringBuilder.toString());
     }
 
     /**
@@ -422,6 +436,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
             }
 
             mMainCategoryId = mainId;
+
+            lockUI();
             mNetworkController.requestUserProfile();
         }
 

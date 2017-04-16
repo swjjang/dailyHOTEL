@@ -27,6 +27,7 @@ public class MenuBarLayout implements View.OnClickListener
     private BaseActivity mBaseActivity;
     private ViewGroup mViewGroup;
     private boolean mEnabled;
+    private ValueAnimator mValueAnimator;
 
     public static class MenuBarLayoutOnPageChangeListener
     {
@@ -362,12 +363,27 @@ public class MenuBarLayout implements View.OnClickListener
         mViewGroup.setVisibility(visibility);
     }
 
-    public void setTranslationY(float translationY)
+    public boolean isVisibility()
     {
+        return mViewGroup.getVisibility() == View.VISIBLE;
+    }
+
+    private void setTranslationY(float translationY)
+    {
+        if (mViewGroup == null)
+        {
+            return;
+        }
+
         mViewGroup.setTranslationY(translationY);
     }
 
-    public int getHeight()
+    private float getTranslationY()
+    {
+        return mViewGroup.getTranslationY();
+    }
+
+    private int getHeight()
     {
         return mViewGroup.getHeight();
     }
@@ -428,5 +444,148 @@ public class MenuBarLayout implements View.OnClickListener
             default:
                 return null;
         }
+    }
+
+    public void showMenuBar()
+    {
+        setTranslationY(0);
+    }
+
+    public void showMenuBarAnimation(boolean force)
+    {
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            if (force == true)
+            {
+                mValueAnimator.cancel();
+                mValueAnimator = null;
+            } else
+            {
+                return;
+            }
+        }
+
+        if (force == false && isVisibility() == true)
+        {
+            return;
+        }
+
+        mValueAnimator = ValueAnimator.ofFloat(getTranslationY(), 0.0f);
+        mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mValueAnimator.setDuration(300);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                float value = (float) animation.getAnimatedValue();
+
+                setTranslationY(value);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    public void hideMenuBarAnimation()
+    {
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            return;
+        }
+
+        if (isVisibility() == false)
+        {
+            return;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, mViewGroup.getHeight());
+        mValueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mValueAnimator.setDuration(300);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                if (animation == null)
+                {
+                    return;
+                }
+
+                int value = (int) animation.getAnimatedValue();
+
+                setTranslationY(value);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            boolean isCanceled;
+
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                isCanceled = false;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mValueAnimator.removeAllUpdateListeners();
+                mValueAnimator.removeAllListeners();
+
+                if (isCanceled == false)
+                {
+                    setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                isCanceled = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
     }
 }
