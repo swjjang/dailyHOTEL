@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.DailyTextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +62,7 @@ public class Province implements Parcelable
             isOverseas = false;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(url) == false)
+        if (DailyTextUtils.isTextEmpty(url) == false)
         {
             imageUrl = url + jsonObject.getString("imagePath");
         } else

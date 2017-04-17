@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class CountryCodeListLayout implements OnItemClickListener
 
             int selectedIndex = -1;
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(selectedCountryCode) == false)
+            if (DailyTextUtils.isTextEmpty(selectedCountryCode) == false)
             {
                 String code = selectedCountryCode.substring(selectedCountryCode.indexOf('\n') + 1);
 

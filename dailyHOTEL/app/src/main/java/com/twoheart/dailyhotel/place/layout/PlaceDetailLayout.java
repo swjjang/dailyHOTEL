@@ -31,6 +31,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
@@ -287,7 +288,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void setDefaultImage(String url)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+        if (DailyTextUtils.isTextEmpty(url) == true)
         {
             setLineIndicatorVisible(false);
             return;
@@ -371,7 +372,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void setImageInformation(String description)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(description) == false)
+        if (DailyTextUtils.isTextEmpty(description) == false)
         {
             mDescriptionTextView.setVisibility(View.VISIBLE);
             mDescriptionTextView.setText(description);

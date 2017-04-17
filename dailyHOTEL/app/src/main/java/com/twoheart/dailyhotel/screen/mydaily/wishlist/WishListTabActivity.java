@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -153,7 +154,7 @@ public class WishListTabActivity extends BaseActivity
 
         String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeTypeName) == false)
+        if (DailyTextUtils.isTextEmpty(placeTypeName) == false)
         {
             try
             {

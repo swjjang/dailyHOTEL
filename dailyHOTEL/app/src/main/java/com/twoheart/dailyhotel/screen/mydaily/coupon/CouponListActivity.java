@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -59,7 +60,7 @@ public class CouponListActivity extends BaseActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, sortType.name());
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }

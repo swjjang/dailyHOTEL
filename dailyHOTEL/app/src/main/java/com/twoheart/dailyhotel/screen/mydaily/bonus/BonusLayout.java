@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
     public void setBonus(int bonus)
     {
-        mBonusTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, bonus, false));
+        mBonusTextView.setText(DailyTextUtils.getPriceFormat(mContext, bonus, false));
     }
 
     public void setBottomLayoutVisible(boolean visible)

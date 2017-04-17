@@ -11,6 +11,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.appboy.Appboy;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -110,7 +111,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         String email = mEmailEditText.getText().toString().trim();
         String message = mMessageEditText.getText().toString().trim();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+        if (DailyTextUtils.isTextEmpty(email) == true)
         {
             releaseUiComponent();
 
@@ -122,7 +123,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
 
             DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
             return;
-        } else if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+        } else if (DailyTextUtils.isTextEmpty(message) == true)
         {
             releaseUiComponent();
 

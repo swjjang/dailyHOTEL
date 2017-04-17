@@ -20,7 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -636,7 +636,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                         }
 
                         textView02.setVisibility(View.VISIBLE);
-                        textView02.setText(TextUtils.getPriceFormat(mContext, keyword.price, false));
+                        textView02.setText(DailyTextUtils.getPriceFormat(mContext, keyword.price, false));
                     } else
                     {
                         textView01.setText(keyword.name);
@@ -670,7 +670,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     {
         String text = keyword.trim();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             return;
         }

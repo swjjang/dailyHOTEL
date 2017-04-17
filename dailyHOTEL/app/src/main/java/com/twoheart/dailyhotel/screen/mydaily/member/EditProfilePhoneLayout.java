@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -212,7 +213,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                 {
                     String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
+                    if (DailyTextUtils.isTextEmpty(verificationNumber) == true)
                     {
                         DailyToast.showToast(mContext, R.string.message_wrong_certificationnumber, Toast.LENGTH_SHORT);
                         return true;
@@ -255,7 +256,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     public void setCountryCode(String countryCode)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
+        if (DailyTextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }
@@ -309,7 +310,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                     {
                         String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
+                        if (DailyTextUtils.isTextEmpty(verificationNumber) == true)
                         {
                             DailyToast.showToast(mContext, R.string.message_wrong_certificationnumber, Toast.LENGTH_SHORT);
                             return;
@@ -436,7 +437,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     public void setPhoneNumber(String phoneNumber)
     {
-        if (mPhoneEditText == null || com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
+        if (mPhoneEditText == null || DailyTextUtils.isTextEmpty(phoneNumber) == true)
         {
             return;
         }
@@ -464,7 +465,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
+        if (DailyTextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }
@@ -479,7 +480,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
+        if (DailyTextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }

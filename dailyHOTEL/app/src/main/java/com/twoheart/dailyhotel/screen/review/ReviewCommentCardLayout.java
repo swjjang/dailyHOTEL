@@ -14,10 +14,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 import com.daily.base.widget.DailyTextView;
 
 public class ReviewCommentCardLayout extends ReviewCardLayout implements View.OnClickListener
@@ -83,7 +83,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
 
         DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             setSelected(false);
             titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -113,7 +113,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
     @Override
     public boolean isChecked()
     {
-        return com.daily.base.util.TextUtils.isTextEmpty(mCommentTextView.getText().toString()) == false;
+        return DailyTextUtils.isTextEmpty(mCommentTextView.getText().toString()) == false;
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -151,7 +152,7 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
             }
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(name, phone, email) == true)
+        if (DailyTextUtils.isTextEmpty(name, phone, email) == true)
         {
             restartExpiredSession();
             return;

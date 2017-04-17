@@ -23,6 +23,7 @@ import com.adjust.sdk.OnSessionTrackingFailedListener;
 import com.adjust.sdk.OnSessionTrackingSucceededListener;
 import com.appboy.Appboy;
 import com.appboy.models.outgoing.AttributionData;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -365,7 +366,7 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(category, action) == true)
+        if (DailyTextUtils.isTextEmpty(category, action) == true)
         {
             return;
         }
@@ -376,7 +377,7 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             if (AnalyticsManager.Action.LOGIN_COMPLETE.equalsIgnoreCase(action) == true)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(label) == true)
+                if (DailyTextUtils.isTextEmpty(label) == true)
                 {
                     return;
                 }
@@ -514,7 +515,7 @@ public class AdjustManager extends BaseAnalyticsManager
     @Override
     void setUserInformation(String index, String userType)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(index) == true)
+        if (DailyTextUtils.isTextEmpty(index) == true)
         {
             Adjust.removeSessionPartnerParameter(Key.USER_INDEX);
             Adjust.removeSessionCallbackParameter(Key.USER_INDEX);
@@ -525,7 +526,7 @@ public class AdjustManager extends BaseAnalyticsManager
         }
 
         String memberType = getMemberType(userType);
-        if (com.daily.base.util.TextUtils.isTextEmpty(memberType) == true)
+        if (DailyTextUtils.isTextEmpty(memberType) == true)
         {
             Adjust.addSessionPartnerParameter(Key.USER_TYPE, UserType.GUEST);
             Adjust.removeSessionPartnerParameter(Key.MEMBER_TYPE);
@@ -695,7 +696,7 @@ public class AdjustManager extends BaseAnalyticsManager
         Adjust.addSessionCallbackParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
         Adjust.addSessionPartnerParameter(Key.PUSH_NOTIFICATION, onOff == true ? OnOffType.ON : OnOffType.OFF);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(pushSettingType) == true)
+        if (DailyTextUtils.isTextEmpty(pushSettingType) == true)
         {
             return;
         }
@@ -718,7 +719,7 @@ public class AdjustManager extends BaseAnalyticsManager
 
     private String getMemberType(String userType)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(userType) == true)
+        if (DailyTextUtils.isTextEmpty(userType) == true)
         {
             return null;
         }
@@ -773,7 +774,7 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(Key.PLACE_NAME, placeName);
 
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
-        if (com.daily.base.util.TextUtils.isTextEmpty(isShowOriginalPrice) == false)
+        if (DailyTextUtils.isTextEmpty(isShowOriginalPrice) == false)
         {
             isShowOriginalPrice = isShowOriginalPrice.toLowerCase();
         }
@@ -821,7 +822,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(lengthOfStay) == false)
+            if (DailyTextUtils.isTextEmpty(lengthOfStay) == false)
             {
                 event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
             }
@@ -961,7 +962,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(lengthOfStay) == false)
+            if (DailyTextUtils.isTextEmpty(lengthOfStay) == false)
             {
                 event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
             }
@@ -1001,7 +1002,7 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(Key.RATING, rating);
 
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
-        if (com.daily.base.util.TextUtils.isTextEmpty(isShowOriginalPrice) == false)
+        if (DailyTextUtils.isTextEmpty(isShowOriginalPrice) == false)
         {
             isShowOriginalPrice = isShowOriginalPrice.toLowerCase();
         }
@@ -1047,7 +1048,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(lengthOfStay) == false)
+            if (DailyTextUtils.isTextEmpty(lengthOfStay) == false)
             {
                 event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
             }
@@ -1130,7 +1131,7 @@ public class AdjustManager extends BaseAnalyticsManager
         event.addPartnerParameter(Key.RATING, rating);
 
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE); // discounted_price
-        if (com.daily.base.util.TextUtils.isTextEmpty(isShowOriginalPrice) == false)
+        if (DailyTextUtils.isTextEmpty(isShowOriginalPrice) == false)
         {
             isShowOriginalPrice = isShowOriginalPrice.toLowerCase();
         }
@@ -1176,7 +1177,7 @@ public class AdjustManager extends BaseAnalyticsManager
                 lengthOfStay = params.get(AnalyticsManager.KeyType.LENGTH_OF_STAY); // length_of_stay
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(lengthOfStay) == false)
+            if (DailyTextUtils.isTextEmpty(lengthOfStay) == false)
             {
                 event.addPartnerParameter(AnalyticsManager.KeyType.LENGTH_OF_STAY, lengthOfStay);
             }
@@ -1187,7 +1188,7 @@ public class AdjustManager extends BaseAnalyticsManager
 
     private String getYnType(String ynString)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(ynString) == true)
+        if (DailyTextUtils.isTextEmpty(ynString) == true)
         {
             ynString = "n";
         } else
@@ -1223,7 +1224,7 @@ public class AdjustManager extends BaseAnalyticsManager
         @Override
         public void addCallbackParameter(String key, String value)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
+            if (DailyTextUtils.isTextEmpty(value) == true)
             {
                 value = "";
             }
@@ -1234,7 +1235,7 @@ public class AdjustManager extends BaseAnalyticsManager
         @Override
         public void addPartnerParameter(String key, String value)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
+            if (DailyTextUtils.isTextEmpty(value) == true)
             {
                 value = "";
             }

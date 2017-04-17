@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
@@ -43,7 +44,7 @@ public class CouponTermActivity extends WebViewActivity
     public static Intent newInstance(Context context, String couponIdx)
     {
         Intent intent = new Intent(context, CouponTermActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_COUPON_IDX, com.daily.base.util.TextUtils.isTextEmpty(couponIdx) ? "" : couponIdx);
+        intent.putExtra(INTENT_EXTRA_DATA_COUPON_IDX, DailyTextUtils.isTextEmpty(couponIdx) ? "" : couponIdx);
         return intent;
     }
 
@@ -67,7 +68,7 @@ public class CouponTermActivity extends WebViewActivity
             mCouponIdx = intent.getStringExtra(INTENT_EXTRA_DATA_COUPON_IDX);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mCouponIdx) == true)
+        if (DailyTextUtils.isTextEmpty(mCouponIdx) == true)
         {
             setWebView(Crypto.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
@@ -90,7 +91,7 @@ public class CouponTermActivity extends WebViewActivity
     {
         int titleString;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mCouponIdx) == false)
+        if (DailyTextUtils.isTextEmpty(mCouponIdx) == false)
         {
             titleString = R.string.coupon_notice_text;
         } else
@@ -156,7 +157,7 @@ public class CouponTermActivity extends WebViewActivity
     {
         super.onStart();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mCouponIdx) == true)
+        if (DailyTextUtils.isTextEmpty(mCouponIdx) == true)
         {
             AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_GENERAL_TERMS_OF_USE, null);
         } else

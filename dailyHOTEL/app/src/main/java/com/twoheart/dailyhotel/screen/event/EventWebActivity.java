@@ -14,6 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -84,7 +85,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     public static Intent newInstance(Context context, SourceType sourceType, String url, String eventName)
     {
-        if (sourceType == null || com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+        if (sourceType == null || DailyTextUtils.isTextEmpty(url) == true)
         {
             return null;
         }
@@ -93,7 +94,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, url);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, sourceType.name());
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(eventName) == true)
+        if (DailyTextUtils.isTextEmpty(eventName) == true)
         {
             eventName = "";
         }
@@ -122,7 +123,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+        if (DailyTextUtils.isTextEmpty(url) == true)
         {
             finish();
             return;
@@ -259,7 +260,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
     @Override
     protected void onStart()
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(mEventName) == true)
+        if (DailyTextUtils.isTextEmpty(mEventName) == true)
         {
             mEventName = AnalyticsManager.ValueType.EMPTY;
         }
@@ -378,7 +379,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -440,7 +441,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -518,7 +519,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -549,7 +550,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                     default:
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
+                        if (DailyTextUtils.isTextEmpty(word) == false)
                         {
                             Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, new Keyword(0, word), SearchType.SEARCHES);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -599,7 +600,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -627,7 +628,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     }
 
                     default:
-                        if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
+                        if (DailyTextUtils.isTextEmpty(word) == false)
                         {
                             Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -670,7 +671,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 String placeType = externalDeepLink.getPlaceType();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(placeType) == true)
+                if (DailyTextUtils.isTextEmpty(placeType) == true)
                 {
                     sortType = CouponListActivity.SortType.ALL;
                 } else
@@ -785,7 +786,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     void downloadCoupon(final String couponCode, final String deepLink)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(couponCode, deepLink) == true || lockUiComponentAndIsLockUiComponent() == true)
+        if (DailyTextUtils.isTextEmpty(couponCode, deepLink) == true || lockUiComponentAndIsLockUiComponent() == true)
         {
             return;
         }
@@ -805,7 +806,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                         if (msgCode == 100)
                         {
-                            if (com.daily.base.util.TextUtils.isTextEmpty(mConfirmText) == true)
+                            if (DailyTextUtils.isTextEmpty(mConfirmText) == true)
                             {
                                 mConfirmText = getString(R.string.label_eventweb_now_used);
                             }
@@ -1043,7 +1044,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
         @JavascriptInterface
         public void downloadCoupon(String couponCode, String deepLink, String confirmText)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(couponCode, deepLink) == true)
+            if (DailyTextUtils.isTextEmpty(couponCode, deepLink) == true)
             {
                 return;
             }

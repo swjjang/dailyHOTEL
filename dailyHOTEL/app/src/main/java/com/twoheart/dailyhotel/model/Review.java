@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
@@ -203,7 +204,7 @@ public class Review implements Parcelable
         {
             if (requiredCommentReview == true)
             {
-                jsonObject.put("comment", com.daily.base.util.TextUtils.isTextEmpty(comment) == true ? "" : comment);
+                jsonObject.put("comment", DailyTextUtils.isTextEmpty(comment) == true ? "" : comment);
             }
 
             jsonObject.put("itemIdx", reviewItem.itemIdx);

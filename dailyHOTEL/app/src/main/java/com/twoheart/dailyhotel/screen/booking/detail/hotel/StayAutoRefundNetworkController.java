@@ -2,11 +2,11 @@ package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -133,7 +133,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
                                 readyForRefund = dataJSONObject.getBoolean("readyForRefund");
                             }
 
-                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+                            if (DailyTextUtils.isTextEmpty(message) == true)
                             {
                                 message = responseJSONObject.getString("msg");
                             }

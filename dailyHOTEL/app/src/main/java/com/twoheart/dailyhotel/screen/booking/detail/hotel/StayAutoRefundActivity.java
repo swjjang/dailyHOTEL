@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
@@ -614,7 +615,7 @@ public class StayAutoRefundActivity extends BaseActivity
         // 기타로 오는 경우
         if (position == 7)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+            if (DailyTextUtils.isTextEmpty(message) == true)
             {
                 mCancelReasonMessage = reason;
             } else
@@ -651,7 +652,7 @@ public class StayAutoRefundActivity extends BaseActivity
             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
             String accountName = mStayAutoRefundLayout.getAccountName();
 
-            if (mSelectedBank == null || com.daily.base.util.TextUtils.isTextEmpty(accountNumber, accountName) == true)
+            if (mSelectedBank == null || DailyTextUtils.isTextEmpty(accountNumber, accountName) == true)
             {
                 return false;
             }
@@ -670,7 +671,7 @@ public class StayAutoRefundActivity extends BaseActivity
             // 기타인 경우
             if (mSelectedCancelReason == 7)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(mCancelReasonMessage) == false)
+                if (DailyTextUtils.isTextEmpty(mCancelReasonMessage) == false)
                 {
                     if (mCancelReasonMessage.indexOf('-') >= 0)
                     {
@@ -735,7 +736,7 @@ public class StayAutoRefundActivity extends BaseActivity
 
                         String cancelMessage = null;
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(mCancelReasonMessage) == false)
+                        if (DailyTextUtils.isTextEmpty(mCancelReasonMessage) == false)
                         {
                             if (mCancelReasonMessage.indexOf('-') >= 0)
                             {

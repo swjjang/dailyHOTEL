@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 
 /**
@@ -90,7 +91,7 @@ public class DailyUserPreference
     {
         if (editor != null)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
+            if (DailyTextUtils.isTextEmpty(value) == true)
             {
                 editor.remove(key);
             } else

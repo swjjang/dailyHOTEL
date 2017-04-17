@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -121,7 +122,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
         mEditTextView.setText(text);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == false)
+        if (DailyTextUtils.isTextEmpty(text) == false)
         {
             mEditTextView.setSelection(text.length());
         }
@@ -129,7 +130,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     void updateCompleteLayout(String text)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }
@@ -151,7 +152,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     void updateTextCountLayout(String text)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }

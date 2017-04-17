@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.util.Pair;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.daily.base.util.ExLog;
@@ -36,7 +37,7 @@ public class RecentPlaces
 
     private void parse(String preferenceText)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(preferenceText) == true)
+        if (DailyTextUtils.isTextEmpty(preferenceText) == true)
         {
             return;
         }
@@ -50,7 +51,7 @@ public class RecentPlaces
 
         for (String recentPlace : splitArray)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(recentPlace) == true)
+            if (DailyTextUtils.isTextEmpty(recentPlace) == true)
             {
                 continue;
             }
@@ -102,7 +103,7 @@ public class RecentPlaces
         }
 
         String serviceType = getServiceType(placeType);
-        if (com.daily.base.util.TextUtils.isTextEmpty(serviceType) == true)
+        if (DailyTextUtils.isTextEmpty(serviceType) == true)
         {
             return;
         }
@@ -296,7 +297,7 @@ public class RecentPlaces
         }
 
         String serviceType = getServiceType(placeType);
-        if (com.daily.base.util.TextUtils.isTextEmpty(serviceType) == true)
+        if (DailyTextUtils.isTextEmpty(serviceType) == true)
         {
             return new ArrayList<>();
         }

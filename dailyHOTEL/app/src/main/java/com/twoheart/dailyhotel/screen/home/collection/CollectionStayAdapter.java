@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
@@ -141,8 +142,8 @@ public class CollectionStayAdapter extends PlaceListAdapter
     {
         final RecommendationStay recommendationStay = placeViewItem.getItem();
 
-        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationStay.price, false);
-        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationStay.discount, false);
+        String strPrice = DailyTextUtils.getPriceFormat(mContext, recommendationStay.price, false);
+        String strDiscount = DailyTextUtils.getPriceFormat(mContext, recommendationStay.discount, false);
 
         String address = recommendationStay.addrSummary;
 
@@ -220,7 +221,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(recommendationStay.benefit) == false)
+        if (DailyTextUtils.isTextEmpty(recommendationStay.benefit) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(recommendationStay.benefit);

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
@@ -98,7 +99,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         Intent intent = new Intent(context, LoginActivity.class);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(callByScreen) == false)
+        if (DailyTextUtils.isTextEmpty(callByScreen) == false)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         }
@@ -163,7 +164,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         String signupMessage = DailyPreference.getInstance(this).getRemoteConfigTextLoginText01();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(signupMessage) == false)
+        if (DailyTextUtils.isTextEmpty(signupMessage) == false)
         {
             TextView signUpTextView = (TextView) findViewById(R.id.signUpTextView);
             signUpTextView.setText(signupMessage);
@@ -323,12 +324,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         HashMap<String, String> params = new HashMap<>();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
+        if (DailyTextUtils.isTextEmpty(email) == false)
         {
             params.put("email", email);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(id) == false)
+        if (DailyTextUtils.isTextEmpty(id) == false)
         {
             params.put("social_id", id);
         }
@@ -338,12 +339,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.putAll(params);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(name) == false)
+        if (DailyTextUtils.isTextEmpty(name) == false)
         {
             mStoreParams.put("name", name);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gender) == false)
+        if (DailyTextUtils.isTextEmpty(gender) == false)
         {
             mStoreParams.put("gender", gender);
         }
@@ -365,7 +366,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         HashMap<String, String> params = new HashMap<>();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(index) == false)
+        if (DailyTextUtils.isTextEmpty(index) == false)
         {
             params.put("social_id", index);
         }
@@ -430,7 +431,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+        if (DailyTextUtils.isTextEmpty(email) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
             return;
@@ -442,13 +443,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+        if (DailyTextUtils.isTextEmpty(email) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(password) == true)
+        if (DailyTextUtils.isTextEmpty(password) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_passwd, Toast.LENGTH_SHORT);
             return;
@@ -843,7 +844,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     String msg = responseJSONObject.getString("msg");
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(msg) == true)
+                    if (DailyTextUtils.isTextEmpty(msg) == true)
                     {
                         msg = getString(R.string.toast_msg_failed_to_signup);
                     }
@@ -906,7 +907,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     // 로그인이 실패한 경우
                     String msg = responseJSONObject.getString("msg");
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(msg) == true)
+                    if (DailyTextUtils.isTextEmpty(msg) == true)
                     {
                         msg = getString(R.string.toast_msg_failed_to_login);
                     }

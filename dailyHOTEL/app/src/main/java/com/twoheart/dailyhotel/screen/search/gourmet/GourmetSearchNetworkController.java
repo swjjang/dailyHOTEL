@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.search.gourmet;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -28,7 +29,7 @@ public class GourmetSearchNetworkController extends PlaceSearchNetworkController
 
     public void requestAutoComplete(GourmetBookingDay gourmetBookingDay, String keyword)
     {
-        if (gourmetBookingDay == null || com.daily.base.util.TextUtils.isTextEmpty(keyword) == true)
+        if (gourmetBookingDay == null || DailyTextUtils.isTextEmpty(keyword) == true)
         {
             return;
         }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
@@ -307,7 +308,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                         text = null;
                     }
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+                    if (DailyTextUtils.isTextEmpty(text) == true)
                     {
                         waitAccountTextView.setVisibility(View.GONE);
                     } else

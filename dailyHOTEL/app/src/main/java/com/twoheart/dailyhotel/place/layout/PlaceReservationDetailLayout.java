@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -392,7 +393,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
 
     public void updateReviewButtonLayout(String reviewStatus)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(reviewStatus) == true)
+        if (DailyTextUtils.isTextEmpty(reviewStatus) == true)
         {
             reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
         }

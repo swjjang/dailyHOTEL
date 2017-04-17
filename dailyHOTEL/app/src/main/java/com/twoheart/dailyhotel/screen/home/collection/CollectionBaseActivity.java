@@ -11,6 +11,7 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -97,7 +98,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         setContentView(mCollectionBaseLayout.onCreateView(R.layout.activity_collection_search));
 
-        boolean isDeepLink = com.daily.base.util.TextUtils.isTextEmpty(title, subTitle, imageUrl);
+        boolean isDeepLink = DailyTextUtils.isTextEmpty(title, subTitle, imageUrl);
 
         mCollectionBaseLayout.setUsedMultiTransition(mIsUsedMultiTransition);
 

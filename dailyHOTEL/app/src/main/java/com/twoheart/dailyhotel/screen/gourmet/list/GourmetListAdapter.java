@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
@@ -113,8 +114,8 @@ public class GourmetListAdapter extends PlaceListAdapter
     {
         final Gourmet gourmet = placeViewItem.getItem();
 
-        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.price, false);
-        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.discountPrice, false);
+        String strPrice = DailyTextUtils.getPriceFormat(mContext, gourmet.price, false);
+        String strDiscount = DailyTextUtils.getPriceFormat(mContext, gourmet.discountPrice, false);
 
         String address = gourmet.addressSummary;
 
@@ -175,7 +176,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         }
 
         String displayCategory;
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.subCategory) == false)
+        if (DailyTextUtils.isTextEmpty(gourmet.subCategory) == false)
         {
             displayCategory = gourmet.subCategory;
         } else
@@ -184,7 +185,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         }
 
         // grade
-        if (com.daily.base.util.TextUtils.isTextEmpty(displayCategory) == true)
+        if (DailyTextUtils.isTextEmpty(displayCategory) == true)
         {
             holder.gradeView.setVisibility(View.GONE);
         } else
@@ -204,7 +205,7 @@ public class GourmetListAdapter extends PlaceListAdapter
             holder.soldOutView.setVisibility(View.GONE);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.dBenefitText) == false)
+        if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(gourmet.dBenefitText);

@@ -3,9 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Stay.Grade;
 import com.twoheart.dailyhotel.network.model.StayProduct;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -135,7 +135,7 @@ public class StayBookingDetail extends PlaceBookingDetail
         {
             String guestTransportation = jsonObject.getString("guestTransportation");
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(guestTransportation) == true)
+            if (DailyTextUtils.isTextEmpty(guestTransportation) == true)
             {
                 visitType = VISIT_TYPE_NONE;
             } else

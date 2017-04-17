@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class CreditCard implements Parcelable
 {
@@ -66,7 +66,7 @@ public class CreditCard implements Parcelable
 
     public static String getCardCDName(Context context, String cardcd)
     {
-        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(cardcd) == true)
+        if (context == null || DailyTextUtils.isTextEmpty(cardcd) == true)
         {
             return null;
         }

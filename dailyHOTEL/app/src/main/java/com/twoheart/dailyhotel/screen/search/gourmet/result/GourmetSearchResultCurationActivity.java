@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -15,7 +16,6 @@ import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -173,7 +173,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         @Override
         public void onGourmetCount(String url, int totalCount, int maxCount)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && totalCount == -1)
+            if (DailyTextUtils.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));

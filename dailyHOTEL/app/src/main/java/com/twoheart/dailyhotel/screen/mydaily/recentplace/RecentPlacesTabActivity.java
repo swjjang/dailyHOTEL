@@ -10,6 +10,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
@@ -161,7 +162,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeTypeName) == false)
+        if (DailyTextUtils.isTextEmpty(placeTypeName) == false)
         {
             try
             {

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
@@ -302,7 +303,7 @@ public class DailyPreference
     {
         if (editor != null)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
+            if (DailyTextUtils.isTextEmpty(value) == true)
             {
                 editor.remove(key);
             } else
@@ -886,7 +887,7 @@ public class DailyPreference
             mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_PHONENUMBER, phoneNumber);
             mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_FAX, fax);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
+            if (DailyTextUtils.isTextEmpty(email) == false)
             {
                 mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_PRIVACY_EMAIL, email);
             }
@@ -1582,7 +1583,7 @@ public class DailyPreference
     {
         String value = getValue(mPreferences, KEY_PAYMENT_INFORMATION, null);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
+        if (DailyTextUtils.isTextEmpty(value) == true)
         {
             return null;
         } else

@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
@@ -281,7 +282,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
         mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
 
-        mDiscountPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, 0, false));
+        mDiscountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, 0, false));
 
         initDiscountInformation(view);
     }
@@ -366,7 +367,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true || visible == false)
+        if (DailyTextUtils.isTextEmpty(text) == true || visible == false)
         {
             mGuidePaymentMemoView.setVisibility(View.GONE);
             return;
@@ -698,7 +699,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mAmountNightsTextView.setVisibility(View.GONE);
         }
 
-        mPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, originalPrice, false));
+        mPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, originalPrice, false));
 
         switch (discountType)
         {
@@ -711,7 +712,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                     setBonusEnabled(false);
                 } else
                 {
-                    String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, discountPrice, false);
+                    String priceFormat = DailyTextUtils.getPriceFormat(mContext, discountPrice, false);
 
                     mUsedBonusTextView.setText(priceFormat);
                     mDiscountPriceTextView.setText("- " + priceFormat);
@@ -726,7 +727,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                     mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
                 } else
                 {
-                    String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, discountPrice, false);
+                    String priceFormat = DailyTextUtils.getPriceFormat(mContext, discountPrice, false);
 
                     mUsedCouponTextView.setText(priceFormat);
                     mDiscountPriceTextView.setText("- " + priceFormat);
@@ -736,12 +737,12 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             default:
             {
-                mDiscountPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, 0, false));
+                mDiscountPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, 0, false));
                 break;
             }
         }
 
-        mFinalPaymentTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, payPrice, false));
+        mFinalPaymentTextView.setText(DailyTextUtils.getPriceFormat(mContext, payPrice, false));
 
         // 다음 버전에서 진행.
         //        if (payPrice == 0)
@@ -889,7 +890,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
      */
     public void setBonusTextView(int bonus)
     {
-        String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, bonus, false);
+        String priceFormat = DailyTextUtils.getPriceFormat(mContext, bonus, false);
         String text = mContext.getString(R.string.label_booking_own_bonus, priceFormat);
 
         if (bonus > 0)

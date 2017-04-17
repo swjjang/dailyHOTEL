@@ -20,6 +20,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -218,7 +219,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
     protected void onStart()
     {
         String screenName = getScreenName();
-        if (com.daily.base.util.TextUtils.isTextEmpty(screenName) == false)
+        if (DailyTextUtils.isTextEmpty(screenName) == false)
         {
             AnalyticsManager.getInstance(this).recordScreen(this, screenName, null);
         }
@@ -378,7 +379,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             scriptForSkip = scriptPrefix + "returnUrltoMall();"; // KTFC 확인 버튼 콜
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(scriptForSkip) == false)
+        if (DailyTextUtils.isTextEmpty(scriptForSkip) == false)
         {
             mWebView.loadUrl(scriptForSkip);
         }
@@ -1386,7 +1387,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(data) == true)
+            if (DailyTextUtils.isTextEmpty(data) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
                 finish();

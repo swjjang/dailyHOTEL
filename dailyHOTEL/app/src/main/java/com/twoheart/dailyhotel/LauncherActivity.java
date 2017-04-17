@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
@@ -49,7 +50,7 @@ public class LauncherActivity extends Activity
         Util.initializeMemory();
 
         // 개인 정보 방침에 따른 개인 정보 암호화.
-        if (com.daily.base.util.TextUtils.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
+        if (DailyTextUtils.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
         {
             DailyUserPreference.getInstance(this).requestMigration(this);
             DailyPreference.getInstance(this).clearUserInformation();
@@ -81,7 +82,7 @@ public class LauncherActivity extends Activity
                     {
                         String baseURL = externalDeepLink.getBaseUrl();
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(baseURL) == false)
+                        if (DailyTextUtils.isTextEmpty(baseURL) == false)
                         {
                             logOut();
                             DailyPreference.getInstance(this).setBaseUrl(baseURL);

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -103,7 +104,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         mEmail = mEmailEditText.getText().toString().trim();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mEmail) == true)
+        if (DailyTextUtils.isTextEmpty(mEmail) == true)
         {
             releaseUiComponent();
 
@@ -233,7 +234,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
                     if ("true".equalsIgnoreCase(result) == true)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(mEmail) == true)
+                        if (DailyTextUtils.isTextEmpty(mEmail) == true)
                         {
                             DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                         } else

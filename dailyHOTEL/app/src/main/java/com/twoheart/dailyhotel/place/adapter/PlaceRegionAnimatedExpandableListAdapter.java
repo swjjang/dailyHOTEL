@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -189,7 +189,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
         TextView englishTextView = (TextView) convertView.findViewById(R.id.provinceEnglishTextView);
 
-        Uri uri = com.daily.base.util.TextUtils.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
+        Uri uri = DailyTextUtils.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
         provinceImageView.setImageURI(uri);
 
         textView.setText(getInsertSpaceName(province.name));

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
@@ -17,7 +18,6 @@ import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -153,7 +153,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 베네핏
         View benefitLayout = mNestedScrollView.findViewById(R.id.benefitLayout);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true)
         {
             benefitLayout.setVisibility(View.GONE);
         } else
@@ -167,7 +167,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 이용시간
         View timeLayout = mNestedScrollView.findViewById(R.id.timeLayout);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
         {
             timeLayout.setVisibility(View.GONE);
         } else
@@ -178,7 +178,7 @@ public class GourmetProductDetailLayout extends BaseLayout
 
             String timeFormat = String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
+            if (DailyTextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
             {
                 timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
             }
@@ -189,7 +189,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         // 확인사항
         View checkLayout = mNestedScrollView.findViewById(R.id.checkLayout);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == true)
         {
             checkLayout.setVisibility(View.GONE);
         } else
@@ -235,7 +235,7 @@ public class GourmetProductDetailLayout extends BaseLayout
 
         TextView menuSummaryTextView = (TextView) mNestedScrollView.findViewById(R.id.menuSummaryTextView);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuSummary) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.menuSummary) == true)
         {
             menuSummaryTextView.setVisibility(View.GONE);
         } else
@@ -272,8 +272,8 @@ public class GourmetProductDetailLayout extends BaseLayout
         TextView priceTextView = (TextView) mBottomBarLayout.findViewById(R.id.priceTextView);
         priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
-        String price = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetProduct.price, false);
-        String discountPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
+        String price = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.price, false);
+        String discountPrice = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
 
         if (gourmetProduct.price <= 0 || gourmetProduct.price <= gourmetProduct.discountPrice)
         {
@@ -300,7 +300,7 @@ public class GourmetProductDetailLayout extends BaseLayout
 
     public void setImageInformation(String description)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(description) == false)
+        if (DailyTextUtils.isTextEmpty(description) == false)
         {
             mDescriptionTextView.setVisibility(View.VISIBLE);
             mDescriptionTextView.setText(description);
@@ -346,7 +346,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         {
             String contentText = menuDetailList.get(i);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
+            if (DailyTextUtils.isTextEmpty(contentText) == true)
             {
                 continue;
             }

@@ -3,11 +3,11 @@ package com.twoheart.dailyhotel.screen.mydaily.member;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -34,27 +34,27 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         Map<String, String> params = new HashMap<>();
         params.put("user_idx", userIndex);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
+        if (DailyTextUtils.isTextEmpty(email) == false)
         {
             params.put("user_email", email);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(name) == false)
+        if (DailyTextUtils.isTextEmpty(name) == false)
         {
             params.put("user_name", name);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == false)
+        if (DailyTextUtils.isTextEmpty(phoneNumber) == false)
         {
             params.put("user_phone", phoneNumber.replaceAll("-", ""));
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
+        if (DailyTextUtils.isTextEmpty(birthday) == false)
         {
             params.put("birthday", birthday);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
+        if (DailyTextUtils.isTextEmpty(recommender) == false)
         {
             params.put("recommendation_code", recommender);
         }
@@ -63,7 +63,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
 
         if (Constants.DEBUG == false)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true)
             {
                 Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
                     + name + " , userIndex=" + userIndex + " , user_email=" + email);

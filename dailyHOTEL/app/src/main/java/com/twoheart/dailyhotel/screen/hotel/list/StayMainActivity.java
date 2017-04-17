@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -68,7 +69,7 @@ public class StayMainActivity extends PlaceMainActivity
     {
         Intent intent = new Intent(context, StayMainActivity.class);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
@@ -90,7 +91,7 @@ public class StayMainActivity extends PlaceMainActivity
         String oldCategoryCode = DailyPreference.getInstance(this).getStayCategoryCode();
         String oldCategoryName = DailyPreference.getInstance(this).getStayCategoryName();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
+        if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
         {
             mStayCuration.setCategory(this, new Category(oldCategoryName, oldCategoryCode));
         }
@@ -886,7 +887,7 @@ public class StayMainActivity extends PlaceMainActivity
             // 마지막으로 선택한 지역을 가져온다.
             String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(regionName) == true)
+            if (DailyTextUtils.isTextEmpty(regionName) == true)
             {
                 selectedProvince = provinceList.get(0);
             }
@@ -1195,7 +1196,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1320,7 +1321,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1396,7 +1397,7 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     StayBookingDay stayBookingDay = new StayBookingDay();
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                    if (DailyTextUtils.isTextEmpty(date) == false)
                     {
                         Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                         stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1428,7 +1429,7 @@ public class StayMainActivity extends PlaceMainActivity
                         }
 
                         default:
-                            if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
+                            if (DailyTextUtils.isTextEmpty(word) == false)
                             {
                                 Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, new Keyword(0, word), SearchType.SEARCHES);
                                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -1534,7 +1535,7 @@ public class StayMainActivity extends PlaceMainActivity
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
 
                 // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
-                if (com.daily.base.util.TextUtils.isTextEmpty(categoryCode) == false)
+                if (DailyTextUtils.isTextEmpty(categoryCode) == false)
                 {
                     for (Category category : selectedProvince.getCategoryList())
                     {
@@ -1548,7 +1549,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));

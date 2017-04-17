@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.DailyTextUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -502,7 +502,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
     private void initTransLayout(String placeName, String imageUrl, Stay.Grade grade, boolean isFromMap)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, imageUrl) == true)
+        if (DailyTextUtils.isTextEmpty(placeName, imageUrl) == true)
         {
             return;
         }
@@ -560,7 +560,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true)
             {
                 name = getString(R.string.label_friend) + "가";
             } else
@@ -621,7 +621,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true)
             {
                 name = getString(R.string.label_friend) + "가";
             } else
@@ -774,7 +774,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         //        stayProduct.categoryCode = stayDetailParams.categoryCode;
-        boolean isBenefit = com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) == false;
+        boolean isBenefit = DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false;
         //        stayProduct.nights = stayDetailParams.nights;
 
         Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, stayProduct//
@@ -919,7 +919,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (mIsDeepLink == true)
         {
             // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
-            if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.category) == true)
+            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
             {
                 stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
             }
@@ -1084,7 +1084,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, stayDetailParams.name);
             params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().getName(StayDetailActivity.this)); // 14
-            params.put(AnalyticsManager.KeyType.DBENEFIT, com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes"); // 3
+            params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes"); // 3
 
             if (stayDetail.getProductList() == null || stayDetail.getProductList().size() == 0)
             {
@@ -1104,7 +1104,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             params.put(AnalyticsManager.KeyType.ADDRESS, stayDetailParams.address);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.category) == true) //
+            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true) //
             {
                 params.put(AnalyticsManager.KeyType.HOTEL_CATEGORY, AnalyticsManager.ValueType.EMPTY);
                 params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
@@ -1132,7 +1132,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
@@ -1197,7 +1197,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(stayProduct.averageDiscount));
@@ -1439,7 +1439,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void clipAddress(String address)
         {
-            TextUtils.clipText(StayDetailActivity.this, address);
+            DailyTextUtils.clipText(StayDetailActivity.this, address);
 
             DailyToast.showToast(StayDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
@@ -1650,7 +1650,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             } else
             {
                 // 입력된 정보가 부족해.
-                if (com.daily.base.util.TextUtils.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
+                if (DailyTextUtils.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
                 {
                     moveToAddSocialUserInformation(user, birthday);
                 } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
@@ -1764,7 +1764,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                         }
 
-                        params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                        params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                     }
 
                     params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().name());
@@ -1776,7 +1776,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                     params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                    params.put(AnalyticsManager.KeyType.DBENEFIT, com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes");
+                    params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes");
 
                     int nights = stayBookingDay.getNights();
 
@@ -1797,7 +1797,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonCount(stayDetailParams.wishCount);
                 mPlaceDetailLayout.setWishButtonSelected(stayDetailParams.myWish);
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+                if (DailyTextUtils.isTextEmpty(message) == true)
                 {
                     message = "";
                 }
@@ -1862,7 +1862,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                         }
 
-                        params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                        params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                     }
 
                     params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().name());
@@ -1874,7 +1874,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
                     params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                     params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                    params.put(AnalyticsManager.KeyType.DBENEFIT, com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes");
+                    params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes");
 
                     int nights = stayBookingDay.getNights();
 
@@ -1895,7 +1895,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonCount(stayDetailParams.wishCount);
                 mPlaceDetailLayout.setWishButtonSelected(stayDetailParams.myWish);
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+                if (DailyTextUtils.isTextEmpty(message) == true)
                 {
                     message = "";
                 }

@@ -6,9 +6,9 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.model.EventBanner;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class PlaceBannerViewPagerAdapter extends PagerAdapter
         if (mEventBannerList.size() > position)
         {
             String url = mEventBannerList.get(position).imageUrl;
-            Uri uri = com.daily.base.util.TextUtils.isTextEmpty(url) ? null : Uri.parse(url);
+            Uri uri = DailyTextUtils.isTextEmpty(url) ? null : Uri.parse(url);
             imageView.setImageURI(uri);
         }
 

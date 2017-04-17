@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
@@ -215,7 +216,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     public boolean isSameCallingActivity(String checkClassName)
     {
         ComponentName callingActivity = getCallingActivity();
-        if (callingActivity == null || com.daily.base.util.TextUtils.isTextEmpty(checkClassName) == true)
+        if (callingActivity == null || DailyTextUtils.isTextEmpty(checkClassName) == true)
         {
             return false;
         }

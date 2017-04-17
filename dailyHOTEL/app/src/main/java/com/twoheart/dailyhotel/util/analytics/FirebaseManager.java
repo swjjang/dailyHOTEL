@@ -5,10 +5,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.daily.base.util.DailyTextUtils;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public class FirebaseManager extends BaseAnalyticsManager
     {
         Bundle bundle = new Bundle();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(action) == false)
+        if (DailyTextUtils.isTextEmpty(action) == false)
         {
             bundle.putString("action", action);
         } else
@@ -49,7 +49,7 @@ public class FirebaseManager extends BaseAnalyticsManager
             bundle.putString("action", AnalyticsManager.ValueType.EMPTY);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(label) == false)
+        if (DailyTextUtils.isTextEmpty(label) == false)
         {
             bundle.putString("label", label);
         } else

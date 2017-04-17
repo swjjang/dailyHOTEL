@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -57,7 +58,7 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
                 remainedDayText = context.getString(R.string.frag_booking_today_type_gourmet);
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(remainedDayText) == true)
+            if (DailyTextUtils.isTextEmpty(remainedDayText) == true)
             {
                 remainedDayLayout.setVisibility(View.GONE);
             } else
@@ -160,18 +161,18 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetBookingDetail.price, false));
+        priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmetBookingDetail.price, false));
 
         if (gourmetBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetBookingDetail.coupon, false));
+            couponTextView.setText("- " + DailyTextUtils.getPriceFormat(mContext, gourmetBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmetBookingDetail.paymentPrice, false));
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);

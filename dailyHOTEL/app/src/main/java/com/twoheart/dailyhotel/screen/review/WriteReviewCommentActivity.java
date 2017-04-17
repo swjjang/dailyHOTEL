@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -30,7 +30,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             throw new IllegalArgumentException();
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }
@@ -66,7 +66,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             }
 
             String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
-            if (com.daily.base.util.TextUtils.isTextEmpty(placeTypeName) == false)
+            if (DailyTextUtils.isTextEmpty(placeTypeName) == false)
             {
                 try
                 {
@@ -112,10 +112,10 @@ public class WriteReviewCommentActivity extends BaseActivity
 
         String reviewText = mLayout.getReviewText();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mOriginText) == true)
+        if (DailyTextUtils.isTextEmpty(mOriginText) == true)
         {
             // 최초 입력 일때
-            if (com.daily.base.util.TextUtils.isTextEmpty(reviewText) == true)
+            if (DailyTextUtils.isTextEmpty(reviewText) == true)
             {
                 // 입력 데이터가 아무 것도 없을때 그냥 종료!
                 setResult(RESULT_CANCELED);
@@ -299,7 +299,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             }
 
             Intent intent = new Intent();
-            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, TextUtils.trim(text));
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, DailyTextUtils.trim(text));
             setResult(RESULT_OK, intent);
             WriteReviewCommentActivity.this.finish();
         }

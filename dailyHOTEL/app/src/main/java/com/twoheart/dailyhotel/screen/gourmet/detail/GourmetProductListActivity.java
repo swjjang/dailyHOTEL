@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -205,7 +206,7 @@ public class GourmetProductListActivity extends BaseActivity
         } else
         {
             // 입력된 정보가 부족해.
-            if (com.daily.base.util.TextUtils.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
+            if (DailyTextUtils.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
             {
                 moveToAddSocialUserInformation(user, birthday);
             } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
@@ -243,7 +244,7 @@ public class GourmetProductListActivity extends BaseActivity
             imageUrl = imageInformationList.get(0).getImageUrl();
         }
 
-        boolean isBenefit = com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) == false;
+        boolean isBenefit = DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) == false;
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetProductListActivity.this, gourmetDetailParams.name, gourmetProduct//
             , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
@@ -291,7 +292,7 @@ public class GourmetProductListActivity extends BaseActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             GourmetProduct gourmetProduct = gourmetDetail.getProduct(productIndex);

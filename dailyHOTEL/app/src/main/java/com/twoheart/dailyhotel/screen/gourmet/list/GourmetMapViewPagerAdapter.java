@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -77,7 +78,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         name.setText(gourmet.name);
 
         // D.benefit
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.dBenefitText) == false)
+        if (DailyTextUtils.isTextEmpty(gourmet.dBenefitText) == false)
         {
             dBenefitLayout.setVisibility(View.VISIBLE);
             dBenefitTextView.setText(gourmet.dBenefitText);
@@ -105,7 +106,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.price, false));
+            priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmet.price, false));
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -120,12 +121,12 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             satisfactionView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.discountPrice, false));
+        discountTextView.setText(DailyTextUtils.getPriceFormat(mContext, gourmet.discountPrice, false));
 
         name.setSelected(true); // Android TextView marquee bug
 
         String displayCategory;
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.subCategory) == false)
+        if (DailyTextUtils.isTextEmpty(gourmet.subCategory) == false)
         {
             displayCategory = gourmet.subCategory;
         } else
@@ -134,7 +135,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         }
 
         // grade
-        if (com.daily.base.util.TextUtils.isTextEmpty(displayCategory) == true)
+        if (DailyTextUtils.isTextEmpty(displayCategory) == true)
         {
             grade.setVisibility(View.INVISIBLE);
         } else

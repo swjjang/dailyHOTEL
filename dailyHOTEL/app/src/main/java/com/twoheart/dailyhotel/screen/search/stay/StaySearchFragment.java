@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -143,7 +144,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         String text = mPlaceSearchLayout.getSearchKeyWord();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             return;
         }
@@ -262,7 +263,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+            if (DailyTextUtils.isTextEmpty(text) == true)
             {
                 return;
             }

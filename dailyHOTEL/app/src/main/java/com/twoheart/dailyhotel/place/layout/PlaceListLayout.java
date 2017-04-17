@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -332,7 +333,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
             if (list != null && list.size() > 0)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(districtName) == false)
+                if (DailyTextUtils.isTextEmpty(districtName) == false)
                 {
                     PlaceViewItem firstItem = list.get(0);
                     if (firstItem.mType == PlaceViewItem.TYPE_SECTION)

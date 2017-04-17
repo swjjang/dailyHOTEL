@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -133,7 +134,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         {
             case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
+                if (DailyTextUtils.isTextEmpty(mDate) == true)
                 {
                     Util.restartApp(this);
                     return;
@@ -145,7 +146,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
             case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
+                if (DailyTextUtils.isTextEmpty(mDate) == true)
                 {
                     Util.restartApp(this);
                     return;
@@ -321,7 +322,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             {
                 case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
                 {
-                    if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
+                    if (DailyTextUtils.isTextEmpty(mDate) == true)
                     {
                         Util.restartApp(SelectGourmetCouponDialogActivity.this);
                         return;
@@ -333,7 +334,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                 case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
                 {
-                    if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
+                    if (DailyTextUtils.isTextEmpty(mDate) == true)
                     {
                         Util.restartApp(SelectGourmetCouponDialogActivity.this);
                         return;

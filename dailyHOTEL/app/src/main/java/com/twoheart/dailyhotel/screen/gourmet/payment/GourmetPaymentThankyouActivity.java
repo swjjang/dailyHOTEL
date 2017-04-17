@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentThankyouActivity;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.io.Serializable;
@@ -69,7 +69,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(visitTime) == true)
+        if (DailyTextUtils.isTextEmpty(visitTime) == true)
         {
             return;
         }

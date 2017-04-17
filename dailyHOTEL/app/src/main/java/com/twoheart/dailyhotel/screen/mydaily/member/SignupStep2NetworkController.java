@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.mydaily.member;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
@@ -211,7 +212,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                             }
                         }
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+                        if (DailyTextUtils.isTextEmpty(message) == true)
                         {
                             message = mContext.getString(R.string.toast_msg_failed_to_signup);
                         }
@@ -315,7 +316,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                                 boolean isAgreedBenefit = userJSONObject.getBoolean("isAgreedBenefit");
 
-                                if (com.daily.base.util.TextUtils.isTextEmpty(userIndex) == true || com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+                                if (DailyTextUtils.isTextEmpty(userIndex) == true || DailyTextUtils.isTextEmpty(name) == true)
                                 {
                                     if (Constants.DEBUG == true)
                                     {
@@ -335,7 +336,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         // 로그인이 실패한 경우
                         String message = responseJSONObject.getString("msg");
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+                        if (DailyTextUtils.isTextEmpty(message) == true)
                         {
                             message = mContext.getString(R.string.toast_msg_failed_to_login);
                         }

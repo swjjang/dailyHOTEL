@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
@@ -27,7 +28,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -61,7 +61,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public void cancelAll(Context context, final String tag)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
+        if (DailyTextUtils.isTextEmpty(tag) == true)
         {
             return;
         }

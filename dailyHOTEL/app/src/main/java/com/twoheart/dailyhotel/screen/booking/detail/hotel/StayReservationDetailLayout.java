@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -71,7 +72,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                     remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
                 }
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(remainedDayText) == true)
+                if (DailyTextUtils.isTextEmpty(remainedDayText) == true)
                 {
                     remainedDayLayout.setVisibility(View.GONE);
                 } else
@@ -245,13 +246,13 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.price, false));
+        priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayBookingDetail.price, false));
 
 
         if (stayBookingDetail.bonus > 0)
         {
             bonusLayout.setVisibility(View.VISIBLE);
-            bonusTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.bonus, false));
+            bonusTextView.setText("- " + DailyTextUtils.getPriceFormat(mContext, stayBookingDetail.bonus, false));
         } else
         {
             bonusLayout.setVisibility(View.GONE);
@@ -260,13 +261,13 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         if (stayBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.coupon, false));
+            couponTextView.setText("- " + DailyTextUtils.getPriceFormat(mContext, stayBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayBookingDetail.paymentPrice, false));
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);
@@ -304,7 +305,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     {
         TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(stayBookingDetail.mRefundComment) == false)
+        if (DailyTextUtils.isTextEmpty(stayBookingDetail.mRefundComment) == false)
         {
             String comment = stayBookingDetail.mRefundComment.replaceAll("900034", "B70038");
             refundPolicyTextView.setText(Html.fromHtml(comment));
@@ -376,7 +377,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             return StayBookingDetail.STATUS_WAIT_REFUND;
         } else
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(stayBookingDetail.refundPolicy) == false)
+            if (DailyTextUtils.isTextEmpty(stayBookingDetail.refundPolicy) == false)
             {
                 return stayBookingDetail.refundPolicy;
             } else

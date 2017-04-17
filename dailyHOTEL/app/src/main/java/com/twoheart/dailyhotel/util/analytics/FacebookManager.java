@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.daily.base.util.DailyTextUtils;
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.applinks.AppLinkData;
@@ -211,7 +212,7 @@ public class FacebookManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(category, action, label) == true)
+        if (DailyTextUtils.isTextEmpty(category, action, label) == true)
         {
             return;
         }
@@ -267,7 +268,7 @@ public class FacebookManager extends BaseAnalyticsManager
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(index) == true)
+        if (DailyTextUtils.isTextEmpty(index) == true)
         {
             appEventsLogger.logEvent(EventName.LOGIN, 0);
         } else

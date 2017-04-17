@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.GourmetPaymentInformation;
 import com.twoheart.dailyhotel.model.Guest;
@@ -14,7 +15,6 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import okhttp3.FormBody;
@@ -104,7 +104,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
             email = guest.email;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(name, phone, email) == true)
+        if (DailyTextUtils.isTextEmpty(name, phone, email) == true)
         {
             restartExpiredSession();
             return;

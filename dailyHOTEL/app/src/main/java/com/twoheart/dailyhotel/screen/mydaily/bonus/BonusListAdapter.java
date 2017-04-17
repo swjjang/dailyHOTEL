@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bonus;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,7 +77,7 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
         TextView expireTextView = (TextView) view.findViewById(R.id.expireTextView);
         View underLineView = view.findViewById(R.id.underLineView);
 
-        String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, bonus.bonus, false);
+        String priceFormat = DailyTextUtils.getPriceFormat(mContext, bonus.bonus, false);
 
         if (bonus.bonus > 0)
         {

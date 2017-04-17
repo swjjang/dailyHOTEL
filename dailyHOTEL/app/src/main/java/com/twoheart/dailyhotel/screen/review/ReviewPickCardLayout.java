@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewAnswerValue;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
-import com.twoheart.dailyhotel.util.Util;
 import com.daily.base.widget.DailyTextView;
 
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             TextView gridItemDescriptionTextView = (TextView) pickItemView.findViewById(R.id.descriptionTextView);
 
             // 빈상자인 경우
-            if (com.daily.base.util.TextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
+            if (DailyTextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
             {
                 gridItemTitleTextView.setVisibility(View.GONE);
                 gridItemDescriptionTextView.setVisibility(View.GONE);
@@ -122,7 +122,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
             pickItemView.setLayoutParams(gridLayoutParams);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
+            if (DailyTextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
             {
                 pickItemView.setOnClickListener(this);
             }

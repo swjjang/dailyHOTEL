@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -118,7 +119,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
                                             String referralCode, boolean isPhoneVerified, String verifiedDate)
     {
         // 이메일
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+        if (DailyTextUtils.isTextEmpty(email) == true)
         {
             mEmailLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
         }
@@ -129,7 +130,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mEmailTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(mContext, 3));
 
         // 이름
-        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+        if (DailyTextUtils.isTextEmpty(name) == true)
         {
             mNameLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
         }
@@ -137,7 +138,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mNameTextView.setText(name);
 
         // 생일
-        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
+        if (DailyTextUtils.isTextEmpty(birthday) == true)
         {
             mBirthdayLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mBirthdayTextView.setText(null);
@@ -156,7 +157,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
 
         // 휴대폰
-        if (com.daily.base.util.TextUtils.isTextEmpty(phone) == true)
+        if (DailyTextUtils.isTextEmpty(phone) == true)
         {
             mPhoneLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
         }
@@ -165,7 +166,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mPhoneTextView.setText(phone);
 
         // 인증 여부
-        if (isPhoneVerified == true && com.daily.base.util.TextUtils.isTextEmpty(verifiedDate) == false)
+        if (isPhoneVerified == true && DailyTextUtils.isTextEmpty(verifiedDate) == false)
         {
             mPhoneVerifyView.setTextColor(mContext.getResources().getColor(R.color.search_hint_text));
             mPhoneVerifyView.setText(mContext.getString(R.string.label_date_verification, verifiedDate.replaceAll("-", ".")));
@@ -186,7 +187,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     private void updateSocialUserInformation(String userType, String email, String name, String phone, String birthday, String referralCode)
     {
         // 이메일
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+        if (DailyTextUtils.isTextEmpty(email) == true)
         {
             mEmailLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mEmailTextView.setText(null);
@@ -209,7 +210,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
 
         // 이름
-        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+        if (DailyTextUtils.isTextEmpty(name) == true)
         {
             mNameLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mNameTextView.setText(null);
@@ -219,7 +220,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
 
         // 생일
-        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
+        if (DailyTextUtils.isTextEmpty(birthday) == true)
         {
             mBirthdayLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
             mBirthdayTextView.setText(null);
@@ -239,7 +240,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
         // 휴대폰 번호
         // 휴대폰
-        if (com.daily.base.util.TextUtils.isTextEmpty(phone) == true)
+        if (DailyTextUtils.isTextEmpty(phone) == true)
         {
             mPhoneLabelTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
         }
@@ -268,7 +269,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
                 break;
 
             case R.id.birthdayLayout:
-                if (com.daily.base.util.TextUtils.isTextEmpty(mBirthdayTextView.getText().toString()) == false)
+                if (DailyTextUtils.isTextEmpty(mBirthdayTextView.getText().toString()) == false)
                 {
                     ((OnEventListener) mOnEventListener).startEditBirthday((String) mBirthdayTextView.getTag());
                 } else

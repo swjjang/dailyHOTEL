@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.search.stay;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -23,7 +24,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
 
     public void requestAutoComplete(StayBookingDay stayBookingDay, String keyword)
     {
-        if (stayBookingDay == null || com.daily.base.util.TextUtils.isTextEmpty(keyword) == true)
+        if (stayBookingDay == null || DailyTextUtils.isTextEmpty(keyword) == true)
         {
             return;
         }

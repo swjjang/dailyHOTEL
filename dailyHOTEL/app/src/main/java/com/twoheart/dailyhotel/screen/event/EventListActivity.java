@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -16,7 +17,6 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -40,7 +40,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     {
         Intent intent = new Intent(context, EventListActivity.class);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
@@ -220,7 +220,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
     void startEventWeb(String url, String eventName)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+        if (DailyTextUtils.isTextEmpty(url) == true)
         {
             return;
         }

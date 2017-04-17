@@ -14,6 +14,7 @@ package com.twoheart.dailyhotel.util;
 
 import android.util.Base64;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 
 import java.security.InvalidParameterException;
@@ -64,7 +65,7 @@ public class Crypto
 
     public static String encrypt(String seed, String text) throws Exception
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             return null;
         }
@@ -78,7 +79,7 @@ public class Crypto
 
     public static String decrypt(String seed, String encrypted) throws Exception
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(encrypted) == true)
+        if (DailyTextUtils.isTextEmpty(encrypted) == true)
         {
             return null;
         }
@@ -147,7 +148,7 @@ public class Crypto
             {
                 String value = urlParameters.get(key);
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(key, value) == false)
+                if (DailyTextUtils.isTextEmpty(key, value) == false)
                 {
                     int startIndex = decodeUrl.indexOf(key);
                     if (startIndex >= 0)
@@ -293,7 +294,7 @@ public class Crypto
 
     public static String urlDecrypt(String url)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+        if (DailyTextUtils.isTextEmpty(url) == true)
         {
             return null;
         }

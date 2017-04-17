@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -266,7 +267,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             if (customer == null)
             {
                 Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
-            } else if (com.daily.base.util.TextUtils.isTextEmpty(customer.getName()) == true)
+            } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
             {
                 Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
                     + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
@@ -334,7 +335,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             if (customer == null)
             {
                 Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: customer is null");
-            } else if (com.daily.base.util.TextUtils.isTextEmpty(customer.getName()) == true)
+            } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
             {
                 Crashlytics.log("GourmetPaymentActivity::requestEasyPayment :: name=" //
                     + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
@@ -380,7 +381,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         mSelectedCreditCard = creditCard;
 
         if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
-            creditCard != null && com.daily.base.util.TextUtils.isTextEmpty(creditCard.billingkey) == false)
+            creditCard != null && DailyTextUtils.isTextEmpty(creditCard.billingkey) == false)
         {
             DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(creditCard.billingkey));
         }
@@ -732,7 +733,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
         {
             Customer customer = mPaymentInformation.getCustomer();
 
-            if (customer == null || com.daily.base.util.TextUtils.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
+            if (customer == null || DailyTextUtils.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
             {
                 if (DEBUG == false)
                 {
@@ -911,7 +912,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
         if (coupon.amount > originalPrice)
         {
-            String difference = com.daily.base.util.TextUtils.getPriceFormat(this, (coupon.amount - originalPrice), false);
+            String difference = DailyTextUtils.getPriceFormat(this, (coupon.amount - originalPrice), false);
 
             showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
             {
@@ -1108,7 +1109,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             AnalyticsManager.getInstance(GourmetPaymentActivity.this).recordScreen(GourmetPaymentActivity.this, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT, null, params);
@@ -1210,7 +1211,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookingDay.getVisitDay("yyyyMMdd"));
@@ -1579,7 +1580,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
             // 수정 모드인 경우 데이터를 다시 받아와야 한다.
             if (guest != null)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(guest.name) == true)
+                if (DailyTextUtils.isTextEmpty(guest.name) == true)
                 {
                     releaseUiComponent();
 
@@ -1587,7 +1588,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.message_gourmet_please_input_guest, Toast.LENGTH_SHORT);
                     return;
-                } else if (com.daily.base.util.TextUtils.isTextEmpty(guest.phone) == true)
+                } else if (DailyTextUtils.isTextEmpty(guest.phone) == true)
                 {
                     releaseUiComponent();
 
@@ -1595,7 +1596,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     DailyToast.showToast(GourmetPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
-                } else if (com.daily.base.util.TextUtils.isTextEmpty(guest.email) == true)
+                } else if (DailyTextUtils.isTextEmpty(guest.email) == true)
                 {
                     releaseUiComponent();
 
@@ -1764,7 +1765,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
 
                     if (DEBUG == false)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+                        if (DailyTextUtils.isTextEmpty(name) == true)
                         {
                             Crashlytics.log("GourmetPaymentActivity::requestUserInformationForPayment :: name="//
                                 + name + " , userIndex=" + userIndex + " , user_email=" + email);

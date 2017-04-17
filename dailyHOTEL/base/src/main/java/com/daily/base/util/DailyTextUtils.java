@@ -13,7 +13,7 @@ import com.daily.base.R;
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
-public class TextUtils
+public class DailyTextUtils
 {
     public static final int PASSWORD_MIN_COUNT = 8;
 
@@ -21,7 +21,7 @@ public class TextUtils
     {
         boolean result = false;
 
-        if (TextUtils.isTextEmpty(text) == false)
+        if (DailyTextUtils.isTextEmpty(text) == false)
         {
             result = Pattern.matches("^[a-zA-Z\\s.'-]+$", text);
         }
@@ -144,7 +144,7 @@ public class TextUtils
 
     public static String trim(String text)
     {
-        if (TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             return text;
         }
