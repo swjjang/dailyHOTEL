@@ -1432,7 +1432,7 @@ public class DailyPreference
     public JSONObject getDailyRegion(DailyCategoryType type)
     {
         String value = getValue(mPreferences, getDailyRegionKey(type), null);
-        if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
+        if (DailyTextUtils.isTextEmpty(value) == true)
         {
             return null;
         }

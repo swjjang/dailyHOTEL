@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.BaseFragment;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
@@ -143,7 +144,7 @@ public class HomeCategoryRegionListFragment extends BaseFragment
 
         String oldProvinceName = Util.getDailyProvinceString(saveRegionJsonObject);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(oldProvinceName) == true)
+        if (DailyTextUtils.isTextEmpty(oldProvinceName) == true)
         {
             return regionViewItemList.get(0).getProvince();
         }

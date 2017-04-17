@@ -1472,8 +1472,8 @@ public class Util implements Constants
         try
         {
             jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, com.daily.base.util.TextUtils.isTextEmpty(provinceName) ? "" : provinceName);
-            jsonObject.put(Constants.JSON_KEY_AREA_NAME, com.daily.base.util.TextUtils.isTextEmpty(areaName) ? "" : areaName);
+            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, DailyTextUtils.isTextEmpty(provinceName) ? "" : provinceName);
+            jsonObject.put(Constants.JSON_KEY_AREA_NAME, DailyTextUtils.isTextEmpty(areaName) ? "" : areaName);
             jsonObject.put(Constants.JSON_KEY_IS_OVER_SEAS, isOverSeas);
         } catch (Exception e)
         {

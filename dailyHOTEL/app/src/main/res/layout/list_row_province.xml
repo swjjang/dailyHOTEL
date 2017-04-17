@@ -15,7 +15,7 @@
         android:layout_marginRight="20dp"
         app:srcCompat="@drawable/ic_region_ic_sub_v"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/provinceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
