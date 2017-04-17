@@ -14,13 +14,10 @@ import com.daily.base.R;
 public class DailyLock
 {
     private boolean mIsLock = false;
-    private BaseActivity mActivity;
     private ProgressBarDialog mProgressBarDialog;
 
     public DailyLock(BaseActivity activity)
     {
-        mActivity = activity;
-
         mProgressBarDialog = new ProgressBarDialog(activity);
     }
 
