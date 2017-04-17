@@ -132,7 +132,6 @@ public class DailyRemoteConfig
         String androidText = mFirebaseRemoteConfig.getString("androidText");
         String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
         String androidStamp = mFirebaseRemoteConfig.getString("androidStamp");
-        String androidABTestHome = mFirebaseRemoteConfig.getString("androidABTestHome");
 
         if (Constants.DEBUG == true)
         {
@@ -146,8 +145,6 @@ public class DailyRemoteConfig
                 ExLog.d("androidText : " + new JSONObject(androidText).toString());
                 ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
                 ExLog.d("androidStamp : " + new JSONObject(androidStamp).toString());
-                //                        ExLog.d("androidABTestGourmetProductList : " + androidABTestGourmetProductList);
-                ExLog.d("androidABTestHome : " + androidABTestHome);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -200,9 +197,6 @@ public class DailyRemoteConfig
 
         // Stamp
         writeStamp(mContext, androidStamp);
-
-        // ABTest
-        writeABTestHome(mContext, androidABTestHome);
 
         if (listener != null)
         {
@@ -508,34 +502,6 @@ public class DailyRemoteConfig
         } catch (Exception e)
         {
             ExLog.e(e.toString());
-        }
-    }
-
-    void writeABTestHome(Context context, String abTest)
-    {
-        if (context == null)
-        {
-            return;
-        }
-
-        DailyPreference.getInstance(context).setRemoteConfigABTestHomeButton(abTest);
-
-        if (Util.isTextEmpty(abTest) == false)
-        {
-            try
-            {
-                JSONObject jsonObject = new JSONObject(abTest);
-                String abTestValue = jsonObject.getString("value");
-
-                if ("a".equalsIgnoreCase(abTestValue) == true)
-                {
-                    AnalyticsManager.getInstance(context).recordEvent(AnalyticsManager.Category.EXPERIMENT,//
-                        AnalyticsManager.Action.HOME_MENU_BUTTON, AnalyticsManager.Label.CTA_VARIATION_A, null);
-                }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
         }
     }
 }
