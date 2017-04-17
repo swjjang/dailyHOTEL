@@ -104,46 +104,6 @@ public class GourmetProductListActivity extends BaseActivity
         }
     }
 
-    private void settingABTest(GourmetDetail gourmetDetail)
-    {
-        String data = DailyPreference.getInstance(this).getRemoteConfigABTestGourmetProductList();
-
-        if (com.daily.base.util.TextUtils.isTextEmpty(data) == true)
-        {
-            return;
-        }
-
-        try
-        {
-            JSONObject jsonObject = new JSONObject(data);
-            String abTest = jsonObject.getString("value");
-
-            if (com.daily.base.util.TextUtils.isTextEmpty(abTest) == true)
-            {
-                return;
-            }
-
-            boolean isLeft;
-
-            switch (abTest)
-            {
-                case "b":
-                    isLeft = true;
-                    break;
-
-                case "a":
-                default:
-                    isLeft = false;
-                    break;
-            }
-
-            mGourmetProductListLayout.setThumbnailLocation(isLeft);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
