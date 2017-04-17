@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 
 import java.lang.reflect.Field;
 

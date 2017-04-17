@@ -5,7 +5,7 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <com.twoheart.dailyhotel.widget.DailyWebView
+    <com.daily.base.widget.DailyWebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

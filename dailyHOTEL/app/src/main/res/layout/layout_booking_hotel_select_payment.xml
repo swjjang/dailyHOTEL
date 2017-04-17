@@ -11,7 +11,7 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:orientation="vertical">-->
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/default_background"
@@ -30,7 +30,7 @@
         android:layout_marginBottom="15dp"
         android:background="@color/default_line_cf0f0f0"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/freePaymentView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         android:visibility="gone"
         app:drawableCompatLeft="@drawable/info_ic_text_dot_black"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/guidePaymentMemoView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                     android:duplicateParentState="true"
                     android:orientation="vertical">
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/simpleCardTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                         android:textColor="@drawable/selector_text_color_c323232_cb70038"
                         android:textSize="13dp"/>
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/label_booking_simplecard_description"
@@ -125,7 +125,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingRight="15dp">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/cardManagerTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="15dp"
@@ -162,7 +162,7 @@
                     android:background="@drawable/shape_fillrect_le6e6e7_bffffff"
                     android:visibility="visible">
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -181,7 +181,7 @@
                     android:background="@drawable/shape_fillrect_ld1d1d1_bffffff"
                     android:visibility="gone">
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/logoTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -210,7 +210,7 @@
                         android:layout_marginTop="18dp"
                         app:srcCompat="@drawable/card_chip"/>
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/numberTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -259,7 +259,7 @@
                 android:duplicateParentState="true"
                 android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/cardTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -268,7 +268,7 @@
                     android:textColor="@drawable/selector_text_color_c323232_cb70038"
                     android:textSize="13dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_booking_card_description"
@@ -312,7 +312,7 @@
                 android:duplicateParentState="true"
                 android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/phoneTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -321,7 +321,7 @@
                     android:textColor="@drawable/selector_text_color_c323232_cb70038"
                     android:textSize="13dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_booking_phonepay_description"
@@ -366,7 +366,7 @@
                 android:duplicateParentState="true"
                 android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/transferTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -375,7 +375,7 @@
                     android:textColor="@drawable/selector_text_color_c323232_cb70038"
                     android:textSize="13dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_booking_virtualpay_description"

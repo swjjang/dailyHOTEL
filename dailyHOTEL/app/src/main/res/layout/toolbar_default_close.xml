@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:elevation="2dp">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:textColor="@color/actionbar_title"
         android:textSize="18dp"/>
 
-    <com.twoheart.dailyhotel.widget.DailyImageView
+    <com.daily.base.widget.DailyImageView
         android:id="@+id/closeImageView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

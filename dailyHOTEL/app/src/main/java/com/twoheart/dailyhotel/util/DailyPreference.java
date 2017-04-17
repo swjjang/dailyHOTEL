@@ -327,7 +327,7 @@ public class DailyPreference
     {
         if (editor != null)
         {
-            if (Util.isTextEmpty(value) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
             {
                 editor.remove(key);
             } else
@@ -915,7 +915,7 @@ public class DailyPreference
             mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_PHONENUMBER, phoneNumber);
             mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_FAX, fax);
 
-            if (Util.isTextEmpty(email) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
             {
                 mRemoteConfigEditor.putString(KEY_REMOTE_CONFIG_COMPANY_PRIVACY_EMAIL, email);
             }
@@ -1671,7 +1671,7 @@ public class DailyPreference
     {
         String value = getValue(mPreferences, KEY_PAYMENT_INFORMATION, null);
 
-        if (Util.isTextEmpty(value) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
         {
             return null;
         } else

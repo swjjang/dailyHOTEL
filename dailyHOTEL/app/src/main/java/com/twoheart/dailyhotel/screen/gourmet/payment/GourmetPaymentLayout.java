@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -242,7 +243,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
         mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
 
-        mDiscountPriceTextView.setText(Util.getPriceFormat(mContext, 0, false));
+        mDiscountPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, 0, false));
 
         initDiscountInformation(view);
     }
@@ -286,10 +287,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         if (layoutParams == null)
         {
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15));
+            layoutParams.setMargins(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15));
         }
 
-        layoutParams.height = (Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60)) * 9 / 16;
+        layoutParams.height = (ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 60)) * 9 / 16;
         simpleCreditCardLayout.setLayoutParams(layoutParams);
 
         mEmptySimpleCardLayout = simpleCreditCardLayout.findViewById(R.id.emptySimpleCardLayout);
@@ -314,7 +315,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             return;
         }
 
-        if (Util.isTextEmpty(text) == true || visible == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true || visible == false)
         {
             mGuidePaymentMemoView.setVisibility(View.GONE);
             return;
@@ -533,7 +534,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
     public void setPaymentInformation(PlacePaymentInformation.DiscountType discountType, int originalPrice, int discountPrice, int payPrice)
     {
         // 결제금액
-        mPriceTextView.setText(Util.getPriceFormat(mContext, originalPrice, false));
+        mPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, originalPrice, false));
 
         switch (discountType)
         {
@@ -549,7 +550,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
                     mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
                 } else
                 {
-                    String priceFormat = Util.getPriceFormat(mContext, discountPrice, false);
+                    String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, discountPrice, false);
 
                     mUsedCouponTextView.setText(priceFormat);
                     mDiscountPriceTextView.setText("- " + priceFormat);
@@ -559,12 +560,12 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
             default:
             {
-                mDiscountPriceTextView.setText(Util.getPriceFormat(mContext, 0, false));
+                mDiscountPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, 0, false));
                 break;
             }
         }
 
-        mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
+        mFinalPaymentTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, payPrice, false));
 
         // 다음 버전에서 진행.
         //        if (payPrice == 0)
@@ -891,8 +892,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
         }
 
-        final int dp164 = Util.dpToPx(mContext, 164);
-        final int height = Util.getLCDHeight(mContext);
+        final int dp164 = ScreenUtils.dpToPx(mContext, 164);
+        final int height = ScreenUtils.getScreenHeight(mContext);
         mScrollMoveHeight = -1;
 
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()

@@ -13,8 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 /**
@@ -84,10 +84,10 @@ public class FinalCheckLayout extends FrameLayout
 
             if (i == length - 1)
             {
-                layoutParams.setMargins(Util.dpToPx(context, 5), 0, 0, 0);
+                layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, 0);
             } else
             {
-                layoutParams.setMargins(Util.dpToPx(context, 5), 0, 0, Util.dpToPx(context, 10));
+                layoutParams.setMargins(ScreenUtils.dpToPx(context, 5), 0, 0, ScreenUtils.dpToPx(context, 10));
             }
 
             messageTextView.setLayoutParams(layoutParams);

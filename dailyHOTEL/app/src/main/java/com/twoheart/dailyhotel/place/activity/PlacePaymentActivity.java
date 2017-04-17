@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -35,8 +36,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
@@ -313,7 +313,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         break;
                 }
 
-                if (Util.isTextEmpty(msg) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(msg) == false)
                 {
                     String title = getString(R.string.dialog_notice2);
                     String positive = getString(R.string.dialog_btn_text_confirm);
@@ -547,7 +547,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mFinalCheckDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mFinalCheckDialog);
 
             mFinalCheckDialog.show();
 
@@ -683,10 +683,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
             if (i == length - 1)
             {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, 0);
+                layoutParams.setMargins(ScreenUtils.dpToPx(this, 5), 0, 0, 0);
             } else
             {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, Util.dpToPx(this, 10));
+                layoutParams.setMargins(ScreenUtils.dpToPx(this, 5), 0, 0, ScreenUtils.dpToPx(this, 10));
             }
 
             messageTextView.setLayoutParams(layoutParams);
@@ -753,7 +753,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                             String selectedSimpleCard = Crypto.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
 
-                            if (Util.isTextEmpty(selectedSimpleCard) == true)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(selectedSimpleCard) == true)
                             {
                                 jsonObject = dataJSONArray.getJSONObject(0);
                             } else

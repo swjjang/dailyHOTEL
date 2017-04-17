@@ -16,10 +16,9 @@ import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import okhttp3.FormBody;
 
@@ -152,7 +151,7 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
             }
         }
 
-        if (Util.isTextEmpty(name, phone, email) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name, phone, email) == true)
         {
             restartExpiredSession();
             return;
@@ -410,7 +409,7 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
 //            }
 //        }
 //
-//        if (Util.isTextEmpty(name, phone, email) == true)
+//        if (com.daily.base.util.TextUtils.isTextEmpty(name, phone, email) == true)
 //        {
 //            restartExpiredSession();
 //            return;
@@ -1268,7 +1267,7 @@ public class StayPaymentWebActivity extends PlacePaymentWebActivity
 //            Intent intent = new Intent();
 //            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mStayPaymentInformation);
 //
-//            if (Util.isTextEmpty(data) == true)
+//            if (com.daily.base.util.TextUtils.isTextEmpty(data) == true)
 //            {
 //                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
 //                finish();

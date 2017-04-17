@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.File;
@@ -32,7 +32,7 @@ public class SplashImageDownloadAsyncTask extends AsyncTask<String, Void, Boolea
         String url = params[0];
         String version = params[1];
 
-        if (Util.isTextEmpty(url, version) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url, version) == true)
         {
             return false;
         }
@@ -97,7 +97,7 @@ public class SplashImageDownloadAsyncTask extends AsyncTask<String, Void, Boolea
             DailyPreference.getInstance(mContext).setRemoteConfigIntroImageNewVersion(null);
 
             // 파일 삭제
-            if (Util.isTextEmpty(currentVersion) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(currentVersion) == false)
             {
                 String fileName = Util.makeIntroImageFileName(currentVersion);
                 File currentFile = new File(mContext.getCacheDir(), fileName);

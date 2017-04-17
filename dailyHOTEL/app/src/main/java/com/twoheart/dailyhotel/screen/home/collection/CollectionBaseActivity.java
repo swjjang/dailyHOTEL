@@ -11,6 +11,7 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -23,7 +24,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -96,7 +97,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         setContentView(mCollectionBaseLayout.onCreateView(R.layout.activity_collection_search));
 
-        boolean isDeepLink = Util.isTextEmpty(title, subTitle, imageUrl);
+        boolean isDeepLink = com.daily.base.util.TextUtils.isTextEmpty(title, subTitle, imageUrl);
 
         mCollectionBaseLayout.setUsedMultiTransition(mIsUsedMultiTransition);
 
@@ -317,7 +318,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
             endTime = -1;
         }
 
-        mCollectionBaseLayout.setTitleLayout(recommendation.title, recommendation.subtitle, Util.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
+        mCollectionBaseLayout.setTitleLayout(recommendation.title, recommendation.subtitle, ScreenUtils.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
 
         if (endTime < currentTime)
         {

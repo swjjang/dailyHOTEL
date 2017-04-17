@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -23,11 +24,11 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyTextView;
+import com.daily.base.widget.DailyToast;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -216,7 +217,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             }
         }
 
-        mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), 0);
+        mGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), 0);
 
         requestUpdateResultDelayed();
     }
@@ -285,7 +286,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         babySeatCheckView.setOnClickListener(this);
         corkageCheckView.setOnClickListener(this);
 
-        mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 5d));
+        mAmenitiesGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), ScreenUtils.dpToPx(this, 5d));
     }
 
     private void initTimeRangeFilterLayout(View view, GourmetCurationOption gourmetCurationOption)
@@ -801,7 +802,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         @Override
         public void onGourmetCount(String url, int totalCount)
         {
-            if (Util.isTextEmpty(url) == true && totalCount == -1)
+            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));

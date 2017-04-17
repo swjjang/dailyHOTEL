@@ -75,7 +75,7 @@ public class DailyCalendar
 
     public static String convertDateFormatString(String dateString, String srcFormat, String dstFormat) throws ParseException, NullPointerException
     {
-        if (Util.isTextEmpty(dateString, srcFormat) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(dateString, srcFormat) == true)
         {
             throw new NullPointerException("dateString, srcFormat is empty");
         }
@@ -113,7 +113,7 @@ public class DailyCalendar
      */
     public static Date convertStringToDate(final String dateString) throws ParseException, NullPointerException
     {
-        if (Util.isTextEmpty(dateString) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(dateString) == true)
         {
             throw new NullPointerException("dateString is empty");
         }
@@ -125,12 +125,12 @@ public class DailyCalendar
 
     public static Date convertDate(final String dateString, final String format, TimeZone timeZone) throws ParseException, NullPointerException
     {
-        if (Util.isTextEmpty(dateString) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(dateString) == true)
         {
             throw new NullPointerException("dateString is empty");
         }
 
-        if (Util.isTextEmpty(format) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(format) == true)
         {
             throw new NullPointerException("format is empty");
         }
@@ -158,7 +158,7 @@ public class DailyCalendar
      */
     public static void setCalendarDateString(Calendar calendar, String dateString) throws Exception
     {
-        if (calendar == null || Util.isTextEmpty(dateString) == true)
+        if (calendar == null || com.daily.base.util.TextUtils.isTextEmpty(dateString) == true)
         {
             return;
         }
@@ -168,7 +168,7 @@ public class DailyCalendar
 
     public static void setCalendarDateString(Calendar calendar, String dateString, int afterDay) throws Exception
     {
-        if (calendar == null || Util.isTextEmpty(dateString) == true)
+        if (calendar == null || com.daily.base.util.TextUtils.isTextEmpty(dateString) == true)
         {
             return;
         }
@@ -193,7 +193,7 @@ public class DailyCalendar
      */
     public static String format(final long milliseconds, final String format, TimeZone timeZone)
     {
-        if (Util.isTextEmpty(format) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(format) == true)
         {
             return "";
         }

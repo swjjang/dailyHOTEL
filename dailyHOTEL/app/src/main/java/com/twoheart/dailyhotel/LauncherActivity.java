@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -16,10 +17,10 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 public class LauncherActivity extends Activity
 {
@@ -28,7 +29,7 @@ public class LauncherActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        if (Util.isOverAPI21() == true && Util.isOverAPI23() == false)
+        if (VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI23() == false)
         {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -48,7 +49,7 @@ public class LauncherActivity extends Activity
         Util.initializeMemory();
 
         // 개인 정보 방침에 따른 개인 정보 암호화.
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
         {
             DailyUserPreference.getInstance(this).requestMigration(this);
             DailyPreference.getInstance(this).clearUserInformation();
@@ -80,7 +81,7 @@ public class LauncherActivity extends Activity
                     {
                         String baseURL = externalDeepLink.getBaseUrl();
 
-                        if (Util.isTextEmpty(baseURL) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(baseURL) == false)
                         {
                             logOut();
                             DailyPreference.getInstance(this).setBaseUrl(baseURL);

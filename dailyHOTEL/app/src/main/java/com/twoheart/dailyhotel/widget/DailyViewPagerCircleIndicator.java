@@ -7,8 +7,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class DailyViewPagerCircleIndicator extends View
 {
@@ -43,7 +43,7 @@ public class DailyViewPagerCircleIndicator extends View
 
     private void initLayout()
     {
-        mRadius = Util.dpToPx(getContext(), 1.5);
+        mRadius = ScreenUtils.dpToPx(getContext(), 1.5);
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);

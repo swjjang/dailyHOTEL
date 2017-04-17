@@ -41,7 +41,7 @@ public class FirebaseManager extends BaseAnalyticsManager
     {
         Bundle bundle = new Bundle();
 
-        if (Util.isTextEmpty(action) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(action) == false)
         {
             bundle.putString("action", action);
         } else
@@ -49,7 +49,7 @@ public class FirebaseManager extends BaseAnalyticsManager
             bundle.putString("action", AnalyticsManager.ValueType.EMPTY);
         }
 
-        if (Util.isTextEmpty(label) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(label) == false)
         {
             bundle.putString("label", label);
         } else

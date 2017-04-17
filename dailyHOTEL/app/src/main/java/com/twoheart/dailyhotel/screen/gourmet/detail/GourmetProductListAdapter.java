@@ -11,13 +11,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyImageView;
+import com.daily.base.widget.DailyImageView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -198,8 +199,8 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
         productInformationViewHolder.contentsList.removeAllViews();
 
-        if (Util.isTextEmpty(gourmetProduct.menuBenefit) == true && Util.isTextEmpty(gourmetProduct.needToKnow) == true//
-            && Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true && com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == true//
+            && com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
         {
             productInformationViewHolder.contentsList.setVisibility(View.GONE);
         } else
@@ -207,17 +208,17 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
 
             // 베네핏
-            if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == false)
             {
                 addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
             }
 
             // 이용 시간
-            if (Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
             {
                 String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
 
-                if (Util.isTextEmpty(gourmetProduct.lastOrderTime) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
                 {
                     timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
                 }
@@ -226,7 +227,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             // 확인 사항
-            if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == false)
             {
                 addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
             }
@@ -236,8 +237,8 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         //        {
         //
         //
-        //            if (Util.isTextEmpty(gourmetProduct.menuBenefit) == true && Util.isTextEmpty(gourmetProduct.needToKnow) == true//
-        //                && Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
+        //            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true && com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == true//
+        //                && com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
         //            {
         //                productInformationViewHolder.contentsList.setVisibility(View.GONE);
         //            } else
@@ -245,17 +246,17 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         //                productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
         //
         //                // 베네핏
-        //                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
+        //                if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == false)
         //                {
         //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
         //                }
         //
         //                // 이용 시간
-        //                if (Util.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
+        //                if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
         //                {
         //                    String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
         //
-        //                    if (Util.isTextEmpty(gourmetProduct.lastOrderTime) == false)
+        //                    if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
         //                    {
         //                        timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
         //                    }
@@ -264,34 +265,34 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         //                }
         //
         //                // 확인 사항
-        //                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
+        //                if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == false)
         //                {
         //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
         //                }
 
-        //                int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 98);
+        //                int titleTextViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30) - ScreenUtils.dpToPx(mContext, 98);
         //                float titleTextViewHeight = Util.getTextViewHeight(productInformationViewHolder.productNameTextView, titleTextViewWidth);
         //
-        //                float startY = titleTextViewHeight + Util.dpToPx(mContext, 8);
-        //                Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 98), Util.dpToPx(mContext, 98));
-        //                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 39) - Util.dpToPx(mContext, 15);
+        //                float startY = titleTextViewHeight + ScreenUtils.dpToPx(mContext, 8);
+        //                Rect rect = new Rect(0, 0, ScreenUtils.dpToPx(mContext, 98), ScreenUtils.dpToPx(mContext, 98));
+        //                int textViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 39) - ScreenUtils.dpToPx(mContext, 15);
         //
         //                // 베네핏
-        //                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
+        //                if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == false)
         //                {
         //                    startY = addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, startY, textViewWidth, rect, false);
         //                }
         //
         //                // 확인 사항
-        //                if (Util.isTextEmpty(gourmetProduct.needToKnow) == false)
+        //                if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == false)
         //                {
         //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, startY, textViewWidth, rect, true);
         //                }
         //            }
         //        }
 
-        String price = Util.getPriceFormat(mContext, gourmetProduct.price, false);
-        String discountPrice = Util.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
+        String price = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetProduct.price, false);
+        String discountPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
 
         if (gourmetProduct.price <= 0 || gourmetProduct.price <= gourmetProduct.discountPrice)
         {
@@ -345,7 +346,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, boolean hasTopMargin)
     {
-        if (layoutInflater == null || viewGroup == null || Util.isTextEmpty(contentText) == true)
+        if (layoutInflater == null || viewGroup == null || com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
         {
             return;
         }
@@ -356,7 +357,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         if (hasTopMargin == true)
         {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.topMargin = Util.dpToPx(mContext, 6);
+            layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 6);
             textLayout.setLayoutParams(layoutParams);
         }
 
@@ -369,7 +370,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private float addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, float startY, int textViewWidth, Rect rect, boolean hasTopMargin)
     {
-        if (layoutInflater == null || viewGroup == null || Util.isTextEmpty(contentText) == true)
+        if (layoutInflater == null || viewGroup == null || com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
         {
             return startY;
         }
@@ -380,13 +381,13 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         if (hasTopMargin == true)
         {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.topMargin = Util.dpToPx(mContext, 6);
+            layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 6);
             textLayout.setLayoutParams(layoutParams);
 
             startY += layoutParams.topMargin;
         } else
         {
-            startY += Util.dpToPx(mContext, 2);
+            startY += ScreenUtils.dpToPx(mContext, 2);
         }
 
         DailyImageView iconImageView = (DailyImageView) textLayout.findViewById(R.id.iconImageView);
@@ -405,7 +406,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     protected float measureText(TextView textView, String text, float viewY, int viewWidth, Rect rect)
     {
-        if (textView == null || viewWidth <= 0 || Util.isTextEmpty(text) == true)
+        if (textView == null || viewWidth <= 0 || com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return 0;
         }
@@ -444,12 +445,12 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             startIndex += textCount;
 
             textView.setText(stringBuilder.toString());
-            textViewHeight = Util.getTextViewHeight(textView, viewWidth);
+            textViewHeight = TextUtils.getTextViewHeight(textView, viewWidth);
         }
 
         textView.setText(stringBuilder.toString());
 
-        return viewY + Util.getTextViewHeight(textView, viewWidth);
+        return viewY + TextUtils.getTextViewHeight(textView, viewWidth);
     }
 
     private class ProductInformationViewHolder extends RecyclerView.ViewHolder

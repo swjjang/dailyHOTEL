@@ -4,8 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,7 +56,7 @@ public class ReviewItem implements Parcelable
 
         String serviceType = jsonObject.getString("serviceType");
 
-        if (Util.isTextEmpty(serviceType) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(serviceType) == false)
         {
             if ("HOTEL".equalsIgnoreCase(serviceType) == true)
             {

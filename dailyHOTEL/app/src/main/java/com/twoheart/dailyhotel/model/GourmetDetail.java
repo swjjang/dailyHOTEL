@@ -127,7 +127,7 @@ public class GourmetDetail extends PlaceDetail<GourmetProduct> implements Parcel
     //        {
     //            benefit = jsonObject.getString("benefit");
     //
-    //            if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
+    //            if (com.daily.base.util.TextUtils.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
     //            {
     //                JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
     //

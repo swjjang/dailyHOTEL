@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -51,7 +52,7 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -369,7 +370,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             mHomeLayout.setTextMessageData(title, description);
 
-            if (Util.isTextEmpty(title) == false || Util.isTextEmpty(description) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(title) == false || com.daily.base.util.TextUtils.isTextEmpty(description) == false)
             {
                 AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_MESSAGE_OPEN,//
@@ -401,7 +402,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         Intent intent;
 
-        if (Util.isTextEmpty(recommenderCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommenderCode) == true)
         {
             intent = SignupStep1Activity.newInstance(baseActivity, null);
         } else
@@ -414,7 +415,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     void startEventWebActivity(String url, String eventName)
     {
-        if (Util.isTextEmpty(url) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
         {
             return;
         }
@@ -952,7 +953,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            if (Util.isTextEmpty(event.linkUrl, event.title) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(event.linkUrl, event.title) == true)
             {
                 return;
             }
@@ -976,14 +977,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     case "GOURMET":
                         intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, true);
                         break;
 
                     case "HOTEL":
                     default:
                         intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, true);
                         break;
                 }
@@ -1006,14 +1007,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     case "GOURMET":
                         intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, false);
                         break;
 
                     case "HOTEL":
                     default:
                         intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, false);
                         break;
                 }

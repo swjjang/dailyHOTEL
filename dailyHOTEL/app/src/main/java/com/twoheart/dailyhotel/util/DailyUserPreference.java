@@ -90,7 +90,7 @@ public class DailyUserPreference
     {
         if (editor != null)
         {
-            if (Util.isTextEmpty(value) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
             {
                 editor.remove(key);
             } else

@@ -77,7 +77,7 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
         TextView expireTextView = (TextView) view.findViewById(R.id.expireTextView);
         View underLineView = view.findViewById(R.id.underLineView);
 
-        String priceFormat = Util.getPriceFormat(mContext, bonus.bonus, false);
+        String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, bonus.bonus, false);
 
         if (bonus.bonus > 0)
         {

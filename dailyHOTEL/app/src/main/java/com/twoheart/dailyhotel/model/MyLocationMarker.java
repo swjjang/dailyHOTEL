@@ -6,9 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.daily.base.util.ScreenUtils;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.twoheart.dailyhotel.util.Util;
 
 public class MyLocationMarker
 {
@@ -16,7 +16,7 @@ public class MyLocationMarker
 
     public MyLocationMarker(Context context)
     {
-        mBitmap = Bitmap.createBitmap(Util.dpToPx(context, 15), Util.dpToPx(context, 15), Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(ScreenUtils.dpToPx(context, 15), ScreenUtils.dpToPx(context, 15), Bitmap.Config.ARGB_8888);
     }
 
     public BitmapDescriptor makeIcon()

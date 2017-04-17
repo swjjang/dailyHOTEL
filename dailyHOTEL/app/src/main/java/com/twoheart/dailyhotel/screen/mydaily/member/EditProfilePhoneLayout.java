@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -24,8 +25,8 @@ import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
@@ -211,7 +212,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                 {
                     String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-                    if (Util.isTextEmpty(verificationNumber) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
                     {
                         DailyToast.showToast(mContext, R.string.message_wrong_certificationnumber, Toast.LENGTH_SHORT);
                         return true;
@@ -254,7 +255,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     public void setCountryCode(String countryCode)
     {
-        if (Util.isTextEmpty(countryCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }
@@ -308,7 +309,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                     {
                         String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-                        if (Util.isTextEmpty(verificationNumber) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
                         {
                             DailyToast.showToast(mContext, R.string.message_wrong_certificationnumber, Toast.LENGTH_SHORT);
                             return;
@@ -406,7 +407,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                         }
                     });
 
-                    if (Util.isOverAPI16() == true)
+                    if (VersionUtils.isOverAPI16() == true)
                     {
                         mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     } else
@@ -435,7 +436,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     public void setPhoneNumber(String phoneNumber)
     {
-        if (mPhoneEditText == null || Util.isTextEmpty(phoneNumber) == true)
+        if (mPhoneEditText == null || com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
         {
             return;
         }
@@ -463,7 +464,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }
@@ -478,7 +479,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }

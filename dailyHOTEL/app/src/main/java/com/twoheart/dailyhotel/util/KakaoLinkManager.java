@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.kakao.kakaolink.AppActionBuilder;
 import com.kakao.kakaolink.AppActionInfoBuilder;
 import com.kakao.kakaolink.KakaoLink;
@@ -70,7 +71,7 @@ public class KakaoLinkManager implements Constants
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
                 , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"), stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
 
-            if (Util.isTextEmpty(imageUrl) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
@@ -98,7 +99,7 @@ public class KakaoLinkManager implements Constants
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            if (Util.isTextEmpty(imageUrl) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
@@ -131,7 +132,7 @@ public class KakaoLinkManager implements Constants
             String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
                 , gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"), address);
 
-            if (Util.isTextEmpty(imageUrl) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
@@ -160,7 +161,7 @@ public class KakaoLinkManager implements Constants
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
-            if (Util.isTextEmpty(imageUrl) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);

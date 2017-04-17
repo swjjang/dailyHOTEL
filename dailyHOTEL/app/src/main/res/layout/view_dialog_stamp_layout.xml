@@ -14,7 +14,7 @@
         android:background="@drawable/shape_round_top_left_right_2dp"
         android:src="@drawable/img_popup_detail_stamp"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:textSize="17dp"
         dailyFont:style="Medium"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/messageTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
         android:gravity="center_horizontal"
         android:visibility="visible">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/confirmTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

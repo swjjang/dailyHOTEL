@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.util.Util;
@@ -87,7 +88,7 @@ public class EventListAdapter extends ArrayAdapter<Event>
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.list_row_event, parent, false);
 
-            AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+            AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
             view.setLayoutParams(layoutParams);
         } else
         {
@@ -96,7 +97,7 @@ public class EventListAdapter extends ArrayAdapter<Event>
 
         com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
         Event event = getItem(position);
-        Util.requestImageResize(mContext, imageView, Util.getResolutionImageUrl(mContext, event.defaultImageUrl, event.lowResolutionImageUrl));
+        Util.requestImageResize(mContext, imageView, ScreenUtils.getResolutionImageUrl(mContext, event.defaultImageUrl, event.lowResolutionImageUrl));
 
         return view;
     }

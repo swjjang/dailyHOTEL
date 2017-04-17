@@ -77,7 +77,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         name.setText(gourmet.name);
 
         // D.benefit
-        if (Util.isTextEmpty(gourmet.dBenefitText) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.dBenefitText) == false)
         {
             dBenefitLayout.setVisibility(View.VISIBLE);
             dBenefitTextView.setText(gourmet.dBenefitText);
@@ -105,7 +105,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(Util.getPriceFormat(mContext, gourmet.price, false));
+            priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.price, false));
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -120,12 +120,12 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             satisfactionView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(Util.getPriceFormat(mContext, gourmet.discountPrice, false));
+        discountTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.discountPrice, false));
 
         name.setSelected(true); // Android TextView marquee bug
 
         String displayCategory;
-        if (Util.isTextEmpty(gourmet.subCategory) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.subCategory) == false)
         {
             displayCategory = gourmet.subCategory;
         } else
@@ -134,7 +134,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         }
 
         // grade
-        if (Util.isTextEmpty(displayCategory) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(displayCategory) == true)
         {
             grade.setVisibility(View.INVISIBLE);
         } else

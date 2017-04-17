@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.FontManager;
+import com.daily.base.util.VersionUtils;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -17,11 +19,10 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.GoogleAnalyticsManager;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Locale;
 
@@ -83,15 +84,15 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         Util.setLocale(getApplicationContext(), Locale.KOREAN);
 
         // 버전 정보 얻기
-        VERSION_CODE = Util.getAppVersionCode(getApplicationContext());
-        VERSION = Util.getAppVersionName(getApplicationContext());
+        VERSION_CODE = VersionUtils.getAppVersionCode(getApplicationContext());
+        VERSION = VersionUtils.getAppVersionName(getApplicationContext());
 
         AUTHORIZATION = DailyUserPreference.getInstance(getApplicationContext()).getAuthorization();
 
         String preferenceVersion = DailyPreference.getInstance( //
             getApplicationContext()).getFirstAppVersion();
 
-        if (Util.isTextEmpty(preferenceVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(preferenceVersion) == true)
         {
             DailyPreference.getInstance(getApplicationContext()).setFirstAppVersion(VERSION_CODE);
         }
@@ -138,7 +139,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
     public static boolean isLogin()
     {
-        return Util.isTextEmpty(AUTHORIZATION) == false;
+        return com.daily.base.util.TextUtils.isTextEmpty(AUTHORIZATION) == false;
     }
 
     public static boolean isSuccessTMapAuth()

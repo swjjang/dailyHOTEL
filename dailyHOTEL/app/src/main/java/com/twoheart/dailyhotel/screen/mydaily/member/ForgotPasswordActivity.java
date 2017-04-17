@@ -16,10 +16,9 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONException;
@@ -104,7 +103,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         mEmail = mEmailEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(mEmail) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mEmail) == true)
         {
             releaseUiComponent();
 
@@ -234,7 +233,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
                     if ("true".equalsIgnoreCase(result) == true)
                     {
-                        if (Util.isTextEmpty(mEmail) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(mEmail) == true)
                         {
                             DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                         } else

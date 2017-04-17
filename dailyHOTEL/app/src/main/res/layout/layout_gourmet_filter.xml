@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
@@ -74,7 +74,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/time0611View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -86,7 +86,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_01"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/time1115View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -98,7 +98,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_02"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/time1517View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -110,7 +110,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_03"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/time1721View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -122,7 +122,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_gourmet_03_time_04"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/time2106View"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -139,7 +139,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
@@ -170,7 +170,7 @@
         android:stretchMode="columnWidth"
         app:columnCount="5">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/parkingCheckView"
             android:layout_width="0dp"
             android:layout_height="74dp"
@@ -182,7 +182,7 @@
             app:drawableCompatTop="@drawable/f_ic_facilities_05"
             app:layout_columnWeight="1"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/valetCheckView"
             android:layout_width="0dp"
             android:layout_height="74dp"
@@ -194,7 +194,7 @@
             app:drawableCompatTop="@drawable/f_ic_facilities_10"
             app:layout_columnWeight="1"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/privateRoomCheckView"
             android:layout_width="0dp"
             android:layout_height="74dp"
@@ -206,7 +206,7 @@
             app:drawableCompatTop="@drawable/f_ic_facilities_11"
             app:layout_columnWeight="1"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/groupBookingCheckView"
             android:layout_width="0dp"
             android:layout_height="74dp"
@@ -218,7 +218,7 @@
             app:drawableCompatTop="@drawable/f_ic_facilities_12"
             app:layout_columnWeight="1"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/babySeatCheckView"
             android:layout_width="0dp"
             android:layout_height="74dp"
@@ -230,7 +230,7 @@
             app:drawableCompatTop="@drawable/f_ic_facilities_13"
             app:layout_columnWeight="1"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/corkageCheckView"
             android:layout_width="0dp"
             android:layout_height="74dp"

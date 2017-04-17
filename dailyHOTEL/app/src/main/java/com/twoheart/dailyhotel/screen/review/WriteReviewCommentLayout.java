@@ -18,11 +18,10 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyScrollView;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyScrollView;
 
 /**
  * Created by android_sam on 2016. 12. 5..
@@ -122,7 +121,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
         mEditTextView.setText(text);
 
-        if (Util.isTextEmpty(text) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == false)
         {
             mEditTextView.setSelection(text.length());
         }
@@ -130,7 +129,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     void updateCompleteLayout(String text)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }
@@ -152,7 +151,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     void updateTextCountLayout(String text)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }

@@ -12,7 +12,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 
 import java.text.ParseException;
 import java.util.ArrayList;

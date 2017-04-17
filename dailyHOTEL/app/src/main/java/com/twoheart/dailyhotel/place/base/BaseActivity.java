@@ -26,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
@@ -37,9 +39,9 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -89,7 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         mLockUI = new LoadingDialog(this);
         mNetworkTag = getClass().getName();
 
-        if (Util.isOverAPI21() == true && Util.isOverAPI23() == false)
+        if (VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI23() == false)
         {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -483,7 +485,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         unLockUI();
 
-        if (Util.isTextEmpty(message) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
         {
             onError();
         } else
@@ -506,7 +508,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             return;
         }
 
-        if (Util.isOverAPI16())
+        if (VersionUtils.isOverAPI16())
         {
             root.setBackground(null);
         } else
@@ -560,7 +562,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(getString(R.string.dialog_notice2));
         } else
@@ -577,7 +579,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
 
-        if (Util.isTextEmpty(positive, negative) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
@@ -698,15 +700,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             return;
         }
 
-        if (mDialog != null)
-        {
-            if (mDialog.isShowing())
-            {
-                mDialog.dismiss();
-            }
-
-            mDialog = null;
-        }
+        hideSimpleDialog();
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = layoutInflater.inflate(R.layout.view_dialog_layout, null, false);
@@ -720,7 +714,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(getString(R.string.dialog_notice2));
         } else
@@ -737,7 +731,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
 
-        if (Util.isTextEmpty(positive, negative) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
@@ -822,7 +816,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             mDialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -877,7 +871,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(getString(R.string.dialog_notice2));
         } else
@@ -893,7 +887,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
 
-        if (Util.isTextEmpty(positive, negative) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
 
@@ -953,7 +947,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             mDialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -979,7 +973,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                 }
 
                 String remoteConfigPhoneNumber = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
-                String phoneNumber = Util.isTextEmpty(remoteConfigPhoneNumber) == false //
+                String phoneNumber = com.daily.base.util.TextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
                     ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
 
                 String noCallMessage = getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);

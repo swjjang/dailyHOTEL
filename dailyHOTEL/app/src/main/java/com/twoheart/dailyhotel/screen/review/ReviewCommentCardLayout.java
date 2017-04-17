@@ -14,10 +14,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.daily.base.widget.DailyTextView;
 
 public class ReviewCommentCardLayout extends ReviewCardLayout implements View.OnClickListener
 {
@@ -44,14 +45,14 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
     {
         setBackgroundResource(R.drawable.selector_review_cardlayout_selected);
 
-        final int DP1 = Util.dpToPx(context, 1);
+        final int DP1 = ScreenUtils.dpToPx(context, 1);
         setPadding(DP1, DP1, DP1, DP1);
 
-        int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(context, 30);
-        int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+        int cardWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(context, 30);
+        int cardHeight = ScreenUtils.getRatioHeightType4x3(cardWidth);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.bottomMargin = Util.dpToPx(context, 15);
+        layoutParams.bottomMargin = ScreenUtils.dpToPx(context, 15);
         setLayoutParams(layoutParams);
         setMinimumHeight(cardHeight);
 
@@ -82,7 +83,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
 
         DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             setSelected(false);
             titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -112,7 +113,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
     @Override
     public boolean isChecked()
     {
-        return Util.isTextEmpty(mCommentTextView.getText().toString()) == false;
+        return com.daily.base.util.TextUtils.isTextEmpty(mCommentTextView.getText().toString()) == false;
     }
 
     @Override

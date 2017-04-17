@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -19,17 +18,18 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Map;
 
@@ -114,13 +114,13 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     private void initLayout(String imageUrl, String place, String placeType, String userName)
     {
-        if (Util.isTextEmpty(place, placeType) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(place, placeType) == true)
         {
             Util.restartApp(this);
             return;
         }
 
-        int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(this));
+        int imageHeight = ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(this));
         com.facebook.drawee.view.SimpleDraweeView simpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
         layoutParams.height = imageHeight;
@@ -136,7 +136,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         placeTypeTextView.setText(placeType);
 
         String message;
-        if (Util.isTextEmpty(userName) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(userName) == false)
         {
             message = getString(R.string.message_completed_payment_format, userName);
             SpannableStringBuilder userNameBuilder = new SpannableStringBuilder(message);
@@ -182,7 +182,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         message2TextView.setText(message2);
 
         // SpannableString 자체가 null을 허용하지 않
-        if (Util.isTextEmpty(message3) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(message3) == false)
         {
             SpannableString spannableString3 = new SpannableString(message3);
             spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -199,18 +199,36 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         confirmImageView.setVisibility(View.INVISIBLE);
         final View receiptLayout = findViewById(R.id.receiptLayout);
 
-        float startY = 0f - Util.getLCDHeight(PlacePaymentThankyouActivity.this);
+        float startY = 0f - ScreenUtils.getScreenHeight(PlacePaymentThankyouActivity.this);
         final float endY = 0.0f;
 
         final float startScaleY = 2.3f;
         final float endScaleY = 1.0f;
 
-        int animatorSetStartDelay = Util.isOverAPI21() ? 400 : 600;
-        int receiptLayoutAnimatorDuration = Util.isOverAPI21() ? 300 : 400;
-        int confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
-        int confirmImageAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
-        int stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
-        int stampLayoutAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
+        int animatorSetStartDelay;
+        int receiptLayoutAnimatorDuration;
+        int confirmImageAnimatorStartDelay;
+        int confirmImageAnimatorDuration;
+        int stampLayoutAnimatorStartDelay;
+        int stampLayoutAnimatorDuration;
+
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            animatorSetStartDelay = 400;
+            receiptLayoutAnimatorDuration = 300;
+            confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            confirmImageAnimatorDuration = 200;
+            stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            stampLayoutAnimatorDuration = 200;
+        } else
+        {
+            animatorSetStartDelay = 600;
+            receiptLayoutAnimatorDuration = 400;
+            confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            confirmImageAnimatorDuration = 200;
+            stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            stampLayoutAnimatorDuration = 200;
+        }
 
         receiptLayout.setTranslationY(startY);
 

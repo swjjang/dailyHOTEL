@@ -24,12 +24,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -80,7 +82,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         switch (mPermissionType)
         {
             case READ_PHONE_STATE:
-                if (Util.isOverAPI23() == false)
+                if (VersionUtils.isOverAPI23() == false)
                 {
                     finish(RESULT_OK);
                     return;
@@ -99,7 +101,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                     showTermsOfLocationDialog();
                 } else
                 {
-                    if (Util.isOverAPI23() == false)
+                    if (VersionUtils.isOverAPI23() == false)
                     {
                         finish(RESULT_OK);
                         return;
@@ -339,14 +341,14 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                 messageTextView.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_permission_read_phone_state), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_phone);
                 permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_call, 0, 0, 0);
-                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
+                permissionTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(this, 5));
                 break;
 
             case ACCESS_FINE_LOCATION:
                 messageTextView.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_permission_access_fine_location), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_location);
                 permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_map, 0, 0, 0);
-                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
+                permissionTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(this, 5));
                 break;
         }
 
@@ -379,7 +381,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             mDialog.setContentView(view);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -411,7 +413,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                 messageTextView02.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_denied_permission_read_phone_state), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_phone);
                 permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_call, 0, 0, 0);
-                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
+                permissionTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(this, 5));
                 break;
             }
 
@@ -421,7 +423,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
                 messageTextView02.setText(changedSpannableColorBoldString(getString(R.string.message_guide_dialog_denied_permission_access_fine_location), CHANGE_STYLE_TEXT));
                 permissionTextView.setText(R.string.label_location);
                 permissionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_map, 0, 0, 0);
-                permissionTextView.setCompoundDrawablePadding(Util.dpToPx(this, 5));
+                permissionTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(this, 5));
                 break;
             }
         }
@@ -478,7 +480,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             mDialog.setContentView(view);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -493,7 +495,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
     {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return spannableStringBuilder;
         }
@@ -614,7 +616,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 

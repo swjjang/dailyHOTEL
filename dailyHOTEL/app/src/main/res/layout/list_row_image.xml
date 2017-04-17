@@ -10,7 +10,7 @@
         android:layout_height="240dp"
         fresco:actualImageScaleType="centerCrop"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/descriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

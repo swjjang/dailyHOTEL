@@ -7,6 +7,9 @@ import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -25,8 +28,7 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.DailyViewPager;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.widget.DailyViewPager;
 
 import org.json.JSONObject;
 
@@ -99,7 +101,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             tabUpperLineView.setVisibility(View.VISIBLE);
         } else
@@ -107,7 +109,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
             tabUpperLineView.setVisibility(View.GONE);
 
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTabLayout.getLayoutParams();
-            layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+            layoutParams.topMargin = 1 - ScreenUtils.dpToPx(this, 1);
 
             mTabLayout.setLayoutParams(layoutParams);
         }

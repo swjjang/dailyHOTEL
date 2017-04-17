@@ -332,7 +332,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
             if (list != null && list.size() > 0)
             {
-                if (Util.isTextEmpty(districtName) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(districtName) == false)
                 {
                     PlaceViewItem firstItem = list.get(0);
                     if (firstItem.mType == PlaceViewItem.TYPE_SECTION)

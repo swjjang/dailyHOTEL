@@ -14,9 +14,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,7 +55,7 @@ public class DailyRemoteConfig
 
     public void requestRemoteConfig(final OnCompleteListener listener)
     {
-        if (Util.isTextEmpty(DailyPreference.getInstance(mContext).getRemoteConfigCompanyName()) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(DailyPreference.getInstance(mContext).getRemoteConfigCompanyName()) == true)
         {
             writeCompanyInformation(mContext, mContext.getString(R.string.default_company_information));
         }
@@ -206,7 +205,7 @@ public class DailyRemoteConfig
 
     void processSplashImage(Context context, String updateTime, String imageUrl)
     {
-        if (Util.isTextEmpty(updateTime, imageUrl) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(updateTime, imageUrl) == true)
         {
             return;
         }
@@ -246,7 +245,7 @@ public class DailyRemoteConfig
             } else
             {
                 // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
-                if (Util.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
                 {
                     new SplashImageDownloadAsyncTask(context).execute(url, newVersion);
                 }
@@ -306,7 +305,7 @@ public class DailyRemoteConfig
 
     void writeTextFiled(Context context, String textInformation)
     {
-        if (context == null || Util.isTextEmpty(textInformation) == true)
+        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(textInformation) == true)
         {
             return;
         }
@@ -384,7 +383,7 @@ public class DailyRemoteConfig
                 if (result == true)
                 {
                     // 이전 파일 삭제
-                    if (Util.isTextEmpty(clientHomeEventCurrentVersion) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(clientHomeEventCurrentVersion) == false)
                     {
                         String fileName = Util.makeImageFileName(clientHomeEventCurrentVersion);
                         File currentFile = new File(context.getCacheDir(), fileName);
@@ -405,7 +404,7 @@ public class DailyRemoteConfig
 
     void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
     {
-        if (Util.isTextEmpty(jsonObject) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(jsonObject) == true)
         {
             return;
         }
@@ -422,7 +421,7 @@ public class DailyRemoteConfig
             dpi = "highResolution";
         }
 
-        if (Util.isTextEmpty(clientVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(clientVersion) == true)
         {
             clientVersion = "";
         }
@@ -448,7 +447,7 @@ public class DailyRemoteConfig
 
     void writeStamp(final Context context, String androidStamp)
     {
-        if (context == null || Util.isTextEmpty(androidStamp) == true)
+        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(androidStamp) == true)
         {
             return;
         }

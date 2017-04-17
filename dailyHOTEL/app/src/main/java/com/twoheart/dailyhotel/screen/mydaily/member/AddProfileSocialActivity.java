@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -22,10 +23,10 @@ import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import java.util.Calendar;
 
@@ -105,7 +106,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hidePhoneLayout();
         }
 
-        if (Util.isTextEmpty(mCustomer.getEmail()) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getEmail()) == true)
         {
             mAddProfileSocialLayout.showEmailLayout();
         } else
@@ -198,7 +199,7 @@ public class AddProfileSocialActivity extends BaseActivity
             updateDate = null;
         }
 
-        if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
+        if (isBenefit == true && com.daily.base.util.TextUtils.isTextEmpty(updateDate) == false)
         {
             messageTextView.setVisibility(View.VISIBLE);
             messageTextView.setText(getString(R.string.message_signup_completed_alarm_on_format, updateDate));
@@ -234,7 +235,7 @@ public class AddProfileSocialActivity extends BaseActivity
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 
@@ -368,7 +369,7 @@ public class AddProfileSocialActivity extends BaseActivity
             {
                 dialog.setContentView(dialogView);
 
-                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(AddProfileSocialActivity.this, dialog);
+                WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(AddProfileSocialActivity.this, dialog);
 
                 dialog.show();
 
@@ -383,9 +384,9 @@ public class AddProfileSocialActivity extends BaseActivity
         public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
         {
             // 전화번호가 없거나 잘못 된경우
-            if (Util.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
             {
-                if (Util.isTextEmpty(phoneNumber) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
                 {
                     DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
                     return;
@@ -399,9 +400,9 @@ public class AddProfileSocialActivity extends BaseActivity
             }
 
             // 이메일이 없는 경우
-            if (Util.isTextEmpty(mCustomer.getEmail()) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getEmail()) == true)
             {
-                if (Util.isTextEmpty(email) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
                 {
                     DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
                     return;
@@ -416,9 +417,9 @@ public class AddProfileSocialActivity extends BaseActivity
             }
 
             // 이름이 없는 경우
-            if (Util.isTextEmpty(mCustomer.getName()) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getName()) == true)
             {
-                if (Util.isTextEmpty(name) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
                 {
                     DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
                     return;
@@ -461,7 +462,7 @@ public class AddProfileSocialActivity extends BaseActivity
         @Override
         public void onUpdateSocialUserInformation(String message, String agreedDate)
         {
-            if (Util.isTextEmpty(message) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
             {
                 boolean isBenefit = mAddProfileSocialLayout.isCheckedBenefit();
 

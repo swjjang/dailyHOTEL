@@ -9,8 +9,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -89,7 +88,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
                 {
                     String data = response.body().string();
 
-                    if (Util.isTextEmpty(data) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(data) == false)
                     {
                         jsonObject = new JSONObject(data);
                     }
@@ -130,7 +129,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 
         private JSONObject getSearchTypes(JSONArray jsonArray, String searchType) throws JSONException
         {
-            if (jsonArray == null || Util.isTextEmpty(searchType) == true)
+            if (jsonArray == null || com.daily.base.util.TextUtils.isTextEmpty(searchType) == true)
             {
                 return null;
             }
@@ -163,7 +162,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 
         private String getSearchTypes(JSONArray jsonArray, String searchType, String key) throws JSONException
         {
-            if (jsonArray == null || Util.isTextEmpty(searchType) == true)
+            if (jsonArray == null || com.daily.base.util.TextUtils.isTextEmpty(searchType) == true)
             {
                 return null;
             }
@@ -190,7 +189,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
                         String address = addressJSONObject.getString(key);
 
 
-                        if (Util.isTextEmpty(firstAddress) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(firstAddress) == true)
                         {
                             firstAddress = address;
                         }
@@ -208,7 +207,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 
         private boolean isKoreanAddress(String address)
         {
-            if (Util.isTextEmpty(address) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(address) == true)
             {
                 return false;
             }
@@ -232,7 +231,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 
         private boolean hasType(JSONArray jsonArray, String searchType) throws JSONException
         {
-            if (jsonArray == null || Util.isTextEmpty(searchType) == true)
+            if (jsonArray == null || com.daily.base.util.TextUtils.isTextEmpty(searchType) == true)
             {
                 return false;
             }

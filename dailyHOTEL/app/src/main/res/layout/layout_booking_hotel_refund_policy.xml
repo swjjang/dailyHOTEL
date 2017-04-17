@@ -12,7 +12,7 @@
         android:layout_height="1dp"
         android:background="@color/default_line_cf0f0f0"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/default_background"
@@ -42,7 +42,7 @@
             android:layout_marginTop="5dp"
             app:srcCompat="@drawable/info_ic_text_dot_black"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/refundPolicyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
             android:layout_marginTop="5dp"
             app:srcCompat="@drawable/info_ic_text_dot_black"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"

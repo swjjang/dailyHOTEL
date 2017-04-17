@@ -16,16 +16,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyAutoCompleteEditText;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Arrays;
@@ -240,7 +240,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
-        if (Util.isOverAPI21() == false)
+        if (VersionUtils.isOverAPI21() == false)
         {
             mAllAgreementCheckBox.setBackgroundResource(0);
             mTermsOfPrivacyCheckBox.setBackgroundResource(0);
@@ -328,7 +328,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         // 생일
         String birthday = mBirthdayEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(birthday) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
         {
             Calendar calendar = (Calendar) mBirthdayEditText.getTag();
 

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -22,11 +23,9 @@ import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Prices;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.daily.base.widget.DailyTextView;
 
 import java.util.ArrayList;
-
-import static com.twoheart.dailyhotel.util.Util.dpToPx;
 
 /**
  * Created by android_sam on 2017. 1. 19..
@@ -85,7 +84,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         boolean isLast = size <= 0 || (position == size - 1);
 
         ViewGroup.LayoutParams rightViewParam = holder.rightView.getLayoutParams();
-        int rightViewWidth = Util.dpToPx(mContext, isLast == true ? 15 : 12);
+        int rightViewWidth = ScreenUtils.dpToPx(mContext, isLast == true ? 15 : 12);
 
         if (rightViewParam == null)
         {
@@ -122,8 +121,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.personView.setText("");
         } else
         {
-            String strPrice = Util.getPriceFormat(mContext, prices.normalPrice, false);
-            String strDiscount = Util.getPriceFormat(mContext, prices.discountPrice, false);
+            String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, prices.normalPrice, false);
+            String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, prices.discountPrice, false);
 
             holder.discountPriceView.setText(strDiscount);
 
@@ -149,7 +148,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (place.placeType == Constants.PlaceType.FNB)
         {
             // grade
-            if (Util.isTextEmpty(place.details.category) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(place.details.category) == true)
             {
                 holder.gradeView.setVisibility(View.GONE);
                 holder.dotView.setVisibility(View.GONE);
@@ -258,8 +257,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             leftView = view.findViewById(R.id.leftLayout);
             rightView = view.findViewById(R.id.rightLayout);
 
-            int width = imageView.getWidth() == 0 ? dpToPx(mContext, 239) : imageView.getWidth();
-            int height = Util.getRatioHeightType16x9(width);
+            int width = imageView.getWidth() == 0 ? ScreenUtils.dpToPx(mContext, 239) : imageView.getWidth();
+            int height = ScreenUtils.getRatioHeightType16x9(width);
 
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);

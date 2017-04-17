@@ -12,7 +12,7 @@
         android:layout_height="1dp"
         android:background="@color/default_line_cf0f0f0"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -22,7 +22,7 @@
         android:textColor="@color/search_hint_text"
         android:textSize="14dp"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/guideTextView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

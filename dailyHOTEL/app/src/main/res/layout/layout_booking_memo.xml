@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
@@ -32,7 +32,7 @@
             android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyEditText
+    <com.daily.base.widget.DailyEditText
         android:id="@+id/memoEditText"
         android:layout_width="match_parent"
         android:layout_height="80dp"

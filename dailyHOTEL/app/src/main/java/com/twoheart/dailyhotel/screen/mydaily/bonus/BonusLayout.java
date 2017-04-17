@@ -98,7 +98,7 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
     public void setBonus(int bonus)
     {
-        mBonusTextView.setText(Util.getPriceFormat(mContext, bonus, false));
+        mBonusTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, bonus, false));
     }
 
     public void setBottomLayoutVisible(boolean visible)

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_default"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/logoutView"
+            android:layout_below="@+id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/emailLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/emailView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/act_profile_email"
+                            android:textColor="@color/search_hint_text"
+                            android:textSize="12dp"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/emailTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:hint="@string/act_profile_input_email"
+                            android:maxLength="50"
+                            android:singleLine="true"
+                            android:textColor="@color/default_text_c929292"
+                            android:textColorHint="@color/default_text_cc5c5c5"
+                            android:textSize="16dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+
+                <RelativeLayout
+                    android:id="@+id/passwordLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/passwordView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/act_profile_password"
+                            android:textColor="@color/search_hint_text"
+                            android:textSize="12dp"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/passwordTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:maxLength="20"
+                            android:singleLine="true"
+                            android:text="\u2022\u2022\u2022\u2022\u2022\u2022"
+                            android:textColor="@color/default_text_c323232"
+                            android:textSize="16dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/passwordUnderLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+
+                <RelativeLayout
+                    android:id="@+id/nameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/nameView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/act_profile_name"
+                            android:textColor="@color/search_hint_text"
+                            android:textSize="12dp"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/nameTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:hint="@string/act_profile_input_name"
+                            android:singleLine="true"
+                            android:textColor="@color/default_text_c323232"
+                            android:textColorHint="@color/default_text_cc5c5c5"
+                            android:textSize="16dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+
+                <RelativeLayout
+                    android:id="@+id/phoneLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/phoneView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/act_profile_contact"
+                            android:textColor="@color/search_hint_text"
+                            android:textSize="12dp"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/phoneVerifyView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="2dp"
+                            android:layout_toRightOf="@+id/phoneView"
+                            android:text="@string/label_dont_verification"
+                            android:textColor="@color/dh_theme_color"
+                            android:textSize="12dp"
+                            android:visibility="gone"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/phoneTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/phoneView"
+                            android:layout_marginTop="8dp"
+                            android:hint="@string/act_profile_input_contact"
+                            android:singleLine="true"
+                            android:textColor="@color/default_text_c323232"
+                            android:textColorHint="@color/default_text_cc5c5c5"
+                            android:textSize="16dp"/>
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+
+                <RelativeLayout
+                    android:id="@+id/birthdayLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/birthdayView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_birthday"
+                            android:textColor="@color/search_hint_text"
+                            android:textSize="12dp"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/birthdayTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/birthdayView"
+                            android:layout_marginTop="8dp"
+                            android:hint="@string/act_profile_input_birthday"
+                            android:singleLine="true"
+                            android:textColor="@color/default_text_c323232"
+                            android:textColorHint="@color/default_text_cc5c5c5"
+                            android:textSize="16dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+
+                <RelativeLayout
+                    android:id="@+id/referrelLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/referralView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_my_code"
+                            android:textColor="@color/search_hint_text"
+                            android:textSize="12dp"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/referralTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:singleLine="true"
+                            android:textColor="@color/default_text_c323232"
+                            android:textColorHint="@color/default_text_cc5c5c5"
+                            android:textSize="16dp"/>
+                    </LinearLayout>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/codeCopyView"
+                        android:layout_width="59dp"
+                        android:layout_height="21dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="14dp"
+                        android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r1"
+                        android:gravity="center"
+                        android:text="@string/label_code_copy"
+                        android:textColor="@color/default_line_c323232"
+                        android:textSize="11dp"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/curation_information_line"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/logoutView"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="15dp"
+            android:background="@drawable/shape_fillrect_bb70038_r2"
+            android:gravity="center"
+            android:text="@string/act_profile_btn_logout"
+            android:textColor="@color/white"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+    </RelativeLayout>
+</layout>

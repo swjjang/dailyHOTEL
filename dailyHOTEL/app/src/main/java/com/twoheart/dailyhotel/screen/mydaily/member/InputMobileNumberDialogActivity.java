@@ -18,12 +18,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import java.util.Locale;
 
@@ -108,7 +109,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
     {
         String[] countryMobile = null;
 
-        if (Util.isTextEmpty(number) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(number) == false)
         {
             number = number.replace("-", "");
 
@@ -166,7 +167,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
             mobileEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         }
 
-        if (Util.isTextEmpty(mobileNumber) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mobileNumber) == false)
         {
             mobileNumber = mobileNumber.replaceAll("\\(|\\)|-|\\s", "");
         }
@@ -245,7 +246,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mMobileDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mMobileDialog);
 
             mMobileDialog.show();
 

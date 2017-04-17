@@ -239,7 +239,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
         }
 
         // benefit
-        if (Util.isTextEmpty(benefit) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(benefit) == false)
         {
             int length = benefitContents == null ? 0 : benefitContents.size();
             if (length > 0)
@@ -255,7 +255,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
                 mBenefitInformation = new ArrayList<>();
             }
 
-            if (Util.isTextEmpty(benefitWarning) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(benefitWarning) == false)
             {
                 mBenefitInformation.add(benefitWarning);
             }

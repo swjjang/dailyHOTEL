@@ -163,7 +163,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
     public static Intent getStayBookingDetailScreenLink(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType, String checkInTime, String checkOutTime)
     {
-        if (Util.isTextEmpty(placeName, checkInTime, checkOutTime) == true || paymentType == null)
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true || paymentType == null)
         {
             return null;
         }
@@ -184,7 +184,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
     public static Intent getGourmetBookingDetailScreenLink(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType, String visitTime)
     {
-        if (Util.isTextEmpty(placeName, visitTime) == true || paymentType == null)
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, visitTime) == true || paymentType == null)
         {
             return null;
         }

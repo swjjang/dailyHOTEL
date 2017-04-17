@@ -16,12 +16,13 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 
@@ -59,10 +60,10 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
         mDialogLayout = view.findViewById(R.id.dialogLayout);
 
-        if (mContext instanceof Activity && Util.isTabletDevice((Activity) mContext) == true)
+        if (mContext instanceof Activity && ScreenUtils.isTabletDevice((Activity) mContext) == true)
         {
             ViewGroup.LayoutParams layoutParams = mDialogLayout.getLayoutParams();
-            layoutParams.width = Util.getLCDWidth(mContext) * 10 / 15;
+            layoutParams.width = ScreenUtils.getScreenWidth(mContext) * 10 / 15;
         }
 
         mTitleTextView = (TextView) view.findViewById(R.id.titleTextView);
@@ -80,7 +81,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
         View punchMaskLayout = view.findViewById(R.id.punchMaskLayout);
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             punchMaskLayout.setBackground(new BackgroundDrawable(mContext, punchMaskLayout));
         } else

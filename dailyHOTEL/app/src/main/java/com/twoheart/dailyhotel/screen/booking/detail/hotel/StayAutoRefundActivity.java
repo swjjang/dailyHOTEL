@@ -21,15 +21,17 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.HashMap;
@@ -170,8 +172,7 @@ public class StayAutoRefundActivity extends BaseActivity
             orientation = Configuration.ORIENTATION_PORTRAIT;
         }
 
-        //        ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
-        boolean isInMultiWindowMode = Util.isOverAPI24() == true && isInMultiWindowMode();
+        boolean isInMultiWindowMode = VersionUtils.isOverAPI24() == true && isInMultiWindowMode();
         setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
 
@@ -484,10 +485,10 @@ public class StayAutoRefundActivity extends BaseActivity
                 orientation = Configuration.ORIENTATION_PORTRAIT;
             }
 
-            boolean isInMultiWindowMode = Util.isOverAPI24() == true && isInMultiWindowMode();
+            boolean isInMultiWindowMode = VersionUtils.isOverAPI24() == true && isInMultiWindowMode();
             setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -595,7 +596,7 @@ public class StayAutoRefundActivity extends BaseActivity
         {
             mDialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -613,7 +614,7 @@ public class StayAutoRefundActivity extends BaseActivity
         // 기타로 오는 경우
         if (position == 7)
         {
-            if (Util.isTextEmpty(message) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
             {
                 mCancelReasonMessage = reason;
             } else
@@ -650,7 +651,7 @@ public class StayAutoRefundActivity extends BaseActivity
             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
             String accountName = mStayAutoRefundLayout.getAccountName();
 
-            if (mSelectedBank == null || Util.isTextEmpty(accountNumber, accountName) == true)
+            if (mSelectedBank == null || com.daily.base.util.TextUtils.isTextEmpty(accountNumber, accountName) == true)
             {
                 return false;
             }
@@ -669,7 +670,7 @@ public class StayAutoRefundActivity extends BaseActivity
             // 기타인 경우
             if (mSelectedCancelReason == 7)
             {
-                if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(mCancelReasonMessage) == false)
                 {
                     if (mCancelReasonMessage.indexOf('-') >= 0)
                     {
@@ -734,7 +735,7 @@ public class StayAutoRefundActivity extends BaseActivity
 
                         String cancelMessage = null;
 
-                        if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(mCancelReasonMessage) == false)
                         {
                             if (mCancelReasonMessage.indexOf('-') >= 0)
                             {

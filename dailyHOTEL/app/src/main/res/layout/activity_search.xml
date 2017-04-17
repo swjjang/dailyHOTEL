@@ -10,7 +10,7 @@
         android:layout_height="52dp"
         android:background="@color/white">
 
-        <com.twoheart.dailyhotel.widget.DailyImageView
+        <com.daily.base.widget.DailyImageView
             android:id="@+id/backImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -24,7 +24,7 @@
             android:layout_centerInParent="true">
 
             <!-- 이미지 크기가 변경되면 DailySwitchCompat 크기도 수정 -->
-            <com.twoheart.dailyhotel.widget.DailySwitchCompat
+            <com.daily.base.widget.DailySwitchCompat
                 android:id="@+id/placeSwitch"
                 android:layout_width="181dp"
                 android:layout_height="32dp"
@@ -35,7 +35,7 @@
                 app:showText="false"
                 app:track="@drawable/toggle_btn_ic_01_template"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/hotelTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                 android:textSize="13dp"
                 app:drawableCompatLeft="@drawable/toggle_ic_03_hotel"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/gourmetTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 app:drawableCompatLeft="@drawable/toggle_ic_04_gourmet"/>
         </RelativeLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/searchView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -80,7 +80,7 @@
             android:background="@color/default_line_ce7e7e7"/>
     </RelativeLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyViewPager
+    <com.daily.base.widget.DailyViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -94,7 +94,7 @@
         android:paddingLeft="71dp"
         android:visibility="gone">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"

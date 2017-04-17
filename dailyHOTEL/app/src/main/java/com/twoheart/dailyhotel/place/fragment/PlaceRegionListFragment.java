@@ -11,6 +11,8 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -116,7 +118,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         if (mAdapter == null)
         {
             mAdapter = new PlaceRegionAnimatedExpandableListAdapter(baseActivity);
-            mAdapter.setIsTablet(Util.isTabletDevice(baseActivity));
+            mAdapter.setIsTablet(ScreenUtils.isTabletDevice(baseActivity));
             mAdapter.setOnChildClickListener(mOnChildClickListener);
         }
 
@@ -285,7 +287,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             return;
         }
 
-        if (Util.isOverAPI11() == true)
+        if (VersionUtils.isOverAPI11() == true)
         {
             final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
 
@@ -348,7 +350,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
             return;
         }
 
-        if (Util.isOverAPI11() == true)
+        if (VersionUtils.isOverAPI11() == true)
         {
             final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
 

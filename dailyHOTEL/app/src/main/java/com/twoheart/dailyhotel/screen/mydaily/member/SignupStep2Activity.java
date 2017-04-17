@@ -14,17 +14,18 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -61,7 +62,7 @@ public class SignupStep2Activity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_PASSWORD, password);
         intent.putExtra(INTENT_EXTRA_DATA_AGREED_BENEFIT_DATE, agreedBenefitDate);
 
-        if (Util.isTextEmpty(recommmender) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommmender) == true)
         {
             recommmender = "";
         }
@@ -188,7 +189,7 @@ public class SignupStep2Activity extends BaseActivity
             updateDate = null;
         }
 
-        if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
+        if (isBenefit == true && com.daily.base.util.TextUtils.isTextEmpty(updateDate) == false)
         {
             messageTextView.setVisibility(View.VISIBLE);
             messageTextView.setText(getString(R.string.message_signup_completed_alarm_on_format, updateDate));
@@ -223,7 +224,7 @@ public class SignupStep2Activity extends BaseActivity
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 
@@ -264,7 +265,7 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void doSignUp(String verificationNumber, String phoneNumber)
         {
-            if (Util.isTextEmpty(verificationNumber) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
             {
                 DailyToast.showToast(SignupStep2Activity.this, getString(R.string.message_wrong_certificationnumber), Toast.LENGTH_SHORT);
                 return;
@@ -352,13 +353,13 @@ public class SignupStep2Activity extends BaseActivity
             showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
 
             // 내가 추천인 코드를 넣고 회원 가입을 하는 경우
-            if (Util.isTextEmpty(mRecommender) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(mRecommender) == false)
             {
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
                     , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.SUCCESS, null);
             }
 
-            if (Util.isTextEmpty(birthday) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
             {
                 // 생일을 입력한 경우 체크
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//

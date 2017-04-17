@@ -2,6 +2,8 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
+import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -33,6 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class DailyMobileAPI implements IDailyNetwork
 {
     private static DailyMobileAPI mInstance;
@@ -55,7 +61,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public void cancelAll(Context context, final String tag)
     {
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             return;
         }
@@ -127,6 +133,16 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
+    public Observable<BaseDto<UserData>> getUserProfile()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
+            : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
+
+        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(URL))//
+            .subscribeOn(Schedulers.io())//
+            .observeOn(AndroidSchedulers.mainThread());
+    }
+
     @Override
     public void requestUserBonus(String tag, Object listener)
     {
@@ -158,6 +174,16 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserProfileBenefit(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    public Observable<BaseDto<UserBenefitData>> getUserBenefit()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
+            : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
+
+        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(URL))//
+            .subscribeOn(Schedulers.io())//
+            .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override

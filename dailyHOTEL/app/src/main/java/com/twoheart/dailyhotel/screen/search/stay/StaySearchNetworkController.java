@@ -9,8 +9,7 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -24,7 +23,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
 
     public void requestAutoComplete(StayBookingDay stayBookingDay, String keyword)
     {
-        if (stayBookingDay == null || Util.isTextEmpty(keyword) == true)
+        if (stayBookingDay == null || com.daily.base.util.TextUtils.isTextEmpty(keyword) == true)
         {
             return;
         }

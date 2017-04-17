@@ -19,11 +19,11 @@ import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailySwitchCompat;
-import com.twoheart.dailyhotel.widget.DailyViewPager;
+import com.daily.base.widget.DailySwitchCompat;
+import com.daily.base.widget.DailyViewPager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
 
-        if (Util.isTextEmpty(word) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
         {
             intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
         }
@@ -234,7 +234,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 case HOTEL:
                     mViewPager.setCurrentItem(0);
 
-                    if (Util.isTextEmpty(word) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
                     {
                         // Fragment 가 생성되기 전이라서 지연시간 추가
                         mViewPager.postDelayed(new Runnable()
@@ -251,7 +251,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 case FNB:
                     mViewPager.setCurrentItem(1);
 
-                    if (Util.isTextEmpty(word) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
                     {
                         mViewPager.postDelayed(new Runnable()
                         {

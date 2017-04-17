@@ -100,7 +100,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                                     String code = categoryJSONObject.getString("alias");
                                     int count = categoryJSONObject.getInt("count");
 
-                                    if (count > 0 && Util.isTextEmpty(name, code) == false)
+                                    if (count > 0 && com.daily.base.util.TextUtils.isTextEmpty(name, code) == false)
                                     {
                                         categoryList.add(new Category(name, code));
                                     }

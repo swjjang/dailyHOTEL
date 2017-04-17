@@ -9,16 +9,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.util.Date;
 
@@ -205,13 +204,13 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(Util.getPriceFormat(context, stayBookingDetail.price, false));
+        priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.price, false));
 
 
         if (stayBookingDetail.bonus > 0)
         {
             bonusLayout.setVisibility(View.VISIBLE);
-            bonusTextView.setText("- " + Util.getPriceFormat(context, stayBookingDetail.bonus, false));
+            bonusTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.bonus, false));
         } else
         {
             bonusLayout.setVisibility(View.GONE);
@@ -220,13 +219,13 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         if (stayBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + Util.getPriceFormat(context, stayBookingDetail.coupon, false));
+            couponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(Util.getPriceFormat(context, stayBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.paymentPrice, false));
     }
 
     @Override

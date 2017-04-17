@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.Util;
 
 public class MenuBarLayout implements View.OnClickListener
 {
@@ -169,7 +169,7 @@ public class MenuBarLayout implements View.OnClickListener
             return;
         }
 
-        final int DP_4 = Util.dpToPx(view.getContext(), 4);
+        final int DP_4 = ScreenUtils.dpToPx(view.getContext(), 4);
         final ValueAnimator showValueAnimator1 = ValueAnimator.ofInt(view.getPaddingTop(), DP_4);
         showValueAnimator1.setDuration(200);
         showValueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -188,7 +188,7 @@ public class MenuBarLayout implements View.OnClickListener
             }
         });
 
-        final ValueAnimator showValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), Util.dpToPx(view.getContext(), 29));
+        final ValueAnimator showValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), ScreenUtils.dpToPx(view.getContext(), 29));
         showValueAnimator2.setDuration(400);
         showValueAnimator2.setInterpolator(PathInterpolatorCompat.create(0.0f, 0.74f, 0.22f, 1.28f));
         showValueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -272,7 +272,7 @@ public class MenuBarLayout implements View.OnClickListener
             return;
         }
 
-        final int DP_10 = Util.dpToPx(view.getContext(), 10);
+        final int DP_10 = ScreenUtils.dpToPx(view.getContext(), 10);
         final ValueAnimator hideValueAnimator1 = ValueAnimator.ofInt(view.getPaddingTop(), DP_10);
         hideValueAnimator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
@@ -290,7 +290,7 @@ public class MenuBarLayout implements View.OnClickListener
             }
         });
 
-        final ValueAnimator hideValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), Util.dpToPx(view.getContext(), 50));
+        final ValueAnimator hideValueAnimator2 = ValueAnimator.ofInt(textView.getPaddingTop(), ScreenUtils.dpToPx(view.getContext(), 50));
         hideValueAnimator2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override

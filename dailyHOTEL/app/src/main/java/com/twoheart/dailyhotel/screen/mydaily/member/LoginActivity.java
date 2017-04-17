@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -40,17 +43,15 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyAutoCompleteEditText;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,7 +98,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     {
         Intent intent = new Intent(context, LoginActivity.class);
 
-        if (Util.isTextEmpty(callByScreen) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(callByScreen) == false)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         }
@@ -147,7 +148,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
         EdgeEffectColor.setEdgeGlowColor(mScrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
         } else
@@ -162,7 +163,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         String signupMessage = DailyPreference.getInstance(this).getRemoteConfigTextLoginText01();
 
-        if (Util.isTextEmpty(signupMessage) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(signupMessage) == false)
         {
             TextView signUpTextView = (TextView) findViewById(R.id.signUpTextView);
             signUpTextView.setText(signupMessage);
@@ -303,7 +304,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         Session.getCurrentSession().removeCallback(mKakaoSessionCallback);
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
         } else
@@ -322,12 +323,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         HashMap<String, String> params = new HashMap<>();
 
-        if (Util.isTextEmpty(email) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
         {
             params.put("email", email);
         }
 
-        if (Util.isTextEmpty(id) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(id) == false)
         {
             params.put("social_id", id);
         }
@@ -337,12 +338,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mStoreParams.putAll(params);
 
-        if (Util.isTextEmpty(name) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name) == false)
         {
             mStoreParams.put("name", name);
         }
 
-        if (Util.isTextEmpty(gender) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gender) == false)
         {
             mStoreParams.put("gender", gender);
         }
@@ -364,7 +365,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mStoreParams.clear();
         HashMap<String, String> params = new HashMap<>();
 
-        if (Util.isTextEmpty(index) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(index) == false)
         {
             params.put("social_id", index);
         }
@@ -429,7 +430,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(email) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
             return;
@@ -441,13 +442,13 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             return;
         }
 
-        if (Util.isTextEmpty(email) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
             return;
         }
 
-        if (Util.isTextEmpty(password) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(password) == true)
         {
             DailyToast.showToast(this, R.string.toast_msg_please_input_passwd, Toast.LENGTH_SHORT);
             return;
@@ -684,7 +685,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 {
                     mScrollToEmailView = false;
 
-                    mSnsLoginLayout.setPadding(0, Util.dpToPx(LoginActivity.this, 40), 0, 0);
+                    mSnsLoginLayout.setPadding(0, ScreenUtils.dpToPx(LoginActivity.this, 40), 0, 0);
 
                     mScrollView.post(new Runnable()
                     {
@@ -708,7 +709,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private FacebookCallback mFacebookCallback = new FacebookCallback<com.facebook.login.LoginResult>()
+    private FacebookCallback mFacebookCallback = new FacebookCallback<LoginResult>()
     {
         @Override
         public void onSuccess(LoginResult result)
@@ -842,7 +843,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     String msg = responseJSONObject.getString("msg");
 
-                    if (Util.isTextEmpty(msg) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(msg) == true)
                     {
                         msg = getString(R.string.toast_msg_failed_to_signup);
                     }
@@ -905,7 +906,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     // 로그인이 실패한 경우
                     String msg = responseJSONObject.getString("msg");
 
-                    if (Util.isTextEmpty(msg) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(msg) == true)
                     {
                         msg = getString(R.string.toast_msg_failed_to_login);
                     }

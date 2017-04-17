@@ -314,7 +314,7 @@ public class CountryCodeNumber
 
         for (String[] codeNumber : CODE_NUMBER)
         {
-            if (Util.isTextEmpty(codeNumber[1]) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(codeNumber[1]) == true)
             {
                 values.add(new String[]{codeNumber[3], null});
             } else
@@ -425,7 +425,7 @@ public class CountryCodeNumber
 
     public boolean hasCountryCode(String countryCode)
     {
-        if (Util.isTextEmpty(countryCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
         {
             return false;
         }
@@ -445,7 +445,7 @@ public class CountryCodeNumber
 
     public String getCountry(String countryCode)
     {
-        if (Util.isTextEmpty(countryCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
         {
             return null;
         }
