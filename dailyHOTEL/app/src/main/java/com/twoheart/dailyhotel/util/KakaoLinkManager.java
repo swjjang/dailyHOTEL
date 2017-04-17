@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.util;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.kakao.kakaolink.AppActionBuilder;
 import com.kakao.kakaolink.AppActionInfoBuilder;
 import com.kakao.kakaolink.KakaoLink;

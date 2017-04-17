@@ -4,13 +4,13 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
-    <com.twoheart.dailyhotel.widget.DailyImageView
+    <com.daily.base.widget.DailyImageView
         android:id="@+id/iconImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_detail_item_01_info"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

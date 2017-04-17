@@ -14,6 +14,8 @@ package com.twoheart.dailyhotel.util;
 
 import android.util.Base64;
 
+import com.daily.base.util.ExLog;
+
 import java.security.InvalidParameterException;
 import java.security.MessageDigest;
 import java.util.ArrayList;

@@ -30,7 +30,7 @@ import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyScrollView;
+import com.daily.base.widget.DailyScrollView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

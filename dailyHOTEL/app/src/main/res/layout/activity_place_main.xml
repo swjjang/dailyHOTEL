@@ -19,7 +19,7 @@
             android:layout_height="52dp"
             app:layout_scrollFlags="scroll|snap|enterAlways">
 
-            <com.twoheart.dailyhotel.widget.DailyImageView
+            <com.daily.base.widget.DailyImageView
                 android:id="@+id/backImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -27,7 +27,7 @@
                 android:paddingRight="15dp"
                 app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/regionTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -99,7 +99,7 @@
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/dateTextView"
                     android:layout_width="match_parent"
                     android:layout_height="36dp"

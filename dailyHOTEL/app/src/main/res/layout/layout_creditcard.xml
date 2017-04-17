@@ -24,7 +24,7 @@
                 android:layout_height="1dp"
                 android:background="@color/default_line_ce7e7e7"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/addCreditCardButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -57,7 +57,7 @@
             android:background="@drawable/shape_fillrect_ld1d1d1_bffffff"
             android:visibility="gone">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageView"

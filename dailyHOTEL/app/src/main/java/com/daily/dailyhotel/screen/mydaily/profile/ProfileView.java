@@ -10,8 +10,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityProfileDataBinding;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileViewInterface

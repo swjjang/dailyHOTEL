@@ -37,9 +37,8 @@ import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
@@ -39,7 +39,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
-        <com.twoheart.dailyhotel.widget.DailyRadioButton
+        <com.daily.base.widget.DailyRadioButton
             android:id="@+id/regionCheckView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -53,7 +53,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_sort_01"/>
 
-        <com.twoheart.dailyhotel.widget.DailyRadioButton
+        <com.daily.base.widget.DailyRadioButton
             android:id="@+id/distanceCheckView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -67,7 +67,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_sort_02"/>
 
-        <com.twoheart.dailyhotel.widget.DailyRadioButton
+        <com.daily.base.widget.DailyRadioButton
             android:id="@+id/lowPriceCheckView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -81,7 +81,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_sort_03"/>
 
-        <com.twoheart.dailyhotel.widget.DailyRadioButton
+        <com.daily.base.widget.DailyRadioButton
             android:id="@+id/highPriceCheckView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -95,7 +95,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_sort_04"/>
 
-        <com.twoheart.dailyhotel.widget.DailyRadioButton
+        <com.daily.base.widget.DailyRadioButton
             android:id="@+id/satisfactionCheckView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -109,7 +109,7 @@
             android:textSize="11dp"
             app:drawableCompatTop="@drawable/f_ic_sort_05"/>
 
-        <com.twoheart.dailyhotel.widget.DailyRadioButton
+        <com.daily.base.widget.DailyRadioButton
             android:id="@+id/emptyCheckView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

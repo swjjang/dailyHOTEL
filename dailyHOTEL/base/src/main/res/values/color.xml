@@ -2,6 +2,7 @@
 <resources>
     <color name="default_cb70038">#b70038</color>
     <color name="default_ce8e8e9">#e8e8e9</color>
+    <color name="default_caa000000">#aa000000</color>
 
     <color name="default_text_c323232">#323232</color>
     <color name="default_text_cc5c5c5">#c5c5c5</color>

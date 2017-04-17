@@ -1,30 +1,31 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.base.widget;
 
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatCheckedTextView;
 import android.util.AttributeSet;
 
-import com.twoheart.dailyhotel.R;
+import com.daily.base.util.FontManager;
+import com.daily.base.R;
 
-public class DailyCheckBox extends AppCompatCheckBox
+public class DailyCheckedTextView extends AppCompatCheckedTextView
 {
-    public DailyCheckBox(Context context)
+    public DailyCheckedTextView(Context context)
     {
         super(context);
 
         setFontStyle(context, null);
     }
 
-    public DailyCheckBox(Context context, AttributeSet attrs)
+    public DailyCheckedTextView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         setFontStyle(context, attrs);
     }
 
-    public DailyCheckBox(Context context, AttributeSet attrs, int defStyle)
+    public DailyCheckedTextView(Context context, AttributeSet attrs, int defStyle)
     {
         super(context, attrs, defStyle);
 

@@ -23,8 +23,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyScrollView;
+import com.daily.base.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.text.DecimalFormat;

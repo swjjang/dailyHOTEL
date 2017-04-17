@@ -10,7 +10,7 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:orientation="vertical">-->
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/default_background"
@@ -28,7 +28,7 @@
         android:layout_height="1dp"
         android:background="@color/default_line_cf0f0f0"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginTop="10dp"
@@ -40,7 +40,7 @@
         android:textSize="13dp"
         dailyFont:style="Medium"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/guideNameMemoView"
         android:layout_width="match_parent"
         android:layout_height="36dp"
@@ -76,7 +76,7 @@
             android:duplicateParentState="true"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:duplicateParentState="true"
@@ -84,7 +84,7 @@
                 android:textColor="@drawable/selector_text_color_c929292_cb70038_cc5c5c5"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/bonusTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
             android:layout_alignParentRight="true"
             android:gravity="right|center_vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/usedBonusTextView"
                 android:layout_width="95dp"
                 android:layout_height="25dp"
@@ -135,7 +135,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/selector_radio_button"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -153,7 +153,7 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical|right">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/usedCouponTextView"
                 android:layout_width="95dp"
                 android:layout_height="25dp"
@@ -180,7 +180,7 @@
         android:background="@color/default_line_cdcdcdd"/>
 
     <!-- 결제 -->
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_marginTop="10dp"
@@ -211,7 +211,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/bookingAmountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -220,7 +220,7 @@
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/originalPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -229,7 +229,7 @@
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/amountNightsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -247,7 +247,7 @@
             android:layout_marginBottom="10dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:duplicateParentState="true"
@@ -255,7 +255,7 @@
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/discountPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -275,7 +275,7 @@
             android:layout_height="55dp"
             android:gravity="center_vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -284,7 +284,7 @@
                 android:textSize="14dp"
                 dailyFont:style="Bold"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/totalPaymentPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

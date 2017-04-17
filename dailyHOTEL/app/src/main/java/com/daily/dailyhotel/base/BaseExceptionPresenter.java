@@ -13,7 +13,7 @@ import com.daily.dailyhotel.repository.remote.KakaoImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import retrofit2.HttpException;
 

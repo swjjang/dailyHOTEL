@@ -13,7 +13,7 @@
         android:layout_height="52dp"
         android:background="@color/white">
 
-        <com.twoheart.dailyhotel.widget.DailyImageView
+        <com.daily.base.widget.DailyImageView
             android:id="@+id/backImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -21,7 +21,7 @@
             android:paddingRight="15dp"
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/completeTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -34,7 +34,7 @@
             android:textColor="@color/selector_text_color_dc5c5c5_eb70038"
             android:textSize="18dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
             android:layout_alignParentTop="true"
             android:background="@color/default_line_cdcdcdd"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/textCountView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
             app:drawableCompatLeft="@drawable/ic_review"/>
     </RelativeLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyScrollView
+    <com.daily.base.widget.DailyScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -96,14 +96,14 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_write_review_comment_title"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="12dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -121,7 +121,7 @@
                     android:background="@color/default_line_cf0f0f0"/>
             </LinearLayout>
 
-            <com.twoheart.dailyhotel.widget.DailyEditText
+            <com.daily.base.widget.DailyEditText
                 android:id="@+id/writeReviewEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,5 +139,5 @@
                 android:textSize="13dp"
                 android:theme="@style/EditTextTheme"/>
         </LinearLayout>
-    </com.twoheart.dailyhotel.widget.DailyScrollView>
+    </com.daily.base.widget.DailyScrollView>
 </RelativeLayout>

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="15dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/trueReviewGuideTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/termsView"
             android:layout_width="93dp"
             android:layout_height="28dp"
@@ -52,7 +52,7 @@
 
     <include layout="@layout/view_separate_line_no_linear"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/reviewCountTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

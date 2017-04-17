@@ -6,6 +6,8 @@ import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.widget.DailyTextView;
+
 public class DayView extends LinearLayout
 {
     private TextView mDayTextView;

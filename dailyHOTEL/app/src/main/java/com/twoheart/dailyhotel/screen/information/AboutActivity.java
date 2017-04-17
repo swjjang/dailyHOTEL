@@ -12,7 +12,7 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.DailyWebView;
+import com.daily.base.widget.DailyWebView;
 
 public class AboutActivity extends WebViewActivity
 {

@@ -6,7 +6,7 @@
 
     <include layout="@layout/toolbar_default"/>
 
-    <com.twoheart.dailyhotel.widget.DailyScrollView
+    <com.daily.base.widget.DailyScrollView
         android:id="@+id/informationScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -59,7 +59,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -84,7 +84,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -103,7 +103,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -138,7 +138,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/dailyTextView2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -168,7 +168,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -193,7 +193,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -218,7 +218,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -236,7 +236,7 @@
                 android:layout_height="41dp"
                 android:background="@color/white">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -246,7 +246,7 @@
                     android:textColor="@color/information_title"
                     android:textSize="15dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/versionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -270,7 +270,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/productServerTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -281,7 +281,7 @@
                     android:textColor="@color/white"
                     android:textSize="12dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/devServerTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -292,7 +292,7 @@
                     android:textColor="@color/white"
                     android:textSize="12dp"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/debugTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -305,5 +305,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="62dp"/>
         </LinearLayout>
-    </com.twoheart.dailyhotel.widget.DailyScrollView>
+    </com.daily.base.widget.DailyScrollView>
 </RelativeLayout>

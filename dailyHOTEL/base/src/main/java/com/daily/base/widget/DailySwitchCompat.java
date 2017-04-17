@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.base.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,9 +7,10 @@ import android.graphics.Typeface;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 
+import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

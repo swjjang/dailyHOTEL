@@ -21,9 +21,9 @@ import android.widget.TextView;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.daily.base.widget.DailyTextView;
 
 public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTouchListener
 {

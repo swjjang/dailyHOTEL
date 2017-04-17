@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.base.widget;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;

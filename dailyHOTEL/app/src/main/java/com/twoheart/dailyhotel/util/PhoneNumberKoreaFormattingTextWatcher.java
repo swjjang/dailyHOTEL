@@ -7,7 +7,7 @@ import android.text.TextWatcher;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 public class PhoneNumberKoreaFormattingTextWatcher implements TextWatcher
 {

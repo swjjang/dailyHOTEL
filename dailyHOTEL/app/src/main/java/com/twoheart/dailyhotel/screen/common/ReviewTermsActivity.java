@@ -9,7 +9,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.DailyWebView;
+import com.daily.base.widget.DailyWebView;
 
 public class ReviewTermsActivity extends WebViewActivity
 {

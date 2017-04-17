@@ -18,7 +18,7 @@ import android.view.View;
 
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 
 import java.util.ArrayList;
 

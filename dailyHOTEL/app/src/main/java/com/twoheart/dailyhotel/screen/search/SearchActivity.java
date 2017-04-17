@@ -19,11 +19,11 @@ import com.twoheart.dailyhotel.screen.search.gourmet.GourmetSearchFragment;
 import com.twoheart.dailyhotel.screen.search.stay.StaySearchFragment;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailySwitchCompat;
-import com.twoheart.dailyhotel.widget.DailyViewPager;
+import com.daily.base.widget.DailySwitchCompat;
+import com.daily.base.widget.DailyViewPager;
 
 import java.util.ArrayList;
 import java.util.HashMap;

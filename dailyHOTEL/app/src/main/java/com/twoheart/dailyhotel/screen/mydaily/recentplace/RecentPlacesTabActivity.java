@@ -10,18 +10,18 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.DailyViewPager;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.widget.DailyViewPager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

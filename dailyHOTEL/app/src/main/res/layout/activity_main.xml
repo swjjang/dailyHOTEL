@@ -17,7 +17,7 @@
         android:background="@color/default_background_cf1f2f3"
         android:visibility="visible">
 
-        <com.twoheart.dailyhotel.widget.DailyImageView
+        <com.daily.base.widget.DailyImageView
             android:id="@+id/splashImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

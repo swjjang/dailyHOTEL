@@ -6,7 +6,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/monthTextView"
         android:layout_width="match_parent"
         android:layout_height="30dp"

@@ -1,12 +1,12 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.base.widget;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.R;
+import com.daily.base.R;
+import com.daily.base.databinding.ToastLayoutDataBinding;
 
 public class DailyToast extends Toast
 {
@@ -72,13 +72,18 @@ public class DailyToast extends Toast
 
     private void showDailyToast(Context context, String text, int duration)
     {
+        if (context == null)
+        {
+            return;
+        }
+
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.view_toast, null);
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(text);
+        ToastLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.toast_layout_data, null, false);
+
+        dataBinding.textView.setText(text);
 
         mToast.setDuration(duration);
-        mToast.setView(view);
+        mToast.setView(dataBinding.getRoot());
         mToast.show();
     }
 }

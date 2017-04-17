@@ -14,8 +14,8 @@ import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 
 public abstract class PlaceRegionListActivity extends BaseActivity
 {

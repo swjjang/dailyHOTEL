@@ -27,7 +27,7 @@ import android.widget.ProgressBar;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 
 public class LoadingDialog
 {

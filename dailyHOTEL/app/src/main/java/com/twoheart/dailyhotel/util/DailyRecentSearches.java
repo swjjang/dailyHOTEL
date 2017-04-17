@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.util;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Keyword;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.firebase;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.File;

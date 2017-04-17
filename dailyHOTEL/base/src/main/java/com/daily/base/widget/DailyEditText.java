@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.base.widget;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -12,10 +12,11 @@ import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
+
+import com.daily.base.R;
 
 public class DailyEditText extends AppCompatEditText
 {

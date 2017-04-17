@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.daily.base.util.ExLog;
+
 public class AvailableNetwork
 {
     public static final int NET_TYPE_NONE = 0x00;

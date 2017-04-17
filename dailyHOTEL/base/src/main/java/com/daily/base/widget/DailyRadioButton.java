@@ -1,30 +1,29 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.base.widget;
 
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
-import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 
+import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
-import com.twoheart.dailyhotel.R;
 
-public class DailyTextView extends AppCompatTextView
+import com.daily.base.R;
+
+public class DailyRadioButton extends AppCompatRadioButton
 {
-    private int mCurMaxLine = 0;
-
-    public DailyTextView(Context context)
+    public DailyRadioButton(Context context)
     {
-        super(context);
+        super(context, null);
 
         setDrawableCompat(context, null);
         setFontStyle(context, null);
     }
 
-    public DailyTextView(Context context, AttributeSet attrs)
+    public DailyRadioButton(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
@@ -32,9 +31,9 @@ public class DailyTextView extends AppCompatTextView
         setFontStyle(context, attrs);
     }
 
-    public DailyTextView(Context context, AttributeSet attrs, int defStyle)
+    public DailyRadioButton(Context context, AttributeSet attrs, int defStyleAttr)
     {
-        super(context, attrs, defStyle);
+        super(context, attrs, defStyleAttr);
 
         setDrawableCompat(context, attrs);
         setFontStyle(context, attrs);
@@ -113,18 +112,6 @@ public class DailyTextView extends AppCompatTextView
         }
     }
 
-    public int getCurrentMaxLines()
-    {
-        return mCurMaxLine;
-    }
-
-    @Override
-    public void setMaxLines(int maxLines)
-    {
-        mCurMaxLine = maxLines;
-        super.setMaxLines(maxLines);
-    }
-
     @Override
     public void setTypeface(Typeface typeface, int style)
     {
@@ -187,64 +174,6 @@ public class DailyTextView extends AppCompatTextView
             }
 
             super.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable);
-        }
-    }
-
-    public void setDrawableVectorTintList(int id)
-    {
-        Drawable[] drawables = getCompoundDrawables();
-
-        if (drawables == null)
-        {
-            return;
-        }
-
-        for (Drawable drawable : drawables)
-        {
-            if (drawable == null)
-            {
-                continue;
-            }
-
-            if (drawable instanceof VectorDrawableCompat)
-            {
-                ((VectorDrawableCompat) drawable).setTintList(getResources().getColorStateList(id));
-            } else
-            {
-                if (VersionUtils.isOverAPI21() == true)
-                {
-                    drawable.setTintList(getResources().getColorStateList(id));
-                }
-            }
-        }
-    }
-
-    public void setDrawableVectorTint(int id)
-    {
-        Drawable[] drawables = getCompoundDrawables();
-
-        if (drawables == null)
-        {
-            return;
-        }
-
-        for (Drawable drawable : drawables)
-        {
-            if (drawable == null)
-            {
-                continue;
-            }
-
-            if (drawable instanceof VectorDrawableCompat)
-            {
-                ((VectorDrawableCompat) drawable).setTint(getResources().getColor(id));
-            } else
-            {
-                if (VersionUtils.isOverAPI21() == true)
-                {
-                    drawable.setTint(getResources().getColor(id));
-                }
-            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.widget;
+package com.daily.base.widget;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -6,7 +6,8 @@ import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
-import com.twoheart.dailyhotel.R;
+import com.daily.base.util.FontManager;
+import com.daily.base.R;
 
 public class DailyButton extends AppCompatButton
 {

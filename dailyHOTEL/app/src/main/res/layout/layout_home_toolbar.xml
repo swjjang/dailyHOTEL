@@ -25,7 +25,7 @@
         android:paddingRight="15dp"
         app:srcCompat="@drawable/navibar_ic_search"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

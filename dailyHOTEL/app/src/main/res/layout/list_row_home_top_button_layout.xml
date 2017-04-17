@@ -5,7 +5,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/default_background">
 
-    <com.twoheart.dailyhotel.widget.DailyImageView
+    <com.daily.base.widget.DailyImageView
         android:id="@+id/topButtonView"
         android:layout_width="wrap_content"
         android:layout_height="105dp"

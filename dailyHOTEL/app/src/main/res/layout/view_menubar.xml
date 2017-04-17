@@ -42,7 +42,7 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/tabbar_ic_01_home_off"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/homeView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -67,7 +67,7 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/tabbar_ic_02_reservation_off"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/bookingView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -93,7 +93,7 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/tabbar_ic_03_mydaily_off"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/myDailyView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -129,7 +129,7 @@
                     android:scaleType="centerInside"
                     app:srcCompat="@drawable/tabbar_ic_04_more_off"/>
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/informationView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
