@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -69,7 +70,7 @@ public abstract class CollectionBaseLayout extends BaseLayout
         final View imageViewLayout = view.findViewById(R.id.imageViewLayout);
 
         // 16:9 높이
-        int height16x9 = Util.getRatioHeightType16x9(Util.getLCDWidth(mContext));
+        int height16x9 = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext));
 
         // 이미지
         mSimpleDraweeView = (SimpleDraweeView) imageViewLayout.findViewById(R.id.simpleDraweeView);
@@ -77,9 +78,9 @@ public abstract class CollectionBaseLayout extends BaseLayout
         mSimpleDraweeView.setLayoutParams(layoutParams);
 
         final FrameLayout titleBoxLayout = (FrameLayout) view.findViewById(R.id.titleBoxLayout);
-        final int dp15Height = Util.dpToPx(mContext, 15);
-        int titleBoxTopPadding = Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - dp15Height - Util.dpToPx(mContext, 118);
-        titleBoxLayout.setPadding(dp15Height, titleBoxTopPadding + Util.dpToPx(mContext, 21), dp15Height, dp15Height);
+        final int dp15Height = ScreenUtils.dpToPx(mContext, 15);
+        int titleBoxTopPadding = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - dp15Height - ScreenUtils.dpToPx(mContext, 118);
+        titleBoxLayout.setPadding(dp15Height, titleBoxTopPadding + ScreenUtils.dpToPx(mContext, 21), dp15Height, dp15Height);
 
         final View fakeBackImageView = titleBoxLayout.findViewById(R.id.fakeBackImageView);
         final View subTitleLayout = view.findViewById(R.id.subTitleLayout);
@@ -123,13 +124,13 @@ public abstract class CollectionBaseLayout extends BaseLayout
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
         {
-            private final int dp15Height = Util.dpToPx(mContext, 15);
-            private final int dp3Height = Util.dpToPx(mContext, 3);
-            private final int dp20Height = Util.dpToPx(mContext, 20);
-            private final int dp21Height = Util.dpToPx(mContext, 21);
-            private final int dp42Height = Util.dpToPx(mContext, 42);
-            private final int dp30Height = Util.dpToPx(mContext, 30);
-            private final int dp44Height = Util.dpToPx(mContext, 44);
+            private final int dp15Height = ScreenUtils.dpToPx(mContext, 15);
+            private final int dp3Height = ScreenUtils.dpToPx(mContext, 3);
+            private final int dp20Height = ScreenUtils.dpToPx(mContext, 20);
+            private final int dp21Height = ScreenUtils.dpToPx(mContext, 21);
+            private final int dp42Height = ScreenUtils.dpToPx(mContext, 42);
+            private final int dp30Height = ScreenUtils.dpToPx(mContext, 30);
+            private final int dp44Height = ScreenUtils.dpToPx(mContext, 44);
 
             private int mDragDistance;
             private boolean mIsFirstCollapse;

@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -20,9 +23,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.util.ExLog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -91,7 +92,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
-            final int dp52Height = Util.dpToPx(mContext, 52);
+            final int dp52Height = ScreenUtils.dpToPx(mContext, 52);
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
@@ -187,7 +188,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         int viewWidth = mDateTextView.getWidth() - (mDateTextView.getCompoundDrawablePadding() * 2) - mDateTextView.getCompoundDrawables()[0].getIntrinsicWidth() - mDateTextView.getCompoundDrawables()[2].getIntrinsicWidth();
 
         final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
-        final float width = Util.getTextWidth(mContext, text, 12d, typeface);
+        final float width = TextUtils.getTextWidth(mContext, text, 12d, typeface);
 
         if (viewWidth > width)
         {
@@ -200,7 +201,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             for (int i = 99; i >= 60; i--)
             {
                 scaleX = (float) i / 100;
-                scaleWidth = Util.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
+                scaleWidth = TextUtils.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
 
                 if (viewWidth > scaleWidth)
                 {
@@ -245,7 +246,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 layoutParams.height = 1;
             } else
             {
-                layoutParams.height = Util.dpToPx(mContext, 1);
+                layoutParams.height = ScreenUtils.dpToPx(mContext, 1);
             }
 
             mToolbarUnderlineView.setLayoutParams(layoutParams);

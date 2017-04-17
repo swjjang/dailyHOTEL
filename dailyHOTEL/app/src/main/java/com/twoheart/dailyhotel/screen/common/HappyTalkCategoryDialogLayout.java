@@ -13,10 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyHintSpinner;
 
 import java.util.ArrayList;
@@ -53,12 +53,12 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
     {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        if (mContext instanceof Activity && Util.isTabletDevice((Activity) mContext) == true)
+        if (mContext instanceof Activity && ScreenUtils.isTabletDevice((Activity) mContext) == true)
         {
-            layoutParams.width = Util.getLCDWidth(mContext) * 10 / 15;
+            layoutParams.width = ScreenUtils.getScreenWidth(mContext) * 10 / 15;
         } else
         {
-            layoutParams.width = Util.getLCDWidth(mContext) * 13 / 15;
+            layoutParams.width = ScreenUtils.getScreenWidth(mContext) * 13 / 15;
         }
 
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;

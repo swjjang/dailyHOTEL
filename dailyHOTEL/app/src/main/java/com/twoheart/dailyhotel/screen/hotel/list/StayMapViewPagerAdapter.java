@@ -90,7 +90,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         name.setText(stay.name);
 
         // D.benefit
-        if (Util.isTextEmpty(stay.dBenefitText) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
             dBenefitLayout.setVisibility(View.VISIBLE);
             dBenefitTextView.setText(stay.dBenefitText);
@@ -108,7 +108,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(Util.getPriceFormat(mContext, stay.price, false));
+            priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.price, false));
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -131,7 +131,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             averageTextView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(Util.getPriceFormat(mContext, stay.discountPrice, false));
+        discountTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.discountPrice, false));
 
         name.setSelected(true); // Android TextView marquee bug
 

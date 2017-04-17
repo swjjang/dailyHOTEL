@@ -15,7 +15,7 @@
         fresco:actualImageScaleType="centerCrop"
         fresco:overlayImage="@drawable/shape_home_recommend_image_overlay"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/contentCountView"
         android:layout_width="36dp"
         android:layout_height="18dp"
@@ -42,7 +42,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/contentTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:textSize="18dp"
             dailyFont:style="Medium"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/contentDescriptionView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -42,7 +42,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     {
         Intent intent = new Intent(context, NoticeListActivity.class);
 
-        if (Util.isTextEmpty(deepLink) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }

@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.deprecated;
 import android.content.Context;
 import android.os.PowerManager;
 
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 
 public class WakeLock
 {

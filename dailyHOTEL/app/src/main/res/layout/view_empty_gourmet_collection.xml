@@ -20,7 +20,7 @@
             android:layout_gravity="center_horizontal"
             app:srcCompat="@drawable/no_event_ic"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/messageTextView01"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:textSize="18dp"
             dailyFont:style="Medium"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/messageTextView02"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

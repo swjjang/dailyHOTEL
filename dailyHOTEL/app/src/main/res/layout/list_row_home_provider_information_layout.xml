@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp"
         app:srcCompat="@drawable/img_footer_logo"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/providerInfoButtonView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,35 +41,35 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/companyInfoTextView"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:textColor="@color/default_text_cababab"
             android:textSize="11dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/companyAddressTextView"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:textColor="@color/default_text_cababab"
             android:textSize="11dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/registrationNoTextView"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:textColor="@color/default_text_cababab"
             android:textSize="11dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/mailSalesOrderNoTextView"
             android:layout_width="match_parent"
             android:layout_height="18dp"
             android:textColor="@color/default_text_cababab"
             android:textSize="11dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/privacyEmailTextView"
             android:layout_width="match_parent"
             android:layout_height="18dp"
@@ -88,7 +88,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/termsTextView"
             android:layout_width="wrap_content"
             android:layout_height="18dp"
@@ -98,7 +98,7 @@
             android:textSize="10dp"
             dailyFont:style="Bold"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/vericalLineTextView1"
             android:layout_width="9dp"
             android:layout_height="18dp"
@@ -108,7 +108,7 @@
             android:textSize="10dp"
             dailyFont:style="DemiLight"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/privacyTextView"
             android:layout_width="wrap_content"
             android:layout_height="18dp"
@@ -118,7 +118,7 @@
             android:textSize="10dp"
             dailyFont:style="Bold"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/vericalLineTextView2"
             android:layout_width="9dp"
             android:layout_height="18dp"
@@ -128,7 +128,7 @@
             android:textSize="10dp"
             dailyFont:style="DemiLight"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/locationTermsTextView"
             android:layout_width="wrap_content"
             android:layout_height="18dp"
@@ -138,7 +138,7 @@
             android:textSize="10dp"
             dailyFont:style="Bold"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/vericalLineTextView3"
             android:layout_width="9dp"
             android:layout_height="18dp"
@@ -148,7 +148,7 @@
             android:textSize="10dp"
             dailyFont:style="DemiLight"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/protectYouthTermsTextView"
             android:layout_width="wrap_content"
             android:layout_height="18dp"

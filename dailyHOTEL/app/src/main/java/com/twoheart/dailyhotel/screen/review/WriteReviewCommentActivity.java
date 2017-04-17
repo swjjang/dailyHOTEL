@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
@@ -30,7 +30,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             throw new IllegalArgumentException();
         }
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }
@@ -66,7 +66,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             }
 
             String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
-            if (Util.isTextEmpty(placeTypeName) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(placeTypeName) == false)
             {
                 try
                 {
@@ -112,10 +112,10 @@ public class WriteReviewCommentActivity extends BaseActivity
 
         String reviewText = mLayout.getReviewText();
 
-        if (Util.isTextEmpty(mOriginText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mOriginText) == true)
         {
             // 최초 입력 일때
-            if (Util.isTextEmpty(reviewText) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(reviewText) == true)
             {
                 // 입력 데이터가 아무 것도 없을때 그냥 종료!
                 setResult(RESULT_CANCELED);
@@ -299,7 +299,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             }
 
             Intent intent = new Intent();
-            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, Util.trim(text));
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, TextUtils.trim(text));
             setResult(RESULT_OK, intent);
             WriteReviewCommentActivity.this.finish();
         }

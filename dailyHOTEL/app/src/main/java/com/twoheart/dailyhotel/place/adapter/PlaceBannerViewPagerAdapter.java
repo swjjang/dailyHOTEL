@@ -47,7 +47,7 @@ public class PlaceBannerViewPagerAdapter extends PagerAdapter
         if (mEventBannerList.size() > position)
         {
             String url = mEventBannerList.get(position).imageUrl;
-            Uri uri = Util.isTextEmpty(url) ? null : Uri.parse(url);
+            Uri uri = com.daily.base.util.TextUtils.isTextEmpty(url) ? null : Uri.parse(url);
             imageView.setImageURI(uri);
         }
 

@@ -69,7 +69,7 @@ public class GourmetPaymentThankyouActivity extends PlacePaymentThankyouActivity
             return;
         }
 
-        if (Util.isTextEmpty(visitTime) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(visitTime) == true)
         {
             return;
         }

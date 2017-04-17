@@ -133,7 +133,7 @@ public class StayAutoRefundNetworkController extends BaseNetworkController
                                 readyForRefund = dataJSONObject.getBoolean("readyForRefund");
                             }
 
-                            if (Util.isTextEmpty(message) == true)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
                             {
                                 message = responseJSONObject.getString("msg");
                             }

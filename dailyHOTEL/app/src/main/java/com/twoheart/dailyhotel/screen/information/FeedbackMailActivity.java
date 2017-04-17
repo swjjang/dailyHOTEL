@@ -11,13 +11,13 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.appboy.Appboy;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
@@ -82,7 +82,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         });
 
         TextView informationTextView = (TextView) findViewById(R.id.informationTextView);
-        String formText = getString(R.string.mail_base_information, String.format(Locale.KOREA, "Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersionCode(this)));
+        String formText = getString(R.string.mail_base_information, String.format(Locale.KOREA, "Android : %s, v%s", Build.VERSION.RELEASE, VersionUtils.getAppVersionCode(this)));
         informationTextView.setText(formText);
 
         // 기본 정보를 태그에 넣음.
@@ -110,7 +110,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         String email = mEmailEditText.getText().toString().trim();
         String message = mMessageEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(email) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
         {
             releaseUiComponent();
 
@@ -122,7 +122,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
 
             DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
             return;
-        } else if (Util.isTextEmpty(message) == true)
+        } else if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
         {
             releaseUiComponent();
 

@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -26,11 +27,11 @@ import com.twoheart.dailyhotel.model.StayRoomAmenities;
 import com.twoheart.dailyhotel.place.activity.PlaceCurationActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyTextView;
+import com.daily.base.widget.DailyToast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -252,7 +253,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         }
 
-        mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), 0);
+        mAmenitiesGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), 0);
     }
 
     protected void initInRoomAmenitiesLayout(View view, StayCurationOption stayCurationOption)
@@ -307,7 +308,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         }
 
-        mInRoomAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 5));
+        mInRoomAmenitiesGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), ScreenUtils.dpToPx(this, 5));
     }
 
     protected void updatePersonFilter(int person)
@@ -714,7 +715,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         @Override
         public void onStayCount(String url, int hotelSaleCount)
         {
-            if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
+            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && hotelSaleCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));

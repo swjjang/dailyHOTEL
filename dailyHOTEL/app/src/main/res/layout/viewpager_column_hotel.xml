@@ -27,7 +27,7 @@
         android:tag="map"
         android:transitionName="@string/transition_gradient_bottom_view"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/gradeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:textSize="11dp"
         android:transitionName="@string/transition_place_grade"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/satisfactionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         android:visibility="gone"
         dailyFont:style="DemiLight"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/priceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         android:textSize="12dp"
         dailyFont:style="DemiLight"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginRight="11dp">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/averageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
             android:visibility="gone"
             dailyFont:style="DemiLight"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/discountPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,7 +122,7 @@
             dailyFont:style="Medium"/>
     </LinearLayout>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/addressTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/dBenefitTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

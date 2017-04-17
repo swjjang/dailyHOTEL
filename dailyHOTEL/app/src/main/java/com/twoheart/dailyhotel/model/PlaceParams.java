@@ -62,7 +62,7 @@ public abstract class PlaceParams implements Parcelable
     protected String getParamString(String key, Object value)
     {
         String stringValue = String.valueOf(value);
-        if (Util.isTextEmpty(stringValue))
+        if (com.daily.base.util.TextUtils.isTextEmpty(stringValue))
         {
             return "";
         }

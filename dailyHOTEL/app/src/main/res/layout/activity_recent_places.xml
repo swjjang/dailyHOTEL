@@ -33,7 +33,7 @@
             app:tabTextAppearance="@style/PlaceTabLayoutTextAppearance"
             app:tabTextColor="@color/default_text_c929292"/>
 
-        <com.twoheart.dailyhotel.widget.DailyViewPager
+        <com.daily.base.widget.DailyViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -57,7 +57,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/emptyTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
 
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyImageView
+        <com.daily.base.widget.DailyImageView
             android:id="@+id/emptyImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

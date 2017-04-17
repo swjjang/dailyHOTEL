@@ -74,7 +74,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(stayDetailParams);
 
-                            if (Util.isTextEmpty(baseDto.msg) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(baseDto.msg) == false)
                             {
                                 mOnNetworkControllerListener.onErrorPopupMessage(msgCode, baseDto.msg);
                             } else
@@ -87,7 +87,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                         case 4:
                         default:
                         {
-                            if (Util.isTextEmpty(baseDto.msg) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(baseDto.msg) == false)
                             {
                                 mOnNetworkControllerListener.onErrorToastMessage(baseDto.msg);
                             } else

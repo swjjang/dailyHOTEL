@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
@@ -83,7 +84,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         mImageDimView = view.findViewById(R.id.imageDimView);
         mImageDimView.setAlpha(0.0f);
 
-        int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(mContext));
+        int imageHeight = ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(mContext));
         mPlaceImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = mPlaceImageView.getLayoutParams();
         layoutParams.height = imageHeight;
@@ -176,8 +177,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
             if (childReviewCardLayout.isChecked() == false)
             {
-                int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
-                final int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+                int cardWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
+                final int cardHeight = ScreenUtils.getRatioHeightType4x3(cardWidth);
 
                 mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
@@ -194,8 +195,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
                 if (childReviewCardLayout.isChecked() == false)
                 {
-                    int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
-                    final int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+                    int cardWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
+                    final int cardHeight = ScreenUtils.getRatioHeightType4x3(cardWidth);
 
                     mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
@@ -269,10 +270,10 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
     protected void showReviewDetailAnimation()
     {
-        final float y = Util.getLCDHeight(mContext);
+        final float y = ScreenUtils.getScreenHeight(mContext);
 
         // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-        int height = Util.getLCDHeight(mContext);
+        int height = ScreenUtils.getScreenHeight(mContext);
 
         mRootView.setTranslationY(height);
 
@@ -546,7 +547,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         }
 
         // 배경 없어지는 애니메이션
-        int scrollTopY = mScrollLayout.getPaddingTop() - Util.dpToPx(mContext, 15);
+        int scrollTopY = mScrollLayout.getPaddingTop() - ScreenUtils.dpToPx(mContext, 15);
 
         if (scrollTopY >= scrollY)
         {

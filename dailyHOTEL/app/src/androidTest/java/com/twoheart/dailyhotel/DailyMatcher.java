@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel;
 
-import com.twoheart.dailyhotel.util.Util;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -22,7 +20,7 @@ public class DailyMatcher
             protected boolean matchesSafely(String item)
             {
                 stringValue = item;
-                return Util.isTextEmpty(item);
+                return com.daily.base.util.TextUtils.isTextEmpty(item);
             }
 
             @Override
@@ -40,7 +38,7 @@ public class DailyMatcher
             @Override
             protected boolean matchesSafely(String item)
             {
-                return Util.isTextEmpty(item) == false;
+                return com.daily.base.util.TextUtils.isTextEmpty(item) == false;
             }
 
             @Override

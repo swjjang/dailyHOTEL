@@ -104,7 +104,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
             email = guest.email;
         }
 
-        if (Util.isTextEmpty(name, phone, email) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name, phone, email) == true)
         {
             restartExpiredSession();
             return;
@@ -315,7 +315,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            email = guest.email;
 //        }
 //
-//        if (Util.isTextEmpty(name, phone, email) == true)
+//        if (com.daily.base.util.TextUtils.isTextEmpty(name, phone, email) == true)
 //        {
 //            restartExpiredSession();
 //            return;
@@ -1100,7 +1100,7 @@ public class GourmetPaymentWebActivity extends PlacePaymentWebActivity
 //            Intent intent = new Intent();
 //            intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mGourmetPaymentInformation);
 //
-//            if (Util.isTextEmpty(data) == true)
+//            if (com.daily.base.util.TextUtils.isTextEmpty(data) == true)
 //            {
 //                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
 //                finish();

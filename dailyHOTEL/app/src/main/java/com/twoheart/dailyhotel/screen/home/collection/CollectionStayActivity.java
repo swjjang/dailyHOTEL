@@ -17,7 +17,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;

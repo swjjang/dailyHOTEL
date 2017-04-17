@@ -19,14 +19,14 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -36,15 +36,12 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyHomeScrollView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.FontManager;
-
-import org.json.JSONObject;
+import com.daily.base.widget.DailyTextView;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -156,13 +153,13 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        mButtonGapHeight = Util.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT - BUTTON_LAYOUT_MIN_HEIGHT);
-        mScrollButtonMinHeight = Util.dpToPx(mContext, BUTTON_LAYOUT_MIN_HEIGHT);
-        mScrollButtonMaxHeight = Util.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT);
+        mButtonGapHeight = ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT - BUTTON_LAYOUT_MIN_HEIGHT);
+        mScrollButtonMinHeight = ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MIN_HEIGHT);
+        mScrollButtonMaxHeight = ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT);
 
-        mButtonTextGapLeftMargin = Util.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN - BUTTON_TEXT_MIN_LEFT_MARGIN);
-        mScrollButtonTextMaxLeftMargin = Util.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN);
-        mScrollButtonTextMinLeftMargin = Util.dpToPx(mContext, BUTTON_TEXT_MIN_LEFT_MARGIN);
+        mButtonTextGapLeftMargin = ScreenUtils.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN - BUTTON_TEXT_MIN_LEFT_MARGIN);
+        mScrollButtonTextMaxLeftMargin = ScreenUtils.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN);
+        mScrollButtonTextMinLeftMargin = ScreenUtils.dpToPx(mContext, BUTTON_TEXT_MIN_LEFT_MARGIN);
 
         initToolbarLayout(view);
         initSwipeRefreshLayout(view);
@@ -284,7 +281,7 @@ public class HomeLayout extends BaseLayout
 
         int index;
 
-        if (Util.getLCDWidth(mContext) < 720)
+        if (ScreenUtils.getScreenWidth(mContext) < 720)
         {
             String findText = mContext.getResources().getString(R.string.label_home_server_error_low_display_split_text);
             index = errorText.lastIndexOf(findText) + findText.length();
@@ -298,7 +295,7 @@ public class HomeLayout extends BaseLayout
 
 
         mErrorLayoutMinTranslationY = 0;
-        mErrorLayoutMaxTranslationY = Util.dpToPx(mContext, 93d) + 1;
+        mErrorLayoutMaxTranslationY = ScreenUtils.dpToPx(mContext, 93d) + 1;
         mErrorPopupLayout.setTranslationY(mErrorLayoutMaxTranslationY);
     }
 
@@ -349,7 +346,7 @@ public class HomeLayout extends BaseLayout
         layout.addView(mScrollButtonLayout);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(//
-            ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT));
+            ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT));
         mScrollButtonLayout.setLayoutParams(params);
 
         View stayButton = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
@@ -662,7 +659,7 @@ public class HomeLayout extends BaseLayout
     {
         if (mEventImageHeight == 0)
         {
-            mEventImageHeight = Util.getListRowHeight(context);
+            mEventImageHeight = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext));
         }
 
         return mEventImageHeight;
@@ -675,7 +672,7 @@ public class HomeLayout extends BaseLayout
         String homeEventTitle = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventTitle();
         int homeEventIndex = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventIndex();
 
-        if (Util.isTextEmpty(homeEventCurrentVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(homeEventCurrentVersion) == true)
         {
             return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
                 HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
@@ -701,7 +698,7 @@ public class HomeLayout extends BaseLayout
                     ExLog.d(e.toString());
                 }
 
-                if (Util.isTextEmpty(urlString) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(urlString) == true)
                 {
                     return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
                         HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
@@ -860,7 +857,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        if (Util.isTextEmpty(title) == true && Util.isTextEmpty(description) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(title) == true && com.daily.base.util.TextUtils.isTextEmpty(description) == true)
         {
             if (mTextMessageLayout.getVisibility() != View.GONE)
             {

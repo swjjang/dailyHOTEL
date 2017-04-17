@@ -34,27 +34,27 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         Map<String, String> params = new HashMap<>();
         params.put("user_idx", userIndex);
 
-        if (Util.isTextEmpty(email) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
         {
             params.put("user_email", email);
         }
 
-        if (Util.isTextEmpty(name) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name) == false)
         {
             params.put("user_name", name);
         }
 
-        if (Util.isTextEmpty(phoneNumber) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == false)
         {
             params.put("user_phone", phoneNumber.replaceAll("-", ""));
         }
 
-        if (Util.isTextEmpty(birthday) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
         {
             params.put("birthday", birthday);
         }
 
-        if (Util.isTextEmpty(recommender) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
         {
             params.put("recommendation_code", recommender);
         }
@@ -63,7 +63,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
 
         if (Constants.DEBUG == false)
         {
-            if (Util.isTextEmpty(name) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
             {
                 Crashlytics.log("AddProfileSocialNetworkController::requestUpdateSocialUserInformation :: name="//
                     + name + " , userIndex=" + userIndex + " , user_email=" + email);

@@ -10,7 +10,7 @@ import com.facebook.keyframes.KeyframesDrawableBuilder;
 import com.facebook.keyframes.deserializers.KFImageDeserializer;
 import com.facebook.keyframes.model.KFImage;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 
 import java.io.IOException;
 import java.io.InputStream;

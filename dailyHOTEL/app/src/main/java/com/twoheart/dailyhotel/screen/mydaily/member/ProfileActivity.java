@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.daily.base.util.TextUtils;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -26,11 +27,11 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -49,7 +50,7 @@ public class ProfileActivity extends BaseActivity
     {
         Intent intent = new Intent(context, ProfileActivity.class);
 
-        if (Util.isTextEmpty(deepLink) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
@@ -367,7 +368,7 @@ public class ProfileActivity extends BaseActivity
         @Override
         public void doCodeCopy(String code)
         {
-            Util.clipText(ProfileActivity.this, code);
+            TextUtils.clipText(ProfileActivity.this, code);
 
             DailyToast.showToast(ProfileActivity.this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
 

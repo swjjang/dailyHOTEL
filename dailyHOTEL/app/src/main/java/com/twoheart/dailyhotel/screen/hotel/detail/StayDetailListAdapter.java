@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.StayDetail;
@@ -25,10 +27,8 @@ import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyTextView;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -150,7 +150,7 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         // D Benefit
-        if (Util.isTextEmpty(stayDetailParams.benefit) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) == false)
         {
             if (mDetailViews[4] == null)
             {
@@ -163,7 +163,7 @@ public class StayDetailListAdapter extends BaseAdapter
         {
             // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
             View view = new View(mContext);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, 1));
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
             view.setLayoutParams(layoutParams);
             view.setBackgroundResource(R.color.default_line_cf0f0f0);
             linearLayout.addView(view);
@@ -517,10 +517,10 @@ public class StayDetailListAdapter extends BaseAdapter
 
         if (isSingleLine == true)
         {
-            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 15));
+            dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 15));
         } else
         {
-            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 2));
+            dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 2));
         }
 
         dailyTextView.setLayoutParams(layoutParams);
@@ -699,7 +699,7 @@ public class StayDetailListAdapter extends BaseAdapter
             {
                 String contentText = contentsList.get(i);
 
-                if (Util.isTextEmpty(contentText) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
                 {
                     continue;
                 }

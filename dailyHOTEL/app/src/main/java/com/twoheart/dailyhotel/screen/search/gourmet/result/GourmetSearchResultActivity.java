@@ -34,10 +34,10 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -395,7 +395,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
     void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
     {
-        if (Util.isTextEmpty(address))
+        if (com.daily.base.util.TextUtils.isTextEmpty(address))
         {
             return;
         }
@@ -416,7 +416,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
             }
 
-            if (Util.isTextEmpty(action) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(action) == false)
             {
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , action, address, params);

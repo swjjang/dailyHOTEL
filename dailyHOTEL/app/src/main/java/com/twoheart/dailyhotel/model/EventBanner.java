@@ -47,7 +47,7 @@ public class EventBanner
 
     public boolean isDeepLink()
     {
-        return Util.isTextEmpty(webLink) == true;
+        return com.daily.base.util.TextUtils.isTextEmpty(webLink) == true;
     }
 
     public boolean isHotel()

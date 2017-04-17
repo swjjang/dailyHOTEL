@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.widget.DailyButton;
+import com.daily.base.widget.DailyButton;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class StampLayout extends BaseLayout implements View.OnClickListener

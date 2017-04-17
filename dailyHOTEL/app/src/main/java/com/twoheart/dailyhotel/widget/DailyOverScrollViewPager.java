@@ -18,7 +18,7 @@ import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 
 public class DailyOverScrollViewPager extends ViewPager
 {

@@ -3,9 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.daily.base.util.ScreenUtils;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.twoheart.dailyhotel.util.Util;
 
 public class PlaceRegionRenderer
 {
@@ -19,16 +19,16 @@ public class PlaceRegionRenderer
 
         if (count < 4)
         {
-            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 10));
+            mRegionIconGenerator.setTextPadding(ScreenUtils.dpToPx(context, 10));
         } else if (count >= 4 && count < 10)
         {
-            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 15));
+            mRegionIconGenerator.setTextPadding(ScreenUtils.dpToPx(context, 15));
         } else if (count >= 10 && count < 21)
         {
-            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 18));
+            mRegionIconGenerator.setTextPadding(ScreenUtils.dpToPx(context, 18));
         } else
         {
-            mRegionIconGenerator.setTextPadding(Util.dpToPx(context, 25));
+            mRegionIconGenerator.setTextPadding(ScreenUtils.dpToPx(context, 25));
         }
     }
 

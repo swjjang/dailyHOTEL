@@ -8,6 +8,10 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyImageView;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -29,7 +33,7 @@ public class DailyToolbarLayout
     {
         DailyTextView textView = (DailyTextView) mToolbar.findViewById(R.id.titleTextView);
 
-        if (Util.getLCDWidth(context) <= 480)
+        if (ScreenUtils.getScreenWidth(context) <= 480)
         {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
         }
@@ -62,14 +66,14 @@ public class DailyToolbarLayout
         {
             backView.setVisibility(View.GONE);
 
-            textView.setPadding(Util.dpToPx(mContext, 15), 0, 0, 0);
+            textView.setPadding(ScreenUtils.dpToPx(mContext, 15), 0, 0, 0);
         } else
         {
             backView.setVectorImageResource(backPressedResId);
             backView.setVisibility(View.VISIBLE);
             backView.setOnClickListener(backPressedListener);
 
-            textView.setPadding(Util.dpToPx(mContext, 72), 0, 0, 0);
+            textView.setPadding(ScreenUtils.dpToPx(mContext, 72), 0, 0, 0);
         }
     }
 
@@ -152,7 +156,7 @@ public class DailyToolbarLayout
             return;
         }
 
-        if (Util.isTextEmpty(menu1Text) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(menu1Text) == false)
         {
             menu1.setVisibility(View.VISIBLE);
             menu1.setText(menu1Text);
@@ -162,7 +166,7 @@ public class DailyToolbarLayout
             menu1.setText(null);
         }
 
-        if (Util.isTextEmpty(menu2Text) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(menu2Text) == false)
         {
             menu2.setVisibility(View.VISIBLE);
             menu2.setText(menu2Text);
@@ -224,10 +228,10 @@ public class DailyToolbarLayout
 
         if (backView.getVisibility() == View.GONE)
         {
-            textView.setPadding(Util.dpToPx(mContext, 15), 0, 0, 0);
+            textView.setPadding(ScreenUtils.dpToPx(mContext, 15), 0, 0, 0);
         } else
         {
-            textView.setPadding(Util.dpToPx(mContext, 72), 0, 0, 0);
+            textView.setPadding(ScreenUtils.dpToPx(mContext, 72), 0, 0, 0);
         }
     }
 

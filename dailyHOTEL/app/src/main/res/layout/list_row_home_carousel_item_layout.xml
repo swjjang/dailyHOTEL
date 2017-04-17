@@ -53,7 +53,7 @@
 
         </RelativeLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/contentTextView"
             android:layout_width="match_parent"
             android:layout_height="19dp"
@@ -75,7 +75,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentDiscountPriceView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,14 +83,14 @@
                 android:textSize="13dp"
                 dailyFont:style="Medium"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentPersonView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/default_text_c666666"
                 android:textSize="12dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentOriginPriceView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentProvinceView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                 android:textSize="12dp"
                 dailyFont:style="DemiLight"/>
 
-            <com.twoheart.dailyhotel.widget.DailyImageView
+            <com.daily.base.widget.DailyImageView
                 android:id="@+id/contentDotImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -133,7 +133,7 @@
                 android:visibility="invisible"
                 app:srcCompat="@drawable/info_ic_text_dot_grey"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentGradeView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

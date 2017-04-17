@@ -9,7 +9,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="24dp">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_below="@+id/titleTextView"
         android:orientation="vertical">
 
-        <com.twoheart.dailyhotel.widget.DailyScrollView
+        <com.daily.base.widget.DailyScrollView
             android:id="@+id/scrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/agreeSignatureTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                         android:background="@drawable/shape_rect_c323232"/>
                 </FrameLayout>
             </LinearLayout>
-        </com.twoheart.dailyhotel.widget.DailyScrollView>
+        </com.daily.base.widget.DailyScrollView>
 
         <RelativeLayout
             android:id="@+id/buttonLayout"
@@ -90,7 +90,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/confirmTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

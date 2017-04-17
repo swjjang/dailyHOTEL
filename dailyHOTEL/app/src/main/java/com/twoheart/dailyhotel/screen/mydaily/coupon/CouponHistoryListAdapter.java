@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.util.CouponUtil;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 
 import java.util.List;
 
@@ -66,7 +66,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     {
         CouponHistory coupon = getItem(position);
 
-        String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
+        String strAmount = com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
         holder.descriptionTextView.setText(coupon.title);
@@ -75,7 +75,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         if (position == getItemCount() - 1)
         {
-            layoutParams.bottomMargin = Util.dpToPx(mContext, 40);
+            layoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 40);
 
             holder.lastBottomLine.setVisibility(View.VISIBLE);
         } else
@@ -105,7 +105,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
 
         try
         {
-            if (Util.getLCDWidth(mContext) < 720)
+            if (ScreenUtils.getScreenWidth(mContext) < 720)
             {
                 builder.append("\n");
             } else

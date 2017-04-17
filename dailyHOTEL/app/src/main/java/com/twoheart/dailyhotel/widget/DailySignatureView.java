@@ -16,9 +16,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 
 import java.util.ArrayList;
 
@@ -130,16 +130,16 @@ public class DailySignatureView extends View
 
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.payment_sign_hint);
 
-                if (Util.getLCDWidth(getContext()) < 720)
+                if (ScreenUtils.getScreenWidth(getContext()) < 720)
                 {
                     int dstLeft = (mBitmap.getWidth() - bitmap.getWidth()) / 2;
-                    int dstTop = mBitmap.getHeight() - Util.dpToPx(getContext(), 10) - bitmap.getHeight();
+                    int dstTop = mBitmap.getHeight() - ScreenUtils.dpToPx(getContext(), 10) - bitmap.getHeight();
 
                     mDstRect.set(dstLeft, dstTop, dstLeft + bitmap.getWidth(), dstTop + bitmap.getHeight());
                 } else
                 {
                     int dstLeft = (mBitmap.getWidth() - bitmap.getWidth()) / 2;
-                    int dstTop = mBitmap.getHeight() - Util.dpToPx(getContext(), 15) - bitmap.getHeight();
+                    int dstTop = mBitmap.getHeight() - ScreenUtils.dpToPx(getContext(), 15) - bitmap.getHeight();
                     mDstRect.set(dstLeft, dstTop, dstLeft + bitmap.getWidth(), dstTop + bitmap.getHeight());
                 }
 

@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
+import com.daily.base.util.FontManager;
 import com.twoheart.dailyhotel.R;
 
 public class DailyCountryCodeTextView extends AppCompatTextView

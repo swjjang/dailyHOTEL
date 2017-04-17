@@ -24,6 +24,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewItem;
@@ -32,13 +34,12 @@ import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
-import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.widget.DailyToast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -531,7 +532,7 @@ public class ReviewActivity extends BaseActivity
         mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-737-A_not_satisfied.kf.json");
         mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-573-B_satfisfied.kf.json");
 
-        final int VALUE_DP100 = Util.dpToPx(ReviewActivity.this, 100);
+        final int VALUE_DP100 = ScreenUtils.dpToPx(ReviewActivity.this, 100);
         final int paddingValue = VALUE_DP100 * 17 / 200;
 
         mDailyEmoticonImageView[0].setPadding(paddingValue, paddingValue, paddingValue, paddingValue);
@@ -755,7 +756,7 @@ public class ReviewActivity extends BaseActivity
         {
             mDialog.setContentView(view);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 

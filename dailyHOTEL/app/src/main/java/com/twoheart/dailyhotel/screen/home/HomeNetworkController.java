@@ -14,8 +14,7 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -264,7 +263,7 @@ public class HomeNetworkController extends BaseNetworkController
 
                         for (HomePlace wishItem : homePlaceList)
                         {
-                            if (Util.isTextEmpty(wishItem.imageUrl) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(wishItem.imageUrl) == false)
                             {
                                 wishItem.imageUrl = imageBaseUrl + wishItem.imageUrl;
                             }
@@ -314,7 +313,7 @@ public class HomeNetworkController extends BaseNetworkController
 
                         for (HomePlace recentItem : homePlaceList)
                         {
-                            if (Util.isTextEmpty(recentItem.imageUrl) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(recentItem.imageUrl) == false)
                             {
                                 recentItem.imageUrl = imageBaseUrl + recentItem.imageUrl;
                             }

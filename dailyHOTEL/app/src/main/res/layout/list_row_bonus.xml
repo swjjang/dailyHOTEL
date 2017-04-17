@@ -20,14 +20,14 @@
         android:layout_toLeftOf="@+id/bonusTextView"
         android:orientation="vertical">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/contentTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/information_title"
             android:textSize="13dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/expireTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
     </LinearLayout>
 
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/bonusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

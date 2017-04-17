@@ -12,7 +12,7 @@
         android:layout_height="52dp"
         android:background="@color/white">
 
-        <com.twoheart.dailyhotel.widget.DailyImageView
+        <com.daily.base.widget.DailyImageView
             android:id="@+id/backImageView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -20,7 +20,7 @@
             android:paddingRight="15dp"
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/registerCouponView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -32,7 +32,7 @@
             android:textColor="@color/default_text_cb70038"
             android:textSize="18dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:dropDownWidth="134dp"
             android:spinnerMode="dropdown"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/couponTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
             android:layout_height="1dp"
             android:background="@color/default_line_ce7e7e7"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -131,7 +131,7 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="10dp">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/couponUseNoticeTextView"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
@@ -143,7 +143,7 @@
                 android:textSize="13dp"
                 dailyFont:style="Medium"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/couponHistoryTextView"
                 android:layout_width="0dp"
                 android:layout_height="38dp"

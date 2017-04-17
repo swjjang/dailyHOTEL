@@ -3,7 +3,7 @@ package com.twoheart.dailyhotel.firebase;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.File;
@@ -39,7 +39,7 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
     {
         String url = params[0];
 
-        if (Util.isTextEmpty(url, mVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url, mVersion) == true)
         {
             return false;
         }

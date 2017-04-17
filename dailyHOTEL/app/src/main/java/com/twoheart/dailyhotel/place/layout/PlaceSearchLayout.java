@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -28,7 +30,7 @@ import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyScrollView;
+import com.daily.base.widget.DailyScrollView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -336,11 +338,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                 } else
                 {
-                    if (scrollView.getHeight() < Util.getLCDHeight(mContext) / 2)
+                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
                     {
                         mDistance += (t - oldt);
 
-                        if (mDistance > Util.dpToPx(mContext, 41) == true)
+                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
                         {
                             mDistance = 0;
                             mIsHide = true;
@@ -485,11 +487,11 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                 } else
                 {
-                    if (scrollView.getHeight() < Util.getLCDHeight(mContext) / 2)
+                    if (scrollView.getHeight() < ScreenUtils.getScreenHeight(mContext) / 2)
                     {
                         mDistance += (t - oldt);
 
-                        if (mDistance > Util.dpToPx(mContext, 41) == true)
+                        if (mDistance > ScreenUtils.dpToPx(mContext, 41) == true)
                         {
                             mDistance = 0;
                             mIsHide = true;
@@ -634,7 +636,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                         }
 
                         textView02.setVisibility(View.VISIBLE);
-                        textView02.setText(Util.getPriceFormat(mContext, keyword.price, false));
+                        textView02.setText(TextUtils.getPriceFormat(mContext, keyword.price, false));
                     } else
                     {
                         textView01.setText(keyword.name);
@@ -668,7 +670,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     {
         String text = keyword.trim();
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return;
         }

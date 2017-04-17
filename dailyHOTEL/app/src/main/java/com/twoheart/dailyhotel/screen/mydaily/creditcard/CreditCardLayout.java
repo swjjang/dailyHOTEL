@@ -15,11 +15,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.daily.base.widget.DailyTextView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,10 +103,10 @@ public class CreditCardLayout extends FrameLayout
         if (layoutParams == null)
         {
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(Util.dpToPx(context, 30), Util.dpToPx(context, 24), Util.dpToPx(context, 30), 0);
+            layoutParams.setMargins(ScreenUtils.dpToPx(context, 30), ScreenUtils.dpToPx(context, 24), ScreenUtils.dpToPx(context, 30), 0);
         }
 
-        layoutParams.height = (Util.getLCDWidth(context) - Util.dpToPx(context, 60)) * 9 / 16;
+        layoutParams.height = (ScreenUtils.getScreenWidth(context) - ScreenUtils.dpToPx(context, 60)) * 9 / 16;
         emptyCardLayout.setLayoutParams(layoutParams);
     }
 
@@ -286,10 +286,10 @@ public class CreditCardLayout extends FrameLayout
             if (layoutParams == null)
             {
                 layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(Util.dpToPx(mContext, 30), Util.dpToPx(mContext, 24), Util.dpToPx(mContext, 30), 0);
+                layoutParams.setMargins(ScreenUtils.dpToPx(mContext, 30), ScreenUtils.dpToPx(mContext, 24), ScreenUtils.dpToPx(mContext, 30), 0);
             }
 
-            layoutParams.height = (Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60)) * 9 / 16;
+            layoutParams.height = (ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 60)) * 9 / 16;
             cardLayout.setLayoutParams(layoutParams);
 
             final CreditCard card = getItem(position);

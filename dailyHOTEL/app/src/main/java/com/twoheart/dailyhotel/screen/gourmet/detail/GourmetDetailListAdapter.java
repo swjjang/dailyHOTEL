@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.GourmetDetail;
@@ -22,7 +23,7 @@ import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.daily.base.widget.DailyTextView;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -148,7 +149,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             linearLayout.addView(mDetailViews[3]);
         }
 
-        if (Util.isTextEmpty(gourmetDetailParams.benefit) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) == false)
         {
             // D Benefit
             if (mDetailViews[4] == null)
@@ -162,7 +163,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         {
             // 베네핏이 없으면 정보화면의 상단 라인으로 대체한다.
             View view = new View(mContext);
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dpToPx(mContext, 1));
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 1));
             view.setLayoutParams(layoutParams);
             view.setBackgroundResource(R.color.default_line_cf0f0f0);
             linearLayout.addView(view);
@@ -221,7 +222,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 등급
         TextView gradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetGradeTextView);
 
-        if (Util.isTextEmpty(gourmetDetailParams.category) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.category) == true)
         {
             gradeTextView.setVisibility(View.GONE);
         } else
@@ -233,7 +234,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 소분류 등급
         TextView subGradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetSubGradeTextView);
 
-        if (Util.isTextEmpty(gourmetDetailParams.categorySub) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.categorySub) == true)
         {
             subGradeTextView.setVisibility(View.GONE);
         } else
@@ -465,10 +466,10 @@ public class GourmetDetailListAdapter extends BaseAdapter
 
         if (isSingleLine == true)
         {
-            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 15));
+            dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 15));
         } else
         {
-            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 2));
+            dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 10), 0, ScreenUtils.dpToPx(context, 2));
         }
 
         dailyTextView.setLayoutParams(layoutParams);
@@ -610,7 +611,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             {
                 String contentText = contentsList.get(i);
 
-                if (Util.isTextEmpty(contentText) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
                 {
                     continue;
                 }

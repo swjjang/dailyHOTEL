@@ -20,16 +20,17 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 
 import java.net.URISyntaxException;
 
@@ -155,7 +156,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
          *
          * Third party cookies 사용의 차단으로 안심클릭 카드 결제 시, 보안 키보드를 불러오지 못 하는 이슈 등이 발생할 수 있으니 하기 설정을 true 로
          */
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
@@ -217,7 +218,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
     protected void onStart()
     {
         String screenName = getScreenName();
-        if (Util.isTextEmpty(screenName) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(screenName) == false)
         {
             AnalyticsManager.getInstance(this).recordScreen(this, screenName, null);
         }
@@ -377,7 +378,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             scriptForSkip = scriptPrefix + "returnUrltoMall();"; // KTFC 확인 버튼 콜
         }
 
-        if (Util.isTextEmpty(scriptForSkip) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(scriptForSkip) == false)
         {
             mWebView.loadUrl(scriptForSkip);
         }
@@ -580,7 +581,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
         {
             super.onProgressChanged(view, newProgress);
 
-            if (Util.isOverAPI14() == true)
+            if (VersionUtils.isOverAPI14() == true)
             {
                 if (newProgress != 100)
                 {
@@ -652,7 +653,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             // handler.removeCallbacks(networkCheckRunner);
             // 결제 완료시 항상 네트워크 불안정뜨므로, 네트워크 체크는 제거하도록 함.
 
-            if (Util.isOverAPI14() == true)
+            if (VersionUtils.isOverAPI14() == true)
             {
                 setSupportProgressBarIndeterminateVisibility(true);
             }
@@ -665,7 +666,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
 
             unLockUI();
 
-            if (Util.isOverAPI14() == true)
+            if (VersionUtils.isOverAPI14() == true)
             {
                 setSupportProgressBarIndeterminateVisibility(false);
             }
@@ -875,7 +876,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_ISP)));
 
                         // Android OS 5.0 이상에서는 back 이하에서는 결제 취소 후 엑티비티 종료 하도록 함
-                        if (Util.isOverAPI21() == true)
+                        if (VersionUtils.isOverAPI21() == true)
                         {
                             view.goBack();
                         } else
@@ -901,7 +902,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
                             DailyToast.showToast(this, R.string.toast_msg_retry_payment_after_install_app, Toast.LENGTH_LONG);
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(URL_STORE_PAYMENT_KFTC)));
 
-                            if (Util.isOverAPI21() == true)
+                            if (VersionUtils.isOverAPI21() == true)
                             {
                                 view.goBack();
                             } else
@@ -1385,7 +1386,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
-            if (Util.isTextEmpty(data) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(data) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
                 finish();

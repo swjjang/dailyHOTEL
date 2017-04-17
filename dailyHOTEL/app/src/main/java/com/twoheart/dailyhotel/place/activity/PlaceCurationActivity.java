@@ -16,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -25,7 +27,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.lang.ref.WeakReference;
 
@@ -124,7 +125,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
 
         String text = mConfirmView.getText().toString();
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return 0;
         }
@@ -212,10 +213,10 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = Util.dpToPx(this, 74d);
+        layoutParams.height = ScreenUtils.dpToPx(this, 74d);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-        dailyTextView.setPadding(0, Util.dpToPx(this, 12), 0, 0);
+        dailyTextView.setPadding(0, ScreenUtils.dpToPx(this, 12), 0, 0);
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;

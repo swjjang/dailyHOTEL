@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -20,9 +22,8 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -137,7 +138,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void setCalendarText(String date)
     {
-        if (Util.isTextEmpty(date) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(date) == true)
         {
             return;
         }
@@ -277,7 +278,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 mCalendarUnderlineView.getLayoutParams().height = 1;
             } else
             {
-                mCalendarUnderlineView.getLayoutParams().height = Util.dpToPx(mContext, 1);
+                mCalendarUnderlineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
             }
         }
     }

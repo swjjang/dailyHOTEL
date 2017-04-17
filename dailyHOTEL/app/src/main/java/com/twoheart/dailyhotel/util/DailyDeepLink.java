@@ -70,7 +70,7 @@ public abstract class DailyDeepLink
     {
         String value = uri.getQueryParameter(param);
 
-        if (Util.isTextEmpty(value) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
         {
             mParamsMap.put(param, value);
             return true;

@@ -17,10 +17,9 @@ import android.widget.Toast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyAutoCompleteEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
@@ -105,7 +104,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 String email = s.toString();
 
                 // email 유효성 체크
-                if (Util.isTextEmpty(email) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
                 {
                     mConfirmView.setEnabled(false);
                 } else
@@ -156,7 +155,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
             case R.id.confirmView:
                 String email = mEmailEditText.getText().toString();
 
-                if (Util.isTextEmpty(email) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
                 {
                     DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
                     return;

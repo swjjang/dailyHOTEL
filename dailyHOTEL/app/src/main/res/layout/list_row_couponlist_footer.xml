@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="10dp">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/couponUseNoticeTextView"
         android:layout_width="0dp"
         android:layout_height="38dp"
@@ -19,7 +19,7 @@
         android:textSize="13dp"
         dailyFont:style="Medium"/>
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:id="@+id/couponHistoryTextView"
         android:layout_width="0dp"
         android:layout_height="38dp"

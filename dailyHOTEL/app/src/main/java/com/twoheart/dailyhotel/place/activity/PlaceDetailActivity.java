@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -28,10 +30,9 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public abstract class PlaceDetailActivity extends BaseActivity
@@ -214,7 +215,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     public boolean isSameCallingActivity(String checkClassName)
     {
         ComponentName callingActivity = getCallingActivity();
-        if (callingActivity == null || Util.isTextEmpty(checkClassName) == true)
+        if (callingActivity == null || com.daily.base.util.TextUtils.isTextEmpty(checkClassName) == true)
         {
             return false;
         }
@@ -543,7 +544,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 
@@ -641,7 +642,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
             {
                 shareDialog.setContentView(dialogView);
 
-                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(PlaceDetailActivity.this, shareDialog);
+                WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(PlaceDetailActivity.this, shareDialog);
 
                 shareDialog.show();
 

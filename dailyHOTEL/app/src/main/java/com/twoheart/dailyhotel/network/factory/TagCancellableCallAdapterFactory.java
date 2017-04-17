@@ -72,7 +72,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
     public void cancelAll(String tag)
     {
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             return;
         }

@@ -24,8 +24,8 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyAutoCompleteEditText;
-import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.daily.base.widget.DailyAutoCompleteEditText;
+import com.daily.base.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Arrays;
@@ -228,14 +228,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 {
                     String tag = (String) mCountryEditText.getTag();
 
-                    if (Util.isTextEmpty(tag) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
                     {
                         tag = Util.DEFAULT_COUNTRY_CODE;
                     }
 
                     phoneNumber = mPhoneEditText.getText().toString().trim();
 
-                    if (Util.isTextEmpty(phoneNumber) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
                     {
                         phoneNumber = null;
                     } else
@@ -255,7 +255,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     name = mNameEditText.getText().toString().trim();
                 }
 
-                if (Util.isTextEmpty(birthday) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
                 {
                     Calendar calendar = (Calendar) mBirthdayEditText.getTag();
 
@@ -374,7 +374,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     public void setCountryCode(String countryCode)
     {
-        if (Util.isTextEmpty(countryCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }

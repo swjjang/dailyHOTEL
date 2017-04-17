@@ -15,13 +15,14 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.PhoneNumberKoreaFormattingTextWatcher;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyEditText;
+import com.daily.base.widget.DailyEditText;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
@@ -212,7 +213,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     public void setCountryCode(String countryCode)
     {
-        if (Util.isTextEmpty(countryCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }
@@ -318,7 +319,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
                         }
                     });
 
-                    if (Util.isOverAPI16() == true)
+                    if (VersionUtils.isOverAPI16() == true)
                     {
                         mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     } else
@@ -356,7 +357,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }
@@ -371,7 +372,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }

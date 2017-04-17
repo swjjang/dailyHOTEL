@@ -24,6 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -35,14 +37,13 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.FontManager;
 
 public class HotelPaymentLayout extends BaseLayout implements View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener
 {
@@ -280,7 +281,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         mDiscountPriceTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
         mFinalPaymentTextView = (TextView) view.findViewById(R.id.totalPaymentPriceTextView);
 
-        mDiscountPriceTextView.setText(Util.getPriceFormat(mContext, 0, false));
+        mDiscountPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, 0, false));
 
         initDiscountInformation(view);
     }
@@ -332,10 +333,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         if (layoutParams == null)
         {
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15));
+            layoutParams.setMargins(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15));
         }
 
-        layoutParams.height = (Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60)) * 9 / 16;
+        layoutParams.height = (ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 60)) * 9 / 16;
         simpleCreditCardLayout.setLayoutParams(layoutParams);
 
         mEmptySimpleCardLayout = simpleCreditCardLayout.findViewById(R.id.emptySimpleCardLayout);
@@ -365,7 +366,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             return;
         }
 
-        if (Util.isTextEmpty(text) == true || visible == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true || visible == false)
         {
             mGuidePaymentMemoView.setVisibility(View.GONE);
             return;
@@ -539,7 +540,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         } else
         {
             ViewGroup.LayoutParams frameLayoutParams = mGuestFrameLayout.getLayoutParams();
-            frameLayoutParams.height = Util.dpToPx(mContext, 164) + Util.dpToPx(mContext, 36);
+            frameLayoutParams.height = ScreenUtils.dpToPx(mContext, 164) + ScreenUtils.dpToPx(mContext, 36);
             mGuestFrameLayout.setLayoutParams(frameLayoutParams);
 
             ViewGroup.LayoutParams linearLayoutParams = mGuestLinearLayout.getLayoutParams();
@@ -594,10 +595,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             mGuideNameMemo.setVisibility(View.VISIBLE);
 
-            if (Util.getLCDWidth(mContext) > 480)
+            if (ScreenUtils.getScreenWidth(mContext) > 480)
             {
                 mGuideNameMemo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_payment_notice, 0, 0, 0);
-                mGuideNameMemo.setCompoundDrawablePadding(Util.dpToPx(mContext, 4));
+                mGuideNameMemo.setCompoundDrawablePadding(ScreenUtils.dpToPx(mContext, 4));
             }
         }
     }
@@ -697,7 +698,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mAmountNightsTextView.setVisibility(View.GONE);
         }
 
-        mPriceTextView.setText(Util.getPriceFormat(mContext, originalPrice, false));
+        mPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, originalPrice, false));
 
         switch (discountType)
         {
@@ -710,7 +711,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                     setBonusEnabled(false);
                 } else
                 {
-                    String priceFormat = Util.getPriceFormat(mContext, discountPrice, false);
+                    String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, discountPrice, false);
 
                     mUsedBonusTextView.setText(priceFormat);
                     mDiscountPriceTextView.setText("- " + priceFormat);
@@ -725,7 +726,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
                     mUsedCouponTextView.setText(R.string.label_booking_select_coupon);
                 } else
                 {
-                    String priceFormat = Util.getPriceFormat(mContext, discountPrice, false);
+                    String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, discountPrice, false);
 
                     mUsedCouponTextView.setText(priceFormat);
                     mDiscountPriceTextView.setText("- " + priceFormat);
@@ -735,12 +736,12 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             default:
             {
-                mDiscountPriceTextView.setText(Util.getPriceFormat(mContext, 0, false));
+                mDiscountPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, 0, false));
                 break;
             }
         }
 
-        mFinalPaymentTextView.setText(Util.getPriceFormat(mContext, payPrice, false));
+        mFinalPaymentTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, payPrice, false));
 
         // 다음 버전에서 진행.
         //        if (payPrice == 0)
@@ -888,7 +889,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
      */
     public void setBonusTextView(int bonus)
     {
-        String priceFormat = Util.getPriceFormat(mContext, bonus, false);
+        String priceFormat = com.daily.base.util.TextUtils.getPriceFormat(mContext, bonus, false);
         String text = mContext.getString(R.string.label_booking_own_bonus, priceFormat);
 
         if (bonus > 0)
@@ -1091,8 +1092,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
         }
 
-        final int dp164 = Util.dpToPx(mContext, 164);
-        final int height = Util.getLCDHeight(mContext);
+        final int dp164 = ScreenUtils.dpToPx(mContext, 164);
+        final int height = ScreenUtils.getScreenHeight(mContext);
         mScrollMoveHeight = -1;
 
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()

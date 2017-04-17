@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -123,7 +124,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                     String placeType = externalDeepLink.getPlaceType();
 
-                    if (Util.isTextEmpty(placeType) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(placeType) == true)
                     {
                         sortType = CouponListActivity.SortType.ALL;
                     } else
@@ -210,7 +211,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                 mMyDailyLayout.updatePushIcon(isBenefitAlarm);
 
-                if (Util.isOverAPI19() == true && isBenefitAlarm == true)
+                if (VersionUtils.isOverAPI19() == true && isBenefitAlarm == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 
@@ -262,7 +263,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
             case Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS:
             {
-                if (Util.isOverAPI19() == true)
+                if (VersionUtils.isOverAPI19() == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 
@@ -305,7 +306,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
         Intent intent;
 
-        if (Util.isTextEmpty(recommenderCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommenderCode) == true)
         {
             intent = SignupStep1Activity.newInstance(baseActivity, null);
         } else
@@ -320,7 +321,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
     {
         String benefitMessage = DailyPreference.getInstance(getContext()).getBenefitAlarmMessage();
 
-        if (Util.isTextEmpty(benefitMessage) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(benefitMessage) == true)
         {
             benefitMessage = getResources().getString(R.string.frag_push_alert_subtext);
             DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(benefitMessage);
@@ -667,7 +668,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                 mMyDailyLayout.updatePushIcon(isAgreedBenefit);
 
-                if (Util.isOverAPI19() == true && isAgreedBenefit == true)
+                if (VersionUtils.isOverAPI19() == true && isAgreedBenefit == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 
@@ -738,7 +739,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     }
                 }, true);
 
-                if (Util.isOverAPI19() == true)
+                if (VersionUtils.isOverAPI19() == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 

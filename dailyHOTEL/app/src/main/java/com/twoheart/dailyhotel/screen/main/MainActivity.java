@@ -19,6 +19,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
@@ -39,10 +41,10 @@ import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyImageView;
+import com.daily.base.widget.DailyImageView;
 
 import org.json.JSONObject;
 
@@ -147,7 +149,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
-        String currentVersion = Util.getAppVersionCode(this);
+        String currentVersion = VersionUtils.getAppVersionCode(this);
         if (currentVersion.equalsIgnoreCase(version) == false)
         {
             DailyPreference.getInstance(this).setAppVersion(currentVersion);
@@ -248,14 +250,14 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         DailyImageView imageView = (DailyImageView) splashLayout.findViewById(R.id.splashImageView);
 
-        if (Util.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
             imageView.setVectorImageResource(R.drawable.img_splash_logo);
         } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
             imageView.setPadding(0, 0, 0, 0);
 
-            if (Util.isTabletDevice(this) == true)
+            if (ScreenUtils.isTabletDevice(this) == true)
             {
                 imageView.setBackgroundColor(getResources().getColor(R.color.white));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -280,7 +282,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 {
                     imageView.setPadding(0, 0, 0, 0);
 
-                    if (Util.isTabletDevice(this) == true)
+                    if (ScreenUtils.isTabletDevice(this) == true)
                     {
                         imageView.setBackgroundColor(getResources().getColor(R.color.white));
                         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -293,7 +295,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 } catch (Exception | OutOfMemoryError e)
                 {
                     DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                    imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
+                    imageView.setPadding(0, 0, 0, ScreenUtils.dpToPx(this, 26));
                     imageView.setScaleType(ImageView.ScaleType.CENTER);
                     imageView.setVectorImageResource(R.drawable.img_splash_logo);
                 }
@@ -591,13 +593,13 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
     void checkAppVersion(final String currentVersion, final String forceVersion)
     {
-        if (Util.isTextEmpty(currentVersion, forceVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(currentVersion, forceVersion) == true)
         {
             mOnNetworkControllerListener.onConfigurationResponse();
             return;
         }
 
-        int appVersion = Integer.parseInt(Util.getAppVersionCode(MainActivity.this).replace(".", ""));
+        int appVersion = Integer.parseInt(VersionUtils.getAppVersionCode(MainActivity.this).replace(".", ""));
         int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
         int forceVersionNumber = Integer.parseInt(forceVersion.replace(".", ""));
         int currentVersionNumber = Integer.parseInt(currentVersion.replace(".", ""));
@@ -645,7 +647,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             {
                 String forceString = DailyPreference.getInstance(MainActivity.this).getRemoteConfigUpdateForce();
 
-                if (Util.isTextEmpty(forceString) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(forceString) == true)
                 {
                     throw new NullPointerException();
                 }
@@ -712,7 +714,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             {
                 String optionalString = DailyPreference.getInstance(MainActivity.this).getRemoteConfigUpdateOptional();
 
-                if (Util.isTextEmpty(optionalString) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(optionalString) == true)
                 {
                     throw new NullPointerException();
                 }
@@ -805,7 +807,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mSettingNetworkDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mSettingNetworkDialog);
 
             mSettingNetworkDialog.show();
 
@@ -832,7 +834,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             return;
         }
 
-        final int MAX_MOVE_DISTANCE = Util.dpToPx(this, 20);
+        final int MAX_MOVE_DISTANCE = ScreenUtils.dpToPx(this, 20);
         final int MIN_MOVE_DISTANCE = 2;
 
         if (Math.abs(mDistance) > MAX_MOVE_DISTANCE)
@@ -1095,14 +1097,14 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             mDelayTimeHandler.removeMessages(0);
             unLockUI();
 
-            if (Util.isTextEmpty(title, message) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(title, message) == true)
             {
                 DailyRemoteConfig.getInstance(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
                 {
                     @Override
                     public void onComplete(String currentVersion, String forceVersion)
                     {
-                        if (Util.isTextEmpty(currentVersion, forceVersion) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(currentVersion, forceVersion) == true)
                         {
                             mNetworkController.requestVersion();
                         } else
@@ -1378,17 +1380,17 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(todayDateTime.currentDateTime);
             DailyPreference.getInstance(MainActivity.this).setLastestNoticeTime(todayDateTime.currentDateTime);
 
-            if (Util.isTextEmpty(viewedEventTime) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(viewedEventTime) == true)
             {
                 viewedEventTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
-            if (Util.isTextEmpty(viewedCouponTime) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(viewedCouponTime) == true)
             {
                 viewedCouponTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
 
-            if (Util.isTextEmpty(viewedNoticeTime) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(viewedNoticeTime) == true)
             {
                 viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
             }
@@ -1439,7 +1441,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         @Override
         public void onHappyTalkCategory(String categorys)
         {
-            if (Util.isTextEmpty(categorys) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(categorys) == true)
             {
                 return;
             }

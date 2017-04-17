@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -24,11 +25,11 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyEditText;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
@@ -96,7 +97,7 @@ public class IssuingReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (Util.isTextEmpty(mReservationIndex) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(mReservationIndex) == true)
                 {
                     restartExpiredSession();
                 } else
@@ -200,7 +201,7 @@ public class IssuingReceiptActivity extends BaseActivity
             {
                 String email = emailEditTExt.getText().toString();
 
-                if (Util.isTextEmpty(email) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
                 {
                     // 이메일로 영수증 전송하기
 
@@ -253,7 +254,7 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 
@@ -273,7 +274,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             mReservationIndex = jsonObject.getString("reservation_idx");
 
-            if (Constants.DEBUG == false && Util.isTextEmpty(mReservationIndex) == true)
+            if (Constants.DEBUG == false && com.daily.base.util.TextUtils.isTextEmpty(mReservationIndex) == true)
             {
                 Crashlytics.logException(new NullPointerException("IssuingReceiptActivity : mReservationIndex == null"));
             }
@@ -334,7 +335,7 @@ public class IssuingReceiptActivity extends BaseActivity
             // 결제수단
             View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
 
-            if (Util.isTextEmpty(paymentType) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(paymentType) == true)
             {
                 paymentTypeLayout.setVisibility(View.GONE);
             } else
@@ -350,7 +351,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             // 총금액
             TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-            totalPriceTextView.setText(Util.getPriceFormat(this, discount, false));
+            totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, discount, false));
 
             // 적립금 혹은 쿠폰 사용
             View discountLayout = paymentInfoLayout.findViewById(R.id.discountLayout);
@@ -369,7 +370,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
                 discountLayout.setVisibility(View.VISIBLE);
                 TextView discountedTextView = (TextView) paymentInfoLayout.findViewById(R.id.discountedTextView);
-                discountedTextView.setText("- " + Util.getPriceFormat(this, bonus + coupon, false));
+                discountedTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(this, bonus + coupon, false));
             } else
             {
                 discountLayout.setVisibility(View.GONE);
@@ -385,7 +386,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
             // 총 입금(실 결제) 금액
             TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-            totalPaymentTextView.setText(Util.getPriceFormat(this, pricePayment, false));
+            totalPaymentTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, pricePayment, false));
 
             // **공급자**
 

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.list.BookingListFragment;
@@ -115,7 +116,7 @@ public class MainFragmentManager
             return;
         }
 
-        if (Util.isOverAPI17() == true)
+        if (VersionUtils.isOverAPI17() == true)
         {
             if (mMainActivity.isDestroyed() == true)
             {

@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,8 +39,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyScrollView;
-import com.twoheart.dailyhotel.widget.DailyTextView;
+import com.daily.base.widget.DailyScrollView;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.Locale;
@@ -119,8 +120,8 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         mScrollLayout = (DailyScrollView) view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(mScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        double width = Util.getLCDWidth(mContext);
-        double height = Util.getListRowHeight(mContext);
+        double width = ScreenUtils.getScreenWidth(mContext);
+        double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext));
         final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
 
         // Map 4 :2 비율 맞추기
@@ -232,8 +233,8 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             return;
         }
 
-        double width = Util.getLCDWidth(context);
-        double height = Util.getListRowHeight(context);
+        double width = ScreenUtils.getScreenWidth(context);
+        double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(context));
 
         if (Util.isInstallGooglePlayService(context) == false)
         {
@@ -391,7 +392,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
 
     public void updateReviewButtonLayout(String reviewStatus)
     {
-        if (Util.isTextEmpty(reviewStatus) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(reviewStatus) == true)
         {
             reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
         }
@@ -687,7 +688,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
         latLngBounds.include(mPlaceLocationMarker.getPosition());
         latLngBounds.include(mMyLocationMarker.getPosition());
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), Util.dpToPx(mContext, 50));
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(mContext, 50));
         mGoogleMap.animateCamera(cameraUpdate);
     }
 
@@ -729,7 +730,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
 
-            mZoomControl.setPadding(mZoomControl.getPaddingLeft(), Util.dpToPx(mContext, 50), mZoomControl.getPaddingRight(), mZoomControl.getPaddingBottom());
+            mZoomControl.setPadding(mZoomControl.getPaddingLeft(), ScreenUtils.dpToPx(mContext, 50), mZoomControl.getPaddingRight(), mZoomControl.getPaddingBottom());
             mZoomControl.setLayoutParams(params);
         }
     }

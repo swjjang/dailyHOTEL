@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.CouponUtil;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyTextView;
 
 import java.util.List;
 
@@ -183,7 +183,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return;
             }
 
-            String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
+            String strAmount = com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amount, false);
             couponPriceTextView.setText(strAmount);
 
             descriptionTextView.setText(coupon.title);
@@ -216,14 +216,14 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             dueDateTextView.setText(strDueDate);
 
             String lastLineText = "";
-            boolean isEmptyStayFromTo = Util.isTextEmpty(coupon.stayFrom, coupon.stayTo);
+            boolean isEmptyStayFromTo = com.daily.base.util.TextUtils.isTextEmpty(coupon.stayFrom, coupon.stayTo);
             boolean isEmptyAmountMinimum = coupon.amountMinimum == 0;
 
             if (isEmptyAmountMinimum == false)
             {
                 lastLineText += mContext.getResources().getString( //
                     isEmptyStayFromTo == false ? R.string.coupon_min_price_short_text : R.string.coupon_min_price_text, //
-                    Util.getPriceFormat(mContext, coupon.amountMinimum, false));
+                    com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amountMinimum, false));
             }
 
             if (isEmptyStayFromTo == false)
@@ -274,7 +274,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             useStayIconView.setImageResource(coupon.availableInStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
             useGourmetIconView.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
 
-            CharSequence charSequence = Util.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
+            CharSequence charSequence = com.daily.base.util.TextUtils.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
             SpannableString spannableString = new SpannableString(charSequence);
             spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             noticeTextView.setText(spannableString);
@@ -299,13 +299,13 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         void setMinPriceText(int position, int viewWidth, String lastLineText)
         {
-            if (Util.isTextEmpty(lastLineText) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(lastLineText) == true)
             {
                 lastLineText = "";
             }
 
             final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
-            final float textWidth = Util.getTextWidth(mContext, lastLineText, 11d, typeface);
+            final float textWidth = TextUtils.getTextWidth(mContext, lastLineText, 11d, typeface);
 
             //            ExLog.d("index : " + position + " , viewWidth : " + viewWidth + " , getWidth() : "//
             //                + minPriceTextView.getWidth() + " , getPaddingLeft() : " + minPriceTextView.getPaddingLeft() //

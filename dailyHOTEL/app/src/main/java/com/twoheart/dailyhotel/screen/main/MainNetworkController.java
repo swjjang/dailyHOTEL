@@ -15,8 +15,7 @@ import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
@@ -117,7 +116,7 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestEventNCouponNNoticeNewCount(String lastEventTime, String lastCouponTime, String lastNoticeTime)
     {
-        if (Util.isTextEmpty(lastEventTime, lastCouponTime, lastNoticeTime) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(lastEventTime, lastCouponTime, lastNoticeTime) == true)
         {
             return;
         }
@@ -398,7 +397,7 @@ public class MainNetworkController extends BaseNetworkController
                         final String userType = dataJSONObject.has("userType") == true ? dataJSONObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
                         AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
 
-                        if (Util.isTextEmpty(userIndex) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(userIndex) == true)
                         {
                             if (Constants.DEBUG == true)
                             {

@@ -32,12 +32,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -123,7 +124,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         }
 
         final ObjectAnimator objectAnimator = ObjectAnimator.ofInt(webView, "scrollY", webView.getScrollY(), 0);
-        objectAnimator.setDuration(webView.getScrollY() * 30 / Util.getLCDHeight(this));
+        objectAnimator.setDuration(webView.getScrollY() * 30 / ScreenUtils.getScreenHeight(this));
         objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
         webView.flingScroll(0, 0);
@@ -211,7 +212,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
             } else if (url.startsWith(INTENT_PROTOCOL_START))
             {
-                if (Util.isOverAPI19() == true)
+                if (VersionUtils.isOverAPI19() == true)
                 {
                     final int customUrlStartIndex = INTENT_PROTOCOL_START.length();
                     final int customUrlEndIndex = url.indexOf(INTENT_PROTOCOL_INTENT);
@@ -257,7 +258,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
         private void browseToExternalBrowser(String url)
         {
-            if (Util.isTextEmpty(url) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
             {
                 return;
             }

@@ -15,12 +15,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewAnswerValue;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.widget.DailyTextView;
 
 import java.util.ArrayList;
 
@@ -53,11 +54,11 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
         setEnabled(false);
         setBackgroundResource(R.drawable.selector_review_cardlayout_enabled);
 
-        final int DP1 = Util.dpToPx(context, 1);
+        final int DP1 = ScreenUtils.dpToPx(context, 1);
         setPadding(DP1, DP1, DP1, DP1);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.bottomMargin = Util.dpToPx(context, 15);
+        layoutParams.bottomMargin = ScreenUtils.dpToPx(context, 15);
         setLayoutParams(layoutParams);
 
         View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_pick, this);
@@ -86,7 +87,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             TextView gridItemDescriptionTextView = (TextView) pickItemView.findViewById(R.id.descriptionTextView);
 
             // 빈상자인 경우
-            if (Util.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
             {
                 gridItemTitleTextView.setVisibility(View.GONE);
                 gridItemDescriptionTextView.setVisibility(View.GONE);
@@ -111,17 +112,17 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
             if (i >= size - 2)
             {
-                gridLayoutParams.height = Util.dpToPx(mContext, 56);
+                gridLayoutParams.height = ScreenUtils.dpToPx(mContext, 56);
             } else
             {
-                gridLayoutParams.height = Util.dpToPx(mContext, 57);
+                gridLayoutParams.height = ScreenUtils.dpToPx(mContext, 57);
             }
 
             gridLayoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
             pickItemView.setLayoutParams(gridLayoutParams);
 
-            if (Util.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
             {
                 pickItemView.setOnClickListener(this);
             }
@@ -133,15 +134,15 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             {
                 View dividerView = new View(mContext);
                 android.support.v7.widget.GridLayout.LayoutParams dividerLayoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
-                dividerLayoutParams.width = Util.dpToPx(mContext, 1);
+                dividerLayoutParams.width = ScreenUtils.dpToPx(mContext, 1);
                 dividerLayoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 0.0f);
 
                 if (i >= size - 2)
                 {
-                    dividerLayoutParams.height = Util.dpToPx(mContext, 56);
+                    dividerLayoutParams.height = ScreenUtils.dpToPx(mContext, 56);
                 } else
                 {
-                    dividerLayoutParams.height = Util.dpToPx(mContext, 57);
+                    dividerLayoutParams.height = ScreenUtils.dpToPx(mContext, 57);
                 }
 
                 dividerView.setBackgroundResource(R.color.default_line_cf0f0f0);

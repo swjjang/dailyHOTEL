@@ -40,7 +40,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     {
         Intent intent = new Intent(context, EventListActivity.class);
 
-        if (Util.isTextEmpty(deepLink) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
@@ -220,7 +220,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
     void startEventWeb(String url, String eventName)
     {
-        if (Util.isTextEmpty(url) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
         {
             return;
         }

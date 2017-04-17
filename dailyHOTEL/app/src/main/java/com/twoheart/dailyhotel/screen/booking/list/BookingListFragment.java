@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
@@ -45,11 +44,10 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
@@ -441,7 +439,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
         , PlacePaymentInformation.PaymentType paymentType//
         , String visitTime, ArrayList<Booking> bookingArrayList)
     {
-        if (Util.isTextEmpty(placeName, visitTime) == true//
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, visitTime) == true//
             || bookingArrayList == null || bookingArrayList.size() == 0 || paymentType == null)
         {
             DailyPreference.getInstance(context).clearPaymentInformation();
@@ -497,7 +495,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
         , String checkInTime, String checkOutTime//
         , ArrayList<Booking> bookingArrayList)
     {
-        if (Util.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
             || bookingArrayList == null || bookingArrayList.size() == 0 || paymentType == null)
         {
             DailyPreference.getInstance(context).clearPaymentInformation();
@@ -818,7 +816,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
                     {
                         String msg = responseJSONObject.getString("msg");
 
-                        if (Util.isTextEmpty(msg) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(msg) == false)
                         {
                             DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
                         } else
@@ -1087,7 +1085,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
                         {
                             message = responseJSONObject.getString("msg");
 
-                            if (Util.isTextEmpty(message) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == false)
                             {
                                 DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                             }
@@ -1101,7 +1099,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
                         {
                             message = responseJSONObject.getString("msg");
 
-                            if (Util.isTextEmpty(message) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == false)
                             {
                                 unLockUI();
 

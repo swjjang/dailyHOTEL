@@ -50,7 +50,7 @@
                 android:layout_below="@+id/lineView"
                 android:background="@color/default_background"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_below="@+id/emptyView"
@@ -75,7 +75,7 @@
                 android:background="@drawable/shape_fillrect_l1a000000_bffffff"
                 android:orientation="vertical">
 
-                <com.twoheart.dailyhotel.widget.DailyTextView
+                <com.daily.base.widget.DailyTextView
                     android:id="@+id/placeNameTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="68dp">
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/viewDetailView"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -118,7 +118,7 @@
                         android:layout_gravity="center_vertical"
                         android:background="@color/default_line_cf0f0f0"/>
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/viewMapView"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -137,7 +137,7 @@
                         android:layout_gravity="center_vertical"
                         android:background="@color/default_line_cf0f0f0"/>
 
-                    <com.twoheart.dailyhotel.widget.DailyTextView
+                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/inputReviewView"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"

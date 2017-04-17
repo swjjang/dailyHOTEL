@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="206dp">
 
-    <com.twoheart.dailyhotel.widget.DailyTextView
+    <com.daily.base.widget.DailyTextView
         android:layout_width="wrap_content"
         android:layout_height="206dp"
         android:layout_centerHorizontal="true"

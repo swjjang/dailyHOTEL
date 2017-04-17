@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.network.model.StampHistory;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;

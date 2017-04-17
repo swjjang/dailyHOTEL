@@ -634,6 +634,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
+        <!--  com.daily.dailyhotel.... -->
+
+
+        <!--  com.daily.dailyhotel.... -->
+
+
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

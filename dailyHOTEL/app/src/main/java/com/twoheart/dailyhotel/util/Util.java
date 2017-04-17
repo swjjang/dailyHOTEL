@@ -5,31 +5,24 @@ import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap.Config;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.provider.Telephony;
-import android.support.annotation.NonNull;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -38,6 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -57,16 +54,13 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.DailyToast;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.widget.DailyToast;
 
 import net.simonvt.numberpicker.NumberPicker;
 
 import java.lang.ref.SoftReference;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -79,17 +73,6 @@ public class Util implements Constants
     private static final String REMOVE_CHARACTER = "[\\-\\:\\+]";
 
     private static SoftReference<String> MEMORY_CLEAR;
-
-    //    static
-    //    {
-    //        try
-    //        {
-    //            SoLoaderShim.loadLibrary("webp");
-    //        } catch (UnsatisfiedLinkError e)
-    //        {
-    //            ExLog.e(e.toString());
-    //        }
-    //    }
 
     public static void initializeMemory()
     {
@@ -105,7 +88,7 @@ public class Util implements Constants
     {
         ImagePipelineConfig imagePipelineConfig;
 
-        if (Util.isOverAPI11() == true && Util.getLCDWidth(context) >= 720)
+        if (VersionUtils.isOverAPI11() == true && ScreenUtils.getScreenWidth(context) >= 720)
         {
             imagePipelineConfig = OkHttpImagePipelineConfigFactory//
                 .newBuilder(context, new OkHttpClient()).build();
@@ -123,13 +106,13 @@ public class Util implements Constants
     {
         simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-        if (Util.isTextEmpty(imageUrl) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(imageUrl) == true)
         {
             simpleDraweeView.setImageURI((String) null);
             return;
         }
 
-        if (Util.getLCDWidth(context) >= 720)
+        if (ScreenUtils.getScreenWidth(context) >= 720)
         {
             simpleDraweeView.setImageURI(Uri.parse(imageUrl));
         } else
@@ -147,17 +130,6 @@ public class Util implements Constants
 
             simpleDraweeView.setController(controller);
         }
-    }
-
-    public static int dpToPx(Context context, double dp)
-    {
-        if (context == null)
-        {
-            context = DailyHotel.getGlobalApplicationContext();
-        }
-
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
     }
 
     public static String storeReleaseAddress()
@@ -247,271 +219,15 @@ public class Util implements Constants
         System.exit(0);
     }
 
-    //    public static String getDeviceId(Context context)
-    //    {
-    //        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-    //        String deviceId = telephonyManager.getDeviceId();
-    //
-    //        // // 참고로 태블릿, 웨어러블 기기에서는 값이 null이 나온다.
-    //        if (Util.isTelephonyEnabled(context) == false && deviceId == null)
-    //        {
-    //            return getDeviceUUID(context);
-    //        }
-    //
-    //        return deviceId;
-    //    }
-    //
-    //    public static String getDeviceUUID(Context context)
-    //    {
-    //        UUID uuid = null;
-    //
-    //        final String androidId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-    //        try
-    //        {
-    //            if ("9774d56d682e549c".equals(androidId) == false)
-    //            {
-    //                uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
-    //            } else
-    //            {
-    //                final String deviceId = ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-    //                uuid = deviceId != null ? UUID.nameUUIDFromBytes(deviceId.getBytes("utf8")) : UUID.randomUUID();
-    //            }
-    //        } catch (UnsupportedEncodingException e)
-    //        {
-    //            ExLog.d(e.toString());
-    //        }
-    //
-    //        if (uuid != null)
-    //        {
-    //            return uuid.toString();
-    //        } else
-    //        {
-    //            return null;
-    //        }
-    //    }
-
-    public static int getLCDWidth(Context context)
-    {
-        if (context == null)
-        {
-            return 0;
-        }
-
-        try
-        {
-            return context.getResources().getDisplayMetrics().widthPixels;
-        } catch (Exception e)
-        {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.widthPixels;
-        }
-    }
-
-    public static int getLCDHeight(Context context)
-    {
-        if (context == null)
-        {
-            return 0;
-        }
-        try
-        {
-            return context.getResources().getDisplayMetrics().heightPixels;
-        } catch (Exception e)
-        {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.heightPixels;
-        }
-    }
-
-    /**
-     * 메인 리스트를 16:9로 표현
-     *
-     * @return
-     */
-    public static int getListRowHeight(Context context)
-    {
-        return getRatioHeightType16x9(getLCDWidth(context));
-    }
-
-
-    /**
-     * 21:9로 표현된 높이
-     *
-     * @return
-     */
-    public static int getRatioHeightType21x9(int width)
-    {
-        if (width < 1)
-        {
-            return 0;
-        }
-
-        return width * 9 / 21;
-    }
-
-    /**
-     * 16:9로 표현된 높이
-     *
-     * @return
-     */
-    public static int getRatioHeightType16x9(int width)
-    {
-        if (width < 1)
-        {
-            return 0;
-        }
-
-        return width * 9 / 16;
-    }
-
-    /**
-     * 4:3으로 표현된 높이
-     *
-     * @return
-     */
-    public static int getRatioHeightType4x3(int width)
-    {
-        if (width < 1)
-        {
-            return 0;
-        }
-
-        return width * 3 / 4;
-    }
-
-    public static boolean isNameCharacter(String text)
-    {
-        boolean result = false;
-
-        if (Util.isTextEmpty(text) == false)
-        {
-            result = Pattern.matches("^[a-zA-Z\\s.'-]+$", text);
-        }
-
-        return result;
-    }
-
-    public static boolean isOverAPI11()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-    }
-
-    public static boolean isOverAPI12()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-    }
-
-    public static boolean isOverAPI14()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-    }
-
-    public static boolean isOverAPI15()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
-    }
-
-    public static boolean isOverAPI16()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
-
-    public static boolean isOverAPI17()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
-    }
-
-    public static boolean isOverAPI19()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
-
-    public static boolean isOverAPI21()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    public static boolean isOverAPI22()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1;
-    }
-
-    public static boolean isOverAPI23()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
-    public static boolean isOverAPI24()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
-    }
-
-    /**
-     * 현재 Fresco 라이브러리 버그로 인해서 7.0 이상 단말이에서 사용금지.
-     *
-     * @return
-     */
     public static boolean isUsedMultiTransition()
     {
-        return isOverAPI21() == true && isOverAPI24() == false;
+        return VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI24() == false;
         //        return isOverAPI21() == true;
     }
 
     public static boolean isTelephonyEnabled(Context context)
     {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
-    }
-
-    public static boolean isTextEmpty(String... texts)
-    {
-        if (texts == null)
-        {
-            return true;
-        }
-
-        for (String text : texts)
-        {
-            if ((TextUtils.isEmpty(text) == true || "null".equalsIgnoreCase(text) == true || text.trim().length() == 0) == true)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static String getAppVersionCode(Context context)
-    {
-        String version = null;
-        try
-        {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            version = Integer.toString(packageInfo.versionCode);
-        } catch (NameNotFoundException e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return version;
-    }
-
-    public static String getAppVersionName(Context context)
-    {
-        String version = null;
-        try
-        {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            version = packageInfo.versionName;
-        } catch (NameNotFoundException e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return version;
     }
 
     public static boolean isGooglePlayServicesAvailable(Context context)
@@ -652,14 +368,14 @@ public class Util implements Constants
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String countryIsoCode = telephonyManager.getSimCountryIso();
 
-            if (Util.isTextEmpty(countryIsoCode) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(countryIsoCode) == true)
             {
                 Locale currentLocale = context.getResources().getConfiguration().locale;
 
                 countryIsoCode = currentLocale.getCountry();
             }
 
-            if (Util.isTextEmpty(countryIsoCode) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(countryIsoCode) == false)
             {
                 CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
 
@@ -689,7 +405,7 @@ public class Util implements Constants
 
     public static boolean isValidatePhoneNumber(String phoneNumber)
     {
-        if (Util.isTextEmpty(phoneNumber) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
         {
             return false;
         }
@@ -745,7 +461,7 @@ public class Util implements Constants
      */
     public static boolean isExistMobileNumber(String mobileNumber)
     {
-        if (Util.isTextEmpty(mobileNumber) == true || mobileNumber.startsWith("+82") == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mobileNumber) == true || mobileNumber.startsWith("+82") == false)
         {
             return false;
         }
@@ -779,7 +495,7 @@ public class Util implements Constants
 
     public static String[] getValidatePhoneNumber(String phoneNumber)
     {
-        if (Util.isTextEmpty(phoneNumber) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
         {
             return null;
         }
@@ -791,7 +507,7 @@ public class Util implements Constants
             String countryCode = getValidateCountry(text[0]);
 
             // 국제 전화번호 존재 여부 확인
-            if (isTextEmpty(countryCode) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
             {
                 return null;
             }
@@ -858,7 +574,7 @@ public class Util implements Constants
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(baseActivity.getString(R.string.dialog_notice2));
         } else
@@ -919,7 +635,7 @@ public class Util implements Constants
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(baseActivity, dialog);
 
             dialog.show();
 
@@ -936,7 +652,7 @@ public class Util implements Constants
 
     public static String addHyphenMobileNumber(Context context, String mobileNumber)
     {
-        if (Util.isTextEmpty(mobileNumber) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mobileNumber) == true)
         {
             return "";
         }
@@ -967,7 +683,7 @@ public class Util implements Constants
 
     public static boolean isInstalledPackage(Context context, String packageName, Intent intent)
     {
-        if (context == null || Util.isTextEmpty(packageName) == true || intent == null)
+        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(packageName) == true || intent == null)
         {
             return false;
         }
@@ -986,7 +702,7 @@ public class Util implements Constants
 
     public static void shareDaumMap(Activity activity, String latitude, String longitude)
     {
-        if (activity == null || Util.isTextEmpty(latitude, longitude) == true)
+        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -1008,7 +724,7 @@ public class Util implements Constants
 
     public static void shareNaverMap(Activity activity, String name, String latitude, String longitude)
     {
-        if (activity == null || Util.isTextEmpty(latitude, longitude) == true)
+        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -1036,7 +752,7 @@ public class Util implements Constants
 
     public static void shareKakaoNavi(Activity activity, String name, String latitude, String longitude)
     {
-        if (activity == null || Util.isTextEmpty(latitude) == true || Util.isTextEmpty(longitude) == true)
+        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude) == true || com.daily.base.util.TextUtils.isTextEmpty(longitude) == true)
         {
             return;
         }
@@ -1064,7 +780,7 @@ public class Util implements Constants
 
     public static void shareGoogleMap(Activity activity, String placeName, String latitude, String longitude)
     {
-        if (activity == null || Util.isTextEmpty(latitude, longitude) == true)
+        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -1287,7 +1003,7 @@ public class Util implements Constants
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(activity, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(activity, dialog);
 
             dialog.show();
 
@@ -1349,9 +1065,9 @@ public class Util implements Constants
 
                     Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
 
-                    if (Util.isTextEmpty(gaCategory) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (Util.isTextEmpty(gaLabel) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
                         } else
@@ -1374,9 +1090,9 @@ public class Util implements Constants
 
                     Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (Util.isTextEmpty(gaCategory) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (Util.isTextEmpty(gaLabel) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
                         } else
@@ -1399,9 +1115,9 @@ public class Util implements Constants
 
                     Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (Util.isTextEmpty(gaCategory) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (Util.isTextEmpty(gaLabel) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
                         } else
@@ -1424,9 +1140,9 @@ public class Util implements Constants
 
                     Util.shareTMapNavi(baseActivity, placeName, (float) latitude, (float) longitude);
 
-                    if (Util.isTextEmpty(gaCategory) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (Util.isTextEmpty(gaLabel) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi", null);
                         } else
@@ -1449,9 +1165,9 @@ public class Util implements Constants
 
                     Util.shareKakaoNavi(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (Util.isTextEmpty(gaCategory) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (Util.isTextEmpty(gaLabel) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi", null);
                         } else
@@ -1480,9 +1196,9 @@ public class Util implements Constants
 
                     Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (Util.isTextEmpty(gaCategory) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (Util.isTextEmpty(gaLabel) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
                         } else
@@ -1507,7 +1223,7 @@ public class Util implements Constants
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(baseActivity, dialog);
 
             dialog.show();
 
@@ -1518,22 +1234,9 @@ public class Util implements Constants
         }
     }
 
-    public static void clipText(Context context, String text)
-    {
-        if (Util.isOverAPI11() == true)
-        {
-            android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardManager.setPrimaryClip(ClipData.newPlainText(null, text));
-        } else
-        {
-            android.text.ClipboardManager clipboardManager = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboardManager.setText(text);
-        }
-    }
-
     public static void installPackage(Context context, String packageName)
     {
-        if (context == null || Util.isTextEmpty(packageName) == true)
+        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(packageName) == true)
         {
             return;
         }
@@ -1563,91 +1266,9 @@ public class Util implements Constants
         }
     }
 
-    public static String getPriceFormat(Context context, int price, boolean isPrefixType)
-    {
-        if (isPrefixType == true)
-        {
-            DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format_prefix));
-            return decimalFormat.format(price);
-        } else
-        {
-            DecimalFormat decimalFormat = new DecimalFormat(context.getString(R.string.currency_format));
-            return decimalFormat.format(price);
-        }
-    }
-
-    /**
-     * String value 값 중 "true", "1", "Y", "y" 값을 true로 바꿔 주는 메소드
-     *
-     * @param value
-     * @return boolean value
-     */
-    public static boolean parseBoolean(String value)
-    {
-        if (isTextEmpty(value) == true)
-        {
-            return false;
-        }
-
-        value = value.toLowerCase();
-
-        if ("true".equalsIgnoreCase(value))
-        {
-            return true;
-        } else if ("1".equalsIgnoreCase(value))
-        {
-            return true;
-        } else if ("Y".equalsIgnoreCase(value))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static float getTextWidth(Context context, String text, double dp, Typeface typeface)
-    {
-        return getScaleTextWidth(context, text, dp, 1.0f, typeface);
-    }
-
-    public static float getScaleTextWidth(Context context, String text, double dp, float scaleX, Typeface typeface)
-    {
-        if (context == null || isTextEmpty(text))
-        {
-            return 0;
-        }
-
-        Paint p = new Paint();
-
-        float size = dpToPx(context, dp);
-        p.setTextSize(size);
-        p.setTypeface(typeface);
-        p.setTextScaleX(scaleX);
-
-        float width = p.measureText(text);
-
-        p.reset();
-        return width;
-    }
-
-    /**
-     * textView에 텍스트가 들어가 있어야 한다.
-     *
-     * @param textView
-     * @param textViewWidth
-     * @return
-     */
-    public static float getTextViewHeight(TextView textView, int textViewWidth)
-    {
-        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.AT_MOST);
-        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        textView.measure(widthMeasureSpec, heightMeasureSpec);
-        return textView.getMeasuredHeight();
-    }
-
     public static String makeIntroImageFileName(String version)
     {
-        if (Util.isTextEmpty(version) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(version) == true)
         {
             return "daily_intro";
         }
@@ -1658,7 +1279,7 @@ public class Util implements Constants
 
     public static String makeImageFileName(String version)
     {
-        if (Util.isTextEmpty(version) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(version) == true)
         {
             return "daily_image";
         }
@@ -1669,7 +1290,7 @@ public class Util implements Constants
 
     public static String makeStampStayThankYpuImageFileName(String version)
     {
-        if (Util.isTextEmpty(version) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(version) == true)
         {
             return "daily_stamp_stay";
         }
@@ -1695,7 +1316,7 @@ public class Util implements Constants
     {
         String value = DailyPreference.getInstance(context).getNoticeNewList();
 
-        return (Util.isTextEmpty(value) == false);
+        return (com.daily.base.util.TextUtils.isTextEmpty(value) == false);
     }
 
     public static ArrayList<Notice> checkNoticeNewList(Context context, ArrayList<Notice> noticeList)
@@ -1710,7 +1331,7 @@ public class Util implements Constants
         String removeValue = DailyPreference.getInstance(context).getNoticeNewRemoveList();
         String indexString;
 
-        if (Util.isTextEmpty(removeValue) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(removeValue) == true)
         {
             removeValue = "";
         }
@@ -1745,12 +1366,12 @@ public class Util implements Constants
 
         String indexString = Integer.toString(index) + SEPARATE;
 
-        if (Util.isTextEmpty(newValue) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(newValue) == false)
         {
             DailyPreference.getInstance(context).setNoticeNewList(newValue.replace(indexString, ""));
         }
 
-        if (Util.isTextEmpty(removeValue) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(removeValue) == true)
         {
             DailyPreference.getInstance(context).setNoticeNewRemoveList(indexString);
         } else
@@ -1795,29 +1416,6 @@ public class Util implements Constants
         return realProvinceName;
     }
 
-
-    public static String trim(String text)
-    {
-        if (Util.isTextEmpty(text) == true)
-        {
-            return text;
-        }
-
-        int length = text.length();
-        int index = 0;
-
-        while ((index < length) && (text.charAt(index) <= ' '))
-        {
-            index++;
-        }
-        while ((index < length) && (text.charAt(length - 1) <= ' '))
-        {
-            length--;
-        }
-
-        return ((index > 0) || (length < text.length())) ? text.substring(index, length) : text;
-    }
-
     public static boolean isAvailableNetwork(Context context)
     {
         boolean result = false;
@@ -1841,32 +1439,9 @@ public class Util implements Constants
         return result;
     }
 
-    public static WindowManager.LayoutParams getDialogWidthLayoutParams(Activity activity, Dialog dialog)
-    {
-        if (dialog == null)
-        {
-            return null;
-        }
-
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        layoutParams.copyFrom(dialog.getWindow().getAttributes());
-
-        if (isTabletDevice(activity) == false)
-        {
-            layoutParams.width = Util.getLCDWidth(activity) * 13 / 15;
-        } else
-        {
-            layoutParams.width = Util.getLCDWidth(activity) * 10 / 15;
-        }
-
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        return layoutParams;
-    }
-
     public static void sendSms(Activity activity, String message)
     {
-        if (Util.isOverAPI19() == true)
+        if (VersionUtils.isOverAPI19() == true)
         {
             String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(activity);
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -1898,116 +1473,5 @@ public class Util implements Constants
                 activity.startActivity(intent);
             }
         }
-    }
-
-    /**
-     * 일단은 테블릿으로 정의하지만 실제로는 화면 크기이기 때문에 폰이 테블릿이 되는 경우도
-     * 반대의 경우도 발생하나 스크린 사이즈로 결정되기 때문에 이상없을 것이라고 판단됨
-     *
-     * @param activity
-     * @return
-     */
-    public static boolean isTabletDevice(Activity activity)
-    {
-        return checkTabletDeviceWithScreenSize(activity);
-    }
-
-    private static boolean checkTabletDeviceWithScreenSize(Activity activity)
-    {
-        boolean device_large = ((activity.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE);
-
-        if (device_large)
-        {
-            DisplayMetrics metrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-            if (metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_TV//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static String getResolutionImageUrl(Context context, String defaultImageUrl, String lowResolutionImageUrl)
-    {
-        return Util.getLCDWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;
-    }
-
-    public static boolean verifyPassword(String email, @NonNull final String password)
-    {
-        // 둘중에 한개라도 없으면 안됨.
-        if (Util.isTextEmpty(password) == true)
-        {
-            return false;
-        }
-
-        int length = password.length();
-
-        if (length < SignupStep1Activity.PASSWORD_MIN_COUNT)
-        {
-            return false;
-        }
-
-        if (length == SignupStep1Activity.PASSWORD_MIN_COUNT)
-        {
-            boolean oneCharacterVerified = false;
-
-            // 8자이면서 한개의 영문(대소문자 구분)이나 숫자, 특수문자로만 입력된 경우
-            for (int i = 1; i < length; i++)
-            {
-                if (password.charAt(0) != password.charAt(i))
-                {
-                    oneCharacterVerified = true;
-                    break;
-                }
-            }
-
-            if (oneCharacterVerified == false)
-            {
-                return false;
-            }
-
-            boolean doubleCharacterVerified = false;
-
-            // 8자이면서 두개의 숫자가 반복적으로 입력된 경우 (12121212, 82828282…)
-            for (int i = 2; i < length; i += 2)
-            {
-                if (password.charAt(0) != password.charAt(i) && password.charAt(1) != password.charAt(i + 1))
-                {
-                    doubleCharacterVerified = true;
-                    break;
-                }
-            }
-
-            if (doubleCharacterVerified == false)
-            {
-                return false;
-            }
-        }
-
-        // 이메일주소와 동일한 경우
-        if (password.equalsIgnoreCase(email) == true)
-        {
-            return false;
-        }
-
-        //  특정 문자열의 경우
-        final String[] patterns = {"12345678"};
-
-        for (String pattern : patterns)
-        {
-            if (pattern.equalsIgnoreCase(password) == true)
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

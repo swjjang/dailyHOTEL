@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -177,7 +178,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         if (mIsTable == true)
         {
             ViewGroup.LayoutParams layoutParams = convertView.getLayoutParams();
-            layoutParams.height = Util.getLCDWidth(mContext) * 10 / 36;
+            layoutParams.height = ScreenUtils.getScreenWidth(mContext) * 10 / 36;
         }
 
         convertView.setTag(parent.getId(), R.layout.list_row_province);
@@ -188,7 +189,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
         TextView englishTextView = (TextView) convertView.findViewById(R.id.provinceEnglishTextView);
 
-        Uri uri = Util.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
+        Uri uri = com.daily.base.util.TextUtils.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
         provinceImageView.setImageURI(uri);
 
         textView.setText(getInsertSpaceName(province.name));

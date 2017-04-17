@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -74,7 +76,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
                 view.setLayoutParams(layoutParams);
 
                 return new HotelViewHolder(view);
@@ -85,7 +87,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
                 View view = mInflater.inflate(R.layout.list_row_collection_header, parent, false);
 
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - Util.dpToPx(mContext, 97));
+                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
                 view.setLayoutParams(layoutParams);
 
                 return new HeaderViewHolder(view);
@@ -96,7 +98,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
                 View view = mInflater.inflate(R.layout.view_empty_stay_collection, parent, false);
 
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
-                    , Util.getLCDHeight(mContext) - Util.dpToPx(mContext, 97) - Util.getRatioHeightType16x9(Util.getLCDWidth(mContext)) + Util.dpToPx(mContext, 81) - Util.dpToPx(mContext, 97));
+                    , ScreenUtils.getScreenHeight(mContext) - ScreenUtils.dpToPx(mContext, 97) - ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
                 view.setLayoutParams(layoutParams);
 
                 return new FooterViewHolder(view);
@@ -139,8 +141,8 @@ public class CollectionStayAdapter extends PlaceListAdapter
     {
         final RecommendationStay recommendationStay = placeViewItem.getItem();
 
-        String strPrice = Util.getPriceFormat(mContext, recommendationStay.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, recommendationStay.discount, false);
+        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationStay.price, false);
+        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationStay.discount, false);
 
         String address = recommendationStay.addrSummary;
 
@@ -189,7 +191,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         holder.hotelDiscountView.setText(strDiscount);
         holder.hotelNameView.setSelected(true); // Android TextView marquee bug
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             holder.gradientView.setBackground(mPaintDrawable);
         } else
@@ -218,7 +220,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(recommendationStay.benefit) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommendationStay.benefit) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(recommendationStay.benefit);

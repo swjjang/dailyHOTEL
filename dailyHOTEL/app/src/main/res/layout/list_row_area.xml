@@ -8,7 +8,7 @@
         android:layout_height="45dp"
         android:orientation="horizontal">
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/areaTextView1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:background="@color/selectarea_underline"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/areaTextView2"
             android:layout_width="0dp"
             android:layout_height="match_parent"

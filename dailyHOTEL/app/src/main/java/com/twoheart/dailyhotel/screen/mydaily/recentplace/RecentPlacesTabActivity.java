@@ -10,17 +10,18 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.twoheart.dailyhotel.widget.DailyViewPager;
-import com.twoheart.dailyhotel.widget.FontManager;
+import com.daily.base.widget.DailyViewPager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -160,7 +161,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
 
-        if (Util.isTextEmpty(placeTypeName) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeTypeName) == false)
         {
             try
             {
@@ -229,7 +230,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         //        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
-        layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+        layoutParams.topMargin = 1 - ScreenUtils.dpToPx(this, 1);
 
         mTabLayout.setLayoutParams(layoutParams);
 

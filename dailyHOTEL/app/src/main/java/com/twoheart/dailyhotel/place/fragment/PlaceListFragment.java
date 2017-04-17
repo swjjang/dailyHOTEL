@@ -268,7 +268,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
                 {
                     String region = place.districtName;
 
-                    if (Util.isTextEmpty(region) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(region) == true)
                     {
                         continue;
                     }
@@ -284,7 +284,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
                         }
                     } else
                     {
-                        if (Util.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
                         {
                             previousRegion = region;
 

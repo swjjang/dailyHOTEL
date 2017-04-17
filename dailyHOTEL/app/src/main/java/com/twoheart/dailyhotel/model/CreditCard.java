@@ -66,7 +66,7 @@ public class CreditCard implements Parcelable
 
     public static String getCardCDName(Context context, String cardcd)
     {
-        if (context == null || Util.isTextEmpty(cardcd) == true)
+        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(cardcd) == true)
         {
             return null;
         }

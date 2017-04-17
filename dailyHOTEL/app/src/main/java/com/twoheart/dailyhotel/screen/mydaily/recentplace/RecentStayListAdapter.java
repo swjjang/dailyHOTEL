@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -57,7 +59,8 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             case PlaceViewItem.TYPE_ENTRY:
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
+                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
                 view.setLayoutParams(layoutParams);
 
                 return new StayViewHolder(view);
@@ -97,8 +100,8 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     {
         final Stay stay = placeViewItem.getItem();
 
-        String strPrice = Util.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, stay.discountPrice, false);
+        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.price, false);
+        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.discountPrice, false);
 
         String address = stay.addressSummary;
 
@@ -147,7 +150,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         holder.hotelDiscountView.setText(strDiscount);
         holder.hotelNameView.setSelected(true); // Android TextView marquee bug
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             holder.gradientView.setBackground(mPaintDrawable);
         } else
@@ -170,7 +173,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(stay.dBenefitText) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(stay.dBenefitText);
@@ -248,7 +251,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             deleteView = itemView.findViewById(R.id.deleteView);
 
             RelativeLayout.LayoutParams dBenefitLayoutParams = (RelativeLayout.LayoutParams) dBenefitLayout.getLayoutParams();
-            dBenefitLayoutParams.rightMargin = Util.dpToPx(mContext, 4);
+            dBenefitLayoutParams.rightMargin = ScreenUtils.dpToPx(mContext, 4);
             dBenefitLayout.setLayoutParams(dBenefitLayoutParams);
 
             itemView.setOnClickListener(new View.OnClickListener()

@@ -27,7 +27,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="68dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/couponPriceTextView"
             android:layout_width="match_parent"
             android:layout_height="24dp"
@@ -40,7 +40,7 @@
             android:textSize="16dp"
             dailyFont:style="Bold"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/descriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="19dp"
@@ -55,7 +55,7 @@
             android:textColor="@color/black"
             android:textSize="13dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/minPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:textColor="@color/coupon_description_text"
             android:textSize="11dp"/>
 
-        <com.twoheart.dailyhotel.widget.DailyTextView
+        <com.daily.base.widget.DailyTextView
             android:id="@+id/useablePlaceTextView"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
@@ -95,7 +95,7 @@
             android:gravity="top"
             android:orientation="horizontal">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/expireTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="17dp"
@@ -103,7 +103,7 @@
                 android:textColor="@color/coupon_description_text"
                 android:textSize="11dp"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/dueDateTextView"
                 android:layout_width="0dp"
                 android:layout_height="17dp"
@@ -136,7 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true">
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/useIconView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                 app:drawableCompatTop="@drawable/more_ic_coupon_01"
                 dailyFont:style="Medium"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/downloadIconView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
                 android:layout_height="13dp"
                 android:layout_alignParentBottom="true"/>
 
-            <com.twoheart.dailyhotel.widget.DailyTextView
+            <com.daily.base.widget.DailyTextView
                 android:id="@+id/noticeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
