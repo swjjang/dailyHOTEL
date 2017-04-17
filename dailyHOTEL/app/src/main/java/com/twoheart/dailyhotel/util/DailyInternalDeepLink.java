@@ -1,8 +1,11 @@
 package com.twoheart.dailyhotel.util;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.screen.main.MainActivity;
 
 import java.net.URLEncoder;
 import java.util.Set;
@@ -25,6 +28,10 @@ public class DailyInternalDeepLink extends DailyDeepLink
 
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
     private static final String VIEW_STAMP = "stamp"; // 스탬프.
+    private static final String VIEW_HOME = "home"; // 홈.
+
+    private static final String STAY = "stay";
+    private static final String GOURMET = "gourmet";
 
     public DailyInternalDeepLink(Uri uri)
     {
@@ -77,6 +84,13 @@ public class DailyInternalDeepLink extends DailyDeepLink
         String view = getView();
 
         return VIEW_STAMP.equalsIgnoreCase(view);
+    }
+
+    public boolean isHomeView()
+    {
+        String view = getView();
+
+        return VIEW_HOME.equalsIgnoreCase(view);
     }
 
     public String getPlaceType()
@@ -134,7 +148,19 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return true;
     }
 
-    public static String getStayBookingDetailScreenLink(String placeName//
+    private static Intent getIntent(Context context, Uri uri)
+    {
+        if (context == null || uri == null)
+        {
+            return null;
+        }
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return intent.setData(uri);
+    }
+
+    public static Intent getStayBookingDetailScreenLink(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType, String checkInTime, String checkOutTime)
     {
         if (Util.isTextEmpty(placeName, checkInTime, checkOutTime) == true || paymentType == null)
@@ -145,17 +171,17 @@ public class DailyInternalDeepLink extends DailyDeepLink
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?v=bd");
-        stringBuilder.append("&pt=stay");
+        stringBuilder.append("?v=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&pt=" + STAY);
         stringBuilder.append("&pn=" + URLEncoder.encode(placeName));
         stringBuilder.append("&pm=" + URLEncoder.encode(paymentType.name()));
         stringBuilder.append("&ci=" + URLEncoder.encode(checkInTime));
         stringBuilder.append("&co=" + URLEncoder.encode(checkOutTime));
 
-        return stringBuilder.toString();
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static String getGourmetBookingDetailScreenLink(String placeName//
+    public static Intent getGourmetBookingDetailScreenLink(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType, String visitTime)
     {
         if (Util.isTextEmpty(placeName, visitTime) == true || paymentType == null)
@@ -166,22 +192,32 @@ public class DailyInternalDeepLink extends DailyDeepLink
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?v=bd");
-        stringBuilder.append("&pt=gourmet");
+        stringBuilder.append("?v=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&pt=" + GOURMET);
         stringBuilder.append("&pn=" + URLEncoder.encode(placeName));
         stringBuilder.append("&pm=" + URLEncoder.encode(paymentType.name()));
         stringBuilder.append("&vt=" + URLEncoder.encode(visitTime));
 
-        return stringBuilder.toString();
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static String getStampScreenLink()
+    public static Intent getStampScreenLink(Context context)
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?v=stamp");
+        stringBuilder.append("?v=" + VIEW_STAMP);
 
-        return stringBuilder.toString();
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
+    }
+
+    public static Intent getHomeScreenLink(Context context)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dailyhotel://");
+        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
+        stringBuilder.append("?v=" + VIEW_HOME);
+
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 }
