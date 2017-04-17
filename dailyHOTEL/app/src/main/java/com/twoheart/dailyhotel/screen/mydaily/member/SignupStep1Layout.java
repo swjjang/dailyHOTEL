@@ -45,6 +45,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
+    private ScrollView mScrollView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -86,8 +87,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
-        final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
-        EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        mScrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
 
@@ -111,7 +112,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             {
                 if (actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    scrollView.fullScroll(View.FOCUS_DOWN);
+                    mScrollView.fullScroll(View.FOCUS_DOWN);
                     mNameEditText.requestFocus();
 
                     InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -305,6 +306,16 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mSignupBalloonsTextView.setText(text);
     }
 
+    public void requestPasswordFocus()
+    {
+        if (mScrollView == null || mPasswordEditText == null)
+        {
+            return;
+        }
+
+        mScrollView.fullScroll(View.FOCUS_UP);
+        mPasswordEditText.requestFocus();
+    }
 
     private void nextStep()
     {

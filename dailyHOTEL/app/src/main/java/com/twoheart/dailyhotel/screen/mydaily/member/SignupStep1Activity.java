@@ -198,6 +198,7 @@ public class SignupStep1Activity extends BaseActivity
             // 패스워드 유효성 체크
             if (password.length() < PASSWORD_MIN_COUNT)
             {
+                mSignupStep1Layout.requestPasswordFocus();
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_please_input_password_more_than_8chars, Toast.LENGTH_SHORT);
                 return;
             }
@@ -205,12 +206,14 @@ public class SignupStep1Activity extends BaseActivity
             // 패스워드가 동일하게 입력되어있는지 확인
             if (password.equals(confirmPassword) == false)
             {
+                mSignupStep1Layout.requestPasswordFocus();
                 DailyToast.showToast(SignupStep1Activity.this, R.string.message_please_enter_the_same_password, Toast.LENGTH_SHORT);
                 return;
             }
 
             if (Util.verifyPassword(email, password) == false)
             {
+                mSignupStep1Layout.requestPasswordFocus();
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);
                 return;
             }
