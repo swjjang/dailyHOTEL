@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -286,10 +287,10 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
         if (layoutParams == null)
         {
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15));
+            layoutParams.setMargins(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15));
         }
 
-        layoutParams.height = (Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60)) * 9 / 16;
+        layoutParams.height = (ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 60)) * 9 / 16;
         simpleCreditCardLayout.setLayoutParams(layoutParams);
 
         mEmptySimpleCardLayout = simpleCreditCardLayout.findViewById(R.id.emptySimpleCardLayout);
@@ -891,8 +892,8 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
             mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
         }
 
-        final int dp164 = Util.dpToPx(mContext, 164);
-        final int height = Util.getLCDHeight(mContext);
+        final int dp164 = ScreenUtils.dpToPx(mContext, 164);
+        final int height = ScreenUtils.getScreenHeight(mContext);
         mScrollMoveHeight = -1;
 
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()

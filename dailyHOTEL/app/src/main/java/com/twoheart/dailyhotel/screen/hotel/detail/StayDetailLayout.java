@@ -13,6 +13,8 @@ import android.view.animation.Animation;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
@@ -325,7 +327,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         mProductTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
 
         // 객실 개수로 높이를 재지정해준다.
-        final int productTitleBarHeight = Util.dpToPx(mContext, 52) + (nights > 1 ? Util.dpToPx(mContext, 40) : 0);
+        final int productTitleBarHeight = ScreenUtils.dpToPx(mContext, 52) + (nights > 1 ? ScreenUtils.dpToPx(mContext, 40) : 0);
 
         mProductTypeRecyclerView.postDelayed(new Runnable()
         {
@@ -334,7 +336,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             {
                 // 화면 높이 - 상단 타이틀 - 하단 버튼
                 final int maxHeight = ((View) mProductTypeLayout.getParent()).getHeight() //
-                    - Util.dpToPx(mContext, 52) - Util.dpToPx(mContext, 64);
+                    - ScreenUtils.dpToPx(mContext, 52) - ScreenUtils.dpToPx(mContext, 64);
 
                 ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
 
@@ -491,7 +493,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         mProductTypeBackgroundView.setVisibility(View.GONE);
 
-        if (Util.isOverAPI12() == true)
+        if (VersionUtils.isOverAPI12() == true)
         {
             mProductTypeLayout.setVisibility(View.INVISIBLE);
         } else
@@ -512,7 +514,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         setBookingStatus(STATUS_NONE);
 
-        if (Util.isOverAPI12() == true)
+        if (VersionUtils.isOverAPI12() == true)
         {
             final float fromAnimationY = mBottomLayout.getTop();
 
@@ -524,11 +526,11 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
             int height = mProductTypeLayout.getHeight();
             int toolbarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-            int maxHeight = Util.getLCDHeight(mContext) - (mBottomLayout.getBottom() - mBottomLayout.getTop()) - toolbarHeight - getStatusBarHeight();
+            int maxHeight = ScreenUtils.getScreenHeight(mContext) - (mBottomLayout.getBottom() - mBottomLayout.getTop()) - toolbarHeight - getStatusBarHeight();
 
             float toAnimationY = fromAnimationY - Math.min(height, maxHeight);
 
-            int startTransY = Util.dpToPx(mContext, height);
+            int startTransY = ScreenUtils.dpToPx(mContext, height);
             mProductTypeLayout.setTranslationY(startTransY);
 
             mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", fromAnimationY, toAnimationY);
@@ -607,7 +609,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
         setBookingStatus(STATUS_NONE);
 
-        if (Util.isOverAPI12() == true)
+        if (VersionUtils.isOverAPI12() == true)
         {
             final float y = mBottomLayout.getTop();
 
@@ -618,7 +620,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
 
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
             int height = mProductTypeLayout.getHeight();
-            mProductTypeLayout.setTranslationY(Util.dpToPx(mContext, height));
+            mProductTypeLayout.setTranslationY(ScreenUtils.dpToPx(mContext, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, dy);
             mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);

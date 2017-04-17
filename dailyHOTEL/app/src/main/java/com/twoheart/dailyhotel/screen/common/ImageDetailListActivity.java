@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -271,7 +272,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                             mVelocityTracker.computeCurrentVelocity(1);
                             float yVelocity = Math.abs(mVelocityTracker.getYVelocity());
 
-                            if (yVelocity > 5.0f || Math.abs(mListView.getTranslationY()) > (Util.getLCDHeight(ImageDetailListActivity.this) / 4))
+                            if (yVelocity > 5.0f || Math.abs(mListView.getTranslationY()) > (ScreenUtils.getScreenHeight(ImageDetailListActivity.this) / 4))
                             {
                                 switch (mPlaceType)
                                 {
@@ -325,8 +326,8 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         mToolbarView.setTranslationY(y);
 
         mAlphaView.setBackgroundResource(R.color.black);
-        mAlphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / Util.getLCDHeight(ImageDetailListActivity.this));
-        //        mToolbarView.setAlpha(1.0f - Math.abs(y * 20) / Util.getLCDHeight(ImageDetailListActivity.this));
+        mAlphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / ScreenUtils.getScreenHeight(ImageDetailListActivity.this));
+        //        mToolbarView.setAlpha(1.0f - Math.abs(y * 20) / ScreenUtils.getScreenHeight(ImageDetailListActivity.this));
     }
 
     @Override
@@ -415,7 +416,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                 }
             };
 
-            if (Util.getLCDWidth(getContext()) >= 720)
+            if (ScreenUtils.getScreenWidth(getContext()) >= 720)
             {
                 controller = Fresco.newDraweeControllerBuilder()//
                     .setControllerListener(baseControllerListener)//
@@ -444,7 +445,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) imageView.getLayoutParams();
 
-            float scale = (float) Util.getLCDWidth(getContext()) / width;
+            float scale = (float) ScreenUtils.getScreenWidth(getContext()) / width;
             int viewHeight = (int) (scale * height);
 
             if (layoutParams == null)

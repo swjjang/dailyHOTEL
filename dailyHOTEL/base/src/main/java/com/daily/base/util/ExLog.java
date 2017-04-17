@@ -1,6 +1,5 @@
 package com.daily.base.util;
 
-import android.os.Bundle;
 import android.support.compat.BuildConfig;
 import android.util.Log;
 

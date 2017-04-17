@@ -18,6 +18,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.networkcontroller.PlacePaymentThankyouNetworkController;
@@ -118,7 +120,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
             return;
         }
 
-        int imageHeight = Util.getRatioHeightType4x3(Util.getLCDWidth(this));
+        int imageHeight = ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(this));
         com.facebook.drawee.view.SimpleDraweeView simpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
         layoutParams.height = imageHeight;
@@ -197,18 +199,36 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         confirmImageView.setVisibility(View.INVISIBLE);
         final View receiptLayout = findViewById(R.id.receiptLayout);
 
-        float startY = 0f - Util.getLCDHeight(PlacePaymentThankyouActivity.this);
+        float startY = 0f - ScreenUtils.getScreenHeight(PlacePaymentThankyouActivity.this);
         final float endY = 0.0f;
 
         final float startScaleY = 2.3f;
         final float endScaleY = 1.0f;
 
-        int animatorSetStartDelay = Util.isOverAPI21() ? 400 : 600;
-        int receiptLayoutAnimatorDuration = Util.isOverAPI21() ? 300 : 400;
-        int confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
-        int confirmImageAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
-        int stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
-        int stampLayoutAnimatorDuration = Util.isOverAPI21() ? 200 : 200;
+        int animatorSetStartDelay;
+        int receiptLayoutAnimatorDuration;
+        int confirmImageAnimatorStartDelay;
+        int confirmImageAnimatorDuration;
+        int stampLayoutAnimatorStartDelay;
+        int stampLayoutAnimatorDuration;
+
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            animatorSetStartDelay = 400;
+            receiptLayoutAnimatorDuration = 300;
+            confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            confirmImageAnimatorDuration = 200;
+            stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            stampLayoutAnimatorDuration = 200;
+        } else
+        {
+            animatorSetStartDelay = 600;
+            receiptLayoutAnimatorDuration = 400;
+            confirmImageAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            confirmImageAnimatorDuration = 200;
+            stampLayoutAnimatorStartDelay = receiptLayoutAnimatorDuration - 50;
+            stampLayoutAnimatorDuration = 200;
+        }
 
         receiptLayout.setTranslationY(startY);
 

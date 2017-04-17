@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.VersionUtils;
 import com.facebook.FacebookSdk;
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -83,8 +84,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         Util.setLocale(getApplicationContext(), Locale.KOREAN);
 
         // 버전 정보 얻기
-        VERSION_CODE = Util.getAppVersionCode(getApplicationContext());
-        VERSION = Util.getAppVersionName(getApplicationContext());
+        VERSION_CODE = VersionUtils.getAppVersionCode(getApplicationContext());
+        VERSION = VersionUtils.getAppVersionName(getApplicationContext());
 
         AUTHORIZATION = DailyUserPreference.getInstance(getApplicationContext()).getAuthorization();
 

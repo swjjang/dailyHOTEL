@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.ExLog;
@@ -245,7 +246,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mMobileDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mMobileDialog);
 
             mMobileDialog.show();
 

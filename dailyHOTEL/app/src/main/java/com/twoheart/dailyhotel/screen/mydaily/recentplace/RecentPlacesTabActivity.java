@@ -10,6 +10,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -229,7 +230,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         //        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
-        layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+        layoutParams.topMargin = 1 - ScreenUtils.dpToPx(this, 1);
 
         mTabLayout.setLayoutParams(layoutParams);
 

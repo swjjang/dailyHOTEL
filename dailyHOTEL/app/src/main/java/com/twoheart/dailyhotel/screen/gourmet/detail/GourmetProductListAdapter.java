@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -269,12 +270,12 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         //                    addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
         //                }
 
-        //                int titleTextViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30) - Util.dpToPx(mContext, 98);
+        //                int titleTextViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30) - ScreenUtils.dpToPx(mContext, 98);
         //                float titleTextViewHeight = Util.getTextViewHeight(productInformationViewHolder.productNameTextView, titleTextViewWidth);
         //
-        //                float startY = titleTextViewHeight + Util.dpToPx(mContext, 8);
-        //                Rect rect = new Rect(0, 0, Util.dpToPx(mContext, 98), Util.dpToPx(mContext, 98));
-        //                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 39) - Util.dpToPx(mContext, 15);
+        //                float startY = titleTextViewHeight + ScreenUtils.dpToPx(mContext, 8);
+        //                Rect rect = new Rect(0, 0, ScreenUtils.dpToPx(mContext, 98), ScreenUtils.dpToPx(mContext, 98));
+        //                int textViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 39) - ScreenUtils.dpToPx(mContext, 15);
         //
         //                // 베네핏
         //                if (Util.isTextEmpty(gourmetProduct.menuBenefit) == false)
@@ -356,7 +357,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         if (hasTopMargin == true)
         {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.topMargin = Util.dpToPx(mContext, 6);
+            layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 6);
             textLayout.setLayoutParams(layoutParams);
         }
 
@@ -380,13 +381,13 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         if (hasTopMargin == true)
         {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.topMargin = Util.dpToPx(mContext, 6);
+            layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 6);
             textLayout.setLayoutParams(layoutParams);
 
             startY += layoutParams.topMargin;
         } else
         {
-            startY += Util.dpToPx(mContext, 2);
+            startY += ScreenUtils.dpToPx(mContext, 2);
         }
 
         DailyImageView iconImageView = (DailyImageView) textLayout.findViewById(R.id.iconImageView);

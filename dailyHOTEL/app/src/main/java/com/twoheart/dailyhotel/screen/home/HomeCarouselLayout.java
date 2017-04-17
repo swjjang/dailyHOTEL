@@ -15,10 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyPagerSnapHelper;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -120,7 +120,7 @@ public class HomeCarouselLayout extends LinearLayout
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setHasFixedSize(true);
 
-        if (Util.isTabletDevice((Activity) mContext) == true)
+        if (ScreenUtils.isTabletDevice((Activity) mContext) == true)
         {
             SnapHelper snapHelper = new DailyPagerSnapHelper();
             snapHelper.attachToRecyclerView(mRecyclerView);

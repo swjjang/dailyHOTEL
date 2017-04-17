@@ -24,6 +24,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -358,7 +359,7 @@ public class PaymentWaitActivity extends BaseActivity
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 

@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceReviewItem;
 import com.twoheart.dailyhotel.network.model.PlaceReview;
@@ -579,7 +580,7 @@ public class PlaceReviewLayout extends BaseLayout
                 reviewViewHolder.moreReadTextView.setOnClickListener(null);
             } else
             {
-                int textViewWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
+                int textViewWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
                 int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.EXACTLY);
                 int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
                 reviewViewHolder.reviewTextView.measure(widthMeasureSpec, heightMeasureSpec);

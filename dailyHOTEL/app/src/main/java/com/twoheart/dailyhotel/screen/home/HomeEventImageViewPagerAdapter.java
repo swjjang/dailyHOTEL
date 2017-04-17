@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -40,8 +41,8 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        final int width = Util.getLCDWidth(mContext);
-        final int height = Util.getRatioHeightType16x9(width);
+        final int width = ScreenUtils.getScreenWidth(mContext);
+        final int height = ScreenUtils.getRatioHeightType16x9(width);
 
         final SimpleDraweeView imageView = new SimpleDraweeView(mContext);
 
@@ -67,7 +68,7 @@ public class HomeEventImageViewPagerAdapter extends PagerAdapter
             imageView.setTag(homeEvent);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            String url = Util.getLCDWidth(mContext) < 1440 ? homeEvent.lowResolutionImageUrl : homeEvent.defaultImageUrl;
+            String url = ScreenUtils.getScreenWidth(mContext) < 1440 ? homeEvent.lowResolutionImageUrl : homeEvent.defaultImageUrl;
             if (DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(url) == true)
             {
                 // RemoteConfig 실패등의 상황에서 기본 layerlist_placeholder 만 노출

@@ -4,12 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 public class ScreenUtils
 {

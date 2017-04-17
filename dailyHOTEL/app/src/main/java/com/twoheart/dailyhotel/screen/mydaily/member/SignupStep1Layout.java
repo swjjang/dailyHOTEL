@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -240,7 +241,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
-        if (Util.isOverAPI21() == false)
+        if (VersionUtils.isOverAPI21() == false)
         {
             mAllAgreementCheckBox.setBackgroundResource(0);
             mTermsOfPrivacyCheckBox.setBackgroundResource(0);

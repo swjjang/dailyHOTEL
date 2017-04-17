@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -308,7 +309,7 @@ public class ZoomMapActivity extends BaseActivity
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
 
-            zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(this, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
+            zoomControl.setPadding(zoomControl.getPaddingLeft(), ScreenUtils.dpToPx(this, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
             zoomControl.setLayoutParams(params);
         }
     }
@@ -437,7 +438,7 @@ public class ZoomMapActivity extends BaseActivity
                 latLngBounds.include(mPlaceLocationMarker.getPosition());
                 latLngBounds.include(mMyLocationMarker.getPosition());
 
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), Util.dpToPx(ZoomMapActivity.this, 50));
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(ZoomMapActivity.this, 50));
                 mGoogleMap.animateCamera(cameraUpdate);
             }
         });

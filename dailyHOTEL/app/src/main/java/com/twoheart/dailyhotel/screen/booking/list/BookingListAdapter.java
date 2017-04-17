@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.util.Constants;
@@ -196,7 +197,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
             layoutParams.bottomMargin = 0;
         }
 
-        layoutParams.height = Util.getListRowHeight(mContext);
+        layoutParams.height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext));
         listItemLayout.setLayoutParams(layoutParams);
 
         // 호텔 이미지

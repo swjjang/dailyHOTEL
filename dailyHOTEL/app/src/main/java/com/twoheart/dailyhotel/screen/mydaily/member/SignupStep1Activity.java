@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -377,7 +378,7 @@ public class SignupStep1Activity extends BaseActivity
             {
                 dialog.setContentView(dialogView);
 
-                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(SignupStep1Activity.this, dialog);
+                WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(SignupStep1Activity.this, dialog);
 
                 dialog.show();
 

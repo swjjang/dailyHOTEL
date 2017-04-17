@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -25,8 +26,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
 import java.util.ArrayList;
-
-import static com.twoheart.dailyhotel.util.Util.dpToPx;
 
 /**
  * Created by android_sam on 2017. 1. 19..
@@ -85,7 +84,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         boolean isLast = size <= 0 || (position == size - 1);
 
         ViewGroup.LayoutParams rightViewParam = holder.rightView.getLayoutParams();
-        int rightViewWidth = Util.dpToPx(mContext, isLast == true ? 15 : 12);
+        int rightViewWidth = ScreenUtils.dpToPx(mContext, isLast == true ? 15 : 12);
 
         if (rightViewParam == null)
         {
@@ -258,8 +257,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             leftView = view.findViewById(R.id.leftLayout);
             rightView = view.findViewById(R.id.rightLayout);
 
-            int width = imageView.getWidth() == 0 ? dpToPx(mContext, 239) : imageView.getWidth();
-            int height = Util.getRatioHeightType16x9(width);
+            int width = imageView.getWidth() == 0 ? ScreenUtils.dpToPx(mContext, 239) : imageView.getWidth();
+            int height = ScreenUtils.getRatioHeightType16x9(width);
 
             imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);

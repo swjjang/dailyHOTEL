@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -406,7 +407,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                         }
                     });
 
-                    if (Util.isOverAPI16() == true)
+                    if (VersionUtils.isOverAPI16() == true)
                     {
                         mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     } else

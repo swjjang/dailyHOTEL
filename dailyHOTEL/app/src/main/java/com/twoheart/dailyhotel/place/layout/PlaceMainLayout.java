@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -91,7 +92,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
-            final int dp52Height = Util.dpToPx(mContext, 52);
+            final int dp52Height = ScreenUtils.dpToPx(mContext, 52);
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
@@ -245,7 +246,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                 layoutParams.height = 1;
             } else
             {
-                layoutParams.height = Util.dpToPx(mContext, 1);
+                layoutParams.height = ScreenUtils.dpToPx(mContext, 1);
             }
 
             mToolbarUnderlineView.setLayoutParams(layoutParams);

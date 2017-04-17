@@ -8,8 +8,8 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class DailyRadioButton extends AppCompatRadioButton
 {
@@ -140,7 +140,7 @@ public class DailyRadioButton extends AppCompatRadioButton
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
     {
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         } else

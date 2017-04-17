@@ -107,7 +107,7 @@ public class EdgeEffectColor
                     break;
                 case "ensureRightGlow":
                     m.setAccessible(true);
-                    ensureGlowRight= m;
+                    ensureGlowRight = m;
                     ensureGlowRight.setAccessible(true);
                     break;
             }

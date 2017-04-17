@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.widget.DailyToast;
@@ -169,7 +170,7 @@ public class DailyLocationFactory
             return;
         }
 
-        if (Util.isOverAPI23() == true)
+        if (VersionUtils.isOverAPI23() == true)
         {
             if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             {

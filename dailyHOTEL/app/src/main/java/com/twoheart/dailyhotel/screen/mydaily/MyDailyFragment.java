@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -210,7 +211,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                 mMyDailyLayout.updatePushIcon(isBenefitAlarm);
 
-                if (Util.isOverAPI19() == true && isBenefitAlarm == true)
+                if (VersionUtils.isOverAPI19() == true && isBenefitAlarm == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 
@@ -262,7 +263,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
             case Constants.REQUEST_CODE_APPLICATION_DETAILS_SETTINGS:
             {
-                if (Util.isOverAPI19() == true)
+                if (VersionUtils.isOverAPI19() == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 
@@ -667,7 +668,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                 mMyDailyLayout.updatePushIcon(isAgreedBenefit);
 
-                if (Util.isOverAPI19() == true && isAgreedBenefit == true)
+                if (VersionUtils.isOverAPI19() == true && isAgreedBenefit == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 
@@ -738,7 +739,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     }
                 }, true);
 
-                if (Util.isOverAPI19() == true)
+                if (VersionUtils.isOverAPI19() == true)
                 {
                     boolean isNotificationsEnabled = NotificationManagerCompat.from(getActivity()).areNotificationsEnabled();
 

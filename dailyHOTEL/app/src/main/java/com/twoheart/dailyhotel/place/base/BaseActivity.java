@@ -26,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
@@ -89,7 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         mLockUI = new LoadingDialog(this);
         mNetworkTag = getClass().getName();
 
-        if (Util.isOverAPI21() == true && Util.isOverAPI23() == false)
+        if (VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI23() == false)
         {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -506,7 +508,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             return;
         }
 
-        if (Util.isOverAPI16())
+        if (VersionUtils.isOverAPI16())
         {
             root.setBackground(null);
         } else
@@ -814,7 +816,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             mDialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -945,7 +947,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             mDialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 

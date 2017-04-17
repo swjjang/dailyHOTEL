@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -66,7 +68,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     {
         super.onCreate(savedInstanceState);
 
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -145,7 +147,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 if (i >= 0 && i < maxMonth)
                 {
                     calendarLayout.setPadding(calendarLayout.getPaddingLeft(), calendarLayout.getPaddingTop()//
-                        , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + Util.dpToPx(this, 30));
+                        , calendarLayout.getPaddingRight(), calendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(this, 30));
                 }
 
                 mCalendarsLayout.addView(calendarLayout);
@@ -240,7 +242,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         visitTextView.setVisibility(View.INVISIBLE);
 
         RelativeLayout.LayoutParams visitLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        visitLayoutParams.topMargin = Util.dpToPx(context, 5);
+        visitLayoutParams.topMargin = ScreenUtils.dpToPx(context, 5);
 
         relativeLayout.addView(visitTextView, visitLayoutParams);
 
@@ -250,14 +252,14 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         dayTextView.setDuplicateParentStateEnabled(true);
 
         RelativeLayout.LayoutParams dayLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dayLayoutParams.bottomMargin = Util.dpToPx(context, 6);
+        dayLayoutParams.bottomMargin = ScreenUtils.dpToPx(context, 6);
         dayLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 
         relativeLayout.addView(dayTextView, dayLayoutParams);
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = Util.dpToPx(context, 45);
+        layoutParams.height = ScreenUtils.dpToPx(context, 45);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
         relativeLayout.setLayoutParams(layoutParams);
@@ -387,7 +389,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             return;
         }
 
-        if (Util.isOverAPI12() == true)
+        if (VersionUtils.isOverAPI12() == true)
         {
             final float y = mAnimationLayout.getBottom();
 
@@ -399,7 +401,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
             int height = mAnimationLayout.getHeight();
 
-            mAnimationLayout.setTranslationY(Util.dpToPx(this, height));
+            mAnimationLayout.setTranslationY(ScreenUtils.dpToPx(this, height));
 
             mObjectAnimator = ObjectAnimator.ofFloat(mAnimationLayout, "y", y, y - height);
             mObjectAnimator.setDuration(ANIMATION_DELAY);
@@ -479,7 +481,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             return;
         }
 
-        if (Util.isOverAPI12() == true)
+        if (VersionUtils.isOverAPI12() == true)
         {
             final float y = mAnimationLayout.getTop();
 

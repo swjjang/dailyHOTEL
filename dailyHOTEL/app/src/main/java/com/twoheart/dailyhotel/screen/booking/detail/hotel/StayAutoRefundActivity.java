@@ -21,6 +21,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
@@ -170,8 +172,7 @@ public class StayAutoRefundActivity extends BaseActivity
             orientation = Configuration.ORIENTATION_PORTRAIT;
         }
 
-        //        ExLog.d("newConfig : " + newConfig.orientation + " , rotation orientation : " + orientation);
-        boolean isInMultiWindowMode = Util.isOverAPI24() == true && isInMultiWindowMode();
+        boolean isInMultiWindowMode = VersionUtils.isOverAPI24() == true && isInMultiWindowMode();
         setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
 
@@ -484,10 +485,10 @@ public class StayAutoRefundActivity extends BaseActivity
                 orientation = Configuration.ORIENTATION_PORTRAIT;
             }
 
-            boolean isInMultiWindowMode = Util.isOverAPI24() == true && isInMultiWindowMode();
+            boolean isInMultiWindowMode = VersionUtils.isOverAPI24() == true && isInMultiWindowMode();
             setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 
@@ -595,7 +596,7 @@ public class StayAutoRefundActivity extends BaseActivity
         {
             mDialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
 
             mDialog.show();
 

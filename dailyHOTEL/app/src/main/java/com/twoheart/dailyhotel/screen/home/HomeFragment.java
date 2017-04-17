@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
@@ -802,14 +803,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     case "GOURMET":
                         intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, true);
                         break;
 
                     case "HOTEL":
                     default:
                         intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, true);
                         break;
                 }
@@ -832,14 +833,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     case "GOURMET":
                         intent = CollectionGourmetActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, false);
                         break;
 
                     case "HOTEL":
                     default:
                         intent = CollectionStayActivity.newInstance(mBaseActivity, recommendation.idx//
-                            , Util.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
+                            , ScreenUtils.getResolutionImageUrl(mBaseActivity, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl)//
                             , recommendation.title, recommendation.subtitle, false);
                         break;
                 }

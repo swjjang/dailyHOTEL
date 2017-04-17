@@ -8,8 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.reflect.Field;
 
@@ -248,10 +248,10 @@ public class DailyLoopViewPager extends ViewPager
 
         if (layoutParams == null)
         {
-            layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getLCDWidth(context));
+            layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getScreenWidth(context));
         } else
         {
-            layoutParams.height = Util.getLCDWidth(context);
+            layoutParams.height = ScreenUtils.getScreenWidth(context);
         }
 
         setLayoutParams(layoutParams);

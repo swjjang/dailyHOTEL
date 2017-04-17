@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
@@ -31,7 +32,7 @@ public class PlaceDetailImageViewPagerAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        final int width = Util.getLCDWidth(mContext);
+        final int width = ScreenUtils.getScreenWidth(mContext);
         final int height = PlaceDetailLayout.getImageLayoutHeight(mContext);
         final com.facebook.drawee.view.SimpleDraweeView imageView = new com.facebook.drawee.view.SimpleDraweeView(mContext);
 

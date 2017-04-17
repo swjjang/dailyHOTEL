@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -212,10 +213,10 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = Util.dpToPx(this, 74d);
+        layoutParams.height = ScreenUtils.dpToPx(this, 74d);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-        dailyTextView.setPadding(0, Util.dpToPx(this, 12), 0, 0);
+        dailyTextView.setPadding(0, ScreenUtils.dpToPx(this, 12), 0, 0);
         dailyTextView.setLayoutParams(layoutParams);
 
         return dailyTextView;

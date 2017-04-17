@@ -11,6 +11,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.appboy.Appboy;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -82,7 +83,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         });
 
         TextView informationTextView = (TextView) findViewById(R.id.informationTextView);
-        String formText = getString(R.string.mail_base_information, String.format(Locale.KOREA, "Android : %s, v%s", Build.VERSION.RELEASE, Util.getAppVersionCode(this)));
+        String formText = getString(R.string.mail_base_information, String.format(Locale.KOREA, "Android : %s, v%s", Build.VERSION.RELEASE, VersionUtils.getAppVersionCode(this)));
         informationTextView.setText(formText);
 
         // 기본 정보를 태그에 넣음.

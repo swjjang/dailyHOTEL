@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -234,7 +235,7 @@ public class AddProfileSocialActivity extends BaseActivity
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
 
             dialog.show();
 
@@ -368,7 +369,7 @@ public class AddProfileSocialActivity extends BaseActivity
             {
                 dialog.setContentView(dialogView);
 
-                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(AddProfileSocialActivity.this, dialog);
+                WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(AddProfileSocialActivity.this, dialog);
 
                 dialog.show();
 

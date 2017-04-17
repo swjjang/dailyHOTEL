@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -69,7 +71,8 @@ public class StayListAdapter extends PlaceListAdapter
             {
                 View view = mInflater.inflate(R.layout.list_row_hotel, parent, false);
 
-                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.getListRowHeight(mContext));
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
+                    , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)));
                 view.setLayoutParams(layoutParams);
 
                 return new HotelViewHolder(view);
@@ -181,7 +184,7 @@ public class StayListAdapter extends PlaceListAdapter
         holder.hotelDiscountView.setText(strDiscount);
         holder.hotelNameView.setSelected(true); // Android TextView marquee bug
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             holder.gradientView.setBackground(mPaintDrawable);
         } else

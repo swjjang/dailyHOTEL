@@ -9,8 +9,8 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class DailyTextView extends AppCompatTextView
 {
@@ -155,7 +155,7 @@ public class DailyTextView extends AppCompatTextView
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
     {
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         } else
@@ -211,7 +211,7 @@ public class DailyTextView extends AppCompatTextView
                 ((VectorDrawableCompat) drawable).setTintList(getResources().getColorStateList(id));
             } else
             {
-                if (Util.isOverAPI21() == true)
+                if (VersionUtils.isOverAPI21() == true)
                 {
                     drawable.setTintList(getResources().getColorStateList(id));
                 }
@@ -240,7 +240,7 @@ public class DailyTextView extends AppCompatTextView
                 ((VectorDrawableCompat) drawable).setTint(getResources().getColor(id));
             } else
             {
-                if (Util.isOverAPI21() == true)
+                if (VersionUtils.isOverAPI21() == true)
                 {
                     drawable.setTint(getResources().getColor(id));
                 }

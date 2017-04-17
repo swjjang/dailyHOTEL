@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -547,7 +548,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mFinalCheckDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mFinalCheckDialog);
 
             mFinalCheckDialog.show();
 
@@ -683,10 +684,10 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
             if (i == length - 1)
             {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, 0);
+                layoutParams.setMargins(ScreenUtils.dpToPx(this, 5), 0, 0, 0);
             } else
             {
-                layoutParams.setMargins(Util.dpToPx(this, 5), 0, 0, Util.dpToPx(this, 10));
+                layoutParams.setMargins(ScreenUtils.dpToPx(this, 5), 0, 0, ScreenUtils.dpToPx(this, 10));
             }
 
             messageTextView.setLayoutParams(layoutParams);

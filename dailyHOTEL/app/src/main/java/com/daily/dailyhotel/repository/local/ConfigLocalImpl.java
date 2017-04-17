@@ -44,7 +44,6 @@ public class ConfigLocalImpl implements ConfigInterface
     }
 
 
-
     @Override
     public Observable clear()
     {

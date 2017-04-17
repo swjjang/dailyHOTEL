@@ -31,6 +31,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
@@ -132,7 +133,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public static int getImageLayoutHeight(Context context)
     {
-        return Util.getRatioHeightType4x3(Util.getLCDWidth(context));
+        return ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(context));
     }
 
     public PlaceDetailLayout(Context context, OnBaseEventListener listener)

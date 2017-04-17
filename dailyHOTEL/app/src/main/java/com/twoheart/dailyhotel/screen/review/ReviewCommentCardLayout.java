@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
@@ -44,14 +45,14 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
     {
         setBackgroundResource(R.drawable.selector_review_cardlayout_selected);
 
-        final int DP1 = Util.dpToPx(context, 1);
+        final int DP1 = ScreenUtils.dpToPx(context, 1);
         setPadding(DP1, DP1, DP1, DP1);
 
-        int cardWidth = Util.getLCDWidth(mContext) - Util.dpToPx(context, 30);
-        int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+        int cardWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(context, 30);
+        int cardHeight = ScreenUtils.getRatioHeightType4x3(cardWidth);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.bottomMargin = Util.dpToPx(context, 15);
+        layoutParams.bottomMargin = ScreenUtils.dpToPx(context, 15);
         setLayoutParams(layoutParams);
         setMinimumHeight(cardHeight);
 

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -126,7 +127,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mEmailLayout.setOnClickListener(null);
         mEmailTextView.setText(email);
         mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_daily_small, 0, 0, 0);
-        mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
+        mEmailTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(mContext, 3));
 
         // 이름
         if (Util.isTextEmpty(name) == true)
@@ -205,7 +206,7 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
                 mEmailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_kakao_small, 0, 0, 0);
             }
 
-            mEmailTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 3));
+            mEmailTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(mContext, 3));
         }
 
         // 이름

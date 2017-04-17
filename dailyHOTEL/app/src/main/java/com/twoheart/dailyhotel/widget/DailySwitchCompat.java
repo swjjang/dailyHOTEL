@@ -7,9 +7,9 @@ import android.graphics.Typeface;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -164,7 +164,7 @@ public class DailySwitchCompat extends SwitchCompat
         try
         {
             mSwitchLeft.setInt(this, 0);
-            mSwitchWidth.setInt(this, Util.dpToPx(getContext(), 181));
+            mSwitchWidth.setInt(this, ScreenUtils.dpToPx(getContext(), 181));
             //            mSwitchWidth.setInt(this, getWidth());
         } catch (IllegalAccessException e)
         {

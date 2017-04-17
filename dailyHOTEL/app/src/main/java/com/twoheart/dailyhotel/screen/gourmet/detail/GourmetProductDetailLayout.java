@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
@@ -83,7 +84,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         mDailyLineIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
-        layoutParams.height = Util.getLCDWidth(mContext);
+        layoutParams.height = ScreenUtils.getScreenWidth(mContext);
         mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = mDefaultImageLayout.findViewById(R.id.moreIconView);
@@ -201,10 +202,10 @@ public class GourmetProductDetailLayout extends BaseLayout
 
         if (timeLayout.getVisibility() == View.VISIBLE)
         {
-            timeLayout.setPadding(0, Util.dpToPx(mContext, 10), 0, 0);
+            timeLayout.setPadding(0, ScreenUtils.dpToPx(mContext, 10), 0, 0);
         } else if (checkLayout.getVisibility() == View.VISIBLE)
         {
-            checkLayout.setPadding(0, Util.dpToPx(mContext, 10), 0, 0);
+            checkLayout.setPadding(0, ScreenUtils.dpToPx(mContext, 10), 0, 0);
         }
 
         View bottomMarginView = mNestedScrollView.findViewById(R.id.bottomMarginView);
@@ -322,7 +323,7 @@ public class GourmetProductDetailLayout extends BaseLayout
             mMoreIconView.setVisibility(View.VISIBLE);
             mDailyLineIndicator.setVisibility(View.GONE);
 
-            mDescriptionLayout.setPadding(0, 0, 0, Util.dpToPx(mContext, 5));
+            mDescriptionLayout.setPadding(0, 0, 0, ScreenUtils.dpToPx(mContext, 5));
         } else
         {
             mMoreIconView.setVisibility(View.GONE);

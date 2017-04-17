@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -252,7 +253,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         }
 
-        mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), 0);
+        mAmenitiesGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), 0);
     }
 
     protected void initInRoomAmenitiesLayout(View view, StayCurationOption stayCurationOption)
@@ -307,7 +308,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             }
         }
 
-        mInRoomAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 5));
+        mInRoomAmenitiesGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), ScreenUtils.dpToPx(this, 5));
     }
 
     protected void updatePersonFilter(int person)

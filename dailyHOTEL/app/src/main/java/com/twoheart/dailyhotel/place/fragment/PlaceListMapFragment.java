@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,7 +45,6 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
 
 import java.util.ArrayList;
@@ -200,17 +201,17 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        int paddingLeftRight = Util.dpToPx(baseActivity, VIEWPAGER_LEFT_N_RIGHT_PADDING_DP);
-        int paddingTopBottom = Util.dpToPx(baseActivity, VIEWPAGER_TOP_N_BOTTOM_PADDING_DP);
+        int paddingLeftRight = ScreenUtils.dpToPx(baseActivity, VIEWPAGER_LEFT_N_RIGHT_PADDING_DP);
+        int paddingTopBottom = ScreenUtils.dpToPx(baseActivity, VIEWPAGER_TOP_N_BOTTOM_PADDING_DP);
 
         mViewPager = new DailyOverScrollViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setClipToPadding(false);
-        mViewPager.setPageMargin(Util.dpToPx(baseActivity, VIEWPAGER_PAGE_MARGIN_DP));
+        mViewPager.setPageMargin(ScreenUtils.dpToPx(baseActivity, VIEWPAGER_PAGE_MARGIN_DP));
         mViewPager.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, Util.dpToPx(baseActivity, VIEWPAGER_HEIGHT_DP));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(baseActivity, VIEWPAGER_HEIGHT_DP));
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 
         layoutParams.gravity = Gravity.BOTTOM;
@@ -381,7 +382,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
 
-            zoomControl.setPadding(zoomControl.getPaddingLeft(), Util.dpToPx(mBaseActivity, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
+            zoomControl.setPadding(zoomControl.getPaddingLeft(), ScreenUtils.dpToPx(mBaseActivity, 50), zoomControl.getPaddingRight(), zoomControl.getPaddingBottom());
             zoomControl.setLayoutParams(params);
         }
     }
@@ -625,7 +626,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         {
             mViewPager.setCurrentItem(position);
 
-            if (Util.isOverAPI21() == true)
+            if (VersionUtils.isOverAPI21() == true)
             {
                 mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
                 {
@@ -655,7 +656,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        mBottomOptionLayout.setTranslationY(dy - Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+        mBottomOptionLayout.setTranslationY(dy - ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
         mViewPager.setTranslationY(dy);
     }
 
@@ -707,7 +708,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
                 float translationY = height - height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -722,7 +723,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 //                setMenuBarLayoutEnabled(false);
 
                 mViewPager.setVisibility(View.VISIBLE);
-                mViewPager.setTranslationY(Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+                mViewPager.setTranslationY(ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
 
                 mAnimationState = Constants.ANIMATION_STATE.START;
                 mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
@@ -787,7 +788,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = Util.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
                 float translationY = height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -885,7 +886,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             mViewPager.setCurrentItem(position);
             mPlaceMapViewPagerAdapter.notifyDataSetChanged();
 
-            if (Util.isOverAPI21() == true)
+            if (VersionUtils.isOverAPI21() == true)
             {
                 mGoogleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener()
                 {
@@ -949,7 +950,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         return;
                     }
 
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(mBaseActivity, 50));
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, ScreenUtils.dpToPx(mBaseActivity, 50));
                     mGoogleMap.moveCamera(cameraUpdate);
 
                     mClusterManager.cluster();
@@ -976,7 +977,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
         } else
         {
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, Util.dpToPx(mBaseActivity, 50));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, ScreenUtils.dpToPx(mBaseActivity, 50));
             mGoogleMap.moveCamera(cameraUpdate);
         }
 
@@ -1149,7 +1150,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         CameraPosition cameraPosition = new CameraPosition.Builder().target(latLng).zoom(13f).build();
 
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         } else

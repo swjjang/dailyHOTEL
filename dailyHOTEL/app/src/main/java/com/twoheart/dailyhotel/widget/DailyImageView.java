@@ -6,7 +6,7 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.VersionUtils;
 
 public class DailyImageView extends AppCompatImageView
 {
@@ -29,7 +29,7 @@ public class DailyImageView extends AppCompatImageView
     {
         super.setImageResource(resId);
 
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             super.setImageResource(resId);
         } else

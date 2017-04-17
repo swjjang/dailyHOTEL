@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -277,7 +278,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
                 mCalendarUnderlineView.getLayoutParams().height = 1;
             } else
             {
-                mCalendarUnderlineView.getLayoutParams().height = Util.dpToPx(mContext, 1);
+                mCalendarUnderlineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
             }
         }
     }

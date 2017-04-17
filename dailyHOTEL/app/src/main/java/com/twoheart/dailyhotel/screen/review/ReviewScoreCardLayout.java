@@ -18,10 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyEmoticonImageView;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 
@@ -58,11 +58,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
         setEnabled(false);
         setBackgroundResource(R.drawable.selector_review_cardlayout_enabled);
 
-        int cardWidth = Util.getLCDWidth(context) - Util.dpToPx(context, 30);
-        int cardHeight = Util.getRatioHeightType4x3(cardWidth);
+        int cardWidth = ScreenUtils.getScreenWidth(context) - ScreenUtils.dpToPx(context, 30);
+        int cardHeight = ScreenUtils.getRatioHeightType4x3(cardWidth);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, cardHeight);
-        layoutParams.bottomMargin = Util.dpToPx(context, 15);
+        layoutParams.bottomMargin = ScreenUtils.dpToPx(context, 15);
         setLayoutParams(layoutParams);
 
         View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_score, this);
@@ -93,7 +93,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
         mDailyEmoticonImageView[3].setJSONData("Review_Animation.aep.comp-200-04_good.kf.json");
         mDailyEmoticonImageView[4].setJSONData("Review_Animation.aep.comp-230-05_awesome.kf.json");
 
-        final int DP30 = Util.dpToPx(context, 30);
+        final int DP30 = ScreenUtils.dpToPx(context, 30);
         final int DP30_DIV2 = DP30 / 2;
 
         for (DailyEmoticonImageView dailyEmoticonImageView : mDailyEmoticonImageView)
@@ -101,7 +101,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
             dailyEmoticonImageView.setPadding(DP30_DIV2, DP30, DP30_DIV2, 0);
         }
 
-        RelativeLayout.LayoutParams emoticonLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, Util.dpToPx(context, 66));
+        RelativeLayout.LayoutParams emoticonLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ScreenUtils.dpToPx(context, 66));
         emoticonLayoutParams.bottomMargin = cardHeight * 27 / 100;
         emoticonLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
         emoticonLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
@@ -374,14 +374,14 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
 
     private ValueAnimator getScaleDownAnimator(final View view)
     {
-        final float VALUE_DP7 = Util.dpToPx(mContext, 7);
-        final float VALUE_DP15 = Util.dpToPx(mContext, 15);
-        final int VALUE_DP8 = Util.dpToPx(mContext, 8);
+        final float VALUE_DP7 = ScreenUtils.dpToPx(mContext, 7);
+        final float VALUE_DP15 = ScreenUtils.dpToPx(mContext, 15);
+        final int VALUE_DP8 = ScreenUtils.dpToPx(mContext, 8);
 
         final ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, -VALUE_DP8);
         valueAnimator.setDuration(200);
 
-        final int VALUE_DP30 = Util.dpToPx(mContext, 30);
+        final int VALUE_DP30 = ScreenUtils.dpToPx(mContext, 30);
         final int VALUE_DP30_DIV2 = VALUE_DP30 / 2;
 
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
@@ -459,14 +459,14 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
 
     private ValueAnimator getScaleUpAnimator(final View view)
     {
-        final float VALUE_DP8 = Util.dpToPx(mContext, 8);
-        final float VALUE_DP15 = Util.dpToPx(mContext, 15);
-        final int VALUE_DP7 = Util.dpToPx(mContext, 7);
+        final float VALUE_DP8 = ScreenUtils.dpToPx(mContext, 8);
+        final float VALUE_DP15 = ScreenUtils.dpToPx(mContext, 15);
+        final int VALUE_DP7 = ScreenUtils.dpToPx(mContext, 7);
 
         final ValueAnimator valueAnimator = ValueAnimator.ofInt(((LayoutParams) view.getLayoutParams()).leftMargin, VALUE_DP7);
         valueAnimator.setDuration(200);
 
-        final int VALUE_DP30 = Util.dpToPx(mContext, 30);
+        final int VALUE_DP30 = ScreenUtils.dpToPx(mContext, 30);
         final int VALUE_DP30_DIV2 = VALUE_DP30 / 2;
 
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()

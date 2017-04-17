@@ -19,6 +19,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
@@ -147,7 +149,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
-        String currentVersion = Util.getAppVersionCode(this);
+        String currentVersion = VersionUtils.getAppVersionCode(this);
         if (currentVersion.equalsIgnoreCase(version) == false)
         {
             DailyPreference.getInstance(this).setAppVersion(currentVersion);
@@ -255,7 +257,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         {
             imageView.setPadding(0, 0, 0, 0);
 
-            if (Util.isTabletDevice(this) == true)
+            if (ScreenUtils.isTabletDevice(this) == true)
             {
                 imageView.setBackgroundColor(getResources().getColor(R.color.white));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -280,7 +282,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 {
                     imageView.setPadding(0, 0, 0, 0);
 
-                    if (Util.isTabletDevice(this) == true)
+                    if (ScreenUtils.isTabletDevice(this) == true)
                     {
                         imageView.setBackgroundColor(getResources().getColor(R.color.white));
                         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -293,7 +295,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 } catch (Exception | OutOfMemoryError e)
                 {
                     DailyPreference.getInstance(this).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
-                    imageView.setPadding(0, 0, 0, Util.dpToPx(this, 26));
+                    imageView.setPadding(0, 0, 0, ScreenUtils.dpToPx(this, 26));
                     imageView.setScaleType(ImageView.ScaleType.CENTER);
                     imageView.setVectorImageResource(R.drawable.img_splash_logo);
                 }
@@ -597,7 +599,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             return;
         }
 
-        int appVersion = Integer.parseInt(Util.getAppVersionCode(MainActivity.this).replace(".", ""));
+        int appVersion = Integer.parseInt(VersionUtils.getAppVersionCode(MainActivity.this).replace(".", ""));
         int skipMaxVersion = Integer.parseInt(DailyPreference.getInstance(MainActivity.this).getSkipVersion().replace(".", ""));
         int forceVersionNumber = Integer.parseInt(forceVersion.replace(".", ""));
         int currentVersionNumber = Integer.parseInt(currentVersion.replace(".", ""));
@@ -805,7 +807,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(this, mSettingNetworkDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mSettingNetworkDialog);
 
             mSettingNetworkDialog.show();
 
@@ -832,7 +834,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             return;
         }
 
-        final int MAX_MOVE_DISTANCE = Util.dpToPx(this, 20);
+        final int MAX_MOVE_DISTANCE = ScreenUtils.dpToPx(this, 20);
         final int MIN_MOVE_DISTANCE = 2;
 
         if (Math.abs(mDistance) > MAX_MOVE_DISTANCE)

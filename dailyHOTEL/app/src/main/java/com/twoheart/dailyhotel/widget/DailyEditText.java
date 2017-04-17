@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -186,7 +188,7 @@ public class DailyEditText extends AppCompatEditText
         mHasDeleteButton = true;
         mOnDeleteTextClickListener = listener;
 
-        setCompoundDrawablePadding(Util.dpToPx(getContext(), 8));
+        setCompoundDrawablePadding(ScreenUtils.dpToPx(getContext(), 8));
     }
 
     private void setDrawableCompat(Context context, AttributeSet attrs)
@@ -321,7 +323,7 @@ public class DailyEditText extends AppCompatEditText
     @Override
     public void setCompoundDrawablesWithIntrinsicBounds(int left, int top, int right, int bottom)
     {
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             super.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         } else

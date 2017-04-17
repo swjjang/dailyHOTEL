@@ -7,6 +7,8 @@ import android.support.design.widget.TabLayout;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -96,7 +98,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.label_global));
         tabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
-        if (Util.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             tabUpperLineView.setVisibility(View.VISIBLE);
         } else
@@ -104,7 +106,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
             tabUpperLineView.setVisibility(View.GONE);
 
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTabLayout.getLayoutParams();
-            layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+            layoutParams.topMargin = 1 - ScreenUtils.dpToPx(this, 1);
 
             mTabLayout.setLayoutParams(layoutParams);
         }

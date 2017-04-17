@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -23,13 +22,11 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -38,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -94,7 +93,7 @@ public class Util implements Constants
     {
         ImagePipelineConfig imagePipelineConfig;
 
-        if (Util.isOverAPI11() == true && Util.getLCDWidth(context) >= 720)
+        if (VersionUtils.isOverAPI11() == true && ScreenUtils.getScreenWidth(context) >= 720)
         {
             imagePipelineConfig = OkHttpImagePipelineConfigFactory//
                 .newBuilder(context, new OkHttpClient()).build();
@@ -118,7 +117,7 @@ public class Util implements Constants
             return;
         }
 
-        if (Util.getLCDWidth(context) >= 720)
+        if (ScreenUtils.getScreenWidth(context) >= 720)
         {
             simpleDraweeView.setImageURI(Uri.parse(imageUrl));
         } else
@@ -136,17 +135,6 @@ public class Util implements Constants
 
             simpleDraweeView.setController(controller);
         }
-    }
-
-    public static int dpToPx(Context context, double dp)
-    {
-        if (context == null)
-        {
-            context = DailyHotel.getGlobalApplicationContext();
-        }
-
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
     }
 
     public static String storeReleaseAddress()
@@ -279,99 +267,6 @@ public class Util implements Constants
     //        }
     //    }
 
-    public static int getLCDWidth(Context context)
-    {
-        if (context == null)
-        {
-            return 0;
-        }
-
-        try
-        {
-            return context.getResources().getDisplayMetrics().widthPixels;
-        } catch (Exception e)
-        {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.widthPixels;
-        }
-    }
-
-    public static int getLCDHeight(Context context)
-    {
-        if (context == null)
-        {
-            return 0;
-        }
-        try
-        {
-            return context.getResources().getDisplayMetrics().heightPixels;
-        } catch (Exception e)
-        {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.heightPixels;
-        }
-    }
-
-    /**
-     * 메인 리스트를 16:9로 표현
-     *
-     * @return
-     */
-    public static int getListRowHeight(Context context)
-    {
-        return getRatioHeightType16x9(getLCDWidth(context));
-    }
-
-
-    /**
-     * 21:9로 표현된 높이
-     *
-     * @return
-     */
-    public static int getRatioHeightType21x9(int width)
-    {
-        if (width < 1)
-        {
-            return 0;
-        }
-
-        return width * 9 / 21;
-    }
-
-    /**
-     * 16:9로 표현된 높이
-     *
-     * @return
-     */
-    public static int getRatioHeightType16x9(int width)
-    {
-        if (width < 1)
-        {
-            return 0;
-        }
-
-        return width * 9 / 16;
-    }
-
-    /**
-     * 4:3으로 표현된 높이
-     *
-     * @return
-     */
-    public static int getRatioHeightType4x3(int width)
-    {
-        if (width < 1)
-        {
-            return 0;
-        }
-
-        return width * 3 / 4;
-    }
-
     public static boolean isNameCharacter(String text)
     {
         boolean result = false;
@@ -384,61 +279,6 @@ public class Util implements Constants
         return result;
     }
 
-    public static boolean isOverAPI11()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-    }
-
-    public static boolean isOverAPI12()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1;
-    }
-
-    public static boolean isOverAPI14()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-    }
-
-    public static boolean isOverAPI15()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1;
-    }
-
-    public static boolean isOverAPI16()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
-
-    public static boolean isOverAPI17()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
-    }
-
-    public static boolean isOverAPI19()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-    }
-
-    public static boolean isOverAPI21()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    public static boolean isOverAPI22()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1;
-    }
-
-    public static boolean isOverAPI23()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
-    public static boolean isOverAPI24()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
-    }
-
     /**
      * 현재 Fresco 라이브러리 버그로 인해서 7.0 이상 단말이에서 사용금지.
      *
@@ -446,7 +286,7 @@ public class Util implements Constants
      */
     public static boolean isUsedMultiTransition()
     {
-        return isOverAPI21() == true && isOverAPI24() == false;
+        return VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI24() == false;
         //        return isOverAPI21() == true;
     }
 
@@ -471,36 +311,6 @@ public class Util implements Constants
         }
 
         return false;
-    }
-
-    public static String getAppVersionCode(Context context)
-    {
-        String version = null;
-        try
-        {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            version = Integer.toString(packageInfo.versionCode);
-        } catch (NameNotFoundException e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return version;
-    }
-
-    public static String getAppVersionName(Context context)
-    {
-        String version = null;
-        try
-        {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            version = packageInfo.versionName;
-        } catch (NameNotFoundException e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return version;
     }
 
     public static boolean isGooglePlayServicesAvailable(Context context)
@@ -908,7 +718,7 @@ public class Util implements Constants
 
         try
         {
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(baseActivity, dialog);
 
             dialog.show();
 
@@ -1276,7 +1086,7 @@ public class Util implements Constants
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(activity, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(activity, dialog);
 
             dialog.show();
 
@@ -1496,7 +1306,7 @@ public class Util implements Constants
         {
             dialog.setContentView(dialogView);
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(baseActivity, dialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(baseActivity, dialog);
 
             dialog.show();
 
@@ -1509,7 +1319,7 @@ public class Util implements Constants
 
     public static void clipText(Context context, String text)
     {
-        if (Util.isOverAPI11() == true)
+        if (VersionUtils.isOverAPI11() == true)
         {
             android.content.ClipboardManager clipboardManager = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboardManager.setPrimaryClip(ClipData.newPlainText(null, text));
@@ -1608,7 +1418,7 @@ public class Util implements Constants
 
         Paint p = new Paint();
 
-        float size = dpToPx(context, dp);
+        float size = ScreenUtils.dpToPx(context, dp);
         p.setTextSize(size);
         p.setTypeface(typeface);
         p.setTextScaleX(scaleX);
@@ -1830,32 +1640,9 @@ public class Util implements Constants
         return result;
     }
 
-    public static WindowManager.LayoutParams getDialogWidthLayoutParams(Activity activity, Dialog dialog)
-    {
-        if (dialog == null)
-        {
-            return null;
-        }
-
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        layoutParams.copyFrom(dialog.getWindow().getAttributes());
-
-        if (isTabletDevice(activity) == false)
-        {
-            layoutParams.width = Util.getLCDWidth(activity) * 13 / 15;
-        } else
-        {
-            layoutParams.width = Util.getLCDWidth(activity) * 10 / 15;
-        }
-
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        return layoutParams;
-    }
-
     public static void sendSms(Activity activity, String message)
     {
-        if (Util.isOverAPI19() == true)
+        if (VersionUtils.isOverAPI19() == true)
         {
             String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(activity);
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -1887,45 +1674,6 @@ public class Util implements Constants
                 activity.startActivity(intent);
             }
         }
-    }
-
-    /**
-     * 일단은 테블릿으로 정의하지만 실제로는 화면 크기이기 때문에 폰이 테블릿이 되는 경우도
-     * 반대의 경우도 발생하나 스크린 사이즈로 결정되기 때문에 이상없을 것이라고 판단됨
-     *
-     * @param activity
-     * @return
-     */
-    public static boolean isTabletDevice(Activity activity)
-    {
-        return checkTabletDeviceWithScreenSize(activity);
-    }
-
-    private static boolean checkTabletDeviceWithScreenSize(Activity activity)
-    {
-        boolean device_large = ((activity.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE);
-
-        if (device_large)
-        {
-            DisplayMetrics metrics = new DisplayMetrics();
-            activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-            if (metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_MEDIUM//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_TV//
-                || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static String getResolutionImageUrl(Context context, String defaultImageUrl, String lowResolutionImageUrl)
-    {
-        return Util.getLCDWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;
     }
 
     public static boolean verifyPassword(String email, @NonNull final String password)

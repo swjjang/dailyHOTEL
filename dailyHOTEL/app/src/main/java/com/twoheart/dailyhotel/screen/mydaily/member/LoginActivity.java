@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -147,7 +149,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
         EdgeEffectColor.setEdgeGlowColor(mScrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
         } else
@@ -303,7 +305,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         Session.getCurrentSession().removeCallback(mKakaoSessionCallback);
 
-        if (Util.isOverAPI16() == true)
+        if (VersionUtils.isOverAPI16() == true)
         {
             mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
         } else
@@ -684,7 +686,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 {
                     mScrollToEmailView = false;
 
-                    mSnsLoginLayout.setPadding(0, Util.dpToPx(LoginActivity.this, 40), 0, 0);
+                    mSnsLoginLayout.setPadding(0, ScreenUtils.dpToPx(LoginActivity.this, 40), 0, 0);
 
                     mScrollView.post(new Runnable()
                     {

@@ -18,6 +18,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -1370,7 +1371,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 dialog.setContentView(dialogView);
 
-                WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(StayDetailActivity.this, dialog);
+                WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(StayDetailActivity.this, dialog);
 
                 dialog.show();
 

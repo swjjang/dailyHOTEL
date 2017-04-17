@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -318,7 +319,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
                         }
                     });
 
-                    if (Util.isOverAPI16() == true)
+                    if (VersionUtils.isOverAPI16() == true)
                     {
                         mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     } else

@@ -11,6 +11,7 @@ import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -317,7 +318,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
             endTime = -1;
         }
 
-        mCollectionBaseLayout.setTitleLayout(recommendation.title, recommendation.subtitle, Util.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
+        mCollectionBaseLayout.setTitleLayout(recommendation.title, recommendation.subtitle, ScreenUtils.getResolutionImageUrl(this, recommendation.defaultImageUrl, recommendation.lowResolutionImageUrl));
 
         if (endTime < currentTime)
         {

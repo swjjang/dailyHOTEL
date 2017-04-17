@@ -8,6 +8,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.daily.base.util.VersionUtils;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -28,7 +29,7 @@ public class LauncherActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        if (Util.isOverAPI21() == true && Util.isOverAPI23() == false)
+        if (VersionUtils.isOverAPI21() == true && VersionUtils.isOverAPI23() == false)
         {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

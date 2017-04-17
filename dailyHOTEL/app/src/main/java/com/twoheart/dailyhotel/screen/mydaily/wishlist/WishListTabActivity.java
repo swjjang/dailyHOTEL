@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -223,7 +224,7 @@ public class WishListTabActivity extends BaseActivity
         //        mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
 
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTabLayout.getLayoutParams();
-        layoutParams.topMargin = 1 - Util.dpToPx(this, 1);
+        layoutParams.topMargin = 1 - ScreenUtils.dpToPx(this, 1);
 
         mTabLayout.setLayoutParams(layoutParams);
 

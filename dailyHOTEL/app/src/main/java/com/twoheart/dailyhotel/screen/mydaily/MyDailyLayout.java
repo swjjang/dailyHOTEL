@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -174,7 +175,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         View editProfileView = view.findViewById(R.id.editProfileTextView);
         TextView profileTextView = (TextView) view.findViewById(R.id.profileTextView);
 
-        if (Util.getLCDWidth(context) < 720)
+        if (ScreenUtils.getScreenWidth(context) < 720)
         {
             profileTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, SMALL_PROFILE_TEXT_SIZE_DP);
         } else
@@ -255,7 +256,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
                 profileTextView.setVisibility(View.GONE);
                 loginMessageTextView.setText(R.string.information_empty_name_n_email_after_login);
 
-                if (Util.getLCDWidth(mContext) < 720)
+                if (ScreenUtils.getScreenWidth(mContext) < 720)
                 {
                     loginMessageTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, EMPTY_SMALL_MESSAGE_TEXT_SIZE_DP);
                     loginMessageTextView.setLineSpacing(6.0f, 1.0f);
@@ -311,7 +312,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
             profileLayoutBottomLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cf0f0f0));
             ViewGroup.LayoutParams layoutParams = profileLayoutBottomLine.getLayoutParams();
-            layoutParams.height = Util.dpToPx(mContext, 1);
+            layoutParams.height = ScreenUtils.dpToPx(mContext, 1);
             profileLayoutBottomLine.setLayoutParams(layoutParams);
 
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_01_logout);

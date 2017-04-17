@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -332,10 +333,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         if (layoutParams == null)
         {
             layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15), Util.dpToPx(mContext, 15));
+            layoutParams.setMargins(ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15), ScreenUtils.dpToPx(mContext, 15));
         }
 
-        layoutParams.height = (Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 60)) * 9 / 16;
+        layoutParams.height = (ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 60)) * 9 / 16;
         simpleCreditCardLayout.setLayoutParams(layoutParams);
 
         mEmptySimpleCardLayout = simpleCreditCardLayout.findViewById(R.id.emptySimpleCardLayout);
@@ -539,7 +540,7 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
         } else
         {
             ViewGroup.LayoutParams frameLayoutParams = mGuestFrameLayout.getLayoutParams();
-            frameLayoutParams.height = Util.dpToPx(mContext, 164) + Util.dpToPx(mContext, 36);
+            frameLayoutParams.height = ScreenUtils.dpToPx(mContext, 164) + ScreenUtils.dpToPx(mContext, 36);
             mGuestFrameLayout.setLayoutParams(frameLayoutParams);
 
             ViewGroup.LayoutParams linearLayoutParams = mGuestLinearLayout.getLayoutParams();
@@ -594,10 +595,10 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
 
             mGuideNameMemo.setVisibility(View.VISIBLE);
 
-            if (Util.getLCDWidth(mContext) > 480)
+            if (ScreenUtils.getScreenWidth(mContext) > 480)
             {
                 mGuideNameMemo.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_payment_notice, 0, 0, 0);
-                mGuideNameMemo.setCompoundDrawablePadding(Util.dpToPx(mContext, 4));
+                mGuideNameMemo.setCompoundDrawablePadding(ScreenUtils.dpToPx(mContext, 4));
             }
         }
     }
@@ -1091,8 +1092,8 @@ public class HotelPaymentLayout extends BaseLayout implements View.OnClickListen
             mValueAnimator = ValueAnimator.ofInt(mAnimationValue, 0);
         }
 
-        final int dp164 = Util.dpToPx(mContext, 164);
-        final int height = Util.getLCDHeight(mContext);
+        final int dp164 = ScreenUtils.dpToPx(mContext, 164);
+        final int height = ScreenUtils.getScreenHeight(mContext);
         mScrollMoveHeight = -1;
 
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()

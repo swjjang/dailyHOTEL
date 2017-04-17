@@ -62,17 +62,6 @@ public class VersionUtils
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
 
-    /**
-     * 현재 Fresco 라이브러리 버그로 인해서 7.0 이상 단말이에서 사용금지.
-     *
-     * @return
-     */
-    public static boolean isUsedMultiTransition()
-    {
-        return isOverAPI21() == true && isOverAPI24() == false;
-        //        return isOverAPI21() == true;
-    }
-
     public static String getAppVersionCode(Context context)
     {
         String version = null;

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -90,10 +91,10 @@ public class HomeRecommendationLayout extends LinearLayout
         view.setBackgroundResource(R.color.white);
         setVisibility(View.VISIBLE);
 
-        mTitleLayoutHeight = Util.dpToPx(mContext, (21 + 15 + 15 + 1)); // title height(반올림) + title top margin + title + bottom margin + bottom divider height
-        mImageWidth = Util.getLCDWidth(mContext) - Util.dpToPx(mContext, 30);
-        mImageHeight = Util.getRatioHeightType21x9(mImageWidth);
-        mExpectedItemHeight = mImageHeight + Util.dpToPx(mContext, 78d);
+        mTitleLayoutHeight = ScreenUtils.dpToPx(mContext, (21 + 15 + 15 + 1)); // title height(반올림) + title top margin + title + bottom margin + bottom divider height
+        mImageWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
+        mImageHeight = ScreenUtils.getRatioHeightType21x9(mImageWidth);
+        mExpectedItemHeight = mImageHeight + ScreenUtils.dpToPx(mContext, 78d);
 
         mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
 
@@ -166,7 +167,7 @@ public class HomeRecommendationLayout extends LinearLayout
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(mImageWidth, mImageHeight);
         imageView.setLayoutParams(layoutParams);
 
-        if (Util.getLCDWidth(mContext) < 1440)
+        if (ScreenUtils.getScreenWidth(mContext) < 1440)
         {
             Util.requestImageResize(mContext, imageView, recommendation.lowResolutionImageUrl);
         } else

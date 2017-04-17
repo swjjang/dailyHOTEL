@@ -5,6 +5,7 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityProfileDataBinding;
 import com.twoheart.dailyhotel.util.Constants;
@@ -133,7 +134,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
                 break;
         }
 
-        viewDataBinding.emailTextView.setCompoundDrawablePadding(Util.dpToPx(getContext(), 3));
+        viewDataBinding.emailTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(getContext(), 3));
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -216,7 +217,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             }
         }
 
-        mGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), 0);
+        mGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), 0);
 
         requestUpdateResultDelayed();
     }
@@ -285,7 +286,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         babySeatCheckView.setOnClickListener(this);
         corkageCheckView.setOnClickListener(this);
 
-        mAmenitiesGridLayout.setPadding(Util.dpToPx(this, 10), 0, Util.dpToPx(this, 10), Util.dpToPx(this, 5d));
+        mAmenitiesGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), ScreenUtils.dpToPx(this, 5d));
     }
 
     private void initTimeRangeFilterLayout(View view, GourmetCurationOption gourmetCurationOption)

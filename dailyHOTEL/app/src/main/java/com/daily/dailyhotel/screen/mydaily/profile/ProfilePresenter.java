@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.BasePresenter;
+import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.parcel.UserParcel;
@@ -32,7 +32,7 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
-public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileViewInterface> implements ProfileView.OnEventListener
+public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, ProfileViewInterface> implements ProfileView.OnEventListener
 {
     private ProfileAnalyticsInterface mProfileAnalytics;
 

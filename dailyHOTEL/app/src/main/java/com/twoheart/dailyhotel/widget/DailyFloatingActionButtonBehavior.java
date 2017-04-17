@@ -11,8 +11,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
+import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavior
 {
@@ -31,7 +31,7 @@ public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavio
             return;
         }
 
-        if (Util.isOverAPI15() == true)
+        if (VersionUtils.isOverAPI15() == true)
         {
             ViewCompat.animate(view).scaleX(0.0F).scaleY(0.0F).alpha(0.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(new ViewPropertyAnimatorListener()
             {
@@ -86,7 +86,7 @@ public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavio
         }
 
         view.setVisibility(View.VISIBLE);
-        if (Util.isOverAPI15() == true)
+        if (VersionUtils.isOverAPI15() == true)
         {
             ViewCompat.animate(view).scaleX(1.0F).scaleY(1.0F).alpha(1.0F).setInterpolator(INTERPOLATOR).withLayer().setListener(null).start();
         } else
@@ -107,7 +107,7 @@ public class DailyFloatingActionButtonBehavior extends CoordinatorLayout.Behavio
             return;
         }
 
-        if (Util.isOverAPI11() == true)
+        if (VersionUtils.isOverAPI11() == true)
         {
             floatingView.setScaleX(offset);
             floatingView.setScaleY(offset);
