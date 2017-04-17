@@ -3,11 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.daily.base.util.TextUtils;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 
 public class PlaceRenderer
 {
@@ -17,7 +15,7 @@ public class PlaceRenderer
 
     public PlaceRenderer(Context context, int price, int markerResId)
     {
-        mPrice = TextUtils.getPriceFormat(context, price, false);
+        mPrice = com.daily.base.util.TextUtils.getPriceFormat(context, price, false);
         mMarkerResId = markerResId;
         mIconGenerator = new PlaceIconGenerator(context);
         mIconGenerator.setTextColor(context.getResources().getColor(R.color.white));

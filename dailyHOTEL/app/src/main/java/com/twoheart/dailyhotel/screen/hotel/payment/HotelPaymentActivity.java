@@ -25,7 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyScrollView;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -54,15 +56,12 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.daily.base.widget.DailyScrollView;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
-import com.daily.base.widget.DailyToast;
 
 import org.json.JSONObject;
 
@@ -2155,7 +2154,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             }
                         }
 
-                        if (TextUtils.isNameCharacter(overseasName) == false)
+                        if (com.daily.base.util.TextUtils.isNameCharacter(overseasName) == false)
                         {
                             guest.name = "";
                             mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);

@@ -8,7 +8,7 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
- import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
 import org.json.JSONObject;
 
@@ -1431,7 +1431,7 @@ public class DailyPreference
     public JSONObject getDailyRegion(DailyCategoryType type)
     {
         String value = getValue(mPreferences, getDailyRegionKey(type), null);
-        if (Util.isTextEmpty(value) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
         {
             return null;
         }
@@ -1442,7 +1442,7 @@ public class DailyPreference
             jsonObject = new JSONObject(value);
         } catch (Exception e)
         {
-            ExLog.e(e.toString());
+            com.daily.base.util.ExLog.e(e.toString());
         }
 
         return jsonObject;

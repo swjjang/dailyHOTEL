@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
@@ -299,7 +298,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             }
 
             Intent intent = new Intent();
-            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, TextUtils.trim(text));
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, com.daily.base.util.TextUtils.trim(text));
             setResult(RESULT_OK, intent);
             WriteReviewCommentActivity.this.finish();
         }

@@ -14,8 +14,9 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.TextUtils;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -26,10 +27,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
-import com.daily.base.widget.DailyToast;
 
 import org.json.JSONObject;
 
@@ -212,7 +211,7 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
-            if (TextUtils.verifyPassword(email, password) == false)
+            if (com.daily.base.util.TextUtils.verifyPassword(email, password) == false)
             {
                 mSignupStep1Layout.requestPasswordFocus();
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);

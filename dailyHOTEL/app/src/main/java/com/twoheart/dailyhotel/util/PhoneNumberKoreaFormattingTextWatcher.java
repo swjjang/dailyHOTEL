@@ -6,8 +6,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.R;
 import com.daily.base.widget.DailyToast;
+import com.twoheart.dailyhotel.R;
 
 public class PhoneNumberKoreaFormattingTextWatcher implements TextWatcher
 {
@@ -41,7 +41,7 @@ public class PhoneNumberKoreaFormattingTextWatcher implements TextWatcher
             return;
         }
 
-        if (TextUtils.isDigitsOnly(s.subSequence(start, start + count).toString()) == false)
+        if (android.text.TextUtils.isDigitsOnly(s.subSequence(start, start + count).toString()) == false)
         {
             mIsNotDigit = true;
         }

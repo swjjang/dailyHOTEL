@@ -8,13 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView.AnimatedExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -108,7 +107,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
      */
     private void setNameTextViewMaxWidth(View layout, TextView nameTextView, TextView countTextView) {
         // 전체 레이아웃 넓이
-        int layoutWidth = (Util.getLCDWidth(mContext) / 2) - 1;
+        int layoutWidth = (ScreenUtils.getScreenWidth(mContext) / 2) - 1;
         int widthMeasureSpec1 = View.MeasureSpec.makeMeasureSpec(layoutWidth, View.MeasureSpec.EXACTLY);
         int heightMeasureSpec1 = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         layout.measure(widthMeasureSpec1, heightMeasureSpec1);

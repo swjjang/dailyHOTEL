@@ -17,8 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.TextUtils;
+import com.daily.base.widget.DailyTextView;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
@@ -33,12 +35,9 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.daily.base.widget.DailyTextView;
-import com.daily.base.widget.DailyToast;
 
 import org.json.JSONObject;
 
@@ -917,7 +916,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         @Override
         public void onClipAddressClick()
         {
-            TextUtils.clipText(StayReservationDetailActivity.this, mPlaceBookingDetail.address);
+            com.daily.base.util.TextUtils.clipText(StayReservationDetailActivity.this, mPlaceBookingDetail.address);
 
             DailyToast.showToast(StayReservationDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
         }

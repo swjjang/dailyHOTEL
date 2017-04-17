@@ -12,13 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
-import com.daily.base.util.TextUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.CouponUtil;
-import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyTextView;
 
 import java.util.List;
 
@@ -305,7 +304,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
-            final float textWidth = TextUtils.getTextWidth(mContext, lastLineText, 11d, typeface);
+            final float textWidth = com.daily.base.util.TextUtils.getTextWidth(mContext, lastLineText, 11d, typeface);
 
             //            ExLog.d("index : " + position + " , viewWidth : " + viewWidth + " , getWidth() : "//
             //                + minPriceTextView.getWidth() + " , getPaddingLeft() : " + minPriceTextView.getPaddingLeft() //

@@ -15,14 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daily.base.util.TextUtils;
+import com.daily.base.widget.DailyEditText;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.daily.base.widget.DailyEditText;
-import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import org.json.JSONObject;
@@ -231,7 +230,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 }
 
                 // 패스워드 검증
-                if (TextUtils.verifyPassword(null, password) == false)
+                if (com.daily.base.util.TextUtils.verifyPassword(null, password) == false)
                 {
                     mPasswordEditText.requestFocus();
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);

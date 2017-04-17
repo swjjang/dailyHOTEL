@@ -12,7 +12,8 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -48,12 +49,10 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.util.Calendar;
@@ -1413,7 +1412,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
 
-            TextUtils.clipText(GourmetDetailActivity.this, address);
+            com.daily.base.util.TextUtils.clipText(GourmetDetailActivity.this, address);
 
             DailyToast.showToast(GourmetDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 

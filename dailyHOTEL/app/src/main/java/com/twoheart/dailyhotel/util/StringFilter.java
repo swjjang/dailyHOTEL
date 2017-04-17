@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.twoheart.dailyhotel.R;
@@ -189,7 +188,7 @@ public class StringFilter
             if (source instanceof Spanned)
             {
                 SpannableString spannableString = new SpannableString(stringBuilder);
-                TextUtils.copySpansFrom((Spanned) source, start, stringBuilder.length(), null, spannableString, 0);
+                android.text.TextUtils.copySpansFrom((Spanned) source, start, stringBuilder.length(), null, spannableString, 0);
                 return spannableString;
             } else
             {

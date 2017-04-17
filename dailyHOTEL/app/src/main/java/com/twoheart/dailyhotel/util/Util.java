@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -431,7 +430,7 @@ public class Util implements Constants
                 if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
                     || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
                 {
-                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    if (android.text.TextUtils.isDigitsOnly(text[1].substring(5)) == true)
                     {
                         int length = text[1].length();
                         if (length == 12 || length == 13)
@@ -520,7 +519,7 @@ public class Util implements Constants
                 if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
                     || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
                 {
-                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    if (android.text.TextUtils.isDigitsOnly(text[1].substring(5)) == true)
                     {
                         int length = text[1].length();
                         if (length == 12 || length == 13)
@@ -542,7 +541,7 @@ public class Util implements Constants
             if (text.startsWith("010") || text.startsWith("011") || text.startsWith("016") //
                 || text.startsWith("017") || text.startsWith("018") || text.startsWith("019"))
             {
-                if (TextUtils.isDigitsOnly(text) == true)
+                if (android.text.TextUtils.isDigitsOnly(text) == true)
                 {
                     int length = text.length();
                     if (length == 10 || length == 11)
@@ -1472,8 +1471,8 @@ public class Util implements Constants
         try
         {
             jsonObject = new JSONObject();
-            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, Util.isTextEmpty(provinceName) ? "" : provinceName);
-            jsonObject.put(Constants.JSON_KEY_AREA_NAME, Util.isTextEmpty(areaName) ? "" : areaName);
+            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, com.daily.base.util.TextUtils.isTextEmpty(provinceName) ? "" : provinceName);
+            jsonObject.put(Constants.JSON_KEY_AREA_NAME, com.daily.base.util.TextUtils.isTextEmpty(areaName) ? "" : areaName);
             jsonObject.put(Constants.JSON_KEY_IS_OVER_SEAS, isOverSeas);
         } catch (Exception e)
         {

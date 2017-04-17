@@ -636,7 +636,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                         }
 
                         textView02.setVisibility(View.VISIBLE);
-                        textView02.setText(TextUtils.getPriceFormat(mContext, keyword.price, false));
+                        textView02.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, keyword.price, false));
                     } else
                     {
                         textView01.setText(keyword.name);

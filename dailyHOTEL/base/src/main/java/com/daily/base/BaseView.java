@@ -176,7 +176,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         // 상단
         dataBinding.titleTextView.setVisibility(View.VISIBLE);
 
-        if (TextUtils.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             dataBinding.titleTextView.setText(getString(R.string.label_notice));
         } else
@@ -188,7 +188,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         dataBinding.messageTextView.setText(msg);
 
         // 버튼
-        if (TextUtils.isTextEmpty(positive, negative) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(positive, negative) == false)
         {
             dataBinding.twoButtonLayout.setVisibility(View.VISIBLE);
             dataBinding.oneButtonLayout.setVisibility(View.GONE);

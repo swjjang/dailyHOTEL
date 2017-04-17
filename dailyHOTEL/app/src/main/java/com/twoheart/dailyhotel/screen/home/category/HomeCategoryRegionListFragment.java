@@ -143,7 +143,7 @@ public class HomeCategoryRegionListFragment extends BaseFragment
 
         String oldProvinceName = Util.getDailyProvinceString(saveRegionJsonObject);
 
-        if (Util.isTextEmpty(oldProvinceName) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(oldProvinceName) == true)
         {
             return regionViewItemList.get(0).getProvince();
         }

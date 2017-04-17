@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daily.base.util.TextUtils;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -19,7 +19,6 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
-import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class InviteFriendsActivity extends BaseActivity implements View.OnClickListener
@@ -297,7 +296,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
             case R.id.copyCodeLayout:
             {
-                TextUtils.clipText(this, mRecommendCode);
+                com.daily.base.util.TextUtils.clipText(this, mRecommendCode);
 
                 DailyToast.showToast(this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
 

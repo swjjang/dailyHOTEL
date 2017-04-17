@@ -12,13 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.TextUtils;
+import com.daily.base.widget.DailyImageView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
-import com.daily.base.widget.DailyImageView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -445,12 +444,12 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             startIndex += textCount;
 
             textView.setText(stringBuilder.toString());
-            textViewHeight = TextUtils.getTextViewHeight(textView, viewWidth);
+            textViewHeight = com.daily.base.util.TextUtils.getTextViewHeight(textView, viewWidth);
         }
 
         textView.setText(stringBuilder.toString());
 
-        return viewY + TextUtils.getTextViewHeight(textView, viewWidth);
+        return viewY + com.daily.base.util.TextUtils.getTextViewHeight(textView, viewWidth);
     }
 
     private class ProductInformationViewHolder extends RecyclerView.ViewHolder

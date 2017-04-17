@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.StayProduct;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -175,7 +173,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.VISIBLE);
             saleRoomInformationViewHolder.amenitiesTextView.setText(stayProduct.amenities);
 
-            float width = TextUtils.getTextWidth(mContext, stayProduct.amenities //
+            float width = com.daily.base.util.TextUtils.getTextWidth(mContext, stayProduct.amenities //
                 , saleRoomInformationViewHolder.amenitiesTextView.getTextSize() //
                 , saleRoomInformationViewHolder.amenitiesTextView.getTypeface());
 

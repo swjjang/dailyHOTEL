@@ -190,7 +190,7 @@ public class ZoomMapActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                TextUtils.clipText(ZoomMapActivity.this, address);
+                com.daily.base.util.TextUtils.clipText(ZoomMapActivity.this, address);
 
                 DailyToast.showToast(ZoomMapActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
             }

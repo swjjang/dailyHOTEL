@@ -21,7 +21,7 @@ public class TextUtils
     {
         boolean result = false;
 
-        if (TextUtils.isTextEmpty(text) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == false)
         {
             result = Pattern.matches("^[a-zA-Z\\s.'-]+$", text);
         }
@@ -144,7 +144,7 @@ public class TextUtils
 
     public static String trim(String text)
     {
-        if (TextUtils.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return text;
         }

@@ -904,7 +904,7 @@ public class StayMainActivity extends PlaceMainActivity
                 String oldProvinceName = DailyPreference.getInstance(baseActivity).getSelectedRegionTypeProvince(PlaceType.HOTEL);
                 boolean isOldOverSea = DailyPreference.getInstance(baseActivity).isSelectedOverseaRegion(PlaceType.HOTEL);
 
-                if (Util.isTextEmpty(oldAreaName) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(oldAreaName) == false)
                 {
                     // 기존 저장 된 지역이 소지역 일 수도, 대지역 일 수도 있어서 확인 후 대지역과 같으면 제거
                     if (oldAreaName.equalsIgnoreCase(oldProvinceName) == true)
@@ -925,7 +925,7 @@ public class StayMainActivity extends PlaceMainActivity
             }
 
             // Api 구조상 province 내에 area가 존재하지 않고 독립적이기때문에 작은단위로 찾아야 함
-            regionName = Util.isTextEmpty(areaName) == true ? provinceName : areaName;
+            regionName = com.daily.base.util.TextUtils.isTextEmpty(areaName) == true ? provinceName : areaName;
 
             if (com.daily.base.util.TextUtils.isTextEmpty(regionName) == true)
             {

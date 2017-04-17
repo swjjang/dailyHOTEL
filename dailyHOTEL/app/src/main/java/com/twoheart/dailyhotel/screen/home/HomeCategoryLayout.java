@@ -14,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyTextView;
 
 /**
  * Created by android_sam on 2017. 4. 11..
@@ -90,7 +90,7 @@ public class HomeCategoryLayout extends RelativeLayout
 
         RelativeLayout.LayoutParams layoutParams //
             = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = Util.dpToPx(mContext, 10d);
+        layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 10d);
         mLayout.setLayoutParams(layoutParams);
 
         mItemGridLayout = (android.support.v7.widget.GridLayout) mLayout.findViewById(R.id.categoryGridLayout);
@@ -137,14 +137,14 @@ public class HomeCategoryLayout extends RelativeLayout
         dailyTextView.setTextColor(mContext.getResources().getColorStateList(R.color.default_text_c323232));
         dailyTextView.setText(categoryType.getNameResId());
         dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, categoryType.getImageResId(), 0, 0);
-        dailyTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 2d));
+        dailyTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(mContext, 2d));
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-        dailyTextView.setPadding(0, Util.dpToPx(context, 16), 0, Util.dpToPx(context, 17));
+        dailyTextView.setPadding(0, ScreenUtils.dpToPx(context, 16), 0, ScreenUtils.dpToPx(context, 17));
 
         dailyTextView.setLayoutParams(layoutParams);
 
