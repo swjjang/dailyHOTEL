@@ -37,6 +37,8 @@ public class EdgeEffectColor
     private static final Field RECYCLER_VIEW_FIELD_EDGE_GLOW_RIGHT;
     private static final Field RECYCLER_VIEW_FIELD_EDGE_GLOW_BOTTOM;
     private static final Method RECYCLER_VIEW_METHOD_ENSURE_GLOW_TOP;
+    private static final Method RECYCLER_VIEW_METHOD_ENSURE_GLOW_LEFT;
+    private static final Method RECYCLER_VIEW_METHOD_ENSURE_GLOW_RIGHT;
     private static final Method RECYCLER_VIEW_METHOD_ENSURE_GLOW_BOTTOM;
 
     private static final Class<AbsListView> CLASS_LIST_VIEW = AbsListView.class;
@@ -55,7 +57,7 @@ public class EdgeEffectColor
     static
     {
         Field edgeGlowTop = null, edgeGlowBottom = null, edgeGlowLeft = null, edgeGlowRight = null;
-        Method ensureGlowTop = null, ensureGlowBottom = null;
+        Method ensureGlowTop = null, ensureGlowBottom = null, ensureGlowLeft = null, ensureGlowRight = null;
 
         for (Field f : CLASS_RECYCLER_VIEW.getDeclaredFields())
         {
@@ -98,6 +100,16 @@ public class EdgeEffectColor
                     ensureGlowBottom = m;
                     ensureGlowBottom.setAccessible(true);
                     break;
+                case "ensureLeftGlow":
+                    m.setAccessible(true);
+                    ensureGlowLeft = m;
+                    ensureGlowLeft.setAccessible(true);
+                    break;
+                case "ensureRightGlow":
+                    m.setAccessible(true);
+                    ensureGlowRight= m;
+                    ensureGlowRight.setAccessible(true);
+                    break;
             }
         }
 
@@ -108,6 +120,8 @@ public class EdgeEffectColor
 
         RECYCLER_VIEW_METHOD_ENSURE_GLOW_TOP = ensureGlowTop;
         RECYCLER_VIEW_METHOD_ENSURE_GLOW_BOTTOM = ensureGlowBottom;
+        RECYCLER_VIEW_METHOD_ENSURE_GLOW_LEFT = ensureGlowLeft;
+        RECYCLER_VIEW_METHOD_ENSURE_GLOW_RIGHT = ensureGlowRight;
 
         for (Field f : CLASS_NESTED_SCROLL_VIEW.getDeclaredFields())
         {
@@ -342,6 +356,8 @@ public class EdgeEffectColor
         {
             RECYCLER_VIEW_METHOD_ENSURE_GLOW_TOP.invoke(recyclerView);
             RECYCLER_VIEW_METHOD_ENSURE_GLOW_BOTTOM.invoke(recyclerView);
+            RECYCLER_VIEW_METHOD_ENSURE_GLOW_LEFT.invoke(recyclerView);
+            RECYCLER_VIEW_METHOD_ENSURE_GLOW_RIGHT.invoke(recyclerView);
 
             Object object;
             object = RECYCLER_VIEW_FIELD_EDGE_GLOW_TOP.get(recyclerView);
