@@ -16,15 +16,15 @@ public enum DailyCategoryType implements Parcelable
     // 기존 버튼 용 카테고리
     GOURMET_ALL(0, 0, 0),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_HOTEL(R.string.label_home_category_hotel, R.string.code_home_category_hotel, 0),
+    STAY_HOTEL(R.string.label_home_category_hotel, R.string.code_home_category_hotel, R.drawable.ic_home_shortcut_01_hotel),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_BOUTIQUE(R.string.label_home_category_boutique, R.string.code_home_category_boutique, 0),
+    STAY_BOUTIQUE(R.string.label_home_category_boutique, R.string.code_home_category_boutique, R.drawable.ic_home_shortcut_02_boutique),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_PENSION(R.string.label_home_category_pension, R.string.code_home_category_pension, 0),
+    STAY_PENSION(R.string.label_home_category_pension, R.string.code_home_category_pension, R.drawable.ic_home_shortcut_03_pension),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_RESORT(R.string.label_home_category_resort, R.string.code_home_category_resort, 0),
+    STAY_RESORT(R.string.label_home_category_resort, R.string.code_home_category_resort, R.drawable.ic_home_shortcut_04_resort),
     // 신규 홈 카테고리 버튼 용 카테고리 - 홈 화면 전용
-    STAY_AROUND_SEARCH(R.string.label_home_category_around_search, 0, 0),
+    STAY_AROUND_SEARCH(R.string.label_home_category_around_search, 0, R.drawable.ic_home_shortcut_nearby),
     // 신규 홈 카테고리 빈 뷰 생성용 - 홈화면 전용
     NONE(0, 0, 0);
 

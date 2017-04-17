@@ -7,58 +7,36 @@
         android:id="@+id/homeCategoryLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
+        >
 
         <com.twoheart.dailyhotel.widget.DailyTextView
             android:id="@+id/homeCategoryTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:text="@string/label_home_category_title_text"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"
-            dailyFont:style="Medium"/>
+            android:textColor="@color/default_text_c929292"
+            android:textSize="11dp"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/homeCategoryTitleTextView"
-            android:layout_alignTop="@id/homeCategoryTitleTextView"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/homeCategoryTitleTextView"
-            android:gravity="center_vertical">
+        <View
+            android:id="@+id/homeCategoryTitleBottomLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@id/homeCategoryTitleTextView"
+            android:background="@color/default_line_cdcdcdd"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_c323232"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/homeCategoryTitleTextView"
-            android:layout_alignTop="@id/homeCategoryTitleTextView"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/homeCategoryTitleTextView"
-            android:gravity="center_vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_c323232"/>
-        </LinearLayout>
 
         <android.support.v7.widget.GridLayout
             android:id="@+id/categoryGridLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/homeCategoryTitleTextView"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:layout_below="@id/homeCategoryTitleBottomLine"
             app:columnCount="5"/>
 
     </RelativeLayout>
@@ -68,7 +46,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/homeCategoryLayout"
-        android:layout_marginTop="15dp"
         android:background="@color/default_line_cf0f0f0"/>
 
 </merge>

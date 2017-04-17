@@ -131,13 +131,13 @@ public class HomeCategoryLayout extends RelativeLayout
     private DailyTextView getGridLayoutItemView(Context context, DailyCategoryType categoryType)
     {
         DailyTextView dailyTextView = new DailyTextView(mContext);
-        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         dailyTextView.setGravity(Gravity.CENTER_HORIZONTAL);
         dailyTextView.setTypeface(dailyTextView.getTypeface(), Typeface.NORMAL);
         dailyTextView.setTextColor(mContext.getResources().getColorStateList(R.color.default_text_c323232));
         dailyTextView.setText(categoryType.getNameResId());
         dailyTextView.setCompoundDrawablesWithIntrinsicBounds(0, categoryType.getImageResId(), 0, 0);
-        dailyTextView.setDrawableVectorTint(R.color.default_background_c454545);
+        dailyTextView.setCompoundDrawablePadding(Util.dpToPx(mContext, 2d));
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
@@ -146,7 +146,7 @@ public class HomeCategoryLayout extends RelativeLayout
 
         //        if (isSingleLine == true)
         //        {
-        dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 15));
+        dailyTextView.setPadding(0, Util.dpToPx(context, 16), 0, Util.dpToPx(context, 17));
         //        } else
         //        {
         //            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 2));
