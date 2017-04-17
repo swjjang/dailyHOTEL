@@ -125,6 +125,11 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
         public void setTag(String tag)
         {
+            if (DailyTextUtils.isTextEmpty(tag) == true)
+            {
+                return;
+            }
+
             mTag = tag;
 
             synchronized (mObject)
