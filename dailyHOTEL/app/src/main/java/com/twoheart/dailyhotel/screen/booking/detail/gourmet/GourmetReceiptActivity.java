@@ -41,7 +41,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         // 영수증
         mReservationIndex = jsonObject.getString("gourmetReservationIdx");
 
-        if (Constants.DEBUG == false && Util.isTextEmpty(mReservationIndex) == true)
+        if (Constants.DEBUG == false && com.daily.base.util.TextUtils.isTextEmpty(mReservationIndex) == true)
         {
             Crashlytics.logException(new NullPointerException("GourmetReceiptActivity : mReservationIndex == null"));
         }
@@ -99,7 +99,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         // 결제수단
         View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
 
-        if (Util.isTextEmpty(paymentType) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(paymentType) == true)
         {
             paymentTypeLayout.setVisibility(View.GONE);
         } else
@@ -115,7 +115,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 총금액
         TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
-        totalPriceTextView.setText(Util.getPriceFormat(this, sellingPrice, false));
+        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, sellingPrice, false));
 
         // 적립금 혹은 쿠폰 사용
         View discountLayout = paymentInfoLayout.findViewById(R.id.discountLayout);
@@ -134,7 +134,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
             discountLayout.setVisibility(View.VISIBLE);
             TextView discountedTextView = (TextView) paymentInfoLayout.findViewById(R.id.discountedTextView);
-            discountedTextView.setText("- " + Util.getPriceFormat(this, bonus + coupon, false));
+            discountedTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(this, bonus + coupon, false));
         } else
         {
             discountLayout.setVisibility(View.GONE);
@@ -158,7 +158,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         // 총 입금 금액
         TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-        totalPaymentTextView.setText(Util.getPriceFormat(this, paymentAmount, false));
+        totalPaymentTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, paymentAmount, false));
 
         // **공급자**
 
@@ -206,7 +206,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             @Override
             public void onClick(View v)
             {
-                if (Util.isTextEmpty(mReservationIndex) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(mReservationIndex) == true)
                 {
                     restartExpiredSession();
                 } else

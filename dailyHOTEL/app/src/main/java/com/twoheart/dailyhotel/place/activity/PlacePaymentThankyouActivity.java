@@ -114,7 +114,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
 
     private void initLayout(String imageUrl, String place, String placeType, String userName)
     {
-        if (Util.isTextEmpty(place, placeType) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(place, placeType) == true)
         {
             Util.restartApp(this);
             return;
@@ -136,7 +136,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         placeTypeTextView.setText(placeType);
 
         String message;
-        if (Util.isTextEmpty(userName) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(userName) == false)
         {
             message = getString(R.string.message_completed_payment_format, userName);
             SpannableStringBuilder userNameBuilder = new SpannableStringBuilder(message);
@@ -182,7 +182,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         message2TextView.setText(message2);
 
         // SpannableString 자체가 null을 허용하지 않
-        if (Util.isTextEmpty(message3) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(message3) == false)
         {
             SpannableString spannableString3 = new SpannableString(message3);
             spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

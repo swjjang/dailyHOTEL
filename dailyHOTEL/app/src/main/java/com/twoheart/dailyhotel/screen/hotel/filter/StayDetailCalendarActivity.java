@@ -183,7 +183,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         String title = getResources().getString(R.string.dialog_notice2);
 
-        if (Util.isTextEmpty(message) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
         {
             message = getResources().getString(R.string.stay_detail_calender_dialog_message);
         }

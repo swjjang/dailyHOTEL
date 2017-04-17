@@ -62,7 +62,7 @@ public class Province implements Parcelable
             isOverseas = false;
         }
 
-        if (Util.isTextEmpty(url) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url) == false)
         {
             imageUrl = url + jsonObject.getString("imagePath");
         } else

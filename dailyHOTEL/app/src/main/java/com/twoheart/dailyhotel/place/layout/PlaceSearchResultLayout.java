@@ -138,7 +138,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void setCalendarText(String date)
     {
-        if (Util.isTextEmpty(date) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(date) == true)
         {
             return;
         }

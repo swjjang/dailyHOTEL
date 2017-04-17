@@ -62,7 +62,7 @@ public class SignupStep2Activity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_PASSWORD, password);
         intent.putExtra(INTENT_EXTRA_DATA_AGREED_BENEFIT_DATE, agreedBenefitDate);
 
-        if (Util.isTextEmpty(recommmender) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommmender) == true)
         {
             recommmender = "";
         }
@@ -189,7 +189,7 @@ public class SignupStep2Activity extends BaseActivity
             updateDate = null;
         }
 
-        if (isBenefit == true && Util.isTextEmpty(updateDate) == false)
+        if (isBenefit == true && com.daily.base.util.TextUtils.isTextEmpty(updateDate) == false)
         {
             messageTextView.setVisibility(View.VISIBLE);
             messageTextView.setText(getString(R.string.message_signup_completed_alarm_on_format, updateDate));
@@ -265,7 +265,7 @@ public class SignupStep2Activity extends BaseActivity
         @Override
         public void doSignUp(String verificationNumber, String phoneNumber)
         {
-            if (Util.isTextEmpty(verificationNumber) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
             {
                 DailyToast.showToast(SignupStep2Activity.this, getString(R.string.message_wrong_certificationnumber), Toast.LENGTH_SHORT);
                 return;
@@ -353,13 +353,13 @@ public class SignupStep2Activity extends BaseActivity
             showCompletedSignupDialog(isBenefit, mAgreedBenefitDate);
 
             // 내가 추천인 코드를 넣고 회원 가입을 하는 경우
-            if (Util.isTextEmpty(mRecommender) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(mRecommender) == false)
             {
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
                     , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.SUCCESS, null);
             }
 
-            if (Util.isTextEmpty(birthday) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
             {
                 // 생일을 입력한 경우 체크
                 AnalyticsManager.getInstance(SignupStep2Activity.this).recordEvent(AnalyticsManager.Category.SET_MY_BIRTHDAY//

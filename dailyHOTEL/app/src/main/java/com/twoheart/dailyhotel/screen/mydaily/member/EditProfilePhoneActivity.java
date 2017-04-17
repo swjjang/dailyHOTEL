@@ -52,7 +52,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         intent.putExtra(INTENT_EXTRA_DATA_USERINDEX, userIndex);
         intent.putExtra(INTENT_EXTRA_DATA_TYPE, type.name());
 
-        if (Util.isTextEmpty(phoneNumber) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == false)
         {
             intent.putExtra(INTENT_EXTRA_DATA_PHONENUMBER, phoneNumber);
         }
@@ -86,7 +86,7 @@ public class EditProfilePhoneActivity extends BaseActivity
             return;
         }
 
-        if (Util.isTextEmpty(mUserIndex) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mUserIndex) == true)
         {
             Util.restartApp(this);
             return;
@@ -168,7 +168,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
 
         // showCertificationLayout() 다음으로 호출 순서가 중요함
-        if (Util.isTextEmpty(phoneNumber) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == false)
         {
             mEditProfilePhoneLayout.setPhoneNumber(phoneNumber.replaceAll("\\(|\\)|-", ""));
         }

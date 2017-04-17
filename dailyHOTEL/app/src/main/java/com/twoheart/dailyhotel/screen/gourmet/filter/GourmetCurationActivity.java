@@ -802,7 +802,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         @Override
         public void onGourmetCount(String url, int totalCount)
         {
-            if (Util.isTextEmpty(url) == true && totalCount == -1)
+            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));

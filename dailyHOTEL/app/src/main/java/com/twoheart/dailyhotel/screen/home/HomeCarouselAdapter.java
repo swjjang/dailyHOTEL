@@ -121,8 +121,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.personView.setText("");
         } else
         {
-            String strPrice = Util.getPriceFormat(mContext, prices.normalPrice, false);
-            String strDiscount = Util.getPriceFormat(mContext, prices.discountPrice, false);
+            String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, prices.normalPrice, false);
+            String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, prices.discountPrice, false);
 
             holder.discountPriceView.setText(strDiscount);
 
@@ -148,7 +148,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (place.placeType == Constants.PlaceType.FNB)
         {
             // grade
-            if (Util.isTextEmpty(place.details.category) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(place.details.category) == true)
             {
                 holder.gradeView.setVisibility(View.GONE);
                 holder.dotView.setVisibility(View.GONE);

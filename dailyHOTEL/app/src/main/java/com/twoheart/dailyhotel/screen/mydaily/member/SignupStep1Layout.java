@@ -329,7 +329,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         // 생일
         String birthday = mBirthdayEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(birthday) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
         {
             Calendar calendar = (Calendar) mBirthdayEditText.getTag();
 

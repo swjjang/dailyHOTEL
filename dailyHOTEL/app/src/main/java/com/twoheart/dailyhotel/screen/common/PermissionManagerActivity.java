@@ -495,7 +495,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
     {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return spannableStringBuilder;
         }

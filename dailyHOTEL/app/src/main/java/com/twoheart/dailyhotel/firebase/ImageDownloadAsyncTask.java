@@ -39,7 +39,7 @@ public class ImageDownloadAsyncTask extends AsyncTask<String, Void, Boolean>
     {
         String url = params[0];
 
-        if (Util.isTextEmpty(url, mVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url, mVersion) == true)
         {
             return false;
         }

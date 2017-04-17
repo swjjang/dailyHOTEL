@@ -248,8 +248,8 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             String userName = DailyUserPreference.getInstance(mContext).getName();
             String userEmail = DailyUserPreference.getInstance(mContext).getEmail();
 
-            boolean isEmptyName = Util.isTextEmpty(userName) == true;
-            boolean isEmptyEmail = Util.isTextEmpty(userEmail) == true;
+            boolean isEmptyName = com.daily.base.util.TextUtils.isTextEmpty(userName) == true;
+            boolean isEmptyEmail = com.daily.base.util.TextUtils.isTextEmpty(userEmail) == true;
 
             if (isEmptyName == true && isEmptyEmail == true)
             {
@@ -373,7 +373,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
     public void updatePushText(String message)
     {
-        if (Util.isTextEmpty(message))
+        if (com.daily.base.util.TextUtils.isTextEmpty(message))
         {
             message = mContext.getResources().getString(R.string.frag_push_alert_subtext);
         }

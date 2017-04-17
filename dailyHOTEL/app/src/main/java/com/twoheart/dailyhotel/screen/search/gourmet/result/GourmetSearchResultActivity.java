@@ -395,7 +395,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
     void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
     {
-        if (Util.isTextEmpty(address))
+        if (com.daily.base.util.TextUtils.isTextEmpty(address))
         {
             return;
         }
@@ -416,7 +416,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
             }
 
-            if (Util.isTextEmpty(action) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(action) == false)
             {
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , action, address, params);

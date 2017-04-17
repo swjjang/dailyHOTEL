@@ -128,7 +128,7 @@ public class StaySearchParams extends StayParams
             hashMap.put("limit", limit);
         }
 
-        if (Util.isTextEmpty(term) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(term) == false)
         {
             hashMap.put("term", term);
         }
@@ -144,12 +144,12 @@ public class StaySearchParams extends StayParams
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            if (Util.isTextEmpty(sortProperty) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(sortProperty) == false)
             {
                 hashMap.put("sortProperty", sortProperty);
             }
 
-            if (Util.isTextEmpty(sortDirection) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(sortDirection) == false)
             {
                 hashMap.put("sortDirection", sortDirection);
             }

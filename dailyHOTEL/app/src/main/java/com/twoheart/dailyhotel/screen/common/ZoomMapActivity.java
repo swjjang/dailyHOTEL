@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -189,7 +190,7 @@ public class ZoomMapActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                Util.clipText(ZoomMapActivity.this, address);
+                TextUtils.clipText(ZoomMapActivity.this, address);
 
                 DailyToast.showToast(ZoomMapActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
             }

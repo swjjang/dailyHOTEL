@@ -102,7 +102,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
         Coupon coupon = getItem(position);
 
-        String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
+        String strAmount = com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
         holder.titleTextView.setText(coupon.title);
@@ -111,7 +111,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         {
             String strAmountMinimum = mContext.getResources().getString( //
                 R.string.coupon_min_price_text, //
-                Util.getPriceFormat(mContext, coupon.amountMinimum, false));
+                com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amountMinimum, false));
 
             holder.minPriceTextView.setText(strAmountMinimum);
             holder.minPriceTextView.setVisibility(View.VISIBLE);

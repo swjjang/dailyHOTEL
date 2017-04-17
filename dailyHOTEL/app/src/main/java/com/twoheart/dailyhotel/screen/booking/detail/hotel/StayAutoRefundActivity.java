@@ -614,7 +614,7 @@ public class StayAutoRefundActivity extends BaseActivity
         // 기타로 오는 경우
         if (position == 7)
         {
-            if (Util.isTextEmpty(message) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
             {
                 mCancelReasonMessage = reason;
             } else
@@ -651,7 +651,7 @@ public class StayAutoRefundActivity extends BaseActivity
             String accountNumber = mStayAutoRefundLayout.getAccountNumber();
             String accountName = mStayAutoRefundLayout.getAccountName();
 
-            if (mSelectedBank == null || Util.isTextEmpty(accountNumber, accountName) == true)
+            if (mSelectedBank == null || com.daily.base.util.TextUtils.isTextEmpty(accountNumber, accountName) == true)
             {
                 return false;
             }
@@ -670,7 +670,7 @@ public class StayAutoRefundActivity extends BaseActivity
             // 기타인 경우
             if (mSelectedCancelReason == 7)
             {
-                if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(mCancelReasonMessage) == false)
                 {
                     if (mCancelReasonMessage.indexOf('-') >= 0)
                     {
@@ -735,7 +735,7 @@ public class StayAutoRefundActivity extends BaseActivity
 
                         String cancelMessage = null;
 
-                        if (Util.isTextEmpty(mCancelReasonMessage) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(mCancelReasonMessage) == false)
                         {
                             if (mCancelReasonMessage.indexOf('-') >= 0)
                             {

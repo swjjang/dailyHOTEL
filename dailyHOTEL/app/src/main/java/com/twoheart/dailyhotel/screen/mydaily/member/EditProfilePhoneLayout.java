@@ -212,7 +212,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                 {
                     String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-                    if (Util.isTextEmpty(verificationNumber) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
                     {
                         DailyToast.showToast(mContext, R.string.message_wrong_certificationnumber, Toast.LENGTH_SHORT);
                         return true;
@@ -255,7 +255,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     public void setCountryCode(String countryCode)
     {
-        if (Util.isTextEmpty(countryCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }
@@ -309,7 +309,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
                     {
                         String verificationNumber = mVerificationEditText.getText().toString().trim();
 
-                        if (Util.isTextEmpty(verificationNumber) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(verificationNumber) == true)
                         {
                             DailyToast.showToast(mContext, R.string.message_wrong_certificationnumber, Toast.LENGTH_SHORT);
                             return;
@@ -436,7 +436,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     public void setPhoneNumber(String phoneNumber)
     {
-        if (mPhoneEditText == null || Util.isTextEmpty(phoneNumber) == true)
+        if (mPhoneEditText == null || com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
         {
             return;
         }
@@ -464,7 +464,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }
@@ -479,7 +479,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }

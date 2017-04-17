@@ -151,7 +151,7 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         // D Benefit
-        if (Util.isTextEmpty(stayDetailParams.benefit) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) == false)
         {
             if (mDetailViews[4] == null)
             {
@@ -700,7 +700,7 @@ public class StayDetailListAdapter extends BaseAdapter
             {
                 String contentText = contentsList.get(i);
 
-                if (Util.isTextEmpty(contentText) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
                 {
                     continue;
                 }

@@ -485,7 +485,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         unLockUI();
 
-        if (Util.isTextEmpty(message) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
         {
             onError();
         } else
@@ -562,7 +562,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(getString(R.string.dialog_notice2));
         } else
@@ -579,7 +579,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
 
-        if (Util.isTextEmpty(positive, negative) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
@@ -714,7 +714,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(getString(R.string.dialog_notice2));
         } else
@@ -731,7 +731,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
         View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
 
-        if (Util.isTextEmpty(positive, negative) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
@@ -871,7 +871,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(getString(R.string.dialog_notice2));
         } else
@@ -887,7 +887,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
         View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
 
-        if (Util.isTextEmpty(positive, negative) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(positive, negative) == false)
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
 
@@ -973,7 +973,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                 }
 
                 String remoteConfigPhoneNumber = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
-                String phoneNumber = Util.isTextEmpty(remoteConfigPhoneNumber) == false //
+                String phoneNumber = com.daily.base.util.TextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
                     ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
 
                 String noCallMessage = getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);

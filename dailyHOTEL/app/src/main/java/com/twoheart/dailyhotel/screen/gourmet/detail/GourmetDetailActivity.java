@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
+import com.daily.base.util.TextUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -512,7 +513,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
     private void initTransLayout(String placeName, String imageUrl, boolean isFromMap)
     {
-        if (Util.isTextEmpty(imageUrl) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(imageUrl) == true)
         {
             return;
         }
@@ -570,7 +571,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
 
-            if (Util.isTextEmpty(name) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
             {
                 name = getString(R.string.label_friend) + "가";
             } else
@@ -621,7 +622,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             String name = DailyUserPreference.getInstance(GourmetDetailActivity.this).getName();
 
-            if (Util.isTextEmpty(name) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
             {
                 name = getString(R.string.label_friend) + "가";
             } else
@@ -771,7 +772,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             imageUrl = imageInformationList.get(0).getImageUrl();
         }
 
-        boolean isBenefit = Util.isTextEmpty(gourmetDetailParams.benefit) == false;
+        boolean isBenefit = com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) == false;
 
         Intent intent = GourmetPaymentActivity.newInstance(GourmetDetailActivity.this, gourmetDetailParams.name, gourmetProduct//
             , gourmetBookingDay, imageUrl, gourmetDetailParams.category, gourmetDetail.index, isBenefit //
@@ -1058,7 +1059,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.NAME, gourmetDetailParams.name);
             params.put(AnalyticsManager.KeyType.GRADE, gourmetDetailParams.getGrade().name()); // 14
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
-            params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
+            params.put(AnalyticsManager.KeyType.DBENEFIT, com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
             if (gourmetDetail.getProductList() == null || gourmetDetail.getProductList().size() == 0)
             {
@@ -1089,7 +1090,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mViewPrice));
@@ -1155,7 +1156,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(gourmetProduct.discountPrice));
@@ -1412,7 +1413,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             GourmetDetailParams gourmetDetailParams = ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas();
 
-            Util.clipText(GourmetDetailActivity.this, address);
+            TextUtils.clipText(GourmetDetailActivity.this, address);
 
             DailyToast.showToast(GourmetDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
@@ -1540,7 +1541,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             } else
             {
                 // 입력된 정보가 부족해.
-                if (Util.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(user.getEmail(), user.getPhone(), user.getName()) == true)
                 {
                     moveToAddSocialUserInformation(user, birthday);
                 } else if (Util.isValidatePhoneNumber(user.getPhone()) == false)
@@ -1640,7 +1641,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                             params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                         }
 
-                        params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                        params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                     }
 
                     params.put(AnalyticsManager.KeyType.GRADE, gourmetDetailParams.getGrade().name());
@@ -1652,7 +1653,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                     params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                     params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                    params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
+                    params.put(AnalyticsManager.KeyType.DBENEFIT, com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
                     params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
                     params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
@@ -1671,7 +1672,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonCount(gourmetDetailParams.wishCount);
                 mPlaceDetailLayout.setWishButtonSelected(gourmetDetailParams.myWish);
 
-                if (Util.isTextEmpty(message) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
                 {
                     message = "";
                 }
@@ -1733,7 +1734,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                         params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                     }
 
-                    params.put(AnalyticsManager.KeyType.AREA, Util.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                    params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
                 }
 
                 params.put(AnalyticsManager.KeyType.GRADE, gourmetDetailParams.getGrade().name());
@@ -1745,7 +1746,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
                 params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
                 params.put(AnalyticsManager.KeyType.DAILYCHOICE, mPlaceDetail.isDailyChoice ? "y" : "n");
-                params.put(AnalyticsManager.KeyType.DBENEFIT, Util.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
+                params.put(AnalyticsManager.KeyType.DBENEFIT, com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) ? "no" : "yes");
 
                 params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
                 params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, "1");
@@ -1760,7 +1761,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 mPlaceDetailLayout.setWishButtonCount(gourmetDetailParams.wishCount);
                 mPlaceDetailLayout.setWishButtonSelected(gourmetDetailParams.myWish);
 
-                if (Util.isTextEmpty(message) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
                 {
                     message = "";
                 }

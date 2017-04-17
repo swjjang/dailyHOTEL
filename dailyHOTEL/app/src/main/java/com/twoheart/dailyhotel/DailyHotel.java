@@ -92,7 +92,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         String preferenceVersion = DailyPreference.getInstance( //
             getApplicationContext()).getFirstAppVersion();
 
-        if (Util.isTextEmpty(preferenceVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(preferenceVersion) == true)
         {
             DailyPreference.getInstance(getApplicationContext()).setFirstAppVersion(VERSION_CODE);
         }
@@ -139,7 +139,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
     public static boolean isLogin()
     {
-        return Util.isTextEmpty(AUTHORIZATION) == false;
+        return com.daily.base.util.TextUtils.isTextEmpty(AUTHORIZATION) == false;
     }
 
     public static boolean isSuccessTMapAuth()

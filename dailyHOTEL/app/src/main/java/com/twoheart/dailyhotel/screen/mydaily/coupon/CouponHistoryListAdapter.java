@@ -67,7 +67,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     {
         CouponHistory coupon = getItem(position);
 
-        String strAmount = Util.getPriceFormat(mContext, coupon.amount, false);
+        String strAmount = com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
         holder.descriptionTextView.setText(coupon.title);

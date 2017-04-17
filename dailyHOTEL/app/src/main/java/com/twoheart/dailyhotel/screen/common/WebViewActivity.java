@@ -259,7 +259,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
         private void browseToExternalBrowser(String url)
         {
-            if (Util.isTextEmpty(url) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
             {
                 return;
             }

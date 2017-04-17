@@ -83,7 +83,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
 
         DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             setSelected(false);
             titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -113,7 +113,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
     @Override
     public boolean isChecked()
     {
-        return Util.isTextEmpty(mCommentTextView.getText().toString()) == false;
+        return com.daily.base.util.TextUtils.isTextEmpty(mCommentTextView.getText().toString()) == false;
     }
 
     @Override

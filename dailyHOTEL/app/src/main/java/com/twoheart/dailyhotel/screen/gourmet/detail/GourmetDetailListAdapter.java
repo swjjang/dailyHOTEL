@@ -149,7 +149,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             linearLayout.addView(mDetailViews[3]);
         }
 
-        if (Util.isTextEmpty(gourmetDetailParams.benefit) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) == false)
         {
             // D Benefit
             if (mDetailViews[4] == null)
@@ -222,7 +222,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 등급
         TextView gradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetGradeTextView);
 
-        if (Util.isTextEmpty(gourmetDetailParams.category) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.category) == true)
         {
             gradeTextView.setVisibility(View.GONE);
         } else
@@ -234,7 +234,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 소분류 등급
         TextView subGradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetSubGradeTextView);
 
-        if (Util.isTextEmpty(gourmetDetailParams.categorySub) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.categorySub) == true)
         {
             subGradeTextView.setVisibility(View.GONE);
         } else
@@ -611,7 +611,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             {
                 String contentText = contentsList.get(i);
 
-                if (Util.isTextEmpty(contentText) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
                 {
                     continue;
                 }

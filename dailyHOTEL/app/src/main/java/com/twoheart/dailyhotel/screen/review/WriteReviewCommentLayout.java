@@ -122,7 +122,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
         mEditTextView.setText(text);
 
-        if (Util.isTextEmpty(text) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == false)
         {
             mEditTextView.setSelection(text.length());
         }
@@ -130,7 +130,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     void updateCompleteLayout(String text)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }
@@ -152,7 +152,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     void updateTextCountLayout(String text)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             text = "";
         }

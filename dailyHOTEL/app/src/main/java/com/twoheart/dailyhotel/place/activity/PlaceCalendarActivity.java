@@ -78,7 +78,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         // 휴일 정보를 얻어온다.
         String calendarHolidays = DailyPreference.getInstance(this).getCalendarHolidays();
 
-        if (Util.isTextEmpty(calendarHolidays) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(calendarHolidays) == false)
         {
             String[] holidays = calendarHolidays.split("\\,");
             mHolidays = new int[holidays.length];

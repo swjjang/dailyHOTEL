@@ -74,7 +74,7 @@ public class RecentGourmetParams extends GourmetParams
 
         hashMap.put("reserveDate", date);
 
-        if (Util.isTextEmpty(targetIndices) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(targetIndices) == false)
         {
             hashMap.put("targetIndices", targetIndices);
         }

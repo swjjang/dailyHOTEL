@@ -715,7 +715,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         @Override
         public void onStayCount(String url, int hotelSaleCount)
         {
-            if (Util.isTextEmpty(url) == true && hotelSaleCount == -1)
+            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && hotelSaleCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));

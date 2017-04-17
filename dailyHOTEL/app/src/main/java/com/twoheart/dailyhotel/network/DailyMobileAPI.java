@@ -61,7 +61,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public void cancelAll(Context context, final String tag)
     {
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             return;
         }

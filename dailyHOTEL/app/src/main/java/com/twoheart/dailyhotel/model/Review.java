@@ -204,7 +204,7 @@ public class Review implements Parcelable
         {
             if (requiredCommentReview == true)
             {
-                jsonObject.put("comment", Util.isTextEmpty(comment) == true ? "" : comment);
+                jsonObject.put("comment", com.daily.base.util.TextUtils.isTextEmpty(comment) == true ? "" : comment);
             }
 
             jsonObject.put("itemIdx", reviewItem.itemIdx);

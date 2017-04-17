@@ -386,7 +386,7 @@ public class HomeLayout extends BaseLayout
 
         String data = DailyPreference.getInstance(mContext).getRemoteConfigABTestHomeButton();
 
-        if (Util.isTextEmpty(data) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(data) == true)
         {
             return;
         }
@@ -396,7 +396,7 @@ public class HomeLayout extends BaseLayout
             JSONObject jsonObject = new JSONObject(data);
             String abTestValue = jsonObject.getString("value");
 
-            if (Util.isTextEmpty(abTestValue) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(abTestValue) == true)
             {
                 return;
             }
@@ -751,7 +751,7 @@ public class HomeLayout extends BaseLayout
         String homeEventTitle = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventTitle();
         int homeEventIndex = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventIndex();
 
-        if (Util.isTextEmpty(homeEventCurrentVersion) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(homeEventCurrentVersion) == true)
         {
             return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
                 HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
@@ -777,7 +777,7 @@ public class HomeLayout extends BaseLayout
                     ExLog.d(e.toString());
                 }
 
-                if (Util.isTextEmpty(urlString) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(urlString) == true)
                 {
                     return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
                         HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
@@ -936,7 +936,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        if (Util.isTextEmpty(title) == true && Util.isTextEmpty(description) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(title) == true && com.daily.base.util.TextUtils.isTextEmpty(description) == true)
         {
             if (mTextMessageLayout.getVisibility() != View.GONE)
             {

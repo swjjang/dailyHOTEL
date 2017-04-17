@@ -71,7 +71,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                     remainedDayText = context.getString(R.string.frag_booking_today_type_stay);
                 }
 
-                if (Util.isTextEmpty(remainedDayText) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(remainedDayText) == true)
                 {
                     remainedDayLayout.setVisibility(View.GONE);
                 } else
@@ -245,13 +245,13 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(Util.getPriceFormat(mContext, stayBookingDetail.price, false));
+        priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.price, false));
 
 
         if (stayBookingDetail.bonus > 0)
         {
             bonusLayout.setVisibility(View.VISIBLE);
-            bonusTextView.setText("- " + Util.getPriceFormat(mContext, stayBookingDetail.bonus, false));
+            bonusTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.bonus, false));
         } else
         {
             bonusLayout.setVisibility(View.GONE);
@@ -260,13 +260,13 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         if (stayBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + Util.getPriceFormat(mContext, stayBookingDetail.coupon, false));
+            couponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(Util.getPriceFormat(mContext, stayBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stayBookingDetail.paymentPrice, false));
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);
@@ -304,7 +304,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     {
         TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
 
-        if (Util.isTextEmpty(stayBookingDetail.mRefundComment) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stayBookingDetail.mRefundComment) == false)
         {
             String comment = stayBookingDetail.mRefundComment.replaceAll("900034", "B70038");
             refundPolicyTextView.setText(Html.fromHtml(comment));
@@ -376,7 +376,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             return StayBookingDetail.STATUS_WAIT_REFUND;
         } else
         {
-            if (Util.isTextEmpty(stayBookingDetail.refundPolicy) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(stayBookingDetail.refundPolicy) == false)
             {
                 return stayBookingDetail.refundPolicy;
             } else

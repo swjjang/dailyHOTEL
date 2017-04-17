@@ -62,7 +62,7 @@ public class Crypto
 
     public static String encrypt(String seed, String text) throws Exception
     {
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return null;
         }
@@ -76,7 +76,7 @@ public class Crypto
 
     public static String decrypt(String seed, String encrypted) throws Exception
     {
-        if (Util.isTextEmpty(encrypted) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(encrypted) == true)
         {
             return null;
         }
@@ -145,7 +145,7 @@ public class Crypto
             {
                 String value = urlParameters.get(key);
 
-                if (Util.isTextEmpty(key, value) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(key, value) == false)
                 {
                     int startIndex = decodeUrl.indexOf(key);
                     if (startIndex >= 0)
@@ -291,7 +291,7 @@ public class Crypto
 
     public static String urlDecrypt(String url)
     {
-        if (Util.isTextEmpty(url) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
         {
             return null;
         }

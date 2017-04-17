@@ -111,7 +111,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
         String email = mEmailEditText.getText().toString().trim();
         String message = mMessageEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(email) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
         {
             releaseUiComponent();
 
@@ -123,7 +123,7 @@ public class FeedbackMailActivity extends BaseActivity implements Constants, OnC
 
             DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
             return;
-        } else if (Util.isTextEmpty(message) == true)
+        } else if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
         {
             releaseUiComponent();
 

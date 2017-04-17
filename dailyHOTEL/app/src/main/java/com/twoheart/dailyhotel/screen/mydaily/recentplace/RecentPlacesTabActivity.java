@@ -161,7 +161,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
 
-        if (Util.isTextEmpty(placeTypeName) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeTypeName) == false)
         {
             try
             {

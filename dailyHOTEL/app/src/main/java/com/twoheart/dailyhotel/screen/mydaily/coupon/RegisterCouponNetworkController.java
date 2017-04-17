@@ -26,7 +26,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
     public void requestRegisterCoupon(String couponCode)
     {
 
-        if (Util.isTextEmpty(couponCode))
+        if (com.daily.base.util.TextUtils.isTextEmpty(couponCode))
         {
             mOnNetworkControllerListener.onErrorToastMessage(mContext.getString(R.string.toast_msg_register_coupon_empty_keyword));
             return;

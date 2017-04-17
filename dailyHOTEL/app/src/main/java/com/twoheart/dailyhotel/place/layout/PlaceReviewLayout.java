@@ -553,7 +553,7 @@ public class PlaceReviewLayout extends BaseLayout
             final int MAX_LINE = 10;
             final PlaceReview placeReview = placeViewItem.getItem();
 
-            if (Util.isTextEmpty(placeReview.email) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(placeReview.email) == true)
             {
                 placeReview.email = mContext.getString(R.string.label_customer);
             }

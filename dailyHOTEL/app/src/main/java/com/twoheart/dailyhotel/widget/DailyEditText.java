@@ -122,7 +122,7 @@ public class DailyEditText extends AppCompatEditText
     {
         super.setText(text, type);
 
-        if (mHasDeleteButton == true && text != null && Util.isTextEmpty(text.toString()) == false)
+        if (mHasDeleteButton == true && text != null && com.daily.base.util.TextUtils.isTextEmpty(text.toString()) == false)
         {
             setDeleteDrawable();
         }

@@ -104,7 +104,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         mEmail = mEmailEditText.getText().toString().trim();
 
-        if (Util.isTextEmpty(mEmail) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mEmail) == true)
         {
             releaseUiComponent();
 
@@ -234,7 +234,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
                     if ("true".equalsIgnoreCase(result) == true)
                     {
-                        if (Util.isTextEmpty(mEmail) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(mEmail) == true)
                         {
                             DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
                         } else

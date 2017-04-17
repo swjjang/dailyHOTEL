@@ -125,7 +125,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
         }
 
         String text = mConfirmView.getText().toString();
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return 0;
         }

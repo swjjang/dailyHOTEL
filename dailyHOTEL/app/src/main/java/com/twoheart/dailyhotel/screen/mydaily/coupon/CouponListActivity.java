@@ -60,7 +60,7 @@ public class CouponListActivity extends BaseActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, sortType.name());
         }
 
-        if (Util.isTextEmpty(deepLink) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }

@@ -29,7 +29,7 @@ public class GourmetSearchNetworkController extends PlaceSearchNetworkController
 
     public void requestAutoComplete(GourmetBookingDay gourmetBookingDay, String keyword)
     {
-        if (gourmetBookingDay == null || Util.isTextEmpty(keyword) == true)
+        if (gourmetBookingDay == null || com.daily.base.util.TextUtils.isTextEmpty(keyword) == true)
         {
             return;
         }

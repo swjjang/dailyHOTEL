@@ -193,7 +193,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         @Override
         public void onStayCount(String url, int totalCount, int maxCount)
         {
-            if (Util.isTextEmpty(url) == true && totalCount == -1)
+            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));

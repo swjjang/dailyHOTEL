@@ -124,7 +124,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                     String placeType = externalDeepLink.getPlaceType();
 
-                    if (Util.isTextEmpty(placeType) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(placeType) == true)
                     {
                         sortType = CouponListActivity.SortType.ALL;
                     } else
@@ -306,7 +306,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
         Intent intent;
 
-        if (Util.isTextEmpty(recommenderCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommenderCode) == true)
         {
             intent = SignupStep1Activity.newInstance(baseActivity, null);
         } else
@@ -321,7 +321,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
     {
         String benefitMessage = DailyPreference.getInstance(getContext()).getBenefitAlarmMessage();
 
-        if (Util.isTextEmpty(benefitMessage) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(benefitMessage) == true)
         {
             benefitMessage = getResources().getString(R.string.frag_push_alert_subtext);
             DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(benefitMessage);

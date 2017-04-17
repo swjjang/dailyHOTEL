@@ -287,7 +287,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void setDefaultImage(String url)
     {
-        if (Util.isTextEmpty(url) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
         {
             setLineIndicatorVisible(false);
             return;
@@ -371,7 +371,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
     public void setImageInformation(String description)
     {
-        if (Util.isTextEmpty(description) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(description) == false)
         {
             mDescriptionTextView.setVisibility(View.VISIBLE);
             mDescriptionTextView.setText(description);

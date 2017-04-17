@@ -143,7 +143,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         String text = mPlaceSearchLayout.getSearchKeyWord();
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return;
         }
@@ -262,7 +262,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (Util.isTextEmpty(text) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
             {
                 return;
             }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -53,7 +54,7 @@ public class SignupStep1Activity extends BaseActivity
     {
         Intent intent = new Intent(context, SignupStep1Activity.class);
 
-        if (Util.isTextEmpty(callByScreen) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(callByScreen) == false)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         }
@@ -64,12 +65,12 @@ public class SignupStep1Activity extends BaseActivity
     {
         Intent intent = new Intent(context, SignupStep1Activity.class);
 
-        if (Util.isTextEmpty(recommender) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
         {
             intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommender);
         }
 
-        if (Util.isTextEmpty(callByScreen) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(callByScreen) == false)
         {
             intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
         }
@@ -101,14 +102,14 @@ public class SignupStep1Activity extends BaseActivity
 
         setContentView(mSignupStep1Layout.onCreateView(R.layout.activity_signup_step1));
 
-        if (Util.isTextEmpty(recommender) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
         {
             mSignupStep1Layout.setRecommenderText(recommender);
         }
 
         String signUpText = DailyPreference.getInstance(this).getRemoteConfigTextSignUpText01();
 
-        if (Util.isTextEmpty(signUpText) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(signUpText) == false)
         {
             mSignupStep1Layout.signUpBalloonsTextView(signUpText);
         }
@@ -183,7 +184,7 @@ public class SignupStep1Activity extends BaseActivity
         @Override
         public void onValidation(final String email, final String name, final String password, final String confirmPassword, final String recommender, final String birthday, final boolean isBenefit)
         {
-            if (Util.isTextEmpty(email, name, password, confirmPassword) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(email, name, password, confirmPassword) == true)
             {
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
                 return;
@@ -212,7 +213,7 @@ public class SignupStep1Activity extends BaseActivity
                 return;
             }
 
-            if (Util.verifyPassword(email, password) == false)
+            if (TextUtils.verifyPassword(email, password) == false)
             {
                 mSignupStep1Layout.requestPasswordFocus();
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);
@@ -247,7 +248,7 @@ public class SignupStep1Activity extends BaseActivity
             mSignupParams.put("pw", password);
             mSignupParams.put("name", name);
 
-            if (Util.isTextEmpty(recommender) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
             {
                 mSignupParams.put("recommender", recommender);
 
@@ -255,7 +256,7 @@ public class SignupStep1Activity extends BaseActivity
                     , AnalyticsManager.Action.REFERRAL_CODE, AnalyticsManager.Label.TRY, null);
             }
 
-            if (Util.isTextEmpty(birthday) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
             {
                 mSignupParams.put("birthday", birthday);
             }

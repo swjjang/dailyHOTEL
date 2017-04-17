@@ -69,7 +69,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     {
         Intent intent = new Intent(context, GourmetMainActivity.class);
 
-        if (Util.isTextEmpty(deepLink) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
@@ -805,7 +805,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             // 마지막으로 선택한 지역을 가져온다.
             String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
 
-            if (Util.isTextEmpty(regionName) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(regionName) == true)
             {
                 selectedProvince = provinceList.get(0);
             }
@@ -1106,7 +1106,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (Util.isTextEmpty(date) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1213,7 +1213,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (Util.isTextEmpty(date) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1270,7 +1270,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (Util.isTextEmpty(date) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1300,7 +1300,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     }
 
                     default:
-                        if (Util.isTextEmpty(word) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
                         {
                             Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
                             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -1381,7 +1381,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (Util.isTextEmpty(date) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));

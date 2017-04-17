@@ -136,7 +136,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         String text = mPlaceSearchLayout.getSearchKeyWord();
 
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return;
         }
@@ -242,7 +242,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (Util.isTextEmpty(text) == true || mGourmetBookingDay == null)
+            if (com.daily.base.util.TextUtils.isTextEmpty(text) == true || mGourmetBookingDay == null)
             {
                 return;
             }

@@ -307,7 +307,7 @@ public class BookingListAdapter extends ArrayAdapter<Booking> implements PinnedS
                         text = null;
                     }
 
-                    if (Util.isTextEmpty(text) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
                     {
                         waitAccountTextView.setVisibility(View.GONE);
                     } else

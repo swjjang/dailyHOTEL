@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.util.Util;
@@ -135,12 +136,12 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         if (mViewPriceType == StayDetailLayout.VIEW_TOTAL_PRICE)
         {
-            price = Util.getPriceFormat(mContext, stayProduct.price * mNights, false);
-            discountPrice = Util.getPriceFormat(mContext, stayProduct.totalDiscount, false);
+            price = com.daily.base.util.TextUtils.getPriceFormat(mContext, stayProduct.price * mNights, false);
+            discountPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, stayProduct.totalDiscount, false);
         } else
         {
-            price = Util.getPriceFormat(mContext, stayProduct.price, false);
-            discountPrice = Util.getPriceFormat(mContext, stayProduct.averageDiscount, false);
+            price = com.daily.base.util.TextUtils.getPriceFormat(mContext, stayProduct.price, false);
+            discountPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, stayProduct.averageDiscount, false);
         }
 
         if (stayProduct.price <= 0 || stayProduct.price <= stayProduct.averageDiscount)
@@ -155,7 +156,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
 
         saleRoomInformationViewHolder.discountPriceTextView.setText(discountPrice);
 
-        if (Util.isTextEmpty(stayProduct.option) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stayProduct.option) == true)
         {
             saleRoomInformationViewHolder.optionTextView.setVisibility(View.GONE);
             isMaxLine = false;
@@ -165,7 +166,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.optionTextView.setText(stayProduct.option);
         }
 
-        if (Util.isTextEmpty(stayProduct.amenities) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stayProduct.amenities) == true)
         {
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.GONE);
             isMaxLine = false;
@@ -174,7 +175,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             saleRoomInformationViewHolder.amenitiesTextView.setVisibility(View.VISIBLE);
             saleRoomInformationViewHolder.amenitiesTextView.setText(stayProduct.amenities);
 
-            float width = Util.getTextWidth(mContext, stayProduct.amenities //
+            float width = TextUtils.getTextWidth(mContext, stayProduct.amenities //
                 , saleRoomInformationViewHolder.amenitiesTextView.getTextSize() //
                 , saleRoomInformationViewHolder.amenitiesTextView.getTypeface());
 
@@ -188,7 +189,7 @@ public class StayDetailRoomTypeListAdapter extends RecyclerView.Adapter<Recycler
             }
         }
 
-        if (Util.isTextEmpty(stayProduct.roomBenefit) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stayProduct.roomBenefit) == true)
         {
             saleRoomInformationViewHolder.benefitTextView.setVisibility(View.GONE);
             isMaxLine = false;

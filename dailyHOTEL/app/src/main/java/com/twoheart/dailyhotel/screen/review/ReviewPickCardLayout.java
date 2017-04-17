@@ -87,7 +87,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             TextView gridItemDescriptionTextView = (TextView) pickItemView.findViewById(R.id.descriptionTextView);
 
             // 빈상자인 경우
-            if (Util.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
             {
                 gridItemTitleTextView.setVisibility(View.GONE);
                 gridItemDescriptionTextView.setVisibility(View.GONE);
@@ -122,7 +122,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
             pickItemView.setLayoutParams(gridLayoutParams);
 
-            if (Util.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == false)
             {
                 pickItemView.setOnClickListener(this);
             }

@@ -77,7 +77,7 @@ public class RecentStayParams extends StayParams
         hashMap.put("dateCheckIn", dateCheckIn);
         hashMap.put("stays", stays);
 
-        if (Util.isTextEmpty(targetIndices) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(targetIndices) == false)
         {
             hashMap.put("targetIndices", targetIndices);
         }

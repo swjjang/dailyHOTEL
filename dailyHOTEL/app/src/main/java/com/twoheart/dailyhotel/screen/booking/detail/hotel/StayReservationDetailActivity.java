@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.model.Review;
@@ -151,7 +152,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             }
         });
 
-        if (Util.isTextEmpty(mPlaceBookingDetail.phone1) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mPlaceBookingDetail.phone1) == false)
         {
             DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
             contactUs02TextView.setText(R.string.label_hotel_front_phone);
@@ -187,7 +188,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
         int time = calendar.get(Calendar.HOUR_OF_DAY) * 100 + calendar.get(Calendar.MINUTE);
 
-        if (Util.isTextEmpty(mPlaceBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
+        if (com.daily.base.util.TextUtils.isTextEmpty(mPlaceBookingDetail.phone2) == false && (time >= 900 && time <= 2000))
         {
             contactUs03Layout.setVisibility(View.VISIBLE);
 
@@ -347,7 +348,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                     String message = getString(R.string.message_booking_stay_share_kakao, //
                         stayBookingDetail.userName, stayBookingDetail.placeName, stayBookingDetail.guestName,//
-                        Util.getPriceFormat(StayReservationDetailActivity.this, stayBookingDetail.paymentPrice, false), //
+                        com.daily.base.util.TextUtils.getPriceFormat(StayReservationDetailActivity.this, stayBookingDetail.paymentPrice, false), //
                         stayBookingDetail.roomName, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
                         DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                         stayBookingDetail.address);
@@ -401,7 +402,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                     String message = getString(R.string.message_booking_stay_share_sms, //
                         stayBookingDetail.userName, stayBookingDetail.placeName, stayBookingDetail.guestName,//
-                        Util.getPriceFormat(StayReservationDetailActivity.this, stayBookingDetail.paymentPrice, false), //
+                        com.daily.base.util.TextUtils.getPriceFormat(StayReservationDetailActivity.this, stayBookingDetail.paymentPrice, false), //
                         stayBookingDetail.roomName, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
                         DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
                         stayBookingDetail.address);
@@ -735,7 +736,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             return StayBookingDetail.STATUS_WAIT_REFUND;
         } else
         {
-            if (Util.isTextEmpty(bookingDetail.refundPolicy) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(bookingDetail.refundPolicy) == false)
             {
                 return bookingDetail.refundPolicy;
             } else
@@ -916,7 +917,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         @Override
         public void onClipAddressClick()
         {
-            Util.clipText(StayReservationDetailActivity.this, mPlaceBookingDetail.address);
+            TextUtils.clipText(StayReservationDetailActivity.this, mPlaceBookingDetail.address);
 
             DailyToast.showToast(StayReservationDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
         }
@@ -992,7 +993,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
 
                 // Analytics
-                if (Util.isTextEmpty(refundPolicy) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(refundPolicy) == false)
                 {
                     switch (refundPolicy)
                     {

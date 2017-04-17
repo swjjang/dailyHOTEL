@@ -133,7 +133,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         {
             case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
             {
-                if (Util.isTextEmpty(mDate) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
                 {
                     Util.restartApp(this);
                     return;
@@ -145,7 +145,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
             case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
             {
-                if (Util.isTextEmpty(mDate) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
                 {
                     Util.restartApp(this);
                     return;
@@ -321,7 +321,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             {
                 case AnalyticsManager.Screen.DAILYGOURMET_PAYMENT:
                 {
-                    if (Util.isTextEmpty(mDate) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
                     {
                         Util.restartApp(SelectGourmetCouponDialogActivity.this);
                         return;
@@ -333,7 +333,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
                 case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
                 {
-                    if (Util.isTextEmpty(mDate) == true)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(mDate) == true)
                     {
                         Util.restartApp(SelectGourmetCouponDialogActivity.this);
                         return;

@@ -219,12 +219,12 @@ public class StayParams extends PlaceParams
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            if (Util.isTextEmpty(sortProperty) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(sortProperty) == false)
             {
                 hashMap.put("sortProperty", sortProperty);
             }
 
-            if (Util.isTextEmpty(sortDirection) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(sortDirection) == false)
             {
                 hashMap.put("sortDirection", sortDirection);
             }

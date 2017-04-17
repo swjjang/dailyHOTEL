@@ -241,7 +241,7 @@ public class DailyMobileAPITest
     @Ignore
     public void requestDailyUserLoginBySetUp() throws Exception
     {
-        if (Util.isTextEmpty(mAuthorization) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mAuthorization) == false)
         {
             return;
         }
@@ -1090,14 +1090,14 @@ public class DailyMobileAPITest
 
         // 전화번호 일단 패스
         String phoneNumber = "";
-        if (Util.isTextEmpty(phoneNumber) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == false)
         {
             params.put("user_phone", phoneNumber.replaceAll("-", ""));
         }
 
         // 추천도 일단 패스
         String recommender = "";
-        if (Util.isTextEmpty(recommender) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
         {
             params.put("recommendation_code", recommender);
         }
@@ -1165,7 +1165,7 @@ public class DailyMobileAPITest
                     {
                         String checkNum = Crypto.getUrlDecoderEx(Const.TEST_SKIP_DELETE_CREDITCARD_NUMBER);
 
-                        boolean isNeedCheck = Util.isTextEmpty(checkNum) == false ? true : false;
+                        boolean isNeedCheck = com.daily.base.util.TextUtils.isTextEmpty(checkNum) == false ? true : false;
                         if (isNeedCheck == false)
                         {
                             CreditCard creditCard = creditCardArrayList.get(creditCardArrayList.size() - 1);
@@ -1414,12 +1414,12 @@ public class DailyMobileAPITest
         // sort skip
         //  if (Constants.SortType.DEFAULT != mSort)
         //  {
-        //if (Util.isTextEmpty(sortProperty) == false)
+        //if (com.daily.base.util.TextUtils.isTextEmpty(sortProperty) == false)
         //{
         // queryMap.put("sortProperty", sortProperty);
         //}
         //
-        //if (Util.isTextEmpty(sortDirection) == false)
+        //if (com.daily.base.util.TextUtils.isTextEmpty(sortDirection) == false)
         //{
         // queryMap.put("sortDirection", sortDirection);
         //}
@@ -1744,7 +1744,7 @@ public class DailyMobileAPITest
                 }
 
                 // benefit
-                if (Util.isTextEmpty(stayDetailParams.benefit) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) == false)
                 {
                     assertThat(stayDetailParams.benefit, isNotEmpty());
                     assertThat(stayDetailParams.getBenefitList(), allOf(notNullValue(), instanceOf(List.class)));
@@ -1754,7 +1754,7 @@ public class DailyMobileAPITest
                         assertThat(text, isNotEmpty());
                     }
 
-                    if (Util.isTextEmpty(stayDetailParams.benefitWarning) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefitWarning) == false)
                     {
                         assertThat(stayDetailParams.benefitWarning, isNotEmpty());
                     }
@@ -2570,12 +2570,12 @@ public class DailyMobileAPITest
         //skip sort
         //  if (Constants.SortType.DEFAULT != mSort)
         //  {
-        //if (Util.isTextEmpty(sortProperty) == false)
+        //if (com.daily.base.util.TextUtils.isTextEmpty(sortProperty) == false)
         //{
         // hashMap.put("sortProperty", sortProperty);
         //}
         //
-        //if (Util.isTextEmpty(sortDirection) == false)
+        //if (com.daily.base.util.TextUtils.isTextEmpty(sortDirection) == false)
         //{
         // hashMap.put("sortDirection", sortDirection);
         //}
@@ -3432,17 +3432,17 @@ public class DailyMobileAPITest
         String viewedCouponTime = DailyPreference.getInstance(mContext).getViewedCouponTime();
         String viewedNoticeTime = DailyPreference.getInstance(mContext).getViewedNoticeTime();
 
-        if (Util.isTextEmpty(viewedEventTime) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(viewedEventTime) == true)
         {
             viewedEventTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
         }
 
-        if (Util.isTextEmpty(viewedCouponTime) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(viewedCouponTime) == true)
         {
             viewedCouponTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
         }
 
-        if (Util.isTextEmpty(viewedNoticeTime) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(viewedNoticeTime) == true)
         {
             viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
         }
@@ -3643,7 +3643,7 @@ public class DailyMobileAPITest
     @Ignore
     public void requestDailyUserUpdatePhoneNumber(String phoneNumber, String code) throws Exception
     {
-        if (Util.isTextEmpty(phoneNumber, code) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber, code) == false)
         {
             try
             {
@@ -3771,7 +3771,7 @@ public class DailyMobileAPITest
         signUpParams.put("name", Const.TEST_USER_NAME);
 
         // recommender skip!
-        //        if (Util.isTextEmpty(recommender) == false)
+        //        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
         //        {
         //            signUpParams.put("recommender", recommender);
         //        }
@@ -4330,7 +4330,7 @@ public class DailyMobileAPITest
     @Ignore
     public void requestDownloadCoupon(String userCouponCode) throws Exception
     {
-        if (Util.isTextEmpty(userCouponCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(userCouponCode) == true)
         {
             assertThat("userCouponCode is null", false);
             return;
@@ -5470,7 +5470,7 @@ public class DailyMobileAPITest
                                 assertThat(dataJSONObject.getBoolean("readyForRefund"), is(true));
                             }
 
-                            if (Util.isTextEmpty(message) == true)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
                             {
                                 message = responseJSONObject.getString("msg");
                                 assertThat(message, isNotEmpty());
@@ -5865,7 +5865,7 @@ public class DailyMobileAPITest
         mLock = new CountDownLatch(1);
 
         JSONObject stayJsonObject = new JSONObject();
-        stayJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+        stayJsonObject.put("comment", com.daily.base.util.TextUtils.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
 
         stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
         stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
@@ -5888,7 +5888,7 @@ public class DailyMobileAPITest
         mLock = new CountDownLatch(1);
 
         JSONObject gourmetJsonObject = new JSONObject();
-        gourmetJsonObject.put("comment", Util.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+        gourmetJsonObject.put("comment", com.daily.base.util.TextUtils.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
 
         gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
         gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);

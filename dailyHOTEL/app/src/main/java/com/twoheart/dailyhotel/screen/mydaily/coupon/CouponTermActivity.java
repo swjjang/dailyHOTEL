@@ -44,7 +44,7 @@ public class CouponTermActivity extends WebViewActivity
     public static Intent newInstance(Context context, String couponIdx)
     {
         Intent intent = new Intent(context, CouponTermActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_COUPON_IDX, Util.isTextEmpty(couponIdx) ? "" : couponIdx);
+        intent.putExtra(INTENT_EXTRA_DATA_COUPON_IDX, com.daily.base.util.TextUtils.isTextEmpty(couponIdx) ? "" : couponIdx);
         return intent;
     }
 
@@ -68,7 +68,7 @@ public class CouponTermActivity extends WebViewActivity
             mCouponIdx = intent.getStringExtra(INTENT_EXTRA_DATA_COUPON_IDX);
         }
 
-        if (Util.isTextEmpty(mCouponIdx) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mCouponIdx) == true)
         {
             setWebView(Crypto.getUrlDecoderEx(URL_WEB_COMMON_COUPON_TERMS));
         } else
@@ -91,7 +91,7 @@ public class CouponTermActivity extends WebViewActivity
     {
         int titleString;
 
-        if (Util.isTextEmpty(mCouponIdx) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mCouponIdx) == false)
         {
             titleString = R.string.coupon_notice_text;
         } else
@@ -157,7 +157,7 @@ public class CouponTermActivity extends WebViewActivity
     {
         super.onStart();
 
-        if (Util.isTextEmpty(mCouponIdx) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mCouponIdx) == true)
         {
             AnalyticsManager.getInstance(CouponTermActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_COUPON_GENERAL_TERMS_OF_USE, null);
         } else

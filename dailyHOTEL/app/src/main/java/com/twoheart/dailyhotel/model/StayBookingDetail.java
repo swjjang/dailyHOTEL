@@ -135,7 +135,7 @@ public class StayBookingDetail extends PlaceBookingDetail
         {
             String guestTransportation = jsonObject.getString("guestTransportation");
 
-            if (Util.isTextEmpty(guestTransportation) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(guestTransportation) == true)
             {
                 visitType = VISIT_TYPE_NONE;
             } else

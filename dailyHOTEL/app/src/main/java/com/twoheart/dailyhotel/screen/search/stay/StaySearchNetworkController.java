@@ -24,7 +24,7 @@ public class StaySearchNetworkController extends PlaceSearchNetworkController
 
     public void requestAutoComplete(StayBookingDay stayBookingDay, String keyword)
     {
-        if (stayBookingDay == null || Util.isTextEmpty(keyword) == true)
+        if (stayBookingDay == null || com.daily.base.util.TextUtils.isTextEmpty(keyword) == true)
         {
             return;
         }

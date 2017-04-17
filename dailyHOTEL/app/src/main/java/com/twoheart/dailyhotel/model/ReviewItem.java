@@ -57,7 +57,7 @@ public class ReviewItem implements Parcelable
 
         String serviceType = jsonObject.getString("serviceType");
 
-        if (Util.isTextEmpty(serviceType) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(serviceType) == false)
         {
             if ("HOTEL".equalsIgnoreCase(serviceType) == true)
             {

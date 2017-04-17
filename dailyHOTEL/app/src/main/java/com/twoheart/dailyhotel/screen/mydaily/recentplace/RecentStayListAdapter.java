@@ -100,8 +100,8 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     {
         final Stay stay = placeViewItem.getItem();
 
-        String strPrice = Util.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, stay.discountPrice, false);
+        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.price, false);
+        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.discountPrice, false);
 
         String address = stay.addressSummary;
 
@@ -173,7 +173,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(stay.dBenefitText) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(stay.dBenefitText);

@@ -392,7 +392,7 @@ public abstract class PlaceReservationDetailLayout extends BaseLayout implements
 
     public void updateReviewButtonLayout(String reviewStatus)
     {
-        if (Util.isTextEmpty(reviewStatus) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(reviewStatus) == true)
         {
             reviewStatus = PlaceBookingDetail.ReviewStatusType.NONE;
         }

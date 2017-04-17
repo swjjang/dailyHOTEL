@@ -440,7 +440,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
         , PlacePaymentInformation.PaymentType paymentType//
         , String visitTime, ArrayList<Booking> bookingArrayList)
     {
-        if (Util.isTextEmpty(placeName, visitTime) == true//
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, visitTime) == true//
             || bookingArrayList == null || bookingArrayList.size() == 0 || paymentType == null)
         {
             DailyPreference.getInstance(context).clearPaymentInformation();
@@ -496,7 +496,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
         , String checkInTime, String checkOutTime//
         , ArrayList<Booking> bookingArrayList)
     {
-        if (Util.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
+        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true//
             || bookingArrayList == null || bookingArrayList.size() == 0 || paymentType == null)
         {
             DailyPreference.getInstance(context).clearPaymentInformation();
@@ -817,7 +817,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
                     {
                         String msg = responseJSONObject.getString("msg");
 
-                        if (Util.isTextEmpty(msg) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(msg) == false)
                         {
                             DailyToast.showToast(baseActivity, msg, Toast.LENGTH_SHORT);
                         } else
@@ -1086,7 +1086,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
                         {
                             message = responseJSONObject.getString("msg");
 
-                            if (Util.isTextEmpty(message) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == false)
                             {
                                 DailyToast.showToast(baseActivity, message, Toast.LENGTH_SHORT);
                             }
@@ -1100,7 +1100,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements C
                         {
                             message = responseJSONObject.getString("msg");
 
-                            if (Util.isTextEmpty(message) == false)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == false)
                             {
                                 unLockUI();
 

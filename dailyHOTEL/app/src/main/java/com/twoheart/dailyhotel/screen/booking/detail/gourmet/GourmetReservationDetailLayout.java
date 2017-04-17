@@ -57,7 +57,7 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
                 remainedDayText = context.getString(R.string.frag_booking_today_type_gourmet);
             }
 
-            if (Util.isTextEmpty(remainedDayText) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(remainedDayText) == true)
             {
                 remainedDayLayout.setVisibility(View.GONE);
             } else
@@ -160,18 +160,18 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(Util.getPriceFormat(mContext, gourmetBookingDetail.price, false));
+        priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetBookingDetail.price, false));
 
         if (gourmetBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + Util.getPriceFormat(mContext, gourmetBookingDetail.coupon, false));
+            couponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(Util.getPriceFormat(mContext, gourmetBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetBookingDetail.paymentPrice, false));
 
         // 영수증 발급
         View confirmView = view.findViewById(R.id.buttonLayout);

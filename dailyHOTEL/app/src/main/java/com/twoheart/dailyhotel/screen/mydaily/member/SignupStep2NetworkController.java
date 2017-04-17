@@ -212,7 +212,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                             }
                         }
 
-                        if (Util.isTextEmpty(message) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
                         {
                             message = mContext.getString(R.string.toast_msg_failed_to_signup);
                         }
@@ -316,7 +316,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
 
                                 boolean isAgreedBenefit = userJSONObject.getBoolean("isAgreedBenefit");
 
-                                if (Util.isTextEmpty(userIndex) == true || Util.isTextEmpty(name) == true)
+                                if (com.daily.base.util.TextUtils.isTextEmpty(userIndex) == true || com.daily.base.util.TextUtils.isTextEmpty(name) == true)
                                 {
                                     if (Constants.DEBUG == true)
                                     {
@@ -336,7 +336,7 @@ public class SignupStep2NetworkController extends BaseNetworkController
                         // 로그인이 실패한 경우
                         String message = responseJSONObject.getString("msg");
 
-                        if (Util.isTextEmpty(message) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
                         {
                             message = mContext.getString(R.string.toast_msg_failed_to_login);
                         }

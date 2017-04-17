@@ -141,8 +141,8 @@ public class CollectionStayAdapter extends PlaceListAdapter
     {
         final RecommendationStay recommendationStay = placeViewItem.getItem();
 
-        String strPrice = Util.getPriceFormat(mContext, recommendationStay.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, recommendationStay.discount, false);
+        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationStay.price, false);
+        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationStay.discount, false);
 
         String address = recommendationStay.addrSummary;
 
@@ -220,7 +220,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(recommendationStay.benefit) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommendationStay.benefit) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(recommendationStay.benefit);

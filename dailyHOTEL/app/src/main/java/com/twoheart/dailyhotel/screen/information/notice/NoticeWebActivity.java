@@ -44,7 +44,7 @@ public class NoticeWebActivity extends WebViewActivity
         String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
         String url = intent.getStringExtra(INTENT_EXTRA_DATA_URL);
 
-        if (Util.isTextEmpty(url) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
         {
             finish();
             return;

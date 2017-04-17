@@ -314,7 +314,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         break;
                 }
 
-                if (Util.isTextEmpty(msg) == false)
+                if (com.daily.base.util.TextUtils.isTextEmpty(msg) == false)
                 {
                     String title = getString(R.string.dialog_notice2);
                     String positive = getString(R.string.dialog_btn_text_confirm);
@@ -754,7 +754,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                             String selectedSimpleCard = Crypto.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
 
-                            if (Util.isTextEmpty(selectedSimpleCard) == true)
+                            if (com.daily.base.util.TextUtils.isTextEmpty(selectedSimpleCard) == true)
                             {
                                 jsonObject = dataJSONArray.getJSONObject(0);
                             } else

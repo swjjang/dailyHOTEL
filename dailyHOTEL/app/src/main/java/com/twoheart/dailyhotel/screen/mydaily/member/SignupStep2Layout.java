@@ -213,7 +213,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     public void setCountryCode(String countryCode)
     {
-        if (Util.isTextEmpty(countryCode) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }
@@ -357,7 +357,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }
@@ -372,7 +372,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (Util.isTextEmpty(tag) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }

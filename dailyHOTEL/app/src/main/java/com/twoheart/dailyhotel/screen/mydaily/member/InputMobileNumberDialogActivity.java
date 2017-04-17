@@ -109,7 +109,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
     {
         String[] countryMobile = null;
 
-        if (Util.isTextEmpty(number) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(number) == false)
         {
             number = number.replace("-", "");
 
@@ -167,7 +167,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
             mobileEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         }
 
-        if (Util.isTextEmpty(mobileNumber) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mobileNumber) == false)
         {
             mobileNumber = mobileNumber.replaceAll("\\(|\\)|-|\\s", "");
         }

@@ -205,13 +205,13 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(Util.getPriceFormat(context, stayBookingDetail.price, false));
+        priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.price, false));
 
 
         if (stayBookingDetail.bonus > 0)
         {
             bonusLayout.setVisibility(View.VISIBLE);
-            bonusTextView.setText("- " + Util.getPriceFormat(context, stayBookingDetail.bonus, false));
+            bonusTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.bonus, false));
         } else
         {
             bonusLayout.setVisibility(View.GONE);
@@ -220,13 +220,13 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         if (stayBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + Util.getPriceFormat(context, stayBookingDetail.coupon, false));
+            couponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(Util.getPriceFormat(context, stayBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.paymentPrice, false));
     }
 
     @Override

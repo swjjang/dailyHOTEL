@@ -49,7 +49,7 @@ public class LauncherActivity extends Activity
         Util.initializeMemory();
 
         // 개인 정보 방침에 따른 개인 정보 암호화.
-        if (Util.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
         {
             DailyUserPreference.getInstance(this).requestMigration(this);
             DailyPreference.getInstance(this).clearUserInformation();
@@ -81,7 +81,7 @@ public class LauncherActivity extends Activity
                     {
                         String baseURL = externalDeepLink.getBaseUrl();
 
-                        if (Util.isTextEmpty(baseURL) == false)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(baseURL) == false)
                         {
                             logOut();
                             DailyPreference.getInstance(this).setBaseUrl(baseURL);

@@ -117,7 +117,7 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestEventNCouponNNoticeNewCount(String lastEventTime, String lastCouponTime, String lastNoticeTime)
     {
-        if (Util.isTextEmpty(lastEventTime, lastCouponTime, lastNoticeTime) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(lastEventTime, lastCouponTime, lastNoticeTime) == true)
         {
             return;
         }
@@ -398,7 +398,7 @@ public class MainNetworkController extends BaseNetworkController
                         final String userType = dataJSONObject.has("userType") == true ? dataJSONObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
                         AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
 
-                        if (Util.isTextEmpty(userIndex) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(userIndex) == true)
                         {
                             if (Constants.DEBUG == true)
                             {

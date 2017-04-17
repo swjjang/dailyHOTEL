@@ -92,7 +92,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
         mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 
-        if (Util.isTextEmpty(name) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
         {
             mNameEditText.setText(null);
         } else
@@ -148,7 +148,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
         mConfirmView = findViewById(R.id.confirmView);
 
-        if (Util.isTextEmpty(name) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
         {
             mConfirmView.setEnabled(false);
         } else
@@ -175,7 +175,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
             case R.id.confirmView:
                 String name = mNameEditText.getText().toString();
 
-                if (Util.isTextEmpty(name) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
                 {
                     DailyToast.showToast(EditProfileNameActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
                     return;
@@ -200,7 +200,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
                     if (DEBUG == false)
                     {
-                        if (Util.isTextEmpty(name) == true)
+                        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
                         {
                             Crashlytics.log("EditProfileNameActivity :: requestUserUpdateInformationForSocial :: name="//
                                 + name + " , userIndex=" + mUserIndex);

@@ -95,7 +95,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
         View view;
         String[] countryCode = getItem(position);
 
-        if (Util.isTextEmpty(countryCode[1]) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode[1]) == true)
         {
             if (convertView == null || convertView.getTag().equals(R.layout.list_row_countrycode_section) == false)
             {
@@ -153,7 +153,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
     @Override
     public int getItemViewType(int position)
     {
-        if (Util.isTextEmpty(getItem(position)[1]) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(getItem(position)[1]) == true)
         {
             return TYPE_SECTION;
         } else

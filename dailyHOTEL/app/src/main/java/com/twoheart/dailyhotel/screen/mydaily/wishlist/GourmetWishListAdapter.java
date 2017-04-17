@@ -86,8 +86,8 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
     {
         final Gourmet gourmet = placeViewItem.getItem();
 
-        String strPrice = Util.getPriceFormat(mContext, gourmet.price, false);
-        String strDiscount = Util.getPriceFormat(mContext, gourmet.discountPrice, false);
+        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.price, false);
+        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmet.discountPrice, false);
 
         String address = gourmet.addressSummary;
 
@@ -148,7 +148,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         }
 
         String displayCategory;
-        if (Util.isTextEmpty(gourmet.subCategory) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.subCategory) == false)
         {
             displayCategory = gourmet.subCategory;
         } else
@@ -157,7 +157,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         }
 
         // grade
-        if (Util.isTextEmpty(displayCategory) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(displayCategory) == true)
         {
             holder.gradeView.setVisibility(View.GONE);
         } else
@@ -177,7 +177,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             holder.soldOutView.setVisibility(View.GONE);
         }
 
-        if (Util.isTextEmpty(gourmet.dBenefitText) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(gourmet.dBenefitText) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(gourmet.dBenefitText);

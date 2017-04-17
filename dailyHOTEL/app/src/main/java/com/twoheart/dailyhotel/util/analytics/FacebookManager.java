@@ -212,7 +212,7 @@ public class FacebookManager extends BaseAnalyticsManager
     @Override
     void recordEvent(String category, String action, String label, Map<String, String> params)
     {
-        if (Util.isTextEmpty(category, action, label) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(category, action, label) == true)
         {
             return;
         }
@@ -268,7 +268,7 @@ public class FacebookManager extends BaseAnalyticsManager
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
-        if (Util.isTextEmpty(index) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(index) == true)
         {
             appEventsLogger.logEvent(EventName.LOGIN, 0);
         } else

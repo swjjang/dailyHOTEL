@@ -375,7 +375,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             View view;
 
-            Uri imageUri = Util.isTextEmpty(getItem(position).getImageUrl()) == true ? null : Uri.parse(getItem(position).getImageUrl());
+            Uri imageUri = com.daily.base.util.TextUtils.isTextEmpty(getItem(position).getImageUrl()) == true ? null : Uri.parse(getItem(position).getImageUrl());
             String description = getItem(position).description;
 
             if (convertView == null)
@@ -392,7 +392,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             TextView textView = (TextView) view.findViewById(R.id.descriptionTextView);
             final com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
 
-            if (Util.isTextEmpty(description) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(description) == false)
             {
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(description);

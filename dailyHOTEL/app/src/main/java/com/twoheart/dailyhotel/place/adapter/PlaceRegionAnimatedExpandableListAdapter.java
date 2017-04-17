@@ -189,7 +189,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
         TextView englishTextView = (TextView) convertView.findViewById(R.id.provinceEnglishTextView);
 
-        Uri uri = Util.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
+        Uri uri = com.daily.base.util.TextUtils.isTextEmpty(province.imageUrl) ? null : Uri.parse(province.imageUrl);
         provinceImageView.setImageURI(uri);
 
         textView.setText(getInsertSpaceName(province.name));

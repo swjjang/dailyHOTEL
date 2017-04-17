@@ -37,7 +37,7 @@ public class RecentPlaces
 
     private void parse(String preferenceText)
     {
-        if (Util.isTextEmpty(preferenceText) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(preferenceText) == true)
         {
             return;
         }
@@ -51,7 +51,7 @@ public class RecentPlaces
 
         for (String recentPlace : splitArray)
         {
-            if (Util.isTextEmpty(recentPlace) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(recentPlace) == true)
             {
                 continue;
             }
@@ -103,7 +103,7 @@ public class RecentPlaces
         }
 
         String serviceType = getServiceType(placeType);
-        if (Util.isTextEmpty(serviceType) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(serviceType) == true)
         {
             return;
         }
@@ -297,7 +297,7 @@ public class RecentPlaces
         }
 
         String serviceType = getServiceType(placeType);
-        if (Util.isTextEmpty(serviceType) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(serviceType) == true)
         {
             return new ArrayList<>();
         }

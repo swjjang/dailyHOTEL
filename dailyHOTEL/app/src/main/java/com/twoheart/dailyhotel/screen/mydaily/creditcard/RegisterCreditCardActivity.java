@@ -262,7 +262,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
                 if (splits.length > 1)
                 {
-                    if (Util.isTextEmpty(splits[1]) == false)
+                    if (com.daily.base.util.TextUtils.isTextEmpty(splits[1]) == false)
                     {
                         payData.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, splits[1]);
                     }

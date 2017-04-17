@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -69,7 +70,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
             mName = intent.getStringExtra(INTENT_EXTRA_DATA_NAME);
         }
 
-        if (DailyHotel.isLogin() == true && Util.isTextEmpty(mRecommendCode) == true)
+        if (DailyHotel.isLogin() == true && com.daily.base.util.TextUtils.isTextEmpty(mRecommendCode) == true)
         {
             Util.restartApp(this);
             return;
@@ -236,7 +237,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
             String message;
 
-            if (Util.isTextEmpty(name) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(name) == false)
             {
                 message = getString(R.string.kakaolink_msg_invited_friend, name, recommendCode, recommendCode);
             } else
@@ -296,7 +297,7 @@ public class InviteFriendsActivity extends BaseActivity implements View.OnClickL
 
             case R.id.copyCodeLayout:
             {
-                Util.clipText(this, mRecommendCode);
+                TextUtils.clipText(this, mRecommendCode);
 
                 DailyToast.showToast(this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
 

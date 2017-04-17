@@ -97,7 +97,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         setContentView(mCollectionBaseLayout.onCreateView(R.layout.activity_collection_search));
 
-        boolean isDeepLink = Util.isTextEmpty(title, subTitle, imageUrl);
+        boolean isDeepLink = com.daily.base.util.TextUtils.isTextEmpty(title, subTitle, imageUrl);
 
         mCollectionBaseLayout.setUsedMultiTransition(mIsUsedMultiTransition);
 

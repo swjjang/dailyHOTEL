@@ -695,7 +695,7 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void setUserBirthday(String birthday)
     {
-        if (Util.isTextEmpty(birthday) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
         {
             mAppboy.getCurrentUser().setCustomUserAttribute(AnalyticsManager.KeyType.FILL_DATE_OF_BIRTH, false);
             return;
@@ -718,7 +718,7 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void setUserName(String name)
     {
-        if (Util.isTextEmpty(name) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
         {
             return;
         }
@@ -803,7 +803,7 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
 
 
-        if (Util.isTextEmpty(cardTypes) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(cardTypes) == true)
         {
             cardTypes = AnalyticsManager.ValueType.EMPTY;
         }
@@ -830,7 +830,7 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, AnalyticsManager.ValueType.EMPTY);
 
         String eventName;
-        if (Util.isTextEmpty(callByScreen) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(callByScreen) == true)
         {
             eventName = EventName.REGISTER_COMPLETED;
         } else
@@ -866,7 +866,7 @@ public class AppboyManager extends BaseAnalyticsManager
         setUserName(name);
         setUserBirthday(birthday);
 
-        if (Util.isTextEmpty(recommender) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == true)
         {
             recommender = AnalyticsManager.ValueType.EMPTY;
         }
@@ -874,7 +874,7 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.REFERRAL_CODE, recommender);
 
         String eventName;
-        if (Util.isTextEmpty(callByScreen) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(callByScreen) == true)
         {
             eventName = EventName.REGISTER_COMPLETED;
         } else
@@ -1058,7 +1058,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
     private String getUserIndex()
     {
-        return Util.isTextEmpty(mUserIndex) == true ? AnalyticsManager.ValueType.EMPTY : mUserIndex;
+        return com.daily.base.util.TextUtils.isTextEmpty(mUserIndex) == true ? AnalyticsManager.ValueType.EMPTY : mUserIndex;
     }
 
     private AppboyProperties getAppboyProperties(Map<String, String> params)
@@ -1072,7 +1072,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
         for (Map.Entry<String, String> element : params.entrySet())
         {
-            String value = Util.isTextEmpty(element.getValue()) == true ? AnalyticsManager.ValueType.EMPTY : element.getValue();
+            String value = com.daily.base.util.TextUtils.isTextEmpty(element.getValue()) == true ? AnalyticsManager.ValueType.EMPTY : element.getValue();
             appboyProperties.addProperty(element.getKey(), value);
         }
 

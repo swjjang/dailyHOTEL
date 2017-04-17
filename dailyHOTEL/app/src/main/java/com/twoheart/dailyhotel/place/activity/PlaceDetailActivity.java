@@ -215,7 +215,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     public boolean isSameCallingActivity(String checkClassName)
     {
         ComponentName callingActivity = getCallingActivity();
-        if (callingActivity == null || Util.isTextEmpty(checkClassName) == true)
+        if (callingActivity == null || com.daily.base.util.TextUtils.isTextEmpty(checkClassName) == true)
         {
             return false;
         }

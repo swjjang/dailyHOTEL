@@ -153,7 +153,7 @@ public class DailyToolbarLayout
             return;
         }
 
-        if (Util.isTextEmpty(menu1Text) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(menu1Text) == false)
         {
             menu1.setVisibility(View.VISIBLE);
             menu1.setText(menu1Text);
@@ -163,7 +163,7 @@ public class DailyToolbarLayout
             menu1.setText(null);
         }
 
-        if (Util.isTextEmpty(menu2Text) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(menu2Text) == false)
         {
             menu2.setVisibility(View.VISIBLE);
             menu2.setText(menu2Text);

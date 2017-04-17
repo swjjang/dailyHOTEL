@@ -190,7 +190,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             String value = mParamsMap.get(PARAM_V13_PRODUCT_INDEX);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 try
                 {
@@ -339,7 +339,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             String value = mParamsMap.get(PARAM_V9_OPEN_TICKEt_INDEX);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 try
                 {
@@ -516,7 +516,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             String value = mParamsMap.get(PARAM_V7_RESERVATION_INDEX);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 try
                 {
@@ -553,7 +553,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             String value = mParamsMap.get(PARAM_V7_NOTICE_INDEX);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 try
                 {
@@ -647,7 +647,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
             String lat = mParamsMap.get(PARAM_V6_LATITUDE);
             String lng = mParamsMap.get(PARAM_V6_LONGITUDE);
 
-            if (Util.isTextEmpty(lat, lng) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(lat, lng) == false)
             {
                 type = SearchType.LOCATION;
             }
@@ -665,7 +665,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
             String lat = mParamsMap.get(PARAM_V6_LATITUDE);
             String lng = mParamsMap.get(PARAM_V6_LONGITUDE);
 
-            if (Util.isTextEmpty(lat, lng) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(lat, lng) == false)
             {
                 latLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
             }
@@ -683,7 +683,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             String value = mParamsMap.get(PARAM_V6_RADIUS);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 try
                 {
@@ -759,7 +759,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             String value = mParamsMap.get(PARAM_V5_CALENDAR_FLAG);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 try
                 {
@@ -814,7 +814,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             value = mParamsMap.get(PARAM_V4_DATE_PLUS);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 try
                 {
@@ -837,7 +837,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         {
             value = mParamsMap.get(PARAM_V4_SORTING);
 
-            if (Util.isTextEmpty(value) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
             {
                 if (VALUE_V4_SORTING_LOW_TO_HIGH.equalsIgnoreCase(value) == true)
                 {
@@ -915,9 +915,9 @@ public class DailyExternalDeepLink extends DailyDeepLink
         } else
         {
             return HOTEL_V2_LIST.equalsIgnoreCase(view)//
-                && Util.isTextEmpty(mParamsMap.get(PARAM_V2_INDEX)) == false//
-                && Util.isTextEmpty(mParamsMap.get(PARAM_V2_DATE)) == false//
-                && Util.isTextEmpty(mParamsMap.get(PARAM_V2_NIGHTS)) == false;
+                && com.daily.base.util.TextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_INDEX)) == false//
+                && com.daily.base.util.TextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_DATE)) == false//
+                && com.daily.base.util.TextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_NIGHTS)) == false;
         }
     }
 
@@ -962,8 +962,8 @@ public class DailyExternalDeepLink extends DailyDeepLink
         } else
         {
             return GOURMET_V2_LIST.equalsIgnoreCase(view)//
-                && Util.isTextEmpty(mParamsMap.get(PARAM_V2_INDEX)) == false//
-                && Util.isTextEmpty(mParamsMap.get(PARAM_V2_DATE)) == false;
+                && com.daily.base.util.TextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_INDEX)) == false//
+                && com.daily.base.util.TextUtils.isTextEmpty(mParamsMap.get(PARAM_V2_DATE)) == false;
         }
     }
 
@@ -1169,7 +1169,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
         int versionCode;
 
         String versionString = uri.getQueryParameter(PARAM_V3_VERSION_CODE);
-        if (Util.isTextEmpty(versionString) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(versionString) == true)
         {
             versionCode = MINIMUM_VERSION_CODE;
         } else

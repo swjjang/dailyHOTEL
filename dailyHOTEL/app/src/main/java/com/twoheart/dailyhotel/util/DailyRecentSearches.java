@@ -23,7 +23,7 @@ public class DailyRecentSearches
 
     public void addString(Keyword recentKeyword)
     {
-        if (recentKeyword == null || Util.isTextEmpty(recentKeyword.name) == true)
+        if (recentKeyword == null || com.daily.base.util.TextUtils.isTextEmpty(recentKeyword.name) == true)
         {
             return;
         }
@@ -81,7 +81,7 @@ public class DailyRecentSearches
 
     private boolean remove(Keyword recentKeyword)
     {
-        if (recentKeyword == null || Util.isTextEmpty(recentKeyword.name) == true)
+        if (recentKeyword == null || com.daily.base.util.TextUtils.isTextEmpty(recentKeyword.name) == true)
         {
             return false;
         }
@@ -99,7 +99,7 @@ public class DailyRecentSearches
 
     private boolean contains(Keyword recentKeyword)
     {
-        if (recentKeyword == null || Util.isTextEmpty(recentKeyword.name) == true)
+        if (recentKeyword == null || com.daily.base.util.TextUtils.isTextEmpty(recentKeyword.name) == true)
         {
             return false;
         }
@@ -117,7 +117,7 @@ public class DailyRecentSearches
 
     private void parserText(String text)
     {
-        if (Util.isTextEmpty(text) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
         {
             return;
         }

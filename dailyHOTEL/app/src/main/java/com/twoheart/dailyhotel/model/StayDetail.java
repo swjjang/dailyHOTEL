@@ -158,7 +158,7 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
     //        {
     //            benefit = jsonObject.getString("benefit");
     //
-    //            if (Util.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
+    //            if (com.daily.base.util.TextUtils.isTextEmpty(benefit) == false && jsonObject.has("benefitContents") == true && jsonObject.isNull("benefitContents") == false)
     //            {
     //                JSONArray benefitJSONArray = jsonObject.getJSONArray("benefitContents");
     //
@@ -181,7 +181,7 @@ public class StayDetail extends PlaceDetail<StayProduct> implements Parcelable
     //                {
     //                    String benefitWarning = jsonObject.getString("benefitWarning");
     //
-    //                    if (Util.isTextEmpty(benefitWarning) == false)
+    //                    if (com.daily.base.util.TextUtils.isTextEmpty(benefitWarning) == false)
     //                    {
     //                        mBenefitInformation.add(benefitWarning);
     //                    }

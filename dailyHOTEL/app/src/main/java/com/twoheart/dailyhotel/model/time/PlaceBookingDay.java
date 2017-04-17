@@ -47,7 +47,7 @@ public abstract class PlaceBookingDay implements Parcelable
 
     String getCalendarDateString(Calendar calendar, String format)
     {
-        if (calendar == null || Util.isTextEmpty(format) == true)
+        if (calendar == null || com.daily.base.util.TextUtils.isTextEmpty(format) == true)
         {
             return null;
         }

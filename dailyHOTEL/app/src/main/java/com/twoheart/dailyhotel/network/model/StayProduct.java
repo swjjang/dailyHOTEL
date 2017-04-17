@@ -76,13 +76,13 @@ public class StayProduct implements Parcelable
     @OnJsonParseComplete
     void onParseComplete()
     {
-        roomName = Util.isTextEmpty(roomName) == true ? "" : roomName.trim();
-        option = Util.isTextEmpty(option) == true ? "" : option.trim();
-        amenities = Util.isTextEmpty(amenities) == true ? "" : amenities.trim();
+        roomName = com.daily.base.util.TextUtils.isTextEmpty(roomName) == true ? "" : roomName.trim();
+        option = com.daily.base.util.TextUtils.isTextEmpty(option) == true ? "" : option.trim();
+        amenities = com.daily.base.util.TextUtils.isTextEmpty(amenities) == true ? "" : amenities.trim();
 
-        roomBenefit = Util.isTextEmpty(roomBenefit) == true ? "" : roomBenefit.trim();
+        roomBenefit = com.daily.base.util.TextUtils.isTextEmpty(roomBenefit) == true ? "" : roomBenefit.trim();
 
-        if (Util.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true)
         {
             isNRD = true;
         } else

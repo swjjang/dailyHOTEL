@@ -57,7 +57,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         // 생일
         viewDataBinding.birthdayLayout.setOnClickListener(v ->
         {
-            if (Util.isTextEmpty(viewDataBinding.birthdayTextView.getText().toString()) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(viewDataBinding.birthdayTextView.getText().toString()) == false)
             {
                 getEventListener().startEditBirthday((String) viewDataBinding.birthdayTextView.getTag());
             } else
@@ -95,12 +95,12 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
             return;
         }
 
-        if (Util.isTextEmpty(userType) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(userType) == false)
         {
             userType = Constants.DAILY_USER;
         }
 
-        if (Util.isTextEmpty(email) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
         {
             viewDataBinding.emailView.setTextColor(getColor(R.color.default_text_c323232));
         }
@@ -110,7 +110,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         switch (userType)
         {
             case Constants.FACEBOOK_USER:
-                if (Util.isTextEmpty(email) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
                 {
                     viewDataBinding.emailTextView.setOnClickListener(v -> getEventListener().startEditEmail());
                 }
@@ -119,7 +119,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
                 break;
 
             case Constants.KAKAO_USER:
-                if (Util.isTextEmpty(email) == true)
+                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
                 {
                     viewDataBinding.emailTextView.setOnClickListener(v -> getEventListener().startEditEmail());
                 }
@@ -148,7 +148,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         }
 
         // 이름
-        if (Util.isTextEmpty(name) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
         {
             viewDataBinding.nameView.setTextColor(getColor(R.color.default_text_c323232));
         }
@@ -166,7 +166,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
             return;
         }
 
-        if (Util.isTextEmpty(birthday) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
         {
             viewDataBinding.birthdayView.setTextColor(getColor(R.color.default_text_c323232));
         } else
@@ -194,7 +194,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
             return;
         }
 
-        if (Util.isTextEmpty(phoneNumber) == true)
+        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
         {
             viewDataBinding.phoneView.setTextColor(getColor(R.color.default_text_c323232));
         }
@@ -232,7 +232,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         }
 
         // 인증 여부
-        if (isPhoneVerified == true && Util.isTextEmpty(verifiedDate) == false)
+        if (isPhoneVerified == true && com.daily.base.util.TextUtils.isTextEmpty(verifiedDate) == false)
         {
             viewDataBinding.phoneVerifyView.setTextColor(getColor(R.color.search_hint_text));
             viewDataBinding.phoneVerifyView.setText(getString(R.string.label_date_verification, verifiedDate.replaceAll("-", ".")));

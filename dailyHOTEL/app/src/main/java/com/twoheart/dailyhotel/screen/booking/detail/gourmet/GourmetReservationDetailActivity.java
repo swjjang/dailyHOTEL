@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -148,13 +149,13 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
         final String phone;
 
-        if (Util.isTextEmpty(mPlaceBookingDetail.phone2) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(mPlaceBookingDetail.phone2) == false)
         {
             phone = mPlaceBookingDetail.phone2;
-        } else if (Util.isTextEmpty(mPlaceBookingDetail.phone1) == false)
+        } else if (com.daily.base.util.TextUtils.isTextEmpty(mPlaceBookingDetail.phone1) == false)
         {
             phone = mPlaceBookingDetail.phone1;
-        } else if (Util.isTextEmpty(mPlaceBookingDetail.phone3) == false)
+        } else if (com.daily.base.util.TextUtils.isTextEmpty(mPlaceBookingDetail.phone3) == false)
         {
             phone = mPlaceBookingDetail.phone3;
         } else
@@ -320,7 +321,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
                     String message = getString(R.string.message_booking_gourmet_share_kakao, //
                         gourmetBookingDetail.userName, gourmetBookingDetail.placeName, gourmetBookingDetail.guestName,//
-                        Util.getPriceFormat(GourmetReservationDetailActivity.this, gourmetBookingDetail.paymentPrice, false), //
+                        com.daily.base.util.TextUtils.getPriceFormat(GourmetReservationDetailActivity.this, gourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                         DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         gourmetBookingDetail.ticketName, getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount), //
@@ -367,7 +368,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
 
                     String message = getString(R.string.message_booking_gourmet_share_sms, //
                         gourmetBookingDetail.userName, gourmetBookingDetail.placeName, gourmetBookingDetail.guestName,//
-                        Util.getPriceFormat(GourmetReservationDetailActivity.this, gourmetBookingDetail.paymentPrice, false), //
+                        com.daily.base.util.TextUtils.getPriceFormat(GourmetReservationDetailActivity.this, gourmetBookingDetail.paymentPrice, false), //
                         DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                         DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
                         gourmetBookingDetail.ticketName, getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount), //
@@ -678,7 +679,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         @Override
         public void onClipAddressClick()
         {
-            Util.clipText(GourmetReservationDetailActivity.this, mPlaceBookingDetail.address);
+            TextUtils.clipText(GourmetReservationDetailActivity.this, mPlaceBookingDetail.address);
 
             DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
         }

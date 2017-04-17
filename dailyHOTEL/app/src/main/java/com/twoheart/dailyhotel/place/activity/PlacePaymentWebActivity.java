@@ -218,7 +218,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
     protected void onStart()
     {
         String screenName = getScreenName();
-        if (Util.isTextEmpty(screenName) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(screenName) == false)
         {
             AnalyticsManager.getInstance(this).recordScreen(this, screenName, null);
         }
@@ -378,7 +378,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             scriptForSkip = scriptPrefix + "returnUrltoMall();"; // KTFC 확인 버튼 콜
         }
 
-        if (Util.isTextEmpty(scriptForSkip) == false)
+        if (com.daily.base.util.TextUtils.isTextEmpty(scriptForSkip) == false)
         {
             mWebView.loadUrl(scriptForSkip);
         }
@@ -1386,7 +1386,7 @@ public abstract class PlacePaymentWebActivity extends BaseActivity implements Co
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_PAYMENTINFORMATION, mPlacePaymentInformation);
 
-            if (Util.isTextEmpty(data) == true)
+            if (com.daily.base.util.TextUtils.isTextEmpty(data) == true)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL, intent);
                 finish();

@@ -58,7 +58,7 @@ public class CountryCodeListLayout implements OnItemClickListener
 
             int selectedIndex = -1;
 
-            if (Util.isTextEmpty(selectedCountryCode) == false)
+            if (com.daily.base.util.TextUtils.isTextEmpty(selectedCountryCode) == false)
             {
                 String code = selectedCountryCode.substring(selectedCountryCode.indexOf('\n') + 1);
 
