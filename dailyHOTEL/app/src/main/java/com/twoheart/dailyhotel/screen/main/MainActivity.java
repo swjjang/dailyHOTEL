@@ -1144,7 +1144,10 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     Bundle bundle = new Bundle();
                     bundle.putString(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, internalDeepLink.getDeepLink());
 
-                    if (internalDeepLink.isBookingDetailView() == true)
+                    if (internalDeepLink.isHomeView() == true)
+                    {
+                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, null);
+                    } else if (internalDeepLink.isBookingDetailView() == true)
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
                     } else if (internalDeepLink.isStampView() == true)

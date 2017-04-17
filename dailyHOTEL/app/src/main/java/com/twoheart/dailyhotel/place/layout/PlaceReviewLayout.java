@@ -549,7 +549,7 @@ public class PlaceReviewLayout extends BaseLayout
 
         private void onBindViewHolder(final ReviewViewHolder reviewViewHolder, int position, PlaceReviewItem placeViewItem)
         {
-            final int MAX_LINE = 11;
+            final int MAX_LINE = 10;
             final PlaceReview placeReview = placeViewItem.getItem();
 
             if (Util.isTextEmpty(placeReview.email) == true)
