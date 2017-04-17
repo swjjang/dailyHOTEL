@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="label_notice">알림</string>
+    <string name="label_currency_format_postfix">###,##0원</string>
+    <string name="label_currency_format_prefix">₩ ###,##0</string>
+</resources>

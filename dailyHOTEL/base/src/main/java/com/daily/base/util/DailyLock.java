@@ -1,19 +1,15 @@
-package com.daily.dailyhotel.util;
+package com.daily.base.util;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.daily.base.BaseActivity;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.ExLog;
+import com.daily.base.R;
 
 public class DailyLock
 {
@@ -127,11 +123,9 @@ public class DailyLock
 
             mDialog = new Dialog(activity, R.style.TransDialog);
             mProgressBar = new ProgressBar(activity);
-            mProgressBar.getIndeterminateDrawable().setColorFilter(activity.getResources().getColor(R.color.probressbar_default), PorterDuff.Mode.SRC_IN);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             mDialog.addContentView(mProgressBar, params);
             mDialog.setCancelable(false);
-            mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
             mDialog.setOnCancelListener(dialog ->
             {
@@ -178,7 +172,6 @@ public class DailyLock
                     mDialog.show();
                 } catch (Exception e)
                 {
-                    ExLog.d(e.toString());
                 }
             }
         }

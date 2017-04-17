@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -24,7 +23,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.ExLog;
 
 import io.reactivex.Observable;
@@ -95,12 +93,12 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
     @Override
     public void onIntent(Intent intent)
     {
-        if(intent == null)
+        if (intent == null)
         {
             return;
         }
 
-        if(intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
+        if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
         }
     }
@@ -111,28 +109,28 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
         super.onStart();
 
         mProfileAnalytics.screenProfile(getActivity());
-//
-//        if (DailyDeepLink.getInstance().isValidateLink() == true)
-//        {
-//            if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
-//            {
-//                if (DailyHotel.isLogin() == true)
-//                {
-//                    mOnEventListener.startEditBirthday(DailyUserPreference.getInstance(this).getBirthday());
-//                } else
-//                {
-//                    mOnEventListener.startEditBirthday(null);
-//                }
-//            }
-//
-//            DailyDeepLink.getInstance().clear();
-//        } else
-//        {
-//            if (DailyHotel.isLogin() == false)
-//            {
-//                showLoginDialog();
-//            }
-//        }
+        //
+        //        if (DailyDeepLink.getInstance().isValidateLink() == true)
+        //        {
+        //            if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
+        //            {
+        //                if (DailyHotel.isLogin() == true)
+        //                {
+        //                    mOnEventListener.startEditBirthday(DailyUserPreference.getInstance(this).getBirthday());
+        //                } else
+        //                {
+        //                    mOnEventListener.startEditBirthday(null);
+        //                }
+        //            }
+        //
+        //            DailyDeepLink.getInstance().clear();
+        //        } else
+        //        {
+        //            if (DailyHotel.isLogin() == false)
+        //            {
+        //                showLoginDialog();
+        //            }
+        //        }
     }
 
     @Override
@@ -141,21 +139,21 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
         super.onResume();
 
 
-//        Observable mergedObservable = Observable.merge(mConfigLocalImpl.isLogin()
-//            , mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile));
-//
-//
-//        Observable.
-//
-//
-//        addCompositeDisposable(mConfigLocalImpl.isLogin().subscribe(new Consumer<Boolean>()
-//        {
-//            @Override
-//            public void accept(Boolean isLogin) throws Exception
-//            {
-//
-//            }
-//        });
+        //        Observable mergedObservable = Observable.merge(mConfigLocalImpl.isLogin()
+        //            , mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile));
+        //
+        //
+        //        Observable.
+        //
+        //
+        //        addCompositeDisposable(mConfigLocalImpl.isLogin().subscribe(new Consumer<Boolean>()
+        //        {
+        //            @Override
+        //            public void accept(Boolean isLogin) throws Exception
+        //            {
+        //
+        //            }
+        //        });
 
         if (DailyHotel.isLogin() == true)
         {
@@ -272,16 +270,16 @@ public class ProfilePresenter extends BasePresenter<ProfileActivity, ProfileView
                     }
                 }));
 
-//                // 인증 후 인증이 해지된 경우
-//                addCompositeDisposable(mConfigLocalImpl.isVerified().subscribe(verify ->
-//                {
-//                    if (verify.booleanValue() == true)
-//                    {
-//                        getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
-//                    }
-//
-//                    addCompositeDisposable(mConfigLocalImpl.setVerified(false).subscribe());
-//                }));
+                //                // 인증 후 인증이 해지된 경우
+                //                addCompositeDisposable(mConfigLocalImpl.isVerified().subscribe(verify ->
+                //                {
+                //                    if (verify.booleanValue() == true)
+                //                    {
+                //                        getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
+                //                    }
+                //
+                //                    addCompositeDisposable(mConfigLocalImpl.setVerified(false).subscribe());
+                //                }));
             }
         }
 

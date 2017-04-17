@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ViewDialogLayoutDataBinding;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.databinding.DialogLayoutDataBinding;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.TextUtils;
 
 public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> implements BaseViewInterface
 {
@@ -166,7 +166,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         hideSimpleDialog();
 
         LayoutInflater layoutInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ViewDialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.view_dialog_layout_data, null, false);
+        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_layout_data, null, false);
 
         mDialog = new Dialog(mActivity);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -176,9 +176,9 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         // 상단
         dataBinding.titleTextView.setVisibility(View.VISIBLE);
 
-        if (Util.isTextEmpty(titleText) == true)
+        if (TextUtils.isTextEmpty(titleText) == true)
         {
-            dataBinding.titleTextView.setText(getString(R.string.dialog_notice2));
+            dataBinding.titleTextView.setText(getString(R.string.label_notice));
         } else
         {
             dataBinding.titleTextView.setText(titleText);
@@ -188,7 +188,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         dataBinding.messageTextView.setText(msg);
 
         // 버튼
-        if (Util.isTextEmpty(positive, negative) == false)
+        if (TextUtils.isTextEmpty(positive, negative) == false)
         {
             dataBinding.twoButtonLayout.setVisibility(View.VISIBLE);
             dataBinding.oneButtonLayout.setVisibility(View.GONE);
@@ -226,7 +226,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
             dataBinding.twoButtonLayout.setVisibility(View.GONE);
             dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
 
-            dataBinding.confirmTextView.setText(positive);
+            dataBinding.positiveTextView.setText(positive);
             dataBinding.oneButtonLayout.setOnClickListener(v ->
             {
                 if (mDialog != null && mDialog.isShowing())
@@ -257,7 +257,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         {
             mDialog.setContentView(dataBinding.getRoot());
 
-            WindowManager.LayoutParams layoutParams = Util.getDialogWidthLayoutParams(mActivity, mDialog);
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(mActivity, mDialog);
 
             mDialog.show();
 

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
@@ -186,8 +185,6 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
             }
 
             lockUiComponent();
-
-//            startActivity(com.daily.dailyhotel.screen.mydaily.profile.ProfileActivity.newInstance(getContext()));
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(AboutActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_ABOUT);

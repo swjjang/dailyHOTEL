@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;

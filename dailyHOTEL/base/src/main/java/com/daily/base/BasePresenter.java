@@ -1,25 +1,13 @@
 package com.daily.base;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 
-import com.crashlytics.android.Crashlytics;
-import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.remote.FacebookImpl;
-import com.daily.dailyhotel.repository.remote.KakaoImpl;
-import com.daily.dailyhotel.util.DailyLock;
-import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.ExLog;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.widget.DailyToast;
+import com.daily.base.util.DailyLock;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import retrofit2.adapter.rxjava2.HttpException;
 
 public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> implements BaseActivityInterface
 {
@@ -49,6 +37,8 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     public abstract void initialize(T1 activity);
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
+
+    protected abstract void onHandleError(Throwable throwable);
 
     public T1 getActivity()
     {
@@ -167,64 +157,64 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mLock.screenUnLock();
     }
 
-    protected void onHandleError(Throwable throwable)
-    {
-        screenUnLock();
-
-        if (throwable instanceof BaseException)
-        {
-            // 팝업 에러 보여주기
-            BaseException baseException = (BaseException) throwable;
-
-            mOnViewInterface.showSimpleDialog(null, baseException.getMessage()//
-                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                        getActivity().onBackPressed();
-                    }
-                }, true);
-        } else if (throwable instanceof HttpException)
-        {
-            retrofit2.HttpException httpException = (HttpException) throwable;
-
-            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
-            {
-                onHandleAuthorizedError();
-            } else
-            {
-                if (Constants.DEBUG == false)
-                {
-                    Crashlytics.log(httpException.response().raw().request().url().toString());
-                    Crashlytics.logException(throwable);
-                }
-            }
-        } else
-        {
-            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
-        }
-    }
-
-    private void onHandleAuthorizedError()
-    {
-        addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(new Consumer()
-        {
-            @Override
-            public void accept(Object o) throws Exception
-            {
-                new FacebookImpl().logOut();
-                new KakaoImpl().logOut();
-
-                restartExpiredSession();
-            }
-        }));
-    }
-
-    private void restartExpiredSession()
-    {
-        DailyToast.showToast(getActivity(), R.string.dialog_msg_session_expired, DailyToast.LENGTH_SHORT);
-
-        Util.restartApp(getActivity());
-    }
+    //    protected void onHandleError(Throwable throwable)
+    //    {
+    //        screenUnLock();
+    //
+    //        if (throwable instanceof BaseException)
+    //        {
+    //            // 팝업 에러 보여주기
+    //            BaseException baseException = (BaseException) throwable;
+    //
+    //            mOnViewInterface.showSimpleDialog(null, baseException.getMessage()//
+    //                , getString(R.string.dialog_btn_text_confirm), null, null, null, null, new DialogInterface.OnDismissListener()
+    //                {
+    //                    @Override
+    //                    public void onDismiss(DialogInterface dialog)
+    //                    {
+    //                        getActivity().onBackPressed();
+    //                    }
+    //                }, true);
+    //        } else if (throwable instanceof HttpException)
+    //        {
+    //            retrofit2.HttpException httpException = (HttpException) throwable;
+    //
+    //            if (httpException.code() == BaseException.CODE_UNAUTHORIZED)
+    //            {
+    //                onHandleAuthorizedError();
+    //            } else
+    //            {
+    //                if (Constants.DEBUG == false)
+    //                {
+    //                    Crashlytics.log(httpException.response().raw().request().url().toString());
+    //                    Crashlytics.logException(throwable);
+    //                }
+    //            }
+    //        } else
+    //        {
+    //            DailyToast.showToast(getActivity(), getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+    //        }
+    //    }
+    //
+    //    private void onHandleAuthorizedError()
+    //    {
+    //        addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(new Consumer()
+    //        {
+    //            @Override
+    //            public void accept(Object o) throws Exception
+    //            {
+    //                new FacebookImpl().logOut();
+    //                new KakaoImpl().logOut();
+    //
+    //                restartExpiredSession();
+    //            }
+    //        }));
+    //    }
+    //
+    //    private void restartExpiredSession()
+    //    {
+    //        DailyToast.showToast(getActivity(), R.string.dialog_msg_session_expired, DailyToast.LENGTH_SHORT);
+    //
+    //        Util.restartApp(getActivity());
+    //    }
 }

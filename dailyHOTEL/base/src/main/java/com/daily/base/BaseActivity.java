@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 
 public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatActivity
 {
-    public static final String INTENT_EXTRA_DATA_DEEPLINK = "nameDeepLink";
+    public static final String INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
 
     private BasePresenter mPresenter;
 

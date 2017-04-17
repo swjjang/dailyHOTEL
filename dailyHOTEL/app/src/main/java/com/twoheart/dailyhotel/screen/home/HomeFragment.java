@@ -20,7 +20,6 @@ import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
