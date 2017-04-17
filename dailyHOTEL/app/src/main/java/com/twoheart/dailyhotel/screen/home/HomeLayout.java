@@ -89,6 +89,7 @@ public class HomeLayout extends BaseLayout
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
     View mScrollButtonLayout;
+    private View mScrollButtonBottomLineView;
     private HomeCategoryLayout mCategoryLayout;
     View mTextMessageLayout;
     View mTopButtonLayout;
@@ -99,6 +100,7 @@ public class HomeLayout extends BaseLayout
     ObjectAnimator mErrorPopupAnimator;
 
     LinearLayout mProviderInfoView;
+
     private BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
 
 
@@ -379,6 +381,10 @@ public class HomeLayout extends BaseLayout
                 ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick();
             }
         });
+
+        mScrollButtonBottomLineView = mScrollButtonLayout.findViewById(R.id.bottomLine);
+
+        mScrollButtonBottomLineView.setVisibility(View.VISIBLE);
     }
 
     private void settingABTest(View view)
@@ -1028,6 +1034,8 @@ public class HomeLayout extends BaseLayout
     public void setCategoryEnabled(boolean isEnabled)
     {
         mCategoryLayout.setCategoryEnabled(isEnabled);
+
+        mScrollButtonBottomLineView.setVisibility(isEnabled == true ? View.GONE : View.VISIBLE);
     }
 
     public boolean hasWishListData()

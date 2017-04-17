@@ -144,13 +144,7 @@ public class HomeCategoryLayout extends RelativeLayout
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-        //        if (isSingleLine == true)
-        //        {
         dailyTextView.setPadding(0, Util.dpToPx(context, 16), 0, Util.dpToPx(context, 17));
-        //        } else
-        //        {
-        //            dailyTextView.setPadding(0, Util.dpToPx(context, 10), 0, Util.dpToPx(context, 2));
-        //        }
 
         dailyTextView.setLayoutParams(layoutParams);
 
