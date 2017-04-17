@@ -211,6 +211,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 // 패스워드 유효성 체크
                 if (Util.isTextEmpty(password) == true || password.length() < SignupStep1Activity.PASSWORD_MIN_COUNT)
                 {
+                    mPasswordEditText.requestFocus();
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_password_more_than_8chars, Toast.LENGTH_SHORT);
                     return;
                 }
@@ -224,6 +225,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 // 패스워드가 동일하게 입력되어있는지 확인
                 if (password.equals(confirmPassword) == false)
                 {
+                    mPasswordEditText.requestFocus();
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.message_please_enter_the_same_password, Toast.LENGTH_SHORT);
                     return;
                 }
@@ -231,6 +233,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 // 패스워드 검증
                 if (Util.verifyPassword(null, password) == false)
                 {
+                    mPasswordEditText.requestFocus();
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);
                     return;
                 }
