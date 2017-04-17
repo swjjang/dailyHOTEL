@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -136,7 +137,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         String text = mPlaceSearchLayout.getSearchKeyWord();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             return;
         }
@@ -242,7 +243,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(text) == true || mGourmetBookingDay == null)
+            if (DailyTextUtils.isTextEmpty(text) == true || mGourmetBookingDay == null)
             {
                 return;
             }

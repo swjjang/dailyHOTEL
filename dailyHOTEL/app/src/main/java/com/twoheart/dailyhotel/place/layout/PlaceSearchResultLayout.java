@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
@@ -138,7 +139,7 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
 
     public void setCalendarText(String date)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(date) == true)
+        if (DailyTextUtils.isTextEmpty(date) == true)
         {
             return;
         }

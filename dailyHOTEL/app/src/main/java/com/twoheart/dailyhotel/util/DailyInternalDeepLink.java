@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 
@@ -163,7 +164,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
     public static Intent getStayBookingDetailScreenLink(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType, String checkInTime, String checkOutTime)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true || paymentType == null)
+        if (DailyTextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true || paymentType == null)
         {
             return null;
         }
@@ -184,7 +185,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
     public static Intent getGourmetBookingDetailScreenLink(Context context, String placeName//
         , PlacePaymentInformation.PaymentType paymentType, String visitTime)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, visitTime) == true || paymentType == null)
+        if (DailyTextUtils.isTextEmpty(placeName, visitTime) == true || paymentType == null)
         {
             return null;
         }

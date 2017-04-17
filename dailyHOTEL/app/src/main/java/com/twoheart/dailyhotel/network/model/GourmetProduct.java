@@ -7,7 +7,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.DailyTextUtils;
 
 import java.util.List;
 
@@ -96,12 +96,12 @@ public class GourmetProduct implements Parcelable
         }
 
         // 기본 포맷은 HH:mm:ss
-        if (com.daily.base.util.TextUtils.isTextEmpty(openTime) == false)
+        if (DailyTextUtils.isTextEmpty(openTime) == false)
         {
             openTime = openTime.substring(0, openTime.length() - 3);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(closeTime) == false)
+        if (DailyTextUtils.isTextEmpty(closeTime) == false)
         {
             closeTime = closeTime.substring(0, closeTime.length() - 3);
 
@@ -112,7 +112,7 @@ public class GourmetProduct implements Parcelable
             }
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(lastOrderTime) == false)
+        if (DailyTextUtils.isTextEmpty(lastOrderTime) == false)
         {
             lastOrderTime = lastOrderTime.substring(0, lastOrderTime.length() - 3);
 

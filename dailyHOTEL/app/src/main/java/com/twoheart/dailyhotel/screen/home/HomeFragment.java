@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -369,7 +370,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             mHomeLayout.setTextMessageData(title, description);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(title) == false || com.daily.base.util.TextUtils.isTextEmpty(description) == false)
+            if (DailyTextUtils.isTextEmpty(title) == false || DailyTextUtils.isTextEmpty(description) == false)
             {
                 AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_MESSAGE_OPEN,//
@@ -401,7 +402,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         Intent intent;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(recommenderCode) == true)
+        if (DailyTextUtils.isTextEmpty(recommenderCode) == true)
         {
             intent = SignupStep1Activity.newInstance(baseActivity, null);
         } else
@@ -414,7 +415,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     void startEventWebActivity(String url, String eventName)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+        if (DailyTextUtils.isTextEmpty(url) == true)
         {
             return;
         }
@@ -952,7 +953,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(event.linkUrl, event.title) == true)
+            if (DailyTextUtils.isTextEmpty(event.linkUrl, event.title) == true)
             {
                 return;
             }

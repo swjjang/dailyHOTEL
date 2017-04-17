@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -53,7 +54,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
+        if (DailyTextUtils.isTextEmpty(word) == false)
         {
             intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
         }
@@ -234,7 +235,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 case HOTEL:
                     mViewPager.setCurrentItem(0);
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
+                    if (DailyTextUtils.isTextEmpty(word) == false)
                     {
                         // Fragment 가 생성되기 전이라서 지연시간 추가
                         mViewPager.postDelayed(new Runnable()
@@ -251,7 +252,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 case FNB:
                     mViewPager.setCurrentItem(1);
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
+                    if (DailyTextUtils.isTextEmpty(word) == false)
                     {
                         mViewPager.postDelayed(new Runnable()
                         {

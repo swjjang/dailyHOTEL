@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.daily.base.util.DailyTextUtils;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -148,12 +149,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             String checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
             String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(checkIn) == false)
+            if (DailyTextUtils.isTextEmpty(checkIn) == false)
             {
                 screenViewBuilder.setCustomDimension(1, checkIn);
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(checkOut) == false)
+            if (DailyTextUtils.isTextEmpty(checkOut) == false)
             {
                 screenViewBuilder.setCustomDimension(2, checkOut);
             }
@@ -165,13 +166,13 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             screenViewBuilder.setCustomDimension(8, params.get(AnalyticsManager.KeyType.PROVINCE));
 
             String district = params.get(AnalyticsManager.KeyType.DISTRICT);
-            if (com.daily.base.util.TextUtils.isTextEmpty(district) == false)
+            if (DailyTextUtils.isTextEmpty(district) == false)
             {
                 screenViewBuilder.setCustomDimension(12, district);
             }
 
             String category = params.get(AnalyticsManager.KeyType.CATEGORY);
-            if (com.daily.base.util.TextUtils.isTextEmpty(category) == false)
+            if (DailyTextUtils.isTextEmpty(category) == false)
             {
                 screenViewBuilder.setCustomDimension(13, category);
             }
@@ -276,7 +277,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     {
         long value = 0L;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(category, action) == true)
+        if (DailyTextUtils.isTextEmpty(category, action) == true)
         {
             return;
         }
@@ -291,7 +292,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             || AnalyticsManager.Action.GOURMET_SORT_FILTER_APPLY_BUTTON_CLICKED.equalsIgnoreCase(action) == true))
         {
             String countString = params.get(AnalyticsManager.KeyType.SEARCH_COUNT);
-            if (com.daily.base.util.TextUtils.isTextEmpty(countString) == false)
+            if (DailyTextUtils.isTextEmpty(countString) == false)
             {
                 try
                 {
@@ -395,7 +396,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             //            screenName = AnalyticsManager.Screen.
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(screenName) == false)
+        if (DailyTextUtils.isTextEmpty(screenName) == false)
         {
             mGoogleAnalyticsTracker.setScreenName(screenName);
             mGoogleAnalyticsTracker.send(new HitBuilders.ScreenViewBuilder()//
@@ -410,7 +411,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     @Override
     void setUserInformation(String index, String userType)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(index) == true)
+        if (DailyTextUtils.isTextEmpty(index) == true)
         {
             mGoogleAnalyticsTracker.set("&uid", AnalyticsManager.ValueType.EMPTY);
         } else
@@ -642,10 +643,10 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         String id;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeIndex, ticketIndex) == false)
+        if (DailyTextUtils.isTextEmpty(placeIndex, ticketIndex) == false)
         {
             id = placeIndex + "_" + ticketIndex;
-        } else if (com.daily.base.util.TextUtils.isTextEmpty(placeIndex) == false)
+        } else if (DailyTextUtils.isTextEmpty(placeIndex) == false)
         {
             id = placeIndex;
         } else
@@ -657,30 +658,30 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         String name = null;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeName, ticketName) == false)
+        if (DailyTextUtils.isTextEmpty(placeName, ticketName) == false)
         {
             name = placeName + "_" + ticketName;
-        } else if (com.daily.base.util.TextUtils.isTextEmpty(placeName) == false)
+        } else if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             name = placeName;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(name) == false)
+        if (DailyTextUtils.isTextEmpty(name) == false)
         {
             product.setName(name);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(grade) == false)
+        if (DailyTextUtils.isTextEmpty(grade) == false)
         {
             product.setCategory(grade);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(category) == false)
+        if (DailyTextUtils.isTextEmpty(category) == false)
         {
             product.setCategory(category);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(price) == false)
+        if (DailyTextUtils.isTextEmpty(price) == false)
         {
             try
             {
@@ -691,7 +692,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             }
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(quantity) == false)
+        if (DailyTextUtils.isTextEmpty(quantity) == false)
         {
             try
             {
@@ -737,67 +738,67 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String isShowOriginalPrice = params.get(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE);
         String placeCount = params.get(AnalyticsManager.KeyType.PLACE_COUNT);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(checkIn) == false)
+        if (DailyTextUtils.isTextEmpty(checkIn) == false)
         {
             screenViewBuilder.setCustomDimension(1, checkIn);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(checkOut) == false)
+        if (DailyTextUtils.isTextEmpty(checkOut) == false)
         {
             screenViewBuilder.setCustomDimension(2, checkOut);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(dBenefit) == false)
+        if (DailyTextUtils.isTextEmpty(dBenefit) == false)
         {
             screenViewBuilder.setCustomDimension(3, "yes".equalsIgnoreCase(dBenefit) == true ? "y" : "n");
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(paymentType) == false)
+        if (DailyTextUtils.isTextEmpty(paymentType) == false)
         {
             screenViewBuilder.setCustomDimension(4, paymentType);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(registeredSimpleCard) == false)
+        if (DailyTextUtils.isTextEmpty(registeredSimpleCard) == false)
         {
             screenViewBuilder.setCustomDimension(9, registeredSimpleCard);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(nrd) == false)
+        if (DailyTextUtils.isTextEmpty(nrd) == false)
         {
             screenViewBuilder.setCustomDimension(10, nrd);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(category) == false)
+        if (DailyTextUtils.isTextEmpty(category) == false)
         {
             screenViewBuilder.setCustomDimension(13, category);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(grade) == false)
+        if (DailyTextUtils.isTextEmpty(grade) == false)
         {
             screenViewBuilder.setCustomDimension(14, grade);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeIndex) == false)
+        if (DailyTextUtils.isTextEmpty(placeIndex) == false)
         {
             screenViewBuilder.setCustomDimension(15, placeIndex);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(listIndex) == false && "-1".equalsIgnoreCase(listIndex) == false)
+        if (DailyTextUtils.isTextEmpty(listIndex) == false && "-1".equalsIgnoreCase(listIndex) == false)
         {
             screenViewBuilder.setCustomDimension(16, listIndex);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(rating) == false)
+        if (DailyTextUtils.isTextEmpty(rating) == false)
         {
             screenViewBuilder.setCustomDimension(17, rating + "%");
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(isShowOriginalPrice) == false)
+        if (DailyTextUtils.isTextEmpty(isShowOriginalPrice) == false)
         {
             screenViewBuilder.setCustomDimension(18, isShowOriginalPrice.toLowerCase());
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeCount) == false && "-1".equalsIgnoreCase(placeCount) == false)
+        if (DailyTextUtils.isTextEmpty(placeCount) == false && "-1".equalsIgnoreCase(placeCount) == false)
         {
             screenViewBuilder.setCustomDimension(20, placeCount.toLowerCase());
         }
@@ -814,17 +815,17 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_CHECKOUT).setCheckoutStep(step);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(transId) == false)
+        if (DailyTextUtils.isTextEmpty(transId) == false)
         {
             productAction.setTransactionId(transId);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(paymentPrice) == false)
+        if (DailyTextUtils.isTextEmpty(paymentPrice) == false)
         {
             productAction.setTransactionRevenue(Double.parseDouble(paymentPrice));
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(credit) == false)
+        if (DailyTextUtils.isTextEmpty(credit) == false)
         {
             productAction.setTransactionCouponCode(String.format(Locale.KOREA, "credit_%s", credit));
         }
@@ -860,12 +861,12 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         String checkIn = params.get(AnalyticsManager.KeyType.CHECK_IN);
         String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(checkIn) == false)
+        if (DailyTextUtils.isTextEmpty(checkIn) == false)
         {
             screenViewBuilder.setCustomDimension(1, checkIn);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(checkOut) == false)
+        if (DailyTextUtils.isTextEmpty(checkOut) == false)
         {
             screenViewBuilder.setCustomDimension(2, checkOut);
         }
@@ -885,13 +886,13 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         screenViewBuilder.setCustomDimension(8, params.get(AnalyticsManager.KeyType.PROVINCE));
 
         String district = params.get(AnalyticsManager.KeyType.DISTRICT);
-        if (com.daily.base.util.TextUtils.isTextEmpty(district) == false)
+        if (DailyTextUtils.isTextEmpty(district) == false)
         {
             screenViewBuilder.setCustomDimension(12, district);
         }
 
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
-        if (com.daily.base.util.TextUtils.isTextEmpty(category) == false)
+        if (DailyTextUtils.isTextEmpty(category) == false)
         {
             screenViewBuilder.setCustomDimension(13, category);
         }

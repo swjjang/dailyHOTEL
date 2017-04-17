@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
@@ -78,7 +79,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
         // 휴일 정보를 얻어온다.
         String calendarHolidays = DailyPreference.getInstance(this).getCalendarHolidays();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(calendarHolidays) == false)
+        if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
         {
             String[] holidays = calendarHolidays.split("\\,");
             mHolidays = new int[holidays.length];

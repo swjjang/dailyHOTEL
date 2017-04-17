@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -55,7 +56,7 @@ public class DailyRemoteConfig
 
     public void requestRemoteConfig(final OnCompleteListener listener)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(DailyPreference.getInstance(mContext).getRemoteConfigCompanyName()) == true)
+        if (DailyTextUtils.isTextEmpty(DailyPreference.getInstance(mContext).getRemoteConfigCompanyName()) == true)
         {
             writeCompanyInformation(mContext, mContext.getString(R.string.default_company_information));
         }
@@ -205,7 +206,7 @@ public class DailyRemoteConfig
 
     void processSplashImage(Context context, String updateTime, String imageUrl)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(updateTime, imageUrl) == true)
+        if (DailyTextUtils.isTextEmpty(updateTime, imageUrl) == true)
         {
             return;
         }
@@ -245,7 +246,7 @@ public class DailyRemoteConfig
             } else
             {
                 // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
-                if (com.daily.base.util.TextUtils.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
+                if (DailyTextUtils.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
                 {
                     new SplashImageDownloadAsyncTask(context).execute(url, newVersion);
                 }
@@ -305,7 +306,7 @@ public class DailyRemoteConfig
 
     void writeTextFiled(Context context, String textInformation)
     {
-        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(textInformation) == true)
+        if (context == null || DailyTextUtils.isTextEmpty(textInformation) == true)
         {
             return;
         }
@@ -383,7 +384,7 @@ public class DailyRemoteConfig
                 if (result == true)
                 {
                     // 이전 파일 삭제
-                    if (com.daily.base.util.TextUtils.isTextEmpty(clientHomeEventCurrentVersion) == false)
+                    if (DailyTextUtils.isTextEmpty(clientHomeEventCurrentVersion) == false)
                     {
                         String fileName = Util.makeImageFileName(clientHomeEventCurrentVersion);
                         File currentFile = new File(context.getCacheDir(), fileName);
@@ -404,7 +405,7 @@ public class DailyRemoteConfig
 
     void processImage(Context context, String clientVersion, String jsonObject, ImageDownloadAsyncTask.OnCompletedListener onCompleteListener)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(jsonObject) == true)
+        if (DailyTextUtils.isTextEmpty(jsonObject) == true)
         {
             return;
         }
@@ -421,7 +422,7 @@ public class DailyRemoteConfig
             dpi = "highResolution";
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(clientVersion) == true)
+        if (DailyTextUtils.isTextEmpty(clientVersion) == true)
         {
             clientVersion = "";
         }
@@ -447,7 +448,7 @@ public class DailyRemoteConfig
 
     void writeStamp(final Context context, String androidStamp)
     {
-        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(androidStamp) == true)
+        if (context == null || DailyTextUtils.isTextEmpty(androidStamp) == true)
         {
             return;
         }

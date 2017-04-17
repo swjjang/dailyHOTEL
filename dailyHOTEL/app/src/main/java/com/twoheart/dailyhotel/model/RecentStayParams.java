@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.daily.base.util.ExLog;
 
@@ -76,7 +77,7 @@ public class RecentStayParams extends StayParams
         hashMap.put("dateCheckIn", dateCheckIn);
         hashMap.put("stays", stays);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(targetIndices) == false)
+        if (DailyTextUtils.isTextEmpty(targetIndices) == false)
         {
             hashMap.put("targetIndices", targetIndices);
         }

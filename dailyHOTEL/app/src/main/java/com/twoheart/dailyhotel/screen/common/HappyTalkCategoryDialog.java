@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.HappyTalkCategory;
@@ -177,7 +178,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         String happyTalkCategory = DailyPreference.getInstance(this).getHappyTalkCategory();
 
         // 해피톡 상담유형을 받은적이 없는 경우
-        if (com.daily.base.util.TextUtils.isTextEmpty(happyTalkCategory) == true)
+        if (DailyTextUtils.isTextEmpty(happyTalkCategory) == true)
         {
             lockUI();
 
@@ -248,39 +249,39 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         urlStringBuilder.append("&parameter1=" + userIndex); // user Index
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(name) == false)
+        if (DailyTextUtils.isTextEmpty(name) == false)
         {
             urlStringBuilder.append("&parameter2=" + URLEncoder.encode(name)); //고객명
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(phone) == false)
+        if (DailyTextUtils.isTextEmpty(phone) == false)
         {
             urlStringBuilder.append("&parameter3=" + URLEncoder.encode(phone)); // 전화번호
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == false)
+        if (DailyTextUtils.isTextEmpty(email) == false)
         {
             urlStringBuilder.append("&parameter4=" + URLEncoder.encode(email)); // 이메일
         }
 
-        if (mCallScreen != null && com.daily.base.util.TextUtils.isTextEmpty(mCallScreen.getName()) == false)
+        if (mCallScreen != null && DailyTextUtils.isTextEmpty(mCallScreen.getName()) == false)
         {
             urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
         }
 
         //        urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mPlaceName) == false)
+        if (DailyTextUtils.isTextEmpty(mPlaceName) == false)
         {
             urlStringBuilder.append("&parameter7=" + URLEncoder.encode(mPlaceName)); // 호텔명
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mPlaceType) == false)
+        if (DailyTextUtils.isTextEmpty(mPlaceType) == false)
         {
             urlStringBuilder.append("&parameter8=" + mPlaceType); // 카테고리 분류
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType()) == false)
+        if (DailyTextUtils.isTextEmpty(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType()) == false)
         {
             urlStringBuilder.append("&parameter9=" + URLEncoder.encode(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType())); // 가입방법
         }
@@ -294,7 +295,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         TelephonyManager telephonyManager = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(telephonyManager.getNetworkOperatorName()) == false)
+        if (DailyTextUtils.isTextEmpty(telephonyManager.getNetworkOperatorName()) == false)
         {
             urlStringBuilder.append("&phone_telecomm=" + URLEncoder.encode(telephonyManager.getNetworkOperatorName()));
         }
@@ -367,7 +368,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
             {
                 String value = linkedHashMap.get(happyTalkCategory.id);
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(value) == true)
+                if (DailyTextUtils.isTextEmpty(value) == true)
                 {
                     linkedHashMap.put(happyTalkCategory.id, happyTalkCategory.name);
 

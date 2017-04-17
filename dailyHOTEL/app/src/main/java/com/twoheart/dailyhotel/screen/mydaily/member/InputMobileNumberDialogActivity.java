@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -109,7 +110,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
     {
         String[] countryMobile = null;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(number) == false)
+        if (DailyTextUtils.isTextEmpty(number) == false)
         {
             number = number.replace("-", "");
 
@@ -167,7 +168,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
             mobileEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mobileNumber) == false)
+        if (DailyTextUtils.isTextEmpty(mobileNumber) == false)
         {
             mobileNumber = mobileNumber.replaceAll("\\(|\\)|-|\\s", "");
         }

@@ -1,6 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.DailyTextUtils;
 
 import org.json.JSONObject;
 
@@ -47,7 +47,7 @@ public class EventBanner
 
     public boolean isDeepLink()
     {
-        return com.daily.base.util.TextUtils.isTextEmpty(webLink) == true;
+        return DailyTextUtils.isTextEmpty(webLink) == true;
     }
 
     public boolean isHotel()

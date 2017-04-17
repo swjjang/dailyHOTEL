@@ -28,6 +28,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -199,7 +200,7 @@ public class PaymentWaitActivity extends BaseActivity
                     return;
                 }
 
-                com.daily.base.util.TextUtils.clipText(PaymentWaitActivity.this, (String) mAccountTextView.getTag());
+                DailyTextUtils.clipText(PaymentWaitActivity.this, (String) mAccountTextView.getTag());
 
                 DailyToast.showToast(PaymentWaitActivity.this, R.string.message_detail_copy_account_number, Toast.LENGTH_SHORT);
             }
@@ -407,14 +408,14 @@ public class PaymentWaitActivity extends BaseActivity
         mDeadlineTextView.setText(validToDate);
 
         // 결재 금액 정보
-        mPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, reservationJSONObject.getInt("price"), false));
+        mPriceTextView.setText(DailyTextUtils.getPriceFormat(this, reservationJSONObject.getInt("price"), false));
 
         int bonus = reservationJSONObject.getInt("bonus");
 
         if (bonus > 0)
         {
             mBonusLayout.setVisibility(View.VISIBLE);
-            mBonusTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(this, bonus, false));
+            mBonusTextView.setText("- " + DailyTextUtils.getPriceFormat(this, bonus, false));
         } else
         {
             mBonusLayout.setVisibility(View.GONE);
@@ -425,7 +426,7 @@ public class PaymentWaitActivity extends BaseActivity
         if (coupon > 0)
         {
             mCouponLayout.setVisibility(View.VISIBLE);
-            mCouponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(this, coupon, false));
+            mCouponTextView.setText("- " + DailyTextUtils.getPriceFormat(this, coupon, false));
         } else
         {
             mCouponLayout.setVisibility(View.GONE);
@@ -433,7 +434,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         int paymentPrice = reservationJSONObject.getInt("amt");
 
-        mTotalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, paymentPrice, false));
+        mTotalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, paymentPrice, false));
 
         // 확인 사항
         String msg1 = jsonObject.getString("msg1");
@@ -463,16 +464,16 @@ public class PaymentWaitActivity extends BaseActivity
         if (coupon > 0)
         {
             mCouponLayout.setVisibility(View.VISIBLE);
-            mCouponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(this, coupon, false));
+            mCouponTextView.setText("- " + DailyTextUtils.getPriceFormat(this, coupon, false));
         } else
         {
             mCouponLayout.setVisibility(View.GONE);
         }
 
-        mPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, jsonObject.getInt("price"), false));
+        mPriceTextView.setText(DailyTextUtils.getPriceFormat(this, jsonObject.getInt("price"), false));
 
         int paymentPrice = jsonObject.getInt("amt");
-        mTotalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(this, paymentPrice, false));
+        mTotalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, paymentPrice, false));
 
         String msg1 = jsonObject.getString("msg1");
         setGuideText(mGuide1Layout, msg1.split("\\."), false);

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.main;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -116,7 +117,7 @@ public class MainNetworkController extends BaseNetworkController
 
     protected void requestEventNCouponNNoticeNewCount(String lastEventTime, String lastCouponTime, String lastNoticeTime)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(lastEventTime, lastCouponTime, lastNoticeTime) == true)
+        if (DailyTextUtils.isTextEmpty(lastEventTime, lastCouponTime, lastNoticeTime) == true)
         {
             return;
         }
@@ -397,7 +398,7 @@ public class MainNetworkController extends BaseNetworkController
                         final String userType = dataJSONObject.has("userType") == true ? dataJSONObject.getString("userType") : AnalyticsManager.ValueType.EMPTY;
                         AnalyticsManager.getInstance(mContext).setUserInformation(userIndex, userType);
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(userIndex) == true)
+                        if (DailyTextUtils.isTextEmpty(userIndex) == true)
                         {
                             if (Constants.DEBUG == true)
                             {

@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchParams;
@@ -10,7 +11,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -100,7 +100,7 @@ public class StaySearchResultListNetworkController extends BaseNetworkController
                                     String code = categoryJSONObject.getString("alias");
                                     int count = categoryJSONObject.getInt("count");
 
-                                    if (count > 0 && com.daily.base.util.TextUtils.isTextEmpty(name, code) == false)
+                                    if (count > 0 && DailyTextUtils.isTextEmpty(name, code) == false)
                                     {
                                         categoryList.add(new Category(name, code));
                                     }

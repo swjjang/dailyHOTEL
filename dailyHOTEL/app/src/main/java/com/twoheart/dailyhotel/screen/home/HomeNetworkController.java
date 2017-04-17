@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -263,7 +264,7 @@ public class HomeNetworkController extends BaseNetworkController
 
                         for (HomePlace wishItem : homePlaceList)
                         {
-                            if (com.daily.base.util.TextUtils.isTextEmpty(wishItem.imageUrl) == false)
+                            if (DailyTextUtils.isTextEmpty(wishItem.imageUrl) == false)
                             {
                                 wishItem.imageUrl = imageBaseUrl + wishItem.imageUrl;
                             }
@@ -313,7 +314,7 @@ public class HomeNetworkController extends BaseNetworkController
 
                         for (HomePlace recentItem : homePlaceList)
                         {
-                            if (com.daily.base.util.TextUtils.isTextEmpty(recentItem.imageUrl) == false)
+                            if (DailyTextUtils.isTextEmpty(recentItem.imageUrl) == false)
                             {
                                 recentItem.imageUrl = imageBaseUrl + recentItem.imageUrl;
                             }

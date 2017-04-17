@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceReviewItem;
@@ -552,7 +553,7 @@ public class PlaceReviewLayout extends BaseLayout
             final int MAX_LINE = 10;
             final PlaceReview placeReview = placeViewItem.getItem();
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(placeReview.email) == true)
+            if (DailyTextUtils.isTextEmpty(placeReview.email) == true)
             {
                 placeReview.email = mContext.getString(R.string.label_customer);
             }

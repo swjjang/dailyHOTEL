@@ -28,6 +28,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -311,7 +312,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 if (customer == null)
                 {
                     Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
-                } else if (com.daily.base.util.TextUtils.isTextEmpty(customer.getName()) == true)
+                } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
                 {
                     Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
                         + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
@@ -397,7 +398,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 if (customer == null)
                 {
                     Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: customer is null");
-                } else if (com.daily.base.util.TextUtils.isTextEmpty(customer.getName()) == true)
+                } else if (DailyTextUtils.isTextEmpty(customer.getName()) == true)
                 {
                     Crashlytics.log("HotelPaymentActivity::requestEasyPayment :: name=" //
                         + customer.getName() + " , userIndex=" + customer.getUserIdx() + " , user_email=" + customer.getEmail());
@@ -458,7 +459,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         mSelectedCreditCard = creditCard;
 
         if (paymentType == PlacePaymentInformation.PaymentType.EASY_CARD &&//
-            creditCard != null && com.daily.base.util.TextUtils.isTextEmpty(creditCard.billingkey) == false)
+            creditCard != null && DailyTextUtils.isTextEmpty(creditCard.billingkey) == false)
         {
             DailyPreference.getInstance(this).setSelectedSimpleCard(Crypto.urlEncrypt(creditCard.billingkey));
         }
@@ -475,7 +476,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected boolean hasWarningMessage()
     {
-        return (com.daily.base.util.TextUtils.isTextEmpty(mWarningDialogMessage) == false);
+        return (DailyTextUtils.isTextEmpty(mWarningDialogMessage) == false);
     }
 
     @Override
@@ -867,7 +868,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         {
             Customer customer = mPaymentInformation.getCustomer();
 
-            if (customer == null || com.daily.base.util.TextUtils.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
+            if (customer == null || DailyTextUtils.isTextEmpty(customer.getName(), customer.getUserIdx()) == true)
             {
                 if (DEBUG == false)
                 {
@@ -1101,7 +1102,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         if (coupon.amount > originalPrice)
         {
-            String difference = com.daily.base.util.TextUtils.getPriceFormat(this, (coupon.amount - originalPrice), false);
+            String difference = DailyTextUtils.getPriceFormat(this, (coupon.amount - originalPrice), false);
 
             showSimpleDialog(null, getString(R.string.message_over_coupon_price, difference), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new OnClickListener()
             {
@@ -1256,7 +1257,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     @Override
     protected void recordAnalyticsPayment(PlacePaymentInformation paymentInformation, PlaceBookingDay placeBookingDay)
     {
-        if (paymentInformation == null || placeBookingDay == null || com.daily.base.util.TextUtils.isTextEmpty(mScreenAnalytics) == true)
+        if (paymentInformation == null || placeBookingDay == null || DailyTextUtils.isTextEmpty(mScreenAnalytics) == true)
         {
             return;
         }
@@ -1309,7 +1310,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             AnalyticsManager.getInstance(HotelPaymentActivity.this).recordScreen(this, mScreenAnalytics, null, params);
@@ -1435,7 +1436,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
                 }
 
-                params.put(AnalyticsManager.KeyType.AREA, com.daily.base.util.TextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
+                params.put(AnalyticsManager.KeyType.AREA, DailyTextUtils.isTextEmpty(mArea) ? AnalyticsManager.ValueType.EMPTY : mArea);
             }
 
             params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookingDay.getCheckInDay("yyyyMMdd"));
@@ -1833,7 +1834,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
             if (guest != null)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(guest.name) == true)
+                if (DailyTextUtils.isTextEmpty(guest.name) == true)
                 {
                     releaseUiComponent();
 
@@ -1847,7 +1848,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                         DailyToast.showToast(HotelPaymentActivity.this, R.string.toast_msg_please_input_guest, Toast.LENGTH_SHORT);
                     }
                     return;
-                } else if (com.daily.base.util.TextUtils.isTextEmpty(guest.phone) == true)
+                } else if (DailyTextUtils.isTextEmpty(guest.phone) == true)
                 {
                     releaseUiComponent();
 
@@ -1855,7 +1856,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     DailyToast.showToast(HotelPaymentActivity.this, R.string.toast_msg_please_input_contact, Toast.LENGTH_SHORT);
                     return;
-                } else if (com.daily.base.util.TextUtils.isTextEmpty(guest.email) == true)
+                } else if (DailyTextUtils.isTextEmpty(guest.email) == true)
                 {
                     releaseUiComponent();
 
@@ -1888,7 +1889,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             {
                 setBonusSelected(false);
 
-                String msg = getString(R.string.dialog_btn_payment_no_reserve, com.daily.base.util.TextUtils.getPriceFormat(HotelPaymentActivity.this, DEFAULT_AVAILABLE_RESERVES, false));
+                String msg = getString(R.string.dialog_btn_payment_no_reserve, DailyTextUtils.getPriceFormat(HotelPaymentActivity.this, DEFAULT_AVAILABLE_RESERVES, false));
 
                 showSimpleDialog(getString(R.string.dialog_notice2), msg, getString(R.string.dialog_btn_text_confirm), null);
 
@@ -2132,9 +2133,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                         guest.name = overseasName;
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(guest.phone) == true)
+                        if (DailyTextUtils.isTextEmpty(guest.phone) == true)
                         {
-                            if (com.daily.base.util.TextUtils.isTextEmpty(overseasPhone) == false)
+                            if (DailyTextUtils.isTextEmpty(overseasPhone) == false)
                             {
                                 guest.phone = overseasPhone;
                             } else
@@ -2143,9 +2144,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             }
                         }
 
-                        if (com.daily.base.util.TextUtils.isTextEmpty(guest.email) == true)
+                        if (DailyTextUtils.isTextEmpty(guest.email) == true)
                         {
-                            if (com.daily.base.util.TextUtils.isTextEmpty(overseasEmail) == false)
+                            if (DailyTextUtils.isTextEmpty(overseasEmail) == false)
                             {
                                 guest.email = overseasEmail;
                             } else
@@ -2154,7 +2155,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             }
                         }
 
-                        if (com.daily.base.util.TextUtils.isNameCharacter(overseasName) == false)
+                        if (DailyTextUtils.isNameCharacter(overseasName) == false)
                         {
                             guest.name = "";
                             mHotelPaymentLayout.requestGuestInformationFocus(UserInformationType.NAME);
@@ -2739,7 +2740,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             }
 
                             // Analytics
-                            if (com.daily.base.util.TextUtils.isTextEmpty(refundPolicy) == false)
+                            if (DailyTextUtils.isTextEmpty(refundPolicy) == false)
                             {
                                 switch (refundPolicy)
                                 {

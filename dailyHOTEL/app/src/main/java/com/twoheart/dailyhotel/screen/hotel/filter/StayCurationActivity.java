@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -715,7 +716,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         @Override
         public void onStayCount(String url, int hotelSaleCount)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && hotelSaleCount == -1)
+            if (DailyTextUtils.isTextEmpty(url) == true && hotelSaleCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));

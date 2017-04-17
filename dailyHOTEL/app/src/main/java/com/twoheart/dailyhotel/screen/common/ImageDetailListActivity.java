@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -375,7 +376,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
         {
             View view;
 
-            Uri imageUri = com.daily.base.util.TextUtils.isTextEmpty(getItem(position).getImageUrl()) == true ? null : Uri.parse(getItem(position).getImageUrl());
+            Uri imageUri = DailyTextUtils.isTextEmpty(getItem(position).getImageUrl()) == true ? null : Uri.parse(getItem(position).getImageUrl());
             String description = getItem(position).description;
 
             if (convertView == null)
@@ -392,7 +393,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
             TextView textView = (TextView) view.findViewById(R.id.descriptionTextView);
             final com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(description) == false)
+            if (DailyTextUtils.isTextEmpty(description) == false)
             {
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(description);

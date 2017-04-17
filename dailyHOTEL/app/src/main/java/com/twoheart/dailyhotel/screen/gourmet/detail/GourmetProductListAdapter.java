@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyImageView;
+import com.daily.base.util.DailyTextUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -198,8 +199,8 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
         productInformationViewHolder.contentsList.removeAllViews();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true && com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == true//
-            && com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == true && DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == true//
+            && DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == true)
         {
             productInformationViewHolder.contentsList.setVisibility(View.GONE);
         } else
@@ -207,17 +208,17 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             productInformationViewHolder.contentsList.setVisibility(View.VISIBLE);
 
             // 베네핏
-            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.menuBenefit) == false)
+            if (DailyTextUtils.isTextEmpty(gourmetProduct.menuBenefit) == false)
             {
                 addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.menuBenefit, R.drawable.ic_detail_item_02_benefit, false);
             }
 
             // 이용 시간
-            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
+            if (DailyTextUtils.isTextEmpty(gourmetProduct.openTime, gourmetProduct.closeTime) == false)
             {
                 String timeFormat = mContext.getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetProduct.openTime, gourmetProduct.closeTime);
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
+                if (DailyTextUtils.isTextEmpty(gourmetProduct.lastOrderTime) == false)
                 {
                     timeFormat += " " + mContext.getString(R.string.label_gourmet_product_lastorder, gourmetProduct.lastOrderTime);
                 }
@@ -226,7 +227,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             // 확인 사항
-            if (com.daily.base.util.TextUtils.isTextEmpty(gourmetProduct.needToKnow) == false)
+            if (DailyTextUtils.isTextEmpty(gourmetProduct.needToKnow) == false)
             {
                 addProductSubInformation(mInflater, productInformationViewHolder.contentsList, gourmetProduct.needToKnow, R.drawable.ic_detail_item_01_info, true);
             }
@@ -290,8 +291,8 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
         //            }
         //        }
 
-        String price = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetProduct.price, false);
-        String discountPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
+        String price = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.price, false);
+        String discountPrice = DailyTextUtils.getPriceFormat(mContext, gourmetProduct.discountPrice, false);
 
         if (gourmetProduct.price <= 0 || gourmetProduct.price <= gourmetProduct.discountPrice)
         {
@@ -345,7 +346,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, boolean hasTopMargin)
     {
-        if (layoutInflater == null || viewGroup == null || com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
+        if (layoutInflater == null || viewGroup == null || DailyTextUtils.isTextEmpty(contentText) == true)
         {
             return;
         }
@@ -369,7 +370,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private float addProductSubInformation(LayoutInflater layoutInflater, ViewGroup viewGroup, String contentText, int iconResId, float startY, int textViewWidth, Rect rect, boolean hasTopMargin)
     {
-        if (layoutInflater == null || viewGroup == null || com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
+        if (layoutInflater == null || viewGroup == null || DailyTextUtils.isTextEmpty(contentText) == true)
         {
             return startY;
         }
@@ -405,7 +406,7 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
 
     protected float measureText(TextView textView, String text, float viewY, int viewWidth, Rect rect)
     {
-        if (textView == null || viewWidth <= 0 || com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (textView == null || viewWidth <= 0 || DailyTextUtils.isTextEmpty(text) == true)
         {
             return 0;
         }
@@ -444,12 +445,12 @@ public class GourmetProductListAdapter extends RecyclerView.Adapter<RecyclerView
             startIndex += textCount;
 
             textView.setText(stringBuilder.toString());
-            textViewHeight = com.daily.base.util.TextUtils.getTextViewHeight(textView, viewWidth);
+            textViewHeight = DailyTextUtils.getTextViewHeight(textView, viewWidth);
         }
 
         textView.setText(stringBuilder.toString());
 
-        return viewY + com.daily.base.util.TextUtils.getTextViewHeight(textView, viewWidth);
+        return viewY + DailyTextUtils.getTextViewHeight(textView, viewWidth);
     }
 
     private class ProductInformationViewHolder extends RecyclerView.ViewHolder

@@ -30,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
@@ -108,7 +109,7 @@ public class Util implements Constants
     {
         simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(imageUrl) == true)
+        if (DailyTextUtils.isTextEmpty(imageUrl) == true)
         {
             simpleDraweeView.setImageURI((String) null);
             return;
@@ -370,14 +371,14 @@ public class Util implements Constants
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             String countryIsoCode = telephonyManager.getSimCountryIso();
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(countryIsoCode) == true)
+            if (DailyTextUtils.isTextEmpty(countryIsoCode) == true)
             {
                 Locale currentLocale = context.getResources().getConfiguration().locale;
 
                 countryIsoCode = currentLocale.getCountry();
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(countryIsoCode) == false)
+            if (DailyTextUtils.isTextEmpty(countryIsoCode) == false)
             {
                 CountryCodeNumber countryCodeNumber = new CountryCodeNumber();
 
@@ -407,7 +408,7 @@ public class Util implements Constants
 
     public static boolean isValidatePhoneNumber(String phoneNumber)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
+        if (DailyTextUtils.isTextEmpty(phoneNumber) == true)
         {
             return false;
         }
@@ -463,7 +464,7 @@ public class Util implements Constants
      */
     public static boolean isExistMobileNumber(String mobileNumber)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(mobileNumber) == true || mobileNumber.startsWith("+82") == false)
+        if (DailyTextUtils.isTextEmpty(mobileNumber) == true || mobileNumber.startsWith("+82") == false)
         {
             return false;
         }
@@ -497,7 +498,7 @@ public class Util implements Constants
 
     public static String[] getValidatePhoneNumber(String phoneNumber)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
+        if (DailyTextUtils.isTextEmpty(phoneNumber) == true)
         {
             return null;
         }
@@ -509,7 +510,7 @@ public class Util implements Constants
             String countryCode = getValidateCountry(text[0]);
 
             // 국제 전화번호 존재 여부 확인
-            if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
+            if (DailyTextUtils.isTextEmpty(countryCode) == true)
             {
                 return null;
             }
@@ -576,7 +577,7 @@ public class Util implements Constants
         TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(titleText) == true)
+        if (DailyTextUtils.isTextEmpty(titleText) == true)
         {
             titleTextView.setText(baseActivity.getString(R.string.dialog_notice2));
         } else
@@ -654,7 +655,7 @@ public class Util implements Constants
 
     public static String addHyphenMobileNumber(Context context, String mobileNumber)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(mobileNumber) == true)
+        if (DailyTextUtils.isTextEmpty(mobileNumber) == true)
         {
             return "";
         }
@@ -685,7 +686,7 @@ public class Util implements Constants
 
     public static boolean isInstalledPackage(Context context, String packageName, Intent intent)
     {
-        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(packageName) == true || intent == null)
+        if (context == null || DailyTextUtils.isTextEmpty(packageName) == true || intent == null)
         {
             return false;
         }
@@ -704,7 +705,7 @@ public class Util implements Constants
 
     public static void shareDaumMap(Activity activity, String latitude, String longitude)
     {
-        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude, longitude) == true)
+        if (activity == null || DailyTextUtils.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -726,7 +727,7 @@ public class Util implements Constants
 
     public static void shareNaverMap(Activity activity, String name, String latitude, String longitude)
     {
-        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude, longitude) == true)
+        if (activity == null || DailyTextUtils.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -754,7 +755,7 @@ public class Util implements Constants
 
     public static void shareKakaoNavi(Activity activity, String name, String latitude, String longitude)
     {
-        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude) == true || com.daily.base.util.TextUtils.isTextEmpty(longitude) == true)
+        if (activity == null || DailyTextUtils.isTextEmpty(latitude) == true || DailyTextUtils.isTextEmpty(longitude) == true)
         {
             return;
         }
@@ -782,7 +783,7 @@ public class Util implements Constants
 
     public static void shareGoogleMap(Activity activity, String placeName, String latitude, String longitude)
     {
-        if (activity == null || com.daily.base.util.TextUtils.isTextEmpty(latitude, longitude) == true)
+        if (activity == null || DailyTextUtils.isTextEmpty(latitude, longitude) == true)
         {
             return;
         }
@@ -1067,9 +1068,9 @@ public class Util implements Constants
 
                     Util.shareDaumMap(baseActivity, Double.toString(latitude), Double.toString(longitude));
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
+                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
+                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Daum", null);
                         } else
@@ -1092,9 +1093,9 @@ public class Util implements Constants
 
                     Util.shareNaverMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
+                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
+                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Naver", null);
                         } else
@@ -1117,9 +1118,9 @@ public class Util implements Constants
 
                     Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
+                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
+                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
                         } else
@@ -1142,9 +1143,9 @@ public class Util implements Constants
 
                     Util.shareTMapNavi(baseActivity, placeName, (float) latitude, (float) longitude);
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
+                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
+                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "TmapNavi", null);
                         } else
@@ -1167,9 +1168,9 @@ public class Util implements Constants
 
                     Util.shareKakaoNavi(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
+                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
+                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "kakaoNavi", null);
                         } else
@@ -1198,9 +1199,9 @@ public class Util implements Constants
 
                     Util.shareGoogleMap(baseActivity, placeName, Double.toString(latitude), Double.toString(longitude));
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(gaCategory) == false)
+                    if (DailyTextUtils.isTextEmpty(gaCategory) == false)
                     {
-                        if (com.daily.base.util.TextUtils.isTextEmpty(gaLabel) == true)
+                        if (DailyTextUtils.isTextEmpty(gaLabel) == true)
                         {
                             AnalyticsManager.getInstance(baseActivity).recordEvent(gaCategory, gaAction, "Google", null);
                         } else
@@ -1238,7 +1239,7 @@ public class Util implements Constants
 
     public static void installPackage(Context context, String packageName)
     {
-        if (context == null || com.daily.base.util.TextUtils.isTextEmpty(packageName) == true)
+        if (context == null || DailyTextUtils.isTextEmpty(packageName) == true)
         {
             return;
         }
@@ -1270,7 +1271,7 @@ public class Util implements Constants
 
     public static String makeIntroImageFileName(String version)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(version) == true)
+        if (DailyTextUtils.isTextEmpty(version) == true)
         {
             return "daily_intro";
         }
@@ -1281,7 +1282,7 @@ public class Util implements Constants
 
     public static String makeImageFileName(String version)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(version) == true)
+        if (DailyTextUtils.isTextEmpty(version) == true)
         {
             return "daily_image";
         }
@@ -1292,7 +1293,7 @@ public class Util implements Constants
 
     public static String makeStampStayThankYpuImageFileName(String version)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(version) == true)
+        if (DailyTextUtils.isTextEmpty(version) == true)
         {
             return "daily_stamp_stay";
         }
@@ -1318,7 +1319,7 @@ public class Util implements Constants
     {
         String value = DailyPreference.getInstance(context).getNoticeNewList();
 
-        return (com.daily.base.util.TextUtils.isTextEmpty(value) == false);
+        return (DailyTextUtils.isTextEmpty(value) == false);
     }
 
     public static ArrayList<Notice> checkNoticeNewList(Context context, ArrayList<Notice> noticeList)
@@ -1333,7 +1334,7 @@ public class Util implements Constants
         String removeValue = DailyPreference.getInstance(context).getNoticeNewRemoveList();
         String indexString;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(removeValue) == true)
+        if (DailyTextUtils.isTextEmpty(removeValue) == true)
         {
             removeValue = "";
         }
@@ -1368,12 +1369,12 @@ public class Util implements Constants
 
         String indexString = Integer.toString(index) + SEPARATE;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(newValue) == false)
+        if (DailyTextUtils.isTextEmpty(newValue) == false)
         {
             DailyPreference.getInstance(context).setNoticeNewList(newValue.replace(indexString, ""));
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(removeValue) == true)
+        if (DailyTextUtils.isTextEmpty(removeValue) == true)
         {
             DailyPreference.getInstance(context).setNoticeNewRemoveList(indexString);
         } else

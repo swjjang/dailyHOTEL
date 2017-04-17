@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -109,7 +110,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
         mBirthdayEditText.setOnFocusChangeListener(this);
         mBirthdayEditText.setOnClickListener(this);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
+        if (DailyTextUtils.isTextEmpty(birthday) == true)
         {
             mBirthdayEditText.setText(null);
         } else
@@ -146,7 +147,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
         mConfirmView = findViewById(R.id.confirmView);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
+        if (DailyTextUtils.isTextEmpty(birthday) == true)
         {
             mConfirmView.setEnabled(false);
         } else
@@ -182,7 +183,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
             {
                 String birthday = mBirthdayEditText.getText().toString();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
+                if (DailyTextUtils.isTextEmpty(birthday) == true)
                 {
                     DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.act_profile_input_birthday, Toast.LENGTH_SHORT);
                     return;
@@ -197,7 +198,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 birthday = (String) mBirthdayEditText.getTag();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
+                if (DailyTextUtils.isTextEmpty(birthday) == true)
                 {
                     DailyToast.showToast(EditProfileBirthdayActivity.this, R.string.act_profile_input_birthday, Toast.LENGTH_SHORT);
                     return;
@@ -275,7 +276,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                 {
                     String birthday = (String) mBirthdayEditText.getTag();
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
+                    if (DailyTextUtils.isTextEmpty(birthday) == false)
                     {
                         try
                         {

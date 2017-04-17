@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
 import com.daily.base.R;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
@@ -123,7 +124,7 @@ public class DailyAutoCompleteEditText extends AppCompatAutoCompleteTextView
     {
         super.setText(text, type);
 
-        if (mHasDeleteButton == true && text != null && com.daily.base.util.TextUtils.isTextEmpty(text.toString()) == false)
+        if (mHasDeleteButton == true && text != null && DailyTextUtils.isTextEmpty(text.toString()) == false)
         {
             setDeleteDrawable();
         }

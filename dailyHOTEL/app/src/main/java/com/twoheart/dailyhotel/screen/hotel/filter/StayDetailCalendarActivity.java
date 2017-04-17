@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -182,7 +183,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
         String title = getResources().getString(R.string.dialog_notice2);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+        if (DailyTextUtils.isTextEmpty(message) == true)
         {
             message = getResources().getString(R.string.stay_detail_calender_dialog_message);
         }

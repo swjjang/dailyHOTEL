@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -90,7 +91,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         name.setText(stay.name);
 
         // D.benefit
-        if (com.daily.base.util.TextUtils.isTextEmpty(stay.dBenefitText) == false)
+        if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
             dBenefitLayout.setVisibility(View.VISIBLE);
             dBenefitTextView.setText(stay.dBenefitText);
@@ -108,7 +109,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         {
             priceTextView.setVisibility(View.VISIBLE);
 
-            priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.price, false));
+            priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stay.price, false));
             priceTextView.setPaintFlags(priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
@@ -131,7 +132,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             averageTextView.setVisibility(View.GONE);
         }
 
-        discountTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.discountPrice, false));
+        discountTextView.setText(DailyTextUtils.getPriceFormat(mContext, stay.discountPrice, false));
 
         name.setSelected(true); // Android TextView marquee bug
 

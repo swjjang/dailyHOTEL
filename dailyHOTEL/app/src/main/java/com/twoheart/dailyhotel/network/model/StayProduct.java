@@ -7,7 +7,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.DailyTextUtils;
 
 @JsonObject
 public class StayProduct implements Parcelable
@@ -76,13 +76,13 @@ public class StayProduct implements Parcelable
     @OnJsonParseComplete
     void onParseComplete()
     {
-        roomName = com.daily.base.util.TextUtils.isTextEmpty(roomName) == true ? "" : roomName.trim();
-        option = com.daily.base.util.TextUtils.isTextEmpty(option) == true ? "" : option.trim();
-        amenities = com.daily.base.util.TextUtils.isTextEmpty(amenities) == true ? "" : amenities.trim();
+        roomName = DailyTextUtils.isTextEmpty(roomName) == true ? "" : roomName.trim();
+        option = DailyTextUtils.isTextEmpty(option) == true ? "" : option.trim();
+        amenities = DailyTextUtils.isTextEmpty(amenities) == true ? "" : amenities.trim();
 
-        roomBenefit = com.daily.base.util.TextUtils.isTextEmpty(roomBenefit) == true ? "" : roomBenefit.trim();
+        roomBenefit = DailyTextUtils.isTextEmpty(roomBenefit) == true ? "" : roomBenefit.trim();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true)
+        if (DailyTextUtils.isTextEmpty(refundType) == false && NRD.equalsIgnoreCase(refundType) == true)
         {
             isNRD = true;
         } else

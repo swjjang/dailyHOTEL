@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
@@ -17,7 +18,6 @@ import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -193,7 +193,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         @Override
         public void onStayCount(String url, int totalCount, int maxCount)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && totalCount == -1)
+            if (DailyTextUtils.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_hotel_filter_result_empty));

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -412,7 +413,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     void recordEventSearchResultByLocation(String address, boolean isEmpty, Map<String, String> params)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(address))
+        if (DailyTextUtils.isTextEmpty(address))
         {
             return;
         }
@@ -437,7 +438,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(action) == false)
+            if (DailyTextUtils.isTextEmpty(action) == false)
             {
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                     , action, address, params);

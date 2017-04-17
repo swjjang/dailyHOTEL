@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.daily.base.util.ExLog;
@@ -218,12 +219,12 @@ public class StayParams extends PlaceParams
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(sortProperty) == false)
+            if (DailyTextUtils.isTextEmpty(sortProperty) == false)
             {
                 hashMap.put("sortProperty", sortProperty);
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(sortDirection) == false)
+            if (DailyTextUtils.isTextEmpty(sortDirection) == false)
             {
                 hashMap.put("sortDirection", sortDirection);
             }

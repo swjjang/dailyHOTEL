@@ -24,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
@@ -495,7 +496,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
     {
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             return spannableStringBuilder;
         }

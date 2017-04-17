@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -42,7 +43,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     {
         Intent intent = new Intent(context, NoticeListActivity.class);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }

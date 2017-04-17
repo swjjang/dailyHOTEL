@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CouponHistory;
@@ -66,7 +67,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     {
         CouponHistory coupon = getItem(position);
 
-        String strAmount = com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amount, false);
+        String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
         holder.descriptionTextView.setText(coupon.title);

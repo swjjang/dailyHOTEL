@@ -5,6 +5,7 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityProfileDataBinding;
@@ -56,7 +57,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         // 생일
         viewDataBinding.birthdayLayout.setOnClickListener(v ->
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(viewDataBinding.birthdayTextView.getText().toString()) == false)
+            if (DailyTextUtils.isTextEmpty(viewDataBinding.birthdayTextView.getText().toString()) == false)
             {
                 getEventListener().startEditBirthday((String) viewDataBinding.birthdayTextView.getTag());
             } else
@@ -94,12 +95,12 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(userType) == false)
+        if (DailyTextUtils.isTextEmpty(userType) == false)
         {
             userType = Constants.DAILY_USER;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+        if (DailyTextUtils.isTextEmpty(email) == true)
         {
             viewDataBinding.emailView.setTextColor(getColor(R.color.default_text_c323232));
         }
@@ -109,7 +110,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         switch (userType)
         {
             case Constants.FACEBOOK_USER:
-                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+                if (DailyTextUtils.isTextEmpty(email) == true)
                 {
                     viewDataBinding.emailTextView.setOnClickListener(v -> getEventListener().startEditEmail());
                 }
@@ -118,7 +119,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
                 break;
 
             case Constants.KAKAO_USER:
-                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+                if (DailyTextUtils.isTextEmpty(email) == true)
                 {
                     viewDataBinding.emailTextView.setOnClickListener(v -> getEventListener().startEditEmail());
                 }
@@ -147,7 +148,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         }
 
         // 이름
-        if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+        if (DailyTextUtils.isTextEmpty(name) == true)
         {
             viewDataBinding.nameView.setTextColor(getColor(R.color.default_text_c323232));
         }
@@ -165,7 +166,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == true)
+        if (DailyTextUtils.isTextEmpty(birthday) == true)
         {
             viewDataBinding.birthdayView.setTextColor(getColor(R.color.default_text_c323232));
         } else
@@ -193,7 +194,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
+        if (DailyTextUtils.isTextEmpty(phoneNumber) == true)
         {
             viewDataBinding.phoneView.setTextColor(getColor(R.color.default_text_c323232));
         }
@@ -231,7 +232,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         }
 
         // 인증 여부
-        if (isPhoneVerified == true && com.daily.base.util.TextUtils.isTextEmpty(verifiedDate) == false)
+        if (isPhoneVerified == true && DailyTextUtils.isTextEmpty(verifiedDate) == false)
         {
             viewDataBinding.phoneVerifyView.setTextColor(getColor(R.color.search_hint_text));
             viewDataBinding.phoneVerifyView.setText(getString(R.string.label_date_verification, verifiedDate.replaceAll("-", ".")));

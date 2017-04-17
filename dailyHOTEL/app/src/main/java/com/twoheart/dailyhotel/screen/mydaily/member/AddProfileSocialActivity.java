@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -106,7 +107,7 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hidePhoneLayout();
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getEmail()) == true)
+        if (DailyTextUtils.isTextEmpty(mCustomer.getEmail()) == true)
         {
             mAddProfileSocialLayout.showEmailLayout();
         } else
@@ -199,7 +200,7 @@ public class AddProfileSocialActivity extends BaseActivity
             updateDate = null;
         }
 
-        if (isBenefit == true && com.daily.base.util.TextUtils.isTextEmpty(updateDate) == false)
+        if (isBenefit == true && DailyTextUtils.isTextEmpty(updateDate) == false)
         {
             messageTextView.setVisibility(View.VISIBLE);
             messageTextView.setText(getString(R.string.message_signup_completed_alarm_on_format, updateDate));
@@ -384,9 +385,9 @@ public class AddProfileSocialActivity extends BaseActivity
         public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
         {
             // 전화번호가 없거나 잘못 된경우
-            if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
+            if (DailyTextUtils.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
+                if (DailyTextUtils.isTextEmpty(phoneNumber) == true)
                 {
                     DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_phone, Toast.LENGTH_SHORT);
                     return;
@@ -400,9 +401,9 @@ public class AddProfileSocialActivity extends BaseActivity
             }
 
             // 이메일이 없는 경우
-            if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getEmail()) == true)
+            if (DailyTextUtils.isTextEmpty(mCustomer.getEmail()) == true)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(email) == true)
+                if (DailyTextUtils.isTextEmpty(email) == true)
                 {
                     DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_id, Toast.LENGTH_SHORT);
                     return;
@@ -417,9 +418,9 @@ public class AddProfileSocialActivity extends BaseActivity
             }
 
             // 이름이 없는 경우
-            if (com.daily.base.util.TextUtils.isTextEmpty(mCustomer.getName()) == true)
+            if (DailyTextUtils.isTextEmpty(mCustomer.getName()) == true)
             {
-                if (com.daily.base.util.TextUtils.isTextEmpty(name) == true)
+                if (DailyTextUtils.isTextEmpty(name) == true)
                 {
                     DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_please_input_name, Toast.LENGTH_SHORT);
                     return;
@@ -462,7 +463,7 @@ public class AddProfileSocialActivity extends BaseActivity
         @Override
         public void onUpdateSocialUserInformation(String message, String agreedDate)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+            if (DailyTextUtils.isTextEmpty(message) == true)
             {
                 boolean isBenefit = mAddProfileSocialLayout.isCheckedBenefit();
 

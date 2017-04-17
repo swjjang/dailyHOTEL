@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -328,7 +329,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         // 생일
         String birthday = mBirthdayEditText.getText().toString().trim();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
+        if (DailyTextUtils.isTextEmpty(birthday) == false)
         {
             Calendar calendar = (Calendar) mBirthdayEditText.getTag();
 

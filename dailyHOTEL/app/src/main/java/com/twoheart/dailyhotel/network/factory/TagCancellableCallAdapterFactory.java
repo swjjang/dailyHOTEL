@@ -1,6 +1,6 @@
 package com.twoheart.dailyhotel.network.factory;
 
-import com.twoheart.dailyhotel.util.Util;
+import com.daily.base.util.DailyTextUtils;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -72,7 +72,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
 
     public void cancelAll(String tag)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
+        if (DailyTextUtils.isTextEmpty(tag) == true)
         {
             return;
         }

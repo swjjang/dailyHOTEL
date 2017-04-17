@@ -3,8 +3,8 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Locale;
 
@@ -62,7 +62,7 @@ public abstract class PlaceParams implements Parcelable
     protected String getParamString(String key, Object value)
     {
         String stringValue = String.valueOf(value);
-        if (com.daily.base.util.TextUtils.isTextEmpty(stringValue))
+        if (DailyTextUtils.isTextEmpty(stringValue))
         {
             return "";
         }

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.base.util.DailyTextUtils;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -49,7 +50,7 @@ public class ProfileActivity extends BaseActivity
     {
         Intent intent = new Intent(context, ProfileActivity.class);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
@@ -367,7 +368,7 @@ public class ProfileActivity extends BaseActivity
         @Override
         public void doCodeCopy(String code)
         {
-            com.daily.base.util.TextUtils.clipText(ProfileActivity.this, code);
+            DailyTextUtils.clipText(ProfileActivity.this, code);
 
             DailyToast.showToast(ProfileActivity.this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
 

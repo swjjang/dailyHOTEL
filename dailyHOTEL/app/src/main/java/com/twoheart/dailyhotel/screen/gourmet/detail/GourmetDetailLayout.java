@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.gourmet.detail;
 import android.content.Context;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -54,7 +55,7 @@ public class GourmetDetailLayout extends PlaceDetailLayout
     {
         mTransTotalGradeTextView.setVisibility(View.INVISIBLE);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeName) == false)
+        if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             mTransPlaceNameTextView.setText(placeName);
             mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));

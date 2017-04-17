@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -213,7 +214,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
 
     public void setCountryCode(String countryCode)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
+        if (DailyTextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }
@@ -357,7 +358,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
+        if (DailyTextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }
@@ -372,7 +373,7 @@ public class SignupStep2Layout extends BaseLayout implements OnClickListener, Vi
     {
         String tag = (String) mCountryEditText.getTag();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
+        if (DailyTextUtils.isTextEmpty(tag) == true)
         {
             tag = Util.DEFAULT_COUNTRY_CODE;
         }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayBookingDetail;
@@ -204,13 +205,13 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             ExLog.d(e.toString());
         }
 
-        priceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.price, false));
+        priceTextView.setText(DailyTextUtils.getPriceFormat(context, stayBookingDetail.price, false));
 
 
         if (stayBookingDetail.bonus > 0)
         {
             bonusLayout.setVisibility(View.VISIBLE);
-            bonusTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.bonus, false));
+            bonusTextView.setText("- " + DailyTextUtils.getPriceFormat(context, stayBookingDetail.bonus, false));
         } else
         {
             bonusLayout.setVisibility(View.GONE);
@@ -219,13 +220,13 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         if (stayBookingDetail.coupon > 0)
         {
             couponLayout.setVisibility(View.VISIBLE);
-            couponTextView.setText("- " + com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.coupon, false));
+            couponTextView.setText("- " + DailyTextUtils.getPriceFormat(context, stayBookingDetail.coupon, false));
         } else
         {
             couponLayout.setVisibility(View.GONE);
         }
 
-        totalPriceTextView.setText(com.daily.base.util.TextUtils.getPriceFormat(context, stayBookingDetail.paymentPrice, false));
+        totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, stayBookingDetail.paymentPrice, false));
     }
 
     @Override

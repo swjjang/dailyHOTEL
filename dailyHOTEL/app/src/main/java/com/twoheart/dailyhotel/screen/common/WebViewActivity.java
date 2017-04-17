@@ -32,6 +32,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -258,7 +259,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
         private void browseToExternalBrowser(String url)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+            if (DailyTextUtils.isTextEmpty(url) == true)
             {
                 return;
             }

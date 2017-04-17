@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -188,7 +188,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         int viewWidth = mDateTextView.getWidth() - (mDateTextView.getCompoundDrawablePadding() * 2) - mDateTextView.getCompoundDrawables()[0].getIntrinsicWidth() - mDateTextView.getCompoundDrawables()[2].getIntrinsicWidth();
 
         final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
-        final float width = com.daily.base.util.TextUtils.getTextWidth(mContext, text, 12d, typeface);
+        final float width = DailyTextUtils.getTextWidth(mContext, text, 12d, typeface);
 
         if (viewWidth > width)
         {
@@ -201,7 +201,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
             for (int i = 99; i >= 60; i--)
             {
                 scaleX = (float) i / 100;
-                scaleWidth = com.daily.base.util.TextUtils.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
+                scaleWidth = DailyTextUtils.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
 
                 if (viewWidth > scaleWidth)
                 {

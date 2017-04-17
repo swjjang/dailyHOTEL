@@ -7,10 +7,10 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -239,7 +239,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
         }
 
         // benefit
-        if (com.daily.base.util.TextUtils.isTextEmpty(benefit) == false)
+        if (DailyTextUtils.isTextEmpty(benefit) == false)
         {
             int length = benefitContents == null ? 0 : benefitContents.size();
             if (length > 0)
@@ -255,7 +255,7 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
                 mBenefitInformation = new ArrayList<>();
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(benefitWarning) == false)
+            if (DailyTextUtils.isTextEmpty(benefitWarning) == false)
             {
                 mBenefitInformation.add(benefitWarning);
             }

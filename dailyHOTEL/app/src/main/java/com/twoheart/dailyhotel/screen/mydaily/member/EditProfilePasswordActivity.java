@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
@@ -208,14 +209,14 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 String confirmPassword = mConfirmPasswordEditText.getText().toString();
 
                 // 패스워드 유효성 체크
-                if (com.daily.base.util.TextUtils.isTextEmpty(password) == true || password.length() < SignupStep1Activity.PASSWORD_MIN_COUNT)
+                if (DailyTextUtils.isTextEmpty(password) == true || password.length() < SignupStep1Activity.PASSWORD_MIN_COUNT)
                 {
                     mPasswordEditText.requestFocus();
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_password_more_than_8chars, Toast.LENGTH_SHORT);
                     return;
                 }
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(password, confirmPassword) == true)
+                if (DailyTextUtils.isTextEmpty(password, confirmPassword) == true)
                 {
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_please_input_required_infos, Toast.LENGTH_SHORT);
                     return;
@@ -230,7 +231,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
                 }
 
                 // 패스워드 검증
-                if (com.daily.base.util.TextUtils.verifyPassword(null, password) == false)
+                if (DailyTextUtils.verifyPassword(null, password) == false)
                 {
                     mPasswordEditText.requestFocus();
                     DailyToast.showToast(EditProfilePasswordActivity.this, R.string.toast_msg_failed_paswword_verify, Toast.LENGTH_SHORT);

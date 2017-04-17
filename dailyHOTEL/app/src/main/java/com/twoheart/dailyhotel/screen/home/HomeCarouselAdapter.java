@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -121,8 +122,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.personView.setText("");
         } else
         {
-            String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, prices.normalPrice, false);
-            String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, prices.discountPrice, false);
+            String strPrice = DailyTextUtils.getPriceFormat(mContext, prices.normalPrice, false);
+            String strDiscount = DailyTextUtils.getPriceFormat(mContext, prices.discountPrice, false);
 
             holder.discountPriceView.setText(strDiscount);
 
@@ -148,7 +149,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (place.placeType == Constants.PlaceType.FNB)
         {
             // grade
-            if (com.daily.base.util.TextUtils.isTextEmpty(place.details.category) == true)
+            if (DailyTextUtils.isTextEmpty(place.details.category) == true)
             {
                 holder.gradeView.setVisibility(View.GONE);
                 holder.dotView.setVisibility(View.GONE);

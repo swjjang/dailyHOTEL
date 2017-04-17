@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -228,14 +229,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 {
                     String tag = (String) mCountryEditText.getTag();
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(tag) == true)
+                    if (DailyTextUtils.isTextEmpty(tag) == true)
                     {
                         tag = Util.DEFAULT_COUNTRY_CODE;
                     }
 
                     phoneNumber = mPhoneEditText.getText().toString().trim();
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == true)
+                    if (DailyTextUtils.isTextEmpty(phoneNumber) == true)
                     {
                         phoneNumber = null;
                     } else
@@ -255,7 +256,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     name = mNameEditText.getText().toString().trim();
                 }
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(birthday) == false)
+                if (DailyTextUtils.isTextEmpty(birthday) == false)
                 {
                     Calendar calendar = (Calendar) mBirthdayEditText.getTag();
 
@@ -374,7 +375,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     public void setCountryCode(String countryCode)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
+        if (DailyTextUtils.isTextEmpty(countryCode) == true)
         {
             return;
         }

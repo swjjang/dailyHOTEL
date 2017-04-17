@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -36,7 +37,6 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Action;
 
@@ -124,7 +124,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
                     String placeType = externalDeepLink.getPlaceType();
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(placeType) == true)
+                    if (DailyTextUtils.isTextEmpty(placeType) == true)
                     {
                         sortType = CouponListActivity.SortType.ALL;
                     } else
@@ -306,7 +306,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
         Intent intent;
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(recommenderCode) == true)
+        if (DailyTextUtils.isTextEmpty(recommenderCode) == true)
         {
             intent = SignupStep1Activity.newInstance(baseActivity, null);
         } else
@@ -321,7 +321,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
     {
         String benefitMessage = DailyPreference.getInstance(getContext()).getBenefitAlarmMessage();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(benefitMessage) == true)
+        if (DailyTextUtils.isTextEmpty(benefitMessage) == true)
         {
             benefitMessage = getResources().getString(R.string.frag_push_alert_subtext);
             DailyPreference.getInstance(getContext()).setBenefitAlarmMessage(benefitMessage);

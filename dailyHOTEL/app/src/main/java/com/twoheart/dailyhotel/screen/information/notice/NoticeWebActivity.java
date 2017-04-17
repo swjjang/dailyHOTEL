@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -43,7 +44,7 @@ public class NoticeWebActivity extends WebViewActivity
         String title = intent.getStringExtra(INTENT_EXTRA_DATA_TITLE);
         String url = intent.getStringExtra(INTENT_EXTRA_DATA_URL);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(url) == true)
+        if (DailyTextUtils.isTextEmpty(url) == true)
         {
             finish();
             return;

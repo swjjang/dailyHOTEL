@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
@@ -702,7 +703,7 @@ public class HomeLayout extends BaseLayout
         String homeEventTitle = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventTitle();
         int homeEventIndex = DailyPreference.getInstance(mContext).getRemoteConfigHomeEventIndex();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(homeEventCurrentVersion) == true)
+        if (DailyTextUtils.isTextEmpty(homeEventCurrentVersion) == true)
         {
             return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
                 HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
@@ -728,7 +729,7 @@ public class HomeLayout extends BaseLayout
                     ExLog.d(e.toString());
                 }
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(urlString) == true)
+                if (DailyTextUtils.isTextEmpty(urlString) == true)
                 {
                     return new Event(HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL,//
                         HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL, null, null, -1);
@@ -887,7 +888,7 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(title) == true && com.daily.base.util.TextUtils.isTextEmpty(description) == true)
+        if (DailyTextUtils.isTextEmpty(title) == true && DailyTextUtils.isTextEmpty(description) == true)
         {
             if (mTextMessageLayout.getVisibility() != View.GONE)
             {

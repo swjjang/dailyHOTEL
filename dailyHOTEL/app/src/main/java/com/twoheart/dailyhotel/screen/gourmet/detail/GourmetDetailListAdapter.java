@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
@@ -22,7 +23,6 @@ import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.Util;
 import com.daily.base.widget.DailyTextView;
 
 import java.text.DecimalFormat;
@@ -149,7 +149,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             linearLayout.addView(mDetailViews[3]);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.benefit) == false)
+        if (DailyTextUtils.isTextEmpty(gourmetDetailParams.benefit) == false)
         {
             // D Benefit
             if (mDetailViews[4] == null)
@@ -222,7 +222,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 등급
         TextView gradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetGradeTextView);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.category) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetDetailParams.category) == true)
         {
             gradeTextView.setVisibility(View.GONE);
         } else
@@ -234,7 +234,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
         // 소분류 등급
         TextView subGradeTextView = (TextView) mGourmetTitleLayout.findViewById(R.id.gourmetSubGradeTextView);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(gourmetDetailParams.categorySub) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetDetailParams.categorySub) == true)
         {
             subGradeTextView.setVisibility(View.GONE);
         } else
@@ -611,7 +611,7 @@ public class GourmetDetailListAdapter extends BaseAdapter
             {
                 String contentText = contentsList.get(i);
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
+                if (DailyTextUtils.isTextEmpty(contentText) == true)
                 {
                     continue;
                 }

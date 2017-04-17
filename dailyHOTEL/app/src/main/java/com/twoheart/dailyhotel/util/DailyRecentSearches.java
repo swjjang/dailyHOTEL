@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.util;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Keyword;
 
@@ -24,7 +25,7 @@ public class DailyRecentSearches
 
     public void addString(Keyword recentKeyword)
     {
-        if (recentKeyword == null || com.daily.base.util.TextUtils.isTextEmpty(recentKeyword.name) == true)
+        if (recentKeyword == null || DailyTextUtils.isTextEmpty(recentKeyword.name) == true)
         {
             return;
         }
@@ -82,7 +83,7 @@ public class DailyRecentSearches
 
     private boolean remove(Keyword recentKeyword)
     {
-        if (recentKeyword == null || com.daily.base.util.TextUtils.isTextEmpty(recentKeyword.name) == true)
+        if (recentKeyword == null || DailyTextUtils.isTextEmpty(recentKeyword.name) == true)
         {
             return false;
         }
@@ -100,7 +101,7 @@ public class DailyRecentSearches
 
     private boolean contains(Keyword recentKeyword)
     {
-        if (recentKeyword == null || com.daily.base.util.TextUtils.isTextEmpty(recentKeyword.name) == true)
+        if (recentKeyword == null || DailyTextUtils.isTextEmpty(recentKeyword.name) == true)
         {
             return false;
         }
@@ -118,7 +119,7 @@ public class DailyRecentSearches
 
     private void parserText(String text)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(text) == true)
+        if (DailyTextUtils.isTextEmpty(text) == true)
         {
             return;
         }

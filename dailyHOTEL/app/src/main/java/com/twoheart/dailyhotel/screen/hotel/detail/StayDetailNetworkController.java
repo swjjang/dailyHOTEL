@@ -3,13 +3,13 @@ package com.twoheart.dailyhotel.screen.hotel.detail;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -74,7 +74,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(stayDetailParams);
 
-                            if (com.daily.base.util.TextUtils.isTextEmpty(baseDto.msg) == false)
+                            if (DailyTextUtils.isTextEmpty(baseDto.msg) == false)
                             {
                                 mOnNetworkControllerListener.onErrorPopupMessage(msgCode, baseDto.msg);
                             } else
@@ -87,7 +87,7 @@ public class StayDetailNetworkController extends PlaceDetailNetworkController
                         case 4:
                         default:
                         {
-                            if (com.daily.base.util.TextUtils.isTextEmpty(baseDto.msg) == false)
+                            if (DailyTextUtils.isTextEmpty(baseDto.msg) == false)
                             {
                                 mOnNetworkControllerListener.onErrorToastMessage(baseDto.msg);
                             } else

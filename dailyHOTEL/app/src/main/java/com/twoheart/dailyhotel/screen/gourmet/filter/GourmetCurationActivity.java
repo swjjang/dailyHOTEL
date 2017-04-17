@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -802,7 +803,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
         @Override
         public void onGourmetCount(String url, int totalCount)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(url) == true && totalCount == -1)
+            if (DailyTextUtils.isTextEmpty(url) == true && totalCount == -1)
             {
                 // OnNetworkControllerListener onErrorResponse
                 setResultMessage(getString(R.string.label_gourmet_filter_result_empty));

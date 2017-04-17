@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
@@ -141,7 +142,7 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mTransTotalGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(placeName) == false)
+        if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             mTransPlaceNameTextView.setText(placeName);
             mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));

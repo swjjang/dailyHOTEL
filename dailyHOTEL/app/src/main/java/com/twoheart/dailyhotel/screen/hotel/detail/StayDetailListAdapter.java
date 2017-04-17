@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
@@ -150,7 +151,7 @@ public class StayDetailListAdapter extends BaseAdapter
         }
 
         // D Benefit
-        if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) == false)
+        if (DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false)
         {
             if (mDetailViews[4] == null)
             {
@@ -699,7 +700,7 @@ public class StayDetailListAdapter extends BaseAdapter
             {
                 String contentText = contentsList.get(i);
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(contentText) == true)
+                if (DailyTextUtils.isTextEmpty(contentText) == true)
                 {
                     continue;
                 }

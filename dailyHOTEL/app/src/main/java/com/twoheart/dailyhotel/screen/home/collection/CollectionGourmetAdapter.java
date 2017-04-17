@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
@@ -120,8 +121,8 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
     {
         final RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
-        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationGourmet.price, false);
-        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, recommendationGourmet.discount, false);
+        String strPrice = DailyTextUtils.getPriceFormat(mContext, recommendationGourmet.price, false);
+        String strDiscount = DailyTextUtils.getPriceFormat(mContext, recommendationGourmet.discount, false);
 
         String address = recommendationGourmet.addrSummary;
 
@@ -182,7 +183,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         }
 
         String displayCategory;
-        if (com.daily.base.util.TextUtils.isTextEmpty(recommendationGourmet.categorySub) == false)
+        if (DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false)
         {
             displayCategory = recommendationGourmet.categorySub;
         } else
@@ -191,7 +192,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         }
 
         // grade
-        if (com.daily.base.util.TextUtils.isTextEmpty(displayCategory) == true)
+        if (DailyTextUtils.isTextEmpty(displayCategory) == true)
         {
             holder.gradeView.setVisibility(View.GONE);
         } else
@@ -216,7 +217,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.soldOutView.setVisibility(View.GONE);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(recommendationGourmet.benefit) == false)
+        if (DailyTextUtils.isTextEmpty(recommendationGourmet.benefit) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(recommendationGourmet.benefit);

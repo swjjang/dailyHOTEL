@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.util;
 
+import com.daily.base.util.DailyTextUtils;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -314,7 +316,7 @@ public class CountryCodeNumber
 
         for (String[] codeNumber : CODE_NUMBER)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(codeNumber[1]) == true)
+            if (DailyTextUtils.isTextEmpty(codeNumber[1]) == true)
             {
                 values.add(new String[]{codeNumber[3], null});
             } else
@@ -425,7 +427,7 @@ public class CountryCodeNumber
 
     public boolean hasCountryCode(String countryCode)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
+        if (DailyTextUtils.isTextEmpty(countryCode) == true)
         {
             return false;
         }
@@ -445,7 +447,7 @@ public class CountryCodeNumber
 
     public String getCountry(String countryCode)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode) == true)
+        if (DailyTextUtils.isTextEmpty(countryCode) == true)
         {
             return null;
         }

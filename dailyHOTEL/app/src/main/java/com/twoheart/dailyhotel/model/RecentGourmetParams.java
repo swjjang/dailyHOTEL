@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.daily.base.util.ExLog;
 
@@ -73,7 +74,7 @@ public class RecentGourmetParams extends GourmetParams
 
         hashMap.put("reserveDate", date);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(targetIndices) == false)
+        if (DailyTextUtils.isTextEmpty(targetIndices) == false)
         {
             hashMap.put("targetIndices", targetIndices);
         }

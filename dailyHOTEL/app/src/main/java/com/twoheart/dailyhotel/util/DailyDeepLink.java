@@ -2,6 +2,8 @@ package com.twoheart.dailyhotel.util;
 
 import android.net.Uri;
 
+import com.daily.base.util.DailyTextUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,7 +72,7 @@ public abstract class DailyDeepLink
     {
         String value = uri.getQueryParameter(param);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(value) == false)
+        if (DailyTextUtils.isTextEmpty(value) == false)
         {
             mParamsMap.put(param, value);
             return true;

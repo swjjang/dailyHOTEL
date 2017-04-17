@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionListView;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
         View view;
         String[] countryCode = getItem(position);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(countryCode[1]) == true)
+        if (DailyTextUtils.isTextEmpty(countryCode[1]) == true)
         {
             if (convertView == null || convertView.getTag().equals(R.layout.list_row_countrycode_section) == false)
             {
@@ -153,7 +153,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
     @Override
     public int getItemViewType(int position)
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(getItem(position)[1]) == true)
+        if (DailyTextUtils.isTextEmpty(getItem(position)[1]) == true)
         {
             return TYPE_SECTION;
         } else

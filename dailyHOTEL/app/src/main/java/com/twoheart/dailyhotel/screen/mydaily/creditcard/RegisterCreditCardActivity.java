@@ -12,6 +12,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.IDailyNetwork;
@@ -262,7 +263,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
                 if (splits.length > 1)
                 {
-                    if (com.daily.base.util.TextUtils.isTextEmpty(splits[1]) == false)
+                    if (DailyTextUtils.isTextEmpty(splits[1]) == false)
                     {
                         payData.putExtra(NAME_INTENT_EXTRA_DATA_MESSAGE, splits[1]);
                     }

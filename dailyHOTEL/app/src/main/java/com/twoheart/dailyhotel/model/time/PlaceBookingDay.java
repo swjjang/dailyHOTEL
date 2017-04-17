@@ -3,8 +3,8 @@ package com.twoheart.dailyhotel.model.time;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Calendar;
 
@@ -47,7 +47,7 @@ public abstract class PlaceBookingDay implements Parcelable
 
     String getCalendarDateString(Calendar calendar, String format)
     {
-        if (calendar == null || com.daily.base.util.TextUtils.isTextEmpty(format) == true)
+        if (calendar == null || DailyTextUtils.isTextEmpty(format) == true)
         {
             return null;
         }

@@ -3,9 +3,9 @@ package com.twoheart.dailyhotel.model;
 import android.location.Location;
 import android.os.Parcel;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +95,7 @@ public class GourmetSearchParams extends GourmetParams
             hashMap.put("limit", limit);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(term) == false)
+        if (DailyTextUtils.isTextEmpty(term) == false)
         {
             hashMap.put("term", term);
         }
@@ -111,12 +111,12 @@ public class GourmetSearchParams extends GourmetParams
 
         if (Constants.SortType.DEFAULT != mSort)
         {
-            if (com.daily.base.util.TextUtils.isTextEmpty(sortProperty) == false)
+            if (DailyTextUtils.isTextEmpty(sortProperty) == false)
             {
                 hashMap.put("sortProperty", sortProperty);
             }
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(sortDirection) == false)
+            if (DailyTextUtils.isTextEmpty(sortDirection) == false)
             {
                 hashMap.put("sortDirection", sortDirection);
             }

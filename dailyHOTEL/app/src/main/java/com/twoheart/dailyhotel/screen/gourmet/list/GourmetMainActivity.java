@@ -12,7 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.daily.base.util.TextUtils;
+import com.daily.base.util.DailyTextUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -73,7 +73,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     {
         Intent intent = new Intent(context, GourmetMainActivity.class);
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(deepLink) == false)
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
             intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
         }
@@ -848,7 +848,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             // Api 구조상 province 내에 area가 존재하지 않고 독립적이기때문에 작은단위로 찾아야 함
             regionName = com.daily.base.util.TextUtils.isTextEmpty(areaName) == true ? provinceName : areaName;
 
-            if (com.daily.base.util.TextUtils.isTextEmpty(regionName) == true)
+            if (DailyTextUtils.isTextEmpty(regionName) == true)
             {
                 selectedProvince = provinceList.get(0);
             }
@@ -1151,7 +1151,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1258,7 +1258,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1315,7 +1315,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
@@ -1345,7 +1345,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                     }
 
                     default:
-                        if (com.daily.base.util.TextUtils.isTextEmpty(word) == false)
+                        if (DailyTextUtils.isTextEmpty(word) == false)
                         {
                             Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
                             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -1426,7 +1426,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(date) == false)
+                if (DailyTextUtils.isTextEmpty(date) == false)
                 {
                     Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                     gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));

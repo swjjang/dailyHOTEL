@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.Constants;
@@ -101,7 +102,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
         Coupon coupon = getItem(position);
 
-        String strAmount = com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amount, false);
+        String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
         holder.priceTextView.setText(strAmount);
 
         holder.titleTextView.setText(coupon.title);
@@ -110,7 +111,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         {
             String strAmountMinimum = mContext.getResources().getString( //
                 R.string.coupon_min_price_text, //
-                com.daily.base.util.TextUtils.getPriceFormat(mContext, coupon.amountMinimum, false));
+                DailyTextUtils.getPriceFormat(mContext, coupon.amountMinimum, false));
 
             holder.minPriceTextView.setText(strAmountMinimum);
             holder.minPriceTextView.setVisibility(View.VISIBLE);

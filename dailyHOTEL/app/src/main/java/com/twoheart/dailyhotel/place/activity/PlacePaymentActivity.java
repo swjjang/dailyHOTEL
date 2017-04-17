@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -313,7 +314,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
                         break;
                 }
 
-                if (com.daily.base.util.TextUtils.isTextEmpty(msg) == false)
+                if (DailyTextUtils.isTextEmpty(msg) == false)
                 {
                     String title = getString(R.string.dialog_notice2);
                     String positive = getString(R.string.dialog_btn_text_confirm);
@@ -753,7 +754,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                             String selectedSimpleCard = Crypto.urlDecrypt(DailyPreference.getInstance(PlacePaymentActivity.this).getSelectedSimpleCard());
 
-                            if (com.daily.base.util.TextUtils.isTextEmpty(selectedSimpleCard) == true)
+                            if (DailyTextUtils.isTextEmpty(selectedSimpleCard) == true)
                             {
                                 jsonObject = dataJSONArray.getJSONObject(0);
                             } else

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
@@ -100,8 +101,8 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     {
         final Stay stay = placeViewItem.getItem();
 
-        String strPrice = com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.price, false);
-        String strDiscount = com.daily.base.util.TextUtils.getPriceFormat(mContext, stay.discountPrice, false);
+        String strPrice = DailyTextUtils.getPriceFormat(mContext, stay.price, false);
+        String strDiscount = DailyTextUtils.getPriceFormat(mContext, stay.discountPrice, false);
 
         String address = stay.addressSummary;
 
@@ -173,7 +174,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
             holder.hotelSoldOutView.setVisibility(View.GONE);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(stay.dBenefitText) == false)
+        if (DailyTextUtils.isTextEmpty(stay.dBenefitText) == false)
         {
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(stay.dBenefitText);

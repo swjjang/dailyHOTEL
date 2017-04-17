@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
 import com.facebook.FacebookSdk;
@@ -92,7 +93,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         String preferenceVersion = DailyPreference.getInstance( //
             getApplicationContext()).getFirstAppVersion();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(preferenceVersion) == true)
+        if (DailyTextUtils.isTextEmpty(preferenceVersion) == true)
         {
             DailyPreference.getInstance(getApplicationContext()).setFirstAppVersion(VERSION_CODE);
         }
@@ -139,7 +140,7 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
 
     public static boolean isLogin()
     {
-        return com.daily.base.util.TextUtils.isTextEmpty(AUTHORIZATION) == false;
+        return DailyTextUtils.isTextEmpty(AUTHORIZATION) == false;
     }
 
     public static boolean isSuccessTMapAuth()

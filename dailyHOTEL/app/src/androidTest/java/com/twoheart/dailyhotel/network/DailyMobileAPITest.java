@@ -6,6 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.RequiresDevice;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.Const;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Area;
@@ -240,7 +241,7 @@ public class DailyMobileAPITest
     @Ignore
     public void requestDailyUserLoginBySetUp() throws Exception
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(mAuthorization) == false)
+        if (DailyTextUtils.isTextEmpty(mAuthorization) == false)
         {
             return;
         }
@@ -1089,14 +1090,14 @@ public class DailyMobileAPITest
 
         // 전화번호 일단 패스
         String phoneNumber = "";
-        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber) == false)
+        if (DailyTextUtils.isTextEmpty(phoneNumber) == false)
         {
             params.put("user_phone", phoneNumber.replaceAll("-", ""));
         }
 
         // 추천도 일단 패스
         String recommender = "";
-        if (com.daily.base.util.TextUtils.isTextEmpty(recommender) == false)
+        if (DailyTextUtils.isTextEmpty(recommender) == false)
         {
             params.put("recommendation_code", recommender);
         }
@@ -1164,7 +1165,7 @@ public class DailyMobileAPITest
                     {
                         String checkNum = Crypto.getUrlDecoderEx(Const.TEST_SKIP_DELETE_CREDITCARD_NUMBER);
 
-                        boolean isNeedCheck = com.daily.base.util.TextUtils.isTextEmpty(checkNum) == false ? true : false;
+                        boolean isNeedCheck = DailyTextUtils.isTextEmpty(checkNum) == false ? true : false;
                         if (isNeedCheck == false)
                         {
                             CreditCard creditCard = creditCardArrayList.get(creditCardArrayList.size() - 1);
@@ -1743,7 +1744,7 @@ public class DailyMobileAPITest
                 }
 
                 // benefit
-                if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefit) == false)
+                if (DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false)
                 {
                     assertThat(stayDetailParams.benefit, isNotEmpty());
                     assertThat(stayDetailParams.getBenefitList(), allOf(notNullValue(), instanceOf(List.class)));
@@ -1753,7 +1754,7 @@ public class DailyMobileAPITest
                         assertThat(text, isNotEmpty());
                     }
 
-                    if (com.daily.base.util.TextUtils.isTextEmpty(stayDetailParams.benefitWarning) == false)
+                    if (DailyTextUtils.isTextEmpty(stayDetailParams.benefitWarning) == false)
                     {
                         assertThat(stayDetailParams.benefitWarning, isNotEmpty());
                     }
@@ -3431,17 +3432,17 @@ public class DailyMobileAPITest
         String viewedCouponTime = DailyPreference.getInstance(mContext).getViewedCouponTime();
         String viewedNoticeTime = DailyPreference.getInstance(mContext).getViewedNoticeTime();
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(viewedEventTime) == true)
+        if (DailyTextUtils.isTextEmpty(viewedEventTime) == true)
         {
             viewedEventTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(viewedCouponTime) == true)
+        if (DailyTextUtils.isTextEmpty(viewedCouponTime) == true)
         {
             viewedCouponTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
         }
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(viewedNoticeTime) == true)
+        if (DailyTextUtils.isTextEmpty(viewedNoticeTime) == true)
         {
             viewedNoticeTime = DailyCalendar.format(new Date(0L), DailyCalendar.ISO_8601_FORMAT);
         }
@@ -3642,7 +3643,7 @@ public class DailyMobileAPITest
     @Ignore
     public void requestDailyUserUpdatePhoneNumber(String phoneNumber, String code) throws Exception
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(phoneNumber, code) == false)
+        if (DailyTextUtils.isTextEmpty(phoneNumber, code) == false)
         {
             try
             {
@@ -4329,7 +4330,7 @@ public class DailyMobileAPITest
     @Ignore
     public void requestDownloadCoupon(String userCouponCode) throws Exception
     {
-        if (com.daily.base.util.TextUtils.isTextEmpty(userCouponCode) == true)
+        if (DailyTextUtils.isTextEmpty(userCouponCode) == true)
         {
             assertThat("userCouponCode is null", false);
             return;
@@ -5469,7 +5470,7 @@ public class DailyMobileAPITest
                                 assertThat(dataJSONObject.getBoolean("readyForRefund"), is(true));
                             }
 
-                            if (com.daily.base.util.TextUtils.isTextEmpty(message) == true)
+                            if (DailyTextUtils.isTextEmpty(message) == true)
                             {
                                 message = responseJSONObject.getString("msg");
                                 assertThat(message, isNotEmpty());
@@ -5864,7 +5865,7 @@ public class DailyMobileAPITest
         mLock = new CountDownLatch(1);
 
         JSONObject stayJsonObject = new JSONObject();
-        stayJsonObject.put("comment", com.daily.base.util.TextUtils.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+        stayJsonObject.put("comment", DailyTextUtils.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
 
         stayJsonObject.put("itemIdx", Const.TEST_STAY_ADD_REVIEW_ITEM_INDEX);
         stayJsonObject.put("reserveIdx", Const.TEST_STAY_RESERVATION_INDEX);
@@ -5887,7 +5888,7 @@ public class DailyMobileAPITest
         mLock = new CountDownLatch(1);
 
         JSONObject gourmetJsonObject = new JSONObject();
-        gourmetJsonObject.put("comment", com.daily.base.util.TextUtils.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
+        gourmetJsonObject.put("comment", DailyTextUtils.isTextEmpty(Const.TEST_ADD_REVIEW_DETAIL_COMMENT) == true ? "" : Const.TEST_ADD_REVIEW_DETAIL_COMMENT);
 
         gourmetJsonObject.put("itemIdx", Const.TEST_GOURMET_ADD_REVIEW_ITEM_INDEX);
         gourmetJsonObject.put("reserveIdx", Const.TEST_GOURMET_RESERVATION_INDEX);

@@ -2,11 +2,11 @@ package com.twoheart.dailyhotel.screen.mydaily.coupon;
 
 import android.content.Context;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONObject;
 
@@ -26,7 +26,7 @@ public class RegisterCouponNetworkController extends BaseNetworkController
     public void requestRegisterCoupon(String couponCode)
     {
 
-        if (com.daily.base.util.TextUtils.isTextEmpty(couponCode))
+        if (DailyTextUtils.isTextEmpty(couponCode))
         {
             mOnNetworkControllerListener.onErrorToastMessage(mContext.getString(R.string.toast_msg_register_coupon_empty_keyword));
             return;
