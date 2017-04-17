@@ -375,18 +375,7 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
                 break;
 
             case R.id.stampLayout:
-                Intent intent = new Intent(PlacePaymentThankyouActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                Uri uri = Uri.parse(DailyInternalDeepLink.getStampScreenLink());
-
-                intent.setData(uri);
-                startActivity(intent);
-
-
-                //                Intent intent = StampActivity.newInstance(this, StampActivity.CallScreen.THANKYOU);
-                //                setResult(RESULT_CANCELED);
-                //                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
+                startActivity(DailyInternalDeepLink.getStampScreenLink(this));
 
                 AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
                     AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_THANKYOU, null);

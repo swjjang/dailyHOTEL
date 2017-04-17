@@ -111,7 +111,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected abstract void setCancelCoupon();
 
-    protected abstract void recordPaymentInformation();
+    protected abstract void startBookingScreen();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -260,7 +260,7 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    recordPaymentInformation();
+                    startBookingScreen();
                     return;
                 }
 
