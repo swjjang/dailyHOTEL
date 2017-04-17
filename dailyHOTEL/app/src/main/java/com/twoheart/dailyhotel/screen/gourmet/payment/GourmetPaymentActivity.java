@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
@@ -39,7 +38,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
@@ -827,7 +825,7 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
-                        recordPaymentInformation();
+                        startBookingScreen();
 
                         //                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                         //                        finish();
@@ -959,26 +957,14 @@ public class GourmetPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void recordPaymentInformation()
+    protected void startBookingScreen()
     {
         GourmetPaymentInformation gourmetPaymentInformation = (GourmetPaymentInformation) mPaymentInformation;
         GourmetBookingDay gourmetBookingDay = (GourmetBookingDay) mPlaceBookingDay;
 
-        Intent intent = new Intent(GourmetPaymentActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        Uri uri = Uri.parse(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(gourmetPaymentInformation.placeName//
+        startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(this, gourmetPaymentInformation.placeName//
             , gourmetPaymentInformation.paymentType//
             , gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)));
-
-        intent.setData(uri);
-        startActivity(intent);
-
-        //        DailyPreference.getInstance(GourmetPaymentActivity.this)//
-        //            .setPaymentInformation(PlaceType.FNB,//
-        //                gourmetPaymentInformation.placeName,//
-        //                gourmetPaymentInformation.paymentType,//
-        //                gourmetBookingDay.getVisitDay("yyyy.MM.dd (EEE)"));
     }
 
     private void setAvailableDefaultPaymentType()

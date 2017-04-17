@@ -8,7 +8,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
@@ -45,7 +44,6 @@ import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentActivity;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
-import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.RegisterCreditCardActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.InputMobileNumberDialogActivity;
@@ -943,7 +941,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
-                        recordPaymentInformation();
+                        startBookingScreen();
                         //
                         //                        setResult(CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY);
                         //                        finish();
@@ -1149,30 +1147,17 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     }
 
     @Override
-    protected void recordPaymentInformation()
+    protected void startBookingScreen()
     {
         DailyPreference.getInstance(this).clearPaymentInformation();
 
         StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
         StayPaymentInformation stayPaymentInformation = (StayPaymentInformation) mPaymentInformation;
 
-        Intent intent = new Intent(HotelPaymentActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        Uri uri = Uri.parse(DailyInternalDeepLink.getStayBookingDetailScreenLink(mPlaceName//
+        startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(this, mPlaceName//
             , stayPaymentInformation.paymentType//
             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)));
-
-        intent.setData(uri);
-        startActivity(intent);
-
-        //        DailyPreference.getInstance(this)//
-        //            .setPaymentInformation(PlaceType.HOTEL//
-        //                , mPlaceName//
-        //                , stayPaymentInformation.paymentType//
-        //                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-        //                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
     }
 
     private void setAvailableDefaultPaymentType()
