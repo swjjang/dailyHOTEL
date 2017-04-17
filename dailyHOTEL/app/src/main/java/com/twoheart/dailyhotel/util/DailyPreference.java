@@ -8,7 +8,7 @@ import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+ import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 
 import org.json.JSONObject;
 
@@ -154,8 +154,8 @@ public class DailyPreference
     // Home - Category
     private static final String KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED = "332";
 
-    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
-    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
+//    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
+//    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
 
     private static final String KEY_REMOTE_CONFIG_UPDATE_OPTIONAL = "342";
     private static final String KEY_REMOTE_CONFIG_UPDATE_FORCE = "343";
@@ -1240,26 +1240,6 @@ public class DailyPreference
     public String getRemoteConfigStampDate3()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, null);
-    }
-
-    public void setRemoteConfigABTestGourmetProductList(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST, value);
-    }
-
-    public String getRemoteConfigABTestGourmetProductList()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST, null);
-    }
-
-    public void setRemoteConfigABTestHomeButton(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON, value);
-    }
-
-    public String getRemoteConfigABTestHomeButton()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON, null);
     }
 
     public void setRemoteConfigUpdateOptional(String value)

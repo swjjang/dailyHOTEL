@@ -2114,36 +2114,38 @@ public class Util implements Constants
             return false;
         }
 
-        boolean verified = false;
-
         if (length == SignupStep1Activity.PASSWORD_MIN_COUNT)
         {
+            boolean oneCharacterVerified = false;
+
             // 8자이면서 한개의 영문(대소문자 구분)이나 숫자, 특수문자로만 입력된 경우
             for (int i = 1; i < length; i++)
             {
                 if (password.charAt(0) != password.charAt(i))
                 {
-                    verified = true;
+                    oneCharacterVerified = true;
                     break;
                 }
             }
 
-            if (verified == false)
+            if (oneCharacterVerified == false)
             {
                 return false;
             }
+
+            boolean doubleCharacterVerified = false;
 
             // 8자이면서 두개의 숫자가 반복적으로 입력된 경우 (12121212, 82828282…)
             for (int i = 2; i < length; i += 2)
             {
                 if (password.charAt(0) != password.charAt(i) && password.charAt(1) != password.charAt(i + 1))
                 {
-                    verified = true;
+                    doubleCharacterVerified = true;
                     break;
                 }
             }
 
-            if (verified == false)
+            if (doubleCharacterVerified == false)
             {
                 return false;
             }

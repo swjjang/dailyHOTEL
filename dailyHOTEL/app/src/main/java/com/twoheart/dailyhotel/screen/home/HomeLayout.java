@@ -220,7 +220,6 @@ public class HomeLayout extends BaseLayout
         }
 
         mActionButtonLayout = view.findViewById(R.id.actionButtonLayout);
-        settingABTest(mActionButtonLayout);
         mActionButtonLayout.setVisibility(View.GONE);
 
         View stayButtonTextView = mActionButtonLayout.findViewById(R.id.stayButtonTextView);
@@ -354,7 +353,6 @@ public class HomeLayout extends BaseLayout
 
         mScrollButtonLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_product_layout, null);
 
-        settingABTest(mScrollButtonLayout);
         layout.addView(mScrollButtonLayout);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(//
@@ -385,79 +383,6 @@ public class HomeLayout extends BaseLayout
         mScrollButtonBottomLineView = mScrollButtonLayout.findViewById(R.id.bottomLine);
 
         mScrollButtonBottomLineView.setVisibility(View.VISIBLE);
-    }
-
-    private void settingABTest(View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        String data = DailyPreference.getInstance(mContext).getRemoteConfigABTestHomeButton();
-
-        if (Util.isTextEmpty(data) == true)
-        {
-            return;
-        }
-
-        try
-        {
-            JSONObject jsonObject = new JSONObject(data);
-            String abTestValue = jsonObject.getString("value");
-
-            if (Util.isTextEmpty(abTestValue) == true)
-            {
-                return;
-            }
-
-            TextView stayTextView = (TextView) view.findViewById(R.id.stayTextView);
-            TextView stayDoTextView = (TextView) view.findViewById(R.id.stayDoTextView);
-            TextView gourmetTextView = (TextView) view.findViewById(R.id.gourmetTextView);
-            TextView gourmetDoTextView = (TextView) view.findViewById(R.id.gourmetDoTextView);
-
-            switch (abTestValue)
-            {
-                case "a":
-                    stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
-                    stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                    stayTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
-
-                    stayDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-                    stayDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                    stayDoTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-
-                    gourmetTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
-                    gourmetTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                    gourmetTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
-
-                    gourmetDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-                    gourmetDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                    gourmetDoTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-                    break;
-
-                default:
-                    stayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-                    stayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-                    stayTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-
-                    stayDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
-                    stayDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                    stayDoTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
-
-                    gourmetTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-                    gourmetTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-                    gourmetTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
-
-                    gourmetDoTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
-                    gourmetDoTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-                    gourmetDoTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
-                    break;
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
     }
 
     private void initCategoryLayout(LinearLayout layout)
