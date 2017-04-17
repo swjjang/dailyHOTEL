@@ -19,13 +19,11 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
@@ -44,8 +42,6 @@ import com.twoheart.dailyhotel.widget.DailyHomeScrollView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -89,7 +85,6 @@ public class HomeLayout extends BaseLayout
     private LinearLayout mHomeContentLayout;
     private View mEventAreaLayout;
     View mScrollButtonLayout;
-    private View mScrollButtonBottomLineView;
     private HomeCategoryLayout mCategoryLayout;
     View mTextMessageLayout;
     View mTopButtonLayout;
@@ -380,9 +375,9 @@ public class HomeLayout extends BaseLayout
             }
         });
 
-        mScrollButtonBottomLineView = mScrollButtonLayout.findViewById(R.id.bottomLine);
+        View scrollButtonBottomLineView = mScrollButtonLayout.findViewById(R.id.bottomLine);
 
-        mScrollButtonBottomLineView.setVisibility(View.VISIBLE);
+        scrollButtonBottomLineView.setVisibility(View.VISIBLE);
     }
 
     private void initCategoryLayout(LinearLayout layout)
@@ -960,7 +955,8 @@ public class HomeLayout extends BaseLayout
     {
         mCategoryLayout.setCategoryEnabled(isEnabled);
 
-        mScrollButtonBottomLineView.setVisibility(isEnabled == true ? View.GONE : View.VISIBLE);
+        View scrollButtonBottomLineView = mScrollButtonLayout.findViewById(R.id.bottomLine);
+        scrollButtonBottomLineView.setVisibility(isEnabled == true ? View.GONE : View.VISIBLE);
     }
 
     public boolean hasWishListData()
