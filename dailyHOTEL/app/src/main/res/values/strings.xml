@@ -87,6 +87,7 @@
     <string name="label_dailyh_lifestyle">데일리 라이프스타일 프로젝트</string>
     <string name="label_dailyh_sns">데일리 SNS</string>
     <string name="label_customer">고객님</string>
+    <string name="label_trueview">트루뷰</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>

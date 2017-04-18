@@ -61,6 +61,16 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp">
 
+            <ImageView
+                android:id="@+id/trueViewIconView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:scaleType="center"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/detail_ic_more_img"/>
+
             <View
                 android:id="@+id/moreIconView"
                 android:layout_width="30dp"

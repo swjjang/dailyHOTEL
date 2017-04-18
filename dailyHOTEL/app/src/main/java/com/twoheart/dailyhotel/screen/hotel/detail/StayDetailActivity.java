@@ -47,6 +47,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
+import com.twoheart.dailyhotel.screen.common.TrueViewActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
@@ -1552,6 +1553,12 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 StayDetailActivity.this.onWishButtonClick(PlaceType.HOTEL, (StayDetail) mPlaceDetail);
             }
+        }
+
+        @Override
+        public void onTrueViewClick()
+        {
+            startActivity(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
         }
 
         @Override
