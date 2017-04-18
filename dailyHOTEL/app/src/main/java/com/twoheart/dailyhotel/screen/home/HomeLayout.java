@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -190,6 +191,15 @@ public class HomeLayout extends BaseLayout
         View stayButton = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
         View gourmetButton = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
 
+        if (ScreenUtils.getScreenWidth(mContext) < 720)
+        {
+            TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
+            TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
+
+            stayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
+            gourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
+        }
+
         stayButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onStayButtonClick());
 
         gourmetButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onGourmetButtonClick());
@@ -287,6 +297,15 @@ public class HomeLayout extends BaseLayout
         stayButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onStayButtonClick());
 
         gourmetButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onGourmetButtonClick());
+
+        if (ScreenUtils.getScreenWidth(mContext) < 720)
+        {
+            TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
+            TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
+
+            stayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
+            gourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
+        }
 
         View scrollButtonBottomLineView = mScrollButtonLayout.findViewById(R.id.bottomLine);
         scrollButtonBottomLineView.setVisibility(View.VISIBLE);
@@ -1173,7 +1192,8 @@ public class HomeLayout extends BaseLayout
             ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) stayButtonLayout.getLayoutParams();
 
 
-            if (scrollY <= startScrollY) {
+            if (scrollY <= startScrollY)
+            {
                 layoutParams.leftMargin = maxValue;
                 layoutParams.rightMargin = minValue;
                 buttonLayoutAlpha = 255;
@@ -1182,7 +1202,8 @@ public class HomeLayout extends BaseLayout
                 layoutParams.leftMargin = minValue;
                 layoutParams.rightMargin = maxValue;
                 buttonLayoutAlpha = 0;
-            } else {
+            } else
+            {
                 double ratio = ((double) (scrollY - startScrollY) / (double) (endScrollY - startScrollY));
                 int gap = (int) ((maxValue - minValue) * ratio);
 

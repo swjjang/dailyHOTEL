@@ -1158,9 +1158,11 @@
     <!-- Home -->
     <string name="format_home_event_count">%1$d / %2$d</string>
     <string name="label_home_stay_menu_title">데일리호텔</string>
-    <string name="label_home_stay_menu_description">스테이 예약하기</string>
+    <string name="label_home_stay_menu_description">스테이 전체보기</string>
+    <string name="label_home_stay_menu_description_low_resolution">스테이 전체</string>
     <string name="label_home_gourmet_menu_title">데일리고메</string>
-    <string name="label_home_gourmet_menu_description">레스토랑 예약하기</string>
+    <string name="label_home_gourmet_menu_description">레스토랑 전체보기</string>
+    <string name="label_home_gourmet_menu_description_low_resolution">레스토랑 전체</string>
     <string name="label_home_view_all">모두보기</string>
     <string name="label_home_recommend_title">데일리 추천</string>
     <string name="label_home_company_info">사업자 정보</string>
