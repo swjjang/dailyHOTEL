@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.twoheart.dailyhotel.R;
 import com.daily.base.util.ExLog;
+import com.twoheart.dailyhotel.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

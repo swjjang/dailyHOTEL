@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyImageView;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyImageView;
-import com.daily.base.widget.DailyTextView;
 
 import java.text.ParseException;
 import java.util.List;

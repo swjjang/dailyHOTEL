@@ -2,11 +2,11 @@ package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.daily.base.util.ExLog;
 
 import org.json.JSONObject;
 

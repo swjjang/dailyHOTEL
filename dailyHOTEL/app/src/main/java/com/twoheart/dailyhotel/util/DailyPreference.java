@@ -68,6 +68,8 @@ public class DailyPreference
     private static final String KEY_GOURMET_RECENT_PLACES = "211";
     private static final String KEY_ALL_RECENT_PLACES = "212";
 
+    private static final String KEY_TRUE_VIEW_SUPPORT = "213";
+
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
     // <-----
@@ -145,8 +147,8 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
 
-//    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
-//    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
+    //    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
+    //    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
 
     private static final String KEY_REMOTE_CONFIG_UPDATE_OPTIONAL = "342";
     private static final String KEY_REMOTE_CONFIG_UPDATE_FORCE = "343";
@@ -788,6 +790,16 @@ public class DailyPreference
     public String getHappyTalkCategory()
     {
         return getValue(mPreferences, KEY_HAPPY_TALK_CATEGORY, null);
+    }
+
+    public void setTrueViewSupport(int value)
+    {
+        setValue(mEditor, KEY_TRUE_VIEW_SUPPORT, value);
+    }
+
+    public int getTrueViewSupport()
+    {
+        return getValue(mPreferences, KEY_TRUE_VIEW_SUPPORT, 0);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

@@ -71,12 +71,12 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        super.onSaveInstanceState(outState);
-
         if (mPresenter != null)
         {
             mPresenter.onSaveInstanceState(outState);
         }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

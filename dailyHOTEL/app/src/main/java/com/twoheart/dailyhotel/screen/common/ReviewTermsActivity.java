@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.daily.base.widget.DailyWebView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.daily.base.widget.DailyWebView;
 
 public class ReviewTermsActivity extends WebViewActivity
 {

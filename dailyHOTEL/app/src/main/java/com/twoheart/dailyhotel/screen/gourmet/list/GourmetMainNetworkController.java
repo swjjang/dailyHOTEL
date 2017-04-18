@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.gourmet.list;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Province;
@@ -9,7 +10,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.manager.PlaceEventBannerManager;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
-import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -1,10 +1,10 @@
 package com.twoheart.dailyhotel.place.networkcontroller;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;

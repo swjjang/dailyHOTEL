@@ -1,8 +1,8 @@
 package com.daily.dailyhotel.repository.remote;
 
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.SnsInterface;
 import com.facebook.login.LoginManager;
-import com.daily.base.util.ExLog;
 
 public class FacebookImpl implements SnsInterface
 {

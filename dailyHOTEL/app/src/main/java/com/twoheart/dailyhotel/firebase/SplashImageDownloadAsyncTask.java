@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.daily.base.util.ExLog;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.File;

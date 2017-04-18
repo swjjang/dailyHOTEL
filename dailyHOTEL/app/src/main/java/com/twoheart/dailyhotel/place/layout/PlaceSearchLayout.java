@@ -19,8 +19,9 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyScrollView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -30,7 +31,6 @@ import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
-import com.daily.base.widget.DailyScrollView;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
