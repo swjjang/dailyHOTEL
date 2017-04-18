@@ -625,7 +625,7 @@ public class PlaceReviewLayout extends BaseLayout
                 }
             }
 
-            if (position == getItemCount() - 2)
+            if (position == mTotalCount + 1)
             {
                 reviewViewHolder.underLineView.setVisibility(View.INVISIBLE);
             } else
