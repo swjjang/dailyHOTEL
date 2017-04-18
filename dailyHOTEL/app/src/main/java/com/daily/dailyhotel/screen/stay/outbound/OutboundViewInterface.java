@@ -2,7 +2,7 @@ package com.daily.dailyhotel.screen.stay.outbound;
 
 import com.daily.base.BaseViewInterface;
 
-public interface OutBoundViewInterface extends BaseViewInterface
+public interface OutboundViewInterface extends BaseViewInterface
 {
     void onReset();
 

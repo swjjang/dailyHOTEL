@@ -39,7 +39,7 @@ public class ProfileActivity extends BaseActivity<ProfilePresenter>
 
     @NonNull
     @Override
-    protected BasePresenter createInstancePresenter()
+    protected ProfilePresenter createInstancePresenter()
     {
         return new ProfilePresenter(this);
     }

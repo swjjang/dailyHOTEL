@@ -32,7 +32,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
     protected abstract
     @NonNull
-    BasePresenter createInstancePresenter();
+    T1 createInstancePresenter();
 
     public
     @NonNull

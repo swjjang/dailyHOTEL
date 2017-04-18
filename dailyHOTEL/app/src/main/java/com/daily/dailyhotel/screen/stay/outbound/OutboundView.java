@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityOutboundDataBinding;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
-public class OutBoundView extends BaseView<OutBoundView.OnEventListener, ActivityOutboundDataBinding> implements OutBoundViewInterface
+public class OutboundView extends BaseView<OutboundView.OnEventListener, ActivityOutboundDataBinding> implements OutboundViewInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -20,7 +20,7 @@ public class OutBoundView extends BaseView<OutBoundView.OnEventListener, Activit
         void onReset();
     }
 
-    public OutBoundView(BaseActivity baseActivity, OutBoundView.OnEventListener listener)
+    public OutboundView(BaseActivity baseActivity, OutboundView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }

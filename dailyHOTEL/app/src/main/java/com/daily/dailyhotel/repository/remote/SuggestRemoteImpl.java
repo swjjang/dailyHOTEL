@@ -6,14 +6,11 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseException;
 import com.daily.dailyhotel.domain.SuggestInterface;
 import com.daily.dailyhotel.entity.Suggest;
-import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 
 public class SuggestRemoteImpl implements SuggestInterface
 {
@@ -27,7 +24,7 @@ public class SuggestRemoteImpl implements SuggestInterface
     @Override
     public Observable<List<Suggest>> getSuggestsByStayOutBound(String keyword)
     {
-        return DailyMobileAPI.getInstance(mContext).getSuggestsByStayOutBound(keyword).map((suggestsDataBaseDto) ->
+        return DailyMobileAPI.getInstance(mContext).getSuggestsByStayOutbound(keyword).map((suggestsDataBaseDto) ->
         {
             List<Suggest> list = null;
 

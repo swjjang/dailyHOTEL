@@ -451,6 +451,6 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<SuggestsData>> getSuggestsByStayOutBound(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+    Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @Query("keyword") String keyword);
 }

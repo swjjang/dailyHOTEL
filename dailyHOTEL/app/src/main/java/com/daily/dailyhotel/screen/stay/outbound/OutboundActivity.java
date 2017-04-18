@@ -8,24 +8,30 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BasePresenter;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class OutBoundActivity extends BaseActivity<OutBoundPresenter>
+public class OutboundActivity extends BaseActivity<OutboundPresenter>
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, OutBoundActivity.class);
+        Intent intent = new Intent(context, OutboundActivity.class);
         return intent;
     }
 
     public static Intent newInstance(Context context, String deepLink)
     {
-        Intent intent = new Intent(context, OutBoundActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        Intent intent = new Intent(context, OutboundActivity.class);
+
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
+
         return intent;
     }
 
@@ -39,9 +45,9 @@ public class OutBoundActivity extends BaseActivity<OutBoundPresenter>
 
     @NonNull
     @Override
-    protected BasePresenter createInstancePresenter()
+    protected OutboundPresenter createInstancePresenter()
     {
-        return new OutBoundPresenter(this);
+        return new OutboundPresenter(this);
     }
 
     @Override

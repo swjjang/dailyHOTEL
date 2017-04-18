@@ -9,53 +9,54 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class OutBoundPresenter extends BaseExceptionPresenter<OutBoundActivity, OutBoundViewInterface> implements OutBoundView.OnEventListener
+public class OutboundPresenter extends BaseExceptionPresenter<OutboundActivity, OutboundViewInterface> implements OutboundView.OnEventListener
 {
-    private OutBoundAnalyticsInterface mAnalytics;
+    private OutboundAnalyticsInterface mAnalytics;
+    private SuggestRemoteImpl mSuggestRemoteImpl;
 
-    public interface OutBoundAnalyticsInterface extends BaseAnalyticsInterface
+    public interface OutboundAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public OutBoundPresenter(@NonNull OutBoundActivity activity)
+    public OutboundPresenter(@NonNull OutboundActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected OutBoundViewInterface createInstanceViewInterface()
+    protected OutboundViewInterface createInstanceViewInterface()
     {
-        return new OutBoundView(getActivity(), this);
+        return new OutboundView(getActivity(), this);
     }
 
     @Override
-    public void initialize(OutBoundActivity activity)
+    public void initialize(OutboundActivity activity)
     {
         setContentView(R.layout.activity_outbound_data);
 
-        setAnalytics(new OutBoundAnalyticsImpl());
+        setAnalytics(new OutboundAnalyticsImpl());
 
-
+        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
 
     }
 
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (OutBoundAnalyticsInterface) analytics;
+        mAnalytics = (OutboundAnalyticsInterface) analytics;
     }
 
     @Override
@@ -132,12 +133,27 @@ public class OutBoundPresenter extends BaseExceptionPresenter<OutBoundActivity, 
     {
         getViewInterface().hideRecentlyKeyword();
 
-        addCompositeDisposable(DailyMobileAPI.getInstance(getActivity()).getSuggestsByStayOutBound(keyword).subscribe());
+        clearCompositeDisposable();
+
+        Observable mergedObservable = Observable.merge(Observable.timer(500, TimeUnit.MILLISECONDS)//
+            , mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword).doOnError(this::onHandleError).doOnNext(this::onSuggests));
+
+        addCompositeDisposable(mergedObservable.subscribe());
     }
 
     @Override
     public void onReset()
     {
+
+    }
+
+    private void onSuggests(List<Suggest> suggestList)
+    {
+        if (suggestList == null)
+        {
+            return;
+        }
+
 
     }
 }

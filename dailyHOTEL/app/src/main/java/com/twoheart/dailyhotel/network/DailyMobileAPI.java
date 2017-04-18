@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.repository.remote.model.SuggestData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
@@ -1218,12 +1217,15 @@ public class DailyMobileAPI implements IDailyNetwork
     //
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Observable<BaseDto<SuggestsData>> getSuggestsByStayOutBound(String keyword)
+    public Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(String keyword)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
-            : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
-        return mDailyMobileService.getSuggestsByStayOutBound(Crypto.getUrlDecoderEx(URL), keyword)//
+        final String METHOD = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
+            : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
+
+        return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(METHOD), keyword)//
             .subscribeOn(Schedulers.io())//
             .observeOn(AndroidSchedulers.mainThread());
     }

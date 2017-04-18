@@ -100,8 +100,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     {
         getViewInterface().hideSimpleDialog();
 
-        mCompositeDisposable.clear();
-        mCompositeDisposable.dispose();
+        clearCompositeDisposable();
     }
 
     @Override
@@ -130,6 +129,11 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         }
 
         mCompositeDisposable.add(disposable);
+    }
+
+    protected void clearCompositeDisposable()
+    {
+        mCompositeDisposable.clear();
     }
 
     protected boolean isLock()
