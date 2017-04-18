@@ -1045,6 +1045,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
     }
 
+
+    @Override
+    public void startTrueView()
+    {
+        startActivity(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
+    }
+
     protected void recordAnalyticsGourmetDetail(String screen, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
     {
         if (gourmetBookingDay == null || gourmetDetail == null)
@@ -1458,12 +1465,6 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             {
                 GourmetDetailActivity.this.onWishButtonClick(PlaceType.FNB, (GourmetDetail) mPlaceDetail);
             }
-        }
-
-        @Override
-        public void onTrueViewClick()
-        {
-            startActivity(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
         }
 
         @Override

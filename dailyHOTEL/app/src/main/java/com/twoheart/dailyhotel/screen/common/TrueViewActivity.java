@@ -8,7 +8,6 @@ import android.view.View;
 import com.daily.base.widget.DailyWebView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class TrueViewActivity extends WebViewActivity
 {
@@ -24,7 +23,7 @@ public class TrueViewActivity extends WebViewActivity
     {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_about);
+        setContentView(R.layout.activity_trueview);
 
         Intent intent = getIntent();
 
@@ -36,9 +35,8 @@ public class TrueViewActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        View toolbar = findViewById(R.id.toolbar);
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_trueview), new View.OnClickListener()
+        View backView = findViewById(R.id.backView);
+        backView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -50,45 +48,6 @@ public class TrueViewActivity extends WebViewActivity
 
     private void initLayout(final DailyWebView dailyWebView)
     {
-        final View topButtonView = findViewById(R.id.topButtonView);
-        //        topButtonView.setOnClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                smoothScrollTop(dailyWebView);
-        //            }
-        //        });
-        //
-        topButtonView.setVisibility(View.GONE);
-        //
-        //        dailyWebView.setOnScrollListener(new DailyWebView.OnScrollListener()
-        //        {
-        //            @Override
-        //            public void onScroll(int l, int t, int oldl, int oldt)
-        //            {
-        //                if (t == 0)
-        //                {
-        //                    topButtonView.setVisibility(View.GONE);
-        //                } else
-        //                {
-        //                    topButtonView.setVisibility(View.VISIBLE);
-        //                }
-        //            }
-        //        });
-        //
-        View homeButtonView = findViewById(R.id.homeButtonView);
-        //        homeButtonView.setOnClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
-        //                finish();
-        //            }
-        //        });
-
-        homeButtonView.setVisibility(View.GONE);
     }
 
     @Override

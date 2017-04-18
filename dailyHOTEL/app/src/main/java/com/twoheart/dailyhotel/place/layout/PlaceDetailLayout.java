@@ -67,7 +67,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected TextView mBookingTextView;
     protected TextView mSoldoutTextView;
     protected TextView mDescriptionTextView;
-    protected View mTrueViewIconView;
     protected View mPriceOptionLayout;
     protected RadioGroup mPriceRadioGroup;
 
@@ -122,8 +121,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void onWishClick();
 
-        void onTrueViewClick();
-
         void releaseUiComponent();
     }
 
@@ -166,10 +163,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
-
-        mTrueViewIconView = view.findViewById(R.id.trueViewIconView);
-
-        hideTrueView();
 
         mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
         mDailyLineIndicator.setViewPager(mViewPager);
@@ -557,36 +550,6 @@ public abstract class PlaceDetailLayout extends BaseLayout
         final int end = mContext.getResources().getDimensionPixelOffset(R.dimen.detail_button_min_left_margin);
 
         startWishButtonAnimation(start, end);
-    }
-
-    public void showTrueView()
-    {
-        if (mTrueViewIconView == null)
-        {
-            return;
-        }
-
-        mTrueViewIconView.setOnClickListener(new OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onTrueViewClick();
-            }
-        });
-
-        mTrueViewIconView.setVisibility(View.VISIBLE);
-    }
-
-    public void hideTrueView()
-    {
-        if (mTrueViewIconView == null)
-        {
-            return;
-        }
-
-        mTrueViewIconView.setOnClickListener(null);
-        mTrueViewIconView.setVisibility(View.GONE);
     }
 
     private void startWishButtonAnimation(final int start, final int end)

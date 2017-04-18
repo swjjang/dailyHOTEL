@@ -949,6 +949,14 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
         }
 
+        if (DailyPreference.getInstance(this).getTrueViewSupport() > 0)
+        {
+            showTrueViewMenu();
+        } else
+        {
+            hideTrueViewMenu();
+        }
+
         mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
@@ -1065,6 +1073,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             mPlaceDetailNetworkController.requestRemoveWishList(placeType, stayDetail.index);
         }
+    }
+
+    @Override
+    public void startTrueView()
+    {
+        startActivity(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
     }
 
     void recordAnalyticsStayDetail(String screen, StayBookingDay stayBookingDay, StayDetail stayDetail)
@@ -1553,12 +1567,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 StayDetailActivity.this.onWishButtonClick(PlaceType.HOTEL, (StayDetail) mPlaceDetail);
             }
-        }
-
-        @Override
-        public void onTrueViewClick()
-        {
-            startActivity(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
         }
 
         @Override
