@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -49,6 +50,8 @@ import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -151,16 +154,20 @@ public class GourmetMainActivity extends PlaceMainActivity
                 mPlaceMainLayout.setToolbarRegionText(province.name);
                 mPlaceMainLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
 
-                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.FNB);
+                //                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.FNB);
 
-                if (province.name.equalsIgnoreCase(savedRegion) == false)
+                JSONObject jsonObject = DailyPreference.getInstance(this).getDailyRegion(DailyCategoryType.GOURMET_ALL);
+
+                boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
+                if (isSameProvince == false)
                 {
-                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.FNB, province.name);
+                    DailyPreference.getInstance(this).setDailyRegion(DailyCategoryType.GOURMET_ALL, Util.getDailyRegionJSONObject(province));
+
+//                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+//                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.FNB, province.name);
 
                     String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                     String realProvinceName = Util.getRealProvinceName(province);
-                    DailyPreference.getInstance(this).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
                     AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
                 }
 
@@ -654,11 +661,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                 selectedProvince = provinceList.get(0);
             }
 
-            boolean mIsProvinceSetting = DailyPreference.getInstance(GourmetMainActivity.this).isSettingRegion(PlaceType.FNB);
-            DailyPreference.getInstance(GourmetMainActivity.this).setSettingRegion(PlaceType.FNB, true);
-
             // 마지막으로 지역이 Area로 되어있으면 Province
-            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+            if (selectedProvince instanceof Area)
             {
                 int provinceIndex = selectedProvince.getProvinceIndex();
 
@@ -666,12 +670,12 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, selectedProvince.name);
+//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, selectedProvince.name);
+                        DailyPreference.getInstance(GourmetMainActivity.this).setDailyRegion(DailyCategoryType.GOURMET_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
                         AnalyticsManager.getInstance(GourmetMainActivity.this).onRegionChanged(country, realProvinceName);
                         break;
                     }
@@ -803,8 +807,46 @@ public class GourmetMainActivity extends PlaceMainActivity
         {
             Province selectedProvince = null;
 
-            // 마지막으로 선택한 지역을 가져온다.
-            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
+            String provinceName;
+            String areaName;
+            String regionName;
+
+            // 마지막으로 선택한 지역을 가져온다. - old and new 추후 2.0.4로 강업 이후 Old 부분 삭제 필요
+            JSONObject saveRegionJsonObject = DailyPreference.getInstance(baseActivity).getDailyRegion(DailyCategoryType.GOURMET_ALL);
+            if (saveRegionJsonObject != null)
+            {
+                // new version preference value 사용
+                areaName = Util.getDailyAreaString(saveRegionJsonObject);
+                provinceName = Util.getDailyProvinceString(saveRegionJsonObject);
+            } else
+            {
+                // Old version preference value 사용
+                String oldAreaName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.FNB);
+                String oldProvinceName = DailyPreference.getInstance(baseActivity).getSelectedRegionTypeProvince(PlaceType.FNB);
+                boolean isOldOverSea = DailyPreference.getInstance(baseActivity).isSelectedOverseaRegion(PlaceType.FNB);
+
+                if (DailyTextUtils.isTextEmpty(oldAreaName) == false)
+                {
+                    // 기존 저장 된 지역이 소지역 일 수도, 대지역 일 수도 있어서 확인 후 대지역과 같으면 제거
+                    if (oldAreaName.equalsIgnoreCase(oldProvinceName) == true)
+                    {
+                        oldAreaName = null;
+                    }
+
+                    // 신규 저장
+                    DailyPreference.getInstance(baseActivity).setDailyRegion(DailyCategoryType.GOURMET_ALL, oldProvinceName, oldAreaName, isOldOverSea);
+                    // 기존 초기화
+                    DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.FNB, null);
+                    DailyPreference.getInstance(baseActivity).setSelectedRegionTypeProvince(PlaceType.FNB, null);
+                    DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.FNB, false);
+                }
+
+                areaName = oldAreaName;
+                provinceName = oldProvinceName;
+            }
+
+            // Api 구조상 province 내에 area가 존재하지 않고 독립적이기때문에 작은단위로 찾아야 함
+            regionName = DailyTextUtils.isTextEmpty(areaName) == true ? provinceName : areaName;
 
             if (DailyTextUtils.isTextEmpty(regionName) == true)
             {
@@ -866,16 +908,18 @@ public class GourmetMainActivity extends PlaceMainActivity
                     Gourmet gourmet = placeViewItem.getItem();
                     Province province = mGourmetCuration.getProvince();
 
-                    String savedRegion = DailyPreference.getInstance(GourmetMainActivity.this).getSelectedRegion(PlaceType.FNB);
+//                    String savedRegion = DailyPreference.getInstance(GourmetMainActivity.this).getSelectedRegion(PlaceType.FNB);
 
-                    if (province.name.equalsIgnoreCase(savedRegion) == false)
+                    JSONObject jsonObject = DailyPreference.getInstance(GourmetMainActivity.this).getDailyRegion(DailyCategoryType.GOURMET_ALL);
+                    boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
+                    if (isSameProvince == false)
                     {
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, province.name);
+//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedOverseaRegion(PlaceType.FNB, province.isOverseas);
+//                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegion(PlaceType.FNB, province.name);
+                        DailyPreference.getInstance(GourmetMainActivity.this).setDailyRegion(DailyCategoryType.GOURMET_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
-                        DailyPreference.getInstance(GourmetMainActivity.this).setSelectedRegionTypeProvince(PlaceType.FNB, realProvinceName);
                         AnalyticsManager.getInstance(GourmetMainActivity.this).onRegionChanged(country, realProvinceName);
                     }
 

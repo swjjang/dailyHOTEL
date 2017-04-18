@@ -144,8 +144,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
 
-        DailyPreference.getInstance(this).setSettingRegion(PlaceType.HOTEL, false);
-        DailyPreference.getInstance(this).setSettingRegion(PlaceType.FNB, false);
         DailyPreference.getInstance(this).clearPaymentInformation();
 
         // 현재 앱버전을 Analytics로..

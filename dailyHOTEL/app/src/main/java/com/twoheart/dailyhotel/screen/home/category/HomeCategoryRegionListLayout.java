@@ -1,13 +1,12 @@
-package com.twoheart.dailyhotel.place.fragment;
+package com.twoheart.dailyhotel.screen.home.category;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,80 +14,65 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
-import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionAnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.util.DailyPreference;
+import com.twoheart.dailyhotel.place.base.BaseLayout;
+import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView;
 
 import java.util.List;
 
-public abstract class PlaceRegionListFragment extends BaseFragment
-{
-    OnPlaceRegionListFragment mOnPlaceRegionListFragment;
+/**
+ * Created by android_sam on 2017. 4. 12..
+ */
 
-    DailyAnimatedExpandableListView mListView;
-    PlaceRegionAnimatedExpandableListAdapter mAdapter;
+public class HomeCategoryRegionListLayout extends BaseLayout
+{
+    private View mTermsOfLocationView;
+    private DailyAnimatedExpandableListView mListView;
+
+    private PlaceRegionAnimatedExpandableListAdapter mAdapter; // TODO : 임시로 어뎁터 생성 - 서버에서 어떤 타입이 올지 몰라 생성 안하고 씀
+
+    private DailyCategoryType mDailyCategoryType;
     private Province mSelectedProvince;
 
-    private PlaceRegionListActivity.Region mRegion;
-
-    private View mTermsOfLocationView;
-    protected BaseActivity mBaseActivity;
-
-    public interface OnPlaceRegionListFragment
+    public interface OnEventListener extends OnBaseEventListener
     {
-        void onActivityCreated(PlaceRegionListFragment placeRegionListFragment);
+        boolean isLockUiComponent();
+
+        void lockUiComponent();
+
+        void releaseUiComponent();
 
         void onRegionClick(Province province);
 
         void onAroundSearchClick();
     }
 
-    protected abstract String getAroundPlaceText();
-
-    protected abstract void recordAnalyticsScreen(PlaceRegionListActivity.Region region);
+    public HomeCategoryRegionListLayout(Context context, @NonNull OnBaseEventListener listener)
+    {
+        super(context, listener);
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    protected void initLayout(View view)
     {
-        mBaseActivity = (BaseActivity) getActivity();
-
-        mListView = (DailyAnimatedExpandableListView) inflater.inflate(R.layout.fragment_region_list, container, false);
+        mListView = (DailyAnimatedExpandableListView) view.findViewById(R.id.listView);
         mListView.setOnGroupClickListener(mOnGroupClickListener);
-
-        return mListView;
     }
 
-    @Override
-    public void onResume()
+    public PlaceRegionAnimatedExpandableListAdapter getAdapter()
     {
-        if (mAdapter != null)
-        {
-            recordAnalyticsScreen(mRegion);
-        }
-
-        super.onResume();
+        return mAdapter;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
+    private View getHeaderLayout(boolean isAgreed)
     {
-        super.onActivityCreated(savedInstanceState);
-
-        if (mOnPlaceRegionListFragment != null)
-        {
-            mOnPlaceRegionListFragment.onActivityCreated(this);
-        }
-    }
-
-    private View getHeaderLayout()
-    {
-        View headerView = LayoutInflater.from(mBaseActivity).inflate(R.layout.layout_region_around_search_header, null);
+        View headerView = LayoutInflater.from(mContext).inflate(R.layout.layout_region_around_search_header, null);
 
         View searchAroundLayout = headerView.findViewById(R.id.searchAroundLayout);
         searchAroundLayout.setOnClickListener(mOnHeaderClickListener);
@@ -97,14 +81,14 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         text01View.setText(getAroundPlaceText());
 
         mTermsOfLocationView = headerView.findViewById(R.id.text02View);
-        updateTermsOfLocationView();
+        updateTermsOfLocationView(isAgreed);
 
         return headerView;
     }
 
-    public void updateTermsOfLocationView()
+    public void updateTermsOfLocationView(boolean isAgreed)
     {
-        if (DailyPreference.getInstance(mBaseActivity).isAgreeTermsOfLocation() == true)
+        if (isAgreed == true)
         {
             mTermsOfLocationView.setVisibility(View.GONE);
         } else
@@ -113,7 +97,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         }
     }
 
-    public void setRegionViewList(BaseActivity baseActivity, List<RegionViewItem> arrayList)
+    public void setRegionViewList(BaseActivity baseActivity, List<RegionViewItem> arrayList, boolean isAgreed)
     {
         if (mAdapter == null)
         {
@@ -126,120 +110,27 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
         if (mListView == null)
         {
-            Util.restartApp(getContext());
+            Util.restartApp(mContext);
             return;
         }
 
         if (mListView.getHeaderViewsCount() == 0)
         {
-            mListView.addHeaderView(getHeaderLayout());
+            mListView.addHeaderView(getHeaderLayout(isAgreed));
         }
 
         mListView.setAdapter(mAdapter);
         selectedPreviousArea(mSelectedProvince, arrayList);
     }
 
-    public void setInformation(PlaceRegionListActivity.Region region, Province province)
+    public void setDailyCategoryType(DailyCategoryType categoryType)
     {
-        mRegion = region;
+        mDailyCategoryType = categoryType;
+    }
+
+    public void setSelectedProvince(Province province)
+    {
         mSelectedProvince = province;
-    }
-
-    public void setOnPlaceRegionListFragmentListener(OnPlaceRegionListFragment listener)
-    {
-        mOnPlaceRegionListFragment = listener;
-    }
-
-    public PlaceRegionListActivity.Region getRegion()
-    {
-        return mRegion;
-    }
-
-    View getGroupView(int groupPosition)
-    {
-        int count = mListView.getChildCount();
-
-        for (int i = 0; i < count; i++)
-        {
-            View childView = mListView.getChildAt(i);
-
-            if (childView != null)
-            {
-                Object tag = childView.getTag();
-
-                if (tag != null && tag instanceof Integer == true)
-                {
-                    Integer childTag = (Integer) tag;
-
-                    if (childTag == groupPosition)
-                    {
-                        return childView;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    void expandGroupWidthAnimation(int groupPosition, final RegionViewItem regionViewItem)
-    {
-        mListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
-        {
-            @Override
-            public void onAnimationEnd()
-            {
-                releaseUiComponent();
-
-                regionViewItem.isExpandGroup = true;
-            }
-        });
-
-        mListView.setTag(groupPosition);
-
-        View groupView = getGroupView(groupPosition);
-
-        if (groupView != null)
-        {
-            onGroupExpand(groupView, regionViewItem);
-        }
-    }
-
-    void postExpandGroupWithAnimation(final int groupPosition)
-    {
-        mListView.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if (mListView.isGroupExpanded(groupPosition))
-                {
-                    RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
-
-                    mListView.collapseGroupWithAnimation(groupPosition);
-
-                    View groupView = getGroupView(groupPosition);
-
-                    if (groupView != null)
-                    {
-                        onGroupCollapse(groupView, regionViewItem);
-                    }
-                } else
-                {
-                    final RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
-
-                    try
-                    {
-                        expandGroupWidthAnimation(groupPosition, regionViewItem);
-                    } catch (Exception e)
-                    {
-                        mListView.setSelection(groupPosition);
-
-                        postExpandGroupWithAnimation(groupPosition);
-                    }
-                }
-            }
-        }, 100);
     }
 
     private void selectedPreviousArea(Province province, List<RegionViewItem> arrayList)
@@ -277,11 +168,50 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         }
     }
 
+    private String getAroundPlaceText()
+    {
+        if (mDailyCategoryType == null || mDailyCategoryType == DailyCategoryType.NONE)
+        {
+            mDailyCategoryType = DailyCategoryType.STAY_ALL;
+        }
+
+        String categoryName = mContext.getResources().getString(mDailyCategoryType.getNameResId());
+
+        return mContext.getResources().getString(R.string.label_view_my_around_daily_category_format, categoryName);
+    }
+
+    private View getGroupView(int groupPosition)
+    {
+        int count = mListView.getChildCount();
+
+        for (int i = 0; i < count; i++)
+        {
+            View childView = mListView.getChildAt(i);
+
+            if (childView != null)
+            {
+                Object tag = childView.getTag();
+
+                if (tag != null && tag instanceof Integer == true)
+                {
+                    Integer childTag = (Integer) tag;
+
+                    if (childTag == groupPosition)
+                    {
+                        return childView;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public void onGroupExpand(View view, final RegionViewItem regionViewItem)
     {
         if (view.getVisibility() != View.VISIBLE)
         {
-            releaseUiComponent();
+            ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
 
             regionViewItem.isExpandGroup = true;
             return;
@@ -317,7 +247,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                     @Override
                     public void onAnimationEnd(Animation animation)
                     {
-                        releaseUiComponent();
+                        ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
                         imageView.setAnimation(null);
                         imageView.setImageResource(R.drawable.ic_region_ic_sub_v_top);
 
@@ -328,23 +258,23 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 imageView.startAnimation(animation);
             } else
             {
-                releaseUiComponent();
+                ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
 
                 regionViewItem.isExpandGroup = true;
             }
         } else
         {
-            releaseUiComponent();
+            ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
 
             regionViewItem.isExpandGroup = true;
         }
     }
 
-    public void onGroupCollapse(View view, final RegionViewItem regionViewItem)
+    private void onGroupCollapse(View view, final RegionViewItem regionViewItem)
     {
         if (view.getVisibility() != View.VISIBLE)
         {
-            releaseUiComponent();
+            ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
 
             regionViewItem.isExpandGroup = false;
             return;
@@ -380,7 +310,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                     @Override
                     public void onAnimationEnd(Animation animation)
                     {
-                        releaseUiComponent();
+                        ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
 
                         imageView.setAnimation(null);
                         imageView.setImageResource(R.drawable.ic_region_ic_sub_v);
@@ -392,36 +322,98 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 imageView.startAnimation(animation);
             } else
             {
-                releaseUiComponent();
+                ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
 
                 regionViewItem.isExpandGroup = false;
             }
         } else
         {
-            releaseUiComponent();
+            ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
 
             regionViewItem.isExpandGroup = false;
         }
     }
 
-    private OnGroupClickListener mOnGroupClickListener = new OnGroupClickListener()
+    private void expandGroupWidthAnimation(int groupPosition, final RegionViewItem regionViewItem)
+    {
+        mListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+        {
+            @Override
+            public void onAnimationEnd()
+            {
+                ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
+
+                regionViewItem.isExpandGroup = true;
+            }
+        });
+
+        mListView.setTag(groupPosition);
+
+        View groupView = getGroupView(groupPosition);
+
+        if (groupView != null)
+        {
+            onGroupExpand(groupView, regionViewItem);
+        }
+    }
+
+    private void postExpandGroupWithAnimation(final int groupPosition)
+    {
+        mListView.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (mListView.isGroupExpanded(groupPosition))
+                {
+                    RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
+
+                    mListView.collapseGroupWithAnimation(groupPosition);
+
+                    View groupView = getGroupView(groupPosition);
+
+                    if (groupView != null)
+                    {
+                        onGroupCollapse(groupView, regionViewItem);
+                    }
+                } else
+                {
+                    final RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
+
+                    try
+                    {
+                        expandGroupWidthAnimation(groupPosition, regionViewItem);
+                    } catch (Exception e)
+                    {
+                        mListView.setSelection(groupPosition);
+
+                        postExpandGroupWithAnimation(groupPosition);
+                    }
+                }
+            }
+        }, 100);
+    }
+
+
+    private DailyAnimatedExpandableListView.OnGroupClickListener //
+        mOnGroupClickListener = new DailyAnimatedExpandableListView.OnGroupClickListener()
     {
         @Override
         public boolean onGroupClick(ExpandableListView parent, View v, final int groupPosition, long id)
         {
-            if (isLockUiComponent() == true)
+            if (((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).isLockUiComponent() == true)
             {
                 return true;
             }
 
-            lockUiComponent();
+            ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).lockUiComponent();
 
             //
             if (mAdapter.getChildrenCount(groupPosition) == 0)
             {
-                if (mOnPlaceRegionListFragment != null)
+                if (mOnEventListener != null)
                 {
-                    mOnPlaceRegionListFragment.onRegionClick(mAdapter.getGroup(groupPosition));
+                    ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).onRegionClick(mAdapter.getGroup(groupPosition));
                 }
                 return true;
             }
@@ -464,7 +456,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
             if (previousGroupPosition == groupPosition)
             {
-                releaseUiComponent();
+                ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).releaseUiComponent();
                 return true;
             }
 
@@ -486,7 +478,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 return;
             }
 
-            if (tag instanceof Area == false || mOnPlaceRegionListFragment == null)
+            if (tag instanceof Area == false || mOnEventListener == null)
             {
                 return;
             }
@@ -499,11 +491,11 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
                 if (groupPosition != null)
                 {
-                    mOnPlaceRegionListFragment.onRegionClick(mAdapter.getGroup(groupPosition));
+                    ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).onRegionClick(mAdapter.getGroup(groupPosition));
                 }
             } else
             {
-                mOnPlaceRegionListFragment.onRegionClick(area);
+                ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).onRegionClick(area);
             }
         }
     };
@@ -513,7 +505,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         @Override
         public void onClick(View v)
         {
-            mOnPlaceRegionListFragment.onAroundSearchClick();
+            ((HomeCategoryRegionListLayout.OnEventListener) mOnEventListener).onAroundSearchClick();
         }
     };
 }

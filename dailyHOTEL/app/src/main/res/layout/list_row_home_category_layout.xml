@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/homeCategoryLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/homeCategoryTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="@string/label_home_category_title_text"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="11dp"/>
+
+        <View
+            android:id="@+id/homeCategoryTitleBottomLine"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@id/homeCategoryTitleTextView"
+            android:background="@color/default_line_cdcdcdd"/>
+
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/categoryGridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/homeCategoryTitleBottomLine"
+            app:columnCount="5"/>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/homeCategoryLayout"
+        android:background="@color/default_line_cf0f0f0"/>
+
+</merge>

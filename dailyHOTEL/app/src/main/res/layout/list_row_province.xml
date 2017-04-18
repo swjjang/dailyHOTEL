@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="101dp">
+                android:layout_height="44dp">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/provinceImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:placeholderImage="@color/cd3d3d3"/>
-
-    <LinearLayout
+    <ImageView
+        android:id="@+id/updownArrowImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/ic_region_ic_sub_v"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/provinceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            dailyFont:style="Medium"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/provinceEnglishTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="11dp"
-            dailyFont:style="DemiLight"
-            android:layout_marginTop="6dp"/>
-
-        <ImageView
-            android:id="@+id/updownArrowImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/region_ic_sub_v"
-            android:layout_marginTop="7dp"/>
-    </LinearLayout>
+    <com.daily.base.widget.DailyTextView
+        android:id="@+id/provinceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@id/updownArrowImageView"
+        android:gravity="left|center_vertical"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="15dp"
+        dailyFont:style="Medium"/>
 
     <View
         android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_line_cf0f0f0"/>
+
+    <View
+        android:id="@+id/collapseBottomLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_line_cf0f0f0"/>
+
+    <View
+        android:id="@+id/expandBottomLine"
+        android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/province_underline"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:background="@color/selectarea_underline"/>
 </RelativeLayout>

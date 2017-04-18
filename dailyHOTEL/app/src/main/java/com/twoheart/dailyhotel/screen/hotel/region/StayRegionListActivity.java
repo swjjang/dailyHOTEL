@@ -13,6 +13,7 @@ import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyViewPager;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -28,6 +29,8 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -148,7 +151,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         ArrayList<PlaceRegionListFragment> fragmentList = new ArrayList<>(STAY_TAB_COUNT);
         StayRegionListFragment regionListFragment01 = new StayRegionListFragment();
 
-        boolean isOverseas = false;
+        boolean isOverSeas = false;
 
         if (mSelectedProvince != null)
         {
@@ -158,23 +161,25 @@ public class StayRegionListActivity extends PlaceRegionListActivity
 
                 if (area.getProvince() == null)
                 {
-                    isOverseas = DailyPreference.getInstance(this).isSelectedOverseaRegion(PlaceType.HOTEL);
+                    JSONObject jsonObject = DailyPreference.getInstance(this).getDailyRegion(DailyCategoryType.STAY_ALL);
+                    isOverSeas = Util.isDailyOverSeas(jsonObject);
+//                    isOverSeas = DailyPreference.getInstance(this).isSelectedOverseaRegion(PlaceType.HOTEL);
                 } else
                 {
-                    isOverseas = area.getProvince().isOverseas;
+                    isOverSeas = area.getProvince().isOverseas;
                 }
             } else
             {
-                isOverseas = mSelectedProvince.isOverseas;
+                isOverSeas = mSelectedProvince.isOverseas;
             }
         }
 
-        regionListFragment01.setInformation(Region.DOMESTIC, isOverseas ? null : mSelectedProvince);
+        regionListFragment01.setInformation(Region.DOMESTIC, isOverSeas ? null : mSelectedProvince);
         regionListFragment01.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment01);
 
         StayRegionListFragment regionListFragment02 = new StayRegionListFragment();
-        regionListFragment02.setInformation(Region.GLOBAL, isOverseas ? mSelectedProvince : null);
+        regionListFragment02.setInformation(Region.GLOBAL, isOverSeas ? mSelectedProvince : null);
         regionListFragment02.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment02);
 
@@ -184,9 +189,9 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        mViewPager.setCurrentItem(isOverseas ? 1 : 0);
+        mViewPager.setCurrentItem(isOverSeas ? 1 : 0);
 
-        if (isOverseas == true)
+        if (isOverSeas == true)
         {
             AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
         } else

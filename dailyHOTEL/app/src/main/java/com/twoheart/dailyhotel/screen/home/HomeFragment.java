@@ -1,20 +1,28 @@
 package com.twoheart.dailyhotel.screen.home;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
+import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -24,9 +32,11 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.home.category.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -39,9 +49,11 @@ import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
+import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -219,6 +231,43 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     forceRefreshing();
                 }
                 break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_REGIONLIST:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
+                    {
+                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
+                        DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
+
+                        DailyPreference.getInstance(mBaseActivity).setDailyRegion(categoryType, Util.getDailyRegionJSONObject(province));
+                    }
+                }
+
+                break;
+            }
+
+            case Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION:
+            {
+                searchMyLocation();
+                break;
+            }
+
+            case Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    searchMyLocation();
+                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
+                {
+                    mDontReload = true;
+                    mHomeLayout.setScrollTop();
+
+                    forceRefreshing();
+                }
+                break;
+            }
         }
     }
 
@@ -331,6 +380,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
+    private void requestCategoryEnabled()
+    {
+        boolean isEnabled = DailyPreference.getInstance(mBaseActivity).getRemoteConfigHomeCategoryEnabled();
+
+        if (mHomeLayout != null)
+        {
+            mHomeLayout.setCategoryEnabled(isEnabled);
+        }
+    }
+
     void startSignUp(String recommenderCode)
     {
         if (isLockUiComponent() == true || mIsAttach == false)
@@ -422,6 +481,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         baseActivity.startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_RECENTPLACE);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void startPlaceDetail(View view, HomePlace place, TodayDateTime todayDateTime)
     {
         if (place == null || todayDateTime == null)
@@ -621,12 +681,125 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mNetworkRunState = IS_RUNNED_NONE;
 
             mNetworkController.requestCommonDateTime();
+            requestCategoryEnabled();
             requestMessageData();
             mNetworkController.requestEventList();
             mNetworkController.requestRecommendationList();
             requestWishList();
             requestRecentList();
         }
+    }
+
+    protected void searchMyLocation()
+    {
+        lockUI();
+
+        DailyLocationFactory.getInstance(mBaseActivity) //
+            .startLocationMeasure(this, null, new DailyLocationFactory.LocationListenerEx()
+            {
+                @Override
+                public void onRequirePermission()
+                {
+                    unLockUI();
+
+                    Intent intent = PermissionManagerActivity.newInstance( //
+                        mBaseActivity, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                }
+
+                @Override
+                public void onFailed()
+                {
+                    unLockUI();
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider)
+                {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider)
+                {
+                    unLockUI();
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                    mBaseActivity.showSimpleDialog(getString(R.string.dialog_title_used_gps)//
+                        , getString(R.string.dialog_msg_used_gps)//
+                        , getString(R.string.dialog_btn_text_dosetting)//
+                        , getString(R.string.dialog_btn_text_cancel)//
+                        , new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                            }
+                        }, null, false);
+                }
+
+                @Override
+                public void onLocationChanged(Location location)
+                {
+                    unLockUI();
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    DailyLocationFactory.getInstance(mBaseActivity).stopLocationMeasure();
+
+                    if (location == null)
+                    {
+                        DailyToast.showToast(mBaseActivity, R.string.message_failed_mylocation, Toast.LENGTH_SHORT);
+                    } else
+                    {
+                        // Location
+                        onSearch(location);
+                    }
+                }
+            });
+    }
+
+    private void onSearch(Location location)
+    {
+        if (mTodayDateTime == null)
+        {
+            Util.restartApp(mBaseActivity);
+            return;
+        }
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, location, AnalyticsManager.Screen.HOME);
+            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
     }
 
     private void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
@@ -793,6 +966,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 Integer.toString(event.index), null);
         }
 
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
         public void onRecommendationClick(View view, Recommendation recommendation)
         {
@@ -952,6 +1126,37 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             Intent intent = new Intent(mBaseActivity, ProtectYouthTermsActivity.class);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_TERMS_AND_POLICY);
+        }
+
+        @Override
+        public void onCategoryItemClick(DailyCategoryType categoryType)
+        {
+            if (DailyCategoryType.STAY_AROUND_SEARCH == categoryType)
+            {
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                Intent intent = PermissionManagerActivity.newInstance(mBaseActivity //
+                    , PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+                return;
+            }
+
+            try
+            {
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                mBaseActivity.startActivityForResult( //
+                    HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
+                    , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         @Override

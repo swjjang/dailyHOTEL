@@ -3,50 +3,106 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+    <View
+        android:id="@+id/verticalLine"
+        android:layout_width="1px"
+        android:layout_height="44dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/selectarea_underline"/>
+
     <LinearLayout
+        android:id="@+id/areaLayout1"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:orientation="horizontal">
+        android:layout_height="44dp"
+        android:layout_toLeftOf="@id/verticalLine"
+        android:background="@drawable/selector_background_area"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="10dp">
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/areaTextView1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/selector_background_area"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@drawable/selector_selectarea_titlecolor"
-            android:textSize="13dp"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="@color/selectarea_underline"/>
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/areaNameTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textColor="@drawable/selector_selectarea_titlecolor"
+                android:textSize="13dp"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/areaTextView2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/selector_background_area"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="2"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:textColor="@drawable/selector_selectarea_titlecolor"
-            android:textSize="13dp"/>
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/areaCountTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_alignTop="@id/areaNameTextView1"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/areaNameTextView1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/default_text_cb8b8b8"
+                android:textSize="11dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/areaLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_toRightOf="@id/verticalLine"
+        android:background="@drawable/selector_background_area"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="10dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/areaNameTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textColor="@drawable/selector_selectarea_titlecolor"
+                android:textSize="13dp"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/areaCountTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_alignTop="@id/areaNameTextView2"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/areaNameTextView2"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/default_text_cb8b8b8"
+                android:textSize="11dp"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
 
     <View
         android:id="@+id/underLineView"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/verticalLine"
         android:background="@color/selectarea_underline"/>
 
 </RelativeLayout>

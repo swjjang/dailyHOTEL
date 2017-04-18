@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.EventBanner;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -49,6 +50,8 @@ import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -161,16 +164,18 @@ public class StayMainActivity extends PlaceMainActivity
                 mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
                 // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
+//                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
 
-                if (province.name.equalsIgnoreCase(savedRegion) == false)
+                JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
+                boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
+                if (isSameProvince == false)
                 {
-                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
+//                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+//                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                    DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
 
                     String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                     String realProvinceName = Util.getRealProvinceName(province);
-                    DailyPreference.getInstance(this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                     AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
                 }
 
@@ -195,16 +200,18 @@ public class StayMainActivity extends PlaceMainActivity
                 mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
                 // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
+                //                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
 
-                if (province.name.equalsIgnoreCase(savedRegion) == false)
+                JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
+                boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
+                if (isSameProvince == false)
                 {
-                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                    //                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                    //                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                    DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
 
                     String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                     String realProvinceName = Util.getRealProvinceName(province);
-                    DailyPreference.getInstance(this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                     AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
                 }
 
@@ -733,12 +740,8 @@ public class StayMainActivity extends PlaceMainActivity
                 selectedProvince = provinceList.get(0);
             }
 
-            // 처음 시작시에는 지역이 Area로 저장된 경우 Province로 변경하기 위한 저장값.
-            boolean mIsProvinceSetting = DailyPreference.getInstance(StayMainActivity.this).isSettingRegion(PlaceType.HOTEL);
-            DailyPreference.getInstance(StayMainActivity.this).setSettingRegion(PlaceType.HOTEL, true);
-
             // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
-            if (mIsProvinceSetting == false && selectedProvince instanceof Area)
+            if (selectedProvince instanceof Area)
             {
                 int provinceIndex = selectedProvince.getProvinceIndex();
 
@@ -746,12 +749,12 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     if (province.getProvinceIndex() == provinceIndex)
                     {
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, selectedProvince.name);
+//                        DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+//                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, selectedProvince.name);
+                        DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                         AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
                         break;
                     }
@@ -884,8 +887,46 @@ public class StayMainActivity extends PlaceMainActivity
         {
             Province selectedProvince = null;
 
-            // 마지막으로 선택한 지역을 가져온다.
-            String regionName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
+            String provinceName;
+            String areaName;
+            String regionName;
+
+            // 마지막으로 선택한 지역을 가져온다. - old and new 추후 2.0.4로 강업 이후 Old 부분 삭제 필요
+            JSONObject saveRegionJsonObject = DailyPreference.getInstance(baseActivity).getDailyRegion(DailyCategoryType.STAY_ALL);
+            if (saveRegionJsonObject != null)
+            {
+                // new version preference value 사용
+                areaName = Util.getDailyAreaString(saveRegionJsonObject);
+                provinceName = Util.getDailyProvinceString(saveRegionJsonObject);
+            } else
+            {
+                // Old version preference value 사용
+                String oldAreaName = DailyPreference.getInstance(baseActivity).getSelectedRegion(PlaceType.HOTEL);
+                String oldProvinceName = DailyPreference.getInstance(baseActivity).getSelectedRegionTypeProvince(PlaceType.HOTEL);
+                boolean isOldOverSea = DailyPreference.getInstance(baseActivity).isSelectedOverseaRegion(PlaceType.HOTEL);
+
+                if (DailyTextUtils.isTextEmpty(oldAreaName) == false)
+                {
+                    // 기존 저장 된 지역이 소지역 일 수도, 대지역 일 수도 있어서 확인 후 대지역과 같으면 제거
+                    if (oldAreaName.equalsIgnoreCase(oldProvinceName) == true)
+                    {
+                        oldAreaName = null;
+                    }
+
+                    // 신규 저장
+                    DailyPreference.getInstance(baseActivity).setDailyRegion(DailyCategoryType.STAY_ALL, oldProvinceName, oldAreaName, isOldOverSea);
+                    // 기존 초기화
+                    DailyPreference.getInstance(baseActivity).setSelectedRegion(PlaceType.HOTEL, null);
+                    DailyPreference.getInstance(baseActivity).setSelectedRegionTypeProvince(PlaceType.HOTEL, null);
+                    DailyPreference.getInstance(baseActivity).setSelectedOverseaRegion(PlaceType.HOTEL, false);
+                }
+
+                areaName = oldAreaName;
+                provinceName = oldProvinceName;
+            }
+
+            // Api 구조상 province 내에 area가 존재하지 않고 독립적이기때문에 작은단위로 찾아야 함
+            regionName = DailyTextUtils.isTextEmpty(areaName) == true ? provinceName : areaName;
 
             if (DailyTextUtils.isTextEmpty(regionName) == true)
             {
@@ -947,16 +988,19 @@ public class StayMainActivity extends PlaceMainActivity
                     Stay stay = placeViewItem.getItem();
                     Province province = mStayCuration.getProvince();
 
-                    String savedRegion = DailyPreference.getInstance(StayMainActivity.this).getSelectedRegion(PlaceType.HOTEL);
+                    // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
+                    //                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
 
-                    if (province.name.equalsIgnoreCase(savedRegion) == false)
+                    JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
+                    boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
+                    if (isSameProvince == false)
                     {
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                        //                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
+                        //                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
+                        DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
                         String realProvinceName = Util.getRealProvinceName(province);
-                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
                         AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
                     }
 

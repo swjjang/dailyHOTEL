@@ -87,7 +87,8 @@
     <string name="label_dailyh_lifestyle">데일리 라이프스타일 프로젝트</string>
     <string name="label_dailyh_sns">데일리 SNS</string>
     <string name="label_customer">고객님</string>
-    <string name="label_trueview">트루뷰</string>
+    <string name="label_region_name">지역명</string>
+    <string name="label_subway_station">지하철역</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -812,6 +813,7 @@
     <!-- Area -->
     <string name="label_selectarea_stay_area">스테이 지역 선택</string>
     <string name="label_selectarea_gourmet_area">고메 지역 선택</string>
+    <string name="label_select_area_daily_category_format">%1$s 지역 선택</string>
 
     <!-- EventFragment -->
     <string name="eventfragment_emptylist_maintext">현재 진행중인 이벤트가 없습니다.</string>
@@ -914,6 +916,7 @@
     <!-- Search -->
     <string name="label_view_myaround_hotel">내 주변 스테이 보기</string>
     <string name="label_view_myaround_gourmet">내 주변 레스토랑 보기</string>
+    <string name="label_view_my_around_daily_category_format">내 주변 %1$s 보기</string>
     <string name="label_change_date">검색 날짜 변경하기</string>
     <string name="label_search_need_to_agree_termsoflocation">위치기반서비스 이용약관 동의 필요</string>
     <string name="label_search_agree_termsoflocation">위치기반서비스 이용동의</string>
@@ -1155,9 +1158,11 @@
     <!-- Home -->
     <string name="format_home_event_count">%1$d / %2$d</string>
     <string name="label_home_stay_menu_title">데일리호텔</string>
-    <string name="label_home_stay_menu_description">스테이 예약하기</string>
+    <string name="label_home_stay_menu_description">스테이 전체보기</string>
+    <string name="label_home_stay_menu_description_low_resolution">스테이 전체</string>
     <string name="label_home_gourmet_menu_title">데일리고메</string>
-    <string name="label_home_gourmet_menu_description">레스토랑 예약하기</string>
+    <string name="label_home_gourmet_menu_description">레스토랑 전체보기</string>
+    <string name="label_home_gourmet_menu_description_low_resolution">레스토랑 전체</string>
     <string name="label_home_view_all">모두보기</string>
     <string name="label_home_recommend_title">데일리 추천</string>
     <string name="label_home_company_info">사업자 정보</string>
@@ -1174,6 +1179,23 @@
     <string name="label_home_server_error_text">네트워크 연결 오류로 일부 정보를 불러오지 못했습니다. 다시 시도해 주세요.</string>
     <string name="label_home_server_error_low_display_split_text">불러오지</string>
     <string name="label_home_retry_button_text">연결 재시도하기</string>
+    <string name="label_home_category_title_text">스테이 바로가기</string>
+
+    <string name="label_home_category_stay_all">스테이</string>
+    <string name="label_home_category_hotel">호텔</string>
+    <string name="label_home_category_boutique">부티끄</string>
+    <string name="label_home_category_pension">펜션</string>
+    <string name="label_home_category_resort">리조트</string>
+    <string name="label_home_category_guest_house">게스트하우스</string>
+    <string name="label_home_category_around_search">내주변</string>
+
+    <string name="code_home_category_hotel">hotel</string>
+    <string name="code_home_category_boutique">boutique</string>
+    <string name="code_home_category_pension">pension</string>
+    <string name="code_home_category_resort">resort</string>
+    <string name="code_home_category_guest_house">guest_house</string>
+    <!--<string name="code_home_category_around_search">0</string>-->
+
 
 
     <!-- Gourmet Product List -->

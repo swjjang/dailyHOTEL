@@ -8,7 +8,10 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.PlacePaymentInformation;
+
+import org.json.JSONObject;
 
 /**
  */
@@ -23,14 +26,18 @@ public class DailyPreference
 
     private static final String KEY_OPENING_ALARM = "1"; // 알람
     //    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
-    private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
+    //    private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     //    private static final String KEY_ALLOW_PUSH = "5";
     //    private static final String KEY_ALLOW_BENEFIT_ALARM = "6";
 
     //    private static final String KEY_COLLAPSEKEY = "10"; // 푸시 중복 되지 않도록
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
@@ -147,6 +154,9 @@ public class DailyPreference
     private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
     private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
 
+    // Home - Category
+    private static final String KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED = "332";
+
     //    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
     //    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
 
@@ -161,13 +171,28 @@ public class DailyPreference
     private static final String KEY_SETTING_GCM_ID = "1002";
     private static final String KEY_SETTING_VERSION_SKIP_MAX_VERSION = "1004";
 
-    // Setting - Region
+    // Setting - Region - Old 2017.04.07
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
-    private static final String KEY_SETTING_REGION_STAY_SETTING = "1111";
-    private static final String KEY_SETTING_REGION_PROVINCE_STAY_SELECT = "1112";
+    //        private static final String KEY_SETTING_REGION_STAY_SETTING = "1111"; // home 이후 사용안하는 부분
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
+    private static final String KEY_SETTING_REGION_PROVINCE_STAY_SELECT = "1112"; // adjust
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
-    private static final String KEY_SETTING_REGION_FNB_SETTING = "1121";
-    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122";
+    //        private static final String KEY_SETTING_REGION_FNB_SETTING = "1121"; // home 이후 사용안하는 부분
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
+    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122"; // adjust
+    // Setting - Region New 2017.04.07 - 스테이 호텔 구분 안하고 전체를 다 개별 카테고리로 봄
+    private static final String KEY_SETTING_REGION_STAY_ALL = "1130";
+    private static final String KEY_SETTING_REGION_GOURMET_ALL = "1131";
+    private static final String KEY_SETTING_REGION_STAY_HOTEL = "1132";
+    private static final String KEY_SETTING_REGION_STAY_BOUTIQUE = "1133";
+    private static final String KEY_SETTING_REGION_STAY_PENSION = "1134";
+    private static final String KEY_SETTING_REGION_STAY_RESORT = "1135";
 
     // Setting - Home
     private static final String KEY_SETTING_HOME_MESSAGE_AREA_ENABLED = "1201";
@@ -524,15 +549,15 @@ public class DailyPreference
     //        setValue(mEditor, KEY_LAST_MENU, value);
     //    }
 
-    public boolean isShowGuide()
-    {
-        return getValue(mPreferences, KEY_SHOW_GUIDE, false);
-    }
-
-    public void setShowGuide(boolean value)
-    {
-        setValue(mEditor, KEY_SHOW_GUIDE, value);
-    }
+    //    public boolean isShowGuide()
+    //    {
+    //        return getValue(mPreferences, KEY_SHOW_GUIDE, false);
+    //    }
+    //
+    //    public void setShowGuide(boolean value)
+    //    {
+    //        setValue(mEditor, KEY_SHOW_GUIDE, value);
+    //    }
 
     //    public String getStayLastViewDate()
     //    {
@@ -554,6 +579,8 @@ public class DailyPreference
     //        setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
     //    }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
     {
         switch (placeType)
@@ -567,6 +594,8 @@ public class DailyPreference
         }
     }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public void setSelectedOverseaRegion(Constants.PlaceType placeType, boolean value)
     {
         switch (placeType)
@@ -1108,6 +1137,16 @@ public class DailyPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_EVENT_INDEX, -1);
     }
 
+    public void setRemoteConfigHomeCategoryEnabled(boolean enabled)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED, enabled);
+    }
+
+    public boolean getRemoteConfigHomeCategoryEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED, false);
+    }
+
     public void setRemoteConfigStampEnabled(boolean enabled)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_ENABLED, enabled);
@@ -1335,6 +1374,8 @@ public class DailyPreference
         setValue(mEditor, KEY_SELECTED_SIMPLE_CARD, value);
     }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public String getSelectedRegion(Constants.PlaceType placeType)
     {
         switch (placeType)
@@ -1348,6 +1389,8 @@ public class DailyPreference
         }
     }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public void setSelectedRegion(Constants.PlaceType placeType, String value)
     {
         switch (placeType)
@@ -1364,9 +1407,11 @@ public class DailyPreference
 
     /**
      * 선택된 대지역 저장값 - Adjust 용
+     * // version - 2.0.4 로 강업 이후 삭제 필요 부분
      *
      * @return
      */
+    @Deprecated
     public String getSelectedRegionTypeProvince(Constants.PlaceType placeType)
     {
         switch (placeType)
@@ -1380,6 +1425,8 @@ public class DailyPreference
         }
     }
 
+    // version - 2.0.4 로 강업 이후 삭제 필요 부분
+    @Deprecated
     public void setSelectedRegionTypeProvince(Constants.PlaceType placeType, String value)
     {
         switch (placeType)
@@ -1395,30 +1442,73 @@ public class DailyPreference
         }
     }
 
-    public boolean isSettingRegion(Constants.PlaceType placeType)
+    public JSONObject getDailyRegion(DailyCategoryType type)
     {
-        switch (placeType)
+        String value = getValue(mPreferences, getDailyRegionKey(type), null);
+        if (DailyTextUtils.isTextEmpty(value) == true)
         {
-            case FNB:
-                return getValue(mPreferences, KEY_SETTING_REGION_FNB_SETTING, false);
-
-            case HOTEL:
-            default:
-                return getValue(mPreferences, KEY_SETTING_REGION_STAY_SETTING, false);
+            return null;
         }
+
+        JSONObject jsonObject = null;
+        try
+        {
+            jsonObject = new JSONObject(value);
+        } catch (Exception e)
+        {
+            com.daily.base.util.ExLog.e(e.toString());
+        }
+
+        return jsonObject;
     }
 
-    public void setSettingRegion(Constants.PlaceType placeType, boolean value)
+    public void setDailyRegion(DailyCategoryType type, JSONObject jsonObject)
     {
-        switch (placeType)
-        {
-            case HOTEL:
-                setValue(mEditor, KEY_SETTING_REGION_STAY_SETTING, value);
-                break;
+        String value;
 
-            case FNB:
-                setValue(mEditor, KEY_SETTING_REGION_FNB_SETTING, value);
-                break;
+        if (jsonObject == null)
+        {
+            value = "";
+        } else
+        {
+            value = jsonObject.toString();
+        }
+
+        setValue(mEditor, getDailyRegionKey(type), value);
+    }
+
+    public void setDailyRegion(DailyCategoryType type //
+        , String provinceName, String areaName, boolean isOverSeas)
+    {
+        JSONObject jsonObject = Util.getDailyRegionJSONObject(provinceName, areaName, isOverSeas);
+
+        setDailyRegion(type, jsonObject);
+    }
+
+    private String getDailyRegionKey(DailyCategoryType type)
+    {
+        switch (type)
+        {
+            case STAY_ALL:
+                return KEY_SETTING_REGION_STAY_ALL;
+
+            case GOURMET_ALL:
+                return KEY_SETTING_REGION_GOURMET_ALL;
+
+            case STAY_HOTEL:
+                return KEY_SETTING_REGION_STAY_HOTEL;
+
+            case STAY_BOUTIQUE:
+                return KEY_SETTING_REGION_STAY_BOUTIQUE;
+
+            case STAY_PENSION:
+                return KEY_SETTING_REGION_STAY_PENSION;
+
+            case STAY_RESORT:
+                return KEY_SETTING_REGION_STAY_RESORT;
+
+            default:
+                return null;
         }
     }
 

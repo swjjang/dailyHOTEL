@@ -41,7 +41,7 @@ public class PhoneNumberKoreaFormattingTextWatcher implements TextWatcher
             return;
         }
 
-        if (TextUtils.isDigitsOnly(s.subSequence(start, start + count).toString()) == false)
+        if (android.text.TextUtils.isDigitsOnly(s.subSequence(start, start + count).toString()) == false)
         {
             mIsNotDigit = true;
         }

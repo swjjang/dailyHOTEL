@@ -255,6 +255,7 @@
     <color name="default_text_c5a5a5a">#5a5a5a</color>
     <color name="default_text_cababab">#ababab</color>
     <color name="default_text_cbe945b">#be945b</color>
+    <color name="default_text_cb8b8b8">#b8b8b8</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>

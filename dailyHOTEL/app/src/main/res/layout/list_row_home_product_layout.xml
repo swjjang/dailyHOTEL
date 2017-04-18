@@ -1,111 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/productLayout"
+<RelativeLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="82dp"
+                android:layout_height="96dp"
                 android:background="@color/white">
 
-    <View
-        android:id="@+id/verticalLine"
-        android:layout_width="1dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:background="@color/default_line_cf0f0f0"/>
-
-    <LinearLayout
-        android:id="@+id/stayButtonLayout"
+    <RelativeLayout
+        android:id="@+id/productButtonLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/verticalLine"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:background="@color/white"
+        android:layout_height="76dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginTop="10dp">
 
-        <com.daily.base.widget.DailyImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginTop="20dp"
-            android:scaleType="fitStart"
-            android:src="@drawable/ic_home_category_01_hotel"/>
+        <View
+            android:id="@+id/verticalLine"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@color/transparent"/>
 
         <LinearLayout
-            android:id="@+id/stayButtonTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:id="@+id/stayButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/home_category_btn"
+            android:layout_toLeftOf="@id/verticalLine"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/stayTextView"
+            <com.daily.base.widget.DailyImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_home_stay_menu_title"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"
-                dailyFont:style="Medium"/>
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/ic_home_category_01_hotel"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/stayDoTextView"
+            <LinearLayout
+                android:id="@+id/stayButtonTextLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/label_home_stay_menu_description"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"/>
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/stayTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_home_stay_menu_title"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/stayDoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/label_home_stay_menu_description"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/gourmetButtonLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/verticalLine"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <com.daily.base.widget.DailyImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="18dp"
-            android:layout_marginTop="20dp"
-            android:scaleType="fitStart"
-            android:src="@drawable/ic_home_category_02_gourmet"/>
 
         <LinearLayout
-            android:id="@+id/gourmetButtonTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:id="@+id/gourmetButtonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/home_category_btn"
+            android:layout_toRightOf="@id/verticalLine"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/gourmetTextView"
+            <com.daily.base.widget.DailyImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_home_gourmet_menu_title"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"
-                dailyFont:style="Medium"/>
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/ic_home_category_02_gourmet"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/gourmetDoTextView"
+            <LinearLayout
+                android:id="@+id/gourmetButtonTextLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/label_home_gourmet_menu_description"
-                android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"/>
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/gourmetTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_home_gourmet_menu_title"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/gourmetDoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:text="@string/label_home_gourmet_menu_description"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <View
+        android:id="@+id/bottomLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"

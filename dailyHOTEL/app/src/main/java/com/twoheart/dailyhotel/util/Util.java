@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -60,6 +59,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import net.simonvt.numberpicker.NumberPicker;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.SoftReference;
 import java.net.URLEncoder;
@@ -430,7 +432,7 @@ public class Util implements Constants
                 if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
                     || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
                 {
-                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    if (android.text.TextUtils.isDigitsOnly(text[1].substring(5)) == true)
                     {
                         int length = text[1].length();
                         if (length == 12 || length == 13)
@@ -519,7 +521,7 @@ public class Util implements Constants
                 if (text[1].startsWith("(0)10") || text[1].startsWith("(0)11") || text[1].startsWith("(0)16") //
                     || text[1].startsWith("(0)17") || text[1].startsWith("(0)18") || text[1].startsWith("(0)19"))
                 {
-                    if (TextUtils.isDigitsOnly(text[1].substring(5)) == true)
+                    if (android.text.TextUtils.isDigitsOnly(text[1].substring(5)) == true)
                     {
                         int length = text[1].length();
                         if (length == 12 || length == 13)
@@ -541,7 +543,7 @@ public class Util implements Constants
             if (text.startsWith("010") || text.startsWith("011") || text.startsWith("016") //
                 || text.startsWith("017") || text.startsWith("018") || text.startsWith("019"))
             {
-                if (TextUtils.isDigitsOnly(text) == true)
+                if (android.text.TextUtils.isDigitsOnly(text) == true)
                 {
                     int length = text.length();
                     if (length == 10 || length == 11)
@@ -1416,6 +1418,164 @@ public class Util implements Constants
         }
 
         return realProvinceName;
+    }
+
+    /**
+     * 신규 저장용 지역 JSONObject
+     *
+     * @param province
+     * @return
+     */
+    public static JSONObject getDailyRegionJSONObject(Province province)
+    {
+        JSONObject jsonObject;
+        try
+        {
+            String areaName;
+            String provinceName;
+            boolean isOverSeas;
+
+            if (province instanceof Area)
+            {
+                Area area = (Area) province;
+
+                areaName = area.name;
+                provinceName = area.getProvince().name;
+                isOverSeas = area.getProvince().isOverseas;
+            } else
+            {
+                provinceName = province.name;
+                areaName = "";
+                isOverSeas = province.isOverseas;
+            }
+
+            jsonObject = getDailyRegionJSONObject(provinceName, areaName, isOverSeas);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            jsonObject = null;
+        }
+
+        return jsonObject;
+    }
+
+    /**
+     * 신규 저장용 지역 JSONObject
+     *
+     * @param provinceName
+     * @param areaName
+     * @param isOverSeas
+     * @return
+     */
+    public static JSONObject getDailyRegionJSONObject(String provinceName, String areaName, boolean isOverSeas)
+    {
+        JSONObject jsonObject;
+        try
+        {
+            jsonObject = new JSONObject();
+            jsonObject.put(Constants.JSON_KEY_PROVINCE_NAME, DailyTextUtils.isTextEmpty(provinceName) ? "" : provinceName);
+            jsonObject.put(Constants.JSON_KEY_AREA_NAME, DailyTextUtils.isTextEmpty(areaName) ? "" : areaName);
+            jsonObject.put(Constants.JSON_KEY_IS_OVER_SEAS, isOverSeas);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            jsonObject = null;
+        }
+
+        return jsonObject;
+    }
+
+    public static String getDailyAreaString(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            return "";
+        }
+
+        String areaName;
+        try
+        {
+            areaName = jsonObject.getString(Constants.JSON_KEY_AREA_NAME);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+            areaName = "";
+        }
+
+        return areaName;
+    }
+
+    public static String getDailyProvinceString(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            return "";
+        }
+
+        String provinceName;
+        try
+        {
+            provinceName = jsonObject.getString(Constants.JSON_KEY_PROVINCE_NAME);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+            provinceName = "";
+        }
+
+        return provinceName;
+    }
+
+    public static boolean isDailyOverSeas(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            return false;
+        }
+
+        boolean isOverSeas;
+        try
+        {
+            isOverSeas = jsonObject.getBoolean(Constants.JSON_KEY_IS_OVER_SEAS);
+        } catch (JSONException e)
+        {
+            ExLog.d(e.toString());
+            isOverSeas = false;
+        }
+
+        return isOverSeas;
+    }
+
+    public static boolean isSameProvinceName(Province province, JSONObject saveProvinceJsonObject)
+    {
+        if (province == null && saveProvinceJsonObject == null)
+        {
+            return true;
+        } else if (province == null || saveProvinceJsonObject == null)
+        {
+            return false;
+        }
+
+        String saveProvinceName = getDailyProvinceString(saveProvinceJsonObject);
+        String saveAreaName = getDailyAreaString(saveProvinceJsonObject);
+
+        boolean isSameProvince = false;
+        try
+        {
+            String regionName = province.name;
+
+            if (province instanceof Area)
+            {
+                isSameProvince = regionName.equalsIgnoreCase(saveAreaName);
+            } else
+            {
+                isSameProvince = regionName.equalsIgnoreCase(saveProvinceName);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return isSameProvince;
     }
 
     public static boolean isAvailableNetwork(Context context)
