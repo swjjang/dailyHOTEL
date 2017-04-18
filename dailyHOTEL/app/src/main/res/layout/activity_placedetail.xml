@@ -109,6 +109,17 @@
                 app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
             <ImageView
+                android:id="@+id/menu2View"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_toLeftOf="@+id/menu1View"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp"
+                android:tint="@color/white"
+                app:srcCompat="@drawable/navibar_ic_s_region"/>
+
+            <ImageView
                 android:id="@+id/menu1View"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -177,6 +188,13 @@
             android:id="@+id/backView"
             android:layout_width="60dp"
             android:layout_height="match_parent"/>
+
+        <View
+            android:id="@+id/trueViewView"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/shareView"
+            android:layout_centerVertical="true"/>
 
         <View
             android:id="@+id/shareView"
@@ -386,8 +404,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1.11"
-                />
+                android:layout_weight="1.11"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/wishListPopupView"

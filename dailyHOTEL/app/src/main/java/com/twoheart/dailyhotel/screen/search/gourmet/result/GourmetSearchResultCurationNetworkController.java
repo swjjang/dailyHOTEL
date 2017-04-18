@@ -2,11 +2,11 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.daily.base.util.ExLog;
 
 import org.json.JSONObject;
 

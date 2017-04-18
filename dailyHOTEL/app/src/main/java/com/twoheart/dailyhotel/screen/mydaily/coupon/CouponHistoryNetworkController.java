@@ -2,12 +2,12 @@ package com.twoheart.dailyhotel.screen.mydaily.coupon;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.CouponHistory;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.CouponUtil;
-import com.daily.base.util.ExLog;
 
 import org.json.JSONObject;
 

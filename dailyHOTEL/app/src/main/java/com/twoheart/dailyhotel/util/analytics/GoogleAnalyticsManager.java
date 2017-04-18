@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -15,7 +16,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.daily.base.util.ExLog;
 
 import java.util.Locale;
 import java.util.Map;

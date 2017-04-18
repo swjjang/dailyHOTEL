@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.home;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -15,7 +16,6 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.daily.base.util.ExLog;
 
 import org.json.JSONArray;
 import org.json.JSONException;

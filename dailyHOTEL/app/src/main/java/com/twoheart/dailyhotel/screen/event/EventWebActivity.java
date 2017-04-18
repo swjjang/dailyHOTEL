@@ -15,6 +15,8 @@ import android.webkit.WebView;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyWebView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -40,12 +42,10 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
-import com.daily.base.widget.DailyWebView;
 
 import org.json.JSONObject;
 
@@ -951,7 +951,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     }
 
                     DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(uri));
-
 
                     if (dailyDeepLink != null && dailyDeepLink.isValidateLink() == true)
                     {

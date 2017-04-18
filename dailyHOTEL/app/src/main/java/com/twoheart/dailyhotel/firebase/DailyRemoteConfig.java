@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -15,7 +16,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;

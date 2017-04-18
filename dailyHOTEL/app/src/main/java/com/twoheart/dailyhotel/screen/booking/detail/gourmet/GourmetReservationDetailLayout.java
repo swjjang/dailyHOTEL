@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -12,7 +13,6 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Date;

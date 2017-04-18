@@ -7,13 +7,13 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseException;
 import com.daily.base.BasePresenter;
 import com.daily.base.BaseViewInterface;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookImpl;
 import com.daily.dailyhotel.repository.remote.KakaoImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
-import com.daily.base.widget.DailyToast;
 
 import retrofit2.HttpException;
 

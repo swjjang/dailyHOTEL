@@ -75,6 +75,8 @@ public class DailyPreference
     private static final String KEY_GOURMET_RECENT_PLACES = "211";
     private static final String KEY_ALL_RECENT_PLACES = "212";
 
+    private static final String KEY_TRUE_VIEW_SUPPORT = "213";
+
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
     // <-----
@@ -154,9 +156,8 @@ public class DailyPreference
 
     // Home - Category
     private static final String KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED = "332";
-
-//    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
-//    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
+    //    private static final String KEY_REMOTE_CONFIG_ABTEST_GOURMET_PRODUCT_LIST = "340";
+    //    private static final String KEY_REMOTE_CONFIG_ABTEST_HOME_BUTTON = "341";
 
     private static final String KEY_REMOTE_CONFIG_UPDATE_OPTIONAL = "342";
     private static final String KEY_REMOTE_CONFIG_UPDATE_FORCE = "343";
@@ -819,6 +820,16 @@ public class DailyPreference
         return getValue(mPreferences, KEY_HAPPY_TALK_CATEGORY, null);
     }
 
+    public void setTrueViewSupport(int value)
+    {
+        setValue(mEditor, KEY_TRUE_VIEW_SUPPORT, value);
+    }
+
+    public int getTrueViewSupport()
+    {
+        return getValue(mPreferences, KEY_TRUE_VIEW_SUPPORT, 0);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     // Remote Config Text
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -1396,6 +1407,7 @@ public class DailyPreference
     /**
      * 선택된 대지역 저장값 - Adjust 용
      * // version - 2.0.4 로 강업 이후 삭제 필요 부분
+     *
      * @return
      */
     @Deprecated

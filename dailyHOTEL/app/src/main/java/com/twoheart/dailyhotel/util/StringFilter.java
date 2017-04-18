@@ -6,8 +6,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.widget.Toast;
 
-import com.twoheart.dailyhotel.R;
 import com.daily.base.widget.DailyToast;
+import com.twoheart.dailyhotel.R;
 
 import java.util.regex.Pattern;
 

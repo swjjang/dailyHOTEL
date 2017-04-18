@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.search.stay;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -10,7 +11,6 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchNetworkController;
-import com.daily.base.util.ExLog;
 
 import retrofit2.Call;
 import retrofit2.Response;

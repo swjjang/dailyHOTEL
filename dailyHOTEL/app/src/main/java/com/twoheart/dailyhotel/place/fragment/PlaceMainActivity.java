@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -17,7 +18,6 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 
 public abstract class PlaceMainActivity extends BaseActivity

@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -35,10 +37,8 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.daily.base.widget.DailyToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;

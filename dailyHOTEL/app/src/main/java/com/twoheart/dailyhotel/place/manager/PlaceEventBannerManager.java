@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.place.manager;
 
-import com.twoheart.dailyhotel.model.EventBanner;
 import com.daily.base.util.ExLog;
+import com.twoheart.dailyhotel.model.EventBanner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

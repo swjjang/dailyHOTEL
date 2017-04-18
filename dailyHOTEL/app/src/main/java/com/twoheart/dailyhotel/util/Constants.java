@@ -208,6 +208,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_TODAYDATETIME = "todayDateTime";
     String NAME_INTENT_EXTRA_DATA_PLACE_REVIEW_SCORES = "placeReviewScores";
     String NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE = "dailyCategoryType";
+    String NAME_INTENT_EXTRA_DATA_INTENT = "intent";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

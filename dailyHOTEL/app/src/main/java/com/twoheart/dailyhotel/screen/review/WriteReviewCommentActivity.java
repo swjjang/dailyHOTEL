@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;

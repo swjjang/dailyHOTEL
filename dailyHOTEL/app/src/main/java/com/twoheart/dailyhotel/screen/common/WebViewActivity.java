@@ -33,13 +33,13 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyToast;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;

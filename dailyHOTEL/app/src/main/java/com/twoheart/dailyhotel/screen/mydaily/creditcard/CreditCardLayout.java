@@ -16,10 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.daily.base.widget.DailyTextView;
 
 import java.util.ArrayList;
 import java.util.Collection;

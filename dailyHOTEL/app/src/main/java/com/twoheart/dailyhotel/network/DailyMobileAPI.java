@@ -581,8 +581,8 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestSignupValidation(String tag, Map<String, String> params, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/signup/normal/validation"//
-            : "MTA5JDYwJDU4JDk5JDgwJDU2JDk1JDI3JDg3JDU4JDckNTYkNTckNCQ1NSQ2MyQ=$QzlFLMDUI4MzVCQ0NDQTZGQkI1QzMGwMEZGMjA0NUQzRjhBMDJBMzY5IMjANVERQYMjPFCCNEE3MzMxNDgwRUJGODBVCRDWBGNDRGMjYZyRjIxRUkJCRDk1QkFENIjQ1REM3MTA3MzgwQjkz$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/signup/normal/validation"//
+            : "MzQkNjQkMTEyJDEyJDYyJDYyJDI1JDE2JDM4JDIxJDEwMyQxMDUkMiQxMiQ5NSQyOSQ=$QjBQyQzlFRTgN2TNzgX4ODAJwMkRBOGODAwMEE2QTZZFCRDNBRjQzODkxMEE0NjFDMEZBPDNTEB3NTkxMzAzNjhENTU2OEZBPNTYxRkVENjHMG4MkVBNDQ1OUVGRjTBGNkUyMUIzMTZDNDg1$";
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestSignupValidation(Crypto.getUrlDecoderEx(URL), params);
         executorCallbackCall.setTag(tag);

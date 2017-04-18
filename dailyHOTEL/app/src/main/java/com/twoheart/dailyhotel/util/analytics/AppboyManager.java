@@ -11,11 +11,11 @@ import com.appboy.enums.Month;
 import com.appboy.enums.NotificationSubscriptionType;
 import com.appboy.models.outgoing.AppboyProperties;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.daily.base.util.ExLog;
 
 import java.math.BigDecimal;
 import java.util.Calendar;

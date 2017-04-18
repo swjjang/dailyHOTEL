@@ -18,10 +18,10 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
-import com.daily.base.util.DailyTextUtils;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -47,6 +47,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
+import com.twoheart.dailyhotel.screen.common.TrueViewActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
@@ -948,6 +949,14 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
         }
 
+        if (DailyPreference.getInstance(this).getTrueViewSupport() > 0)
+        {
+            showTrueViewMenu();
+        } else
+        {
+            hideTrueViewMenu();
+        }
+
         mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
@@ -1064,6 +1073,12 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             mPlaceDetailNetworkController.requestRemoveWishList(placeType, stayDetail.index);
         }
+    }
+
+    @Override
+    public void startTrueView()
+    {
+        startActivity(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
     }
 
     void recordAnalyticsStayDetail(String screen, StayBookingDay stayBookingDay, StayDetail stayDetail)

@@ -9,9 +9,9 @@ import android.widget.AbsListView;
 import android.widget.EdgeEffect;
 import android.widget.ListView;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.daily.base.util.ExLog;
 
 import java.lang.reflect.Field;
 

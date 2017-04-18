@@ -16,11 +16,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyPagerSnapHelper;
-import com.daily.base.widget.DailyTextView;
 
 import java.util.ArrayList;
 

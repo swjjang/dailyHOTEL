@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -122,12 +124,13 @@ public class ProfileActivity extends BaseActivity
                         mOnEventListener.startEditBirthday(null);
                     }
                 }
-
-                externalDeepLink.clear();
             } else
             {
 
             }
+
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
         } else
         {
             if (DailyHotel.isLogin() == false)
