@@ -104,6 +104,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
             }
 
             mDailyDeepLink.clear();
+            mDailyDeepLink = null;
         }
 
         AnalyticsManager.getInstance(getContext()).recordScreen(getActivity(), AnalyticsManager.Screen.MENU, null);
