@@ -951,7 +951,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                     DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(uri));
 
-
                     if (dailyDeepLink != null && dailyDeepLink.isValidateLink() == true)
                     {
                         if (dailyDeepLink.isExternalDeepLink() == true)

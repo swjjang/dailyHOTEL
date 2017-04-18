@@ -33,6 +33,7 @@ import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
@@ -169,12 +170,18 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                 //            {
                 //                mOnEventListener.startWishList(PlaceType.FNB);
                 //            }
-
-                externalDeepLink.clear();
             } else
             {
+                DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
 
+                if (internalDeepLink.isStampView() == true)
+                {
+                    mOnEventListener.startStamp();
+                }
             }
+
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
         }
     }
 

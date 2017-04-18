@@ -145,12 +145,13 @@ public class CouponListActivity extends BaseActivity
                 {
                     startRegisterCoupon();
                 }
-
-                externalDeepLink.clear();
             } else
             {
 
             }
+
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
         } else
         {
             if (DailyHotel.isLogin() == false)
