@@ -113,16 +113,6 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         }
     }
 
-    public void showLoadingBar()
-    {
-
-    }
-
-    public void hideLoadingBar()
-    {
-
-    }
-
     @Override
     public void showSimpleDialog(String title, String msg, String positive, View.OnClickListener positiveListener)
     {

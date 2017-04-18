@@ -3,6 +3,8 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.repository.remote.model.SuggestData;
+import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
@@ -1208,5 +1210,21 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestPlaceReviewScores(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<PlaceReviewScores>>) listener);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Out Bound
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<SuggestsData>> getSuggestsByStayOutBound(String keyword)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
+            : "";
+
+        return mDailyMobileService.getSuggestsByStayOutBound(Crypto.getUrlDecoderEx(URL), keyword)//
+            .subscribeOn(Schedulers.io())//
+            .observeOn(AndroidSchedulers.mainThread());
     }
 }

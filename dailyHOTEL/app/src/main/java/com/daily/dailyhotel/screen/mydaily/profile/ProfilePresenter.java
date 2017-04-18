@@ -16,8 +16,8 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.parcel.UserParcel;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.remote.FacebookImpl;
-import com.daily.dailyhotel.repository.remote.KakaoImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -345,8 +345,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                     mProfileAnalytics.clearUserInformation(getActivity());
                     mProfileAnalytics.screenLogOut(getActivity());
 
-                    new FacebookImpl().logOut();
-                    new KakaoImpl().logOut();
+                    new FacebookRemoteImpl().logOut();
+                    new KakaoRemoteImpl().logOut();
                 }
             }, null, null, new DialogInterface.OnDismissListener()
             {

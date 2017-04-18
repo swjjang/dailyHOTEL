@@ -4,7 +4,7 @@ import com.daily.dailyhotel.domain.SnsInterface;
 import com.kakao.usermgmt.UserManagement;
 import com.daily.base.util.ExLog;
 
-public class KakaoImpl implements SnsInterface
+public class KakaoRemoteImpl implements SnsInterface
 {
     @Override
     public void initialize()

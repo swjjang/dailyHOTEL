@@ -1,26 +1,18 @@
 package com.daily.dailyhotel.screen.stay.outbound;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.User;
-import com.daily.dailyhotel.entity.UserBenefit;
-import com.daily.dailyhotel.parcel.UserParcel;
-import com.daily.dailyhotel.repository.remote.FacebookImpl;
-import com.daily.dailyhotel.repository.remote.KakaoImpl;
-import com.daily.dailyhotel.screen.mydaily.profile.ProfileActivity;
-import com.twoheart.dailyhotel.DailyHotel;
+import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.network.DailyMobileAPI;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
@@ -131,6 +123,20 @@ public class OutBoundPresenter extends BaseExceptionPresenter<OutBoundActivity, 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    public void onSearchKeyword(String keyword)
+    {
+        getViewInterface().hideRecentlyKeyword();
+
+        addCompositeDisposable(DailyMobileAPI.getInstance(getActivity()).getSuggestsByStayOutBound(keyword).subscribe());
+    }
+
+    @Override
+    public void onReset()
     {
 
     }

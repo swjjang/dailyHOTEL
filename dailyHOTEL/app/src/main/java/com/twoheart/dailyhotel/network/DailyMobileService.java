@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
+import com.daily.dailyhotel.repository.remote.model.SuggestData;
+import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -439,4 +441,16 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<BaseDto<PlaceReviews>> requestPlaceReviews(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @Query("page") int page, @Query("limit") int limit, @Query("sortProperty") String sortProperty, @Query("sortDirection") String sortDirection);
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Out Bound
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<SuggestsData>> getSuggestsByStayOutBound(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("keyword") String keyword);
 }

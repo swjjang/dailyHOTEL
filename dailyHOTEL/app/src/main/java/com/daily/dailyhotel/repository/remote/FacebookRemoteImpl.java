@@ -4,7 +4,7 @@ import com.daily.dailyhotel.domain.SnsInterface;
 import com.facebook.login.LoginManager;
 import com.daily.base.util.ExLog;
 
-public class FacebookImpl implements SnsInterface
+public class FacebookRemoteImpl implements SnsInterface
 {
     @Override
     public void initialize()
