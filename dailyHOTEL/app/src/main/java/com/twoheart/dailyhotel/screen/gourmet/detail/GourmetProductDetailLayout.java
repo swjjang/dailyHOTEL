@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyLineIndicator;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
@@ -84,7 +85,7 @@ public class GourmetProductDetailLayout extends BaseLayout
         mDailyLineIndicator.setOnPageChangeListener(mOnPageChangeListener);
 
         ViewGroup.LayoutParams layoutParams = mViewPager.getLayoutParams();
-        layoutParams.height = ScreenUtils.getScreenWidth(mContext);
+        layoutParams.height = PlaceDetailLayout.getImageLayoutHeight(mContext);
         mViewPager.setLayoutParams(layoutParams);
 
         mMoreIconView = mDefaultImageLayout.findViewById(R.id.moreIconView);
