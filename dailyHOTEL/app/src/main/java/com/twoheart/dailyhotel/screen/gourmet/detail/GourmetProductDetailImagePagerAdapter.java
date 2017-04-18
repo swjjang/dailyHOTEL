@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
+import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public class GourmetProductDetailImagePagerAdapter extends PagerAdapter
     public Object instantiateItem(ViewGroup container, int position)
     {
         final int width = Util.getLCDWidth(mContext);
+        final int height = PlaceDetailLayout.getImageLayoutHeight(mContext);
+
         final com.facebook.drawee.view.SimpleDraweeView imageView = new com.facebook.drawee.view.SimpleDraweeView(mContext);
 
         if (mImageInformationList == null || mImageInformationList.size() == 0 || position < 0)
@@ -42,7 +45,7 @@ public class GourmetProductDetailImagePagerAdapter extends PagerAdapter
             imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
             imageView.setOnClickListener(null);
 
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
             container.addView(imageView, 0, layoutParams);
 
             return imageView;
@@ -56,7 +59,7 @@ public class GourmetProductDetailImagePagerAdapter extends PagerAdapter
 
             Util.requestImageResize(mContext, imageView, mImageInformationList.get(position).imageUrl);
 
-            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, width);
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(width, height);
             container.addView(imageView, 0, layoutParams);
 
             imageView.setOnClickListener(mOnClickListener);

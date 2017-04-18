@@ -119,8 +119,8 @@ public class DailyMobileAPI implements IDailyNetwork
     @Override
     public void requestUserProfile(String tag, Object listener)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/profile"//
-            : "MjEkMTYkMTQkMzckNTgkNTIkNzckOTQkNTIkODgkNzYkMjckMTgkNzUkMCQ0OCQ=$PNDIzQzQ4MURBNULE1OIQzRFRAkVEMMEY4Q0IyNTUAyODMyOWTQxOEIzITRkQ3NUVQ3NDRGMDU2ODIc4NFDUGwNTExMUI3UREE2NA=N=$";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
+            : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserProfile(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
