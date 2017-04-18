@@ -17,18 +17,19 @@
 
         <View
             android:id="@+id/verticalLine"
-            android:layout_width="1dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
             android:background="@color/transparent"/>
 
         <LinearLayout
             android:id="@+id/stayButtonLayout"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/home_category_btn"
             android:layout_toLeftOf="@id/verticalLine"
-            android:layout_marginRight="4.5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -68,11 +69,12 @@
 
         <LinearLayout
             android:id="@+id/gourmetButtonLayout"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/home_category_btn"
             android:layout_toRightOf="@id/verticalLine"
-            android:layout_marginLeft="4.5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

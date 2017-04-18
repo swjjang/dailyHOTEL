@@ -397,14 +397,7 @@ public class HomeLayout extends BaseLayout
         }
 
         mHomeRecommendationLayout = new HomeRecommendationLayout(mContext);
-        mHomeRecommendationLayout.setListener(new HomeRecommendationLayout.HomeRecommendationListener()
-        {
-            @Override
-            public void onRecommendationClick(View view, Recommendation recommendation, int position)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation);
-            }
-        });
+        mHomeRecommendationLayout.setListener((view, recommendation, position) -> ((OnEventListener) mOnEventListener).onRecommendationClick(view, recommendation));
 
         layout.addView(mHomeRecommendationLayout, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
@@ -1170,8 +1163,8 @@ public class HomeLayout extends BaseLayout
             int startScrollY = mEventImageHeight / 5;
             int endScrollY = mEventImageHeight / 5 * 4;
 
-            int minValue = ScreenUtils.dpToPx(mContext, 4.5d);
-            int maxValue = ScreenUtils.dpToPx(mContext, 14.5d);
+            int minValue = ScreenUtils.dpToPx(mContext, 5d);
+            int maxValue = ScreenUtils.dpToPx(mContext, 15d);
             int buttonLayoutAlpha = 255;
 
             View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
@@ -1181,18 +1174,20 @@ public class HomeLayout extends BaseLayout
 
 
             if (scrollY <= startScrollY) {
+                layoutParams.leftMargin = maxValue;
                 layoutParams.rightMargin = minValue;
                 buttonLayoutAlpha = 255;
             } else if (endScrollY < scrollY)
             {
+                layoutParams.leftMargin = minValue;
                 layoutParams.rightMargin = maxValue;
                 buttonLayoutAlpha = 0;
             } else {
                 double ratio = ((double) (scrollY - startScrollY) / (double) (endScrollY - startScrollY));
                 int gap = (int) ((maxValue - minValue) * ratio);
-                int newRightMargin = minValue + gap;
 
-                layoutParams.rightMargin = newRightMargin;
+                layoutParams.leftMargin = maxValue - gap;
+                layoutParams.rightMargin = minValue + gap;
 
                 buttonLayoutAlpha = 255 - (int) (255 * ratio);
             }
