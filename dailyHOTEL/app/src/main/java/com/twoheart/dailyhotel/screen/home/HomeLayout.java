@@ -1160,8 +1160,8 @@ public class HomeLayout extends BaseLayout
                 return;
             }
 
-            int startScrollY = mEventImageHeight / 5;
-            int endScrollY = mEventImageHeight / 5 * 4;
+            int startScrollY = mEventImageHeight / 10 * 5;
+            int endScrollY = mEventImageHeight / 10 * 9;
 
             int minValue = ScreenUtils.dpToPx(mContext, 5d);
             int maxValue = ScreenUtils.dpToPx(mContext, 15d);
