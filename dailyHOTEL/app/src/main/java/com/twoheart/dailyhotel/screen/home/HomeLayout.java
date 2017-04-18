@@ -58,21 +58,11 @@ public class HomeLayout extends BaseLayout
     private static final int EVENT_VIEWPAGER_ANIMATION_DURATION = 5000;
     private static final int MESSAGE_ANIMATION_DURATION = 200;
     private static final int ERROR_ANIMATION_DURATION = 200;
-    private static final double BUTTON_LAYOUT_MIN_HEIGHT = 76d;
-    private static final double BUTTON_LAYOUT_MAX_HEIGHT = 82d;
-    private static final double BUTTON_TEXT_MIN_LEFT_MARGIN = 4d;
-    private static final double BUTTON_TEXT_MAX_LEFT_MARGIN = 10d;
 
     private float mErrorLayoutMinTranslationY;
     private float mErrorLayoutMaxTranslationY;
 
     int mEventImageHeight;
-    int mButtonGapHeight;
-    int mButtonTextGapLeftMargin;
-    int mScrollButtonMaxHeight;
-    int mScrollButtonMinHeight;
-    int mScrollButtonTextMaxLeftMargin;
-    int mScrollButtonTextMinLeftMargin;
 
     Handler mEventHandler;
 
@@ -159,14 +149,6 @@ public class HomeLayout extends BaseLayout
             return;
         }
 
-        mButtonGapHeight = ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT - BUTTON_LAYOUT_MIN_HEIGHT);
-        mScrollButtonMinHeight = ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MIN_HEIGHT);
-        mScrollButtonMaxHeight = ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT);
-
-        mButtonTextGapLeftMargin = ScreenUtils.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN - BUTTON_TEXT_MIN_LEFT_MARGIN);
-        mScrollButtonTextMaxLeftMargin = ScreenUtils.dpToPx(mContext, BUTTON_TEXT_MAX_LEFT_MARGIN);
-        mScrollButtonTextMinLeftMargin = ScreenUtils.dpToPx(mContext, BUTTON_TEXT_MIN_LEFT_MARGIN);
-
         initToolbarLayout(view);
         initSwipeRefreshLayout(view);
         initNestedScrollLayout(view);
@@ -180,14 +162,7 @@ public class HomeLayout extends BaseLayout
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                forceRefreshing(true);
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(() -> forceRefreshing(true));
     }
 
     private void initToolbarLayout(View view)
@@ -198,14 +173,7 @@ public class HomeLayout extends BaseLayout
         }
 
         View searchView = view.findViewById(R.id.searchImageView);
-        searchView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onSearchImageClick();
-            }
-        });
+        searchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onSearchImageClick());
     }
 
     // 홈의 상단 고정 버튼 레이아웃
@@ -219,37 +187,12 @@ public class HomeLayout extends BaseLayout
         mActionButtonLayout = view.findViewById(R.id.actionButtonLayout);
         mActionButtonLayout.setVisibility(View.GONE);
 
-        View stayButtonTextView = mActionButtonLayout.findViewById(R.id.stayButtonTextLayout);
-        View gourmetButtonTextView = mActionButtonLayout.findViewById(R.id.gourmetButtonTextLayout);
-
-        LinearLayout.LayoutParams stayTextParams = (LinearLayout.LayoutParams) stayButtonTextView.getLayoutParams();
-        LinearLayout.LayoutParams gourmetTextParams = (LinearLayout.LayoutParams) gourmetButtonTextView.getLayoutParams();
-        stayTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
-        gourmetTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
-        stayButtonTextView.setLayoutParams(stayTextParams);
-        gourmetButtonTextView.setLayoutParams(gourmetTextParams);
-
-
         View stayButton = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
         View gourmetButton = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
 
-        stayButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onStayButtonClick();
-            }
-        });
+        stayButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onStayButtonClick());
 
-        gourmetButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick();
-            }
-        });
+        gourmetButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onGourmetButtonClick());
     }
 
     private void initErrorPopupLayout(View view)
@@ -265,23 +208,9 @@ public class HomeLayout extends BaseLayout
         View retryButtonView = mErrorPopupLayout.findViewById(R.id.retryTextView);
         View closeButtonView = mErrorPopupLayout.findViewById(R.id.closeImageView);
 
-        retryButtonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                forceRefreshing(false);
-            }
-        });
+        retryButtonView.setOnClickListener(v -> forceRefreshing(false));
 
-        closeButtonView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                setErrorPopupLayout(false);
-            }
-        });
+        closeButtonView.setOnClickListener(v -> setErrorPopupLayout(false));
 
         String errorText = mContext.getResources().getString(R.string.label_home_server_error_text);
 
@@ -352,33 +281,14 @@ public class HomeLayout extends BaseLayout
 
         layout.addView(mScrollButtonLayout);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(//
-            ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, BUTTON_LAYOUT_MAX_HEIGHT));
-        mScrollButtonLayout.setLayoutParams(params);
-
         View stayButton = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
         View gourmetButton = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
 
-        stayButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onStayButtonClick();
-            }
-        });
+        stayButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onStayButtonClick());
 
-        gourmetButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onGourmetButtonClick();
-            }
-        });
+        gourmetButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onGourmetButtonClick());
 
         View scrollButtonBottomLineView = mScrollButtonLayout.findViewById(R.id.bottomLine);
-
         scrollButtonBottomLineView.setVisibility(View.VISIBLE);
     }
 
@@ -392,14 +302,7 @@ public class HomeLayout extends BaseLayout
         mCategoryLayout = new HomeCategoryLayout(mContext);
         layout.addView(mCategoryLayout);
 
-        mCategoryLayout.setOnItemClickListener(new HomeCategoryLayout.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(DailyCategoryType dailyCategoryType)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onCategoryItemClick(dailyCategoryType);
-            }
-        });
+        mCategoryLayout.setOnItemClickListener(dailyCategoryType -> ((OnEventListener) mOnEventListener).onCategoryItemClick(dailyCategoryType));
     }
 
     private void initTextMessageLayout(LinearLayout layout)
@@ -417,24 +320,13 @@ public class HomeLayout extends BaseLayout
         View homeMessageLayout = mTextMessageLayout.findViewById(R.id.homeMessageLayout);
         View closeView = mTextMessageLayout.findViewById(R.id.closeImageView);
 
-        homeMessageLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaClick();
-            }
-        });
+        homeMessageLayout.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onMessageTextAreaClick());
 
-        closeView.setOnClickListener(new View.OnClickListener()
+        closeView.setOnClickListener(v ->
         {
-            @Override
-            public void onClick(View v)
-            {
-                startTextLayoutCloseAnimation();
+            startTextLayoutCloseAnimation();
 
-                ((HomeLayout.OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
-            }
+            ((OnEventListener) mOnEventListener).onMessageTextAreaCloseClick();
         });
 
         hideMessageLayout();
@@ -590,26 +482,22 @@ public class HomeLayout extends BaseLayout
         final DailyTextView providerButtonView = (DailyTextView) providerLayout.findViewById(R.id.providerInfoButtonView);
         providerButtonView.setDrawableVectorTint(R.color.default_text_cababab);
         providerButtonView.setSelected(false);
-        providerButtonView.setOnClickListener(new View.OnClickListener()
+        providerButtonView.setOnClickListener(v ->
         {
-            @Override
-            public void onClick(View v)
+            boolean isSelected = !providerButtonView.isSelected();
+            providerButtonView.setSelected(isSelected);
+
+            if (isSelected == true)
             {
-                boolean isSelected = !providerButtonView.isSelected();
-                providerButtonView.setSelected(isSelected);
+                mProviderInfoView.setVisibility(View.VISIBLE);
+                Drawable[] drawables = providerButtonView.getCompoundDrawables();
 
-                if (isSelected == true)
-                {
-                    mProviderInfoView.setVisibility(View.VISIBLE);
-                    Drawable[] drawables = providerButtonView.getCompoundDrawables();
-
-                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(null, null, getRotateDrawable(drawables[2], 180f), null);
-                    setScrollBottom();
-                } else
-                {
-                    mProviderInfoView.setVisibility(View.GONE);
-                    providerButtonView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_m_ic_v_gray, 0);
-                }
+                providerButtonView.setCompoundDrawablesWithIntrinsicBounds(null, null, getRotateDrawable(drawables[2], 180f), null);
+                setScrollBottom();
+            } else
+            {
+                mProviderInfoView.setVisibility(View.GONE);
+                providerButtonView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.navibar_m_ic_v_gray, 0);
             }
         });
 
@@ -618,23 +506,9 @@ public class HomeLayout extends BaseLayout
         View locationView = providerLayout.findViewById(R.id.locationTermsTextView);
         View protectYouthView = providerLayout.findViewById(R.id.protectYouthTermsTextView);
 
-        termsView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onTermsClick();
-            }
-        });
+        termsView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onTermsClick());
 
-        privacyView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onPrivacyTermsClick();
-            }
-        });
+        privacyView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onPrivacyTermsClick());
 
         locationView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onLocationTermsClick());
 
@@ -734,31 +608,27 @@ public class HomeLayout extends BaseLayout
 
         if (mEventViewPagerAdapter == null)
         {
-            mEventViewPagerAdapter = new HomeEventImageViewPagerAdapter(mContext, new View.OnClickListener()
+            mEventViewPagerAdapter = new HomeEventImageViewPagerAdapter(mContext, v ->
             {
-                @Override
-                public void onClick(View v)
+                Object tag = v.getTag();
+                if (tag == null)
                 {
-                    Object tag = v.getTag();
-                    if (tag == null)
-                    {
-                        ExLog.d("Tag is null");
-                        return;
-                    }
+                    ExLog.d("Tag is null");
+                    return;
+                }
 
-                    if (tag instanceof Event)
-                    {
-                        Event homeEvent = (Event) tag;
-                        String defaultImageUrl = homeEvent.defaultImageUrl;
+                if (tag instanceof Event)
+                {
+                    Event homeEvent = (Event) tag;
+                    String defaultImageUrl = homeEvent.defaultImageUrl;
 
-                        if (HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultImageUrl) == true)
-                        {
-                            // 기본 이미지 클릭 동작 없음
-                            ExLog.d("default Event Click");
-                        } else
-                        {
-                            ((HomeLayout.OnEventListener) mOnEventListener).onEventItemClick(homeEvent);
-                        }
+                    if (HomeEventImageViewPagerAdapter.DEFAULT_EVENT_IMAGE_URL.equalsIgnoreCase(defaultImageUrl) == true)
+                    {
+                        // 기본 이미지 클릭 동작 없음
+                        ExLog.d("default Event Click");
+                    } else
+                    {
+                        ((OnEventListener) mOnEventListener).onEventItemClick(homeEvent);
                     }
                 }
             });
@@ -892,14 +762,7 @@ public class HomeLayout extends BaseLayout
 
         setMessageLayoutVisibility(View.INVISIBLE);
 
-        mTextMessageLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                startTextLayoutShowAnimation();
-            }
-        });
+        mTextMessageLayout.post(() -> startTextLayoutShowAnimation());
     }
 
     public void setWishListData(ArrayList<HomePlace> list, boolean isError)
@@ -1047,16 +910,12 @@ public class HomeLayout extends BaseLayout
         final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, view.getHeight());
         valueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         valueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        valueAnimator.addUpdateListener(animation ->
         {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (int) animation.getAnimatedValue();
-                ViewGroup.LayoutParams params = view.getLayoutParams();
-                params.height = value;
-                view.setLayoutParams(params);
-            }
+            int value = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.height = value;
+            view.setLayoutParams(params);
         });
 
         valueAnimator.addListener(new Animator.AnimatorListener()
@@ -1109,16 +968,12 @@ public class HomeLayout extends BaseLayout
         final ValueAnimator closeValueAnimator = ValueAnimator.ofInt(view.getHeight(), 0);
         closeValueAnimator.setDuration(MESSAGE_ANIMATION_DURATION);
         closeValueAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        closeValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        closeValueAnimator.addUpdateListener(animation ->
         {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation)
-            {
-                int value = (int) animation.getAnimatedValue();
-                ViewGroup.LayoutParams params = view.getLayoutParams();
-                params.height = value;
-                view.setLayoutParams(params);
-            }
+            int value = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.height = value;
+            view.setLayoutParams(params);
         });
 
         closeValueAnimator.addListener(new Animator.AnimatorListener()
@@ -1315,9 +1170,9 @@ public class HomeLayout extends BaseLayout
             int startScrollY = mEventImageHeight / 5;
             int endScrollY = mEventImageHeight / 5 * 4;
 
-            int minValue = mContext.getResources().getDimensionPixelOffset(R.dimen.min_value);
-            int maxValue = mContext.getResources().getDimensionPixelOffset(R.dimen.max_value);
-            int alpha = 255;
+            int minValue = ScreenUtils.dpToPx(mContext, 4.5d);
+            int maxValue = ScreenUtils.dpToPx(mContext, 14.5d);
+            int buttonLayoutAlpha = 255;
 
             View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
             View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
@@ -1327,11 +1182,11 @@ public class HomeLayout extends BaseLayout
 
             if (scrollY <= startScrollY) {
                 layoutParams.rightMargin = minValue;
-                alpha = 255;
+                buttonLayoutAlpha = 255;
             } else if (endScrollY < scrollY)
             {
                 layoutParams.rightMargin = maxValue;
-                alpha = 0;
+                buttonLayoutAlpha = 0;
             } else {
                 double ratio = ((double) (scrollY - startScrollY) / (double) (endScrollY - startScrollY));
                 int gap = (int) ((maxValue - minValue) * ratio);
@@ -1339,25 +1194,25 @@ public class HomeLayout extends BaseLayout
 
                 layoutParams.rightMargin = newRightMargin;
 
-                alpha = 255 - (int) (255 * ratio);
+                buttonLayoutAlpha = 255 - (int) (255 * ratio);
             }
 
             stayButtonLayout.setLayoutParams(layoutParams);
-            stayButtonLayout.getBackground().setAlpha(alpha);
-            gourmetButtonLayout.getBackground().setAlpha(alpha);
+            stayButtonLayout.getBackground().setAlpha(buttonLayoutAlpha);
+            gourmetButtonLayout.getBackground().setAlpha(buttonLayoutAlpha);
 
-//            // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
-//            if (scrollY >= mEventImageHeight + ScreenUtils.dpToPx(mContext, 10d))
-//            {
+            // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
+            if (scrollY > mEventImageHeight + ScreenUtils.dpToPx(mContext, 9d))
+            {
                 // show
                 setActionButtonVisibility(View.VISIBLE);
-//                mSwipeRefreshLayout.setEnabled(true);
-//            } else
-//            {
-//                // hide
-//                setActionButtonVisibility(View.GONE);
-//                mSwipeRefreshLayout.setEnabled(false);
-//            }
+                mSwipeRefreshLayout.setEnabled(true);
+            } else
+            {
+                // hide
+                setActionButtonVisibility(View.GONE);
+                mSwipeRefreshLayout.setEnabled(false);
+            }
         }
     };
 

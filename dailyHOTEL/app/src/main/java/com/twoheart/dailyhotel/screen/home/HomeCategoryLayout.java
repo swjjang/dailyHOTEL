@@ -88,11 +88,6 @@ public class HomeCategoryLayout extends RelativeLayout
 
         mLayout.setBackgroundResource(R.color.white);
 
-        RelativeLayout.LayoutParams layoutParams //
-            = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = ScreenUtils.dpToPx(mContext, 10d);
-        mLayout.setLayoutParams(layoutParams);
-
         mItemGridLayout = (android.support.v7.widget.GridLayout) mLayout.findViewById(R.id.categoryGridLayout);
         mItemGridLayout.setColumnCount(MAX_COLUMN_COUNT);
 
