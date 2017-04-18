@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
@@ -219,8 +219,8 @@ public class HomeLayout extends BaseLayout
         mActionButtonLayout = view.findViewById(R.id.actionButtonLayout);
         mActionButtonLayout.setVisibility(View.GONE);
 
-        View stayButtonTextView = mActionButtonLayout.findViewById(R.id.stayButtonTextView);
-        View gourmetButtonTextView = mActionButtonLayout.findViewById(R.id.gourmetButtonTextView);
+        View stayButtonTextView = mActionButtonLayout.findViewById(R.id.stayButtonTextLayout);
+        View gourmetButtonTextView = mActionButtonLayout.findViewById(R.id.gourmetButtonTextLayout);
 
         LinearLayout.LayoutParams stayTextParams = (LinearLayout.LayoutParams) stayButtonTextView.getLayoutParams();
         LinearLayout.LayoutParams gourmetTextParams = (LinearLayout.LayoutParams) gourmetButtonTextView.getLayoutParams();
@@ -636,23 +636,9 @@ public class HomeLayout extends BaseLayout
             }
         });
 
-        locationView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onLocationTermsClick();
-            }
-        });
+        locationView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onLocationTermsClick());
 
-        protectYouthView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onProtectedYouthClick();
-            }
-        });
+        protectYouthView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onProtectedYouthClick());
     }
 
     private void initTopButtonLayout(LinearLayout layout)
@@ -667,14 +653,7 @@ public class HomeLayout extends BaseLayout
         mTopButtonLayout.setVisibility(View.GONE);
 
         View topButton = mTopButtonLayout.findViewById(R.id.topButtonView);
-        topButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((HomeLayout.OnEventListener) mOnEventListener).onTopButtonClick();
-            }
-        });
+        topButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onTopButtonClick());
     }
 
     private void initNestedScrollLayout(View view)
@@ -1227,14 +1206,7 @@ public class HomeLayout extends BaseLayout
     {
         if (mDailyHomeScrollView != null && mDailyHomeScrollView.getChildCount() != 0)
         {
-            mDailyHomeScrollView.postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    mDailyHomeScrollView.fullScroll(View.FOCUS_UP);
-                }
-            }, 50);
+            mDailyHomeScrollView.postDelayed(() -> mDailyHomeScrollView.fullScroll(View.FOCUS_UP), 50);
         }
     }
 
@@ -1242,15 +1214,11 @@ public class HomeLayout extends BaseLayout
     {
         if (mDailyHomeScrollView != null && mDailyHomeScrollView.getChildCount() != 0)
         {
-            mDailyHomeScrollView.postDelayed(new Runnable()
+            mDailyHomeScrollView.postDelayed(() ->
             {
-                @Override
-                public void run()
-                {
-                    // 간헐적으로 2번 해줘야 동작하는 경우로 인하여 2번 처리
-                    mDailyHomeScrollView.fullScroll(View.FOCUS_DOWN);
-                    mDailyHomeScrollView.scrollBy(0, 10000);
-                }
+                // 간헐적으로 2번 해줘야 동작하는 경우로 인하여 2번 처리
+                mDailyHomeScrollView.fullScroll(View.FOCUS_DOWN);
+                mDailyHomeScrollView.scrollBy(0, 10000);
             }, 50);
         }
     }
@@ -1347,53 +1315,49 @@ public class HomeLayout extends BaseLayout
             int startScrollY = mEventImageHeight / 5;
             int endScrollY = mEventImageHeight / 5 * 4;
 
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mScrollButtonLayout.getLayoutParams();
+            int minValue = mContext.getResources().getDimensionPixelOffset(R.dimen.min_value);
+            int maxValue = mContext.getResources().getDimensionPixelOffset(R.dimen.max_value);
+            int alpha = 255;
 
-            View stayButtonTextView = mScrollButtonLayout.findViewById(R.id.stayButtonTextView);
-            View gourmetButtonTextView = mScrollButtonLayout.findViewById(R.id.gourmetButtonTextView);
+            View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
+            View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
 
-            LinearLayout.LayoutParams stayTextParams = (LinearLayout.LayoutParams) stayButtonTextView.getLayoutParams();
-            LinearLayout.LayoutParams gourmetTextParams = (LinearLayout.LayoutParams) gourmetButtonTextView.getLayoutParams();
+            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) stayButtonLayout.getLayoutParams();
 
-            if (scrollY <= startScrollY)
-            {
-                params.height = mScrollButtonMaxHeight;
-                stayTextParams.leftMargin = mScrollButtonTextMaxLeftMargin;
-                gourmetTextParams.leftMargin = mScrollButtonTextMaxLeftMargin;
+
+            if (scrollY <= startScrollY) {
+                layoutParams.rightMargin = minValue;
+                alpha = 255;
             } else if (endScrollY < scrollY)
             {
-                params.height = mScrollButtonMinHeight;
-                stayTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
-                gourmetTextParams.leftMargin = mScrollButtonTextMinLeftMargin;
-            } else
-            {
+                layoutParams.rightMargin = maxValue;
+                alpha = 0;
+            } else {
                 double ratio = ((double) (scrollY - startScrollY) / (double) (endScrollY - startScrollY));
-                int gapHeight = (int) (mButtonGapHeight * ratio);
-                int newHeight = mScrollButtonMaxHeight - gapHeight;
+                int gap = (int) ((maxValue - minValue) * ratio);
+                int newRightMargin = minValue + gap;
 
-                params.height = newHeight;
+                layoutParams.rightMargin = newRightMargin;
 
-                int gapMargin = (int) (mButtonTextGapLeftMargin * ratio);
-                stayTextParams.leftMargin = mScrollButtonTextMaxLeftMargin - gapMargin;
-                gourmetTextParams.leftMargin = mScrollButtonTextMaxLeftMargin - gapMargin;
+                alpha = 255 - (int) (255 * ratio);
             }
 
-            mScrollButtonLayout.setLayoutParams(params);
-            stayButtonTextView.setLayoutParams(stayTextParams);
-            gourmetButtonTextView.setLayoutParams(gourmetTextParams);
+            stayButtonLayout.setLayoutParams(layoutParams);
+            stayButtonLayout.getBackground().setAlpha(alpha);
+            gourmetButtonLayout.getBackground().setAlpha(alpha);
 
-            // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
-            if (scrollY >= mEventImageHeight)
-            {
+//            // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
+//            if (scrollY >= mEventImageHeight + ScreenUtils.dpToPx(mContext, 10d))
+//            {
                 // show
                 setActionButtonVisibility(View.VISIBLE);
-                mSwipeRefreshLayout.setEnabled(true);
-            } else
-            {
-                // hide
-                setActionButtonVisibility(View.GONE);
-                mSwipeRefreshLayout.setEnabled(false);
-            }
+//                mSwipeRefreshLayout.setEnabled(true);
+//            } else
+//            {
+//                // hide
+//                setActionButtonVisibility(View.GONE);
+//                mSwipeRefreshLayout.setEnabled(false);
+//            }
         }
     };
 

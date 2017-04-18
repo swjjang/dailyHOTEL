@@ -42,4 +42,7 @@
     <dimen name="gradient_2dp_line_height_over_21">0dp</dimen>
     <dimen name="gradient_1dp_line_height_over_21">0dp</dimen>
     <dimen name="bottom_navigation_height_over21">51dp</dimen>
+
+    <dimen name="min_value">4.5dp</dimen>
+    <dimen name="max_value">14.5dp</dimen>
 </resources>
