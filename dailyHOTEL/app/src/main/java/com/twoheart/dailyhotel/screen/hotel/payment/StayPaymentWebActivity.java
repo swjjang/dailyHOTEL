@@ -6,6 +6,8 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.Guest;
@@ -17,9 +19,7 @@ import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.activity.PlacePaymentWebActivity;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.daily.base.widget.DailyToast;
 
 import okhttp3.FormBody;
 

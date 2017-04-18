@@ -6,13 +6,13 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 public class ProfileLayout extends BaseLayout implements OnClickListener

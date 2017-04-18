@@ -9,7 +9,9 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
+import com.daily.base.widget.DailyToast;
 import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -18,10 +20,8 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.daily.base.widget.DailyToast;
 
 public class LauncherActivity extends Activity
 {
@@ -48,6 +48,13 @@ public class LauncherActivity extends Activity
         }
 
         Util.initializeMemory();
+
+        if (DailyPreference.getInstance(this).getTrueViewSupport() == 0)
+        {
+            boolean support = Util.verifyTrueView(this);
+
+            DailyPreference.getInstance(this).setTrueViewSupport(support ? 1 : -1);
+        }
 
         // 개인 정보 방침에 따른 개인 정보 암호화.
         if (DailyTextUtils.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)

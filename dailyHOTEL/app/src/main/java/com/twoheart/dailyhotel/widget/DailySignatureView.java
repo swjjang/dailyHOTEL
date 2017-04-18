@@ -16,9 +16,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
-import com.daily.base.util.ExLog;
 
 import java.util.ArrayList;
 

@@ -5,8 +5,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.daily.base.util.ExLog;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import java.util.ArrayList;
 import java.util.List;

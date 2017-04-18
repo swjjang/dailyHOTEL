@@ -15,9 +15,9 @@ package com.twoheart.dailyhotel.screen.common;
 
 import android.widget.Toast;
 
+import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
-import com.daily.base.widget.DailyToast;
 
 public class CloseOnBackPressed
 {

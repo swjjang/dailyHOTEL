@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.daily.base.widget.DailyTextView;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
 import com.twoheart.dailyhotel.R;
-import com.daily.base.widget.DailyTextView;
 
 public class PlaceNameInfoWindowAdapter implements InfoWindowAdapter
 {

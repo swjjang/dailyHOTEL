@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.base.widget.DailyToast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -56,7 +58,6 @@ import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.daily.base.widget.DailyToast;
 
 import net.simonvt.numberpicker.NumberPicker;
 
@@ -1474,5 +1475,33 @@ public class Util implements Constants
                 activity.startActivity(intent);
             }
         }
+    }
+
+    public static boolean verifyTrueView(Context context)
+    {
+        final int SUPPORT_MIN_VERSION = 37;
+
+        WebView webView = new WebView(context);
+        String webViewVersion = webView.getSettings().getUserAgentString();
+
+        int startIndex = webViewVersion.indexOf("Chrome/") + "Chrome/".length();
+        int endIndex = webViewVersion.indexOf("Mobile Safari/", startIndex);
+
+        String version = webViewVersion.substring(startIndex, endIndex).trim();
+
+        String[] versions = version.split("\\.");
+
+        try
+        {
+            if (Integer.parseInt(versions[0]) >= SUPPORT_MIN_VERSION)
+            {
+                return true;
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return false;
     }
 }

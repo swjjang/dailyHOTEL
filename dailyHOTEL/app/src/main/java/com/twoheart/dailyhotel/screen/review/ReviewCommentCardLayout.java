@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.daily.base.widget.DailyTextView;
 
 public class ReviewCommentCardLayout extends ReviewCardLayout implements View.OnClickListener
 {

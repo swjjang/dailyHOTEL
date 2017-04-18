@@ -6,8 +6,8 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.daily.base.util.ExLog;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.Date;
 import java.util.TimeZone;

@@ -17,8 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.StayDetail;
@@ -28,8 +30,6 @@ import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.util.DailyPreference;
-import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyTextView;
 
 import java.text.DecimalFormat;
 import java.util.List;

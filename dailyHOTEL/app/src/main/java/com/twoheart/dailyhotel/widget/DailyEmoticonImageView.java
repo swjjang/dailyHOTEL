@@ -5,12 +5,12 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.daily.base.util.ExLog;
 import com.facebook.keyframes.KeyframesDrawable;
 import com.facebook.keyframes.KeyframesDrawableBuilder;
 import com.facebook.keyframes.deserializers.KFImageDeserializer;
 import com.facebook.keyframes.model.KFImage;
 import com.twoheart.dailyhotel.R;
-import com.daily.base.util.ExLog;
 
 import java.io.IOException;
 import java.io.InputStream;

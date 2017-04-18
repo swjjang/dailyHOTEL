@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
@@ -31,7 +32,6 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -189,11 +189,28 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        //        if (outState != null)
+        //        {
+        //            outState.putParcelable(Constants.NAME_INTENT_EXTRA_DATA_INTENT, getIntent());
+        //        }
+
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        Util.restartApp(this);
+        //        if (savedInstanceState != null)
+        //        {
+        //            Intent intent = savedInstanceState.getParcelable(Constants.NAME_INTENT_EXTRA_DATA_INTENT);
+        //
+        //            setIntent(intent);
+        //        }
     }
 
     /**
