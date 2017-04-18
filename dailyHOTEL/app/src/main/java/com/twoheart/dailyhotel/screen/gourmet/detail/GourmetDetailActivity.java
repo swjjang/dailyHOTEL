@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
+import com.twoheart.dailyhotel.screen.common.TrueViewActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
@@ -1042,6 +1043,13 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             mPlaceDetailNetworkController.requestRemoveWishList(placeType, gourmetDetail.index);
         }
+    }
+
+
+    @Override
+    public void startTrueView()
+    {
+        startActivity(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
     }
 
     protected void recordAnalyticsGourmetDetail(String screen, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)

@@ -104,6 +104,8 @@ public class LauncherActivity extends Activity
                     newIntent.setData(uri);
                     newIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 }
+
+                dailyDeepLink.clear();
             }
         }
 

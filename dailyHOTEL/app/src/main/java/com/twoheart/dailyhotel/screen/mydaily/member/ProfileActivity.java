@@ -122,12 +122,13 @@ public class ProfileActivity extends BaseActivity
                         mOnEventListener.startEditBirthday(null);
                     }
                 }
-
-                externalDeepLink.clear();
             } else
             {
 
             }
+
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
         } else
         {
             if (DailyHotel.isLogin() == false)
