@@ -16,6 +16,9 @@ public class SuggestData
     @JsonField(name = "category")
     public String category;
 
+    @JsonField(name = "display")
+    public String display;
+
     @JsonField(name = "city")
     public String city;
 
@@ -37,6 +40,7 @@ public class SuggestData
         suggest.name = name;
         suggest.city = city;
         suggest.country = country;
+        suggest.display = display;
 
         return suggest;
     }

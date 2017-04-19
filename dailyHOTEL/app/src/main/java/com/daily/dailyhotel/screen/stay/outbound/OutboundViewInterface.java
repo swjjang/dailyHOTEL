@@ -12,4 +12,8 @@ public interface OutboundViewInterface extends BaseViewInterface
     void setRecentlySuggests(List<Suggest> suggestList);
 
     void setRecentlySuggestsVisibility(boolean visibility);
+
+    void setSuggestsVisibility(boolean visibility);
+
+    void setSuggests(List<Suggest> suggestList);
 }

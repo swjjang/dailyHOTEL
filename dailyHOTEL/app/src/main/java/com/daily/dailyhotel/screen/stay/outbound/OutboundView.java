@@ -2,11 +2,13 @@ package com.daily.dailyhotel.screen.stay.outbound;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityOutboundDataBinding;
@@ -18,7 +20,7 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
 {
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onSearchKeyword(String keyword);
+        void onSearchSuggests(String keyword);
 
         void onReset();
     }
@@ -36,7 +38,7 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
             return;
         }
 
-        viewDataBinding.searchEditText.addTextChangedListener(new TextWatcher()
+        viewDataBinding.keywrodEditText.addTextChangedListener(new TextWatcher()
         {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after)
@@ -55,7 +57,7 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
 
                 if (length == 0)
                 {
-                    viewDataBinding.deleteView.setVisibility(View.INVISIBLE);
+                    viewDataBinding.deleteKeywrodView.setVisibility(View.INVISIBLE);
                     getEventListener().onReset();
                 } else
                 {
@@ -74,8 +76,8 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
                         return;
                     }
 
-                    viewDataBinding.deleteView.setVisibility(View.VISIBLE);
-                    getEventListener().onSearchKeyword(editable.toString());
+                    viewDataBinding.deleteKeywrodView.setVisibility(View.VISIBLE);
+                    getEventListener().onSearchSuggests(editable.toString());
                 }
             }
         });
@@ -92,7 +94,7 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
     @Override
     public void setRecentlySuggests(List<Suggest> suggestList)
     {
-        
+
     }
 
     @Override
@@ -105,10 +107,56 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
 
         if (visibility == true)
         {
-            getViewDataBinding().recentSearchLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().recentSuggestsLayout.setVisibility(View.VISIBLE);
         } else
         {
-            getViewDataBinding().recentSearchLayout.setVisibility(View.GONE);
+            getViewDataBinding().recentSuggestsLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setSuggestsVisibility(boolean visibility)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visibility == true)
+        {
+            getViewDataBinding().suggestsScrollLayout.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().suggestsScrollLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setSuggests(List<Suggest> suggestList)
+    {
+        if (getViewDataBinding() == null || suggestList == null || suggestList.size() == 0)
+        {
+            return;
+        }
+
+        getViewDataBinding().suggestsContentsLayout.removeAllViews();
+
+        for (Suggest suggest : suggestList)
+        {
+            DailyTextView dailyTextView = new DailyTextView(getContext());
+            dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
+            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+
+            // 해당 구분 내용인 경우
+            if (suggest.id == null)
+            {
+                dailyTextView.setText(suggest.name);
+            } else
+            {
+                dailyTextView.setText(suggest.display);
+            }
+
+            getViewDataBinding().suggestsContentsLayout.addView(dailyTextView);
         }
     }
 

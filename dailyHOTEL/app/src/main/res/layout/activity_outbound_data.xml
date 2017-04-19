@@ -17,7 +17,7 @@
             android:background="@color/white">
 
             <com.daily.base.widget.DailyEditText
-                android:id="@+id/searchEditText"
+                android:id="@+id/keywrodEditText"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:layout_marginLeft="8dp"
@@ -37,7 +37,7 @@
                 app:drawableCompatLeft="@drawable/search_ic_01_search"/>
 
             <ImageView
-                android:id="@+id/deleteView"
+                android:id="@+id/deleteKeywrodView"
                 android:layout_width="wrap_content"
                 android:layout_height="28dp"
                 android:layout_alignParentRight="true"
@@ -123,10 +123,9 @@
             android:background="@color/default_line_ce7e7e7"/>
 
         <RelativeLayout
-            android:id="@+id/searchAroundLayout"
+            android:id="@+id/suggestsAroundLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
-            android:layout_below="@+id/searchLayout"
             android:layout_marginTop="9dp"
             android:background="@color/white">
 
@@ -178,10 +177,9 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/recentSearchLayout"
+            android:id="@+id/recentSuggestsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
             android:background="@color/white"
             android:visibility="visible">
@@ -195,7 +193,7 @@
                 android:textColor="@color/search_hint_text"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/deleteAllView"
+                android:id="@+id/deleteRecentSuggestsView"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_alignParentRight="true"
@@ -207,20 +205,20 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_below="@+id/deleteAllView"
+                android:layout_below="@+id/deleteRecentSuggestsView"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:background="@color/default_line_cdcdcdd"/>
 
             <com.daily.base.widget.DailyScrollView
-                android:id="@+id/recentSearchesScrollLayout"
+                android:id="@+id/recentSuggestsScrollLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/deleteAllView"
+                android:layout_below="@+id/deleteRecentSuggestsView"
                 android:fadingEdge="none">
 
                 <LinearLayout
-                    android:id="@+id/contentsLayout"
+                    android:id="@+id/recentSuggestsContentsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -237,21 +235,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="false"
-                android:layout_below="@+id/recentSearchesScrollLayout"
+                android:layout_below="@+id/recentSuggestsScrollLayout"
                 android:background="@color/default_line_cf0f0f0"/>
         </RelativeLayout>
 
         <com.daily.base.widget.DailyScrollView
-            android:id="@+id/autoCompleteScrollLayout"
+            android:id="@+id/suggestsScrollLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/searchAroundLayout"
             android:layout_marginTop="10dp"
             android:fadingEdge="none"
             android:visibility="gone">
 
             <LinearLayout
-                android:id="@+id/autoCompleteLayout"
+                android:id="@+id/suggestsContentsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"/>

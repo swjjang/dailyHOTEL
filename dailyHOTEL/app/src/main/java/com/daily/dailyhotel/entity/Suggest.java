@@ -6,6 +6,7 @@ public class Suggest
     public String name;
     public String city;
     public String country;
+    public String display;
 
     public Suggest()
     {

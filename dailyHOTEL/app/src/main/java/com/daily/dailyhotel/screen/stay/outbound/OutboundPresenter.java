@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.BaseException;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -16,6 +18,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.plugins.RxJavaPlugins;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -129,16 +137,61 @@ public class OutboundPresenter extends BaseExceptionPresenter<OutboundActivity, 
     }
 
     @Override
-    public void onSearchKeyword(String keyword)
+    public void onSearchSuggests(String keyword)
     {
-        getViewInterface().hideRecentlyKeyword();
+        getViewInterface().setRecentlySuggestsVisibility(false);
 
         clearCompositeDisposable();
 
-        Observable mergedObservable = Observable.merge(Observable.timer(500, TimeUnit.MILLISECONDS)//
-            , mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword).doOnError(this::onHandleError).doOnNext(this::onSuggests));
+        Observable mergedObservable = Observable.merge(Observable.timer(500, TimeUnit.MILLISECONDS).subscribeOn(Schedulers.io())//
+            , mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword).doOnNext(this::onSuggests));
 
-        addCompositeDisposable(mergedObservable.subscribe());
+        addCompositeDisposable(mergedObservable.subscribe(new Consumer()
+            {
+                @Override
+                public void accept(Object o) throws Exception
+                {
+                    ExLog.d("pinkred : accept");
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    ExLog.d("pinkred : accept");
+                }
+            }));
+
+//        mergedObservable.subscribeWith(new Observer()
+//        {
+//            @Override
+//            public void onSubscribe(Disposable d)
+//            {
+//                ExLog.d("pinkred : onSubscribe");
+//
+//                addCompositeDisposable(d);
+//            }
+//
+//            @Override
+//            public void onNext(Object value)
+//            {
+//                ExLog.d("pinkred : onNext");
+//            }
+//
+//            @Override
+//            public void onError(Throwable e)
+//            {
+//                ExLog.d("pinkred : onError");
+//
+//                ExLog.d("pinkred : " + e.toString());
+//            }
+//
+//            @Override
+//            public void onComplete()
+//            {
+//                ExLog.d("pinkred : onComplete");
+//            }
+//        });
     }
 
     @Override
@@ -149,11 +202,14 @@ public class OutboundPresenter extends BaseExceptionPresenter<OutboundActivity, 
 
     private void onSuggests(List<Suggest> suggestList)
     {
+        ExLog.d("pinkred3 : " + suggestList);
+
         if (suggestList == null)
         {
             return;
         }
 
-
+        getViewInterface().setSuggests(suggestList);
+        getViewInterface().setSuggestsVisibility(true);
     }
 }

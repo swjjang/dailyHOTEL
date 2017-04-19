@@ -6,6 +6,11 @@ public class BaseException extends Exception
 
     private int mCode;
 
+    public BaseException()
+    {
+
+    }
+
     public BaseException(int code, String message)
     {
         super(message);
