@@ -42,12 +42,13 @@ import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
-import com.twoheart.dailyhotel.screen.common.TrueViewActivity;
+import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
@@ -67,6 +68,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -1091,7 +1093,13 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onState(View view, boolean checked)
                     {
-                        startActivityForResult(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                        ArrayList<TrueVRParams> trueVRParamsList = new ArrayList<>();
+
+                        trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
+                        trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://player.cupix.com/p/MG8BpUmW"));
+                        trueVRParamsList.add(new TrueVRParams("더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
+
+                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1104,7 +1112,13 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            startActivityForResult(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+            ArrayList<TrueVRParams> trueVRParamsList = new ArrayList<>();
+
+            trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
+            trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://player.cupix.com/p/MG8BpUmW"));
+            trueVRParamsList.add(new TrueVRParams("더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
+
+            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
     }
 
