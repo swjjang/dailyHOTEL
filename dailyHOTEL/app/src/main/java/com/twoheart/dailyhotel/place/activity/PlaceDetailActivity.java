@@ -77,6 +77,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected boolean mIsUsedMultiTransition;
     protected Runnable mTransitionEndRunnable; // 트렌지션 중에 에러가 난경우 팝업을 띄워야 하는데 트렌지션으로 이슈가 발생하여 트레진션 끝나고 동작.
 
+    private View mTrueViewView;
+
     protected abstract PlaceDetailLayout getDetailLayout(Context context);
 
     protected abstract PlaceDetailNetworkController getNetworkController(Context context);
@@ -95,7 +97,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void shareSMS(PlaceBookingDay placeBookingDay, PlaceDetail placeDetail);
 
-    protected abstract void startTrueView();
+    protected abstract void onTrueViewClick();
 
     protected abstract void recordAnalyticsShareClicked();
 
@@ -124,8 +126,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
         mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
         mDailyToolbarLayout.setToolbarMenuClickListener(mToolbarOptionsItemSelectedListener);
 
+        mTrueViewView = findViewById(R.id.trueViewView);
+        mTrueViewView.setVisibility(View.GONE);
+
         View backImage = findViewById(R.id.backView);
-        View trueViewView = findViewById(R.id.trueViewView);
         View shareView = findViewById(R.id.shareView);
 
         backImage.setOnClickListener(new View.OnClickListener()
@@ -137,21 +141,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
             }
         });
 
-        trueViewView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startTrueView();
-            }
-        });
-
         shareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                mToolbarOptionsItemSelectedListener.onClick(null);
+                onShareClick();
             }
         });
     }
@@ -592,22 +587,125 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected void showTrueViewMenu()
     {
-        if (mDailyToolbarLayout == null)
+        if (mDailyToolbarLayout != null)
         {
-            return;
+            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.navibar_ic_s_region);
         }
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.navibar_ic_s_region);
+        if (mTrueViewView != null)
+        {
+            mTrueViewView.setVisibility(View.VISIBLE);
+            mTrueViewView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    onTrueViewClick();
+                }
+            });
+        }
     }
 
     protected void hideTrueViewMenu()
     {
-        if (mDailyToolbarLayout == null)
+        if (mDailyToolbarLayout != null)
         {
-            return;
+            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
         }
 
-        mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, -1);
+        if (mTrueViewView != null)
+        {
+            mTrueViewView.setVisibility(View.GONE);
+            mTrueViewView.setOnClickListener(null);
+        }
+    }
+
+    private void onShareClick()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);
+
+        final Dialog shareDialog = new Dialog(PlaceDetailActivity.this);
+        shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        shareDialog.setCanceledOnTouchOutside(true);
+
+        if (Util.isTelephonyEnabled(PlaceDetailActivity.this) == false)
+        {
+            View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
+            smsShareLayout.setVisibility(View.GONE);
+        }
+
+        // 버튼
+        View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
+
+        kakaoShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                if (mDefaultImageUrl == null)
+                {
+                    if (mPlaceDetail.getImageList() != null && mPlaceDetail.getImageList().size() > 0)
+                    {
+                        ImageInformation imageInformation = (ImageInformation) mPlaceDetail.getImageList().get(0);
+                        mDefaultImageUrl = imageInformation.getImageUrl();
+                    }
+                }
+
+                shareKakao(mDefaultImageUrl, mPlaceBookingDay, mPlaceDetail);
+            }
+        });
+
+        View smsShareView = dialogView.findViewById(R.id.smsShareView);
+
+        smsShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                shareSMS(mPlaceBookingDay, mPlaceDetail);
+            }
+        });
+
+        View closeTextView = dialogView.findViewById(R.id.closeTextView);
+        closeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+            }
+        });
+
+        try
+        {
+            shareDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(PlaceDetailActivity.this, shareDialog);
+
+            shareDialog.show();
+
+            shareDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        recordAnalyticsShareClicked();
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -622,99 +720,12 @@ public abstract class PlaceDetailActivity extends BaseActivity
             switch (v.getId())
             {
                 case R.id.menu1View:
-                {
-                    LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);
-
-                    final Dialog shareDialog = new Dialog(PlaceDetailActivity.this);
-                    shareDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    shareDialog.setCanceledOnTouchOutside(true);
-
-                    if (Util.isTelephonyEnabled(PlaceDetailActivity.this) == false)
-                    {
-                        View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
-                        smsShareLayout.setVisibility(View.GONE);
-                    }
-
-                    // 버튼
-                    View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
-
-                    kakaoShareView.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (shareDialog.isShowing() == true)
-                            {
-                                shareDialog.dismiss();
-                            }
-
-                            if (mDefaultImageUrl == null)
-                            {
-                                if (mPlaceDetail.getImageList() != null && mPlaceDetail.getImageList().size() > 0)
-                                {
-                                    ImageInformation imageInformation = (ImageInformation) mPlaceDetail.getImageList().get(0);
-                                    mDefaultImageUrl = imageInformation.getImageUrl();
-                                }
-                            }
-
-                            shareKakao(mDefaultImageUrl, mPlaceBookingDay, mPlaceDetail);
-                        }
-                    });
-
-                    View smsShareView = dialogView.findViewById(R.id.smsShareView);
-
-                    smsShareView.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (shareDialog.isShowing() == true)
-                            {
-                                shareDialog.dismiss();
-                            }
-
-                            shareSMS(mPlaceBookingDay, mPlaceDetail);
-                        }
-                    });
-
-                    View closeTextView = dialogView.findViewById(R.id.closeTextView);
-                    closeTextView.setOnClickListener(new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View v)
-                        {
-                            if (shareDialog.isShowing() == true)
-                            {
-                                shareDialog.dismiss();
-                            }
-                        }
-                    });
-
-                    try
-                    {
-                        shareDialog.setContentView(dialogView);
-
-                        WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(PlaceDetailActivity.this, shareDialog);
-
-                        shareDialog.show();
-
-                        shareDialog.getWindow().setAttributes(layoutParams);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-
-                    recordAnalyticsShareClicked();
+                    onShareClick();
                     break;
-                }
 
                 case R.id.menu2View:
-                {
-
+                    onTrueViewClick();
                     break;
-                }
             }
         }
     };

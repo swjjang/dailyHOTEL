@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -841,9 +842,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
      * @param dismissListener
      * @param isCancelable
      */
-    public void showSimpleDialogType01(String titleText, String msg, String positive, String negative, final View.OnClickListener positiveListener, final View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener, //
-                                       DialogInterface.OnDismissListener dismissListener, //
-                                       boolean isCancelable)
+    public void showSimpleDialogType01(String titleText, String msg, String positive, String negative//
+        , final View.OnClickListener positiveListener, final View.OnClickListener negativeListener//
+        , DialogInterface.OnCancelListener cancelListener, DialogInterface.OnDismissListener dismissListener, boolean isCancelable)
     {
         if (isFinishing())
         {
@@ -940,6 +941,166 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         if (dismissListener != null)
         {
             mDialog.setOnDismissListener(dismissListener);
+        }
+
+        mDialog.setCancelable(isCancelable);
+
+        try
+        {
+            mDialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
+
+            mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    public interface OnCheckDialogStateListener
+    {
+        void onState(View view, boolean checked);
+    }
+
+    /**
+     * 버튼이 좌우가 3:7로 되어있는 팝업
+     * 다시 보지 않기 체크 버튼이 들어가 있음.
+     *
+     * @param titleText
+     * @param msg
+     * @param positive
+     * @param negative
+     * @param positiveListener
+     * @param negativeListener
+     * @param cancelListener
+     * @param dismissListener
+     * @param isCancelable
+     */
+    public void showSimpleDialogType02(String titleText, String msg, String positive, String negative//
+        , final OnCheckDialogStateListener positiveListener, final OnCheckDialogStateListener negativeListener//
+        , final OnCheckDialogStateListener cancelListener, final OnCheckDialogStateListener dismissListener, boolean isCancelable)
+    {
+        if (isFinishing())
+        {
+            return;
+        }
+
+        if (mDialog != null)
+        {
+            if (mDialog.isShowing())
+            {
+                mDialog.dismiss();
+            }
+
+            mDialog = null;
+        }
+
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_button_weight_checkbox_layout, null, false);
+
+        mDialog = new Dialog(this);
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        titleTextView.setVisibility(View.VISIBLE);
+
+        if (DailyTextUtils.isTextEmpty(titleText) == true)
+        {
+            titleTextView.setText(getString(R.string.dialog_notice2));
+        } else
+        {
+            titleTextView.setText(titleText);
+        }
+
+        // 메시지
+        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        messageTextView.setText(msg);
+
+        // 체크박스
+        final CheckBox checkBox = (CheckBox) dialogView.findViewById(R.id.checkBox);
+
+        // 버튼
+        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+        if (DailyTextUtils.isTextEmpty(positive, negative) == false)
+        {
+            twoButtonLayout.setVisibility(View.VISIBLE);
+
+            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+
+            negativeTextView.setText(negative);
+            negativeTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mDialog != null && mDialog.isShowing())
+                    {
+                        mDialog.dismiss();
+                    }
+
+                    if (negativeListener != null)
+                    {
+                        negativeListener.onState(v, checkBox.isChecked());
+                    }
+                }
+            });
+
+            positiveTextView.setText(positive);
+            positiveTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (mDialog != null && mDialog.isShowing())
+                    {
+                        mDialog.dismiss();
+                    }
+
+                    if (positiveListener != null)
+                    {
+                        positiveListener.onState(v, checkBox.isChecked());
+                    }
+                }
+            });
+        }
+
+        if (cancelListener != null)
+        {
+            mDialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialog)
+                {
+                    if (cancelListener != null)
+                    {
+                        cancelListener.onState(null, checkBox.isChecked());
+                    }
+                }
+            });
+        }
+
+        if (dismissListener != null)
+        {
+            mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    if (dismissListener != null)
+                    {
+                        dismissListener.onState(null, checkBox.isChecked());
+                    }
+                }
+            });
         }
 
         mDialog.setCancelable(isCancelable);

@@ -76,6 +76,7 @@ public class DailyPreference
     private static final String KEY_ALL_RECENT_PLACES = "212";
 
     private static final String KEY_TRUE_VIEW_SUPPORT = "213";
+    private static final String KEY_TRUE_VIEW_CHECK_DATA_GUIDE = "214";
 
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
@@ -829,6 +830,16 @@ public class DailyPreference
     public int getTrueViewSupport()
     {
         return getValue(mPreferences, KEY_TRUE_VIEW_SUPPORT, 0);
+    }
+
+    public void setTrueViewCheckDataGuide(boolean value)
+    {
+        setValue(mEditor, KEY_TRUE_VIEW_CHECK_DATA_GUIDE, value);
+    }
+
+    public boolean isTrueViewCheckDataGuide()
+    {
+        return getValue(mPreferences, KEY_TRUE_VIEW_CHECK_DATA_GUIDE, false);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
