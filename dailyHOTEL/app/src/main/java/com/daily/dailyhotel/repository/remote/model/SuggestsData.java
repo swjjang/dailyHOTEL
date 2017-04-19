@@ -2,6 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Suggest;
 
 import java.util.ArrayList;
@@ -22,6 +23,9 @@ public class SuggestsData
     @JsonField(name = "point")
     public List<SuggestData> point;
 
+    @JsonField(name = "airport")
+    public List<SuggestData> airport;
+
     public SuggestsData()
     {
 
@@ -29,50 +33,64 @@ public class SuggestsData
 
     public List<Suggest> getSuggestList()
     {
+        final int SUGGEST_MAX_COUNT = 5;
+
         List<Suggest> list = new ArrayList<>();
 
-        boolean hasStation = station != null && station.size() > 0;
-        boolean hasRegion = region != null && region.size() > 0;
+        List<Suggest> regionList = getSuggestList("도시/지역", region, SUGGEST_MAX_COUNT);
 
-        if (hasStation || hasRegion)
+        if (regionList != null)
         {
-            list.add(new Suggest(null, "도시/지역"));
-
-            if (hasStation == true)
-            {
-                for (SuggestData suggestData : station)
-                {
-                    list.add(suggestData.getSuggests());
-                }
-            }
-
-            if (hasRegion == true)
-            {
-                for (SuggestData suggestData : region)
-                {
-                    list.add(suggestData.getSuggests());
-                }
-            }
+            list.addAll(regionList);
         }
 
-        if (hotel != null && hotel.size() > 0)
-        {
-            list.add(new Suggest(null, "호텔"));
+        List<Suggest> hotelList = getSuggestList("호텔", hotel, SUGGEST_MAX_COUNT);
 
-            for (SuggestData suggestData : hotel)
-            {
-                list.add(suggestData.getSuggests());
-            }
+        if (hotelList != null)
+        {
+            list.addAll(hotelList);
         }
 
-        if (point != null && point.size() > 0)
-        {
-            list.add(new Suggest(null, "주요지점"));
+        List<Suggest> pointList = getSuggestList("주요지점", point, SUGGEST_MAX_COUNT);
 
-            for (SuggestData suggestData : point)
-            {
-                list.add(suggestData.getSuggests());
-            }
+        if (pointList != null)
+        {
+            list.addAll(pointList);
+        }
+
+        List<Suggest> airportList = getSuggestList("공항", airport, SUGGEST_MAX_COUNT);
+
+        if (airportList != null)
+        {
+            list.addAll(airportList);
+        }
+
+        List<Suggest> stationList = getSuggestList("역", station, SUGGEST_MAX_COUNT);
+
+        if (stationList != null)
+        {
+            list.addAll(stationList);
+        }
+
+        return list;
+    }
+
+    private List<Suggest> getSuggestList(String title, List<SuggestData> suggestDataList, int maxCount)
+    {
+        if (suggestDataList == null || suggestDataList.size() == 0 || DailyTextUtils.isTextEmpty(title) == true)
+        {
+            return null;
+        }
+
+        List<Suggest> list = new ArrayList<>();
+
+        list.add(new Suggest(null, title));
+
+        int size = Math.min(suggestDataList.size(), maxCount);
+
+        for (int i = 0; i < size; i++)
+        {
+            list.add(suggestDataList.get(i).getSuggests());
         }
 
         return list;

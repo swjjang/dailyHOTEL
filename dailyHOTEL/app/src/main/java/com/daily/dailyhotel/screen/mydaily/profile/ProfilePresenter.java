@@ -268,6 +268,13 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                             getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
                         }
                     }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
                 }));
 
                 //                // 인증 후 인증이 해지된 경우

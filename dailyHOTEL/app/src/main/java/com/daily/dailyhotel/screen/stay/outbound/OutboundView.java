@@ -16,11 +16,13 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class OutboundView extends BaseView<OutboundView.OnEventListener, ActivityOutboundDataBinding> implements OutboundViewInterface
+public class OutboundView extends BaseView<OutboundView.OnEventListener, ActivityOutboundDataBinding> implements OutboundViewInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onSearchSuggests(String keyword);
+        void onRequestSuggests(String keyword);
+
+        void onSuggestClick(Suggest suggest);
 
         void onReset();
     }
@@ -77,7 +79,7 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
                     }
 
                     viewDataBinding.deleteKeywrodView.setVisibility(View.VISIBLE);
-                    getEventListener().onSearchSuggests(editable.toString());
+                    getEventListener().onRequestSuggests(editable.toString());
                 }
             }
         });
@@ -134,18 +136,24 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
     @Override
     public void setSuggests(List<Suggest> suggestList)
     {
-        if (getViewDataBinding() == null || suggestList == null || suggestList.size() == 0)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
         getViewDataBinding().suggestsContentsLayout.removeAllViews();
 
+        if(suggestList == null || suggestList.size() == 0)
+        {
+            return;
+        }
+
         for (Suggest suggest : suggestList)
         {
             DailyTextView dailyTextView = new DailyTextView(getContext());
+            dailyTextView.setId(R.id.textView);
             dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
-            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
 
             // 해당 구분 내용인 경우
             if (suggest.id == null)
@@ -154,9 +162,31 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
             } else
             {
                 dailyTextView.setText(suggest.display);
+                dailyTextView.setTag(suggest);
+                dailyTextView.setOnClickListener(this);
             }
 
             getViewDataBinding().suggestsContentsLayout.addView(dailyTextView);
+        }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch(v.getId())
+        {
+            case R.id.textView:
+                Object object = v.getTag();
+
+                if(object == null || object instanceof Suggest == false)
+                {
+                    return;
+                }
+
+                Suggest suggest = (Suggest)object;
+
+                getEventListener().onSuggestClick(suggest);
+                break;
         }
     }
 
