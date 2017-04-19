@@ -95,41 +95,6 @@
             android:layout_width="match_parent"
             android:layout_height="112dp"
             android:background="@drawable/img_detail_gradient"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-            <ImageView
-                android:id="@+id/menu2View"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_toLeftOf="@+id/menu1View"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/navibar_ic_s_region"/>
-
-            <ImageView
-                android:id="@+id/menu1View"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:tint="@color/white"
-                app:srcCompat="@drawable/navibar_ic_share_01_black"/>
-        </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout
@@ -184,24 +149,38 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height">
 
-        <View
+        <ImageView
             android:id="@+id/backView"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"/>
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:tint="@color/white"
+            app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
-        <View
+        <ImageView
             android:id="@+id/trueViewView"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/toolbar_height"
+            android:layout_height="@dimen/toolbar_height"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@+id/shareView"
-            android:layout_centerVertical="true"/>
+            android:scaleType="center"
+            android:tint="@color/white"
+            android:visibility="gone"
+            app:srcCompat="@drawable/navibar_ic_s_region"/>
 
-        <View
+        <ImageView
             android:id="@+id/shareView"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/toolbar_height"
+            android:layout_height="@dimen/toolbar_height"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp"
+            android:scaleType="center"
+            android:tint="@color/white"
+            app:srcCompat="@drawable/navibar_ic_share_01_black"/>
     </RelativeLayout>
 
     <include layout="@layout/toolbar_default_menu"/>

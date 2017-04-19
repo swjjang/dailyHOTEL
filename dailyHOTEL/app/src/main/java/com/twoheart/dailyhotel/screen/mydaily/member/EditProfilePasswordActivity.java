@@ -21,6 +21,7 @@ import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -39,9 +40,12 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     DailyEditText mPasswordEditText, mConfirmPasswordEditText;
     View mConfirmView;
 
-    public static Intent newInstance(Context context)
+    private String mEmail;
+
+    public static Intent newInstance(Context context, String email)
     {
         Intent intent = new Intent(context, EditProfilePasswordActivity.class);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_EMAIL, email);
         return intent;
     }
 
@@ -51,6 +55,16 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+
+        if (intent == null)
+        {
+            finish();
+            return;
+        }
+
+        mEmail = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_EMAIL);
 
         setContentView(R.layout.activity_edit_password);
 

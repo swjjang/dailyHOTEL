@@ -1,6 +1,6 @@
 package com.daily.base.util;
 
-import android.support.compat.BuildConfig;
+import com.daily.base.BuildConfig;
 import android.util.Log;
 
 import java.util.Iterator;

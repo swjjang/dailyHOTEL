@@ -61,8 +61,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
     }
 
-    @JavascriptInterface
-    protected void setWebView(String url)
+    protected void initWebView()
     {
         webChromeClient = new DailyHotelWebChromeClient();
         webViewClient = new DailyHotelWebViewClient();
@@ -75,6 +74,12 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         mWebView.setLongClickable(false);
         mWebView.setWebViewClient(webViewClient);
         mWebView.setWebChromeClient(webChromeClient);
+    }
+
+    @JavascriptInterface
+    protected void setWebView(String url)
+    {
+        initWebView();
 
         Map<String, String> headerMap = new HashMap<>();
         headerMap.put("Os-Type", "android");
