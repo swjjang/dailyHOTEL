@@ -209,6 +209,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_PLACE_REVIEW_SCORES = "placeReviewScores";
     String NAME_INTENT_EXTRA_DATA_INTENT = "intent";
     String NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST = "trueViewList";
+    String NAME_INTENT_EXTRA_DATA_EMAIL = "email";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;
