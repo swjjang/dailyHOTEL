@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.stay.outbound;
+package com.daily.dailyhotel.screen.stay.outbound.list;
 
 
 import android.content.Intent;
@@ -8,46 +8,41 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.daily.dailyhotel.screen.stay.outbound.StayStayOutboundAnalyticsImpl;
 import com.twoheart.dailyhotel.R;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.Observable;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class OutboundPresenter extends BaseExceptionPresenter<OutboundActivity, OutboundViewInterface> implements OutboundView.OnEventListener
+public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutboundListActivity, StayOutboundListViewInterface> implements StayOutboundListView.OnEventListener
 {
-    private OutboundAnalyticsInterface mAnalytics;
+    private StayOutboundListAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
 
-    public interface OutboundAnalyticsInterface extends BaseAnalyticsInterface
+    public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public OutboundPresenter(@NonNull OutboundActivity activity)
+    public StayOutboundListPresenter(@NonNull StayOutboundListActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected OutboundViewInterface createInstanceViewInterface()
+    protected StayOutboundListViewInterface createInstanceViewInterface()
     {
-        return new OutboundView(getActivity(), this);
+        return new StayOutboundListView(getActivity(), this);
     }
 
     @Override
-    public void initialize(OutboundActivity activity)
+    public void initialize(StayOutboundListActivity activity)
     {
         setContentView(R.layout.activity_outbound_data);
 
-        setAnalytics(new OutboundAnalyticsImpl());
+        setAnalytics(new StayStayOutboundAnalyticsImpl());
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
 
@@ -56,7 +51,7 @@ public class OutboundPresenter extends BaseExceptionPresenter<OutboundActivity, 
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (OutboundAnalyticsInterface) analytics;
+        mAnalytics = (StayOutboundListAnalyticsInterface) analytics;
     }
 
     @Override
@@ -126,45 +121,5 @@ public class OutboundPresenter extends BaseExceptionPresenter<OutboundActivity, 
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
 
-    }
-
-    @Override
-    public void onRequestSuggests(String keyword)
-    {
-        getViewInterface().setRecentlySuggestsVisibility(false);
-
-        clearCompositeDisposable();
-
-        addCompositeDisposable(Observable.timer(500, TimeUnit.MILLISECONDS).doOnNext(timer -> addCompositeDisposable(//
-            mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword).doOnNext(this::onSuggests).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)))//
-        ).subscribe());
-    }
-
-    @Override
-    public void onSuggestClick(Suggest suggest)
-    {
-        if (suggest == null)
-        {
-            return;
-        }
-
-
-    }
-
-    @Override
-    public void onReset()
-    {
-        getViewInterface().setSuggests(null);
-    }
-
-    private void onSuggests(List<Suggest> suggestList)
-    {
-        if (suggestList == null)
-        {
-            return;
-        }
-
-        getViewInterface().setSuggests(suggestList);
-        getViewInterface().setSuggestsVisibility(true);
     }
 }

@@ -645,7 +645,13 @@
         <!--  com.daily.dailyhotel.... -->
 
         <activity
-            android:name="com.daily.dailyhotel.screen.stay.outbound.OutboundActivity"
+            android:name="com.daily.dailyhotel.screen.stay.outbound.StayOutboundActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

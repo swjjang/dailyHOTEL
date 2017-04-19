@@ -5,7 +5,7 @@ import com.daily.dailyhotel.entity.Suggest;
 
 import java.util.List;
 
-public interface OutboundViewInterface extends BaseViewInterface
+public interface StayOutboundViewInterface extends BaseViewInterface
 {
     void onReset();
 

@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class OutboundView extends BaseView<OutboundView.OnEventListener, ActivityOutboundDataBinding> implements OutboundViewInterface, View.OnClickListener
+public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener, ActivityOutboundDataBinding> implements StayOutboundViewInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -27,7 +27,7 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
         void onReset();
     }
 
-    public OutboundView(BaseActivity baseActivity, OutboundView.OnEventListener listener)
+    public StayOutboundView(BaseActivity baseActivity, StayOutboundView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
