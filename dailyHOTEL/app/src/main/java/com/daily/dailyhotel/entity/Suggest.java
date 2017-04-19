@@ -7,6 +7,11 @@ public class Suggest
     public String city;
     public String country;
 
+    public Suggest()
+    {
+
+    }
+
     public Suggest(String id, String name)
     {
         this.id = id;

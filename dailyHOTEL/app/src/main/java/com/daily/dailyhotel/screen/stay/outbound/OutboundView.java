@@ -7,9 +7,12 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityOutboundDataBinding;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+import java.util.List;
 
 public class OutboundView extends BaseView<OutboundView.OnEventListener, ActivityOutboundDataBinding> implements OutboundViewInterface
 {
@@ -87,25 +90,26 @@ public class OutboundView extends BaseView<OutboundView.OnEventListener, Activit
     }
 
     @Override
-    public void showRecentlyKeyword()
+    public void setRecentlySuggests(List<Suggest> suggestList)
     {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().recentSearchLayout.setVisibility(View.VISIBLE);
+        
     }
 
     @Override
-    public void hideRecentlyKeyword()
+    public void setRecentlySuggestsVisibility(boolean visibility)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().recentSearchLayout.setVisibility(View.GONE);
+        if (visibility == true)
+        {
+            getViewDataBinding().recentSearchLayout.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().recentSearchLayout.setVisibility(View.GONE);
+        }
     }
 
     private void initToolbar(ActivityOutboundDataBinding viewDataBinding)
