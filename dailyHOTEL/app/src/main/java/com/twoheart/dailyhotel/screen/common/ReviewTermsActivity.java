@@ -85,16 +85,4 @@ public class ReviewTermsActivity extends WebViewActivity
             }
         });
     }
-
-    @Override
-    public void onBackPressed()
-    {
-        if (mWebView.canGoBack() == true)
-        {
-            mWebView.goBack();
-        } else
-        {
-            super.onBackPressed();
-        }
-    }
 }

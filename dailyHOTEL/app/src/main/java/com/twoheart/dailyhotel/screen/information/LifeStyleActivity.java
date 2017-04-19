@@ -94,16 +94,4 @@ public class LifeStyleActivity extends WebViewActivity
 
         super.onStart();
     }
-
-    @Override
-    public void onBackPressed()
-    {
-        if (mWebView.canGoBack() == true)
-        {
-            mWebView.goBack();
-        } else
-        {
-            super.onBackPressed();
-        }
-    }
 }

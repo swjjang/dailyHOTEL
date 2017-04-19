@@ -328,18 +328,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
         }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        if (mWebView.canGoBack() == true)
-        {
-            mWebView.goBack();
-        } else
-        {
-            super.onBackPressed();
-        }
-    }
-
     boolean moveDeepLinkStayDetail(TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
         if (dailyDeepLink == null)

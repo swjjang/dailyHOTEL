@@ -98,6 +98,18 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     }
 
     @Override
+    public void onBackPressed()
+    {
+        if (mWebView.canGoBack() == true)
+        {
+            mWebView.goBack();
+        } else
+        {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
