@@ -42,7 +42,7 @@ public class ProfileActivity extends BaseActivity
 
     ProfileLayout mProfileLayout;
     ProfileNetworkController mNetworkController;
-    String mUserIndex;
+    String mUserIndex, mUserEmail;
     private DailyDeepLink mDailyDeepLink;
 
     public static Intent newInstance(Context context, String deepLink)
@@ -292,7 +292,7 @@ public class ProfileActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this);
+            Intent intent = EditProfilePasswordActivity.newInstance(ProfileActivity.this, mUserEmail);
             startActivityForResult(intent, REQUEST_CODE_EDIT_PROFILE);
         }
 
@@ -390,6 +390,7 @@ public class ProfileActivity extends BaseActivity
             , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
         {
             mUserIndex = userIndex;
+            mUserEmail = email;
             String userType = DailyUserPreference.getInstance(ProfileActivity.this).getType();
 
             mProfileLayout.updateUserInformation(userType, email, name, Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
