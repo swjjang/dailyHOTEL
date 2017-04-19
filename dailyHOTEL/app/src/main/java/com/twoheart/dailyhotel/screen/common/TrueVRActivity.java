@@ -127,4 +127,10 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+    }
 }
