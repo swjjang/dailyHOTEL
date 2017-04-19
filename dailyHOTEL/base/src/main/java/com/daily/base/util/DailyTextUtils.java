@@ -164,6 +164,14 @@ public class DailyTextUtils
         return ((index > 0) || (length < text.length())) ? text.substring(index, length) : text;
     }
 
+    private static boolean repeatedCharacters(String text, int length)
+    {
+        String snippet = text.substring(0, length);
+        // 특정 문자열이 반복되는 경우에 대한 정규 표현식 생성 (1111, 1212), arg 길이가 index 의 배수일 때만 유효하게 동작함.
+        String regex = String.format("(%s){%d}", snippet, (text.length() / length));
+        return Pattern.matches(regex, text);
+    }
+
     public static boolean verifyPassword(String email, @NonNull final String password)
     {
         // 둘중에 한개라도 없으면 안됨.
@@ -181,36 +189,7 @@ public class DailyTextUtils
 
         if (length == PASSWORD_MIN_COUNT)
         {
-            boolean oneCharacterVerified = false;
-
-            // 8자이면서 한개의 영문(대소문자 구분)이나 숫자, 특수문자로만 입력된 경우
-            for (int i = 1; i < length; i++)
-            {
-                if (password.charAt(0) != password.charAt(i))
-                {
-                    oneCharacterVerified = true;
-                    break;
-                }
-            }
-
-            if (oneCharacterVerified == false)
-            {
-                return false;
-            }
-
-            boolean doubleCharacterVerified = false;
-
-            // 8자이면서 두개의 숫자가 반복적으로 입력된 경우 (12121212, 82828282…)
-            for (int i = 2; i < length; i += 2)
-            {
-                if (password.charAt(0) != password.charAt(i) && password.charAt(1) != password.charAt(i + 1))
-                {
-                    doubleCharacterVerified = true;
-                    break;
-                }
-            }
-
-            if (doubleCharacterVerified == false)
+            if (repeatedCharacters(password, 1) == true || repeatedCharacters(password, 2) == true)
             {
                 return false;
             }
