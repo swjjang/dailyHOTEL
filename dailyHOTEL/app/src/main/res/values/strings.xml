@@ -88,6 +88,7 @@
     <string name="label_dailyh_sns">데일리 SNS</string>
     <string name="label_customer">고객님</string>
     <string name="label_trueview">트루뷰</string>
+    <string name="label_dont_again">다시보지 않기</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -1034,6 +1035,7 @@
     <string name="message_stay_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 스테이를 확인해주세요.</string>
     <string name="message_gourmet_detail_changed_price">일부 상품의 요금이\n변동되었습니다.\n상품 금액을\n한번 더 확인해주시고\n원하시는 상품이 없으면\n날짜를 변경해보세요.</string>
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
+    <string name="message_stay_used_data_guide">데이터 사용 안내 문구</string>
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
     <string name="message_detail_nrd">특가상품으로 변경, 취소, 환불이 불가합니다.</string>

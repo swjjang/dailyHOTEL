@@ -279,6 +279,7 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_GUIDE = 71;
     int CODE_REQUEST_ACTIVITY_SNS = 72;
     int CODE_REQUEST_ACTIVITY_LIFESTYLE = 73;
+    int CODE_REQUEST_ACTIVITY_TRUEVIEW = 74;
 
     // Android Activity의 Result Code들이다.
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;

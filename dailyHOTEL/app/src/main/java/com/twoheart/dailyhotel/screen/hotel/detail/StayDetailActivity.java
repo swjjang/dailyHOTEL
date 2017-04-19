@@ -1076,9 +1076,36 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     @Override
-    public void startTrueView()
+    public void onTrueViewClick()
     {
-        startActivity(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        if (DailyPreference.getInstance(this).isTrueViewCheckDataGuide() == false)
+        {
+            showSimpleDialogType02(null, getString(R.string.message_stay_used_data_guide), getString(R.string.dialog_btn_text_continue)//
+                , getString(R.string.dialog_btn_text_no), new OnCheckDialogStateListener()
+                {
+                    @Override
+                    public void onState(View view, boolean checked)
+                    {
+                        startActivityForResult(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                    }
+                }, null, null, new OnCheckDialogStateListener()
+                {
+                    @Override
+                    public void onState(View view, boolean checked)
+                    {
+                        unLockUI();
+                        DailyPreference.getInstance(StayDetailActivity.this).setTrueViewCheckDataGuide(checked);
+                    }
+                }, true);
+        } else
+        {
+            startActivityForResult(TrueViewActivity.newInstance(StayDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+        }
     }
 
     void recordAnalyticsStayDetail(String screen, StayBookingDay stayBookingDay, StayDetail stayDetail)

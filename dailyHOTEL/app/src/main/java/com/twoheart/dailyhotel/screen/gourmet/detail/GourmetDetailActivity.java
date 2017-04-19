@@ -50,6 +50,7 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -1047,9 +1048,36 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
 
     @Override
-    public void startTrueView()
+    public void onTrueViewClick()
     {
-        startActivity(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"));
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        if (DailyPreference.getInstance(this).isTrueViewCheckDataGuide() == false)
+        {
+            showSimpleDialogType02(null, getString(R.string.message_stay_used_data_guide), getString(R.string.dialog_btn_text_continue)//
+                , getString(R.string.dialog_btn_text_no), new OnCheckDialogStateListener()
+                {
+                    @Override
+                    public void onState(View view, boolean checked)
+                    {
+                        startActivityForResult(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                    }
+                }, null, null, new OnCheckDialogStateListener()
+                {
+                    @Override
+                    public void onState(View view, boolean checked)
+                    {
+                        unLockUI();
+                        DailyPreference.getInstance(GourmetDetailActivity.this).setTrueViewCheckDataGuide(checked);
+                    }
+                }, true);
+        } else
+        {
+            startActivityForResult(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+        }
     }
 
     protected void recordAnalyticsGourmetDetail(String screen, GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail)
