@@ -1,0 +1,89 @@
+package com.twoheart.dailyhotel.screen.home.category.list;
+
+import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.view.View;
+
+import com.daily.base.util.DailyTextUtils;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
+import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
+import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
+/**
+ * Created by android_sam on 2017. 4. 19..
+ */
+
+public class StayCategoryListLayout extends PlaceMainLayout
+{
+    private String mTitleText;
+
+    public StayCategoryListLayout(Context context, String titleText, PlaceMainLayout.OnEventListener onEventListener)
+    {
+        super(context, onEventListener);
+
+        mTitleText = titleText;
+    }
+
+    @Override
+    protected PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter( //
+                                                                              FragmentManager fragmentManager, int count, View bottomOptionLayout //
+        , PlaceListFragment.OnPlaceListFragmentListener listener)
+    {
+        PlaceListFragmentPagerAdapter placeListFragmentPagerAdapter = new PlaceListFragmentPagerAdapter(fragmentManager);
+
+        ArrayList<StayListFragment> list = new ArrayList<>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            StayListFragment stayListFragment = new StayListFragment();
+            stayListFragment.setPlaceOnListFragmentListener(listener);
+            stayListFragment.setBottomOptionLayout(bottomOptionLayout);
+            list.add(stayListFragment);
+        }
+
+        placeListFragmentPagerAdapter.setPlaceFragmentList(list);
+
+        return placeListFragmentPagerAdapter;
+    }
+
+    @Override
+    protected void onAnalyticsCategoryFlicking(String category)
+    {
+        //        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+        //            , AnalyticsManager.Action.DAILY_HOTEL_CATEGORY_FLICKING, category, null);
+    }
+
+    @Override
+    protected void onAnalyticsCategoryClick(String category)
+    {
+        //        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+        //            , AnalyticsManager.Action.HOTEL_CATEGORY_CLICKED, category, null);
+    }
+
+    @Override
+    protected String getAppBarTitle()
+    {
+        return DailyTextUtils.isTextEmpty(mTitleText) == false //
+            ? mTitleText //
+            : mContext.getString(R.string.label_daily_hotel);
+    }
+
+    protected void setToolbarDateText(StayBookingDay stayBookingDay)
+    {
+        if (stayBookingDay == null)
+        {
+            return;
+        }
+
+        String checkInDay = stayBookingDay.getCheckInDay("M.d(EEE)");
+        String checkOutDay = stayBookingDay.getCheckOutDay("M.d(EEE)");
+
+        setToolbarDateText(String.format(Locale.KOREA, "%s - %s", checkInDay, checkOutDay));
+    }
+}

@@ -1,14 +1,20 @@
 package com.twoheart.dailyhotel.place.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -18,6 +24,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 public abstract class PlaceMainActivity extends BaseActivity
@@ -25,6 +32,7 @@ public abstract class PlaceMainActivity extends BaseActivity
     protected boolean mDontReloadAtOnResume, mIsDeepLink;
     protected ViewType mViewType = ViewType.LIST;
     protected TodayDateTime mTodayDateTime;
+    protected boolean mIsShowPreview;
 
     protected PlaceMainLayout mPlaceMainLayout;
     protected PlaceMainNetworkController mPlaceMainNetworkController;
@@ -72,6 +80,8 @@ public abstract class PlaceMainActivity extends BaseActivity
             return;
         }
 
+        mIsShowPreview = false;
+
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
@@ -80,6 +90,18 @@ public abstract class PlaceMainActivity extends BaseActivity
             lockUI();
             mPlaceMainNetworkController.requestDateTime();
         }
+
+        int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
+
+        if (count == 2)
+        {
+            showPreviewGuide();
+        } else if (count > 2)
+        {
+            return;
+        }
+
+        DailyPreference.getInstance(this).setCountPreviewGuide(count);
     }
 
     @Override
@@ -89,14 +111,17 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         mDontReloadAtOnResume = true;
 
-        new Handler().postDelayed(new Runnable()
+        if(mIsShowPreview == false)
         {
-            @Override
-            public void run()
+            new Handler().postDelayed(new Runnable()
             {
-                mPlaceMainLayout.showAppBarLayout(false);
-            }
-        }, 200);
+                @Override
+                public void run()
+                {
+                    mPlaceMainLayout.showAppBarLayout(false);
+                }
+            }, 200);
+        }
     }
 
     @Override
@@ -420,6 +445,44 @@ public abstract class PlaceMainActivity extends BaseActivity
         if (placeListFragment != null)
         {
             placeListFragment.setScrollListTop();
+        }
+    }
+
+    private void showPreviewGuide()
+    {
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_preview_layout, null, false);
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+
+        View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (dialog != null && dialog.isShowing())
+                {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        try
+        {
+            dialog.setContentView(dialogView);
+
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
+
+            dialog.show();
+
+            dialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
         }
     }
 }

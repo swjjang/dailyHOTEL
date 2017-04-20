@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daily.base.util.ExLog;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -137,14 +136,10 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
         Area area = areas[index];
 
-        layout.setTag(area);
-        layout.setTag(nameTextView.getId(), area != null ? groupPosition : null);
-        layout.setEnabled(area != null);
-
         if (area != null)
         {
             layout.setTag(area);
-            layout.setTag(nameTextView.getId(), groupPosition);
+            layout.setTag(layout.getId(), groupPosition);
             layout.setEnabled(true);
 
             int random = (int) (Math.random() * 1000);
@@ -155,7 +150,7 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         } else
         {
             layout.setTag(null);
-            layout.setTag(nameTextView.getId(), null);
+            layout.setTag(layout.getId(), null);
             layout.setEnabled(false);
 
             countTextView.setText(null);

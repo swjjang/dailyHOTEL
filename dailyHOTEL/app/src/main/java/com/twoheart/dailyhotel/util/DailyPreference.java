@@ -75,8 +75,9 @@ public class DailyPreference
     private static final String KEY_GOURMET_RECENT_PLACES = "211";
     private static final String KEY_ALL_RECENT_PLACES = "212";
 
-    private static final String KEY_TRUE_VIEW_SUPPORT = "213";
-    private static final String KEY_TRUE_VIEW_CHECK_DATA_GUIDE = "214";
+    private static final String KEY_TRUE_VR_SUPPORT = "213";
+    private static final String KEY_TRUE_VR_CHECK_DATA_GUIDE = "214";
+    private static final String KEY_PREVIEW_GUIDE = "215";
 
     // ----> DailyPreference 로 이동
     private static final String KEY_AUTHORIZATION = "1000";
@@ -822,24 +823,34 @@ public class DailyPreference
         return getValue(mPreferences, KEY_HAPPY_TALK_CATEGORY, null);
     }
 
-    public void setTrueViewSupport(int value)
+    public void setTrueVRSupport(int value)
     {
-        setValue(mEditor, KEY_TRUE_VIEW_SUPPORT, value);
+        setValue(mEditor, KEY_TRUE_VR_SUPPORT, value);
     }
 
-    public int getTrueViewSupport()
+    public int getTrueVRSupport()
     {
-        return getValue(mPreferences, KEY_TRUE_VIEW_SUPPORT, 0);
+        return getValue(mPreferences, KEY_TRUE_VR_SUPPORT, 0);
     }
 
-    public void setTrueViewCheckDataGuide(boolean value)
+    public void setTrueVRCheckDataGuide(boolean value)
     {
-        setValue(mEditor, KEY_TRUE_VIEW_CHECK_DATA_GUIDE, value);
+        setValue(mEditor, KEY_TRUE_VR_CHECK_DATA_GUIDE, value);
     }
 
-    public boolean isTrueViewCheckDataGuide()
+    public boolean isTrueVRCheckDataGuide()
     {
-        return getValue(mPreferences, KEY_TRUE_VIEW_CHECK_DATA_GUIDE, false);
+        return getValue(mPreferences, KEY_TRUE_VR_CHECK_DATA_GUIDE, false);
+    }
+
+    public void setCountPreviewGuide(int value)
+    {
+        setValue(mEditor, KEY_PREVIEW_GUIDE, value);
+    }
+
+    public int getCountPreviewGuide()
+    {
+        return getValue(mPreferences, KEY_PREVIEW_GUIDE, 0);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

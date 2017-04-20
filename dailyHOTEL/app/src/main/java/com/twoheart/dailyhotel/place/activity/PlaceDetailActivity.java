@@ -404,6 +404,10 @@ public abstract class PlaceDetailActivity extends BaseActivity
                         finish();
                     }
                     break;
+
+                case CODE_REQUEST_ACTIVITY_TRUEVIEW:
+                    mDontReloadAtOnResume = true;
+                    break;
             }
 
             super.onActivityResult(requestCode, resultCode, data);

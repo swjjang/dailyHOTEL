@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
@@ -36,7 +35,8 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
-import com.twoheart.dailyhotel.screen.home.category.HomeCategoryRegionListActivity;
+import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryListActivity;
+import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -242,9 +242,58 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
 
                         DailyPreference.getInstance(mBaseActivity).setDailyRegion(categoryType, Util.getDailyRegionJSONObject(province));
+
+//                        new Handler().postDelayed(new Runnable()
+//                        {
+//                            @Override
+//                            public void run()
+//                            {
+//                                Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
+//                                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
+//                            }
+//                        }, 50);
+
+                        try {
+                            Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
+                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+
+                    }
+                } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
+                {
+                    // 검색 결과 화면으로 이동한다.
+                    if (data.hasExtra(NAME_INTENT_EXTRA_DATA_LOCATION) == true)
+                    {
+                        Location location = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_LOCATION);
+
+                        //                        String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
+                        //                        String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+                        //
+                        //                        if (PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
+                        //                        {
+                        //                            callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+                        //                        } else if (PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
+                        //                        {
+                        //                            callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
+                        //                        }
+
+                        try
+                        {
+                            StayBookingDay stayBookingDay = new StayBookingDay();
+                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, location, AnalyticsManager.Screen.HOME);
+                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
                     }
                 }
-
                 break;
             }
 
