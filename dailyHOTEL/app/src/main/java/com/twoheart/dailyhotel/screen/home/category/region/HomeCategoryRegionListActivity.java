@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.model.RegionViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
@@ -387,16 +388,18 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         @Override
         public void onRegionClick(Province province)
         {
-            Intent intent = new Intent();
-
             if (province == null)
             {
+                Intent intent = new Intent();
                 setResult(RESULT_CANCELED, intent);
             } else
             {
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
-                intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
-                setResult(RESULT_OK, intent);
+                DailyPreference.getInstance(HomeCategoryRegionListActivity.this) //
+                    .setDailyRegion(mDailyCategoryType, Util.getDailyRegionJSONObject(province));
+
+                Intent intent = StayCategoryListActivity.newInstance( //
+                    HomeCategoryRegionListActivity.this, mDailyCategoryType, null);
+                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
 
                 recordEvent(province);
             }
@@ -412,7 +415,8 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                 return;
             }
 
-            Intent intent = PermissionManagerActivity.newInstance(HomeCategoryRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+            Intent intent = PermissionManagerActivity.newInstance( //
+                HomeCategoryRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
 
             //            AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
