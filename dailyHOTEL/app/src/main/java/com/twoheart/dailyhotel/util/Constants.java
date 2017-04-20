@@ -209,6 +209,8 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_PLACE_REVIEW_SCORES = "placeReviewScores";
     String NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE = "dailyCategoryType";
     String NAME_INTENT_EXTRA_DATA_INTENT = "intent";
+    String NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST = "trueViewList";
+    String NAME_INTENT_EXTRA_DATA_EMAIL = "email";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;
@@ -280,6 +282,7 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_GUIDE = 71;
     int CODE_REQUEST_ACTIVITY_SNS = 72;
     int CODE_REQUEST_ACTIVITY_LIFESTYLE = 73;
+    int CODE_REQUEST_ACTIVITY_TRUEVIEW = 74;
 
     // Android Activity의 Result Code들이다.
     int CODE_RESULT_ACTIVITY_PAYMENT_FAIL = 100;
