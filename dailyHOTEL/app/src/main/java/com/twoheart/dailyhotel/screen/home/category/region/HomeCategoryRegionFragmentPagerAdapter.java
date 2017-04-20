@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.home.category;
+package com.twoheart.dailyhotel.screen.home.category.region;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

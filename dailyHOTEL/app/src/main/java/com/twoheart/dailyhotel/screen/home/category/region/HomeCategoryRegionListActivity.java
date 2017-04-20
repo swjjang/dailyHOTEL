@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.home.category;
+package com.twoheart.dailyhotel.screen.home.category.region;
 
 import android.app.Activity;
 import android.content.Context;
@@ -115,24 +115,10 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar( //
             getResources().getString(R.string.label_select_area_daily_category_format, categoryName) //
-            , R.drawable.navibar_ic_x, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    finish();
-                }
-            }, false);
+            , R.drawable.navibar_ic_x, v -> finish(), false);
 
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
-        dailyToolbarLayout.setToolbarMenuClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                showSearch();
-            }
-        });
+        dailyToolbarLayout.setToolbarMenuClickListener(v -> showSearch());
     }
 
     private void initViewPager(TabLayout tabLayout)
@@ -270,14 +256,10 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                         , getString(R.string.dialog_msg_used_gps)//
                         , getString(R.string.dialog_btn_text_dosetting)//
                         , getString(R.string.dialog_btn_text_cancel)//
-                        , new View.OnClickListener()//
+                        , v ->
                         {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                            }
+                            Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
                         }, null, false);
                 }
 
