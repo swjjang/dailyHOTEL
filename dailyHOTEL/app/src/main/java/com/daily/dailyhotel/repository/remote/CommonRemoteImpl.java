@@ -9,6 +9,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class CommonRemoteImpl implements CommonInterface
 {
@@ -41,6 +42,6 @@ public class CommonRemoteImpl implements CommonInterface
             }
 
             return commonDateTime;
-        });
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 }

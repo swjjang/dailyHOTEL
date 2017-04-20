@@ -18,15 +18,17 @@ import java.util.List;
 
 public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener, ActivityOutboundDataBinding> implements StayOutboundViewInterface, View.OnClickListener
 {
+    private DailyToolbarLayout mDailyToolbarLayout;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onRequestSuggests(String keyword);
 
         void onSuggestClick(Suggest suggest);
 
-        void onCalendarClick();
+        void onSuggestClick(String keyword);
 
-        void onReset();
+        void onCalendarClick();
     }
 
     public StayOutboundView(BaseActivity baseActivity, StayOutboundView.OnEventListener listener)
@@ -64,7 +66,6 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
                 if (length == 0)
                 {
                     viewDataBinding.deleteKeywrodView.setVisibility(View.INVISIBLE);
-                    getEventListener().onReset();
                 } else
                 {
                     if (length == 1 && editable.charAt(0) == ' ')
@@ -83,12 +84,14 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
                     }
 
                     viewDataBinding.deleteKeywrodView.setVisibility(View.VISIBLE);
-                    getEventListener().onRequestSuggests(editable.toString());
                 }
+
+                getEventListener().onRequestSuggests(editable.toString());
             }
         });
 
 
+        viewDataBinding.deleteKeywrodView.setOnClickListener(this);
         viewDataBinding.calendarTextView.setOnClickListener(this);
     }
 
@@ -101,13 +104,6 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
         }
 
         getViewDataBinding().calendarTextView.setText(calendarText);
-    }
-
-    @Override
-    public void onReset()
-    {
-
-
     }
 
     @Override
@@ -160,31 +156,40 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         getViewDataBinding().suggestsContentsLayout.removeAllViews();
 
-        if (suggestList == null || suggestList.size() == 0)
+        if (suggestList != null && suggestList.size() > 0)
+        {
+            for (Suggest suggest : suggestList)
+            {
+                DailyTextView dailyTextView = new DailyTextView(getContext());
+                dailyTextView.setId(R.id.textView);
+                dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
+                dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+
+                // 해당 구분 내용인 경우
+                if (suggest.id == null)
+                {
+                    dailyTextView.setText(suggest.name);
+                } else
+                {
+                    dailyTextView.setText(suggest.display);
+                    dailyTextView.setTag(suggest);
+                    dailyTextView.setOnClickListener(this);
+                }
+
+                getViewDataBinding().suggestsContentsLayout.addView(dailyTextView);
+            }
+        }
+    }
+
+    @Override
+    public void setToolbarMenuEnable(boolean enable)
+    {
+        if (mDailyToolbarLayout == null)
         {
             return;
         }
 
-        for (Suggest suggest : suggestList)
-        {
-            DailyTextView dailyTextView = new DailyTextView(getContext());
-            dailyTextView.setId(R.id.textView);
-            dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
-            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-
-            // 해당 구분 내용인 경우
-            if (suggest.id == null)
-            {
-                dailyTextView.setText(suggest.name);
-            } else
-            {
-                dailyTextView.setText(suggest.display);
-                dailyTextView.setTag(suggest);
-                dailyTextView.setOnClickListener(this);
-            }
-
-            getViewDataBinding().suggestsContentsLayout.addView(dailyTextView);
-        }
+        mDailyToolbarLayout.setToolbarMenuEnable(enable, enable);
     }
 
     @Override
@@ -208,6 +213,14 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
             case R.id.calendarTextView:
                 getEventListener().onCalendarClick();
                 break;
+
+
+            case R.id.menu1View:
+                break;
+
+            case R.id.deleteKeywrodView:
+                resetKeyword();
+                break;
         }
     }
 
@@ -218,8 +231,22 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
             return;
         }
 
-        DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound)//
+        mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
+        mDailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound)//
             , v -> getEventListener().finish());
+
+        mDailyToolbarLayout.setToolbarMenu(getString(R.string.label_search), null);
+        mDailyToolbarLayout.setToolbarMenuEnable(false, false);
+        mDailyToolbarLayout.setToolbarMenuClickListener(this);
+    }
+
+    private void resetKeyword()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().keywrodEditText.setText(null);
     }
 }

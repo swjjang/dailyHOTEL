@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -187,13 +188,25 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     @Override
     public void onRequestSuggests(String keyword)
     {
-        getViewInterface().setRecentlySuggestsVisibility(false);
-
         clearCompositeDisposable();
 
-        addCompositeDisposable(Observable.timer(500, TimeUnit.MILLISECONDS).doOnNext(timer -> addCompositeDisposable(//
-            mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)))//
-        ).subscribe());
+        if(DailyTextUtils.isTextEmpty(keyword) == true)
+        {
+            getViewInterface().setRecentlySuggestsVisibility(true);
+            getViewInterface().setSuggestsVisibility(false);
+            getViewInterface().setToolbarMenuEnable(false);
+
+            onSuggests(null);
+        } else
+        {
+            getViewInterface().setRecentlySuggestsVisibility(false);
+            getViewInterface().setSuggestsVisibility(true);
+            getViewInterface().setToolbarMenuEnable(true);
+
+            addCompositeDisposable(Observable.timer(500, TimeUnit.MILLISECONDS).doOnNext(timer -> addCompositeDisposable(//
+                mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)))//
+            ).subscribe());
+        }
     }
 
     @Override
@@ -228,12 +241,6 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
             unLock();
         }
-    }
-
-    @Override
-    public void onReset()
-    {
-        getViewInterface().setSuggests(null);
     }
 
     private void setStayBookDefaultDateTime(CommonDateTime commonDateTime)
@@ -350,12 +357,6 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
     private void onSuggests(List<Suggest> suggestList)
     {
-        if (suggestList == null)
-        {
-            return;
-        }
-
         getViewInterface().setSuggests(suggestList);
-        getViewInterface().setSuggestsVisibility(true);
     }
 }

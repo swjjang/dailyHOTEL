@@ -1049,7 +1049,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     }
                 } catch (Exception e)
                 {
-                    ExLog.d(e.toString());
+                    ExLog.e(e.toString());
                 }
             } else
             {

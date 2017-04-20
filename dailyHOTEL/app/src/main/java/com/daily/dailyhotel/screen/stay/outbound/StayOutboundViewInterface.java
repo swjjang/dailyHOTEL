@@ -9,8 +9,6 @@ public interface StayOutboundViewInterface extends BaseViewInterface
 {
     void setCalendarText(String calendarText);
 
-    void onReset();
-
     void setRecentlySuggests(List<Suggest> suggestList);
 
     void setRecentlySuggestsVisibility(boolean visibility);
@@ -18,4 +16,6 @@ public interface StayOutboundViewInterface extends BaseViewInterface
     void setSuggestsVisibility(boolean visibility);
 
     void setSuggests(List<Suggest> suggestList);
+
+    void setToolbarMenuEnable(boolean enable);
 }
