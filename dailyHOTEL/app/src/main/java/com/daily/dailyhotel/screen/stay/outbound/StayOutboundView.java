@@ -206,6 +206,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
                 break;
 
             case R.id.calendarTextView:
+                getEventListener().onCalendarClick();
                 break;
         }
     }

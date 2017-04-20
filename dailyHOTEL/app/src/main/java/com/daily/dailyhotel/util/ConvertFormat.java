@@ -25,4 +25,14 @@ public class ConvertFormat
 
         return stayBookingDay;
     }
+
+    public static StayBookDateTime commonStayBookDateTime(@NonNull StayBookingDay stayBookingDay) throws Exception
+    {
+        StayBookDateTime stayBookDateTime = new StayBookDateTime();
+
+        stayBookDateTime.setCheckInDateTime(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+        stayBookDateTime.setCheckOutDateTime(stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+
+        return stayBookDateTime;
+    }
 }

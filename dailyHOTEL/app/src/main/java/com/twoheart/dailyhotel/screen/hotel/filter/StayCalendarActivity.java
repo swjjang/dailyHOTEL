@@ -27,6 +27,9 @@ import java.util.Map;
 
 public class StayCalendarActivity extends PlaceCalendarActivity
 {
+    public static final String INTENT_EXTRA_DATA_CHECKIN_DATETIME = "checkInDateTime";
+    public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
+
     private static final int DAYCOUNT_OF_MAX = 60;
     private static final int ENABLE_DAYCOUNT_OF_MAX = 60;
 
@@ -322,6 +325,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_DATETIME, stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_DATETIME, stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
 
         setResult(RESULT_OK, intent);
         hideAnimation();

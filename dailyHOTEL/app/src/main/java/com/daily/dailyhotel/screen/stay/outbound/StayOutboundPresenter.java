@@ -1,12 +1,14 @@
 package com.daily.dailyhotel.screen.stay.outbound;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
@@ -17,10 +19,8 @@ import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.util.ConvertFormat;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -162,7 +162,25 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
         switch (requestCode)
         {
             case REQUEST_CODE_CALENDAR:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
+                        && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                    {
+                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                        {
+                            return;
+                        }
+
+                        onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                    }
+                }
                 break;
+            }
         }
     }
 
@@ -204,7 +222,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
                 AnalyticsManager.ValueType.SEARCH, true, true);
 
             startActivityForResult(intent, REQUEST_CODE_CALENDAR);
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.e(e.toString());
 
@@ -246,7 +264,62 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
         }
     }
 
-    private void onCommonDateTime(CommonDateTime commonDateTime)
+    /**
+     * @param checkInDateTime  ISO-8601
+     * @param checkOutDateTime ISO-8601
+     */
+    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        if (mStayBookDateTime == null)
+        {
+            mStayBookDateTime = new StayBookDateTime();
+        }
+
+        try
+        {
+            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void onStayBookDateTime(@NonNull StayBookDateTime stayBookDateTime)
+    {
+        if (stayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void onCalendarDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        setStayBookDateTime(checkInDateTime, checkOutDateTime);
+        onStayBookDateTime(mStayBookDateTime);
+    }
+
+    private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -263,26 +336,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
             try
             {
                 // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
-                // 체크인 날짜 체크
-
-                // 날짜로 비교해야 한다.
-                Calendar todayCalendar = DailyCalendar.getInstance(commonDateTime.dailyDateTime, true);
-                Calendar checkInCalendar = DailyCalendar.getInstance(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), true);
-                Calendar checkOutCalendar = DailyCalendar.getInstance(mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), true);
-
-                // 하루가 지나서 체크인 날짜가 전날짜 인 경우
-                if (todayCalendar.getTimeInMillis() > checkInCalendar.getTimeInMillis())
-                {
-                    mStayBookDateTime.setCheckInDateTime(commonDateTime.dailyDateTime);
-
-                    checkInCalendar = DailyCalendar.getInstance(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), true);
-                }
-
-                // 체크인 날짜가 체크 아웃 날짜와 같거나 큰경우.
-                if (checkInCalendar.getTimeInMillis() >= checkOutCalendar.getTimeInMillis())
-                {
-                    mStayBookDateTime.setCheckOutDateTime(mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), 1);
-                }
+                mStayBookDateTime.verifyCommonDateTime(commonDateTime);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
@@ -291,15 +345,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
             }
         }
 
-        try
-        {
-            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), mStayBookDateTime.getNights()));
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        onStayBookDateTime(mStayBookDateTime);
     }
 
     private void onSuggests(List<Suggest> suggestList)
