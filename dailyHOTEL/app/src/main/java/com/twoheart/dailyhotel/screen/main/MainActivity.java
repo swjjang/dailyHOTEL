@@ -70,6 +70,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     boolean mIsInitialization;
     boolean mIsBenefitAlarm;
     private int mDistance;
+    private boolean mMenuBarAnimationDisabled;
 
     Handler mDelayTimeHandler = new Handler()
     {
@@ -827,7 +828,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     @Override
     public void onScrollChange(ViewGroup scrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
     {
-        if (mMenuBarLayout == null)
+        if (mMenuBarLayout == null || mMenuBarAnimationDisabled == true)
         {
             return;
         }
@@ -865,6 +866,17 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 mMenuBarLayout.showMenuBarAnimation(true);
                 mDistance = 0;
             }
+        }
+    }
+
+    @Override
+    public void onScrollState(boolean disabled)
+    {
+        mMenuBarAnimationDisabled = disabled;
+
+        if (disabled == true)
+        {
+            showMenuBar();
         }
     }
 

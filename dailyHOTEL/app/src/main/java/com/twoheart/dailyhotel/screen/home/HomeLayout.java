@@ -19,13 +19,11 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
@@ -43,8 +41,6 @@ import com.twoheart.dailyhotel.widget.DailyHomeScrollView;
 import com.twoheart.dailyhotel.widget.DailyLoopViewPager;
 import com.twoheart.dailyhotel.widget.DailyTextView;
 import com.twoheart.dailyhotel.widget.FontManager;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -257,6 +253,7 @@ public class HomeLayout extends BaseLayout
         }
 
         mErrorPopupLayout = view.findViewById(R.id.errorView);
+        mErrorPopupLayout.setVisibility(View.GONE);
         DailyTextView errorTextView1 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView1);
         DailyTextView errorTextView2 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView2);
         View retryButtonView = mErrorPopupLayout.findViewById(R.id.retryTextView);
@@ -955,11 +952,16 @@ public class HomeLayout extends BaseLayout
         return mRecentListLayout.getItem(position);
     }
 
-    void setErrorPopupLayout(boolean isShow)
+    void setErrorPopupLayout(final boolean isShow)
     {
         if (mErrorPopupLayout == null || mContext == null)
         {
             return;
+        }
+
+        if (mScrollChangedListener != null)
+        {
+            mOnScreenScrollChangeListener.onScrollState(isShow);
         }
 
         if (mErrorPopupAnimator != null && mErrorPopupAnimator.isRunning() == true)
@@ -987,12 +989,22 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationStart(Animator animation)
             {
+                if (isShow == true)
+                {
+                    mErrorPopupLayout.setVisibility(View.VISIBLE);
+                }
+
                 mErrorPopupLayout.setTranslationY(start);
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                if (isShow == false)
+                {
+                    mErrorPopupLayout.setVisibility(View.GONE);
+                }
+
                 mErrorPopupAnimator.removeAllListeners();
                 mErrorPopupAnimator.removeAllUpdateListeners();
                 mErrorPopupAnimator = null;

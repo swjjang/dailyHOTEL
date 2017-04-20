@@ -50,8 +50,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
         android:orientation="vertical"
-        android:translationY="94dp">
+        android:translationY="94dp"
+        android:visibility="gone">
 
         <include
             layout="@layout/list_row_home_content_server_error_layout"/>
