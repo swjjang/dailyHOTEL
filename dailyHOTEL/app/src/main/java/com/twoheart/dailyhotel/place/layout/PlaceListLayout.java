@@ -53,6 +53,8 @@ public abstract class PlaceListLayout extends BaseLayout
     {
         void onPlaceClick(View view, PlaceViewItem placeViewItem);
 
+        void onPlaceLongClick(View view, PlaceViewItem placeViewItem);
+
         //        void onEventBannerClick(EventBanner eventBanner);
 
         void onScrolled(RecyclerView recyclerView, int dx, int dy);
@@ -495,6 +497,31 @@ public abstract class PlaceListLayout extends BaseLayout
             }
         }
     };
+
+    protected View.OnLongClickListener mOnItemLongClickListener = new View.OnLongClickListener()
+    {
+        @Override
+        public boolean onLongClick(View view)
+        {
+            int position = mPlaceRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                ((OnEventListener) mOnEventListener).onPlaceLongClick(null, null);
+                return true;
+            }
+
+            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
+
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+            {
+                ((OnEventListener) mOnEventListener).onPlaceLongClick(view, placeViewItem);
+            }
+
+            return true;
+        }
+    };
+
+
 
     //    protected View.OnClickListener mOnEventBannerItemClickListener = new View.OnClickListener()
     //    {

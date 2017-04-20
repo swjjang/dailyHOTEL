@@ -213,6 +213,7 @@ public class HomeLayout extends BaseLayout
         }
 
         mErrorPopupLayout = view.findViewById(R.id.errorView);
+        mErrorPopupLayout.setVisibility(View.GONE);
         DailyTextView errorTextView1 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView1);
         DailyTextView errorTextView2 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView2);
         View retryButtonView = mErrorPopupLayout.findViewById(R.id.retryTextView);
@@ -845,11 +846,16 @@ public class HomeLayout extends BaseLayout
         return mRecentListLayout.getItem(position);
     }
 
-    void setErrorPopupLayout(boolean isShow)
+    void setErrorPopupLayout(final boolean isShow)
     {
         if (mErrorPopupLayout == null || mContext == null)
         {
             return;
+        }
+
+        if (mScrollChangedListener != null)
+        {
+            mOnScreenScrollChangeListener.onScrollState(isShow);
         }
 
         if (mErrorPopupAnimator != null && mErrorPopupAnimator.isRunning() == true)
@@ -877,12 +883,22 @@ public class HomeLayout extends BaseLayout
             @Override
             public void onAnimationStart(Animator animation)
             {
+                if (isShow == true)
+                {
+                    mErrorPopupLayout.setVisibility(View.VISIBLE);
+                }
+
                 mErrorPopupLayout.setTranslationY(start);
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                if (isShow == false)
+                {
+                    mErrorPopupLayout.setVisibility(View.GONE);
+                }
+
                 mErrorPopupAnimator.removeAllListeners();
                 mErrorPopupAnimator.removeAllUpdateListeners();
                 mErrorPopupAnimator = null;

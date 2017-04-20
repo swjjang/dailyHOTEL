@@ -61,6 +61,9 @@ public class FAQActivity extends WebViewActivity
             public void onClick(View v)
             {
                 showCallDialog();
+
+                AnalyticsManager.getInstance(FAQActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.MENU_FNQ, null);
             }
         });
     }

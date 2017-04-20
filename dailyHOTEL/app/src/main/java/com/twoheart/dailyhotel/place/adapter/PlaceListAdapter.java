@@ -37,6 +37,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
     protected View.OnClickListener mOnEventBannerClickListener;
+    protected View.OnLongClickListener mOnLongClickListener;
 
     Handler mEventBannerHandler;
     int mLastEventBannerPosition;
@@ -56,6 +57,11 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         makeShaderFactory();
+    }
+
+    public void setOnLongClickListener(View.OnLongClickListener listener)
+    {
+        mOnLongClickListener = listener;
     }
 
     @Override

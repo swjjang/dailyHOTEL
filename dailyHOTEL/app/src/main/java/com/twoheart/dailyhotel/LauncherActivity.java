@@ -49,11 +49,11 @@ public class LauncherActivity extends Activity
 
         Util.initializeMemory();
 
-        if (DailyPreference.getInstance(this).getTrueViewSupport() == 0)
+        if (DailyPreference.getInstance(this).getTrueVRSupport() == 0)
         {
             boolean support = Util.verifyTrueView(this);
 
-            DailyPreference.getInstance(this).setTrueViewSupport(support ? 1 : -1);
+            DailyPreference.getInstance(this).setTrueVRSupport(support ? 1 : -1);
         }
 
         // 개인 정보 방침에 따른 개인 정보 암호화.
