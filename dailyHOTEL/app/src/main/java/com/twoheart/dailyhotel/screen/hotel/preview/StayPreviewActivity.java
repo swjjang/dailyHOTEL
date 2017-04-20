@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.detail;
+package com.twoheart.dailyhotel.screen.hotel.preview;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -50,6 +50,9 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailLayout;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailNetworkController;
+import com.twoheart.dailyhotel.screen.hotel.detail.StayReviewActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.payment.HotelPaymentActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -78,7 +81,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class StayDetailActivity extends PlaceDetailActivity
+public class StayPreviewActivity extends PlaceDetailActivity
 {
     StayProduct mSelectedStayProduct;
     private boolean mCheckPrice;
@@ -97,7 +100,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Province province, Stay stay//
         , int listCount, boolean isUsedMultiTransition)
     {
-        Intent intent = new Intent(context, StayDetailActivity.class);
+        Intent intent = new Intent(context, StayPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
@@ -131,35 +134,6 @@ public class StayDetailActivity extends PlaceDetailActivity
     }
 
     /**
-     * 딥링크로 호출
-     *
-     * @param context
-     * @param stayBookingDay
-     * @param stayIndex
-     * @param roomIndex
-     * @param isShowCalendar
-     * @param isUsedMultiTransition
-     * @return
-     */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int stayIndex//
-        , int roomIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
-    {
-        Intent intent = new Intent(context, StayDetailActivity.class);
-
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TYPE, "share");
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stayIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_USED_MULTITRANSITIOIN, isUsedMultiTransition);
-
-        return intent;
-    }
-
-    /**
      * 검색 결과에서 호출
      *
      * @param context
@@ -171,7 +145,7 @@ public class StayDetailActivity extends PlaceDetailActivity
      */
     public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Stay stay, int listCount, boolean isUsedMultiTransition)
     {
-        Intent intent = new Intent(context, StayDetailActivity.class);
+        Intent intent = new Intent(context, StayPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, stay.index);
@@ -215,7 +189,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             return null;
         }
 
-        Intent intent = new Intent(context, StayDetailActivity.class);
+        Intent intent = new Intent(context, StayPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, homePlace.index);
@@ -257,7 +231,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecommendationStay recommendationStay//
         , int listCount, boolean isUsedMultiTransition)
     {
-        Intent intent = new Intent(context, StayDetailActivity.class);
+        Intent intent = new Intent(context, StayPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, recommendationStay.index);
@@ -311,7 +285,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         // 최근 본 업장 저장
         RecentPlaces recentPlaces = new RecentPlaces(this);
-        recentPlaces.add(Constants.PlaceType.HOTEL, mPlaceDetail.index);
+        recentPlaces.add(PlaceType.HOTEL, mPlaceDetail.index);
         recentPlaces.savePreference();
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_TYPE) == true)
@@ -561,7 +535,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             // 카카오톡 패키지 설치 여부
             getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
+            String name = DailyUserPreference.getInstance(StayPreviewActivity.this).getName();
 
             if (DailyTextUtils.isTextEmpty(name) == true)
             {
@@ -584,7 +558,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 return;
             }
 
-            KakaoLinkManager.newInstance(StayDetailActivity.this).shareStay(name//
+            KakaoLinkManager.newInstance(StayPreviewActivity.this).shareStay(name//
                 , stayDetailParams.name//
                 , stayDetailParams.address//
                 , stayDetail.index//
@@ -601,7 +575,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        Util.installPackage(StayDetailActivity.this, "com.kakao.talk");
+                        Util.installPackage(StayPreviewActivity.this, "com.kakao.talk");
                     }
                 }, null);
         }
@@ -622,7 +596,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            String name = DailyUserPreference.getInstance(StayDetailActivity.this).getName();
+            String name = DailyUserPreference.getInstance(StayPreviewActivity.this).getName();
 
             if (DailyTextUtils.isTextEmpty(name) == true)
             {
@@ -703,7 +677,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(stayDetail.index));
             params.put(AnalyticsManager.KeyType.VENDOR_NAME, stayDetailParams.name);
 
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
                 , Action.STAY_ITEM_SHARE, label, params);
         } catch (Exception e)
         {
@@ -733,7 +707,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        Util.installPackage(StayDetailActivity.this, "com.kakao.talk");
+                        Util.installPackage(StayPreviewActivity.this, "com.kakao.talk");
                     }
                 }, null);
         }
@@ -780,7 +754,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         boolean isBenefit = DailyTextUtils.isTextEmpty(stayDetailParams.benefit) == false;
         //        stayProduct.nights = stayDetailParams.nights;
 
-        Intent intent = HotelPaymentActivity.newInstance(StayDetailActivity.this, stayProduct//
+        Intent intent = HotelPaymentActivity.newInstance(StayPreviewActivity.this, stayProduct//
             , stayBookingDay, imageUrl, stayDetail.index, isBenefit //
             , mProvince, mArea, stayDetail.isShowOriginalPrice, stayDetail.entryPosition //
             , stayDetail.isDailyChoice, stayDetailParams.ratingValue //
@@ -860,9 +834,9 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN_, null);
+                        AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN_, null);
 
-                        Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
+                        Intent intent = LoginActivity.newInstance(StayPreviewActivity.this, Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_COUPON);
                     }
                 }, new View.OnClickListener()
@@ -870,14 +844,14 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onClick(View v)
                     {
-                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                        AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
                     }
                 }, new DialogInterface.OnCancelListener()
                 {
                     @Override
                     public void onCancel(DialogInterface dialog)
                     {
-                        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+                        AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES, Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
                     }
                 }, new DialogInterface.OnDismissListener()
                 {
@@ -899,7 +873,7 @@ public class StayDetailActivity extends PlaceDetailActivity
     protected void recordAnalyticsShareClicked()
     {
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SHARE,//
-            AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.STAY, null);
+            Action.ITEM_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
     void updateDetailInformationLayout(StayBookingDay stayBookingDay, StayDetail stayDetail)
@@ -924,7 +898,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
             if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
             {
-                stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
+                stayDetailParams.category = stayDetailParams.getGrade().getName(StayPreviewActivity.this);
             }
 
             mDailyToolbarLayout.setToolbarText(stayDetailParams.name);
@@ -986,11 +960,11 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 if (isDeepLink == true)
                 {
-                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
                         Action.SOLDOUT_DEEPLINK, stayDetailParams.name, null);
                 } else
                 {
-                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
                         Action.SOLDOUT, stayDetailParams.name, null);
                 }
             }
@@ -1030,7 +1004,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                             }
                         });
 
-                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
                         Action.SOLDOUT_CHANGEPRICE, stayDetailParams.name, null);
                 }
             }
@@ -1044,11 +1018,11 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime, stayBookingDay//
+        Intent intent = StayDetailCalendarActivity.newInstance(StayPreviewActivity.this, todayDateTime, stayBookingDay//
             , placeIndex, AnalyticsManager.ValueType.DETAIL, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 
-        AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+        AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
@@ -1099,7 +1073,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                         trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://player.cupix.com/p/MG8BpUmW"));
                         trueVRParamsList.add(new TrueVRParams("더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
 
-                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                        startActivityForResult(TrueVRActivity.newInstance(StayPreviewActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1107,7 +1081,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     public void onState(View view, boolean checked)
                     {
                         unLockUI();
-                        DailyPreference.getInstance(StayDetailActivity.this).setTrueVRCheckDataGuide(checked);
+                        DailyPreference.getInstance(StayPreviewActivity.this).setTrueVRCheckDataGuide(checked);
                     }
                 }, true);
         } else
@@ -1118,7 +1092,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://player.cupix.com/p/MG8BpUmW"));
             trueVRParamsList.add(new TrueVRParams("더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
 
-            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+            startActivityForResult(TrueVRActivity.newInstance(StayPreviewActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
     }
 
@@ -1139,7 +1113,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             Map<String, String> params = new HashMap<>();
             params.put(AnalyticsManager.KeyType.NAME, stayDetailParams.name);
-            params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().getName(StayDetailActivity.this)); // 14
+            params.put(AnalyticsManager.KeyType.GRADE, stayDetailParams.getGrade().getName(StayPreviewActivity.this)); // 14
             params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetailParams.benefit) ? "no" : "yes"); // 3
 
             if (stayDetail.getProductList() == null || stayDetail.getProductList().size() == 0)
@@ -1209,7 +1183,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, stayDetail.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
 
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordScreen(this, screen, null, params);
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordScreen(this, screen, null, params);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1308,11 +1282,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             lockUiComponent();
 
-            Intent intent = ImageDetailListActivity.newInstance(StayDetailActivity.this, PlaceType.HOTEL, stayDetailParams.name, imageInformationList, mCurrentImage);
+            Intent intent = ImageDetailListActivity.newInstance(StayPreviewActivity.this, PlaceType.HOTEL, stayDetailParams.name, imageInformationList, mCurrentImage);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_IMAGELIST);
 
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
-                AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, stayDetailParams.name, null);
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+                Action.HOTEL_IMAGE_CLICKED, stayDetailParams.name, null);
         }
 
         @Override
@@ -1333,7 +1307,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             showCallDialog(PlaceType.HOTEL);
 
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);
         }
 
         @Override
@@ -1398,18 +1372,18 @@ public class StayDetailActivity extends PlaceDetailActivity
             LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View dialogView = layoutInflater.inflate(R.layout.view_dialog_stamp_layout, null, false);
 
-            final Dialog dialog = new Dialog(StayDetailActivity.this);
+            final Dialog dialog = new Dialog(StayPreviewActivity.this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialog.setCanceledOnTouchOutside(false);
 
             // 상단
             TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-            titleTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupTitle());
+            titleTextView.setText(DailyPreference.getInstance(StayPreviewActivity.this).getRemoteConfigStampStayDetailPopupTitle());
 
             // 메시지
             TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
-            messageTextView.setText(DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigStampStayDetailPopupMessage());
+            messageTextView.setText(DailyPreference.getInstance(StayPreviewActivity.this).getRemoteConfigStampStayDetailPopupMessage());
 
             View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
             confirmTextView.setOnClickListener(new View.OnClickListener()
@@ -1428,7 +1402,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             {
                 dialog.setContentView(dialogView);
 
-                WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(StayDetailActivity.this, dialog);
+                WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(StayPreviewActivity.this, dialog);
 
                 dialog.show();
 
@@ -1439,7 +1413,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
 
             AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-                AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_DETAIL_VIEW, null);
+                Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_DETAIL_VIEW, null);
         }
 
         @Override
@@ -1452,17 +1426,17 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             String category = ((StayDetail) mPlaceDetail).getStayDetailParams().category;
 
-            startActivityForResult(StayReviewActivity.newInstance(StayDetailActivity.this//
+            startActivityForResult(StayReviewActivity.newInstance(StayPreviewActivity.this//
                 , mPlaceDetail.index, category, mPlaceReviewScores), Constants.CODE_REQUEST_ACTIVITY_PLACE_REVIEW);
 
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.STAY, null);
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.STAY, null);
         }
 
         @Override
         public void showMap()
         {
-            if (Util.isInstallGooglePlayService(StayDetailActivity.this) == true)
+            if (Util.isInstallGooglePlayService(StayPreviewActivity.this) == true)
             {
                 if (lockUiComponentAndIsLockUiComponent() == true || isFinishing() == true)
                 {
@@ -1472,7 +1446,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 StayDetail stayDetail = (StayDetail) mPlaceDetail;
                 StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-                Intent intent = ZoomMapActivity.newInstance(StayDetailActivity.this//
+                Intent intent = ZoomMapActivity.newInstance(StayPreviewActivity.this//
                     , ZoomMapActivity.SourceType.HOTEL, stayDetailParams.name, stayDetailParams.address//
                     , stayDetailParams.latitude, stayDetailParams.longitude, stayDetailParams.isOverseas);
 
@@ -1482,22 +1456,22 @@ public class StayDetailActivity extends PlaceDetailActivity
                     Action.HOTEL_DETAIL_MAP_CLICKED, stayDetailParams.name, null);
             } else
             {
-                Util.installGooglePlayService(StayDetailActivity.this);
+                Util.installGooglePlayService(StayPreviewActivity.this);
             }
         }
 
         @Override
         public void finish()
         {
-            StayDetailActivity.this.finish();
+            StayPreviewActivity.this.finish();
         }
 
         @Override
         public void clipAddress(String address)
         {
-            DailyTextUtils.clipText(StayDetailActivity.this, address);
+            DailyTextUtils.clipText(StayPreviewActivity.this, address);
 
-            DailyToast.showToast(StayDetailActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
+            DailyToast.showToast(StayPreviewActivity.this, R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
 
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
@@ -1517,10 +1491,10 @@ public class StayDetailActivity extends PlaceDetailActivity
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-            Util.showShareMapDialog(StayDetailActivity.this, stayDetailParams.name//
+            Util.showShareMapDialog(StayPreviewActivity.this, stayDetailParams.name//
                 , stayDetailParams.latitude, stayDetailParams.longitude, stayDetailParams.isOverseas//
                 , AnalyticsManager.Category.HOTEL_BOOKINGS//
-                , AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
+                , Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED//
                 , null);
         }
 
@@ -1553,7 +1527,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         @Override
         public void onDownloadCouponClick()
         {
-            StayDetailActivity.this.downloadCoupon(mPlaceBookingDay, mPlaceDetail);
+            StayPreviewActivity.this.downloadCoupon(mPlaceBookingDay, mPlaceDetail);
         }
 
         @Override
@@ -1585,7 +1559,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
             String label = String.format(Locale.KOREA, "%s-%s", stayDetailParams.name, mSelectedStayProduct.roomName);
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
                 , Action.BOOKING_CLICKED, label, recordAnalyticsBooking((StayBookingDay) mPlaceBookingDay, (StayDetail) mPlaceDetail, stayProduct));
         }
 
@@ -1600,20 +1574,20 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             if (DailyHotel.isLogin() == false)
             {
-                DailyToast.showToast(StayDetailActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
+                DailyToast.showToast(StayPreviewActivity.this, R.string.toast_msg_please_login, Toast.LENGTH_LONG);
 
-                Intent intent = LoginActivity.newInstance(StayDetailActivity.this, Screen.DAILYHOTEL_DETAIL);
+                Intent intent = LoginActivity.newInstance(StayPreviewActivity.this, Screen.DAILYHOTEL_DETAIL);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN_BY_DETAIL_WISHLIST);
             } else
             {
-                StayDetailActivity.this.onWishButtonClick(PlaceType.HOTEL, (StayDetail) mPlaceDetail);
+                StayPreviewActivity.this.onWishButtonClick(PlaceType.HOTEL, (StayDetail) mPlaceDetail);
             }
         }
 
         @Override
         public void releaseUiComponent()
         {
-            StayDetailActivity.this.releaseUiComponent();
+            StayPreviewActivity.this.releaseUiComponent();
         }
     };
 
@@ -1741,7 +1715,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 recordAnalyticsStayDetail(Screen.DAILYHOTEL_DETAIL, (StayBookingDay) mPlaceBookingDay, stayDetail);
             } catch (Exception e)
             {
-                DailyToast.showToast(StayDetailActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
+                DailyToast.showToast(StayPreviewActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
                 finish();
             } finally
             {
@@ -1841,7 +1815,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
                     params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
 
-                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
+                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(//
                         AnalyticsManager.Category.NAVIGATION_,//
                         Action.WISHLIST_ON, stayDetailParams.name, params);
                 } catch (Exception e)
@@ -1939,7 +1913,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
                     params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mPlaceDetail.isShowOriginalPrice);
 
-                    AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(//
+                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(//
                         AnalyticsManager.Category.NAVIGATION_,//
                         Action.WISHLIST_OFF, stayDetailParams.name, params);
                 } catch (Exception e)
@@ -1980,14 +1954,14 @@ public class StayDetailActivity extends PlaceDetailActivity
         public void onError(Call call, Throwable e, boolean onlyReport)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onError(call, e, onlyReport);
+            StayPreviewActivity.this.onError(call, e, onlyReport);
         }
 
         @Override
         public void onError(Throwable e)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onError(e);
+            StayPreviewActivity.this.onError(e);
         }
 
         @Override
@@ -2007,10 +1981,10 @@ public class StayDetailActivity extends PlaceDetailActivity
                         // 판매 마감시
                         if (msgCode == 5)
                         {
-                            StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                            StayPreviewActivity.this.onErrorPopupMessage(msgCode, message, null);
                         } else
                         {
-                            StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                            StayPreviewActivity.this.onErrorPopupMessage(msgCode, message);
                         }
                     }
                 };
@@ -2019,10 +1993,10 @@ public class StayDetailActivity extends PlaceDetailActivity
                 // 판매 마감시
                 if (msgCode == 5)
                 {
-                    StayDetailActivity.this.onErrorPopupMessage(msgCode, message, null);
+                    StayPreviewActivity.this.onErrorPopupMessage(msgCode, message, null);
                 } else
                 {
-                    StayDetailActivity.this.onErrorPopupMessage(msgCode, message);
+                    StayPreviewActivity.this.onErrorPopupMessage(msgCode, message);
                 }
             }
         }
@@ -2031,7 +2005,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         public void onErrorToastMessage(String message)
         {
             setResultCode(CODE_RESULT_ACTIVITY_REFRESH);
-            StayDetailActivity.this.onErrorToastMessage(message);
+            StayPreviewActivity.this.onErrorToastMessage(message);
             finish();
         }
 
@@ -2048,13 +2022,13 @@ public class StayDetailActivity extends PlaceDetailActivity
                     public void run()
                     {
                         mTransitionEndRunnable = null;
-                        StayDetailActivity.this.onErrorResponse(call, response);
+                        StayPreviewActivity.this.onErrorResponse(call, response);
                         finish();
                     }
                 };
             } else
             {
-                StayDetailActivity.this.onErrorResponse(call, response);
+                StayPreviewActivity.this.onErrorResponse(call, response);
                 finish();
             }
         }

@@ -1226,6 +1226,10 @@
     <string name="message_detail_review_stay_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
+
+    <!-- Preview -->
+    <string name="message_preview_guide">목록을 길게 꾸~욱 누르면,\n원하시는 정보를 살짝 엿볼 수 있어요!</string>
+
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
         <item>스테이 쿠폰 보기</item>
