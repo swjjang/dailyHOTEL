@@ -1,5 +1,6 @@
 package com.daily.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -119,6 +120,16 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
 
+    }
+
+    protected void startActivity(Intent intent)
+    {
+        mActivity.startActivity(intent);
+    }
+
+    protected void startActivityForResult(Intent intent, int requestCode)
+    {
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     protected void addCompositeDisposable(Disposable disposable)

@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface StayOutboundViewInterface extends BaseViewInterface
 {
+    void setCalendarText(String calendarText);
+
     void onReset();
 
     void setRecentlySuggests(List<Suggest> suggestList);

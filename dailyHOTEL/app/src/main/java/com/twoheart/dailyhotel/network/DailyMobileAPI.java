@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
@@ -134,16 +135,6 @@ public class DailyMobileAPI implements IDailyNetwork
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    public Observable<BaseDto<UserData>> getUserProfile()
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
-            : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
-
-        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(URL))//
-            .subscribeOn(Schedulers.io())//
-            .observeOn(AndroidSchedulers.mainThread());
-    }
-
     @Override
     public void requestUserBonus(String tag, Object listener)
     {
@@ -175,16 +166,6 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserProfileBenefit(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
-    public Observable<BaseDto<UserBenefitData>> getUserBenefit()
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
-            : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
-
-        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(URL))//
-            .subscribeOn(Schedulers.io())//
-            .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -1213,8 +1194,48 @@ public class DailyMobileAPI implements IDailyNetwork
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    // Out Bound
+    // RxJava2 API
     //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // CommonRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<CommonDateTimeData>> getCommonDateTime()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime"//
+            : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
+
+        return mDailyMobileService.getCommonDateTime(Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io());
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // ProfileRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<UserData>> getUserProfile()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
+            : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
+
+        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(URL))//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<UserBenefitData>> getUserBenefit()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
+            : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
+
+        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(URL))//
+            .subscribeOn(Schedulers.io());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // SuggestRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     public Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(String keyword)
@@ -1222,11 +1243,10 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
-        final String METHOD = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
             : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
 
-        return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(METHOD), keyword)//
-            .subscribeOn(Schedulers.io())//
-            .observeOn(AndroidSchedulers.mainThread());
+        return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
+            .subscribeOn(Schedulers.io());
     }
 }

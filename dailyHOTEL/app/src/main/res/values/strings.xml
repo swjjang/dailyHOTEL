@@ -91,6 +91,7 @@
     <string name="label_subway_station">지하철역</string>
     <string name="label_trueview">트루뷰</string>
     <string name="label_dont_again">다시보지 않기</string>
+    <string name="label_search_stay_outbound">해외호텔 검색</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>

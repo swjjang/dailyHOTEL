@@ -4,19 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseException;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.SuggestInterface;
 import com.daily.dailyhotel.entity.Suggest;
-import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class SuggestRemoteImpl implements SuggestInterface
 {
@@ -49,6 +44,6 @@ public class SuggestRemoteImpl implements SuggestInterface
             }
 
             return list;
-        });
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 }

@@ -24,6 +24,8 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         void onSuggestClick(Suggest suggest);
 
+        void onCalendarClick();
+
         void onReset();
     }
 
@@ -39,6 +41,8 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
         {
             return;
         }
+
+        initToolbar(viewDataBinding);
 
         viewDataBinding.keywrodEditText.addTextChangedListener(new TextWatcher()
         {
@@ -84,6 +88,19 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
             }
         });
 
+
+        viewDataBinding.calendarTextView.setOnClickListener(this);
+    }
+
+    @Override
+    public void setCalendarText(String calendarText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().calendarTextView.setText(calendarText);
     }
 
     @Override
@@ -143,7 +160,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         getViewDataBinding().suggestsContentsLayout.removeAllViews();
 
-        if(suggestList == null || suggestList.size() == 0)
+        if (suggestList == null || suggestList.size() == 0)
         {
             return;
         }
@@ -173,19 +190,22 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
     @Override
     public void onClick(View v)
     {
-        switch(v.getId())
+        switch (v.getId())
         {
             case R.id.textView:
                 Object object = v.getTag();
 
-                if(object == null || object instanceof Suggest == false)
+                if (object == null || object instanceof Suggest == false)
                 {
                     return;
                 }
 
-                Suggest suggest = (Suggest)object;
+                Suggest suggest = (Suggest) object;
 
                 getEventListener().onSuggestClick(suggest);
+                break;
+
+            case R.id.calendarTextView:
                 break;
         }
     }
@@ -198,7 +218,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
         }
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
-        dailyToolbarLayout.initToolbar(getString(R.string.label_search)//
+        dailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound)//
             , v -> getEventListener().finish());
     }
 }

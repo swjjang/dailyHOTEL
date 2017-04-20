@@ -588,8 +588,8 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
         String placeName = mPlaceName;
         String placeType = stayProduct.roomName;
-        //        String checkInDate = stayBookingDay.getCheckInDay("yyyy.M.d (EEE) HH시");
-        //        String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.M.d (EEE) HH시");
+        //        String checkInDate = stayBookingDay.getCheckInDateTime("yyyy.M.d (EEE) HH시");
+        //        String checkOutDate = stayBookingDay.getCheckOutDateTime("yyyy.M.d (EEE) HH시");
         String userName = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getName();
         String userIndex = stayPaymentInformation.getCustomer() == null ? "" : stayPaymentInformation.getCustomer().getUserIdx();
 

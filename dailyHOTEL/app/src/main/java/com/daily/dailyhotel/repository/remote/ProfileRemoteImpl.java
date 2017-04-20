@@ -10,6 +10,7 @@ import com.daily.dailyhotel.entity.UserBenefit;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class ProfileRemoteImpl implements ProfileInterface
 {
@@ -43,7 +44,7 @@ public class ProfileRemoteImpl implements ProfileInterface
             }
 
             return user;
-        });
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -68,6 +69,6 @@ public class ProfileRemoteImpl implements ProfileInterface
             }
 
             return userBenefit;
-        });
+        }).observeOn(AndroidSchedulers.mainThread());
     }
 }

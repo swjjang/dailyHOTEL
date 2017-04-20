@@ -1,5 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
+import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.SuggestData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
@@ -442,10 +444,19 @@ public interface DailyMobileService
     Call<BaseDto<PlaceReviews>> requestPlaceReviews(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @Query("page") int page, @Query("limit") int limit, @Query("sortProperty") String sortProperty, @Query("sortDirection") String sortDirection);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // RxJava2 API
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<CommonDateTimeData>> getCommonDateTime(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
-    // Out Bound
+    // Stay Outbound
     //
     /////////////////////////////////////////////////////////////////////////////////////////////////
 

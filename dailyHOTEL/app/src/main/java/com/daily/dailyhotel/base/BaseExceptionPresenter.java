@@ -19,6 +19,8 @@ import retrofit2.HttpException;
 
 public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> extends BasePresenter<T1, T2>
 {
+    private boolean mIsRefresh;
+
     public BaseExceptionPresenter(@NonNull T1 activity)
     {
         super(activity);
@@ -72,5 +74,15 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
         DailyToast.showToast(getActivity(), R.string.dialog_msg_session_expired, DailyToast.LENGTH_SHORT);
 
         Util.restartApp(getActivity());
+    }
+
+    protected boolean isRefresh()
+    {
+        return mIsRefresh;
+    }
+
+    protected void setRefresh(boolean refresh)
+    {
+        mIsRefresh = refresh;
     }
 }
