@@ -6,9 +6,10 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
+import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
-import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
@@ -16,13 +17,17 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class StayPreviewNetworkController extends PlaceDetailNetworkController
+public class StayPreviewNetworkController extends BaseNetworkController
 {
-    public interface OnNetworkControllerListener extends PlaceDetailNetworkController.OnNetworkControllerListener
+    public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onStayDetailInformation(StayDetailParams stayDetailParams);
 
-        void onHasCoupon(boolean hasCoupon);
+        void onAddWishList(boolean isSuccess, String message);
+
+        void onRemoveWishList(boolean isSuccess, String message);
+
+        void onPlaceReviewScores(PlaceReviewScores placeReviewScores);
     }
 
     public StayPreviewNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -36,9 +41,25 @@ public class StayPreviewNetworkController extends PlaceDetailNetworkController
             day, nights, mStayDetailInformationCallback);
     }
 
-    public void requestHasCoupon(int placeIndex, String date, int nights)
+    public void requestAddWishList(Constants.PlaceType placeType, int placeIndex)
     {
-        DailyMobileAPI.getInstance(mContext).requestHasCoupon(mNetworkTag, placeIndex, date, nights, mHasCouponCallback);
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestAddWishList(mNetworkTag, type, placeIndex, mAddWishListCallback);
+    }
+
+    public void requestRemoveWishList(Constants.PlaceType placeType, int placeIndex)
+    {
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, type, placeIndex, mRemoveWishListCallback);
+    }
+
+    public void requestPlaceReviewScores(Constants.PlaceType placeType, int placeIndex)
+    {
+        String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
+
+        DailyMobileAPI.getInstance(mContext).requestPlaceReviewScores(mNetworkTag, type, placeIndex, mPlaceReviewScoresCallback);
     }
 
     private retrofit2.Callback mStayDetailInformationCallback = new retrofit2.Callback<BaseDto<StayDetailParams>>()
@@ -119,7 +140,7 @@ public class StayPreviewNetworkController extends PlaceDetailNetworkController
         }
     };
 
-    private retrofit2.Callback mHasCouponCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mAddWishListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -131,33 +152,102 @@ public class StayPreviewNetworkController extends PlaceDetailNetworkController
                     JSONObject responseJSONObject = response.body();
 
                     int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100;
 
-                    if (msgCode == 100)
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
                     {
-                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                        boolean hasCoupon = dataJSONObject.getBoolean("existCoupons");
-
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(hasCoupon);
-                    } else
-                    {
-                        String message = responseJSONObject.getString("msg");
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
+                        message = responseJSONObject.getString("msg");
                     }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onAddWishList(isSuccess, message);
                 } catch (Exception e)
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
+                    mOnNetworkControllerListener.onError(e);
                 }
             } else
             {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
+                mOnNetworkControllerListener.onErrorResponse(call, response);
             }
         }
 
         @Override
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
-            mOnNetworkControllerListener.onError(call, t, true);
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasCoupon(false);
+            mOnNetworkControllerListener.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mRemoveWishListCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+                    boolean isSuccess = msgCode == 100;
+
+                    String message = null;
+                    if (responseJSONObject.has("msg") == true)
+                    {
+                        message = responseJSONObject.getString("msg");
+                    }
+
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onRemoveWishList(isSuccess, message);
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(t);
+        }
+    };
+
+    private retrofit2.Callback mPlaceReviewScoresCallback = new retrofit2.Callback<BaseDto<PlaceReviewScores>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<PlaceReviewScores>> call, Response<BaseDto<PlaceReviewScores>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseDto<PlaceReviewScores> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(baseDto.data);
+                    } else
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+                    }
+                } catch (Exception e)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+                }
+            } else
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseDto<PlaceReviewScores>> call, Throwable t)
+        {
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
         }
     };
 }

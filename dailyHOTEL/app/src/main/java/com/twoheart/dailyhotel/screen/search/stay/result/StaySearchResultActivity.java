@@ -767,6 +767,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
+        public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
+        {
+
+        }
+
+        @Override
         public void onCategoryList(List<Category> categoryList)
         {
             if (categoryList != null && categoryList.size() > 0)

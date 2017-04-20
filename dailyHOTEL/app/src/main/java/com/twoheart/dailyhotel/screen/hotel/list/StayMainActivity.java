@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -1001,6 +1002,33 @@ public class StayMainActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.STAY_ITEM_CLICK, Integer.toString(stay.index), null);
                     }
+                    break;
+                }
+
+                default:
+                    unLockUI();
+                    break;
+            }
+        }
+
+        @Override
+        public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
+        {
+            if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            switch (placeViewItem.mType)
+            {
+                case PlaceViewItem.TYPE_ENTRY:
+                {
+                    mIsShowPreview = true;
+
+                    Stay stay = placeViewItem.getItem();
+                    Intent intent = StayPreviewActivity.newInstance(StayMainActivity.this, mStayCuration.getStayBookingDay(), stay);
+
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                     break;
                 }
 

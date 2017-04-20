@@ -1228,7 +1228,21 @@
 
 
     <!-- Preview -->
+    <string name="label_preview_wish">위시리스트\n추가하기</string>
+    <string name="label_preview_kakao">카카오톡\n공유하기</string>
+    <string name="label_preview_map">네이버 지도\n길찾기</string>
+    <string name="label_preview_booking">지금 예약하기</string>
+    <string name="label_preview_review_count">지금 예약하기</string>
+    <string name="label_preview_wish_count">지금 예약하기</string>
+
+    <string name="label_detail_stay_product_count">%1$d개의 객실타입</string>
+    <string name="label_detail_gourmet_product_count">%1$d개의 메뉴</string>
+
+    <string name="label_detail_truereview_count">%1$d개 트루리뷰</string>
+    <string name="label_detail_wish_count">%1$d명 위시리스트</string>
+
     <string name="message_preview_guide">목록을 길게 꾸~욱 누르면,\n원하시는 정보를 살짝 엿볼 수 있어요!</string>
+    <string name="message_preview_changed_price">판매 정보는 상세화면에서\n확인해주세요.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

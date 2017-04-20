@@ -32,6 +32,7 @@ public abstract class PlaceMainActivity extends BaseActivity
     protected boolean mDontReloadAtOnResume, mIsDeepLink;
     protected ViewType mViewType = ViewType.LIST;
     protected TodayDateTime mTodayDateTime;
+    protected boolean mIsShowPreview;
 
     protected PlaceMainLayout mPlaceMainLayout;
     protected PlaceMainNetworkController mPlaceMainNetworkController;
@@ -79,6 +80,8 @@ public abstract class PlaceMainActivity extends BaseActivity
             return;
         }
 
+        mIsShowPreview = false;
+
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
@@ -108,14 +111,17 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         mDontReloadAtOnResume = true;
 
-        new Handler().postDelayed(new Runnable()
+        if(mIsShowPreview == false)
         {
-            @Override
-            public void run()
+            new Handler().postDelayed(new Runnable()
             {
-                mPlaceMainLayout.showAppBarLayout(false);
-            }
-        }, 200);
+                @Override
+                public void run()
+                {
+                    mPlaceMainLayout.showAppBarLayout(false);
+                }
+            }, 200);
+        }
     }
 
     @Override

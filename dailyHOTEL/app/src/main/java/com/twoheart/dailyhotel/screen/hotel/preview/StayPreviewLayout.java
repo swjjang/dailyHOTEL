@@ -1,80 +1,62 @@
 package com.twoheart.dailyhotel.screen.hotel.preview;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.view.Display;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.network.model.ImageInformation;
-import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
-import com.twoheart.dailyhotel.place.adapter.PlaceDetailImageViewPagerAdapter;
+import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailListAdapter;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailRoomTypeListAdapter;
-import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
-import java.util.List;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 호텔 상세 정보 화면
  *
  * @author sheldon
  */
-public class StayPreviewLayout extends PlaceDetailLayout implements RadioGroup.OnCheckedChangeListener
+public class StayPreviewLayout extends BaseLayout
 {
-    private static final int PRODUCT_VIEW_DURATION = 250;
+    private TextView mPlaceGradeTextView;
+    private TextView mPlaceNameTextView;
+    private View mImageLayout;
+    private TextView mProductCountTextView;
+    private TextView mPriceTextView;
+    private View mMoreInformationLayout;
 
-    public static final int VIEW_AVERAGE_PRICE = 0;
-    public static final int VIEW_TOTAL_PRICE = 1;
-
-    private StayPreviewListAdapter mListAdapter;
-    StayProduct mSelectedStayProduct;
-
-    StayDetailRoomTypeListAdapter mRoomTypeListAdapter;
-    protected RecyclerView mProductTypeRecyclerView;
-    protected View mProductTypeLayout;
-    protected View mProductTypeBackgroundView;
-
-    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    ObjectAnimator mObjectAnimator;
-    private AlphaAnimation mAlphaAnimation;
-
-    public interface OnEventListener extends PlaceDetailLayout.OnEventListener
+    public interface OnEventListener extends OnBaseEventListener
     {
-        void doBooking(StayProduct stayProduct);
+        void onWishClick();
 
-        void onChangedViewPrice(int type);
+        void onKakaoClick();
 
-        void showProductInformationLayout();
-
-        void hideProductInformationLayout(boolean isAnimation);
-
-        void onStampClick();
-
-        void onReviewClick();
+        void onMapClick();
     }
 
     public StayPreviewLayout(Context context, OnBaseEventListener listener)
@@ -85,779 +67,328 @@ public class StayPreviewLayout extends PlaceDetailLayout implements RadioGroup.O
     @Override
     protected void initLayout(View view)
     {
-        super.initLayout(view);
-
-        mProductTypeLayout = view.findViewById(R.id.productTypeLayout);
-
-        TextView productTypeTextView = (TextView) mProductTypeLayout.findViewById(R.id.productTypeTextView);
-
-        productTypeTextView.setText(getProductTypeTitle());
-        productTypeTextView.setClickable(true);
-
-        mPriceOptionLayout = mProductTypeLayout.findViewById(R.id.priceOptionLayout);
-        mPriceRadioGroup = (RadioGroup) mPriceOptionLayout.findViewById(R.id.priceRadioGroup);
-
-        mPriceOptionLayout.setVisibility(View.GONE);
-
-        mProductTypeRecyclerView = (RecyclerView) mProductTypeLayout.findViewById(R.id.productTypeRecyclerView);
-        mProductTypeRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        EdgeEffectColor.setEdgeGlowColor(mProductTypeRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-        mProductTypeLayout.setVisibility(View.INVISIBLE);
-
-        mProductTypeBackgroundView = view.findViewById(R.id.productTypeBackgroundView);
-        mProductTypeBackgroundView.setOnClickListener(new OnClickListener()
+        if (VersionUtils.isOverAPI17() == true)
         {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).hideProductInformationLayout(true);
-            }
-        });
-
-        hideProductInformationLayout();
-    }
-
-
-    @Override
-    protected String getProductTypeTitle()
-    {
-        return mContext.getString(R.string.act_hotel_search_room);
-    }
-
-    @Override
-    protected View getTitleLayout()
-    {
-        if (mListAdapter == null)
-        {
-            return null;
-        }
-
-        return mListAdapter.getTitleLayout();
-    }
-
-    public void setTitleText(Stay.Grade grade, String placeName)
-    {
-        if (grade != null)
-        {
-            mTransTotalGradeTextView.setText(grade.getName(mContext));
-            mTransTotalGradeTextView.setBackgroundResource(grade.getColorResId());
-            mTransTotalGradeTextView.setTransitionName(mContext.getString(R.string.transition_place_grade));
-        }
-
-        if (DailyTextUtils.isTextEmpty(placeName) == false)
-        {
-            mTransPlaceNameTextView.setText(placeName);
-            mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
-        }
-    }
-
-    public void setDetail(StayBookingDay stayBookingDay, StayDetail stayDetail, PlaceReviewScores placeReviewScores, int imagePosition)
-    {
-        if (stayDetail == null)
-        {
-            setLineIndicatorVisible(false);
-            setWishButtonSelected(false);
-            setWishButtonCount(0);
-            return;
-        }
-
-        mPlaceDetail = stayDetail;
-
-        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
-        if (stayDetailParams == null)
-        {
-            setLineIndicatorVisible(false);
-            setWishButtonSelected(false);
-            setWishButtonCount(0);
-            return;
-        }
-
-        if (mImageAdapter == null)
-        {
-            mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
-        }
-
-        List<ImageInformation> imageInformationList = stayDetail.getImageList();
-        mImageAdapter.setData(imageInformationList);
-        mViewPager.setAdapter(mImageAdapter);
-
-        mDailyLineIndicator.setViewPager(mViewPager);
-        setLineIndicatorVisible(imageInformationList.size() > 0);
-        setImageInformation((imageInformationList.size() > 0) ? imageInformationList.get(0).description : null);
-
-        if (mListAdapter == null)
-        {
-            mListAdapter = new StayPreviewListAdapter(mContext, stayBookingDay, stayDetail, placeReviewScores, (StayPreviewLayout.OnEventListener) mOnEventListener, mEmptyViewOnTouchListener);
-            mListView.setAdapter(mListAdapter);
-        } else
-        {
-            mListAdapter.setData(stayBookingDay, stayDetail, placeReviewScores);
-        }
-
-        setCurrentImage(imagePosition);
-
-        hideProductInformationLayout();
-        showWishButton();
-
-        // SOLD OUT 판단 조건.
-        List<StayProduct> stayProductList = stayDetail.getProductList();
-
-        if (stayProductList == null || stayProductList.size() == 0)
-        {
-            mBookingTextView.setVisibility(View.GONE);
-            mSoldoutTextView.setVisibility(View.VISIBLE);
-
-            setBookingStatus(STATUS_SOLD_OUT);
-        } else
-        {
-            mBookingTextView.setVisibility(View.VISIBLE);
-            mBookingTextView.setOnClickListener(new OnClickListener()
+            view.post(new Runnable()
             {
                 @Override
-                public void onClick(View v)
+                public void run()
                 {
-                    switch (mBookingStatus)
+                    Observable.just(takeScreenShot((Activity) mContext)).subscribeOn(Schedulers.io()).doOnNext(new Consumer<Bitmap>()
                     {
-                        case STATUS_BOOKING:
-                            ((StayPreviewLayout.OnEventListener) mOnEventListener).doBooking(mSelectedStayProduct);
-                            break;
-
-                        case STATUS_SELECT_PRODUCT:
-                            ((OnEventListener) mOnEventListener).showProductInformationLayout();
-                            break;
-                    }
-                }
-            });
-
-            mSoldoutTextView.setVisibility(View.GONE);
-
-            setBookingStatus(STATUS_SELECT_PRODUCT);
-
-            updateRoomTypeInformationLayout(stayBookingDay, stayProductList);
-        }
-
-        try
-        {
-            if (stayBookingDay.getNights() > 1)
-            {
-                mPriceRadioGroup.check(R.id.averageRadioButton);
-                mPriceOptionLayout.setVisibility(View.VISIBLE);
-                mPriceRadioGroup.setOnCheckedChangeListener(this);
-            } else
-            {
-                mPriceOptionLayout.setVisibility(View.GONE);
-                mPriceRadioGroup.setOnCheckedChangeListener(null);
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            mPriceOptionLayout.setVisibility(View.GONE);
-            mPriceRadioGroup.setOnCheckedChangeListener(null);
-        }
-
-        setWishButtonSelected(stayDetailParams.myWish);
-        setWishButtonCount(stayDetailParams.wishCount);
-
-        if (placeReviewScores != null)
-        {
-            setTrueReviewCount(placeReviewScores.reviewScoreTotalCount);
-        }
-
-        mListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void setTrueReviewCount(int count)
-    {
-        if (mListAdapter != null)
-        {
-            mListAdapter.setTrueReviewCount(count);
-        }
-    }
-
-    private void updateRoomTypeInformationLayout(StayBookingDay stayBookingDay, List<StayProduct> stayProductList)
-    {
-        if (stayBookingDay == null || stayProductList == null || stayProductList.size() == 0)
-        {
-            return;
-        }
-
-        final int nights;
-
-        try
-        {
-            nights = stayBookingDay.getNights();
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return;
-        }
-
-        mSelectedStayProduct = stayProductList.get(0);
-
-        // 처음 세팅하는 경우 객실 타입 세팅
-        if (mRoomTypeListAdapter == null)
-        {
-            mRoomTypeListAdapter = new StayDetailRoomTypeListAdapter(mContext, stayProductList, nights, new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    int position = mProductTypeRecyclerView.getChildAdapterPosition(v);
-
-                    if (position < 0)
+                        @Override
+                        public void accept(Bitmap bitmap) throws Exception
+                        {
+                            fastblur(mContext, bitmap, 3);
+                        }
+                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
                     {
-                        return;
-                    }
-
-                    mSelectedStayProduct = mRoomTypeListAdapter.getItem(position);
-                    mRoomTypeListAdapter.setSelected(position);
-                    mRoomTypeListAdapter.notifyDataSetChanged();
-
-                    AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-                        , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, mSelectedStayProduct.roomName, null);
+                        @Override
+                        public void accept(Bitmap bitmap) throws Exception
+                        {
+                            view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
+                        }
+                    });
                 }
             });
         } else
         {
-            // 재세팅 하는 경우
-            mRoomTypeListAdapter.addAll(stayProductList, nights);
-            mRoomTypeListAdapter.setSelected(0);
-            mRoomTypeListAdapter.notifyDataSetChanged();
+            view.setBackgroundColor(mContext.getResources().getColor(R.color.black_a50));
         }
 
-        mProductTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
+        View popupLayout = view.findViewById(R.id.popupLayout);
 
-        // 객실 개수로 높이를 재지정해준다.
-        final int productTitleBarHeight = ScreenUtils.dpToPx(mContext, 52) + (nights > 1 ? ScreenUtils.dpToPx(mContext, 40) : 0);
+        ViewGroup.LayoutParams layoutParams = popupLayout.getLayoutParams();
 
-        mProductTypeRecyclerView.postDelayed(new Runnable()
+        if (ScreenUtils.isTabletDevice((Activity) mContext) == false)
+        {
+            layoutParams.width = ScreenUtils.getScreenWidth(mContext) * 13 / 15;
+        } else
+        {
+            layoutParams.width = ScreenUtils.getScreenWidth(mContext) * 10 / 15;
+        }
+
+        popupLayout.setLayoutParams(layoutParams);
+
+        mPlaceGradeTextView = (TextView) view.findViewById(R.id.placeGradeTextView);
+        mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
+
+        mImageLayout = view.findViewById(R.id.imageLayout);
+
+        // 이미지 연동
+        SimpleDraweeView simpleDraweeView01 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView01);
+        SimpleDraweeView simpleDraweeView02 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView02);
+        SimpleDraweeView simpleDraweeView03 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView03);
+        SimpleDraweeView simpleDraweeView04 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView04);
+
+        simpleDraweeView01.post(new Runnable()
         {
             @Override
             public void run()
             {
-                // 화면 높이 - 상단 타이틀 - 하단 버튼
-                final int maxHeight = ((View) mProductTypeLayout.getParent()).getHeight() //
-                    - ScreenUtils.dpToPx(mContext, 52) - ScreenUtils.dpToPx(mContext, 64);
-
-                ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
-
-                /* mProductTypeRecyclerView.getHeight() 를 사용하는 이유 - layoutParams.height 를 사용할 경우
-                   속성 값을 리턴 하여 WRAP_CONTENT 등의 값인 -2 등이 리턴 됨 */
-                int productLayoutHeight = mProductTypeRecyclerView.getHeight() + productTitleBarHeight;
-
-                layoutParams.height = Math.min(maxHeight, productLayoutHeight) - productTitleBarHeight;
-                mProductTypeRecyclerView.setLayoutParams(layoutParams);
-            }
-        }, 100);
-    }
-
-    @Override
-    public void setBookingStatus(int status)
-    {
-        mBookingStatus = status;
-
-        if (mBookingTextView == null || mSoldoutTextView == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        switch (status)
-        {
-            case STATUS_NONE:
-            {
-                mBookingTextView.setVisibility(View.VISIBLE);
-                mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
-                break;
-            }
-
-            case STATUS_SELECT_PRODUCT:
-            {
-                mBookingTextView.setVisibility(View.VISIBLE);
-                mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
-
-                mBookingTextView.setText(R.string.act_hotel_search_room);
-                break;
-            }
-
-            case STATUS_BOOKING:
-            {
-                mBookingTextView.setVisibility(View.VISIBLE);
-                mSoldoutTextView.setVisibility(View.GONE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
-
-                mBookingTextView.setText(R.string.act_hotel_booking);
-                break;
-            }
-
-            case STATUS_SOLD_OUT:
-            {
-                mBookingTextView.setVisibility(View.GONE);
-                mSoldoutTextView.setVisibility(View.VISIBLE);
-                mWishButtonTextView.setVisibility(View.VISIBLE);
-                break;
-            }
-        }
-    }
-
-    public void setSelectProduct(int index)
-    {
-        if (mRoomTypeListAdapter == null)
-        {
-            return;
-        }
-
-        int position = mRoomTypeListAdapter.setSelectIndex(index);
-        mProductTypeRecyclerView.scrollToPosition(position);
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId)
-    {
-        switch (checkedId)
-        {
-            case R.id.averageRadioButton:
-                ((OnEventListener) mOnEventListener).onChangedViewPrice(VIEW_AVERAGE_PRICE);
-                break;
-
-            case R.id.totalRadioButton:
-                ((OnEventListener) mOnEventListener).onChangedViewPrice(VIEW_TOTAL_PRICE);
-                break;
-        }
-    }
-
-    public void setChangedViewPrice(int type)
-    {
-        if (mRoomTypeListAdapter == null)
-        {
-            return;
-        }
-
-        mRoomTypeListAdapter.setChangedViewPrice(type);
-        mRoomTypeListAdapter.notifyDataSetChanged();
-    }
-
-    void setProductInformationLayoutEnabled(boolean enabled)
-    {
-        mProductTypeLayout.setEnabled(enabled);
-        mProductTypeRecyclerView.setEnabled(enabled);
-        mProductTypeBackgroundView.setEnabled(enabled);
-    }
-
-    public void showProductInformationLayout(int index)
-    {
-        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
-        {
-            mObjectAnimator.cancel();
-        }
-
-        mProductTypeBackgroundView.setAnimation(null);
-        mProductTypeLayout.setAnimation(null);
-
-        mProductTypeBackgroundView.setVisibility(View.VISIBLE);
-
-        mProductTypeLayout.setVisibility(View.VISIBLE);
-
-        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-        mAnimationState = Constants.ANIMATION_STATE.END;
-
-        setProductInformationLayoutEnabled(true);
-
-        setBookingStatus(STATUS_BOOKING);
-
-        setSelectProduct(index);
-    }
-
-    public void hideProductInformationLayout()
-    {
-        if (mProductTypeBackgroundView == null || mProductTypeLayout == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
-        {
-            mObjectAnimator.cancel();
-        }
-
-        mProductTypeBackgroundView.setAnimation(null);
-        mProductTypeLayout.setAnimation(null);
-
-        mProductTypeBackgroundView.setVisibility(View.GONE);
-
-        if (VersionUtils.isOverAPI12() == true)
-        {
-            mProductTypeLayout.setVisibility(View.INVISIBLE);
-        } else
-        {
-            mProductTypeLayout.setVisibility(View.GONE);
-        }
-
-        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-        mAnimationState = Constants.ANIMATION_STATE.END;
-    }
-
-    public void showAnimationProductInformationLayout()
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-        {
-            return;
-        }
-
-        setBookingStatus(STATUS_NONE);
-
-        if (VersionUtils.isOverAPI12() == true)
-        {
-            final float fromAnimationY = mBottomLayout.getTop();
-
-            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-            }
-
-            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-            int height = mProductTypeLayout.getHeight();
-            int toolbarHeight = mContext.getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-            int maxHeight = ScreenUtils.getScreenHeight(mContext) - (mBottomLayout.getBottom() - mBottomLayout.getTop()) - toolbarHeight - getStatusBarHeight();
-
-            float toAnimationY = fromAnimationY - Math.min(height, maxHeight);
-
-            int startTransY = ScreenUtils.dpToPx(mContext, height);
-            mProductTypeLayout.setTranslationY(startTransY);
-
-            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", fromAnimationY, toAnimationY);
-            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
-
-            mObjectAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    if (mProductTypeLayout.getVisibility() != View.VISIBLE)
-                    {
-                        mProductTypeLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    mObjectAnimator.removeAllListeners();
-                    mObjectAnimator.removeAllUpdateListeners();
-                    mObjectAnimator = null;
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-
-                        setProductInformationLayoutEnabled(true);
-
-                        setBookingStatus(STATUS_BOOKING);
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mObjectAnimator.start();
-        } else
-        {
-            if (mProductTypeLayout != null && mProductTypeLayout.getVisibility() != View.VISIBLE)
-            {
-                mProductTypeLayout.setVisibility(View.VISIBLE);
-
-                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                mAnimationState = Constants.ANIMATION_STATE.END;
-
-                setProductInformationLayoutEnabled(true);
-
-                setBookingStatus(STATUS_BOOKING);
-            }
-        }
-
-        showAnimationFadeOut();
-    }
-
-    public void showAnimationProductInformationLayout(float dy)
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-        {
-            return;
-        }
-
-        setBookingStatus(STATUS_NONE);
-
-        if (VersionUtils.isOverAPI12() == true)
-        {
-            final float y = mBottomLayout.getTop();
-
-            if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
-            {
-                mObjectAnimator.cancel();
-            }
-
-            // 리스트 높이 + 아이콘 높이(실제 화면에 들어나지 않기 때문에 높이가 정확하지 않아서 내부 높이를 더함)
-            int height = mProductTypeLayout.getHeight();
-            mProductTypeLayout.setTranslationY(ScreenUtils.dpToPx(mContext, height));
-
-            mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, dy);
-            mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
-
-            mObjectAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    if (mProductTypeLayout.getVisibility() != View.VISIBLE)
-                    {
-                        mProductTypeLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    mObjectAnimator.removeAllListeners();
-                    mObjectAnimator.removeAllUpdateListeners();
-                    mObjectAnimator = null;
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-
-                        setProductInformationLayoutEnabled(true);
-
-                        setBookingStatus(STATUS_BOOKING);
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mObjectAnimator.start();
-        } else
-        {
-            if (mProductTypeLayout != null && mProductTypeLayout.getVisibility() != View.VISIBLE)
-            {
-                mProductTypeLayout.setVisibility(View.VISIBLE);
-
-                mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                mAnimationState = Constants.ANIMATION_STATE.END;
-
-                setProductInformationLayoutEnabled(true);
-
-                setBookingStatus(STATUS_BOOKING);
-            }
-        }
-
-        showAnimationFadeOut();
-    }
-
-    public void hideAnimationProductInformationLayout()
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
-        {
-            return;
-        }
-
-        if (mPlaceDetail == null)
-        {
-            Util.restartApp(mContext);
-            return;
-        }
-
-        StayDetailParams stayDetailParams = ((StayDetail) mPlaceDetail).getStayDetailParams();
-
-        setBookingStatus(STATUS_NONE);
-
-        final float y = mProductTypeLayout.getY();
-
-        if (mObjectAnimator != null && mObjectAnimator.isRunning() == true)
-        {
-            mObjectAnimator.cancel();
-        }
-
-        mObjectAnimator = ObjectAnimator.ofFloat(mProductTypeLayout, "y", y, mBottomLayout.getTop());
-        mObjectAnimator.setDuration(PRODUCT_VIEW_DURATION);
-
-        mObjectAnimator.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                mAnimationState = Constants.ANIMATION_STATE.START;
-                mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                setProductInformationLayoutEnabled(false);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                mObjectAnimator.removeAllListeners();
-                mObjectAnimator.removeAllUpdateListeners();
-                mObjectAnimator = null;
-
-                if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                {
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                    mAnimationState = Constants.ANIMATION_STATE.END;
-
-                    ((OnEventListener) mOnEventListener).hideProductInformationLayout(false);
-
-                    setBookingStatus(STATUS_SELECT_PRODUCT);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-                mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
+                int imageHeight = ScreenUtils.getRatioHeightType4x3(simpleDraweeView01.getWidth());
+                ViewGroup.LayoutParams layoutParams = simpleDraweeView01.getLayoutParams();
+                layoutParams.height = imageHeight;
+                simpleDraweeView01.setLayoutParams(layoutParams);
             }
         });
 
-        mObjectAnimator.start();
-
-        showAnimationFadeIn();
-        showWishButtonAnimation();
-
-        AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
-            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, stayDetailParams.name, null);
-    }
-
-    /**
-     * 점점 밝아짐.
-     */
-    private void showAnimationFadeIn()
-    {
-        if (mAlphaAnimation != null)
-        {
-            if (mAlphaAnimation.hasEnded() == false)
-            {
-                mAlphaAnimation.cancel();
-            }
-
-            mAlphaAnimation = null;
-        }
-
-        mAlphaAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mAlphaAnimation.setDuration(300);
-        mAlphaAnimation.setFillBefore(true);
-        mAlphaAnimation.setFillAfter(true);
-
-        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        simpleDraweeView02.post(new Runnable()
         {
             @Override
-            public void onAnimationStart(Animation animation)
+            public void run()
             {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
+                int imageHeight = ScreenUtils.getRatioHeightType4x3(simpleDraweeView02.getWidth());
+                ViewGroup.LayoutParams layoutParams = simpleDraweeView02.getLayoutParams();
+                layoutParams.height = imageHeight;
+                simpleDraweeView02.setLayoutParams(layoutParams);
             }
         });
 
-        if (mProductTypeBackgroundView != null)
-        {
-            mProductTypeBackgroundView.startAnimation(mAlphaAnimation);
-        }
-    }
-
-    /**
-     * 점점 어두워짐.
-     */
-    private void showAnimationFadeOut()
-    {
-        if (mAlphaAnimation != null)
-        {
-            if (mAlphaAnimation.hasEnded() == false)
-            {
-                mAlphaAnimation.cancel();
-            }
-
-            mAlphaAnimation = null;
-        }
-
-        mAlphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        mAlphaAnimation.setDuration(300);
-        mAlphaAnimation.setFillBefore(true);
-        mAlphaAnimation.setFillAfter(true);
-
-        mAlphaAnimation.setAnimationListener(new Animation.AnimationListener()
+        simpleDraweeView03.post(new Runnable()
         {
             @Override
-            public void onAnimationStart(Animation animation)
+            public void run()
             {
-                if (mProductTypeBackgroundView.getVisibility() != View.VISIBLE)
+                int imageHeight = ScreenUtils.getRatioHeightType4x3(simpleDraweeView03.getWidth());
+                ViewGroup.LayoutParams layoutParams = simpleDraweeView03.getLayoutParams();
+                layoutParams.height = imageHeight;
+                simpleDraweeView03.setLayoutParams(layoutParams);
+            }
+        });
+
+        simpleDraweeView04.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int imageHeight = ScreenUtils.getRatioHeightType4x3(simpleDraweeView04.getWidth());
+                ViewGroup.LayoutParams layoutParams = simpleDraweeView04.getLayoutParams();
+                layoutParams.height = imageHeight;
+                simpleDraweeView04.setLayoutParams(layoutParams);
+            }
+        });
+
+        mProductCountTextView = (TextView) view.findViewById(R.id.productCountTextView);
+        mPriceTextView = (TextView) view.findViewById(R.id.priceTextView);
+
+        mMoreInformationLayout = view.findViewById(R.id.moreInformationLayout);
+    }
+
+    protected void setGrade(Stay.Grade grade)
+    {
+        if (grade == null)
+        {
+            return;
+        }
+
+        // 등급
+        mPlaceGradeTextView.setText(grade.getName(mContext));
+        mPlaceGradeTextView.setBackgroundResource(grade.getColorResId());
+    }
+
+    protected void setPlaceName(String placeName)
+    {
+        // 이름
+        mPlaceNameTextView.setText(placeName);
+    }
+
+    protected void updateLayout(StayDetail stayDetail, int reviewCount, boolean changedPrice)
+    {
+        if (stayDetail == null)
+        {
+            return;
+        }
+
+        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
+        if (stayDetailParams == null)
+        {
+            return;
+        }
+
+        // 이미지 연동
+        SimpleDraweeView[] simpleDraweeViews = new SimpleDraweeView[4];
+        simpleDraweeViews[0] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView01);
+        simpleDraweeViews[1] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView02);
+        simpleDraweeViews[2] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView03);
+        simpleDraweeViews[3] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView04);
+
+        simpleDraweeViews[0].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+        simpleDraweeViews[1].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+        simpleDraweeViews[2].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+        simpleDraweeViews[3].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+        int size = Math.min(stayDetailParams.getImageList().size(), simpleDraweeViews.length);
+
+        for (int i = 0; i < size; i++)
+        {
+            simpleDraweeViews[i].setImageURI(stayDetailParams.getImageList().get(i).getImageUrl());
+        }
+
+        // 가격
+        if (changedPrice == true)
+        {
+            mProductCountTextView.setText(R.string.message_preview_changed_price);
+
+            mPriceTextView.setVisibility(View.GONE);
+        } else
+        {
+            // N개의 객실타입
+            mProductCountTextView.setText(mContext.getString(R.string.label_detail_stay_product_count, stayDetailParams.getProductList().size()));
+
+            mPriceTextView.setVisibility(View.VISIBLE);
+
+            int minPrice = Integer.MAX_VALUE;
+            int maxPrice = Integer.MIN_VALUE;
+
+            for (StayProduct stayProduct : stayDetailParams.getProductList())
+            {
+                if (minPrice > stayProduct.averageDiscount)
                 {
-                    mProductTypeBackgroundView.setVisibility(View.VISIBLE);
+                    minPrice = stayProduct.averageDiscount;
+                }
+
+                if (maxPrice < stayProduct.averageDiscount)
+                {
+                    maxPrice = stayProduct.averageDiscount;
                 }
             }
 
-            @Override
-            public void onAnimationEnd(Animation animation)
+            String priceFormat;
+
+            if (minPrice == maxPrice)
             {
+                priceFormat = DailyTextUtils.getPriceFormat(mContext, maxPrice, false);
+            } else
+            {
+                priceFormat = DailyTextUtils.getPriceFormat(mContext, minPrice, false) + " ~ " + DailyTextUtils.getPriceFormat(mContext, maxPrice, false);
             }
 
-            @Override
-            public void onAnimationRepeat(Animation animation)
-            {
-            }
-        });
-
-        if (mProductTypeBackgroundView != null)
-        {
-            mProductTypeBackgroundView.startAnimation(mAlphaAnimation);
+            mPriceTextView.setText(priceFormat);
         }
+
+        // 추가 메뉴
+        if (reviewCount == 0 && stayDetailParams.wishCount == 0)
+        {
+            mMoreInformationLayout.setVisibility(View.GONE);
+        } else
+        {
+            mMoreInformationLayout.setVisibility(View.VISIBLE);
+
+            TextView trueReviewCountTextView = (TextView) mMoreInformationLayout.findViewById(R.id.trueReviewCountTextView);
+            TextView wishCountTextView = (TextView) mMoreInformationLayout.findViewById(R.id.wishCountTextView);
+            View dotView = mMoreInformationLayout.findViewById(R.id.dotView);
+
+            if (reviewCount > 0 && stayDetailParams.wishCount > 0)
+            {
+                dotView.setVisibility(View.VISIBLE);
+
+                setTrueReviewCount(trueReviewCountTextView, reviewCount);
+                setWishCount(wishCountTextView, stayDetailParams.wishCount);
+            } else if (reviewCount > 0)
+            {
+                dotView.setVisibility(View.GONE);
+                wishCountTextView.setVisibility(View.GONE);
+
+                setTrueReviewCount(trueReviewCountTextView, reviewCount);
+            } else if (stayDetailParams.wishCount > 0)
+            {
+                dotView.setVisibility(View.GONE);
+                trueReviewCountTextView.setVisibility(View.GONE);
+
+                setWishCount(wishCountTextView, stayDetailParams.wishCount);
+            }
+        }
+    }
+
+    private void setTrueReviewCount(TextView textView, int count)
+    {
+        if (textView == null || count == 0)
+        {
+            return;
+        }
+
+        String trueReviewCount = mContext.getString(R.string.label_detail_truereview_count, count);
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(trueReviewCount);
+        spannableStringBuilder.setSpan( //
+            new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getDemiLightTypeface()),//
+            trueReviewCount.indexOf(" "), trueReviewCount.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(spannableStringBuilder);
+    }
+
+    private void setWishCount(TextView textView, int count)
+    {
+        if (textView == null || count == 0)
+        {
+            return;
+        }
+
+        String wishCount = mContext.getString(R.string.label_detail_wish_count, count);
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(wishCount);
+        spannableStringBuilder.setSpan( //
+            new CustomFontTypefaceSpan(FontManager.getInstance(mContext).getDemiLightTypeface()),//
+            wishCount.indexOf(" "), wishCount.length(),//
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(spannableStringBuilder);
+    }
+
+
+    protected void setWishCount(int count)
+    {
+
+    }
+
+    protected void addWish()
+    {
+
+    }
+
+    protected void removeWish()
+    {
+
+    }
+
+    private static Bitmap takeScreenShot(Activity activity)
+    {
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+
+        Bitmap b1 = view.getDrawingCache();
+        Rect frame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        int statusBarHeight = frame.top;
+
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
+        view.destroyDrawingCache();
+        return b;
+    }
+
+    private static Bitmap fastblur(Context context, Bitmap sentBitmap, int radius)
+    {
+        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+
+        final RenderScript rs = RenderScript.create(context);
+        final Allocation input = Allocation.createFromBitmap(rs, sentBitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+        final Allocation output = Allocation.createTyped(rs, input.getType());
+        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        script.setRadius(radius /* e.g. 3.f */);
+        script.setInput(input);
+        script.forEach(output);
+
+        output.copyTo(bitmap);
+        return bitmap;
     }
 }
