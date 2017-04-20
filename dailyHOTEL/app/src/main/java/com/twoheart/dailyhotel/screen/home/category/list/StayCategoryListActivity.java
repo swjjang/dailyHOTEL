@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.home.category.list;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,13 +37,12 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
+import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainLayout;
 import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -169,7 +167,8 @@ public class StayCategoryListActivity extends PlaceMainActivity
     protected PlaceMainLayout getPlaceMainLayout(Context context)
     {
         String titleText;
-        try {
+        try
+        {
             titleText = context.getResources().getString(mDailyCategoryType.getNameResId());
         } catch (Exception e)
         {
@@ -634,9 +633,9 @@ public class StayCategoryListActivity extends PlaceMainActivity
                 return;
             }
 
-            Intent intent = StayRegionListActivity.newInstance(StayCategoryListActivity.this, //
-                mStayCuration.getProvince(), mStayCuration.getStayBookingDay());
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+            startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
+                StayCategoryListActivity.this, mDailyCategoryType, mStayCuration.getStayBookingDay()) //
+                , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)
             {

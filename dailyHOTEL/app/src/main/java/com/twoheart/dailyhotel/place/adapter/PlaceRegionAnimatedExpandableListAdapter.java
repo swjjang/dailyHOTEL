@@ -256,6 +256,9 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         convertView.setTag(parent.getId(), R.layout.list_row_province);
         convertView.setTag(groupPosition);
 
+        View topDivider = convertView.findViewById(R.id.topDivider);
+        topDivider.setVisibility(groupPosition == 0 ? View.GONE : View.VISIBLE);
+
         ImageView arrowImageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
         TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
         View expandBottomLineView = convertView.findViewById(R.id.expandBottomLine);
