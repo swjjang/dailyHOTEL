@@ -1054,7 +1054,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        if (DailyPreference.getInstance(this).isTrueViewCheckDataGuide() == false)
+        if (DailyPreference.getInstance(this).isTrueVRCheckDataGuide() == false)
         {
             showSimpleDialogType02(null, getString(R.string.message_stay_used_data_guide), getString(R.string.dialog_btn_text_continue)//
                 , getString(R.string.dialog_btn_text_no), new OnCheckDialogStateListener()
@@ -1070,7 +1070,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     public void onState(View view, boolean checked)
                     {
                         unLockUI();
-                        DailyPreference.getInstance(GourmetDetailActivity.this).setTrueViewCheckDataGuide(checked);
+                        DailyPreference.getInstance(GourmetDetailActivity.this).setTrueVRCheckDataGuide(checked);
                     }
                 }, true);
         } else

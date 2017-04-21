@@ -203,6 +203,12 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         @Override
+        public void onPlaceLongClick(View view, PlaceViewItem placeViewItem)
+        {
+
+        }
+
+        @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
             mOnPlaceListFragmentListener.onScrolled(recyclerView, dx, dy);

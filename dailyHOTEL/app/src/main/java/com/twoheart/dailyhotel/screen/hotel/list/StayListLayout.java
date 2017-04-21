@@ -29,7 +29,9 @@ public class StayListLayout extends PlaceListLayout
     @Override
     protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        return new StayListAdapter(context, arrayList, mOnItemClickListener, null);
+        StayListAdapter stayListAdapter = new StayListAdapter(context, arrayList, mOnItemClickListener, null);
+        stayListAdapter.setOnLongClickListener(mOnItemLongClickListener);
+        return stayListAdapter;
     }
 
     //    @Override

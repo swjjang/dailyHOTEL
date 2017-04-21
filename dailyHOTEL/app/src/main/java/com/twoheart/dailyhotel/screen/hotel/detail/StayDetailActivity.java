@@ -951,7 +951,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
         }
 
-        if (DailyPreference.getInstance(this).getTrueViewSupport() > 0)
+        if (DailyPreference.getInstance(this).getTrueVRSupport() > 0)
         {
             showTrueViewMenu();
         } else
@@ -1085,7 +1085,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             return;
         }
 
-        if (DailyPreference.getInstance(this).isTrueViewCheckDataGuide() == false)
+        if (DailyPreference.getInstance(this).isTrueVRCheckDataGuide() == false)
         {
             showSimpleDialogType02(null, getString(R.string.message_stay_used_data_guide), getString(R.string.dialog_btn_text_continue)//
                 , getString(R.string.dialog_btn_text_no), new OnCheckDialogStateListener()
@@ -1107,7 +1107,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     public void onState(View view, boolean checked)
                     {
                         unLockUI();
-                        DailyPreference.getInstance(StayDetailActivity.this).setTrueViewCheckDataGuide(checked);
+                        DailyPreference.getInstance(StayDetailActivity.this).setTrueVRCheckDataGuide(checked);
                     }
                 }, true);
         } else

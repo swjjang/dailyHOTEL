@@ -31,6 +31,8 @@ public class StayListFragment extends PlaceListFragment
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
         void onStayClick(View view, PlaceViewItem placeViewItem, int listCount);
+
+        void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount);
     }
 
     @Override
@@ -210,6 +212,11 @@ public class StayListFragment extends PlaceListFragment
         public void onPlaceClick(View view, PlaceViewItem placeViewItem)
         {
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
+        }
+
+        public void onPlaceLongClick(View view, PlaceViewItem placeViewItem)
+        {
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayLongClick(view, placeViewItem, getPlaceCount());
         }
 
         @Override
