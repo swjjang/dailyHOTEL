@@ -1192,6 +1192,12 @@ public class StayCategoryListActivity extends PlaceMainActivity
         {
 
         }
+
+        @Override
+        public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
+        {
+
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
