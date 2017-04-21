@@ -5,11 +5,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.view.Display;
@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.VersionUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Stay;
@@ -30,11 +29,6 @@ import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 호텔 상세 정보 화면
@@ -67,34 +61,34 @@ public class StayPreviewLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        if (VersionUtils.isOverAPI17() == true)
-        {
-            view.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    Observable.just(takeScreenShot((Activity) mContext)).subscribeOn(Schedulers.io()).doOnNext(new Consumer<Bitmap>()
-                    {
-                        @Override
-                        public void accept(Bitmap bitmap) throws Exception
-                        {
-                            fastblur(mContext, bitmap, 3);
-                        }
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
-                    {
-                        @Override
-                        public void accept(Bitmap bitmap) throws Exception
-                        {
-                            view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
-                        }
-                    });
-                }
-            });
-        } else
-        {
-            view.setBackgroundColor(mContext.getResources().getColor(R.color.black_a50));
-        }
+        //        if (VersionUtils.isOverAPI17() == true)
+        //        {
+        //            view.post(new Runnable()
+        //            {
+        //                @Override
+        //                public void run()
+        //                {
+        //                    Observable.just(takeScreenShot((Activity) mContext)).subscribeOn(Schedulers.io()).doOnNext(new Consumer<Bitmap>()
+        //                    {
+        //                        @Override
+        //                        public void accept(Bitmap bitmap) throws Exception
+        //                        {
+        //                            fastblur(mContext, bitmap, 3);
+        //                        }
+        //                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
+        //                    {
+        //                        @Override
+        //                        public void accept(Bitmap bitmap) throws Exception
+        //                        {
+        //                            view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
+        //                        }
+        //                    });
+        //                }
+        //            });
+        //        } else
+        //        {
+        //            view.setBackgroundColor(mContext.getResources().getColor(R.color.black_a50));
+        //        }
 
         View popupLayout = view.findViewById(R.id.popupLayout);
 
@@ -352,43 +346,5 @@ public class StayPreviewLayout extends BaseLayout
     protected void removeWish()
     {
 
-    }
-
-    private static Bitmap takeScreenShot(Activity activity)
-    {
-        View view = activity.getWindow().getDecorView();
-        view.setDrawingCacheEnabled(true);
-        view.buildDrawingCache();
-
-        Bitmap b1 = view.getDrawingCache();
-        Rect frame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        int statusBarHeight = frame.top;
-
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-
-        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height - statusBarHeight);
-        view.destroyDrawingCache();
-        return b;
-    }
-
-    private static Bitmap fastblur(Context context, Bitmap sentBitmap, int radius)
-    {
-        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-
-        final RenderScript rs = RenderScript.create(context);
-        final Allocation input = Allocation.createFromBitmap(rs, sentBitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
-        final Allocation output = Allocation.createTyped(rs, input.getType());
-        final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-        script.setRadius(radius /* e.g. 3.f */);
-        script.setInput(input);
-        script.forEach(output);
-
-        output.copyTo(bitmap);
-        return bitmap;
     }
 }

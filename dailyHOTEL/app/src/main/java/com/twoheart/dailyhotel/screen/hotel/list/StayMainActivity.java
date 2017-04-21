@@ -1025,6 +1025,8 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     mIsShowPreview = true;
 
+                    mPlaceMainLayout.showBlurView(StayMainActivity.this);
+
                     Stay stay = placeViewItem.getItem();
                     Intent intent = StayPreviewActivity.newInstance(StayMainActivity.this, mStayCuration.getStayBookingDay(), stay);
 
