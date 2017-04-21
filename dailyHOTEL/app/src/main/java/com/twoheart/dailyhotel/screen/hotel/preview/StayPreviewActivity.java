@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.preview;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -167,8 +166,6 @@ public class StayPreviewActivity extends BaseActivity
     protected void onPause()
     {
         super.onPause();
-
-        finish();
     }
 
     private void initLayout(String placeName, Stay.Grade grade, boolean isFromMap)
@@ -223,7 +220,7 @@ public class StayPreviewActivity extends BaseActivity
                 }
             }
 
-           return hasPrice == false;
+            return hasPrice == false;
         }
     }
 
@@ -270,7 +267,7 @@ public class StayPreviewActivity extends BaseActivity
 
                 stayDetail.setStayDetailParams(stayDetailParams);
 
-                if(mPlaceReviewScores != null)
+                if (mPlaceReviewScores != null)
                 {
                     updatePreviewInformationLayout(mPlaceBookingDay, stayDetail, mPlaceReviewScores.reviewScoreTotalCount);
                 }
@@ -356,7 +353,7 @@ public class StayPreviewActivity extends BaseActivity
 
             StayDetail stayDetail = (StayDetail) mPlaceDetail;
 
-            if(stayDetail.getStayDetailParams() != null)
+            if (stayDetail.getStayDetailParams() != null)
             {
                 updatePreviewInformationLayout(mPlaceBookingDay, stayDetail, mPlaceReviewScores.reviewScoreTotalCount);
             }

@@ -1,7 +1,10 @@
 package com.twoheart.dailyhotel.place.layout;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -11,12 +14,14 @@ import android.text.Spanned;
 import android.text.style.ScaleXSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -29,6 +34,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
 public abstract class PlaceMainLayout extends BaseLayout implements View.OnClickListener
 {
     private TextView mRegionTextView;
@@ -39,6 +50,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     protected View mBottomOptionLayout;
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
+    private ImageView mBlurImageView;
 
     TabLayout mCategoryTabLayout;
     private View mToolbarUnderlineView;
@@ -80,6 +92,8 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     @Override
     protected void initLayout(View view)
     {
+        mBlurImageView = (ImageView) view.findViewById(R.id.blurView);
+
         initToolbar(view);
         initCategoryTabLayout(view);
         initOptionLayout(view);
@@ -508,6 +522,55 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
 
         mBottomOptionLayout.setVisibility(View.GONE);
+    }
+
+    public void showBlurView(Activity activity)
+    {
+        if (mBlurImageView == null)
+        {
+            return;
+        }
+
+        mBlurImageView.setVisibility(View.VISIBLE);
+
+        Observable.just(ScreenUtils.takeScreenShot(activity)).subscribeOn(Schedulers.io()).map(new Function<Bitmap, Bitmap>()
+        {
+            @Override
+            public Bitmap apply(Bitmap bitmap) throws Exception
+            {
+                if (bitmap == null)
+                {
+                    return null;
+                }
+
+                NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 50);
+
+                return bitmap;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
+        {
+            @Override
+            public void accept(Bitmap bitmap) throws Exception
+            {
+                if (bitmap == null)
+                {
+                    return;
+                }
+
+                mBlurImageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
+            }
+        });
+    }
+
+    public void hideBlurView()
+    {
+        if (mBlurImageView == null)
+        {
+            return;
+        }
+
+        mBlurImageView.setBackgroundDrawable(null);
+        mBlurImageView.setVisibility(View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
