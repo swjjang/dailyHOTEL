@@ -508,6 +508,17 @@ public class StayMainActivity extends PlaceMainActivity
         unLockUI();
     }
 
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mStayListFragmentListener == null)
+        {
+            return;
+        }
+
+        mStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1026,6 +1037,10 @@ public class StayMainActivity extends PlaceMainActivity
                     mIsShowPreview = true;
 
                     mPlaceMainLayout.showBlurView(StayMainActivity.this);
+
+                    mViewByLongPress = view;
+                    mPlaceViewItemByLongPress = placeViewItem;
+                    mListCountByLongPress = listCount;
 
                     Stay stay = placeViewItem.getItem();
                     Intent intent = StayPreviewActivity.newInstance(StayMainActivity.this, mStayCuration.getStayBookingDay(), stay);

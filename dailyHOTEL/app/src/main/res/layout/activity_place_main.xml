@@ -181,6 +181,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        android:src="@color/black_a50"
+        android:src="@color/black_a40"
         android:scaleType="centerCrop"/>
 </android.support.design.widget.CoordinatorLayout>

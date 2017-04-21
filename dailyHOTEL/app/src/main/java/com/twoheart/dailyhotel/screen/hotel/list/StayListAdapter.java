@@ -280,7 +280,6 @@ public class StayListAdapter extends PlaceListAdapter
                     }
                 }
             });
-
         }
     }
 }

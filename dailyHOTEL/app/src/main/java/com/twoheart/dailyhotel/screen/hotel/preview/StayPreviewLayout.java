@@ -1,20 +1,15 @@
 package com.twoheart.dailyhotel.screen.hotel.preview;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
-import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -42,6 +37,7 @@ public class StayPreviewLayout extends BaseLayout
     private View mImageLayout;
     private TextView mProductCountTextView;
     private TextView mPriceTextView;
+    private View mPopupLayout, mBottomBarLayout;
     private View mMoreInformationLayout;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -51,6 +47,8 @@ public class StayPreviewLayout extends BaseLayout
         void onKakaoClick();
 
         void onMapClick();
+
+        void onStayDetailClick();
     }
 
     public StayPreviewLayout(Context context, OnBaseEventListener listener)
@@ -61,38 +59,18 @@ public class StayPreviewLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        //        if (VersionUtils.isOverAPI17() == true)
-        //        {
-        //            view.post(new Runnable()
-        //            {
-        //                @Override
-        //                public void run()
-        //                {
-        //                    Observable.just(takeScreenShot((Activity) mContext)).subscribeOn(Schedulers.io()).doOnNext(new Consumer<Bitmap>()
-        //                    {
-        //                        @Override
-        //                        public void accept(Bitmap bitmap) throws Exception
-        //                        {
-        //                            fastblur(mContext, bitmap, 3);
-        //                        }
-        //                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
-        //                    {
-        //                        @Override
-        //                        public void accept(Bitmap bitmap) throws Exception
-        //                        {
-        //                            view.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
-        //                        }
-        //                    });
-        //                }
-        //            });
-        //        } else
-        //        {
-        //            view.setBackgroundColor(mContext.getResources().getColor(R.color.black_a50));
-        //        }
+        mPopupLayout = view.findViewById(R.id.popupLayout);
 
-        View popupLayout = view.findViewById(R.id.popupLayout);
+        mPopupLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onStayDetailClick();
+            }
+        });
 
-        ViewGroup.LayoutParams layoutParams = popupLayout.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mPopupLayout.getLayoutParams();
 
         if (ScreenUtils.isTabletDevice((Activity) mContext) == false)
         {
@@ -102,7 +80,7 @@ public class StayPreviewLayout extends BaseLayout
             layoutParams.width = ScreenUtils.getScreenWidth(mContext) * 10 / 15;
         }
 
-        popupLayout.setLayoutParams(layoutParams);
+        mPopupLayout.setLayoutParams(layoutParams);
 
         mPlaceGradeTextView = (TextView) view.findViewById(R.id.placeGradeTextView);
         mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
@@ -166,7 +144,18 @@ public class StayPreviewLayout extends BaseLayout
         mProductCountTextView = (TextView) view.findViewById(R.id.productCountTextView);
         mPriceTextView = (TextView) view.findViewById(R.id.priceTextView);
 
+        mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
         mMoreInformationLayout = view.findViewById(R.id.moreInformationLayout);
+
+        View closeView = view.findViewById(R.id.closeView);
+        closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mOnEventListener.finish();
+            }
+        });
     }
 
     protected void setGrade(Stay.Grade grade)
@@ -332,12 +321,6 @@ public class StayPreviewLayout extends BaseLayout
         textView.setText(spannableStringBuilder);
     }
 
-
-    protected void setWishCount(int count)
-    {
-
-    }
-
     protected void addWish()
     {
 
@@ -346,5 +329,52 @@ public class StayPreviewLayout extends BaseLayout
     protected void removeWish()
     {
 
+    }
+
+    protected void showPopAnimation()
+    {
+        if (mRootView == null)
+        {
+            return;
+        }
+
+        ObjectAnimator objectAnimatorX = ObjectAnimator.ofFloat(mRootView, "scaleX", 0.7f, 1.0f);
+        ObjectAnimator objectAnimatorY = ObjectAnimator.ofFloat(mRootView, "scaleY", 0.7f, 1.0f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(objectAnimatorX, objectAnimatorY);
+        animatorSet.setDuration(200);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                animatorSet.removeAllListeners();
+
+                mRootView.setScaleX(1.0f);
+                mRootView.setScaleY(1.0f);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        animatorSet.start();
     }
 }

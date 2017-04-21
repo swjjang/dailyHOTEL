@@ -543,7 +543,7 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
                     return null;
                 }
 
-                NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 50);
+                NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 60);
 
                 return bitmap;
             }

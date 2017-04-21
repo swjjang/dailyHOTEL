@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceDetail;
@@ -174,10 +173,14 @@ public class StayPreviewActivity extends BaseActivity
 
         mStayPreviewLayout.setGrade(grade);
         mStayPreviewLayout.setPlaceName(placeName);
+
+        mStayPreviewLayout.showPopAnimation();
     }
 
     void updatePreviewInformationLayout(StayBookingDay stayBookingDay, StayDetail stayDetail, int reviewCount)
     {
+        unLockUI();
+
         if (stayBookingDay == null || stayDetail == null)
         {
             return;
@@ -249,6 +252,13 @@ public class StayPreviewActivity extends BaseActivity
         }
 
         @Override
+        public void onStayDetailClick()
+        {
+            setResult(RESULT_OK);
+            finish();
+        }
+
+        @Override
         public void finish()
         {
             StayPreviewActivity.this.finish();
@@ -275,9 +285,6 @@ public class StayPreviewActivity extends BaseActivity
             {
                 DailyToast.showToast(StayPreviewActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
                 finish();
-            } finally
-            {
-                unLockUI();
             }
         }
 
@@ -290,24 +297,11 @@ public class StayPreviewActivity extends BaseActivity
 
             if (isSuccess == true)
             {
-                stayDetailParams.myWish = true;
-                int wishCount = ++stayDetailParams.wishCount;
-                mStayPreviewLayout.setWishCount(wishCount);
                 mStayPreviewLayout.addWish();
             } else
             {
-                mStayPreviewLayout.setWishCount(stayDetailParams.wishCount);
-                mStayPreviewLayout.removeWish();
 
-                if (DailyTextUtils.isTextEmpty(message) == true)
-                {
-                    message = "";
-                }
-
-                releaseUiComponent();
-
-                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
-                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+                DailyToast.showToast(StayPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
             }
         }
 
@@ -320,24 +314,10 @@ public class StayPreviewActivity extends BaseActivity
 
             if (isSuccess == true)
             {
-                stayDetailParams.myWish = false;
-                int wishCount = --stayDetailParams.wishCount;
-                mStayPreviewLayout.setWishCount(wishCount);
-                mStayPreviewLayout.addWish();
+                mStayPreviewLayout.removeWish();
             } else
             {
-                mStayPreviewLayout.setWishCount(stayDetailParams.wishCount);
-                mStayPreviewLayout.removeWish();
-
-                if (DailyTextUtils.isTextEmpty(message) == true)
-                {
-                    message = "";
-                }
-
-                releaseUiComponent();
-
-                showSimpleDialog(getResources().getString(R.string.dialog_notice2), message//
-                    , getResources().getString(R.string.dialog_btn_text_confirm), null);
+                DailyToast.showToast(StayPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
             }
         }
 

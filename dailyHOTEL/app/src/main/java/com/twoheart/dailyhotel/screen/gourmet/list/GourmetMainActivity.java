@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -441,6 +442,12 @@ public class GourmetMainActivity extends PlaceMainActivity
         refreshCurrentFragment(false);
 
         unLockUI();
+    }
+
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
