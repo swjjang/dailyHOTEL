@@ -41,7 +41,17 @@ public class LifeStyleActivity extends WebViewActivity
             @Override
             public void onClick(View v)
             {
-                finish();
+                int i = 0;
+
+                while (mWebView.canGoBackOrForward(--i)){}
+
+                if (i == -1)
+                {
+                    finish();
+                } else
+                {
+                    mWebView.goBackOrForward(i + 1);
+                }
             }
         });
     }
