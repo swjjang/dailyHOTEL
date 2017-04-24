@@ -1074,10 +1074,14 @@ public class AnalyticsManager
         public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
         public static final String EVENT_CLICKED = "EventClicked";
         //
-        public static final String HOTEL_LIST = "HotelList";
-        public static final String HOTEL_MAP = "HotelMap";
-        public static final String GOURMET_LIST_ = "GourmetList";
-        public static final String GOURMET_MAP = "GourmetMap";
+        public static final String _HOTEL_LIST = "HotelList"; // Old Ver 로 앞에 _ 삽입
+        public static final String _HOTEL_MAP = "HotelMap"; // Old Ver 로 앞에 _ 삽입
+        public static final String _GOURMET_LIST_ = "GourmetList"; // Old Ver 로 앞에 _ 삽입
+        public static final String _GOURMET_MAP = "GourmetMap"; // Old Ver 로 앞에 _ 삽입
+        public static final String HOTEL_LIST = "hotel_list"; // 신규 버전
+        public static final String BOUTIQUE_LIST = "boutique_list"; // 신규 버전
+        public static final String PENSION_LIST = "pension_list"; // 신규 버전
+        public static final String RESORT_LIST = "resort_list"; // 신규 버전
         //
         public static final String TERMSOF_LOCATION = "TermsofLocation";
         public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
