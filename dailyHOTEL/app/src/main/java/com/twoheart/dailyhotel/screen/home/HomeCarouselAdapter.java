@@ -202,7 +202,7 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                     vibrator.vibrate(70);
 
-                    mItemClickListener.onItemClick(v, position);
+                    mItemClickListener.onItemLongClick(v, position);
 
                     return true;
                 }

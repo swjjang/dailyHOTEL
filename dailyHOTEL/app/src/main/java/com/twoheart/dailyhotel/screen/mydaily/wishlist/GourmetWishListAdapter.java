@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -267,6 +268,25 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
                     if (mListener != null)
                     {
                         mListener.onItemClick(v);
+                    }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    if(mListener == null)
+                    {
+                        return false;
+                    } else
+                    {
+                        Vibrator vibrator =  (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(70);
+
+                        mListener.onItemLongClick(v);
+                        return true;
                     }
                 }
             });

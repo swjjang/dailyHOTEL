@@ -476,14 +476,8 @@ public class StayPreviewActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            // 판매 마감시
-            if (msgCode == 5)
-            {
-                StayPreviewActivity.this.onErrorPopupMessage(msgCode, message, null);
-            } else
-            {
-                StayPreviewActivity.this.onErrorPopupMessage(msgCode, message);
-            }
+            StayPreviewActivity.this.onErrorToastMessage(message);
+            finish();
         }
 
         @Override

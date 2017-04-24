@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2016. 10. 13..
  */
 
-public abstract class RecentPlacesListLayout extends BaseLayout
+public abstract class RecentPlacesListLayout extends BaseBlurLayout
 {
     RecyclerView mRecyclerView;
     private View mEmptyLayout;
@@ -33,6 +34,8 @@ public abstract class RecentPlacesListLayout extends BaseLayout
     public interface OnEventListener extends OnBaseEventListener
     {
         void onListItemClick(View view, int position);
+
+        void onListItemLongClick(View view, int position);
 
         void onListItemDeleteClick(int position);
 
@@ -195,6 +198,18 @@ public abstract class RecentPlacesListLayout extends BaseLayout
             }
 
             ((OnEventListener) mOnEventListener).onListItemClick(view, position);
+        }
+
+        @Override
+        public void onItemLongClick(View view)
+        {
+            int position = mRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                return;
+            }
+
+            ((OnEventListener) mOnEventListener).onListItemLongClick(view, position);
         }
 
         @Override

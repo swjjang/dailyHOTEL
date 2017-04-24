@@ -27,6 +27,7 @@ import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
@@ -140,9 +141,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         super.onResume();
 
-        refreshList(true);
+        if (mHomeLayout != null && mHomeLayout.getBlurVisibility() == true)
+        {
+            mHomeLayout.setBlurVisibility(mBaseActivity, false);
+        } else
+        {
+            refreshList(true);
 
-        sendHomeScreenAnalytics();
+            sendHomeScreenAnalytics();
+        }
     }
 
     @Override
@@ -900,6 +907,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onWishListItemClick(View view, int position)
         {
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             HomePlace wishItem = null;
 
             if (view != null)
@@ -907,7 +919,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 wishItem = (HomePlace) view.getTag();
             }
 
-            if (wishItem == null && mHomeLayout != null)
+            if (wishItem == null)
             {
                 wishItem = mHomeLayout.getWishItem(position);
             }
@@ -925,7 +937,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onWishListItemLongClick(View view, int position)
         {
-            if (isFinishing() == true || view == null || lockUiComponentAndIsLockUiComponent() == true)
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -937,7 +949,12 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 wishItem = (HomePlace) view.getTag();
             }
 
-            if (wishItem == null && mHomeLayout != null)
+            if (wishItem == null)
+            {
+                wishItem = mHomeLayout.getWishItem(position);
+            }
+
+            if (wishItem != null)
             {
                 try
                 {
@@ -948,13 +965,31 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                     mHomeLayout.setBlurVisibility(mBaseActivity, true);
 
-                    StayBookingDay stayBookingDay = new StayBookingDay();
-                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                    stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+                    switch (wishItem.placeType)
+                    {
+                        case HOTEL:
+                        {
+                            StayBookingDay stayBookingDay = new StayBookingDay();
+                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                    Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, wishItem);
+                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, wishItem);
 
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+
+                        case FNB:
+                        {
+                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, wishItem);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+                    }
                 } catch (Exception e)
                 {
                     unLockUI();
@@ -968,6 +1003,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onRecentListItemClick(View view, int position)
         {
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             HomePlace recentItem = null;
 
             if (view != null)
@@ -975,7 +1015,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 recentItem = (HomePlace) view.getTag();
             }
 
-            if (recentItem == null && mHomeLayout != null)
+            if (recentItem == null)
             {
                 recentItem = mHomeLayout.getRecentItem(position);
             }
@@ -993,6 +1033,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onRecentListItemLongClick(View view, int position)
         {
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             HomePlace recentItem = null;
 
             if (view != null)
@@ -1000,7 +1045,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 recentItem = (HomePlace) view.getTag();
             }
 
-            if (recentItem == null && mHomeLayout != null)
+            if (recentItem == null)
             {
                 recentItem = mHomeLayout.getRecentItem(position);
             }
@@ -1014,13 +1059,31 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                     mHomeLayout.setBlurVisibility(mBaseActivity, true);
 
-                    StayBookingDay stayBookingDay = new StayBookingDay();
-                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                    stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+                    switch (recentItem.placeType)
+                    {
+                        case HOTEL:
+                        {
+                            StayBookingDay stayBookingDay = new StayBookingDay();
+                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                    Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
+                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
 
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+
+                        case FNB:
+                        {
+                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentItem);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+                    }
                 } catch (Exception e)
                 {
                     unLockUI();

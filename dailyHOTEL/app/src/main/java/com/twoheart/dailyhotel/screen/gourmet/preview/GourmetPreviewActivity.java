@@ -462,6 +462,7 @@ public class GourmetPreviewActivity extends BaseActivity
             }
         }
 
+
         @Override
         public void onError(Call call, Throwable e, boolean onlyReport)
         {
@@ -477,14 +478,8 @@ public class GourmetPreviewActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            // 판매 마감시
-            if (msgCode == 5)
-            {
-                GourmetPreviewActivity.this.onErrorPopupMessage(msgCode, message, null);
-            } else
-            {
-                GourmetPreviewActivity.this.onErrorPopupMessage(msgCode, message);
-            }
+            GourmetPreviewActivity.this.onErrorToastMessage(message);
+            finish();
         }
 
         @Override
