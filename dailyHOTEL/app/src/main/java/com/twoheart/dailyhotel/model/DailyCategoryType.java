@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
  * Created by android_sam on 2017. 4. 11..
@@ -12,25 +13,26 @@ import com.twoheart.dailyhotel.R;
 public enum DailyCategoryType implements Parcelable
 {
     // 기존 버튼 용 카테고리
-    STAY_ALL(R.string.label_home_category_stay_all, 0, 0),
+    STAY_ALL(R.string.label_home_category_stay_all, 0, 0, ""),
     // 기존 버튼 용 카테고리
-    GOURMET_ALL(0, 0, 0),
+    GOURMET_ALL(0, 0, 0, ""),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_HOTEL(R.string.label_home_category_hotel, R.string.code_home_category_hotel, R.drawable.ic_home_shortcut_01_hotel),
+    STAY_HOTEL(R.string.label_home_category_hotel, R.string.code_home_category_hotel, R.drawable.ic_home_shortcut_01_hotel, AnalyticsManager.Label.HOTEL),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_BOUTIQUE(R.string.label_home_category_boutique, R.string.code_home_category_boutique, R.drawable.ic_home_shortcut_02_boutique),
+    STAY_BOUTIQUE(R.string.label_home_category_boutique, R.string.code_home_category_boutique, R.drawable.ic_home_shortcut_02_boutique, AnalyticsManager.Label.BOUTIQUE),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_PENSION(R.string.label_home_category_pension, R.string.code_home_category_pension, R.drawable.ic_home_shortcut_03_pension),
+    STAY_PENSION(R.string.label_home_category_pension, R.string.code_home_category_pension, R.drawable.ic_home_shortcut_03_pension, AnalyticsManager.Label.PENSION),
     // 신규 홈 카테고리 버튼 용 카테고리
-    STAY_RESORT(R.string.label_home_category_resort, R.string.code_home_category_resort, R.drawable.ic_home_shortcut_04_resort),
+    STAY_RESORT(R.string.label_home_category_resort, R.string.code_home_category_resort, R.drawable.ic_home_shortcut_04_resort, AnalyticsManager.Label.RESORT),
     // 신규 홈 카테고리 버튼 용 카테고리 - 홈 화면 전용
-    STAY_AROUND_SEARCH(R.string.label_home_category_around_search, 0, R.drawable.ic_home_shortcut_nearby),
+    STAY_AROUND_SEARCH(R.string.label_home_category_around_search, 0, R.drawable.ic_home_shortcut_nearby, AnalyticsManager.Label.NEAR_BY),
     // 신규 홈 카테고리 빈 뷰 생성용 - 홈화면 전용
-    NONE(0, 0, 0);
+    NONE(0, 0, 0, "");
 
     private int mNameResId;
     private int mCodeResId;
     private int mImageResId;
+    private String mAnalyticsLabel;
 
     public int getNameResId()
     {
@@ -47,11 +49,17 @@ public enum DailyCategoryType implements Parcelable
         return mImageResId;
     }
 
-    DailyCategoryType(int nameResId, int codeResId, int imageResId)
+    public String getAnalyticsLabel()
+    {
+        return mAnalyticsLabel;
+    }
+
+    DailyCategoryType(int nameResId, int codeResId, int imageResId, String analyticsLabel)
     {
         mNameResId = nameResId;
         mCodeResId = codeResId;
         mImageResId = imageResId;
+        mAnalyticsLabel = analyticsLabel;
     }
 
     @Override

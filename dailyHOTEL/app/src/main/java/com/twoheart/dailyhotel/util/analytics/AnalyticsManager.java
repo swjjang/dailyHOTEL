@@ -893,6 +893,8 @@ public class AnalyticsManager
         public static final String HOME_BLOCK_SHOW = "home_block_show";
         public static final String MESSAGE_CLICK = "message_click";
         public static final String MESSAGE_CLOSE = "message_close";
+        // home category
+        public static final String HOME_SHORTCUT_CLICK = "home_shortcut_click";
 
         public static final String GOURMET_MENU_DETAIL_CLICK = "gourmet_menu_detail_click";
         public static final String GOURMET_MENU_BACK_CLICK = "gourmet_menu_back_click";
@@ -985,7 +987,10 @@ public class AnalyticsManager
     {
         public static final String HOTEL = "hotel";
         public static final String STAY = "stay";
-        public static final String GOURMET = "gourmet";
+        public static final String BOUTIQUE = "boutique";
+        public static final String PENSION = "pension";
+        public static final String RESORT = "resort";
+        public static final String NEAR_BY = "nearby";
 
         public static final String HOTEL_SCREEN = "HotelScreen";
         public static final String GOURMET_SCREEN = "GoumetScreen";
