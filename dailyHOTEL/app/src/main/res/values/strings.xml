@@ -1228,12 +1228,14 @@
 
 
     <!-- Preview -->
-    <string name="label_preview_wish">위시리스트\n추가하기</string>
+    <string name="label_preview_add_wish">위시리스트\n추가하기</string>
+    <string name="label_preview_remove_wish">위시리스트\n삭제하기</string>
     <string name="label_preview_kakao">카카오톡\n공유하기</string>
     <string name="label_preview_map">네이버 지도\n길찾기</string>
     <string name="label_preview_booking">지금 예약하기</string>
     <string name="label_preview_review_count">지금 예약하기</string>
     <string name="label_preview_wish_count">지금 예약하기</string>
+    <string name="label_preview_extendedstay_average">(평균/1박)</string>
 
     <string name="label_detail_stay_product_count">%1$d개의 객실타입</string>
     <string name="label_detail_gourmet_product_count">%1$d개의 메뉴</string>

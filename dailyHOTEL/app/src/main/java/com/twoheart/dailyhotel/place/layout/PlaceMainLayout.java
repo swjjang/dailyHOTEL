@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
+import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -40,7 +41,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-public abstract class PlaceMainLayout extends BaseLayout implements View.OnClickListener
+public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnClickListener
 {
     private TextView mRegionTextView;
     private TextView mDateTextView;
@@ -50,7 +51,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     protected View mBottomOptionLayout;
     private View mViewTypeOptionImageView;
     private View mFilterOptionImageView;
-    private ImageView mBlurImageView;
 
     TabLayout mCategoryTabLayout;
     private View mToolbarUnderlineView;
@@ -92,8 +92,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
     @Override
     protected void initLayout(View view)
     {
-        mBlurImageView = (ImageView) view.findViewById(R.id.blurView);
-
         initToolbar(view);
         initCategoryTabLayout(view);
         initOptionLayout(view);
@@ -522,55 +520,6 @@ public abstract class PlaceMainLayout extends BaseLayout implements View.OnClick
         }
 
         mBottomOptionLayout.setVisibility(View.GONE);
-    }
-
-    public void showBlurView(Activity activity)
-    {
-        if (mBlurImageView == null)
-        {
-            return;
-        }
-
-        mBlurImageView.setVisibility(View.VISIBLE);
-
-        Observable.just(ScreenUtils.takeScreenShot(activity)).subscribeOn(Schedulers.io()).map(new Function<Bitmap, Bitmap>()
-        {
-            @Override
-            public Bitmap apply(Bitmap bitmap) throws Exception
-            {
-                if (bitmap == null)
-                {
-                    return null;
-                }
-
-                NativeBlurFilter.iterativeBoxBlur(bitmap, 2, 60);
-
-                return bitmap;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Bitmap>()
-        {
-            @Override
-            public void accept(Bitmap bitmap) throws Exception
-            {
-                if (bitmap == null)
-                {
-                    return;
-                }
-
-                mBlurImageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), bitmap));
-            }
-        });
-    }
-
-    public void hideBlurView()
-    {
-        if (mBlurImageView == null)
-        {
-            return;
-        }
-
-        mBlurImageView.setBackgroundDrawable(null);
-        mBlurImageView.setVisibility(View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

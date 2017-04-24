@@ -38,7 +38,6 @@ public abstract class PlaceMainActivity extends BaseActivity
     protected boolean mDontReloadAtOnResume, mIsDeepLink;
     protected ViewType mViewType = ViewType.LIST;
     protected TodayDateTime mTodayDateTime;
-    protected boolean mIsShowPreview;
 
     protected PlaceViewItem mPlaceViewItemByLongPress;
     protected int mListCountByLongPress;
@@ -92,9 +91,6 @@ public abstract class PlaceMainActivity extends BaseActivity
             return;
         }
 
-        mIsShowPreview = false;
-        mPlaceMainLayout.hideBlurView();
-
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
@@ -104,17 +100,23 @@ public abstract class PlaceMainActivity extends BaseActivity
             mPlaceMainNetworkController.requestDateTime();
         }
 
-        int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
+        if (mPlaceMainLayout.getBlurVisibility() == true)
+        {
+            mPlaceMainLayout.setBlurVisibility(this, false);
+        } else
+        {
+            int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
 
-        if (count == 2)
-        {
-            showPreviewGuide();
-        } else if (count > 2)
-        {
-            return;
+            if (count == 2)
+            {
+                showPreviewGuide();
+            } else if (count > 2)
+            {
+                return;
+            }
+
+            DailyPreference.getInstance(this).setCountPreviewGuide(count);
         }
-
-        DailyPreference.getInstance(this).setCountPreviewGuide(count);
     }
 
     @Override
@@ -124,7 +126,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         mDontReloadAtOnResume = true;
 
-        if (mIsShowPreview == false)
+        if (mPlaceMainLayout.getBlurVisibility() == false)
         {
             new Handler().postDelayed(new Runnable()
             {

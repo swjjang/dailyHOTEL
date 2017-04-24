@@ -1,11 +1,16 @@
 package com.twoheart.dailyhotel.screen.hotel.preview;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyToast;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceDetail;
 import com.twoheart.dailyhotel.model.Stay;
@@ -17,7 +22,11 @@ import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyUserPreference;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 
@@ -37,7 +46,6 @@ public class StayPreviewActivity extends BaseActivity
 
     private boolean mCheckPrice;
     private int mViewPrice;
-    private int mPlaceIndex;
 
     /**
      * 리스트에서 호출, 검색 결과에서 호출
@@ -133,8 +141,8 @@ public class StayPreviewActivity extends BaseActivity
 
         mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
-        mPlaceIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
-        mPlaceDetail = new StayDetail(mPlaceIndex, -1, "N", -1, false);
+        int placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_HOTELIDX, -1);
+        mPlaceDetail = new StayDetail(placeIndex, -1, "N", -1, false);
 
         mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
         String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_HOTELNAME);
@@ -142,29 +150,27 @@ public class StayPreviewActivity extends BaseActivity
         boolean isFromMap = intent.hasExtra(NAME_INTENT_EXTRA_DATA_FROM_MAP) == true;
 
         initLayout(placeName, grade, isFromMap);
+
+        onRefresh(placeIndex);
     }
 
     @Override
     protected void onResume()
     {
         super.onResume();
-
-        lockUI();
-
-        try
-        {
-            mNetworkController.requestStayDetailInformation(mPlaceIndex, mPlaceBookingDay.getCheckInDay("yyyy-MM-dd"), mPlaceBookingDay.getNights());
-            mNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, mPlaceIndex);
-        } catch (Exception e)
-        {
-            finish();
-        }
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     private void initLayout(String placeName, Stay.Grade grade, boolean isFromMap)
@@ -175,6 +181,21 @@ public class StayPreviewActivity extends BaseActivity
         mStayPreviewLayout.setPlaceName(placeName);
 
         mStayPreviewLayout.showPopAnimation();
+    }
+
+
+    private void onRefresh(int placeIndex)
+    {
+        lockUI();
+
+        try
+        {
+            mNetworkController.requestStayDetailInformation(placeIndex, mPlaceBookingDay.getCheckInDay("yyyy-MM-dd"), mPlaceBookingDay.getNights());
+            mNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, placeIndex);
+        } catch (Exception e)
+        {
+            finish();
+        }
     }
 
     void updatePreviewInformationLayout(StayBookingDay stayBookingDay, StayDetail stayDetail, int reviewCount)
@@ -190,7 +211,7 @@ public class StayPreviewActivity extends BaseActivity
 
         if (mStayPreviewLayout != null)
         {
-            mStayPreviewLayout.updateLayout(stayDetail, reviewCount, changedProductPrice(stayDetail, mViewPrice));
+            mStayPreviewLayout.updateLayout(stayBookingDay, stayDetail, reviewCount, changedProductPrice(stayDetail, mViewPrice));
         }
     }
 
@@ -236,19 +257,122 @@ public class StayPreviewActivity extends BaseActivity
         @Override
         public void onWishClick()
         {
+            if (mPlaceBookingDay == null || mPlaceDetail == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            lockUI();
+
+            if (DailyHotel.isLogin() == true)
+            {
+                if (((StayDetail) mPlaceDetail).getStayDetailParams().myWish == true)
+                {
+                    mNetworkController.requestRemoveWishList(PlaceType.HOTEL, mPlaceDetail.index);
+                } else
+                {
+                    mNetworkController.requestAddWishList(PlaceType.HOTEL, mPlaceDetail.index);
+                }
+            } else
+            {
+                Intent intent = LoginActivity.newInstance(StayPreviewActivity.this);
+                startActivity(intent);
+                finish();
+            }
         }
 
         @Override
         public void onKakaoClick()
         {
+            if (mPlaceBookingDay == null || mPlaceDetail == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            try
+            {
+                // 카카오톡 패키지 설치 여부
+                getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+                String name = DailyUserPreference.getInstance(StayPreviewActivity.this).getName();
+
+                if (DailyTextUtils.isTextEmpty(name) == true)
+                {
+                    name = getString(R.string.label_friend) + "가";
+                } else
+                {
+                    name += "님이";
+                }
+
+                StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
+                if (stayDetail == null)
+                {
+                    return;
+                }
+
+                StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+                if (stayDetailParams == null)
+                {
+                    return;
+                }
+
+                KakaoLinkManager.newInstance(StayPreviewActivity.this).shareStay(name//
+                    , stayDetailParams.name//
+                    , stayDetailParams.address//
+                    , stayDetail.index//
+                    , stayDetailParams.getImageList().get(0).getImageUrl()//
+                    , (StayBookingDay) mPlaceBookingDay);
+
+                finish();
+            } catch (Exception e)
+            {
+                showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                    , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                    , new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            Util.installPackage(StayPreviewActivity.this, "com.kakao.talk");
+                        }
+                    }, null, null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            StayPreviewActivity.this.finish();
+                        }
+                    }, true);
+            }
         }
 
         @Override
         public void onMapClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            StayDetail stayDetail = (StayDetail) mPlaceDetail;
+
+            if (stayDetail == null)
+            {
+                return;
+            }
+
+            StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+
+            if (stayDetailParams == null)
+            {
+                return;
+            }
+
+            Util.shareNaverMap(StayPreviewActivity.this, stayDetail.getStayDetailParams().name//
+                , Double.toString(stayDetailParams.latitude), Double.toString(stayDetailParams.longitude));
+
+            finish();
         }
 
         @Override
@@ -291,16 +415,12 @@ public class StayPreviewActivity extends BaseActivity
         @Override
         public void onAddWishList(boolean isSuccess, String message)
         {
-            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
-            StayDetail stayDetail = (StayDetail) mPlaceDetail;
-            StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
-
             if (isSuccess == true)
             {
+                lockUI(false);
                 mStayPreviewLayout.addWish();
             } else
             {
-
                 DailyToast.showToast(StayPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
             }
         }
@@ -308,12 +428,9 @@ public class StayPreviewActivity extends BaseActivity
         @Override
         public void onRemoveWishList(boolean isSuccess, String message)
         {
-            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
-            StayDetail stayDetail = (StayDetail) mPlaceDetail;
-            StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
-
             if (isSuccess == true)
             {
+                lockUI(false);
                 mStayPreviewLayout.removeWish();
             } else
             {

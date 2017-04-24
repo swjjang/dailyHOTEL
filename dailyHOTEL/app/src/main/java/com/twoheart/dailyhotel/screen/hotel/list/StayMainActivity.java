@@ -1034,10 +1034,9 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    mIsShowPreview = true;
+                    mPlaceMainLayout.setBlurVisibility(StayMainActivity.this, true);
 
-                    mPlaceMainLayout.showBlurView(StayMainActivity.this);
-
+                    // 기존 데이터를 백업한다.
                     mViewByLongPress = view;
                     mPlaceViewItemByLongPress = placeViewItem;
                     mListCountByLongPress = listCount;

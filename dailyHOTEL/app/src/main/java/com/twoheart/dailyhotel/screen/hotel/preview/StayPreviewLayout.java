@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.hotel.preview;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Spannable;
@@ -10,15 +11,19 @@ import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyTextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -30,15 +35,18 @@ import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
  *
  * @author sheldon
  */
-public class StayPreviewLayout extends BaseLayout
+public class StayPreviewLayout extends BaseLayout implements View.OnClickListener
 {
     private TextView mPlaceGradeTextView;
     private TextView mPlaceNameTextView;
     private View mImageLayout;
     private TextView mProductCountTextView;
     private TextView mPriceTextView;
+    private View mStayAverageView;
     private View mPopupLayout, mBottomBarLayout;
     private View mMoreInformationLayout;
+    private View mWishPopupLayout;
+    private TextView mWishPopupTextView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -60,15 +68,7 @@ public class StayPreviewLayout extends BaseLayout
     protected void initLayout(View view)
     {
         mPopupLayout = view.findViewById(R.id.popupLayout);
-
-        mPopupLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).onStayDetailClick();
-            }
-        });
+        mPopupLayout.setOnClickListener(this);
 
         ViewGroup.LayoutParams layoutParams = mPopupLayout.getLayoutParams();
 
@@ -142,20 +142,18 @@ public class StayPreviewLayout extends BaseLayout
         });
 
         mProductCountTextView = (TextView) view.findViewById(R.id.productCountTextView);
+        mStayAverageView = view.findViewById(R.id.stayAverageView);
         mPriceTextView = (TextView) view.findViewById(R.id.priceTextView);
 
         mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
         mMoreInformationLayout = view.findViewById(R.id.moreInformationLayout);
 
         View closeView = view.findViewById(R.id.closeView);
-        closeView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mOnEventListener.finish();
-            }
-        });
+        closeView.setOnClickListener(this);
+
+        // wish Animation
+        mWishPopupLayout = view.findViewById(R.id.wishPopupLayout);
+        mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishPopupTextView);
     }
 
     protected void setGrade(Stay.Grade grade)
@@ -176,9 +174,9 @@ public class StayPreviewLayout extends BaseLayout
         mPlaceNameTextView.setText(placeName);
     }
 
-    protected void updateLayout(StayDetail stayDetail, int reviewCount, boolean changedPrice)
+    protected void updateLayout(StayBookingDay stayBookingDay, StayDetail stayDetail, int reviewCount, boolean changedPrice)
     {
-        if (stayDetail == null)
+        if (stayBookingDay == null || stayDetail == null)
         {
             return;
         }
@@ -190,8 +188,10 @@ public class StayPreviewLayout extends BaseLayout
             return;
         }
 
+        final int IMAGE_MAX_COUNT = 4;
+
         // 이미지 연동
-        SimpleDraweeView[] simpleDraweeViews = new SimpleDraweeView[4];
+        SimpleDraweeView[] simpleDraweeViews = new SimpleDraweeView[IMAGE_MAX_COUNT];
         simpleDraweeViews[0] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView01);
         simpleDraweeViews[1] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView02);
         simpleDraweeViews[2] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView03);
@@ -202,11 +202,33 @@ public class StayPreviewLayout extends BaseLayout
         simpleDraweeViews[2].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         simpleDraweeViews[3].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-        int size = Math.min(stayDetailParams.getImageList().size(), simpleDraweeViews.length);
+        int imageCount = stayDetailParams.getImageList().size();
 
-        for (int i = 0; i < size; i++)
+        if (imageCount == 1)
         {
-            simpleDraweeViews[i].setImageURI(stayDetailParams.getImageList().get(i).getImageUrl());
+            simpleDraweeViews[1].setVisibility(View.GONE);
+
+            // 하단 이미지 없애기
+            ((View) simpleDraweeViews[2].getParent()).setVisibility(View.GONE);
+
+            int imageHeight = ScreenUtils.getRatioHeightType4x3(((View) simpleDraweeViews[0].getParent()).getWidth());
+            ViewGroup.LayoutParams layoutParams = simpleDraweeViews[0].getLayoutParams();
+            layoutParams.height = imageHeight;
+            simpleDraweeViews[0].setLayoutParams(layoutParams);
+            simpleDraweeViews[0].setImageURI(stayDetailParams.getImageList().get(0).getImageUrl());
+        } else
+        {
+            for (int i = 0; i < IMAGE_MAX_COUNT; i++)
+            {
+                if (imageCount <= i)
+                {
+                    simpleDraweeViews[i].setVisibility(View.INVISIBLE);
+                } else
+                {
+                    simpleDraweeViews[i].setVisibility(View.VISIBLE);
+                    simpleDraweeViews[i].setImageURI(stayDetailParams.getImageList().get(i).getImageUrl());
+                }
+            }
         }
 
         // 가격
@@ -215,12 +237,25 @@ public class StayPreviewLayout extends BaseLayout
             mProductCountTextView.setText(R.string.message_preview_changed_price);
 
             mPriceTextView.setVisibility(View.GONE);
+            mStayAverageView.setVisibility(View.GONE);
         } else
         {
             // N개의 객실타입
             mProductCountTextView.setText(mContext.getString(R.string.label_detail_stay_product_count, stayDetailParams.getProductList().size()));
 
-            mPriceTextView.setVisibility(View.VISIBLE);
+            try
+            {
+                if (stayBookingDay.getNights() > 1)
+                {
+                    mStayAverageView.setVisibility(View.VISIBLE);
+                } else
+                {
+                    mStayAverageView.setVisibility(View.GONE);
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
 
             int minPrice = Integer.MAX_VALUE;
             int maxPrice = Integer.MIN_VALUE;
@@ -283,6 +318,25 @@ public class StayPreviewLayout extends BaseLayout
                 setWishCount(wishCountTextView, stayDetailParams.wishCount);
             }
         }
+
+        // 하단 메뉴 이벤트
+        DailyTextView wishTextVieww = (DailyTextView) mBottomBarLayout.findViewById(R.id.wishTextView);
+        View shareKakaoView = mBottomBarLayout.findViewById(R.id.shareKakaoView);
+        View mapView = mBottomBarLayout.findViewById(R.id.mapView);
+
+        wishTextVieww.setOnClickListener(this);
+        if (stayDetail.getStayDetailParams().myWish == true)
+        {
+            wishTextVieww.setText(R.string.label_preview_remove_wish);
+            wishTextVieww.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_on, 0, 0);
+        } else
+        {
+            wishTextVieww.setText(R.string.label_preview_add_wish);
+            wishTextVieww.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_off, 0, 0);
+        }
+
+        shareKakaoView.setOnClickListener(this);
+        mapView.setOnClickListener(this);
     }
 
     private void setTrueReviewCount(TextView textView, int count)
@@ -323,12 +377,156 @@ public class StayPreviewLayout extends BaseLayout
 
     protected void addWish()
     {
+        AnimatorSet wishAnimatorSet = new AnimatorSet();
 
+        mWishPopupTextView.setText(R.string.wishlist_detail_add_message);
+        mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
+        mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
+
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
+        );
+        objectAnimator1.setInterpolator(new AccelerateInterpolator());
+        objectAnimator1.setDuration(300);
+
+
+        ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
+        );
+        objectAnimator2.setDuration(600);
+
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
+            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
+        );
+        objectAnimator3.setDuration(200);
+
+        wishAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+        wishAnimatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mWishPopupLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                wishAnimatorSet.removeAllListeners();
+
+                mWishPopupLayout.setVisibility(View.INVISIBLE);
+                mOnEventListener.finish();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        wishAnimatorSet.start();
     }
 
     protected void removeWish()
     {
+        AnimatorSet wishAnimatorSet = new AnimatorSet();
 
+        mWishPopupTextView.setText(R.string.wishlist_detail_delete_message);
+        mWishPopupTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
+        mWishPopupTextView.setBackgroundResource(R.drawable.shape_filloval_75000000);
+
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
+        );
+        objectAnimator1.setInterpolator(new AccelerateInterpolator());
+        objectAnimator1.setDuration(300);
+
+        ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
+        );
+        objectAnimator2.setDuration(600);
+
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(mWishPopupTextView //
+            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
+            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
+        );
+        objectAnimator3.setDuration(200);
+
+        wishAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
+        wishAnimatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mWishPopupLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                wishAnimatorSet.removeAllListeners();
+
+                mWishPopupLayout.setVisibility(View.INVISIBLE);
+                mOnEventListener.finish();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        wishAnimatorSet.start();
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.popupLayout:
+                ((OnEventListener) mOnEventListener).onStayDetailClick();
+                break;
+
+            case R.id.closeView:
+                mOnEventListener.finish();
+                break;
+
+            case R.id.wishTextView:
+                ((OnEventListener) mOnEventListener).onWishClick();
+                break;
+
+            case R.id.shareKakaoView:
+                ((OnEventListener) mOnEventListener).onKakaoClick();
+                break;
+
+            case R.id.mapView:
+                ((OnEventListener) mOnEventListener).onMapClick();
+                break;
+        }
     }
 
     protected void showPopAnimation()
@@ -338,15 +536,14 @@ public class StayPreviewLayout extends BaseLayout
             return;
         }
 
-        ObjectAnimator objectAnimatorX = ObjectAnimator.ofFloat(mRootView, "scaleX", 0.7f, 1.0f);
-        ObjectAnimator objectAnimatorY = ObjectAnimator.ofFloat(mRootView, "scaleY", 0.7f, 1.0f);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mRootView //
+            , PropertyValuesHolder.ofFloat("scaleX", 0.7f, 1.0f) //
+            , PropertyValuesHolder.ofFloat("scaleY", 0.7f, 1.0f));
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(objectAnimatorX, objectAnimatorY);
-        animatorSet.setDuration(200);
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        objectAnimator.setDuration(200);
+        objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        animatorSet.addListener(new Animator.AnimatorListener()
+        objectAnimator.addListener(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
@@ -356,7 +553,7 @@ public class StayPreviewLayout extends BaseLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                animatorSet.removeAllListeners();
+                objectAnimator.removeAllListeners();
 
                 mRootView.setScaleX(1.0f);
                 mRootView.setScaleY(1.0f);
@@ -375,6 +572,6 @@ public class StayPreviewLayout extends BaseLayout
             }
         });
 
-        animatorSet.start();
+        objectAnimator.start();
     }
 }
