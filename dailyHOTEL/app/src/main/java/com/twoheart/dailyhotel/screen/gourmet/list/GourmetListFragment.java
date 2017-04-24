@@ -31,6 +31,8 @@ public class GourmetListFragment extends PlaceListFragment
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
         void onGourmetClick(View view, PlaceViewItem placeViewItem, int listCount);
+        
+        void onGourmetLongClick(View view, PlaceViewItem placeViewItem, int listCount);
 
         void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap);
     }
@@ -205,7 +207,7 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onPlaceLongClick(View view, PlaceViewItem placeViewItem)
         {
-
+            ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetLongClick(view, placeViewItem, getPlaceCount());
         }
 
         @Override

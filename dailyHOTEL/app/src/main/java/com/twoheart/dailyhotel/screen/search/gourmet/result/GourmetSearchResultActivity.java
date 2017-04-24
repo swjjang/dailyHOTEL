@@ -738,6 +738,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
+        public void onGourmetLongClick(View view, PlaceViewItem placeViewItem, int listCount)
+        {
+
+        }
+
+        @Override
         public void onGourmetCategoryFilter(int page, HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap)
         {
             if (page <= 1 && mGourmetSearchCuration.getCurationOption().isDefaultFilter() == true)
