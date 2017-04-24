@@ -36,6 +36,8 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
     {
         void onItemClick(View view);
 
+        void onItemLongClick(View view);
+
         void onDeleteClick(View view, int position);
     }
 

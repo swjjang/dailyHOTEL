@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Paint;
 import android.os.Build;
+import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -275,6 +276,23 @@ public class CollectionStayAdapter extends PlaceListAdapter
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
 
             itemView.setOnClickListener(mOnClickListener);
+            itemView.setOnLongClickListener(new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    if (mOnLongClickListener == null)
+                    {
+                        return false;
+                    } else
+                    {
+                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(70);
+
+                        return mOnLongClickListener.onLongClick(v);
+                    }
+                }
+            });
         }
     }
 

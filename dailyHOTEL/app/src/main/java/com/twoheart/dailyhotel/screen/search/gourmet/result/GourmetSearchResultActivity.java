@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -354,6 +355,17 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     protected PlaceCuration getPlaceCuration()
     {
         return mGourmetSearchCuration;
+    }
+
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mOnGourmetListFragmentListener == null)
+        {
+            return;
+        }
+
+        mOnGourmetListFragmentListener.onGourmetClick(view, placeViewItem, listCount);
     }
 
     @Override
@@ -758,7 +770,23 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onGourmetLongClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
+            if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+            {
+                return;
+            }
 
+            mPlaceSearchResultLayout.setBlurVisibility(GourmetSearchResultActivity.this, true);
+
+            Gourmet gourmet = placeViewItem.getItem();
+
+            // 기존 데이터를 백업한다.
+            mViewByLongPress = view;
+            mPlaceViewItemByLongPress = placeViewItem;
+            mListCountByLongPress = listCount;
+
+            Intent intent = GourmetPreviewActivity.newInstance(GourmetSearchResultActivity.this, mGourmetSearchCuration.getGourmetBookingDay(), gourmet);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
 
         @Override

@@ -269,7 +269,10 @@ public class HappyTalkCategoryDialog extends BaseActivity
             urlStringBuilder.append("&parameter5=" + URLEncoder.encode(mCallScreen.getName())); // 커스텀 파라미터5
         }
 
-        urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Hotel IDX
+        if (mPlaceIndex > 0)
+        {
+            urlStringBuilder.append("&parameter6=" + mPlaceIndex); // Place IDX
+        }
 
         if (DailyTextUtils.isTextEmpty(mPlaceName) == false)
         {

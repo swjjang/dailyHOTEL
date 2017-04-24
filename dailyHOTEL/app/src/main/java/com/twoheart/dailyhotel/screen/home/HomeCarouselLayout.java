@@ -48,6 +48,8 @@ public class HomeCarouselLayout extends LinearLayout
         void onViewAllClick();
 
         void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
     }
 
     public HomeCarouselLayout(Context context)
@@ -359,6 +361,15 @@ public class HomeCarouselLayout extends LinearLayout
             if (mCarouselListenter != null)
             {
                 mCarouselListenter.onItemClick(view, position);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(View view, int position)
+        {
+            if (mCarouselListenter != null)
+            {
+                mCarouselListenter.onItemLongClick(view, position);
             }
         }
     };

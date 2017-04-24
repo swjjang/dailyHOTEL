@@ -26,6 +26,9 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     protected PlaceBookingDay mPlaceBookingDay;
 
+    protected View mViewByLongPress;
+    protected int mPositionByLongPress;
+
     protected OnWishListFragmentListener mWishListFragmentListener;
 
     protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
@@ -65,24 +68,30 @@ public abstract class PlaceWishListFragment extends BaseFragment
     {
         super.onResume();
 
-        if (mWishListCount == 0)
+        if (mListLayout != null && mListLayout.getBlurVisibility() == true)
         {
-            unLockUI();
-
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mListLayout == null)
-            {
-                return;
-            }
-
-            mListLayout.setData(null);
+            mListLayout.setBlurVisibility(mBaseActivity, false);
         } else
         {
-            requestWishList();
+            if (mWishListCount == 0)
+            {
+                unLockUI();
+
+                if (isFinishing() == true)
+                {
+                    return;
+                }
+
+                if (mListLayout == null)
+                {
+                    return;
+                }
+
+                mListLayout.setData(null);
+            } else
+            {
+                requestWishList();
+            }
         }
     }
 
