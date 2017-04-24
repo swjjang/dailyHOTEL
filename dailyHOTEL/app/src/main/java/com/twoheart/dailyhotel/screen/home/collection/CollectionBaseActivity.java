@@ -51,6 +51,10 @@ public abstract class CollectionBaseActivity extends BaseActivity
     private boolean checkRequestCollection; // 추천 목록 진입시에만 노출 하도록 한다.
     protected boolean mIsUsedMultiTransition;
 
+    protected PlaceViewItem mPlaceViewItemByLongPress;
+    protected int mListCountByLongPress;
+    protected View mViewByLongPress;
+
     private Handler mHandler = new Handler();
 
     protected abstract void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay);
@@ -114,6 +118,17 @@ public abstract class CollectionBaseActivity extends BaseActivity
             lockUI();
 
             requestCommonDateTime();
+        }
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mCollectionBaseLayout != null && mCollectionBaseLayout.getBlurVisibility() == true)
+        {
+            mCollectionBaseLayout.setBlurVisibility(this, false);
         }
     }
 

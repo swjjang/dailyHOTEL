@@ -14,13 +14,11 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -56,7 +54,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
 
         void onMapClick();
 
-        void onStayDetailClick();
+        void onPlaceDetailClick();
     }
 
     public PlacePreviewLayout(Context context, OnBaseEventListener listener)
@@ -147,7 +145,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
         mStayAverageView = view.findViewById(R.id.stayAverageView);
         mPriceTextView = (TextView) view.findViewById(R.id.priceTextView);
 
-        mBookingTextView = (TextView) view.findViewById(R.id.bookingTextView) ;
+        mBookingTextView = (TextView) view.findViewById(R.id.bookingTextView);
 
         mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
         mMoreInformationLayout = view.findViewById(R.id.moreInformationLayout);
@@ -446,7 +444,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
         switch (v.getId())
         {
             case R.id.popupLayout:
-                ((OnEventListener) mOnEventListener).onStayDetailClick();
+                ((OnEventListener) mOnEventListener).onPlaceDetailClick();
                 break;
 
             case R.id.closeView:

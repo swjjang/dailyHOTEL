@@ -1062,7 +1062,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onState(View view, boolean checked)
                     {
-//                        startActivityForResult(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                        //                        startActivityForResult(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1075,7 +1075,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-//            startActivityForResult(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+            //            startActivityForResult(TrueViewActivity.newInstance(GourmetDetailActivity.this, "http://player.cupix.com/p/MG8BpUmW"), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
     }
 

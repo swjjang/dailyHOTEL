@@ -274,12 +274,12 @@ public class StayWishListAdapter extends PlaceWishListAdapter
                 @Override
                 public boolean onLongClick(View v)
                 {
-                    if(mListener == null)
+                    if (mListener == null)
                     {
                         return false;
                     } else
                     {
-                        Vibrator vibrator =  (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                         vibrator.vibrate(70);
 
                         mListener.onItemLongClick(v);

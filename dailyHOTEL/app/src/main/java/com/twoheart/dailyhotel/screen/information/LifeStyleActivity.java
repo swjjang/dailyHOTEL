@@ -43,7 +43,9 @@ public class LifeStyleActivity extends WebViewActivity
             {
                 int i = 0;
 
-                while (mWebView.canGoBackOrForward(--i)){}
+                while (mWebView.canGoBackOrForward(--i))
+                {
+                }
 
                 if (i == -1)
                 {

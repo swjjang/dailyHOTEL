@@ -79,7 +79,7 @@ public abstract class RecentPlacesListFragment extends BaseFragment
     {
         super.onResume();
 
-        if(mListLayout != null && mListLayout.getBlurVisibility() == true)
+        if (mListLayout != null && mListLayout.getBlurVisibility() == true)
         {
             mListLayout.setBlurVisibility(mBaseActivity, false);
         } else

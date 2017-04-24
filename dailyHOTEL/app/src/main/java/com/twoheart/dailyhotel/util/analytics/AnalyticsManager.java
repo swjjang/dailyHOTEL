@@ -680,6 +680,9 @@ public class AnalyticsManager
 
         // TRUEREVIEW
         public static final String TRUE_REVIEW_LIST = "true_review_list";
+
+        // Preview
+        public static final String PEEK_POP = "peek_pop";
     }
 
     public static class Action
@@ -942,6 +945,15 @@ public class AnalyticsManager
         public static final String CLOSE_HAPPYTALK = "close_happytalk";
         public static final String HAPPYTALK_START = "happytalk_start";
         public static final String CALL_CLICK = "call_click";
+
+        // Preview
+        public static final String PEEK_POP_CLOSE = "peek_pop_close";
+        public static final String PEEK_POP_RESERVATION = "peek_pop_reservation";
+        public static final String PEEK_POP_ADD_WISHLIST = "peek_pop_add_wishlist";
+        public static final String PEEK_POP_DELETE_WISHLIST = "peek_pop_delete_wishlist";
+        public static final String PEEK_POP_SHARE_KAKAO = "peek_pop_share_kakao";
+        public static final String PEEK_POP_NAVER_MAP = "peek_pop_naver_map";
+
     }
 
     public static class Category
