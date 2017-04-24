@@ -3,12 +3,10 @@ package com.twoheart.dailyhotel.screen.gourmet.preview;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
-import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;

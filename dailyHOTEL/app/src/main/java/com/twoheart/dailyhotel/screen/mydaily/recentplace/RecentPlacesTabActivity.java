@@ -329,6 +329,12 @@ public class RecentPlacesTabActivity extends BaseActivity
                 break;
             }
 
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                mDontReloadAtOnResume = true;
+
+                mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+                break;
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);

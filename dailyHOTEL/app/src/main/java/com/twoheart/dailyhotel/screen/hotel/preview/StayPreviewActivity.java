@@ -26,7 +26,9 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -164,6 +166,15 @@ public class StayPreviewActivity extends BaseActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.BACKKEY, null);
+
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -218,6 +229,12 @@ public class StayPreviewActivity extends BaseActivity
             {
                 mPreviewLayout.updateLayout(stayBookingDay, stayDetail, reviewCount, changedProductPrice(stayDetail, mViewPrice), false);
             }
+
+            HashMap<String, String> params = new HashMap();
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
+
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.PEEK_POP, null, params);
         }
     }
 
@@ -272,18 +289,24 @@ public class StayPreviewActivity extends BaseActivity
 
             if (DailyHotel.isLogin() == true)
             {
-                if (((StayDetail) mPlaceDetail).getStayDetailParams().myWish == true)
+                if (mPlaceDetail.getStayDetailParams().myWish == true)
                 {
                     mNetworkController.requestRemoveWishList(PlaceType.HOTEL, mPlaceDetail.index);
+
+                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.PEEK_POP_DELETE_WISHLIST, null, null);
                 } else
                 {
                     mNetworkController.requestAddWishList(PlaceType.HOTEL, mPlaceDetail.index);
+
+                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.PEEK_POP_ADD_WISHLIST, null, null);
                 }
             } else
             {
                 Intent intent = LoginActivity.newInstance(StayPreviewActivity.this);
                 startActivity(intent);
-                finish();
+                StayPreviewActivity.this.finish();
             }
         }
 
@@ -330,7 +353,7 @@ public class StayPreviewActivity extends BaseActivity
                     , stayDetailParams.getImageList().get(0).getImageUrl()//
                     , (StayBookingDay) mPlaceBookingDay);
 
-                finish();
+                StayPreviewActivity.this.finish();
             } catch (Exception e)
             {
                 showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -351,6 +374,9 @@ public class StayPreviewActivity extends BaseActivity
                         }
                     }, true);
             }
+
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_SHARE_KAKAO, null, null);
         }
 
         @Override
@@ -376,23 +402,31 @@ public class StayPreviewActivity extends BaseActivity
             Util.shareNaverMap(StayPreviewActivity.this, mPlaceDetail.getStayDetailParams().name//
                 , Double.toString(stayDetailParams.latitude), Double.toString(stayDetailParams.longitude));
 
-            finish();
+            StayPreviewActivity.this.finish();
+
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_NAVER_MAP, null, null);
         }
 
         @Override
-        public void onStayDetailClick()
+        public void onPlaceDetailClick()
         {
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_RESERVATION, null, null);
+
             setResult(RESULT_OK);
-            finish();
+            StayPreviewActivity.this.finish();
         }
 
         @Override
         public void finish()
         {
+            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.CLOSE, null);
+
             StayPreviewActivity.this.finish();
         }
     };
-
 
     private StayPreviewNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayPreviewNetworkController.OnNetworkControllerListener()
     {
@@ -476,14 +510,8 @@ public class StayPreviewActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            // 판매 마감시
-            if (msgCode == 5)
-            {
-                StayPreviewActivity.this.onErrorPopupMessage(msgCode, message, null);
-            } else
-            {
-                StayPreviewActivity.this.onErrorPopupMessage(msgCode, message);
-            }
+            StayPreviewActivity.this.onErrorToastMessage(message);
+            finish();
         }
 
         @Override

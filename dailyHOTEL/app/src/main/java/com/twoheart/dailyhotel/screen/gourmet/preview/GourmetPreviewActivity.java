@@ -25,7 +25,9 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -165,6 +167,15 @@ public class GourmetPreviewActivity extends BaseActivity
     }
 
     @Override
+    public void onBackPressed()
+    {
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.BACKKEY, null);
+
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -222,6 +233,12 @@ public class GourmetPreviewActivity extends BaseActivity
                 mPreviewLayout.updateLayout(gourmetBookingDay, gourmetDetail, reviewCount, changedProductPrice(gourmetDetail, mViewPrice), false);
             }
         }
+
+        HashMap<String, String> params = new HashMap();
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+        params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
+
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.PEEK_POP, null, params);
     }
 
     private boolean changedProductPrice(GourmetDetail gourmetDetail, int listViewPrice)
@@ -278,15 +295,21 @@ public class GourmetPreviewActivity extends BaseActivity
                 if (mPlaceDetail.getGourmetDetailParmas().myWish == true)
                 {
                     mNetworkController.requestRemoveWishList(PlaceType.FNB, mPlaceDetail.index);
+
+                    AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.PEEK_POP_DELETE_WISHLIST, null, null);
                 } else
                 {
                     mNetworkController.requestAddWishList(PlaceType.FNB, mPlaceDetail.index);
+
+                    AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                        , AnalyticsManager.Action.PEEK_POP_ADD_WISHLIST, null, null);
                 }
             } else
             {
                 Intent intent = LoginActivity.newInstance(GourmetPreviewActivity.this);
                 startActivity(intent);
-                finish();
+                GourmetPreviewActivity.this.finish();
             }
         }
 
@@ -331,7 +354,7 @@ public class GourmetPreviewActivity extends BaseActivity
                     , gourmetDetailParams.getImageList().get(0).getImageUrl()//
                     , mPlaceBookingDay);
 
-                finish();
+                GourmetPreviewActivity.this.finish();
             } catch (Exception e)
             {
                 showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -352,6 +375,9 @@ public class GourmetPreviewActivity extends BaseActivity
                         }
                     }, true);
             }
+
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_SHARE_KAKAO, null, null);
         }
 
         @Override
@@ -377,19 +403,28 @@ public class GourmetPreviewActivity extends BaseActivity
             Util.shareNaverMap(GourmetPreviewActivity.this, gourmetDetailParams.name//
                 , Double.toString(gourmetDetailParams.latitude), Double.toString(gourmetDetailParams.longitude));
 
-            finish();
+            GourmetPreviewActivity.this.finish();
+
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_NAVER_MAP, null, null);
         }
 
         @Override
-        public void onStayDetailClick()
+        public void onPlaceDetailClick()
         {
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_RESERVATION, null, null);
+
             setResult(RESULT_OK);
-            finish();
+            GourmetPreviewActivity.this.finish();
         }
 
         @Override
         public void finish()
         {
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.CLOSE, null);
+
             GourmetPreviewActivity.this.finish();
         }
     };
@@ -462,6 +497,7 @@ public class GourmetPreviewActivity extends BaseActivity
             }
         }
 
+
         @Override
         public void onError(Call call, Throwable e, boolean onlyReport)
         {
@@ -477,14 +513,8 @@ public class GourmetPreviewActivity extends BaseActivity
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            // 판매 마감시
-            if (msgCode == 5)
-            {
-                GourmetPreviewActivity.this.onErrorPopupMessage(msgCode, message, null);
-            } else
-            {
-                GourmetPreviewActivity.this.onErrorPopupMessage(msgCode, message);
-            }
+            GourmetPreviewActivity.this.onErrorToastMessage(message);
+            finish();
         }
 
         @Override

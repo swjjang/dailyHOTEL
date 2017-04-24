@@ -30,9 +30,7 @@ public class GourmetListLayout extends PlaceListLayout
     @Override
     protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
     {
-        GourmetListAdapter gourmetListAdapter = new GourmetListAdapter(context, arrayList, mOnItemClickListener, null);
-        gourmetListAdapter.setOnLongClickListener(mOnItemLongClickListener);
-        return gourmetListAdapter;
+        return new GourmetListAdapter(context, arrayList, mOnItemClickListener, null);
     }
 
     //    @Override

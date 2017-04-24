@@ -12,6 +12,7 @@ import android.view.View;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
@@ -23,6 +24,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public abstract class PlaceSearchResultActivity extends BaseActivity
 {
@@ -45,6 +51,10 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected int mSearchCount;
     protected int mSearchMaxCount;
+
+    protected PlaceViewItem mPlaceViewItemByLongPress;
+    protected int mListCountByLongPress;
+    protected View mViewByLongPress;
 
     protected TodayDateTime mTodayDateTime;
 
@@ -70,6 +80,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected abstract PlaceCuration getPlaceCuration();
 
+    protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -84,6 +96,17 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         setContentView(mPlaceSearchResultLayout.onCreateView(R.layout.activity_search_result));
 
         initLayout();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.getBlurVisibility() == true)
+        {
+            mPlaceSearchResultLayout.setBlurVisibility(this, false);
+        }
     }
 
     @Override
@@ -211,6 +234,20 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                }
+                break;
         }
     }
 

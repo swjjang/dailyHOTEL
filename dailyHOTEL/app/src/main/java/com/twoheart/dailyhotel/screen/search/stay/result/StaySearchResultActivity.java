@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceSearchResultNetworkC
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -370,6 +371,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     protected PlaceCuration getPlaceCuration()
     {
         return mStaySearchCuration;
+    }
+
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mOnStayListFragmentListener == null)
+        {
+            return;
+        }
+
+        mOnStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
     }
 
     @Override
@@ -789,7 +801,23 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
+            if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+            {
+                return;
+            }
 
+            mPlaceSearchResultLayout.setBlurVisibility(StaySearchResultActivity.this, true);
+
+            Stay stay = placeViewItem.getItem();
+
+            // 기존 데이터를 백업한다.
+            mViewByLongPress = view;
+            mPlaceViewItemByLongPress = placeViewItem;
+            mListCountByLongPress = listCount;
+
+            Intent intent = StayPreviewActivity.newInstance(StaySearchResultActivity.this, mStaySearchCuration.getStayBookingDay(), stay);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
 
         @Override
