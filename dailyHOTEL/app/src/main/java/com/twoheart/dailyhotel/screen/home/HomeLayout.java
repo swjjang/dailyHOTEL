@@ -1195,29 +1195,39 @@ public class HomeLayout extends BaseLayout
                 return;
             }
 
-            int startScrollY = mEventImageHeight / 10 * 5;
-            int endScrollY = mEventImageHeight / 10 * 9;
+            int startScrollY = mEventImageHeight / 20 * 15;
+            int endScrollY = mEventImageHeight / 20 * 19;
 
             int minValue = ScreenUtils.dpToPx(mContext, 5d);
             int maxValue = ScreenUtils.dpToPx(mContext, 15d);
             int buttonLayoutAlpha = 255;
 
+            int maxLayoutTopMargin = ScreenUtils.dpToPx(mContext, 10d);
+            int minLayoutTopMargin = 0;
+//            int minLayoutTopMargin = ScreenUtils.dpToPx(mContext, 0d);
+
             View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
             View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
+            View productButtonLayout = mScrollButtonLayout.findViewById(R.id.productButtonLayout);
 
             ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) stayButtonLayout.getLayoutParams();
 
+            ViewGroup.MarginLayoutParams productButtonLayoutParams = (ViewGroup.MarginLayoutParams) productButtonLayout.getLayoutParams();
 
             if (scrollY <= startScrollY)
             {
                 layoutParams.leftMargin = maxValue;
                 layoutParams.rightMargin = minValue;
                 buttonLayoutAlpha = 255;
+
+                productButtonLayoutParams.topMargin = maxLayoutTopMargin;
             } else if (endScrollY < scrollY)
             {
                 layoutParams.leftMargin = minValue;
                 layoutParams.rightMargin = maxValue;
                 buttonLayoutAlpha = 0;
+
+                productButtonLayoutParams.topMargin = minLayoutTopMargin;
             } else
             {
                 double ratio = ((double) (scrollY - startScrollY) / (double) (endScrollY - startScrollY));
@@ -1227,14 +1237,19 @@ public class HomeLayout extends BaseLayout
                 layoutParams.rightMargin = minValue + gap;
 
                 buttonLayoutAlpha = 255 - (int) (255 * ratio);
+
+                productButtonLayoutParams.topMargin = maxLayoutTopMargin - (int) ((maxLayoutTopMargin - minLayoutTopMargin) * ratio);
             }
 
             stayButtonLayout.setLayoutParams(layoutParams);
             stayButtonLayout.getBackground().setAlpha(buttonLayoutAlpha);
             gourmetButtonLayout.getBackground().setAlpha(buttonLayoutAlpha);
 
+            productButtonLayout.setLayoutParams(productButtonLayoutParams);
+
             // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
-            if (scrollY > mEventImageHeight + ScreenUtils.dpToPx(mContext, 9d))
+            if (scrollY > mEventImageHeight)
+//            if (scrollY > mEventImageHeight + ScreenUtils.dpToPx(mContext, 9d))
             {
                 // show
                 setActionButtonVisibility(View.VISIBLE);

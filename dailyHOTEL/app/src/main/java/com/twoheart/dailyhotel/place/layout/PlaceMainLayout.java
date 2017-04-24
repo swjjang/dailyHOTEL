@@ -20,7 +20,7 @@ import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
-import com.twoheart.dailyhotel.place.base.BaseLayout;
+import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -29,7 +29,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PlaceMainLayout extends BaseLayout implements View.OnClickListener
+public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnClickListener
 {
     private TextView mRegionTextView;
     private TextView mDateTextView;

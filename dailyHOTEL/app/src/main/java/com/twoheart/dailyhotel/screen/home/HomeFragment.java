@@ -243,17 +243,18 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                         DailyPreference.getInstance(mBaseActivity).setDailyRegion(categoryType, Util.getDailyRegionJSONObject(province));
 
-//                        new Handler().postDelayed(new Runnable()
-//                        {
-//                            @Override
-//                            public void run()
-//                            {
-//                                Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
-//                                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
-//                            }
-//                        }, 50);
+                        //                        new Handler().postDelayed(new Runnable()
+                        //                        {
+                        //                            @Override
+                        //                            public void run()
+                        //                            {
+                        //                                Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
+                        //                                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        //                            }
+                        //                        }, 50);
 
-                        try {
+                        try
+                        {
                             Intent intent = StayCategoryListActivity.newInstance(mBaseActivity, categoryType, null);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
                         } catch (Exception e)
@@ -1190,6 +1191,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 Intent intent = PermissionManagerActivity.newInstance(mBaseActivity //
                     , PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
                 startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
+
+                try
+                {
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                        AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                        AnalyticsManager.Label.NEAR_BY, null);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
                 return;
             }
 
@@ -1202,6 +1213,27 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 mBaseActivity.startActivityForResult( //
                     HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
                     , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+                String label = "";
+                switch (categoryType)
+                {
+                    case STAY_HOTEL:
+                        label = AnalyticsManager.Label.HOTEL;
+                        break;
+                    case STAY_BOUTIQUE:
+                        label = AnalyticsManager.Label.BOUTIQUE;
+                        break;
+                    case STAY_PENSION:
+                        label = AnalyticsManager.Label.PENSION;
+                        break;
+                    case STAY_RESORT:
+                        label = AnalyticsManager.Label.RESORT;
+                        break;
+                }
+
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
+                    label, null);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

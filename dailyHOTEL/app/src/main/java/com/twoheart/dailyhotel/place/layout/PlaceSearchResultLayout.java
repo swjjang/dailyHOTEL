@@ -8,9 +8,13 @@ import android.graphics.Paint;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -48,6 +52,9 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
+    protected Spinner mDistanceFilterSpinner;
+    DistanceFilterAdapter mDistanceFilterAdapter;
+
     Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     private boolean mUpScrolling;
@@ -72,6 +79,8 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         void research(int resultCode);
 
         void onShowCallDialog();
+
+        void onItemSelectedSpinner(double radius);
     }
 
     protected abstract int getEmptyIconResourceId();
@@ -135,6 +144,30 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
         mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        mDistanceFilterSpinner = (Spinner) view.findViewById(R.id.distanceSpinner);
+
+        CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
+        mDistanceFilterAdapter = new DistanceFilterAdapter(mContext, R.layout.list_row_coupon_spinner, strings);
+
+        mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        mDistanceFilterSpinner.setAdapter(mDistanceFilterAdapter);
+
+        mDistanceFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                mDistanceFilterAdapter.setSelection(position);
+
+                ((OnEventListener) mOnEventListener).onItemSelectedSpinner(getSpinnerRadiusValue(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
     }
 
     public void setCalendarText(String date)
@@ -527,6 +560,121 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
         return mFragmentPagerAdapter.getFragmentList();
     }
 
+    public void setSpinnerVisible(boolean isVisible)
+    {
+        mDistanceFilterSpinner.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mDistanceFilterSpinner.setEnabled(isVisible);
+    }
+
+    private double getSpinnerRadiusValue(int spinnerPosition)
+    {
+        if (mDistanceFilterSpinner == null)
+        {
+            return 0d;
+        }
+
+        double radius;
+
+        switch (spinnerPosition)
+        {
+            case 4:
+                radius = 10d;
+                break;
+
+            case 3:
+                radius = 5d;
+                break;
+
+            case 2:
+                radius = 3d;
+                break;
+
+            case 1:
+                radius = 1d;
+                break;
+
+            case 0:
+                radius = 0.5d;
+                break;
+
+            default:
+                radius = 3d;
+                break;
+        }
+
+        return radius;
+    }
+
+    public void setSelectionSpinner(double radius)
+    {
+        if (mDistanceFilterSpinner == null)
+        {
+            return;
+        }
+
+        int position;
+
+        if (radius > 5)
+        {
+            position = 4; // 10km
+        } else if (radius > 3)
+        {
+            position = 3; // 5km
+        } else if (radius > 1)
+        {
+            position = 2; // 3km
+        } else if (radius > 0.5)
+        {
+            position = 1; // 1km
+        } else
+        {
+            position = 0; // 0.5km
+        }
+
+        mDistanceFilterAdapter.setSelection(position);
+        mDistanceFilterSpinner.setSelection(position);
+    }
+
+    //    public void setSelectionSpinner(PlaceSearchResultActivity.DistanceFilterType distanceFilterType)
+    //    {
+    //        if (mDistanceFilterSpinner == null || distanceFilterType == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        int position;
+    //
+    //        switch (distanceFilterType)
+    //        {
+    //            case DISTANCE_Half_1KM:
+    //                position = 0;
+    //                break;
+    //
+    //            case DISTANCE_1KM:
+    //                position = 1;
+    //                break;
+    //
+    //            case DISTANCE_3KM:
+    //                position = 2;
+    //                break;
+    //
+    //            case DISTANCE_5KM:
+    //                position = 3;
+    //                break;
+    //
+    //            case DISTANCE_10KM:
+    //                position = 4;
+    //                break;
+    //
+    //            default:
+    //                position = 2; // default 3km
+    //                break;
+    //        }
+    //
+    //        mDistanceFilterAdapter.setSelection(position);
+    //        mDistanceFilterSpinner.setSelection(position);
+    //    }
+
     public void showEmptyLayout()
     {
         mEmptyLayout.setVisibility(View.VISIBLE);
@@ -849,4 +997,42 @@ public abstract class PlaceSearchResultLayout extends BaseLayout implements View
             ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onCategoryTabReselected(tab);
         }
     };
+
+    private class DistanceFilterAdapter extends ArrayAdapter<CharSequence>
+    {
+        private int mSelectedPosition;
+
+        public DistanceFilterAdapter(Context context, int resourceId, CharSequence[] list)
+        {
+            super(context, resourceId, list);
+        }
+
+        public void setSelection(int position)
+        {
+            mSelectedPosition = position;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent)
+        {
+            View view = super.getDropDownView(position, convertView, parent);
+
+            if (view != null)
+            {
+                TextView textView = (TextView) view;
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                textView.setSelected(mSelectedPosition == position);
+
+                if (mSelectedPosition == position)
+                {
+                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
+                } else
+                {
+                    textView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+                }
+            }
+
+            return view;
+        }
+    }
 }

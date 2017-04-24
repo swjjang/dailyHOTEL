@@ -893,6 +893,8 @@ public class AnalyticsManager
         public static final String HOME_BLOCK_SHOW = "home_block_show";
         public static final String MESSAGE_CLICK = "message_click";
         public static final String MESSAGE_CLOSE = "message_close";
+        // home category
+        public static final String HOME_SHORTCUT_CLICK = "home_shortcut_click";
 
         public static final String GOURMET_MENU_DETAIL_CLICK = "gourmet_menu_detail_click";
         public static final String GOURMET_MENU_BACK_CLICK = "gourmet_menu_back_click";
@@ -986,6 +988,10 @@ public class AnalyticsManager
         public static final String HOTEL = "hotel";
         public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
+        public static final String BOUTIQUE = "boutique";
+        public static final String PENSION = "pension";
+        public static final String RESORT = "resort";
+        public static final String NEAR_BY = "nearby";
 
         public static final String HOTEL_SCREEN = "HotelScreen";
         public static final String GOURMET_SCREEN = "GoumetScreen";
@@ -1068,10 +1074,14 @@ public class AnalyticsManager
         public static final String CREDIT_MANAGEMENT_CLICKED = "CreditManagementClicked";
         public static final String EVENT_CLICKED = "EventClicked";
         //
-        public static final String HOTEL_LIST = "HotelList";
-        public static final String HOTEL_MAP = "HotelMap";
-        public static final String GOURMET_LIST_ = "GourmetList";
-        public static final String GOURMET_MAP = "GourmetMap";
+        public static final String _HOTEL_LIST = "HotelList"; // Old Ver 로 앞에 _ 삽입
+        public static final String _HOTEL_MAP = "HotelMap"; // Old Ver 로 앞에 _ 삽입
+        public static final String _GOURMET_LIST_ = "GourmetList"; // Old Ver 로 앞에 _ 삽입
+        public static final String _GOURMET_MAP = "GourmetMap"; // Old Ver 로 앞에 _ 삽입
+        public static final String HOTEL_LIST = "hotel_list"; // 신규 버전
+        public static final String BOUTIQUE_LIST = "boutique_list"; // 신규 버전
+        public static final String PENSION_LIST = "pension_list"; // 신규 버전
+        public static final String RESORT_LIST = "resort_list"; // 신규 버전
         //
         public static final String TERMSOF_LOCATION = "TermsofLocation";
         public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
@@ -1144,6 +1154,10 @@ public class AnalyticsManager
         public static final String GOURMET_LIST = "gourmet_list";
         public static final String GOURMET_LOCATION_LIST = "gourmet_location_list";
         public static final String GOURMET_MAP_VIEW = "gourmet_map_view";
+        public static final String HOTEL_LOCATION_LIST = "hotel_location_list";
+        public static final String BOUTIQUE_LOCATION_LIST = "boutique_location_list";
+        public static final String PENSION_LOCATION_LIST = "pension_location_list";
+        public static final String RESORT_LOCATION_LIST = "resort_location_list";
 
         public static final String WISHLIST = "wishlist";
         public static final String RECENTVIEW = "recentview";

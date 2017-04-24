@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
@@ -306,8 +307,25 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mStayBookingDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
-        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
-        //            , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_LOCATION_LIST, null);
+        String label = "";
+        switch (mDailyCategoryType)
+        {
+            case STAY_HOTEL:
+                label = AnalyticsManager.Label.HOTEL_LOCATION_LIST;
+                break;
+            case STAY_BOUTIQUE:
+                label = AnalyticsManager.Label.BOUTIQUE_LOCATION_LIST;
+                break;
+            case STAY_PENSION:
+                label = AnalyticsManager.Label.PENSION_LOCATION_LIST;
+                break;
+            case STAY_RESORT:
+                label = AnalyticsManager.Label.RESORT_LOCATION_LIST;
+                break;
+        }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
+            , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
     }
 
     private void requestRegionList()

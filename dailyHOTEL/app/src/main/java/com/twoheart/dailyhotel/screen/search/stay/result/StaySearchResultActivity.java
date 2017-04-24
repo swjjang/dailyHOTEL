@@ -341,12 +341,19 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             if (mSearchType == SearchType.LOCATION)
             {
                 mPlaceSearchResultLayout.setToolbarTitle("");
+
+                mPlaceSearchResultLayout.setSpinnerVisible(true);
             } else
             {
                 mPlaceSearchResultLayout.setToolbarTitle(mStaySearchCuration.getKeyword().name);
+
+                mPlaceSearchResultLayout.setSpinnerVisible(false);
             }
 
+            mPlaceSearchResultLayout.setSelectionSpinner(mStaySearchCuration.getRadius());
+
             ((StaySearchResultLayout) mPlaceSearchResultLayout).setCalendarText(stayBookingDay);
+
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -537,7 +544,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                     mViewType = ViewType.MAP;
 
-                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._HOTEL_MAP, null);
                     break;
                 }
 
@@ -613,6 +620,19 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , AnalyticsManager.Action.SEARCH_RESULT_VIEW, AnalyticsManager.Label.CALL, null);
+        }
+
+        @Override
+        public void onItemSelectedSpinner(double radius)
+        {
+            if (mStaySearchCuration == null)
+            {
+                return;
+            }
+
+            mStaySearchCuration.setRadius(radius);
+
+            refreshCurrentFragment(true);
         }
     };
 

@@ -488,7 +488,7 @@ public class StayMainActivity extends PlaceMainActivity
 
                 mViewType = ViewType.MAP;
 
-                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_MAP, null);
+                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._HOTEL_MAP, null);
                 break;
             }
 
@@ -496,7 +496,7 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 mViewType = ViewType.LIST;
 
-                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label.HOTEL_LIST, null);
+                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_VIEW, AnalyticsManager.Label._HOTEL_LIST, null);
                 break;
             }
         }
@@ -513,6 +513,17 @@ public class StayMainActivity extends PlaceMainActivity
         refreshCurrentFragment(false);
 
         unLockUI();
+    }
+
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mStayListFragmentListener == null)
+        {
+            return;
+        }
+
+        mStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -585,11 +596,11 @@ public class StayMainActivity extends PlaceMainActivity
             switch (mViewType)
             {
                 case LIST:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_LIST, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
                     break;
 
                 case MAP:
-                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label.HOTEL_MAP, null);
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
                     break;
             }
         }
@@ -1067,7 +1078,12 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    mIsShowPreview = true;
+                    mPlaceMainLayout.setBlurVisibility(StayMainActivity.this, true);
+
+                    // 기존 데이터를 백업한다.
+                    mViewByLongPress = view;
+                    mPlaceViewItemByLongPress = placeViewItem;
+                    mListCountByLongPress = listCount;
 
                     Stay stay = placeViewItem.getItem();
                     Intent intent = StayPreviewActivity.newInstance(StayMainActivity.this, mStayCuration.getStayBookingDay(), stay);

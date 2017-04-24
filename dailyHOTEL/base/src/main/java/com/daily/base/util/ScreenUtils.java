@@ -4,7 +4,17 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 
 public class ScreenUtils
@@ -157,5 +167,54 @@ public class ScreenUtils
     public static String getResolutionImageUrl(Context context, String defaultImageUrl, String lowResolutionImageUrl)
     {
         return ScreenUtils.getScreenWidth(context) < 1440 ? lowResolutionImageUrl : defaultImageUrl;
+    }
+
+    public static Bitmap takeScreenShot(@NonNull Activity activity)
+    {
+        if(activity == null)
+        {
+            return null;
+        }
+
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_LOW);
+
+        Bitmap snapShot = view.getDrawingCache();
+
+        Rect frame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        int statusBarHeight = frame.top;
+
+        Matrix matrix = new Matrix();
+        matrix.setScale(0.4f, 0.4f);
+        Bitmap copySnapShot = Bitmap.createBitmap(snapShot, 0, statusBarHeight//
+            , ScreenUtils.getScreenWidth(activity), ScreenUtils.getScreenHeight(activity) - statusBarHeight, matrix, false);
+        view.setDrawingCacheEnabled(false);
+        view.destroyDrawingCache();
+        return copySnapShot;
+    }
+
+    public static Bitmap fastblur(Context context, Bitmap snapShotBitmap, float radius)
+    {
+        if(context == null || snapShotBitmap == null)
+        {
+            return null;
+        }
+
+        //        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+
+        final RenderScript renderScript = RenderScript.create(context);
+        final Allocation inputAllocation = Allocation.createFromBitmap(renderScript, snapShotBitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+        final Allocation outputAllocation = Allocation.createTyped(renderScript, inputAllocation.getType());
+        final ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        scriptIntrinsicBlur.setRadius(radius /* e.g. 3.f */);
+        scriptIntrinsicBlur.setInput(inputAllocation);
+        scriptIntrinsicBlur.forEach(outputAllocation);
+
+        outputAllocation.copyTo(snapShotBitmap);
+
+        return snapShotBitmap;
     }
 }
