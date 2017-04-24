@@ -515,6 +515,17 @@ public class StayMainActivity extends PlaceMainActivity
         unLockUI();
     }
 
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mStayListFragmentListener == null)
+        {
+            return;
+        }
+
+        mStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1067,9 +1078,12 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 case PlaceViewItem.TYPE_ENTRY:
                 {
-                    mIsShowPreview = true;
+                    mPlaceMainLayout.setBlurVisibility(StayMainActivity.this, true);
 
-                    mPlaceMainLayout.showBlurView(StayMainActivity.this);
+                    // 기존 데이터를 백업한다.
+                    mViewByLongPress = view;
+                    mPlaceViewItemByLongPress = placeViewItem;
+                    mListCountByLongPress = listCount;
 
                     Stay stay = placeViewItem.getItem();
                     Intent intent = StayPreviewActivity.newInstance(StayMainActivity.this, mStayCuration.getStayBookingDay(), stay);

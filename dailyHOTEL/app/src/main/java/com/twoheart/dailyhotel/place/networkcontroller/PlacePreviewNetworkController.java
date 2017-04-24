@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.preview;
+package com.twoheart.dailyhotel.place.networkcontroller;
 
 import android.content.Context;
 
@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class StayPreviewNetworkController extends BaseNetworkController
+public class PlacePreviewNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
@@ -30,7 +30,7 @@ public class StayPreviewNetworkController extends BaseNetworkController
         void onPlaceReviewScores(PlaceReviewScores placeReviewScores);
     }
 
-    public StayPreviewNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
+    public PlacePreviewNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);
     }
@@ -94,6 +94,14 @@ public class StayPreviewNetworkController extends BaseNetworkController
                         case 5:
                         {
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayDetailInformation(stayDetailParams);
+
+                            if (DailyTextUtils.isTextEmpty(baseDto.msg) == false)
+                            {
+                                mOnNetworkControllerListener.onErrorPopupMessage(msgCode, baseDto.msg);
+                            } else
+                            {
+                                throw new NullPointerException("response == null");
+                            }
                             break;
                         }
 
@@ -224,22 +232,22 @@ public class StayPreviewNetworkController extends BaseNetworkController
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(baseDto.data);
                     } else
                     {
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(new PlaceReviewScores());
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
                     }
                 } catch (Exception e)
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(new PlaceReviewScores());
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
                 }
             } else
             {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(new PlaceReviewScores());
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
             }
         }
 
         @Override
         public void onFailure(Call<BaseDto<PlaceReviewScores>> call, Throwable t)
         {
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(new PlaceReviewScores());
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
         }
     };
 }

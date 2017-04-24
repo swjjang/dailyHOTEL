@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
@@ -448,6 +449,17 @@ public class GourmetMainActivity extends PlaceMainActivity
         refreshCurrentFragment(false);
 
         unLockUI();
+    }
+
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mOnPlaceListFragmentListener == null)
+        {
+            return;
+        }
+
+        mOnPlaceListFragmentListener.onGourmetClick(view, placeViewItem, listCount);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -962,6 +974,38 @@ public class GourmetMainActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
                     }
+                    break;
+                }
+
+                default:
+                    unLockUI();
+                    break;
+            }
+        }
+
+        @Override
+        public void onGourmetLongClick(View view, PlaceViewItem placeViewItem, int listCount)
+        {
+            if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            switch (placeViewItem.mType)
+            {
+                case PlaceViewItem.TYPE_ENTRY:
+                {
+                    mPlaceMainLayout.setBlurVisibility(GourmetMainActivity.this, true);
+
+                    // 기존 데이터를 백업한다.
+                    mViewByLongPress = view;
+                    mPlaceViewItemByLongPress = placeViewItem;
+                    mListCountByLongPress = listCount;
+
+                    Gourmet gourmet = placeViewItem.getItem();
+                    Intent intent = GourmetPreviewActivity.newInstance(GourmetMainActivity.this, mGourmetCuration.getGourmetBookingDay(), gourmet);
+
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
                     break;
                 }
 
