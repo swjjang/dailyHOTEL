@@ -987,6 +987,7 @@ public class AnalyticsManager
     {
         public static final String HOTEL = "hotel";
         public static final String STAY = "stay";
+        public static final String GOURMET = "gourmet";
         public static final String BOUTIQUE = "boutique";
         public static final String PENSION = "pension";
         public static final String RESORT = "resort";
