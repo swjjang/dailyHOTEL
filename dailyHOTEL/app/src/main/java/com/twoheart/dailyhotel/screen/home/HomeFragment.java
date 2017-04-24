@@ -31,6 +31,7 @@ import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
@@ -49,6 +50,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -69,7 +74,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
     PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
     TodayDateTime mTodayDateTime;
-    int mNights = 1;
     boolean mIsAttach;
     boolean mDontReload;
     private boolean mIsLogin;
@@ -77,6 +81,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
     int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
     private DailyDeepLink mDailyDeepLink;
+
+    private View mViewByLongPress;
+    private HomePlace mHomePlaceByLongPress;
 
     @Nullable
     @Override
@@ -217,6 +224,20 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     mHomeLayout.setScrollTop();
 
                     forceRefreshing();
+                }
+                break;
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            startPlaceDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
                 break;
         }
@@ -902,6 +923,49 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
+        public void onWishListItemLongClick(View view, int position)
+        {
+            if (isFinishing() == true || view == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            HomePlace wishItem = null;
+
+            if (view != null)
+            {
+                wishItem = (HomePlace) view.getTag();
+            }
+
+            if (wishItem == null && mHomeLayout != null)
+            {
+                try
+                {
+                    mViewByLongPress = view;
+                    mHomePlaceByLongPress = wishItem;
+
+                    wishItem = mHomeLayout.getWishItem(position);
+
+                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                    StayBookingDay stayBookingDay = new StayBookingDay();
+                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                    stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                    Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, wishItem);
+
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                } catch (Exception e)
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                unLockUI();
+            }
+        }
+
+        @Override
         public void onRecentListItemClick(View view, int position)
         {
             HomePlace recentItem = null;
@@ -924,6 +988,44 @@ public class HomeFragment extends BaseMenuNavigationFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
                 Integer.toString(recentItem.index), null);
+        }
+
+        @Override
+        public void onRecentListItemLongClick(View view, int position)
+        {
+            HomePlace recentItem = null;
+
+            if (view != null)
+            {
+                recentItem = (HomePlace) view.getTag();
+            }
+
+            if (recentItem == null && mHomeLayout != null)
+            {
+                recentItem = mHomeLayout.getRecentItem(position);
+            }
+
+            if (recentItem != null)
+            {
+                try
+                {
+                    mViewByLongPress = view;
+                    mHomePlaceByLongPress = recentItem;
+
+                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                    StayBookingDay stayBookingDay = new StayBookingDay();
+                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                    stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                    Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
+
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                } catch (Exception e)
+                {
+                    unLockUI();
+                }
+            }
         }
 
         @Override

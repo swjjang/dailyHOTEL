@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.deprecated.DeviceResolutionUtil;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.Recommendation;
+import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 1. 11..
  */
 
-public class HomeLayout extends BaseLayout
+public class HomeLayout extends BaseBlurLayout
 {
     private static final int EVENT_VIEWPAGER_ANIMATION_DURATION = 5000;
     private static final int MESSAGE_ANIMATION_DURATION = 200;
@@ -124,7 +125,11 @@ public class HomeLayout extends BaseLayout
 
         void onWishListItemClick(View view, int position);
 
+        void onWishListItemLongClick(View view, int position);
+
         void onRecentListItemClick(View view, int position);
+
+        void onRecentListItemLongClick(View view, int position);
 
         void onTermsClick();
 
@@ -436,6 +441,12 @@ public class HomeLayout extends BaseLayout
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view, position);
             }
+
+            @Override
+            public void onItemLongClick(View view, int position)
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemLongClick(view, position);
+            }
         });
     }
 
@@ -464,6 +475,12 @@ public class HomeLayout extends BaseLayout
             public void onItemClick(View view, int position)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view, position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position)
+            {
+                ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view, position);
             }
         });
     }
