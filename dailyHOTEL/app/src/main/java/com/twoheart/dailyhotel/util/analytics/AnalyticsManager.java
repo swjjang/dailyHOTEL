@@ -1149,6 +1149,10 @@ public class AnalyticsManager
         public static final String GOURMET_LIST = "gourmet_list";
         public static final String GOURMET_LOCATION_LIST = "gourmet_location_list";
         public static final String GOURMET_MAP_VIEW = "gourmet_map_view";
+        public static final String HOTEL_LOCATION_LIST = "hotel_location_list";
+        public static final String BOUTIQUE_LOCATION_LIST = "boutique_location_list";
+        public static final String PENSION_LOCATION_LIST = "pension_location_list";
+        public static final String RESORT_LOCATION_LIST = "resort_location_list";
 
         public static final String WISHLIST = "wishlist";
         public static final String RECENTVIEW = "recentview";

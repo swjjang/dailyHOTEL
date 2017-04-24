@@ -1196,7 +1196,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                         AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                        categoryType.getAnalyticsLabel(), null);
+                        AnalyticsManager.Label.NEAR_BY, null);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -1214,9 +1214,26 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
                     , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
+                String label = "";
+                switch (categoryType)
+                {
+                    case STAY_HOTEL:
+                        label = AnalyticsManager.Label.HOTEL;
+                        break;
+                    case STAY_BOUTIQUE:
+                        label = AnalyticsManager.Label.BOUTIQUE;
+                        break;
+                    case STAY_PENSION:
+                        label = AnalyticsManager.Label.PENSION;
+                        break;
+                    case STAY_RESORT:
+                        label = AnalyticsManager.Label.RESORT;
+                        break;
+                }
+
                 AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                     AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_SHORTCUT_CLICK,//
-                    categoryType.getAnalyticsLabel(), null);
+                    label, null);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
