@@ -440,8 +440,25 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                 HomeCategoryRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
 
-            //            AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
-            //                AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED, getString(R.string.label_view_myaround_gourmet), null);
+            String label = "";
+            switch (mDailyCategoryType)
+            {
+                case STAY_HOTEL:
+                    label = AnalyticsManager.Label.HOTEL_LOCATION_LIST;
+                    break;
+                case STAY_BOUTIQUE:
+                    label = AnalyticsManager.Label.BOUTIQUE_LOCATION_LIST;
+                    break;
+                case STAY_PENSION:
+                    label = AnalyticsManager.Label.PENSION_LOCATION_LIST;
+                    break;
+                case STAY_RESORT:
+                    label = AnalyticsManager.Label.RESORT_LOCATION_LIST;
+                    break;
+            }
+
+            AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.STAY_NEARBY_SEARCH, label, null);
         }
     };
 

@@ -604,34 +604,55 @@ public class StayCategoryListActivity extends PlaceMainActivity
             Intent intent = SearchActivity.newInstance(StayCategoryListActivity.this, PlaceType.HOTEL, mStayCuration.getStayBookingDay());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
-            String label = "";
-            switch (mDailyCategoryType)
-            {
-                case STAY_HOTEL:
-                    label = AnalyticsManager.Label.HOTEL_LIST;
-                    break;
-                case STAY_BOUTIQUE:
-                    label = AnalyticsManager.Label.BOUTIQUE_LIST;
-                    break;
-                case STAY_PENSION:
-                    label = AnalyticsManager.Label.PENSION_LIST;
-                    break;
-                case STAY_RESORT:
-                    label = AnalyticsManager.Label.RESORT_LIST;
-                    break;
-            }
-
             switch (mViewType)
             {
                 case LIST:
-                                        AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                                            , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
+                {
+                    String label = "";
+                    switch (mDailyCategoryType)
+                    {
+                        case STAY_HOTEL:
+                            label = AnalyticsManager.Label.HOTEL_LIST;
+                            break;
+                        case STAY_BOUTIQUE:
+                            label = AnalyticsManager.Label.BOUTIQUE_LIST;
+                            break;
+                        case STAY_PENSION:
+                            label = AnalyticsManager.Label.PENSION_LIST;
+                            break;
+                        case STAY_RESORT:
+                            label = AnalyticsManager.Label.RESORT_LIST;
+                            break;
+                    }
+
+                    AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
                     break;
+                }
 
                 case MAP:
-                    //                    AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                    //                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_MAP_VIEW, null);
+                {
+                    String label = "";
+                    switch (mDailyCategoryType)
+                    {
+                        case STAY_HOTEL:
+                            label = AnalyticsManager.Label.HOTEL_LIST_MAP;
+                            break;
+                        case STAY_BOUTIQUE:
+                            label = AnalyticsManager.Label.BOUTIQUE_LIST_MAP;
+                            break;
+                        case STAY_PENSION:
+                            label = AnalyticsManager.Label.PENSION_LIST_MAP;
+                            break;
+                        case STAY_RESORT:
+                            label = AnalyticsManager.Label.RESORT_LIST_MAP;
+                            break;
+                    }
+
+                    AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
                     break;
+                }
             }
         }
 

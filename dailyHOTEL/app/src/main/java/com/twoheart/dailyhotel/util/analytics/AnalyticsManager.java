@@ -895,6 +895,7 @@ public class AnalyticsManager
         public static final String MESSAGE_CLOSE = "message_close";
         // home category
         public static final String HOME_SHORTCUT_CLICK = "home_shortcut_click";
+        public static final String STAY_NEARBY_SEARCH = "stay_nearby_search";
 
         public static final String GOURMET_MENU_DETAIL_CLICK = "gourmet_menu_detail_click";
         public static final String GOURMET_MENU_BACK_CLICK = "gourmet_menu_back_click";
@@ -1082,6 +1083,10 @@ public class AnalyticsManager
         public static final String BOUTIQUE_LIST = "boutique_list"; // 신규 버전
         public static final String PENSION_LIST = "pension_list"; // 신규 버전
         public static final String RESORT_LIST = "resort_list"; // 신규 버전
+        public static final String HOTEL_LIST_MAP = "hotel_list_map"; // 신규 버전
+        public static final String BOUTIQUE_LIST_MAP = "boutique_list_map"; // 신규 버전
+        public static final String PENSION_LIST_MAP = "pension_list_map"; // 신규 버전
+        public static final String RESORT_LIST_MAP = "resort_list_map"; // 신규 버전
         //
         public static final String TERMSOF_LOCATION = "TermsofLocation";
         public static final String AGREE_AND_SEARCH = "AgreeAndSearch";
