@@ -323,6 +323,10 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             mRoomTypeListAdapter.addAll(stayProductList, nights);
             mRoomTypeListAdapter.setSelected(0);
             mRoomTypeListAdapter.notifyDataSetChanged();
+
+            ViewGroup.LayoutParams layoutParams = mProductTypeRecyclerView.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            mProductTypeRecyclerView.setLayoutParams(layoutParams);
         }
 
         mProductTypeRecyclerView.setAdapter(mRoomTypeListAdapter);
