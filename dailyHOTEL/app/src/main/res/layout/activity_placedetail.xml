@@ -160,7 +160,7 @@
 
         <ImageView
             android:id="@+id/trueViewView"
-            android:layout_width="@dimen/toolbar_height"
+            android:layout_width="30dp"
             android:layout_height="@dimen/toolbar_height"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
@@ -168,15 +168,15 @@
             android:scaleType="center"
             android:tint="@color/white"
             android:visibility="gone"
-            app:srcCompat="@drawable/navibar_ic_s_region"/>
+            app:srcCompat="@drawable/navibar_ic_treuvr"/>
 
         <ImageView
             android:id="@+id/shareView"
-            android:layout_width="@dimen/toolbar_height"
+            android:layout_width="30dp"
             android:layout_height="@dimen/toolbar_height"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="15dp"
             android:scaleType="center"
             android:tint="@color/white"
