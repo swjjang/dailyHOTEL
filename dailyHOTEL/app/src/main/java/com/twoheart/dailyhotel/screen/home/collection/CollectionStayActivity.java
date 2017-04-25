@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -255,6 +256,28 @@ public class CollectionStayActivity extends CollectionBaseActivity
             AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(//
                 AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
                 Integer.toString(recommendationStay.index), null);
+        }
+
+        @Override
+        public void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count)
+        {
+            if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+            {
+                return;
+            }
+
+            mCollectionBaseLayout.setBlurVisibility(CollectionStayActivity.this, true);
+
+            RecommendationStay recommendationStay = placeViewItem.getItem();
+
+            // 기존 데이터를 백업한다.
+            mViewByLongPress = view;
+            mPlaceViewItemByLongPress = placeViewItem;
+            mListCountByLongPress = count;
+
+            Intent intent = StayPreviewActivity.newInstance(CollectionStayActivity.this, (StayBookingDay) mPlaceBookingDay, recommendationStay);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
 
         @Override

@@ -17,13 +17,13 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
-import com.twoheart.dailyhotel.place.base.BaseLayout;
+import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
-public abstract class CollectionBaseLayout extends BaseLayout
+public abstract class CollectionBaseLayout extends BaseBlurLayout
 {
     RecyclerView mRecyclerView;
     PlaceListAdapter mPlaceListAdapter;
@@ -46,6 +46,8 @@ public abstract class CollectionBaseLayout extends BaseLayout
         void onCalendarClick();
 
         void onPlaceClick(View view, PlaceViewItem placeViewItem, int count);
+
+        void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count);
     }
 
     public CollectionBaseLayout(Context context, OnBaseEventListener listener)
@@ -109,6 +111,8 @@ public abstract class CollectionBaseLayout extends BaseLayout
         {
             mPlaceListAdapter = getPlaceListAdapter(mOnItemClickListener);
         }
+
+        mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
 
         mRecyclerView.setAdapter(mPlaceListAdapter);
 
@@ -376,6 +380,28 @@ public abstract class CollectionBaseLayout extends BaseLayout
             {
                 ((OnEventListener) mOnEventListener).onPlaceClick(view, placeViewItem, mPlaceListAdapter.getItemCount());
             }
+        }
+    };
+
+    private View.OnLongClickListener mOnItemLongClickListener = new View.OnLongClickListener()
+    {
+        @Override
+        public boolean onLongClick(View view)
+        {
+            int position = mRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                return false;
+            }
+
+            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
+
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+            {
+                ((OnEventListener) mOnEventListener).onPlaceLongClick(view, placeViewItem, mPlaceListAdapter.getItemCount());
+            }
+
+            return true;
         }
     };
 

@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -21,6 +22,7 @@ import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -28,6 +30,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -61,6 +67,29 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                }
+                break;
         }
     }
 
@@ -197,6 +226,27 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }
 
         @Override
+        public void onListItemLongClick(View view, int position)
+        {
+            if (position < 0 || mRecentPlaceList.size() - 1 < position)
+            {
+                return;
+            }
+
+            mListLayout.setBlurVisibility(mBaseActivity, true);
+
+            PlaceViewItem placeViewItem = mListLayout.getItem(position);
+            Stay stay = placeViewItem.getItem();
+
+            mViewByLongPress = view;
+            mPositionByLongPress = position;
+
+            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay);
+
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+        }
+
+        @Override
         public void onListItemDeleteClick(int position)
         {
             if (position < 0 || mRecentPlaceList.size() - 1 < position)
@@ -204,7 +254,6 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 ExLog.d("position Error Stay");
                 return;
             }
-
 
             PlaceViewItem placeViewItem = mListLayout.removeItem(position);
             Place place = placeViewItem.getItem();

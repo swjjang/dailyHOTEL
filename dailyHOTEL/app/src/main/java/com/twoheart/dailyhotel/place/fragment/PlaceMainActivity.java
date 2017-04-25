@@ -17,6 +17,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
+import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
@@ -27,12 +28,20 @@ import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+
 public abstract class PlaceMainActivity extends BaseActivity
 {
     protected boolean mDontReloadAtOnResume, mIsDeepLink;
     protected ViewType mViewType = ViewType.LIST;
     protected TodayDateTime mTodayDateTime;
-    protected boolean mIsShowPreview;
+
+    protected PlaceViewItem mPlaceViewItemByLongPress;
+    protected int mListCountByLongPress;
+    protected View mViewByLongPress;
 
     protected PlaceMainLayout mPlaceMainLayout;
     protected PlaceMainNetworkController mPlaceMainNetworkController;
@@ -57,6 +66,8 @@ public abstract class PlaceMainActivity extends BaseActivity
 
     protected abstract void changeViewType();
 
+    protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -80,8 +91,6 @@ public abstract class PlaceMainActivity extends BaseActivity
             return;
         }
 
-        mIsShowPreview = false;
-
         if (mDontReloadAtOnResume == true)
         {
             mDontReloadAtOnResume = false;
@@ -91,17 +100,23 @@ public abstract class PlaceMainActivity extends BaseActivity
             mPlaceMainNetworkController.requestDateTime();
         }
 
-        int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
+        if (mPlaceMainLayout.getBlurVisibility() == true)
+        {
+            mPlaceMainLayout.setBlurVisibility(this, false);
+        } else
+        {
+            int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
 
-        if (count == 2)
-        {
-            showPreviewGuide();
-        } else if (count > 2)
-        {
-            return;
+            if (count == 2)
+            {
+                showPreviewGuide();
+            } else if (count > 2)
+            {
+                return;
+            }
+
+            DailyPreference.getInstance(this).setCountPreviewGuide(count);
         }
-
-        DailyPreference.getInstance(this).setCountPreviewGuide(count);
     }
 
     @Override
@@ -111,7 +126,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         mDontReloadAtOnResume = true;
 
-        if(mIsShowPreview == false)
+        if (mPlaceMainLayout.getBlurVisibility() == false)
         {
             new Handler().postDelayed(new Runnable()
             {
@@ -287,6 +302,20 @@ public abstract class PlaceMainActivity extends BaseActivity
                 }
                 break;
             }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                }
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);

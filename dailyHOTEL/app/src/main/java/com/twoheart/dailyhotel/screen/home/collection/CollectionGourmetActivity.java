@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -228,6 +229,28 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(//
                 AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
                 Integer.toString(recommendationGourmet.index), null);
+        }
+
+        @Override
+        public void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count)
+        {
+            if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+            {
+                return;
+            }
+
+            mCollectionBaseLayout.setBlurVisibility(CollectionGourmetActivity.this, true);
+
+            RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
+
+            // 기존 데이터를 백업한다.
+            mViewByLongPress = view;
+            mPlaceViewItemByLongPress = placeViewItem;
+            mListCountByLongPress = count;
+
+            Intent intent = GourmetPreviewActivity.newInstance(CollectionGourmetActivity.this, (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet);
+
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
 
         @Override

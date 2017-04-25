@@ -188,7 +188,7 @@ public class ScreenUtils
         int statusBarHeight = frame.top;
 
         Matrix matrix = new Matrix();
-        matrix.setScale(0.5f, 0.5f);
+        matrix.setScale(0.4f, 0.4f);
         Bitmap copySnapShot = Bitmap.createBitmap(snapShot, 0, statusBarHeight//
             , ScreenUtils.getScreenWidth(activity), ScreenUtils.getScreenHeight(activity) - statusBarHeight, matrix, false);
         view.setDrawingCacheEnabled(false);

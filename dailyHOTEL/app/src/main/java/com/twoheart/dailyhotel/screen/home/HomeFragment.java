@@ -37,10 +37,12 @@ import com.twoheart.dailyhotel.screen.gourmet.detail.GourmetDetailActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryListActivity;
 import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
@@ -61,6 +63,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -81,7 +87,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
     PlaceType mPlaceType = PlaceType.HOTEL;
     private HomeNetworkController mNetworkController;
     TodayDateTime mTodayDateTime;
-    int mNights = 1;
     boolean mIsAttach;
     boolean mDontReload;
     private boolean mIsLogin;
@@ -89,6 +94,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
     int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
     private DailyDeepLink mDailyDeepLink;
+
+    private View mViewByLongPress;
+    private HomePlace mHomePlaceByLongPress;
 
     @Nullable
     @Override
@@ -145,9 +153,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         super.onResume();
 
-        refreshList(true);
+        if (mHomeLayout != null && mHomeLayout.getBlurVisibility() == true)
+        {
+            mHomeLayout.setBlurVisibility(mBaseActivity, false);
+        } else
+        {
+            refreshList(true);
 
-        sendHomeScreenAnalytics();
+            sendHomeScreenAnalytics();
+        }
     }
 
     @Override
@@ -315,6 +329,22 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     mHomeLayout.setScrollTop();
 
                     forceRefreshing();
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    Observable.create(new ObservableOnSubscribe<Object>()
+                    {
+                        @Override
+                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        {
+                            startPlaceDetail(mViewByLongPress, mHomePlaceByLongPress, mTodayDateTime);
+                        }
+                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                 }
                 break;
             }
@@ -1103,6 +1133,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onWishListItemClick(View view, int position)
         {
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             HomePlace wishItem = null;
 
             if (view != null)
@@ -1110,7 +1145,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 wishItem = (HomePlace) view.getTag();
             }
 
-            if (wishItem == null && mHomeLayout != null)
+            if (wishItem == null)
             {
                 wishItem = mHomeLayout.getWishItem(position);
             }
@@ -1126,8 +1161,79 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
+        public void onWishListItemLongClick(View view, int position)
+        {
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            HomePlace wishItem = null;
+
+            if (view != null)
+            {
+                wishItem = (HomePlace) view.getTag();
+            }
+
+            if (wishItem == null)
+            {
+                wishItem = mHomeLayout.getWishItem(position);
+            }
+
+            if (wishItem != null)
+            {
+                try
+                {
+                    mViewByLongPress = view;
+                    mHomePlaceByLongPress = wishItem;
+
+                    wishItem = mHomeLayout.getWishItem(position);
+
+                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                    switch (wishItem.placeType)
+                    {
+                        case HOTEL:
+                        {
+                            StayBookingDay stayBookingDay = new StayBookingDay();
+                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, wishItem);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+
+                        case FNB:
+                        {
+                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, wishItem);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                unLockUI();
+            }
+        }
+
+        @Override
         public void onRecentListItemClick(View view, int position)
         {
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             HomePlace recentItem = null;
 
             if (view != null)
@@ -1135,7 +1241,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 recentItem = (HomePlace) view.getTag();
             }
 
-            if (recentItem == null && mHomeLayout != null)
+            if (recentItem == null)
             {
                 recentItem = mHomeLayout.getRecentItem(position);
             }
@@ -1148,6 +1254,67 @@ public class HomeFragment extends BaseMenuNavigationFragment
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_RECENTVIEW_CLICK,//
                 Integer.toString(recentItem.index), null);
+        }
+
+        @Override
+        public void onRecentListItemLongClick(View view, int position)
+        {
+            if (isFinishing() == true || view == null || mHomeLayout == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            HomePlace recentItem = null;
+
+            if (view != null)
+            {
+                recentItem = (HomePlace) view.getTag();
+            }
+
+            if (recentItem == null)
+            {
+                recentItem = mHomeLayout.getRecentItem(position);
+            }
+
+            if (recentItem != null)
+            {
+                try
+                {
+                    mViewByLongPress = view;
+                    mHomePlaceByLongPress = recentItem;
+
+                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                    switch (recentItem.placeType)
+                    {
+                        case HOTEL:
+                        {
+                            StayBookingDay stayBookingDay = new StayBookingDay();
+                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentItem);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+
+                        case FNB:
+                        {
+                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentItem);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+                    }
+                } catch (Exception e)
+                {
+                    unLockUI();
+                }
+            }
         }
 
         @Override

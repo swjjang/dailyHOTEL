@@ -8,6 +8,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
+import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,8 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public interface ItemClickListener
     {
         void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
     }
 
     public HomeCarouselAdapter(Context context, ArrayList<HomePlace> list, ItemClickListener listener)
@@ -182,6 +185,26 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if (mItemClickListener != null)
                 {
                     mItemClickListener.onItemClick(v, position);
+                }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener()
+        {
+            @Override
+            public boolean onLongClick(View v)
+            {
+                if (mItemClickListener == null)
+                {
+                    return false;
+                } else
+                {
+                    Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                    vibrator.vibrate(70);
+
+                    mItemClickListener.onItemLongClick(v, position);
+
+                    return true;
                 }
             }
         });

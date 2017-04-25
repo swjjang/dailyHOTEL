@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.hotel.preview;
+package com.twoheart.dailyhotel.screen.gourmet.preview;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,20 +6,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.StayDetail;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.model.Gourmet;
+import com.twoheart.dailyhotel.model.GourmetDetail;
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
+import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.HomePlace;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
-import com.twoheart.dailyhotel.network.model.RecommendationStay;
-import com.twoheart.dailyhotel.network.model.StayDetailParams;
-import com.twoheart.dailyhotel.network.model.StayProduct;
+import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -34,36 +33,37 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class StayPreviewActivity extends BaseActivity
+public class GourmetPreviewActivity extends BaseActivity
 {
     private static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
-    protected StayPreviewLayout mPreviewLayout;
-    protected StayPreviewNetworkController mNetworkController;
+    protected GourmetPreviewLayout mPreviewLayout;
+    protected GourmetPreviewNetworkController mNetworkController;
 
-    private StayBookingDay mPlaceBookingDay;
-    private StayDetail mPlaceDetail;
+    private GourmetBookingDay mPlaceBookingDay;
+    private GourmetDetail mPlaceDetail;
     private PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
 
     /**
-     * 리스트에서 호출, 검색 결과에서 호출
+     * 리스트에서 호출
      *
      * @param context
-     * @param stayBookingDay
-     * @param stay
+     * @param gourmetBookingDay
+     * @param gourmet
      * @return
      */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, Stay stay)
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, Gourmet gourmet)
     {
-        Intent intent = new Intent(context, StayPreviewActivity.class);
+        Intent intent = new Intent(context, GourmetPreviewActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stay.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
 
         return intent;
     }
@@ -72,22 +72,23 @@ public class StayPreviewActivity extends BaseActivity
      * 홈에서 호출
      *
      * @param context
-     * @param stayBookingDay
+     * @param gourmetBookingDay
      * @param homePlace
      * @return
      */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, HomePlace homePlace)
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, HomePlace homePlace)
     {
-        if (stayBookingDay == null || homePlace == null)
+        if (gourmetBookingDay == null || homePlace == null)
         {
             return null;
         }
 
-        Intent intent = new Intent(context, StayPreviewActivity.class);
+        Intent intent = new Intent(context, GourmetPreviewActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, homePlace.index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, homePlace.title);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, homePlace.details.category);
 
         if (homePlace.prices != null && homePlace.prices.discountPrice > 0)
         {
@@ -97,8 +98,6 @@ public class StayPreviewActivity extends BaseActivity
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, SKIP_CHECK_DISCOUNT_PRICE_VALUE);
         }
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, homePlace.details.stayGrade.name());
-
         return intent;
     }
 
@@ -106,22 +105,24 @@ public class StayPreviewActivity extends BaseActivity
      * 추천 목록에서 호출
      *
      * @param context
-     * @param stayBookingDay
-     * @param recommendationStay
+     * @param gourmetBookingDay
+     * @param recommendationGourmet
      * @return
      */
-    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, RecommendationStay recommendationStay)
+    public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, RecommendationGourmet recommendationGourmet)
     {
-        Intent intent = new Intent(context, StayPreviewActivity.class);
+        Intent intent = new Intent(context, GourmetPreviewActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationStay.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationStay.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationStay.discount);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, recommendationStay.grade);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, recommendationGourmet.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationGourmet.name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, recommendationGourmet.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, recommendationGourmet.isSoldOut);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationGourmet.discount);
 
         return intent;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -136,19 +137,19 @@ public class StayPreviewActivity extends BaseActivity
             return;
         }
 
-        mPreviewLayout = new StayPreviewLayout(this, mOnEventListener);
-        mNetworkController = new StayPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
+        mPreviewLayout = new GourmetPreviewLayout(this, mOnEventListener);
+        mNetworkController = new GourmetPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
 
         mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
 
         int placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
-        mPlaceDetail = new StayDetail(placeIndex, -1, "N", -1, false);
+        mPlaceDetail = new GourmetDetail(placeIndex, -1, "N", -1, false);
 
         mViewPrice = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
         String placeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACENAME);
-        Stay.Grade grade = Stay.Grade.valueOf(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_GRADE));
+        String category = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
 
-        initLayout(placeName, grade);
+        initLayout(placeName, category);
 
         onRefresh(placeIndex);
     }
@@ -181,11 +182,11 @@ public class StayPreviewActivity extends BaseActivity
 
     }
 
-    private void initLayout(String placeName, Stay.Grade grade)
+    private void initLayout(String placeName, String category)
     {
         setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
 
-        mPreviewLayout.setGrade(grade);
+        mPreviewLayout.setGrade(category);
         mPreviewLayout.setPlaceName(placeName);
 
         mPreviewLayout.showPopAnimation();
@@ -198,53 +199,55 @@ public class StayPreviewActivity extends BaseActivity
 
         try
         {
-            mNetworkController.requestStayDetailInformation(placeIndex, mPlaceBookingDay.getCheckInDay("yyyy-MM-dd"), mPlaceBookingDay.getNights());
-            mNetworkController.requestPlaceReviewScores(PlaceType.HOTEL, placeIndex);
+            mNetworkController.requestGourmetDetailInformation(placeIndex, mPlaceBookingDay.getVisitDay("yyyy-MM-dd"));
+            mNetworkController.requestPlaceReviewScores(PlaceType.FNB, placeIndex);
         } catch (Exception e)
         {
             finish();
         }
     }
 
-    void updatePreviewInformationLayout(StayBookingDay stayBookingDay, StayDetail stayDetail, int reviewCount)
+    void updatePreviewInformationLayout(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int reviewCount)
     {
         unLockUI();
 
-        if (stayBookingDay == null || stayDetail == null)
+        if (gourmetBookingDay == null || gourmetDetail == null)
         {
             return;
         }
 
-        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
         if (mPreviewLayout != null)
         {
-            List<StayProduct> stayProductList = stayDetail.getProductList();
+            mPreviewLayout.setSubGrade(gourmetDetailParams.categorySub);
+
+            List<GourmetProduct> stayProductList = gourmetDetail.getProductList();
 
             // SOLD OUT
             if (stayProductList == null || stayProductList.size() == 0)
             {
-                mPreviewLayout.updateLayout(stayBookingDay, stayDetail, reviewCount, changedProductPrice(stayDetail, mViewPrice), true);
+                mPreviewLayout.updateLayout(gourmetBookingDay, gourmetDetail, reviewCount, changedProductPrice(gourmetDetail, mViewPrice), true);
             } else
             {
-                mPreviewLayout.updateLayout(stayBookingDay, stayDetail, reviewCount, changedProductPrice(stayDetail, mViewPrice), false);
+                mPreviewLayout.updateLayout(gourmetBookingDay, gourmetDetail, reviewCount, changedProductPrice(gourmetDetail, mViewPrice), false);
             }
-
-            HashMap<String, String> params = new HashMap();
-            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
-
-            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.PEEK_POP, null, params);
         }
+
+        HashMap<String, String> params = new HashMap();
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+        params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
+
+        AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.PEEK_POP, null, params);
     }
 
-    private boolean changedProductPrice(StayDetail stayDetail, int listViewPrice)
+    private boolean changedProductPrice(GourmetDetail gourmetDetail, int listViewPrice)
     {
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
-        List<StayProduct> stayProductList = stayDetail.getProductList();
-        StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
+        List<GourmetProduct> gourmetProductList = gourmetDetail.getProductList();
+        GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParmas();
 
-        if (stayProductList == null || stayProductList.size() == 0)
+        if (gourmetProductList == null || gourmetProductList.size() == 0)
         {
             return true;
         } else
@@ -257,9 +260,9 @@ public class StayPreviewActivity extends BaseActivity
                 hasPrice = true;
             } else
             {
-                for (StayProduct stayProduct : stayProductList)
+                for (GourmetProduct gourmetProduct : gourmetProductList)
                 {
-                    if (listViewPrice == stayProduct.averageDiscount)
+                    if (listViewPrice == gourmetProduct.discountPrice)
                     {
                         hasPrice = true;
                         break;
@@ -275,7 +278,7 @@ public class StayPreviewActivity extends BaseActivity
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    StayPreviewLayout.OnEventListener mOnEventListener = new StayPreviewLayout.OnEventListener()
+    GourmetPreviewLayout.OnEventListener mOnEventListener = new GourmetPreviewLayout.OnEventListener()
     {
         @Override
         public void onWishClick()
@@ -289,24 +292,24 @@ public class StayPreviewActivity extends BaseActivity
 
             if (DailyHotel.isLogin() == true)
             {
-                if (mPlaceDetail.getStayDetailParams().myWish == true)
+                if (mPlaceDetail.getGourmetDetailParmas().myWish == true)
                 {
-                    mNetworkController.requestRemoveWishList(PlaceType.HOTEL, mPlaceDetail.index);
+                    mNetworkController.requestRemoveWishList(PlaceType.FNB, mPlaceDetail.index);
 
-                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.PEEK_POP_DELETE_WISHLIST, null, null);
                 } else
                 {
-                    mNetworkController.requestAddWishList(PlaceType.HOTEL, mPlaceDetail.index);
+                    mNetworkController.requestAddWishList(PlaceType.FNB, mPlaceDetail.index);
 
-                    AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                    AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                         , AnalyticsManager.Action.PEEK_POP_ADD_WISHLIST, null, null);
                 }
             } else
             {
-                Intent intent = LoginActivity.newInstance(StayPreviewActivity.this);
+                Intent intent = LoginActivity.newInstance(GourmetPreviewActivity.this);
                 startActivity(intent);
-                StayPreviewActivity.this.finish();
+                GourmetPreviewActivity.this.finish();
             }
         }
 
@@ -323,7 +326,7 @@ public class StayPreviewActivity extends BaseActivity
                 // 카카오톡 패키지 설치 여부
                 getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-                String name = DailyUserPreference.getInstance(StayPreviewActivity.this).getName();
+                String name = DailyUserPreference.getInstance(GourmetPreviewActivity.this).getName();
 
                 if (DailyTextUtils.isTextEmpty(name) == true)
                 {
@@ -333,27 +336,25 @@ public class StayPreviewActivity extends BaseActivity
                     name += "님이";
                 }
 
-                StayDetail stayDetail = (StayDetail) mPlaceDetail;
-
-                if (stayDetail == null)
+                if (mPlaceDetail == null)
                 {
                     return;
                 }
 
-                StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
-                if (stayDetailParams == null)
+                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
+                if (gourmetDetailParams == null)
                 {
                     return;
                 }
 
-                KakaoLinkManager.newInstance(StayPreviewActivity.this).shareStay(name//
-                    , stayDetailParams.name//
-                    , stayDetailParams.address//
-                    , stayDetail.index//
-                    , stayDetailParams.getImageList().get(0).getImageUrl()//
-                    , (StayBookingDay) mPlaceBookingDay);
+                KakaoLinkManager.newInstance(GourmetPreviewActivity.this).shareGourmet(name//
+                    , gourmetDetailParams.name//
+                    , gourmetDetailParams.address//
+                    , mPlaceDetail.index//
+                    , gourmetDetailParams.getImageList().get(0).getImageUrl()//
+                    , mPlaceBookingDay);
 
-                StayPreviewActivity.this.finish();
+                GourmetPreviewActivity.this.finish();
             } catch (Exception e)
             {
                 showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -363,19 +364,19 @@ public class StayPreviewActivity extends BaseActivity
                         @Override
                         public void onClick(View v)
                         {
-                            Util.installPackage(StayPreviewActivity.this, "com.kakao.talk");
+                            Util.installPackage(GourmetPreviewActivity.this, "com.kakao.talk");
                         }
                     }, null, null, new DialogInterface.OnDismissListener()
                     {
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
-                            StayPreviewActivity.this.finish();
+                            GourmetPreviewActivity.this.finish();
                         }
                     }, true);
             }
 
-            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_SHARE_KAKAO, null, null);
         }
 
@@ -392,46 +393,47 @@ public class StayPreviewActivity extends BaseActivity
                 return;
             }
 
-            StayDetailParams stayDetailParams = mPlaceDetail.getStayDetailParams();
+            GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
 
-            if (stayDetailParams == null)
+            if (gourmetDetailParams == null)
             {
                 return;
             }
 
-            Util.shareNaverMap(StayPreviewActivity.this, mPlaceDetail.getStayDetailParams().name//
-                , Double.toString(stayDetailParams.latitude), Double.toString(stayDetailParams.longitude));
+            Util.shareNaverMap(GourmetPreviewActivity.this, gourmetDetailParams.name//
+                , Double.toString(gourmetDetailParams.latitude), Double.toString(gourmetDetailParams.longitude));
 
-            StayPreviewActivity.this.finish();
+            GourmetPreviewActivity.this.finish();
 
-            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_NAVER_MAP, null, null);
         }
 
         @Override
         public void onPlaceDetailClick()
         {
-            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_RESERVATION, null, null);
 
             setResult(RESULT_OK);
-            StayPreviewActivity.this.finish();
+            GourmetPreviewActivity.this.finish();
         }
 
         @Override
         public void finish()
         {
-            AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.CLOSE, null);
 
-            StayPreviewActivity.this.finish();
+            GourmetPreviewActivity.this.finish();
         }
     };
 
-    private StayPreviewNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayPreviewNetworkController.OnNetworkControllerListener()
+
+    private GourmetPreviewNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetPreviewNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayDetailInformation(StayDetailParams stayDetailParams)
+        public void onGourmetDetailInformation(GourmetDetailParams gourmetDetailParams)
         {
             if (mPlaceDetail == null)
             {
@@ -440,7 +442,7 @@ public class StayPreviewActivity extends BaseActivity
 
             try
             {
-                mPlaceDetail.setStayDetailParams(stayDetailParams);
+                mPlaceDetail.setGourmetDetailParmas(gourmetDetailParams);
 
                 if (mPlaceReviewScores != null)
                 {
@@ -448,7 +450,7 @@ public class StayPreviewActivity extends BaseActivity
                 }
             } catch (Exception e)
             {
-                DailyToast.showToast(StayPreviewActivity.this, R.string.act_base_network_connect, Toast.LENGTH_LONG);
+                DailyToast.showToast(GourmetPreviewActivity.this, R.string.act_base_network_connect, DailyToast.LENGTH_LONG);
                 finish();
             }
         }
@@ -462,7 +464,7 @@ public class StayPreviewActivity extends BaseActivity
                 mPreviewLayout.addWish();
             } else
             {
-                DailyToast.showToast(StayPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
+                DailyToast.showToast(GourmetPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
             }
         }
 
@@ -475,7 +477,7 @@ public class StayPreviewActivity extends BaseActivity
                 mPreviewLayout.removeWish();
             } else
             {
-                DailyToast.showToast(StayPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
+                DailyToast.showToast(GourmetPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
             }
         }
 
@@ -489,42 +491,43 @@ public class StayPreviewActivity extends BaseActivity
 
             mPlaceReviewScores = placeReviewScores;
 
-            if (mPlaceDetail.getStayDetailParams() != null)
+            if (mPlaceDetail.getGourmetDetailParmas() != null)
             {
                 updatePreviewInformationLayout(mPlaceBookingDay, mPlaceDetail, mPlaceReviewScores.reviewScoreTotalCount);
             }
         }
 
+
         @Override
         public void onError(Call call, Throwable e, boolean onlyReport)
         {
-            StayPreviewActivity.this.onError(call, e, onlyReport);
+            GourmetPreviewActivity.this.onError(call, e, onlyReport);
         }
 
         @Override
         public void onError(Throwable e)
         {
-            StayPreviewActivity.this.onError(e);
+            GourmetPreviewActivity.this.onError(e);
         }
 
         @Override
         public void onErrorPopupMessage(final int msgCode, final String message)
         {
-            StayPreviewActivity.this.onErrorToastMessage(message);
+            GourmetPreviewActivity.this.onErrorToastMessage(message);
             finish();
         }
 
         @Override
         public void onErrorToastMessage(String message)
         {
-            StayPreviewActivity.this.onErrorToastMessage(message);
+            GourmetPreviewActivity.this.onErrorToastMessage(message);
             finish();
         }
 
         @Override
         public void onErrorResponse(final Call call, final Response response)
         {
-            StayPreviewActivity.this.onErrorResponse(call, response);
+            GourmetPreviewActivity.this.onErrorResponse(call, response);
             finish();
         }
     };
