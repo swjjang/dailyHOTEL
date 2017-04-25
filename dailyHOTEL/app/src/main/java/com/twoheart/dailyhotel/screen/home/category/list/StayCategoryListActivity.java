@@ -43,6 +43,8 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -567,6 +569,17 @@ public class StayCategoryListActivity extends PlaceMainActivity
         unLockUI();
     }
 
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mStayListFragmentListener == null)
+        {
+            return;
+        }
+
+        mStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
@@ -1088,6 +1101,38 @@ public class StayCategoryListActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
+        {
+            if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            switch (placeViewItem.mType)
+            {
+                case PlaceViewItem.TYPE_ENTRY:
+                {
+                    mPlaceMainLayout.setBlurVisibility(StayCategoryListActivity.this, true);
+
+                    // 기존 데이터를 백업한다.
+                    mViewByLongPress = view;
+                    mPlaceViewItemByLongPress = placeViewItem;
+                    mListCountByLongPress = listCount;
+
+                    Stay stay = placeViewItem.getItem();
+                    Intent intent = StayPreviewActivity.newInstance(StayCategoryListActivity.this, mStayCuration.getStayBookingDay(), stay);
+
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                    break;
+                }
+
+                default:
+                    unLockUI();
+                    break;
+            }
+        }
+
+        @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)
         {
             if (mPlaceMainLayout == null || placeListFragment == null)
@@ -1226,12 +1271,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
         @Override
         public void onSearchCountUpdate(int searchCount, int searchMaxCount)
-        {
-
-        }
-
-        @Override
-        public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
 
         }
