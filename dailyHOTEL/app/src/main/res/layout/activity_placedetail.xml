@@ -185,6 +185,19 @@
 
     <include layout="@layout/toolbar_default_menu"/>
 
+    <com.daily.base.widget.DailyTextView
+        android:id="@+id/trueVRTooltipView"
+        android:layout_width="316dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/tooltip_top_vr"
+        android:text="@string/label_preview_vr_guide"
+        android:textColor="@color/default_text_c323232"
+        android:textSize="13dp"
+        android:visibility="gone"
+        dailyFont:style="Medium"/>
+
     <View
         android:id="@+id/productTypeBackgroundView"
         android:layout_width="match_parent"

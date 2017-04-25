@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -608,6 +609,24 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 }
             });
         }
+
+        if (DailyPreference.getInstance(this).isTrueVRViewTooltip() == true)
+        {
+            mPlaceDetailLayout.setTrueVRTooltipVisibility(true);
+
+            mHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    DailyPreference.getInstance(PlaceDetailActivity.this).setTrueVRViewTooltip(false);
+                    mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+                }
+            }, 5000);
+        } else
+        {
+            mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+        }
     }
 
     protected void hideTrueViewMenu()
@@ -622,6 +641,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mTrueViewView.setVisibility(View.GONE);
             mTrueViewView.setOnClickListener(null);
         }
+
+        mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
     }
 
     private void onShareClick()
