@@ -107,13 +107,11 @@ public class StayCategoryListActivity extends PlaceMainActivity
             return;
         }
 
-        initDeepLink(intent);
+        String name = getResources().getString(mDailyCategoryType.getNameResId());
+        String code = getResources().getString(mDailyCategoryType.getCodeResId());
+        mStayCuration.setCategory(new Category(name, code));
 
-        // 내주변 검색의 경우 검색 결과로 이동함으로 처리 안함
-        //        if (DailyCategoryType.STAY_AROUND_SEARCH.equals(mDailyCategoryType) == false)
-        //        {
-        //            mStayCuration.setCategory(new Category(mDailyCategoryType.getNameResId(), mDailyCategoryType.getCodeResId()));
-        //        }
+        initDeepLink(intent);
     }
 
     @Override
