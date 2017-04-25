@@ -117,7 +117,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
     {
         // 그라디에이션 만들기.
         final int colors[] = {Color.parseColor("#ED000000"), Color.parseColor("#E8000000"), Color.parseColor("#E2000000"), Color.parseColor("#66000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.38f};
+        final float positions[] = {0.0f, 0.01f, 0.02f, 0.17f, 0.50f};
 
         mPaintDrawable = new PaintDrawable();
         mPaintDrawable.setShape(new RectShape());
