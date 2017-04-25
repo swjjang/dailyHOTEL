@@ -158,8 +158,10 @@ public class StayCategoryListActivity extends PlaceMainActivity
     {
         super.onDestroy();
 
-        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-        //            AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, AnalyticsManager.Label.HOME, null);
+        String label = StayCategoryListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+
+        AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent( //
+            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, label, null);
     }
 
     @Override
