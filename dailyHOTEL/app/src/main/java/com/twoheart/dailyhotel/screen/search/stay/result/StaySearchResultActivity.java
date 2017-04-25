@@ -468,6 +468,17 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
     }
 
+    @Override
+    protected void requestAnalyticsByCanceled()
+    {
+        if (AnalyticsManager.Screen.HOME == mCallByScreen && SearchType.LOCATION == mSearchType)
+        {
+            AnalyticsManager.getInstance(this).recordEvent( //
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK //
+                , AnalyticsManager.Label.NEAR_BY, null);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////

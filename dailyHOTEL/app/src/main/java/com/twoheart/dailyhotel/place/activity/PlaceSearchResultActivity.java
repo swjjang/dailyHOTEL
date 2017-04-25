@@ -82,6 +82,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
 
+    protected abstract void requestAnalyticsByCanceled();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -141,6 +143,11 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         } else
         {
             setResult(resultCode);
+        }
+
+        if (resultCode == RESULT_CANCELED)
+        {
+            requestAnalyticsByCanceled();
         }
 
         finish();
