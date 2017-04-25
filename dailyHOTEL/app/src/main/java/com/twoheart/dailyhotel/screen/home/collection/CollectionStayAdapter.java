@@ -254,7 +254,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
             holder.dBenefitTextView.setText(recommendationStay.benefit);
         } else
         {
-            holder.dot2View.setVisibility(View.GONE);
             holder.dBenefitLayout.setVisibility(View.GONE);
         }
 
@@ -264,6 +263,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         //            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
         //        } else
         //        {
+        holder.dot2View.setVisibility(View.GONE);
         holder.distanceTextView.setVisibility(View.GONE);
         //        }
 
