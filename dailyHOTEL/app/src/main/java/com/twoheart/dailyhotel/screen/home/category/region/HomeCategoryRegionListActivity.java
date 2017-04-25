@@ -116,7 +116,15 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar( //
             getResources().getString(R.string.label_select_area_daily_category_format, categoryName) //
-            , R.drawable.navibar_ic_x, v -> finish(), false);
+            , R.drawable.navibar_ic_x, v ->
+            {
+                String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+
+                HomeCategoryRegionListActivity.this.finish();
+
+                AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent( //
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.LOCATION_LIST_CLOSE, label, null);
+            }, false);
 
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(v -> showSearch());
@@ -147,6 +155,11 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     public void onBackPressed()
     {
         setResult(RESULT_CANCELED);
+
+        String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+
+        AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent( //
+            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.LOCATION_LIST_CLOSE, label, null);
 
         super.onBackPressed();
     }

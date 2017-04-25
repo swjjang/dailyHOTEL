@@ -899,6 +899,7 @@ public class AnalyticsManager
         // home category
         public static final String HOME_SHORTCUT_CLICK = "home_shortcut_click";
         public static final String STAY_NEARBY_SEARCH = "stay_nearby_search";
+        public static final String LOCATION_LIST_CLOSE = "location_list_close";
         public static final String NEARBY_DISTANCE_05 = "nearby_distance_05";
         public static final String NEARBY_DISTANCE_1 = "nearby_distance_1";
         public static final String NEARBY_DISTANCE_3 = "nearby_distance_3";
