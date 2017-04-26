@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.base.widget.DailyViewPager;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Province;
@@ -29,7 +30,9 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -74,6 +77,27 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         // 지역로딩시에 백버튼 누르면 종료되도록 수정
         setLockUICancelable(true);
         initLayout();
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+
+            if (DailyHotel.isLogin() == false)
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+            }
+
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.CATEGORY, getResources().getString(mDailyCategoryType.getCodeResId()));
+
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
+        } catch (Exception e)
+        {
+
+        }
     }
 
     private void initLayout()
