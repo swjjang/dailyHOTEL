@@ -59,6 +59,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected int mCurrentImage;
     protected boolean mIsDeepLink;
     protected boolean mIsShowCalendar;
+    protected boolean mIsShowVR;
     protected String mDefaultImageUrl;
     protected DailyToolbarLayout mDailyToolbarLayout;
     protected boolean mDontReloadAtOnResume;

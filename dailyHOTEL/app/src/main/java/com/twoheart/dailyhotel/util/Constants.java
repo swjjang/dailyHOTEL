@@ -211,6 +211,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE = "dailyCategoryType";
     String NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST = "trueViewList";
     String NAME_INTENT_EXTRA_DATA_EMAIL = "email";
+    String NAME_INTENT_EXTRA_DATA_VR_FLAG = "vrFlag";
 
     // Push Type
     int PUSH_TYPE_NOTICE = 0;

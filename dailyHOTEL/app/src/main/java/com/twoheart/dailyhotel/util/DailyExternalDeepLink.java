@@ -121,9 +121,11 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private static final String STAMP_V14 = "stamp"; // 스탬프.
 
+    private static final String PARAM_V15_VR = "vr"; // vr
+
 
     private static final int MINIMUM_VERSION_CODE = 2;
-    private static final int MAXIMUM_VERSION_CODE = 14;
+    private static final int MAXIMUM_VERSION_CODE = 15;
 
     private int mVersionCode;
 
@@ -160,6 +162,31 @@ public class DailyExternalDeepLink extends DailyDeepLink
         super.clear();
 
         mVersionCode = 0;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 15
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isShowVR()
+    {
+        if (mVersionCode >= 15)
+        {
+            String value = mParamsMap.get(PARAM_V15_VR);
+
+            if (DailyTextUtils.isTextEmpty(value) == false)
+            {
+                try
+                {
+                    return Integer.parseInt(value) == 1;
+                } catch (NumberFormatException e)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return false;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
