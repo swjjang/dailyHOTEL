@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -230,11 +231,17 @@ public class StayPreviewActivity extends BaseActivity
                 mPreviewLayout.updateLayout(stayBookingDay, stayDetail, reviewCount, changedProductPrice(stayDetail, mViewPrice), false);
             }
 
-            HashMap<String, String> params = new HashMap();
-            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
+            try
+            {
+                HashMap<String, String> params = new HashMap();
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetailParams.category);
 
-            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.PEEK_POP, null, params);
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.PEEK_POP, null, params);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 

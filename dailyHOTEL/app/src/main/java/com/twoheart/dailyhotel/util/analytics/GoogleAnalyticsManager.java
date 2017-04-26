@@ -269,7 +269,29 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
-        } else if (AnalyticsManager.Screen.PEEK_POP.endsWith(screenName) == true)
+        } else if (AnalyticsManager.Screen.PEEK_POP.equalsIgnoreCase(screenName) == true)
+        {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
+
+            if (DailyHotel.isLogin() == true)
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.MEMBER);
+            } else
+            {
+                screenViewBuilder.setCustomDimension(5, AnalyticsManager.ValueType.GUEST);
+            }
+
+            screenViewBuilder.setCustomDimension(6, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+            screenViewBuilder.setCustomDimension(13, params.get(AnalyticsManager.KeyType.CATEGORY));
+
+            mGoogleAnalyticsTracker.setScreenName(screenName);
+            mGoogleAnalyticsTracker.send(screenViewBuilder.build());
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
+            }
+        } else if (AnalyticsManager.Screen.TRUE_VR.equalsIgnoreCase(screenName) == true)
         {
             HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder();
 
