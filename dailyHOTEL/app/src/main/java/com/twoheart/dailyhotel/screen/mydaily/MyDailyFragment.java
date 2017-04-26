@@ -157,7 +157,6 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                 } else if (externalDeepLink.isProfileBirthdayView() == true)
                 {
                     onStartEditProfile(externalDeepLink);
-                    return;
                 } else if (externalDeepLink.isStampView() == true)
                 {
                     mOnEventListener.startStamp();
