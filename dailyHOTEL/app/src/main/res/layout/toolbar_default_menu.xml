@@ -25,15 +25,15 @@
 
         <ImageView
             android:id="@+id/menu2View"
-            android:layout_width="@dimen/toolbar_height"
+            android:layout_width="30dp"
             android:layout_height="@dimen/toolbar_height"
             android:scaleType="center"/>
 
         <ImageView
             android:id="@+id/menu1View"
-            android:layout_width="@dimen/toolbar_height"
+            android:layout_width="30dp"
             android:layout_height="@dimen/toolbar_height"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:scaleType="center"/>
     </LinearLayout>
 

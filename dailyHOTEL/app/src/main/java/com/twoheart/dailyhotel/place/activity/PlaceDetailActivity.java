@@ -32,6 +32,7 @@ import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
@@ -193,6 +194,18 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
 
         super.onResume();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
+        {
+            mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+            DailyPreference.getInstance(this).setTrueVRViewTooltip(false);
+        }
     }
 
     @Override
@@ -593,7 +606,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     {
         if (mDailyToolbarLayout != null)
         {
-            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.navibar_ic_s_region);
+            mDailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_share_01_black, R.drawable.navibar_ic_treuvr);
         }
 
         if (mTrueViewView != null)
@@ -607,6 +620,24 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     onTrueViewClick();
                 }
             });
+        }
+
+        if (DailyPreference.getInstance(this).isTrueVRViewTooltip() == true)
+        {
+            mPlaceDetailLayout.setTrueVRTooltipVisibility(true);
+
+            mHandler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    DailyPreference.getInstance(PlaceDetailActivity.this).setTrueVRViewTooltip(false);
+                    mPlaceDetailLayout.hideAnimationTooltip();
+                }
+            }, 3000);
+        } else
+        {
+            mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
         }
     }
 
@@ -622,6 +653,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
             mTrueViewView.setVisibility(View.GONE);
             mTrueViewView.setOnClickListener(null);
         }
+
+        mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
     }
 
     private void onShareClick()

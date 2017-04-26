@@ -38,7 +38,7 @@
             android:id="@+id/menu1View"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:singleLine="true"

@@ -58,7 +58,9 @@ public class DailyPreference
     //    private static final String KEY_IS_VIEW_WISHLIST_TOOLTIP = "30";
     private static final String KEY_IS_VIEW_SEARCH_TOOLTIP = "31";
 
-    private static final String KEY_IS_REQUEST_REVIEW_ = "32";
+    private static final String KEY_IS_REQUEST_REVIEW = "32";
+
+    private static final String KEY_IS_VIEW_TRUEVR_TOOLTIP = "33";
 
     //    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     //    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
@@ -262,7 +264,9 @@ public class DailyPreference
     {
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
-        boolean isShowSearchToolTip = isViewSearchTooltip();
+        boolean isShowSearchTooltip = isViewSearchTooltip();
+        boolean isShowTrueVRTooltip = isTrueVRViewTooltip();
+        int supportTrueVR = getTrueVRSupport();
 
         String allRecentPlaces = getAllRecentPlaces();
 
@@ -277,7 +281,9 @@ public class DailyPreference
         }
 
         setShowBenefitAlarm(isShowBenefitAlarm);
-        setIsViewSearchTooltip(isShowSearchToolTip);
+        setViewSearchTooltip(isShowSearchTooltip);
+        setTrueVRViewTooltip(isShowTrueVRTooltip);
+        setTrueVRSupport(supportTrueVR);
 
         setAllRecentPlaces(allRecentPlaces);
 
@@ -733,7 +739,7 @@ public class DailyPreference
         return getValue(mPreferences, KEY_FIRST_APP_VERSION, null);
     }
 
-    public void setIsViewSearchTooltip(boolean value)
+    public void setViewSearchTooltip(boolean value)
     {
         setValue(mEditor, KEY_IS_VIEW_SEARCH_TOOLTIP, value);
     }
@@ -743,14 +749,24 @@ public class DailyPreference
         return getValue(mPreferences, KEY_IS_VIEW_SEARCH_TOOLTIP, false);
     }
 
+    public void setTrueVRViewTooltip(boolean value)
+    {
+        setValue(mEditor, KEY_IS_VIEW_TRUEVR_TOOLTIP, value);
+    }
+
+    public boolean isTrueVRViewTooltip()
+    {
+        return getValue(mPreferences, KEY_IS_VIEW_TRUEVR_TOOLTIP, true);
+    }
+
     public void setIsRequestReview(boolean value)
     {
-        setValue(mEditor, KEY_IS_REQUEST_REVIEW_, value);
+        setValue(mEditor, KEY_IS_REQUEST_REVIEW, value);
     }
 
     public boolean isRequestReview()
     {
-        return getValue(mPreferences, KEY_IS_REQUEST_REVIEW_, false);
+        return getValue(mPreferences, KEY_IS_REQUEST_REVIEW, false);
     }
 
     public void setStayCategory(String name, String code)
