@@ -115,24 +115,6 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
             holder.personsTextView.setVisibility(View.GONE);
         }
 
-        // VR 여부
-        if (gourmet.supportTrueVR == false)
-        {
-            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
-            {
-                holder.dot1View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dot1View.setVisibility(View.GONE);
-            }
-
-            holder.trueVRView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dot1View.setVisibility(View.GONE);
-            holder.trueVRView.setVisibility(View.GONE);
-        }
-
         if (gourmet.price <= 0 || gourmet.price <= gourmet.discountPrice)
         {
             holder.priceView.setVisibility(View.INVISIBLE);
@@ -154,6 +136,24 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         } else
         {
             holder.satisfactionView.setVisibility(View.GONE);
+        }
+
+        // VR 여부
+        if (gourmet.supportTrueVR == false)
+        {
+            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+            {
+                holder.dot1View.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dot1View.setVisibility(View.GONE);
+            }
+
+            holder.trueVRView.setVisibility(View.VISIBLE);
+        } else
+        {
+            holder.dot1View.setVisibility(View.GONE);
+            holder.trueVRView.setVisibility(View.GONE);
         }
 
         holder.discountView.setText(strDiscount);
