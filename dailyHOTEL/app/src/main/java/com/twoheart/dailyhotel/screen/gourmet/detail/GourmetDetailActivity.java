@@ -129,7 +129,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
      * @return
      */
     public static Intent newInstance(Context context, GourmetBookingDay gourmetBookingDay, int gourmetIndex, int productIndex//
-        , boolean isShowCalendar, boolean isUsedMultiTransition)
+        , boolean isShowCalendar, boolean isShowVR, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, GourmetDetailActivity.class);
 
@@ -138,6 +138,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmetIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PRODUCTINDEX, productIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, isShowVR);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
@@ -295,6 +296,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mIsShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        mIsShowVR = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, false);
 
         if (mPlaceBookingDay == null)
         {
@@ -926,6 +928,26 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             }
         }
 
+        if (DailyPreference.getInstance(this).getTrueVRSupport() > 0)
+        {
+            showTrueViewMenu();
+
+            if (mIsShowVR == true)
+            {
+                unLockUI();
+                onTrueViewClick();
+            }
+        } else
+        {
+            hideTrueViewMenu();
+
+            if (mIsShowVR == true)
+            {
+                unLockUI();
+                showSimpleDialog(null, getString(R.string.message_truevr_not_support), null, null);
+            }
+        }
+
         mProductDetailIndex = 0;
         mIsDeepLink = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
@@ -1510,7 +1532,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onTrueVRClick()
+        public void onTrueVRTooltipClick()
         {
             if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
             {

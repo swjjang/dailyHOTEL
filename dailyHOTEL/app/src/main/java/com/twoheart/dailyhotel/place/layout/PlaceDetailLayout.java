@@ -124,7 +124,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         void releaseUiComponent();
 
-        void onTrueVRClick();
+        void onTrueVRTooltipClick();
     }
 
     protected abstract String getProductTypeTitle();
@@ -170,7 +170,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
             {
                 if (mTrueVRTooltipView.getVisibility() == View.VISIBLE)
                 {
-                    ((OnEventListener) mOnEventListener).onTrueVRClick();
+                    ((OnEventListener) mOnEventListener).onTrueVRTooltipClick();
                 }
             }
         });

@@ -363,6 +363,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 String date = externalDeepLink.getDate();
                 int datePlus = externalDeepLink.getDatePlus();
                 boolean isShowCalendar = externalDeepLink.isShowCalendar();
+                boolean isShowVR = externalDeepLink.isShowVR();
                 int ticketIndex = externalDeepLink.getOpenTicketIndex();
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
@@ -381,7 +382,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
 
-                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, false);
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
@@ -425,6 +426,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 String date = externalDeepLink.getDate();
                 int datePlus = externalDeepLink.getDatePlus();
                 boolean isShowCalendar = externalDeepLink.isShowCalendar();
+                boolean isShowVR = externalDeepLink.isShowVR();
                 int ticketIndex = externalDeepLink.getOpenTicketIndex();
 
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
@@ -442,7 +444,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 }
 
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                    gourmetBookingDay, gourmetIndex, ticketIndex, isShowCalendar, false);
+                    gourmetBookingDay, gourmetIndex, ticketIndex, isShowCalendar, isShowVR, false);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

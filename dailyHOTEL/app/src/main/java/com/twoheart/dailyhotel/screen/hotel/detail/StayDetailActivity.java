@@ -142,7 +142,7 @@ public class StayDetailActivity extends PlaceDetailActivity
      * @return
      */
     public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int stayIndex//
-        , int roomIndex, boolean isShowCalendar, boolean isUsedMultiTransition)
+        , int roomIndex, boolean isShowCalendar, boolean isShowVR, boolean isUsedMultiTransition)
     {
         Intent intent = new Intent(context, StayDetailActivity.class);
 
@@ -151,6 +151,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, roomIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, isShowCalendar);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, isShowVR);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_ENTRY_INDEX, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_LIST_COUNT, -1);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_DAILYCHOICE, false);
@@ -300,6 +301,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
         mIsShowCalendar = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_CALENDAR_FLAG, false);
+        mIsShowVR = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_VR_FLAG, false);
 
         if (mPlaceBookingDay == null)
         {
@@ -954,13 +956,26 @@ public class StayDetailActivity extends PlaceDetailActivity
         if (DailyPreference.getInstance(this).getTrueVRSupport() > 0)
         {
             showTrueViewMenu();
+
+            if (mIsShowVR == true)
+            {
+                unLockUI();
+                onTrueViewClick();
+            }
         } else
         {
             hideTrueViewMenu();
+
+            if (mIsShowVR == true)
+            {
+                unLockUI();
+                showSimpleDialog(null, getString(R.string.message_truevr_not_support), null, null);
+            }
         }
 
         mProductDetailIndex = 0;
         mIsDeepLink = false;
+        mIsShowVR = false;
         mInitializeStatus = STATUS_INITIALIZE_COMPLETE;
     }
 
@@ -1099,7 +1114,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                         trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://players.cupix.com/p/XPvYW7rr"));
                         trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
 
-                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList//
+                            , PlaceType.HOTEL, ((StayDetail)mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1118,7 +1134,8 @@ public class StayDetailActivity extends PlaceDetailActivity
             trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://players.cupix.com/p/XPvYW7rr"));
             trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
 
-            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList//
+                , PlaceType.HOTEL, ((StayDetail)mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
 
         try
@@ -1626,7 +1643,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         @Override
-        public void onTrueVRClick()
+        public void onTrueVRTooltipClick()
         {
             if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
             {
