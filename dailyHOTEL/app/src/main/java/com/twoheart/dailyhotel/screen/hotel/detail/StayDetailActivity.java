@@ -1120,6 +1120,15 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
+
+        try
+        {
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(((StayDetail) mPlaceDetail).getStayDetailParams().index), null);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     void recordAnalyticsStayDetail(String screen, StayBookingDay stayBookingDay, StayDetail stayDetail)

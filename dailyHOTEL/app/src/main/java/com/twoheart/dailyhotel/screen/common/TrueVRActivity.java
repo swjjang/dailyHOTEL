@@ -7,12 +7,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyWebView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TrueVRActivity extends WebViewActivity implements View.OnClickListener
@@ -25,10 +28,12 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
 
     private int mCurrentPage;
 
-    public static Intent newInstance(Context context, ArrayList<TrueVRParams> list)
+    public static Intent newInstance(Context context, ArrayList<TrueVRParams> list, PlaceType placeType, String category)
     {
         Intent intent = new Intent(context, TrueVRActivity.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST, list);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         return intent;
     }
 
@@ -47,6 +52,8 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         }
 
         mTrueVRParamsList = intent.getParcelableArrayListExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVIEW_LIST);
+        PlaceType placeType = PlaceType.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        String category = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY);
 
         if (mTrueVRParamsList == null || mTrueVRParamsList.size() == 0)
         {
@@ -59,6 +66,26 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         initLayout((DailyWebView) mWebView);
 
         setTrueViewPage(mCurrentPage);
+
+        try
+        {
+            HashMap<String, String> params = new HashMap();
+
+            if (placeType == PlaceType.HOTEL)
+            {
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+            }
+
+            params.put(AnalyticsManager.KeyType.CATEGORY, category);
+
+            AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.TRUE_VR, null, params);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     private void initToolbar()
@@ -150,8 +177,6 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     @Override
     protected void onStart()
     {
-        //        AnalyticsManager.getInstance(this).recordScreen(this, Screen.ABOUT, null);
-
         super.onStart();
     }
 

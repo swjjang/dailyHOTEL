@@ -683,6 +683,9 @@ public class AnalyticsManager
 
         // Preview
         public static final String PEEK_POP = "peek_pop";
+
+        // True VR
+        public static final String TRUE_VR = "true_vr";
     }
 
     public static class Action
@@ -954,6 +957,9 @@ public class AnalyticsManager
         public static final String PEEK_POP_SHARE_KAKAO = "peek_pop_share_kakao";
         public static final String PEEK_POP_NAVER_MAP = "peek_pop_naver_map";
 
+        // true vr
+        public static final String STAY_ITEM_CLICK_TRUE_VR = "stay_item_click_true_vr";
+        public static final String TRUE_VR_CLICK = "true_vr_click";
     }
 
     public static class Category
