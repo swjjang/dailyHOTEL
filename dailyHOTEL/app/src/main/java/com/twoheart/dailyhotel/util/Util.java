@@ -814,8 +814,14 @@ public class Util implements Constants
 
     public static void shareTMapNavi(final Activity activity, final String placeName, final float latitude, final float longitude)
     {
-        if (activity == null || latitude == 0 || longitude == 0)
+        if (activity == null)
         {
+            return;
+        }
+
+        if (latitude == 0 || longitude == 0)
+        {
+            showFailedTMapNaviDialog(activity);
             return;
         }
 
