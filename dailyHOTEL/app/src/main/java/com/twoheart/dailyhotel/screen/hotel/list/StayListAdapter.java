@@ -175,6 +175,24 @@ public class StayListAdapter extends PlaceListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
+        // VR 여부
+        if (stay.supportTrueVR == true)
+        {
+            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+            {
+                holder.dot1View.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dot1View.setVisibility(View.GONE);
+            }
+
+            holder.trueVRView.setVisibility(View.VISIBLE);
+        } else
+        {
+            holder.dot1View.setVisibility(View.GONE);
+            holder.trueVRView.setVisibility(View.GONE);
+        }
+
         if (mNights > 1)
         {
             holder.averageView.setVisibility(View.VISIBLE);
@@ -220,11 +238,30 @@ public class StayListAdapter extends PlaceListAdapter
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
+            if (holder.satisfactionView.getVisibility() == View.VISIBLE || holder.trueVRView.getVisibility() == View.VISIBLE)
+            {
+                holder.dot2View.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dot2View.setVisibility(View.GONE);
+            }
+
             holder.distanceTextView.setVisibility(View.VISIBLE);
             holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
         } else
         {
+            holder.dot2View.setVisibility(View.GONE);
             holder.distanceTextView.setVisibility(View.GONE);
+        }
+
+        if (holder.satisfactionView.getVisibility() == View.GONE//
+            && holder.trueVRView.getVisibility() == View.GONE//
+            && holder.distanceTextView.getVisibility() == View.GONE)
+        {
+            holder.informationLayout.setVisibility(View.GONE);
+        } else
+        {
+            holder.informationLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -243,6 +280,10 @@ public class StayListAdapter extends PlaceListAdapter
         TextView distanceTextView;
         View dBenefitLayout;
         TextView dBenefitTextView;
+        View informationLayout;
+        View trueVRView;
+        View dot1View;
+        View dot2View;
 
         public HotelViewHolder(View itemView)
         {
@@ -261,6 +302,10 @@ public class StayListAdapter extends PlaceListAdapter
             hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             averageView = itemView.findViewById(R.id.averageTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
+            informationLayout = itemView.findViewById(R.id.informationLayout);
+            trueVRView = itemView.findViewById(R.id.trueVRView);
+            dot1View = itemView.findViewById(R.id.dot1View);
+            dot2View = itemView.findViewById(R.id.dot2View);
 
             itemView.setOnClickListener(mOnClickListener);
             itemView.setOnLongClickListener(new View.OnLongClickListener()

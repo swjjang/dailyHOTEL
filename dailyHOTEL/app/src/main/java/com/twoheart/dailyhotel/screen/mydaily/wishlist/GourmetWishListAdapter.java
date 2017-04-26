@@ -138,6 +138,24 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
+        // VR 여부
+        if (gourmet.supportTrueVR == true)
+        {
+            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+            {
+                holder.dot1View.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dot1View.setVisibility(View.GONE);
+            }
+
+            holder.trueVRView.setVisibility(View.VISIBLE);
+        } else
+        {
+            holder.dot1View.setVisibility(View.GONE);
+            holder.trueVRView.setVisibility(View.GONE);
+        }
+
         holder.discountView.setText(strDiscount);
         holder.nameView.setSelected(true); // Android TextView marquee bug
 
@@ -190,10 +208,19 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
 
         if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
         {
+            if (holder.satisfactionView.getVisibility() == View.VISIBLE || holder.trueVRView.getVisibility() == View.VISIBLE)
+            {
+                holder.dot2View.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dot2View.setVisibility(View.GONE);
+            }
+
             holder.distanceTextView.setVisibility(View.VISIBLE);
             holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance) + "km)");
         } else
         {
+            holder.dot2View.setVisibility(View.GONE);
             holder.distanceTextView.setVisibility(View.GONE);
         }
 
@@ -210,6 +237,16 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
                 }
             }
         });
+
+        if (holder.satisfactionView.getVisibility() == View.GONE//
+            && holder.trueVRView.getVisibility() == View.GONE//
+            && holder.distanceTextView.getVisibility() == View.GONE)
+        {
+            holder.informationLayout.setVisibility(View.GONE);
+        } else
+        {
+            holder.informationLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private class FooterViewHolder extends RecyclerView.ViewHolder
@@ -236,6 +273,10 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         View dBenefitLayout;
         TextView dBenefitTextView;
         View deleteView;
+        View informationLayout;
+        View trueVRView;
+        View dot1View;
+        View dot2View;
 
         public GourmetWishListViewHolder(View itemView)
         {
@@ -255,6 +296,10 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
             personsTextView = (TextView) itemView.findViewById(R.id.personsTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
             deleteView = itemView.findViewById(R.id.deleteView);
+            informationLayout = itemView.findViewById(R.id.informationLayout);
+            trueVRView = itemView.findViewById(R.id.trueVRView);
+            dot1View = itemView.findViewById(R.id.dot1View);
+            dot2View = itemView.findViewById(R.id.dot2View);
 
             RelativeLayout.LayoutParams dBenefitLayoutParams = (RelativeLayout.LayoutParams) dBenefitLayout.getLayoutParams();
             dBenefitLayoutParams.rightMargin = ScreenUtils.dpToPx(mContext, 4);

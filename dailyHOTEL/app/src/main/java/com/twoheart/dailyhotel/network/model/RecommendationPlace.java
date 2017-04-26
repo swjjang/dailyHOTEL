@@ -50,4 +50,7 @@ public abstract class RecommendationPlace
 
     @JsonIgnore
     public int entryPosition;
+
+    @JsonIgnore
+    public boolean supportTrueVR;
 }

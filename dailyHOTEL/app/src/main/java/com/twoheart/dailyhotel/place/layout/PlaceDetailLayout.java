@@ -83,6 +83,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
     protected DailyTextView mWishButtonTextView;
     protected DailyTextView mWishPopupTextView;
     protected View mWishPopupScrollView;
+    protected View mTrueVRTooltipView;
 
     protected ValueAnimator mBookingTextViewAnimator;
 
@@ -158,6 +159,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
 
         // 이미지 ViewPage 넣기.
         mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
+
+        mTrueVRTooltipView = view.findViewById(R.id.trueVRTooltipView);
 
         mViewPager = (DailyLoopViewPager) view.findViewById(R.id.defaulLoopViewPager);
 
@@ -332,6 +335,32 @@ public abstract class PlaceDetailLayout extends BaseLayout
     public int getStatusBarHeight()
     {
         return mStatusBarHeight;
+    }
+
+    public void setTrueVRTooltipVisibility(boolean visibility)
+    {
+        if (mTrueVRTooltipView == null)
+        {
+            return;
+        }
+
+        if (visibility == true)
+        {
+            mTrueVRTooltipView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mTrueVRTooltipView.setVisibility(View.GONE);
+        }
+    }
+
+    public boolean isTrueVRTooltipVisibility()
+    {
+        if (mTrueVRTooltipView == null)
+        {
+            return false;
+        }
+
+        return mTrueVRTooltipView.getVisibility() == View.VISIBLE;
     }
 
     public int getBookingStatus()
