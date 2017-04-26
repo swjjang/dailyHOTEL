@@ -260,12 +260,7 @@ public class HomeLayout extends BaseBlurLayout
 
         mErrorPopupLayout = view.findViewById(R.id.errorView);
         mErrorPopupLayout.setVisibility(View.GONE);
-        DailyTextView errorTextView1 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView1);
-        DailyTextView errorTextView2 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView2);
-        View retryButtonView = mErrorPopupLayout.findViewById(R.id.retryTextView);
-        View closeButtonView = mErrorPopupLayout.findViewById(R.id.closeImageView);
-
-        retryButtonView.setOnClickListener(new View.OnClickListener()
+        mErrorPopupLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -273,6 +268,11 @@ public class HomeLayout extends BaseBlurLayout
                 forceRefreshing(false);
             }
         });
+
+        DailyTextView errorTextView1 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView1);
+        DailyTextView errorTextView2 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView2);
+        View retryButtonView = mErrorPopupLayout.findViewById(R.id.retryTextView);
+        View closeButtonView = mErrorPopupLayout.findViewById(R.id.closeImageView);
 
         closeButtonView.setOnClickListener(new View.OnClickListener()
         {
