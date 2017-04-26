@@ -1095,9 +1095,9 @@ public class StayDetailActivity extends PlaceDetailActivity
                     {
                         ArrayList<TrueVRParams> trueVRParamsList = new ArrayList<>();
 
-                        trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
-                        trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://player.cupix.com/p/MG8BpUmW"));
-                        trueVRParamsList.add(new TrueVRParams("더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
+                        trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
+                        trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://players.cupix.com/p/XPvYW7rr"));
+                        trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
 
                         startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
@@ -1114,9 +1114,9 @@ public class StayDetailActivity extends PlaceDetailActivity
         {
             ArrayList<TrueVRParams> trueVRParamsList = new ArrayList<>();
 
-            trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
-            trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://player.cupix.com/p/MG8BpUmW"));
-            trueVRParamsList.add(new TrueVRParams("더블 룸", "http://player.cupix.com/p/MG8BpUmW"));
+            trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
+            trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://players.cupix.com/p/XPvYW7rr"));
+            trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
 
             startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
