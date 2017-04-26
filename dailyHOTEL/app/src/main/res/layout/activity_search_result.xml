@@ -129,13 +129,13 @@
 
         <Spinner
             android:id="@+id/distanceSpinner"
-            android:layout_width="125dp"
+            android:layout_width="68dp"
             android:layout_height="28dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:background="@drawable/shape_coupon_sorting_button_backround"
-            android:dropDownWidth="134dp"
+            android:dropDownWidth="73dp"
             android:spinnerMode="dropdown"/>
     </RelativeLayout>
 

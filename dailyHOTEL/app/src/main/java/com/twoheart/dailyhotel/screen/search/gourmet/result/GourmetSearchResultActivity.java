@@ -445,6 +445,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
     }
 
+    @Override
+    protected void requestAnalyticsByCanceled()
+    {
+        // do nothing!
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -618,6 +624,29 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             mGourmetSearchCuration.setRadius(radius);
             refreshCurrentFragment(true);
+
+            String action;
+            if (radius > 5)
+            {
+                action = AnalyticsManager.Action.NEARBY_DISTANCE_10; // 10km
+            } else if (radius > 3)
+            {
+                action = AnalyticsManager.Action.NEARBY_DISTANCE_5; // 5km
+            } else if (radius > 1)
+            {
+                action = AnalyticsManager.Action.NEARBY_DISTANCE_3; // 3km
+            } else if (radius > 0.5)
+            {
+                action = AnalyticsManager.Action.NEARBY_DISTANCE_1; // 1km
+            } else
+            {
+                action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
+            }
+
+            String label = mSearchType == SearchType.LOCATION //
+                ? mAddress : mGourmetSearchCuration.getKeyword().name;
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
+                .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
         }
     };
 

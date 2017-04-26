@@ -43,6 +43,8 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
+import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -105,13 +107,11 @@ public class StayCategoryListActivity extends PlaceMainActivity
             return;
         }
 
-        initDeepLink(intent);
+        String name = getResources().getString(mDailyCategoryType.getNameResId());
+        String code = getResources().getString(mDailyCategoryType.getCodeResId());
+        mStayCuration.setCategory(new Category(name, code));
 
-        // 내주변 검색의 경우 검색 결과로 이동함으로 처리 안함
-        //        if (DailyCategoryType.STAY_AROUND_SEARCH.equals(mDailyCategoryType) == false)
-        //        {
-        //            mStayCuration.setCategory(new Category(mDailyCategoryType.getNameResId(), mDailyCategoryType.getCodeResId()));
-        //        }
+        initDeepLink(intent);
     }
 
     @Override
@@ -158,8 +158,10 @@ public class StayCategoryListActivity extends PlaceMainActivity
     {
         super.onDestroy();
 
-        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
-        //            AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, AnalyticsManager.Label.HOME, null);
+        String label = StayCategoryListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+
+        AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent( //
+            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, label, null);
     }
 
     @Override
@@ -567,6 +569,17 @@ public class StayCategoryListActivity extends PlaceMainActivity
         unLockUI();
     }
 
+    @Override
+    protected void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount)
+    {
+        if (view == null || placeViewItem == null || mStayListFragmentListener == null)
+        {
+            return;
+        }
+
+        mStayListFragmentListener.onStayClick(view, placeViewItem, listCount);
+    }
+
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
@@ -604,34 +617,55 @@ public class StayCategoryListActivity extends PlaceMainActivity
             Intent intent = SearchActivity.newInstance(StayCategoryListActivity.this, PlaceType.HOTEL, mStayCuration.getStayBookingDay());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
-            String label = "";
-            switch (mDailyCategoryType)
-            {
-                case STAY_HOTEL:
-                    label = AnalyticsManager.Label.HOTEL_LIST;
-                    break;
-                case STAY_BOUTIQUE:
-                    label = AnalyticsManager.Label.BOUTIQUE_LIST;
-                    break;
-                case STAY_PENSION:
-                    label = AnalyticsManager.Label.PENSION_LIST;
-                    break;
-                case STAY_RESORT:
-                    label = AnalyticsManager.Label.RESORT_LIST;
-                    break;
-            }
-
             switch (mViewType)
             {
                 case LIST:
-                                        AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                                            , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
+                {
+                    String label = "";
+                    switch (mDailyCategoryType)
+                    {
+                        case STAY_HOTEL:
+                            label = AnalyticsManager.Label.HOTEL_LIST;
+                            break;
+                        case STAY_BOUTIQUE:
+                            label = AnalyticsManager.Label.BOUTIQUE_LIST;
+                            break;
+                        case STAY_PENSION:
+                            label = AnalyticsManager.Label.PENSION_LIST;
+                            break;
+                        case STAY_RESORT:
+                            label = AnalyticsManager.Label.RESORT_LIST;
+                            break;
+                    }
+
+                    AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
                     break;
+                }
 
                 case MAP:
-                    //                    AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
-                    //                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.STAY_MAP_VIEW, null);
+                {
+                    String label = "";
+                    switch (mDailyCategoryType)
+                    {
+                        case STAY_HOTEL:
+                            label = AnalyticsManager.Label.HOTEL_LIST_MAP;
+                            break;
+                        case STAY_BOUTIQUE:
+                            label = AnalyticsManager.Label.BOUTIQUE_LIST_MAP;
+                            break;
+                        case STAY_PENSION:
+                            label = AnalyticsManager.Label.PENSION_LIST_MAP;
+                            break;
+                        case STAY_RESORT:
+                            label = AnalyticsManager.Label.RESORT_LIST_MAP;
+                            break;
+                    }
+
+                    AnalyticsManager.getInstance(StayCategoryListActivity.this).recordEvent(AnalyticsManager.Category.SEARCH//
+                        , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
                     break;
+                }
             }
         }
 
@@ -1067,6 +1101,38 @@ public class StayCategoryListActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
+        {
+            if (isFinishing() == true || placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            switch (placeViewItem.mType)
+            {
+                case PlaceViewItem.TYPE_ENTRY:
+                {
+                    mPlaceMainLayout.setBlurVisibility(StayCategoryListActivity.this, true);
+
+                    // 기존 데이터를 백업한다.
+                    mViewByLongPress = view;
+                    mPlaceViewItemByLongPress = placeViewItem;
+                    mListCountByLongPress = listCount;
+
+                    Stay stay = placeViewItem.getItem();
+                    Intent intent = StayPreviewActivity.newInstance(StayCategoryListActivity.this, mStayCuration.getStayBookingDay(), stay);
+
+                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                    break;
+                }
+
+                default:
+                    unLockUI();
+                    break;
+            }
+        }
+
+        @Override
         public void onActivityCreated(PlaceListFragment placeListFragment)
         {
             if (mPlaceMainLayout == null || placeListFragment == null)
@@ -1205,12 +1271,6 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
         @Override
         public void onSearchCountUpdate(int searchCount, int searchMaxCount)
-        {
-
-        }
-
-        @Override
-        public void onStayLongClick(View view, PlaceViewItem placeViewItem, int listCount)
         {
 
         }

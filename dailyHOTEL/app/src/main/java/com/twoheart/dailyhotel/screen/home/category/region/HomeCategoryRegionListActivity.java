@@ -116,7 +116,15 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(this, toolbar);
         dailyToolbarLayout.initToolbar( //
             getResources().getString(R.string.label_select_area_daily_category_format, categoryName) //
-            , R.drawable.navibar_ic_x, v -> finish(), false);
+            , R.drawable.navibar_ic_x, v ->
+            {
+                String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+
+                HomeCategoryRegionListActivity.this.finish();
+
+                AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent( //
+                    AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.LOCATION_LIST_CLOSE, label, null);
+            }, false);
 
         dailyToolbarLayout.setToolbarMenu(R.drawable.navibar_ic_search, -1);
         dailyToolbarLayout.setToolbarMenuClickListener(v -> showSearch());
@@ -147,6 +155,11 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     public void onBackPressed()
     {
         setResult(RESULT_CANCELED);
+
+        String label = HomeCategoryRegionListActivity.this.getResources().getString(mDailyCategoryType.getNameResId());
+
+        AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent( //
+            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.LOCATION_LIST_CLOSE, label, null);
 
         super.onBackPressed();
     }
@@ -440,8 +453,25 @@ public class HomeCategoryRegionListActivity extends BaseActivity
                 HomeCategoryRegionListActivity.this, PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PERMISSION_MANAGER);
 
-            //            AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
-            //                AnalyticsManager.Action.GOURMET_LOCATIONS_CLICKED, getString(R.string.label_view_myaround_gourmet), null);
+            String label = "";
+            switch (mDailyCategoryType)
+            {
+                case STAY_HOTEL:
+                    label = AnalyticsManager.Label.HOTEL_LOCATION_LIST;
+                    break;
+                case STAY_BOUTIQUE:
+                    label = AnalyticsManager.Label.BOUTIQUE_LOCATION_LIST;
+                    break;
+                case STAY_PENSION:
+                    label = AnalyticsManager.Label.PENSION_LOCATION_LIST;
+                    break;
+                case STAY_RESORT:
+                    label = AnalyticsManager.Label.RESORT_LOCATION_LIST;
+                    break;
+            }
+
+            AnalyticsManager.getInstance(HomeCategoryRegionListActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION, //
+                AnalyticsManager.Action.STAY_NEARBY_SEARCH, label, null);
         }
     };
 

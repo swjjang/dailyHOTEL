@@ -126,7 +126,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                         mTooltipLayout.setVisibility(View.GONE);
                     } else
                     {
-                        DailyPreference.getInstance(this).setIsViewSearchTooltip(true);
+                        DailyPreference.getInstance(this).setViewSearchTooltip(true);
                         mTooltipLayout.setVisibility(View.VISIBLE);
                         mTooltipLayout.setOnClickListener(new View.OnClickListener()
                         {

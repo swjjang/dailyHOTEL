@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyWebView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
@@ -13,13 +14,14 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class TrueVRActivity extends WebViewActivity implements View.OnClickListener
 {
     private List<TrueVRParams> mTrueVRParamsList;
     private TextView mProductNameTextView;
-    private TextView mPageTextView;
+    private TextView mCurrentPageTextView, mTotalPageTextView;
+    private View mPageLayout;
+    private View mPrevView, mNextView;
 
     private int mCurrentPage;
 
@@ -74,18 +76,25 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
 
     private void initLayout(final DailyWebView dailyWebView)
     {
-        mProductNameTextView = (TextView) findViewById(R.id.productNameTextView);
-        mPageTextView = (TextView) findViewById(R.id.pageTextView);
-        View nextView = findViewById(R.id.nextView);
+        mPageLayout = findViewById(R.id.pageLayout);
 
-        if (mTrueVRParamsList != null && mTrueVRParamsList.size() == 1)
+        if (mTrueVRParamsList == null && mTrueVRParamsList.size() == 1)
         {
-            nextView.setVisibility(View.GONE);
+            mPageLayout.setVisibility(View.GONE);
         } else
         {
-            nextView.setVisibility(View.VISIBLE);
-            nextView.setOnClickListener(this);
+            mPageLayout.setVisibility(View.VISIBLE);
         }
+
+        mProductNameTextView = (TextView) findViewById(R.id.productNameTextView);
+        mCurrentPageTextView = (TextView) findViewById(R.id.currentPageTextView);
+        mTotalPageTextView = (TextView) findViewById(R.id.totalPageTextView);
+
+        mNextView = findViewById(R.id.nextView);
+        mPrevView = findViewById(R.id.prevView);
+
+        mNextView.setOnClickListener(this);
+        mPrevView.setOnClickListener(this);
     }
 
     private void setTrueViewPage(int page)
@@ -94,6 +103,8 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         {
             return;
         }
+
+        int totalPage = mTrueVRParamsList.size();
 
         TrueVRParams trueVRParams = mTrueVRParamsList.get(page);
 
@@ -104,9 +115,36 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
 
         mCurrentPage = page;
 
+        if (mPageLayout.getVisibility() == View.VISIBLE)
+        {
+            mCurrentPageTextView.setText(Integer.toString(mCurrentPage + 1));
+            mTotalPageTextView.setText("/" + totalPage);
+
+            if (page == 0)
+            {
+                mPrevView.setEnabled(false);
+                mNextView.setEnabled(true);
+            } else if (page == totalPage - 1)
+            {
+                mPrevView.setEnabled(true);
+                mNextView.setEnabled(false);
+            } else
+            {
+                mPrevView.setEnabled(true);
+                mNextView.setEnabled(true);
+            }
+        }
+
         mWebView.loadUrl(trueVRParams.url);
-        mProductNameTextView.setText(trueVRParams.name);
-        mPageTextView.setText(String.format(Locale.KOREA, "%d / %d", page + 1, mTrueVRParamsList.size()));
+
+        if (DailyTextUtils.isTextEmpty(trueVRParams.name) == true)
+        {
+            mProductNameTextView.setVisibility(View.INVISIBLE);
+        } else
+        {
+            mProductNameTextView.setVisibility(View.VISIBLE);
+            mProductNameTextView.setText(trueVRParams.name);
+        }
     }
 
     @Override
@@ -122,6 +160,10 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     {
         switch (v.getId())
         {
+            case R.id.prevView:
+                setTrueViewPage(mCurrentPage - 1);
+                break;
+
             case R.id.nextView:
                 setTrueViewPage(mCurrentPage + 1);
                 break;

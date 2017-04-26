@@ -18,6 +18,7 @@ public abstract class Place implements Parcelable
     public int satisfaction;
     public String districtName;
     public int entryPosition;
+    public boolean supportTrueVR;
 
     public Place()
     {
@@ -47,6 +48,7 @@ public abstract class Place implements Parcelable
         dest.writeInt(satisfaction);
         dest.writeString(districtName);
         dest.writeInt(entryPosition);
+        dest.writeInt(supportTrueVR ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -64,5 +66,6 @@ public abstract class Place implements Parcelable
         satisfaction = in.readInt();
         districtName = in.readString();
         entryPosition = in.readInt();
+        supportTrueVR = in.readInt() == 1;
     }
 }
