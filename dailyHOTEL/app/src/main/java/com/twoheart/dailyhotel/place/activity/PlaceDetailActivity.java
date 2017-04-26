@@ -197,6 +197,18 @@ public abstract class PlaceDetailActivity extends BaseActivity
     }
 
     @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
+        {
+            mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+            DailyPreference.getInstance(this).setTrueVRViewTooltip(false);
+        }
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState)
     {
         //        if (outState != null)
@@ -620,9 +632,9 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 public void run()
                 {
                     DailyPreference.getInstance(PlaceDetailActivity.this).setTrueVRViewTooltip(false);
-                    mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
+                    mPlaceDetailLayout.hideAnimationTooltip();
                 }
-            }, 5000);
+            }, 3000);
         } else
         {
             mPlaceDetailLayout.setTrueVRTooltipVisibility(false);

@@ -1499,6 +1499,16 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         {
             GourmetDetailActivity.this.releaseUiComponent();
         }
+
+        @Override
+        public void onTrueVRClick()
+        {
+            if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
+            {
+                mPlaceDetailLayout.hideAnimationTooltip();
+                DailyPreference.getInstance(GourmetDetailActivity.this).setTrueVRViewTooltip(false);
+            }
+        }
     };
 
     private GourmetDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetDetailNetworkController.OnNetworkControllerListener()
