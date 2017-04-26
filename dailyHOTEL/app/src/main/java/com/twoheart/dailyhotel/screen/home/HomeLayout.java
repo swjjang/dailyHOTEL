@@ -1364,12 +1364,12 @@ public class HomeLayout extends BaseLayout
             {
                 // show
                 setActionButtonVisibility(View.VISIBLE);
-                mSwipeRefreshLayout.setEnabled(true);
+                mSwipeRefreshLayout.setEnabled(false);
             } else
             {
                 // hide
                 setActionButtonVisibility(View.GONE);
-                mSwipeRefreshLayout.setEnabled(false);
+                mSwipeRefreshLayout.setEnabled(true);
             }
         }
     };
