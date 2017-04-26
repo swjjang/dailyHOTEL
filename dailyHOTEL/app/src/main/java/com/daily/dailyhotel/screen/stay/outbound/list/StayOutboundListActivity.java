@@ -8,8 +8,13 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.screen.stay.outbound.StayOutboundPresenter;
 import com.twoheart.dailyhotel.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by sheldon
@@ -17,9 +22,44 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundListActivity extends BaseActivity<StayOutboundListPresenter>
 {
-    public static Intent newInstance(Context context)
+    static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    static final String INTENT_EXTRA_DATA_CHECKIN = "checkIn";
+    static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
+    static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
+
+    /**
+     *
+     * @param context
+     * @param suggest
+     * @param checkInDateTime ISO-8601
+     * @param checkOutDateTime ISO-8601
+     * @param numberOfAdults
+     * @param childList
+     * @return
+     */
+    public static Intent newInstance(Context context, Suggest suggest, String checkInDateTime, String checkOutDateTime
+        , int numberOfAdults, ArrayList<String> childList)
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
+        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, String keyword, String checkInDateTime, String checkOutDateTime
+        , int numberOfAdults, ArrayList<String> childList)
+    {
+        Intent intent = new Intent(context, StayOutboundListActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
+        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
         return intent;
     }
 

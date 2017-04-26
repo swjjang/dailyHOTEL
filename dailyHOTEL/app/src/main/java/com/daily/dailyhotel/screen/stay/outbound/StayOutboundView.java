@@ -26,7 +26,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         void onSuggestClick(Suggest suggest);
 
-        void onSuggestClick(String keyword);
+        void onSearchKeyword();
 
         void onCalendarClick();
     }
@@ -46,51 +46,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.keywrodEditText.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable)
-            {
-                int length = editable.length();
-
-                if (length == 0)
-                {
-                    viewDataBinding.deleteKeywrodView.setVisibility(View.INVISIBLE);
-                } else
-                {
-                    if (length == 1 && editable.charAt(0) == ' ')
-                    {
-                        editable.delete(0, 1);
-                        return;
-                    }
-
-                    if (length > 1 && editable.charAt(length - 1) == ' ')
-                    {
-                        if (editable.charAt(length - 2) == ' ')
-                        {
-                            editable.delete(length - 1, length);
-                        }
-                        return;
-                    }
-
-                    viewDataBinding.deleteKeywrodView.setVisibility(View.VISIBLE);
-                }
-
-                getEventListener().onRequestSuggests(editable.toString());
-            }
-        });
-
-
+        viewDataBinding.keywrodEditText.addTextChangedListener(mTextWatcher);
         viewDataBinding.deleteKeywrodView.setOnClickListener(this);
         viewDataBinding.calendarTextView.setOnClickListener(this);
     }
@@ -182,6 +138,19 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
     }
 
     @Override
+    public void setSuggest(Suggest suggest)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().keywrodEditText.removeTextChangedListener(mTextWatcher);
+        getViewDataBinding().keywrodEditText.setText(suggest.display);
+        getViewDataBinding().keywrodEditText.addTextChangedListener(mTextWatcher);
+    }
+
+    @Override
     public void setToolbarMenuEnable(boolean enable)
     {
         if (mDailyToolbarLayout == null)
@@ -197,6 +166,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
     {
         switch (v.getId())
         {
+            // 자동 완성 목록에서 특정 텍스트를 클릭하는 경우
             case R.id.textView:
                 Object object = v.getTag();
 
@@ -214,8 +184,9 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
                 getEventListener().onCalendarClick();
                 break;
 
-
+            // 검색 하기
             case R.id.menu1View:
+                getEventListener().onSearchKeyword();
                 break;
 
             case R.id.deleteKeywrodView:
@@ -249,4 +220,53 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         getViewDataBinding().keywrodEditText.setText(null);
     }
+
+    private TextWatcher mTextWatcher = new TextWatcher()
+    {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+        {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable)
+        {
+            if (getViewDataBinding() == null)
+            {
+                return;
+            }
+
+            int length = editable.length();
+
+            if (length == 0)
+            {
+                getViewDataBinding().deleteKeywrodView.setVisibility(View.INVISIBLE);
+            } else
+            {
+                if (length == 1 && editable.charAt(0) == ' ')
+                {
+                    editable.delete(0, 1);
+                    return;
+                }
+
+                if (length > 1 && editable.charAt(length - 1) == ' ')
+                {
+                    if (editable.charAt(length - 2) == ' ')
+                    {
+                        editable.delete(length - 1, length);
+                    }
+                    return;
+                }
+
+                getViewDataBinding().deleteKeywrodView.setVisibility(View.VISIBLE);
+            }
+
+            getEventListener().onRequestSuggests(editable.toString());
+        }
+    };
 }

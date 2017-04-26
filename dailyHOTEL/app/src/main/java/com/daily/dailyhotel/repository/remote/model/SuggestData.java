@@ -25,8 +25,17 @@ public class SuggestData
     @JsonField(name = "categoryKey")
     public int categoryKey;
 
+    @JsonField(name = "countryCode")
+    public String countryCode;
+
     @JsonField(name = "country")
     public String country;
+
+    @JsonField(name = "lat")
+    public double lat;
+
+    @JsonField(name = "lng")
+    public double lng;
 
     public SuggestData()
     {
@@ -40,7 +49,10 @@ public class SuggestData
         suggest.name = name;
         suggest.city = city;
         suggest.country = country;
+        suggest.countryCode = countryCode;
         suggest.display = display;
+        suggest.latitude = lat;
+        suggest.longitude = lng;
 
         return suggest;
     }

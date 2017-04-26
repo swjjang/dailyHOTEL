@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 public interface BaseActivityInterface
 {
-    void onIntent(Intent intent);
+    boolean onIntent(Intent intent);
 
     void onStart();
 

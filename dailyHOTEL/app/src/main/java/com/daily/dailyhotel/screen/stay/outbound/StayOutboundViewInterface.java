@@ -17,5 +17,7 @@ public interface StayOutboundViewInterface extends BaseViewInterface
 
     void setSuggests(List<Suggest> suggestList);
 
+    void setSuggest(Suggest suggest);
+
     void setToolbarMenuEnable(boolean enable);
 }

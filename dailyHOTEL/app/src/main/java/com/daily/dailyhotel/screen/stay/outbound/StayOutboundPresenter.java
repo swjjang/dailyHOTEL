@@ -16,17 +16,19 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.util.ConvertFormat;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -42,6 +44,10 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
     private CommonDateTime mCommonDateTime;
     private StayBookDateTime mStayBookDateTime;
+
+    private Suggest mSuggest;
+    private int mNumberOfAdults;
+    private ArrayList<String> mChildList;
 
     public interface StayOutboundAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -69,6 +75,10 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
+        // 기본 성인 2명, 아동 0명
+        mNumberOfAdults = 2;
+        mChildList = null;
+
         setRefresh(true);
     }
 
@@ -85,16 +95,18 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     }
 
     @Override
-    public void onIntent(Intent intent)
+    public boolean onIntent(Intent intent)
     {
         if (intent == null)
         {
-            return;
+            return true;
         }
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
         }
+
+        return true;
     }
 
     @Override
@@ -190,7 +202,15 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     {
         clearCompositeDisposable();
 
-        if(DailyTextUtils.isTextEmpty(keyword) == true)
+        if (mSuggest == null)
+        {
+            mSuggest = new Suggest();
+        }
+
+        mSuggest.id = null;
+        mSuggest.city = keyword;
+
+        if (DailyTextUtils.isTextEmpty(keyword) == true)
         {
             getViewInterface().setRecentlySuggestsVisibility(true);
             getViewInterface().setSuggestsVisibility(false);
@@ -217,13 +237,40 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
             return;
         }
 
+        mSuggest = suggest.getClone();
 
+        // 검색어에 해당 내용을 넣어준다.
+        getViewInterface().setSuggest(suggest);
     }
 
     @Override
-    public void onSuggestClick(String keyword)
+    public void onSearchKeyword()
     {
+        if (mSuggest == null)
+        {
+            return;
+        }
 
+        Intent intent;
+
+        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        {
+            // 키워드 검색인 경우
+            intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest.city//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mNumberOfAdults, mChildList);
+        } else
+        {
+            // Suggest검색인 경우
+            intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mNumberOfAdults, mChildList);
+
+        }
+
+        startActivity(intent);
     }
 
     @Override

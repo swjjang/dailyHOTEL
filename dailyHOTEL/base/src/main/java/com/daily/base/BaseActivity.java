@@ -27,7 +27,10 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
         mPresenter = createInstancePresenter();
 
-        mPresenter.onIntent(getIntent());
+        if(mPresenter.onIntent(getIntent()) == false)
+        {
+            finish();
+        }
     }
 
     protected abstract
