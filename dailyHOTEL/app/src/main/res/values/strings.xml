@@ -1227,7 +1227,6 @@
     <string name="message_detail_review_stay_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>
     <string name="message_detail_review_gourmet_explain">트루리뷰는 100% 직접 방문한 고객님이 남겨주신 리뷰입니다.</string>
 
-
     <!-- Preview -->
     <string name="label_preview_add_wish">위시리스트\n추가하기</string>
     <string name="label_preview_remove_wish">위시리스트\n삭제하기</string>
@@ -1247,6 +1246,9 @@
 
     <string name="message_preview_guide">목록을 길게 꾸~욱 누르면,\n원하시는 정보를 살짝 엿볼 수 있어요!</string>
     <string name="message_preview_changed_price">판매 정보는 상세화면에서\n확인해주세요.</string>
+
+    <!-- True VR -->
+    <string name="message_truevr_not_support">트루VR을 지원하지 않는 단말입니다.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

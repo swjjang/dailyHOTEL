@@ -593,7 +593,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
                 gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
 
-                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, gourmetBookingDay, mPlaceBookingDetail.placeIndex, 0, false, false);
+                Intent intent = GourmetDetailActivity.newInstance(GourmetReservationDetailActivity.this, gourmetBookingDay, mPlaceBookingDetail.placeIndex, 0, false, false, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
