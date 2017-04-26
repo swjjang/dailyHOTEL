@@ -39,7 +39,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="7dp"
         android:text="@string/label_dont_again"
         android:textColor="@color/default_text_c323232"
         android:textSize="13dp"
@@ -50,14 +50,13 @@
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="16dp">
 
         <LinearLayout
             android:id="@+id/twoButtonLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:orientation="horizontal">
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/negativeTextView"
@@ -78,7 +77,7 @@
                 android:id="@+id/positiveTextView"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:background="@drawable/selector_dialog_button01"
                 android:gravity="center"
                 android:textColor="@drawable/selector_dialog_text_color01"
