@@ -221,6 +221,12 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     }
 
     @Override
+    public void onSuggestClick(String keyword)
+    {
+
+    }
+
+    @Override
     public void onCalendarClick()
     {
         if (lock() == true || mStayBookDateTime == null)
@@ -251,7 +257,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
         }
 
         // 처음 날짜가 없는 경우에는 x일 이후로 보이게 한다
-        final int START_CHECK_IN_AFTER_DAY = 3;
+        final int START_CHECK_IN_AFTER_DAY = 7;
 
         if (mStayBookDateTime == null)
         {
@@ -260,8 +266,8 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
         try
         {
-            mStayBookDateTime.setCheckInDateTime(commonDateTime.dailyDateTime, START_CHECK_IN_AFTER_DAY);
-            mStayBookDateTime.setCheckOutDateTime(commonDateTime.dailyDateTime, START_CHECK_IN_AFTER_DAY + 1);
+            mStayBookDateTime.setCheckInDateTime(commonDateTime.currentDateTime, START_CHECK_IN_AFTER_DAY);
+            mStayBookDateTime.setCheckOutDateTime(commonDateTime.currentDateTime, START_CHECK_IN_AFTER_DAY + 1);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
