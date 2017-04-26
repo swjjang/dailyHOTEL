@@ -182,24 +182,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        // VR 여부
-        if(recommendationStay.supportTrueVR == true)
-        {
-            if(holder.satisfactionView.getVisibility() == View.VISIBLE)
-            {
-                holder.dot1View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dot1View.setVisibility(View.GONE);
-            }
-
-            holder.trueVRView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dot1View.setVisibility(View.GONE);
-            holder.trueVRView.setVisibility(View.GONE);
-        }
-
         if (mNights > 1)
         {
             holder.averageView.setVisibility(View.VISIBLE);
@@ -242,14 +224,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
 
         if (DailyTextUtils.isTextEmpty(recommendationStay.benefit) == false)
         {
-            if(holder.satisfactionView.getVisibility() == View.VISIBLE || holder.trueVRView.getVisibility() == View.VISIBLE)
-            {
-                holder.dot2View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dot2View.setVisibility(View.GONE);
-            }
-
             holder.dBenefitLayout.setVisibility(View.VISIBLE);
             holder.dBenefitTextView.setText(recommendationStay.benefit);
         } else
@@ -263,9 +237,28 @@ public class CollectionStayAdapter extends PlaceListAdapter
         //            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(stay.distance) + "km)");
         //        } else
         //        {
-        holder.dot2View.setVisibility(View.GONE);
+        holder.dot1View.setVisibility(View.GONE);
         holder.distanceTextView.setVisibility(View.GONE);
         //        }
+
+        // VR 여부
+        if(recommendationStay.supportTrueVR == true)
+        {
+            if(holder.satisfactionView.getVisibility() == View.VISIBLE)
+            {
+                holder.dot2View.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dot2View.setVisibility(View.GONE);
+            }
+
+            holder.trueVRView.setVisibility(View.VISIBLE);
+        } else
+        {
+            holder.dot2View.setVisibility(View.GONE);
+            holder.trueVRView.setVisibility(View.GONE);
+        }
+
 
         if (holder.satisfactionView.getVisibility() == View.GONE//
             && holder.trueVRView.getVisibility() == View.GONE//

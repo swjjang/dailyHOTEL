@@ -172,24 +172,6 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.satisfactionView.setVisibility(View.GONE);
         }
 
-        // VR 여부
-        if (recommendationGourmet.supportTrueVR == true)
-        {
-            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
-            {
-                holder.dot1View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dot1View.setVisibility(View.GONE);
-            }
-
-            holder.trueVRView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dot1View.setVisibility(View.GONE);
-            holder.trueVRView.setVisibility(View.GONE);
-        }
-
         holder.discountView.setText(strDiscount);
         holder.nameView.setSelected(true); // Android TextView marquee bug
 
@@ -251,9 +233,27 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         //            holder.distanceTextView.setText("(거리:" + new DecimalFormat("#.#").format(gourmet.distance) + "km)");
         //        } else
         //        {
-        holder.dot2View.setVisibility(View.GONE);
+        holder.dot1View.setVisibility(View.GONE);
         holder.distanceTextView.setVisibility(View.GONE);
         //        }
+
+        // VR 여부
+        if (recommendationGourmet.supportTrueVR == true)
+        {
+            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+            {
+                holder.dot2View.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dot2View.setVisibility(View.GONE);
+            }
+
+            holder.trueVRView.setVisibility(View.VISIBLE);
+        } else
+        {
+            holder.dot2View.setVisibility(View.GONE);
+            holder.trueVRView.setVisibility(View.GONE);
+        }
 
         if (holder.satisfactionView.getVisibility() == View.GONE//
             && holder.trueVRView.getVisibility() == View.GONE//
