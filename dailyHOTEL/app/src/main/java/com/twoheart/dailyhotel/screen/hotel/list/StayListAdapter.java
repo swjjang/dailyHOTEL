@@ -176,7 +176,7 @@ public class StayListAdapter extends PlaceListAdapter
         }
 
         // VR 여부
-        if (stay.supportTrueVR == false)
+        if (stay.supportTrueVR == true)
         {
             if (holder.satisfactionView.getVisibility() == View.VISIBLE)
             {

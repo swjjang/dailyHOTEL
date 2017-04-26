@@ -183,7 +183,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         }
 
         // VR 여부
-        if(recommendationStay.supportTrueVR == false)
+        if(recommendationStay.supportTrueVR == true)
         {
             if(holder.satisfactionView.getVisibility() == View.VISIBLE)
             {

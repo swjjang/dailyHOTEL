@@ -139,7 +139,7 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
         }
 
         // VR 여부
-        if (gourmet.supportTrueVR == false)
+        if (gourmet.supportTrueVR == true)
         {
             if (holder.satisfactionView.getVisibility() == View.VISIBLE)
             {
