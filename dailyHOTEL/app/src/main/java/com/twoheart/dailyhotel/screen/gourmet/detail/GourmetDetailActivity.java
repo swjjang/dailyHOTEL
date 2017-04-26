@@ -1078,8 +1078,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (DailyPreference.getInstance(this).isTrueVRCheckDataGuide() == false)
         {
-            showSimpleDialogType02(null, getString(R.string.message_stay_used_data_guide), getString(R.string.dialog_btn_text_continue)//
-                , getString(R.string.dialog_btn_text_no), new OnCheckDialogStateListener()
+            showSimpleDialogType02(null, getString(R.string.message_stay_used_data_guide), getString(R.string.dialog_btn_do_continue)//
+                , getString(R.string.dialog_btn_text_close), new OnCheckDialogStateListener()
                 {
                     @Override
                     public void onState(View view, boolean checked)

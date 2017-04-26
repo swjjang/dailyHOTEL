@@ -999,7 +999,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_dialog_button_weight_checkbox_layout, null, false);
+        View dialogView = layoutInflater.inflate(R.layout.view_dialog_button_checkbox_layout, null, false);
 
         mDialog = new Dialog(this);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
