@@ -1276,12 +1276,12 @@ public class HomeLayout extends BaseBlurLayout
             {
                 // show
                 setActionButtonVisibility(View.VISIBLE);
-                mSwipeRefreshLayout.setEnabled(true);
+                mSwipeRefreshLayout.setEnabled(false);
             } else
             {
                 // hide
                 setActionButtonVisibility(View.GONE);
-                mSwipeRefreshLayout.setEnabled(false);
+                mSwipeRefreshLayout.setEnabled(true);
             }
         }
     };
