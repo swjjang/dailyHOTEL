@@ -153,6 +153,19 @@ public abstract class PlacePaymentThankyouActivity extends BaseActivity implemen
         }
 
         confirmView.setOnClickListener(this);
+
+        View waitingMessageLayout = findViewById(R.id.waitingMessageLayout);
+        View messageBottomView = findViewById(R.id.messageBottomView);
+
+        String categoryCode = mParams.get(AnalyticsManager.KeyType.CATEGORY);
+        if (AnalyticsManager.ValueType.PENSION.equalsIgnoreCase(categoryCode) == true)
+        {
+            waitingMessageLayout.setVisibility(View.VISIBLE);
+            messageBottomView.setVisibility(View.GONE);
+        } else {
+            waitingMessageLayout.setVisibility(View.GONE);
+            messageBottomView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initStampLayout()
