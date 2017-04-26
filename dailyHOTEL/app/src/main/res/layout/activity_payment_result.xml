@@ -112,6 +112,41 @@
                         android:layout_height="30dp"
                         android:visibility="visible"/>
 
+                    <RelativeLayout
+                        android:id="@+id/waitingMessageLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:orientation="horizontal">
+
+                        <com.daily.base.widget.DailyImageView
+                            android:id="@+id/noticeIconImage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            app:srcCompat="@drawable/ic_payment_notice"
+                            />
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/waitMessageTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@id/noticeIconImage"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toRightOf="@id/noticeIconImage"
+                            android:text="@string/label_reservation_wait_message"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:textColor="@color/default_text_c929292"
+                            android:textSize="11dp"/>
+
+                    </RelativeLayout>
+
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/calendarSaveView"
                         android:layout_width="wrap_content"

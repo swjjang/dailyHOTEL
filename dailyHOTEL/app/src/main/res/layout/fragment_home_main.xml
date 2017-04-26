@@ -44,7 +44,6 @@
             layout="@layout/list_row_home_action_button_layout"/>
     </RelativeLayout>
 
-
     <LinearLayout
         android:id="@+id/errorView"
         android:layout_width="match_parent"

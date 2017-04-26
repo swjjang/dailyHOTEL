@@ -1120,6 +1120,15 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
+
+        try
+        {
+            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(((StayDetail) mPlaceDetail).getStayDetailParams().index), null);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     void recordAnalyticsStayDetail(String screen, StayBookingDay stayBookingDay, StayDetail stayDetail)
@@ -1278,12 +1287,6 @@ public class StayDetailActivity extends PlaceDetailActivity
         public void showActionBar(boolean isAnimation)
         {
             mDailyToolbarLayout.setToolbarVisibility(true, isAnimation);
-
-            if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
-            {
-                mPlaceDetailLayout.setTrueVRTooltipVisibility(false);
-                DailyPreference.getInstance(StayDetailActivity.this).setTrueVRViewTooltip(false);
-            }
         }
 
         @Override
@@ -1620,6 +1623,16 @@ public class StayDetailActivity extends PlaceDetailActivity
         public void releaseUiComponent()
         {
             StayDetailActivity.this.releaseUiComponent();
+        }
+
+        @Override
+        public void onTrueVRClick()
+        {
+            if (mPlaceDetailLayout != null && mPlaceDetailLayout.isTrueVRTooltipVisibility() == true)
+            {
+                mPlaceDetailLayout.hideAnimationTooltip();
+                DailyPreference.getInstance(StayDetailActivity.this).setTrueVRViewTooltip(false);
+            }
         }
     };
 

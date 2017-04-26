@@ -123,6 +123,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         void onWishClick();
 
         void releaseUiComponent();
+
+        void onTrueVRClick();
     }
 
     protected abstract String getProductTypeTitle();
@@ -161,6 +163,17 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
 
         mTrueVRTooltipView = view.findViewById(R.id.trueVRTooltipView);
+        mTrueVRTooltipView.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (mTrueVRTooltipView.getVisibility() == View.VISIBLE)
+                {
+                    ((OnEventListener) mOnEventListener).onTrueVRClick();
+                }
+            }
+        });
 
         mViewPager = (DailyLoopViewPager) view.findViewById(R.id.defaulLoopViewPager);
 
@@ -351,6 +364,53 @@ public abstract class PlaceDetailLayout extends BaseLayout
         {
             mTrueVRTooltipView.setVisibility(View.GONE);
         }
+    }
+
+    public void hideAnimationTooltip()
+    {
+        if (mTrueVRTooltipView == null || mTrueVRTooltipView.getTag() != null)
+        {
+            return;
+        }
+
+        final ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mTrueVRTooltipView, "alpha", 1.0f, 0.0f);
+
+        mTrueVRTooltipView.setTag(objectAnimator);
+
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setDuration(300);
+        objectAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator)
+            {
+                objectAnimator.removeAllListeners();
+                objectAnimator.removeAllUpdateListeners();
+
+                mTrueVRTooltipView.setTag(null);
+                setTrueVRTooltipVisibility(false);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator)
+            {
+
+            }
+        });
+
+        objectAnimator.start();
     }
 
     public boolean isTrueVRTooltipVisibility()
