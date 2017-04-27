@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseException;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.SuggestInterface;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -28,6 +29,8 @@ public class SuggestRemoteImpl implements SuggestInterface
         return DailyMobileAPI.getInstance(mContext).getSuggestsByStayOutbound(keyword).map((suggestsDataBaseDto) ->
         {
             List<Suggest> list = null;
+
+            ExLog.d("pinkred : testtestgetSuggestsByStayOutBoundgetSuggestsByStayOutBoundgetSuggestsByStayOutBoundtestettta");
 
             if (suggestsDataBaseDto != null)
             {

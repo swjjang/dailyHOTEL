@@ -223,9 +223,8 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
             getViewInterface().setSuggestsVisibility(true);
             getViewInterface().setToolbarMenuEnable(true);
 
-            addCompositeDisposable(Observable.timer(500, TimeUnit.MILLISECONDS).doOnNext(timer -> addCompositeDisposable(//
-                mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)))//
-            ).subscribe());
+            addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayOutBound(keyword)//
+                .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(suggests -> onSuggests(suggests), throwable -> onSuggests(null)));
         }
     }
 
@@ -410,6 +409,8 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
     private void onSuggests(List<Suggest> suggestList)
     {
+        ExLog.d("pinkred : onSuggestsonSuggestsonSuggestsonSuggestsonSuggestsonSuggestsonSuggests");
+
         getViewInterface().setSuggests(suggestList);
     }
 }

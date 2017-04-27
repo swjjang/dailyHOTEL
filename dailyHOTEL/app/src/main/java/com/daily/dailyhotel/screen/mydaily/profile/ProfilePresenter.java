@@ -91,16 +91,18 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    public void onIntent(Intent intent)
+    public boolean onIntent(Intent intent)
     {
         if (intent == null)
         {
-            return;
+            return true;
         }
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
         }
+
+        return true;
     }
 
     @Override
