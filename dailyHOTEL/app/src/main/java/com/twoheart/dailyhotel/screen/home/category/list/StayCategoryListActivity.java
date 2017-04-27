@@ -1334,7 +1334,8 @@ public class StayCategoryListActivity extends PlaceMainActivity
 
                 mStayCuration.setStayBookingDay(stayBookingDay);
 
-                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, false);
+                // DeepLink 로 들어오지 않으면 isShowVR false
+                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, hotelIndex, ticketIndex, isShowCalendar, false, false);
                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
