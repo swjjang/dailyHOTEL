@@ -1188,8 +1188,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         String startHour = hour[0];
         String endHour = hour[1];
 
+        String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+        String startLunchTime = lunchTimes[0];
+        String endLunchTime = lunchTimes[1];
+
         String operatingTimeMessage = getString(R.string.dialog_msg_call) //
-            + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour);
+            + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
 
         showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
             getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
