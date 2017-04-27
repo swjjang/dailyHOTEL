@@ -103,6 +103,8 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected abstract void recordAnalyticsShareClicked();
 
+    protected abstract boolean isInValidOperatingTime();
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -544,7 +546,13 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     dialog.dismiss();
                 }
 
-                showDailyCallDialog(null);
+                if (isInValidOperatingTime() == true)
+                {
+                    showNonOpteratingTimeDialog(null);
+                } else
+                {
+                    showDailyCallDialog(null);
+                }
 
                 switch (placeType)
                 {
