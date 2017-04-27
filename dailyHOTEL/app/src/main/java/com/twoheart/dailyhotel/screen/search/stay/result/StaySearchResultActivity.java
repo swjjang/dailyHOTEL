@@ -830,6 +830,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
             }
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
         }
 
         @Override
