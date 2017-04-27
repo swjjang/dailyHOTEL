@@ -223,6 +223,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
                 stay.name, null);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
         }
 
         @Override
