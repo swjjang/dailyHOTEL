@@ -1236,7 +1236,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             , Action.PAYMENT_CLICKED, label, null);
     }
 
-
     private void recordAnalyticsPaymentComplete(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
         try
