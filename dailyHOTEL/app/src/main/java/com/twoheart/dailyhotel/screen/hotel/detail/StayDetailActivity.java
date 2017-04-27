@@ -904,46 +904,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
-    @Override
-    protected boolean isInValidOperatingTime()
-    {
-        try
-        {
-            Calendar todayCalendar = DailyCalendar.getInstance(mTodayDateTime.dailyDateTime, false);
-            int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
-            int minute = todayCalendar.get(Calendar.MINUTE);
-
-            String startHourString = DailyCalendar.convertDateFormatString(mTodayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
-            String endHourString = DailyCalendar.convertDateFormatString(mTodayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
-
-            int startHour = Integer.parseInt(startHourString);
-            int endHour = Integer.parseInt(endHourString);
-
-            String[] lunchTimes = DailyPreference.getInstance(StayDetailActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
-            String[] startLunchTime = lunchTimes[0].split(":");
-            String[] endLunchTime = lunchTimes[1].split(":");
-
-            int startLunchHour = Integer.parseInt(startLunchTime[0]);
-            int startLunchMinute = Integer.parseInt(startLunchTime[1]);
-            int endLunchHour = Integer.parseInt(endLunchTime[0]);
-
-            if (hour < startHour && hour > endHour)
-            {
-                // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
-                return true;
-            } else if ((hour >= startLunchHour && minute >= startLunchMinute) && hour < endLunchHour)
-            {
-                // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
-                return true;
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return false;
-    }
-
     void updateDetailInformationLayout(StayBookingDay stayBookingDay, StayDetail stayDetail)
     {
         switch (mInitializeStatus)

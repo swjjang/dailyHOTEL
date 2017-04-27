@@ -490,7 +490,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
             {
                 Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, false);
                 int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
-//                int minute = todayCalendar.get(Calendar.MINUTE);
+                //                int minute = todayCalendar.get(Calendar.MINUTE);
 
                 String startHourString = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
                 String endHourString = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
@@ -505,6 +505,8 @@ public class HappyTalkCategoryDialog extends BaseActivity
                 //                int startLunchHour = Integer.parseInt(startLunchTime[0]);
                 //                int startLunchMinute = Integer.parseInt(startLunchTime[1]);
                 //                int endLunchHour = Integer.parseInt(endLunchTime[0]);
+                //                boolean isOverStartTime = hour > startLunchHour || (hour == startLunchHour && minute >= startLunchMinute);
+                //                boolean isOverEndTime = hour >= endLunchHour;
 
                 if (hour < startHour && hour > endHour)
                 {
@@ -536,7 +538,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
                             HappyTalkCategoryDialog.this.finish();
                         }
                     });
-                    //                } else if ((hour >= startLunchHour && minute >= startLunchMinute) && hour < endLunchHour)
+                    //                } else if (isOverStartTime == true && isOverEndTime == false)
                     //                {
                     //                    // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
                 } else
