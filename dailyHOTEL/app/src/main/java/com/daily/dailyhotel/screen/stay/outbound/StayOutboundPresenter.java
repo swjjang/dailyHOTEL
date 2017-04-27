@@ -409,8 +409,6 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
     private void onSuggests(List<Suggest> suggestList)
     {
-        ExLog.d("pinkred : onSuggestsonSuggestsonSuggestsonSuggestsonSuggestsonSuggestsonSuggests");
-
         getViewInterface().setSuggests(suggestList);
     }
 }

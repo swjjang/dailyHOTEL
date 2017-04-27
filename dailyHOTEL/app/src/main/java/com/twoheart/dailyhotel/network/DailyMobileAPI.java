@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
@@ -38,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class DailyMobileAPI implements IDailyNetwork
@@ -1247,6 +1247,31 @@ public class DailyMobileAPI implements IDailyNetwork
             : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
 
         return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
+            .subscribeOn(Schedulers.io());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // StayOutboundRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
+        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms, String countryCode, String city//
+        , int numberOfResults, String cacheKey, String cacheLocation)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels"//
+            : "";
+
+        /// 디폴트 인자들
+        final String apiExperience = "ARTNER_MOBILE_APP";
+        final String locale = "ko_KR";
+        final String sort = "DEFAULT";
+
+        return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
+            , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
+            , countryCode, city, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort)//
             .subscribeOn(Schedulers.io());
     }
 }

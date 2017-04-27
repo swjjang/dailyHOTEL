@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
@@ -467,4 +468,28 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
     Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(@Url String mobileAPI, @Query(value = "keyword") String keyword);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // SuggestRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI//
+        , @Query(value = "arrivalDate") String arrivalDate//
+        , @Query(value = "departureDate") String departureDate//
+        , @Query(value = "numberOfAdults") int numberOfAdults//
+        , @Query(value = "numberOfChildren") int numberOfChildren//
+        , @Query(value = "childAges") String childAges//
+        , @Query(value = "numberOfRooms") int numberOfRooms//
+        , @Query(value = "countryCode") String countryCode//
+        , @Query(value = "city") String city//
+        , @Query(value = "numberOfResults") int numberOfResults//
+        , @Query(value = "cacheKey") String cacheKey//
+        , @Query(value = "cacheLocation") String cacheLocation//
+        , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
+        , @Query(value = "locale") String locale// 디폴트 인자들
+        , @Query(value = "sort") String sort// 디폴트 인자들
+    );
+
 }

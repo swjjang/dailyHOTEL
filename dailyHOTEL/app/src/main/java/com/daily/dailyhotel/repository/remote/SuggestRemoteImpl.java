@@ -30,8 +30,6 @@ public class SuggestRemoteImpl implements SuggestInterface
         {
             List<Suggest> list = null;
 
-            ExLog.d("pinkred : testtestgetSuggestsByStayOutBoundgetSuggestsByStayOutBoundgetSuggestsByStayOutBoundtestettta");
-
             if (suggestsDataBaseDto != null)
             {
                 if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
