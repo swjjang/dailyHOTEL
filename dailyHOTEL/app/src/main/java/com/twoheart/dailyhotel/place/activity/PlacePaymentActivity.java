@@ -589,6 +589,12 @@ public abstract class PlacePaymentActivity extends BaseActivity
                     AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                     AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL_, null);
             }
+
+            @Override
+            public void onDismissDialog()
+            {
+                // do nothing!
+            }
         });
     }
 

@@ -18,15 +18,18 @@ import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.HappyTalkCategory;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -108,46 +111,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
         setContentView(mLayout.onCreateView(R.layout.activity_happytalk_category_dialog));
         mLayout.setVisibility(View.INVISIBLE);
 
-        if (DailyHotel.isLogin() == true)
-        {
-            initCategory();
-        } else
-        {
-            showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_happytalk_login), //
-                getString(R.string.frag_login), getString(R.string.dialog_btn_text_close), //
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        Intent intent = LoginActivity.newInstance(HappyTalkCategoryDialog.this, null);
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
-
-                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
-                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.LOGIN, null);
-                    }
-                }, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        finish();
-
-                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
-                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        finish();
-
-                        AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
-                            , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
-                    }
-                }, null, true);
-        }
+        mNetworkController.requestCommonDateTime();
     }
 
     @Override
@@ -517,6 +481,112 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
             AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
                 , AnalyticsManager.Action.HAPPYTALK_START, label, null);
+        }
+
+        @Override
+        public void onCommonDateTime(TodayDateTime todayDateTime)
+        {
+            try
+            {
+                Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, false);
+                int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
+//                int minute = todayCalendar.get(Calendar.MINUTE);
+
+                String startHourString = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+                String endHourString = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+
+                int startHour = Integer.parseInt(startHourString);
+                int endHour = Integer.parseInt(endHourString);
+
+                //                String[] lunchTimes = DailyPreference.getInstance(HappyTalkCategoryDialog.this).getRemoteConfigOperationLunchTime().split("\\,");
+                //                String[] startLunchTime = lunchTimes[0].split(":");
+                //                String[] endLunchTime = lunchTimes[1].split(":");
+                //
+                //                int startLunchHour = Integer.parseInt(startLunchTime[0]);
+                //                int startLunchMinute = Integer.parseInt(startLunchTime[1]);
+                //                int endLunchHour = Integer.parseInt(endLunchTime[0]);
+
+                if (hour < startHour && hour > endHour)
+                {
+                    // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
+
+                    showNonOpteratingTimeDialog(new OnCallDialogListener()
+                    {
+                        @Override
+                        public void onShowDialog()
+                        {
+
+                        }
+
+                        @Override
+                        public void onPositiveButtonClick(View v)
+                        {
+
+                        }
+
+                        @Override
+                        public void onNativeButtonClick(View v)
+                        {
+
+                        }
+
+                        @Override
+                        public void onDismissDialog()
+                        {
+                            HappyTalkCategoryDialog.this.finish();
+                        }
+                    });
+                    //                } else if ((hour >= startLunchHour && minute >= startLunchMinute) && hour < endLunchHour)
+                    //                {
+                    //                    // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
+                } else
+                {
+                    if (DailyHotel.isLogin() == true)
+                    {
+                        initCategory();
+                    } else
+                    {
+                        showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_happytalk_login), //
+                            getString(R.string.frag_login), getString(R.string.dialog_btn_text_close), //
+                            new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    Intent intent = LoginActivity.newInstance(HappyTalkCategoryDialog.this, null);
+                                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_LOGIN);
+
+                                    AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                                        , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.LOGIN, null);
+                                }
+                            }, new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    finish();
+
+                                    AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                                        , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
+                                }
+                            }, new DialogInterface.OnCancelListener()
+                            {
+                                @Override
+                                public void onCancel(DialogInterface dialog)
+                                {
+                                    finish();
+
+                                    AnalyticsManager.getInstance(HappyTalkCategoryDialog.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+                                        , AnalyticsManager.Action.LOGIN_HAPPYTALK, AnalyticsManager.Label.CLOSE, null);
+                                }
+                            }, null, true);
+                    }
+                }
+
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
         }
 
         @Override

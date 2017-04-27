@@ -238,6 +238,12 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                     {
 
                     }
+
+                    @Override
+                    public void onDismissDialog()
+                    {
+                        // do nothing!
+                    }
                 });
 
                 AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//

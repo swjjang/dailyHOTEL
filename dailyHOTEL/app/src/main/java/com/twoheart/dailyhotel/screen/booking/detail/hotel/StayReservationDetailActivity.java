@@ -265,6 +265,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     {
 
                     }
+
+                    @Override
+                    public void onDismissDialog()
+                    {
+                        // do nothing!
+                    }
                 });
 
                 AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//

@@ -59,6 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         void onPositiveButtonClick(View v);
 
         void onNativeButtonClick(View v);
+
+        void onDismissDialog();
     }
 
     Dialog mDialog;
@@ -1174,6 +1176,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             public void onDismiss(DialogInterface dialog)
             {
                 releaseUiComponent();
+
+                if (listener != null)
+                {
+                    listener.onDismissDialog();
+                }
             }
         };
 
@@ -1187,6 +1194,48 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
             getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
             , positiveListener, nativeListener, null, dismissListener, true);
+
+        if (listener != null)
+        {
+            listener.onShowDialog();
+        }
+    }
+
+    public void showNonOpteratingTimeDialog(final OnCallDialogListener listener)
+    {
+        View.OnClickListener positiveListener = v ->
+        {
+            releaseUiComponent();
+
+            if (listener != null)
+            {
+                listener.onPositiveButtonClick(v);
+            }
+        };
+
+        DialogInterface.OnDismissListener dismissListener = dialog ->
+        {
+            releaseUiComponent();
+            if (listener != null)
+            {
+                listener.onDismissDialog();
+            }
+        };
+
+        String[] hour = DailyPreference.getInstance(BaseActivity.this).getOperationTime().split("\\,");
+        String startHour = hour[0];
+        String endHour = hour[1];
+
+        String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+        String startLunchTime = lunchTimes[0];
+        String endLunchTime = lunchTimes[1];
+
+        // 우선 점심시간의 경우 로컬에서 시간 픽스
+        String noneOperatingTimeMessage = getResources().getString( //
+            R.string.dialog_message_none_operating_time, startHour, endHour, startLunchTime, endLunchTime);
+
+        showSimpleDialog(getString(R.string.dialog_information), noneOperatingTimeMessage, //
+            getString(R.string.dialog_btn_text_confirm), positiveListener, dismissListener);
 
         if (listener != null)
         {

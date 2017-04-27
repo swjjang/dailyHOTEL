@@ -165,6 +165,7 @@ public class DailyPreference
 
     private static final String KEY_REMOTE_CONFIG_UPDATE_OPTIONAL = "342";
     private static final String KEY_REMOTE_CONFIG_UPDATE_FORCE = "343";
+    private static final String KEY_REMOTE_CONFIG_OPERATION_LUNCH = "344";
 
     /////////////////////////////////////////////////////////////////////////////////////////
     // New Key old --> v1
@@ -1310,6 +1311,16 @@ public class DailyPreference
     public String getRemoteConfigUpdateForce()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_UPDATE_FORCE, null);
+    }
+
+    public void setRemoteConfigOperationLunchTime(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_OPERATION_LUNCH, value);
+    }
+
+    public String getRemoteConfigOperationLunchTime()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_OPERATION_LUNCH, "11:50,13:00");
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////

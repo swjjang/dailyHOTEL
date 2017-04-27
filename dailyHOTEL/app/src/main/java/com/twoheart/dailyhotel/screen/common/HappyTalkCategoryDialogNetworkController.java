@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
@@ -21,6 +23,8 @@ public class HappyTalkCategoryDialogNetworkController extends BaseNetworkControl
         void onHappyTalkCategory(String happyTalkCategory);
 
         void onUserProfile(String userIndex, String name, String phone, String email);
+
+        void onCommonDateTime(TodayDateTime todayDateTime);
     }
 
     public HappyTalkCategoryDialogNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -36,6 +40,11 @@ public class HappyTalkCategoryDialogNetworkController extends BaseNetworkControl
     public void requestUserProfile()
     {
         DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
+    }
+
+    public void requestCommonDateTime()
+    {
+        DailyMobileAPI.getInstance(mContext).requestCommonDateTime(mNetworkTag, mDateTimeCallback);
     }
 
     private retrofit2.Callback mHappyTalkCategoryCallback = new Callback<JSONObject>()
@@ -123,6 +132,41 @@ public class HappyTalkCategoryDialogNetworkController extends BaseNetworkControl
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             mOnNetworkControllerListener.onError(call, t, false);
+        }
+    };
+
+    private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseDto<TodayDateTime> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCommonDateTime(baseDto.data);
+                    } else
+                    {
+                        mOnNetworkControllerListener.onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(t);
         }
     };
 }
