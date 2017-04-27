@@ -333,6 +333,7 @@
     <string name="dialog_btn_text_close">닫기</string>
     <string name="dialog_btn_text_input_other_phonenumber">다른 번호 입력</string>
     <string name="dialog_btn_text_continue">계속 진행</string>
+    <string name="dialog_btn_do_continue">계속 하기</string>
     <string name="dialog_btn_login_for_benefit">로그인하고 혜택받기</string>
     <string name="dialog_msg_register_creditcard_cancel">결제카드 등록을 취소할까요?</string>
     <string name="dialog_msg_delete_register_creditcard">등록하신 결제카드를 삭제할까요?</string>

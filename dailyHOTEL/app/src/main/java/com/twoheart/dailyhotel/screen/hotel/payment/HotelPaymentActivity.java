@@ -735,14 +735,14 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     @Override
                     public void onClick(View v)
                     {
+                        dialog.dismiss();
+
                         synchronized (HotelPaymentActivity.this)
                         {
-                            if (isLockUiComponent() == true)
+                            if (lockUiComponentAndIsLockUiComponent() == true)
                             {
                                 return;
                             }
-
-                            dialog.dismiss();
 
                             lockUI();
 
@@ -836,7 +836,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                 synchronized (HotelPaymentActivity.this)
                 {
-                    if (isLockUiComponent() == true)
+                    if (lockUiComponentAndIsLockUiComponent() == true)
                     {
                         return;
                     }
@@ -1238,7 +1238,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , Action.PAYMENT_CLICKED, label, null);
     }
-
 
     private void recordAnalyticsPaymentComplete(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {

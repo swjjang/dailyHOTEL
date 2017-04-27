@@ -106,6 +106,25 @@
             android:background="@drawable/shape_circle_bb3ffffff_r3"
             android:visibility="gone"/>
 
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/distanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="12dp"
+            android:visibility="gone"
+            dailyFont:style="DemiLight"/>
+
+        <View
+            android:id="@+id/dot2View"
+            android:layout_width="3dp"
+            android:layout_height="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/shape_circle_bb3ffffff_r3"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:id="@+id/trueVRView"
             android:layout_width="wrap_content"
@@ -123,31 +142,12 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="3dp"
                 android:text="@string/label_truevr"
                 android:textColor="@color/white"
                 android:textSize="12dp"
                 dailyFont:style="DemiLight"/>
         </LinearLayout>
-
-        <View
-            android:id="@+id/dot2View"
-            android:layout_width="3dp"
-            android:layout_height="3dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/shape_circle_bb3ffffff_r3"
-            android:visibility="gone"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/distanceTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="12dp"
-            android:visibility="gone"
-            dailyFont:style="DemiLight"/>
     </LinearLayout>
 
     <LinearLayout
