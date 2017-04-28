@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Locale;
 
 public class DailyRemoteConfig
 {
@@ -344,6 +345,12 @@ public class DailyRemoteConfig
 
             DailyPreference.getInstance(context).setRemoteConfigUpdateOptional(optionalJSONObject.toString());
             DailyPreference.getInstance(context).setRemoteConfigUpdateForce(forceJSONObject.toString());
+
+            JSONObject operationLunchTimeJsonObject = jsonObject.getJSONObject("operationLunchTime");
+            String startTime = operationLunchTimeJsonObject.getString("startTime");
+            String endTime = operationLunchTimeJsonObject.getString("endTime");
+
+            DailyPreference.getInstance(context).setRemoteConfigOperationLunchTime(String.format(Locale.KOREA, "%s,%s", startTime, endTime));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

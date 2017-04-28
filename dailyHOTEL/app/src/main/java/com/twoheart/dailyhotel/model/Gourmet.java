@@ -103,6 +103,11 @@ public class Gourmet extends Place
                 distance = jsonObject.getDouble("distance");
             }
 
+            if (jsonObject.has("truevr") == true)
+            {
+                truevr = jsonObject.getBoolean("truevr");
+            }
+
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
             Iterator<String> iterator = imageJSONObject.keys();

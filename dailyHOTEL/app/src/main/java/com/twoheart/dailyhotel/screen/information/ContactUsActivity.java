@@ -119,6 +119,12 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
                             AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.MENU,//
                             AnalyticsManager.Label.CANCEL_, null);
                     }
+
+                    @Override
+                    public void onDismissDialog()
+                    {
+                        // do nothing!
+                    }
                 });
 
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//

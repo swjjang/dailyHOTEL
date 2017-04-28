@@ -652,7 +652,11 @@ public class StayDetailListAdapter extends BaseAdapter
         String startHour = hour[0];
         String endHour = hour[1];
 
-        conciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour));
+        String[] lunchTimes = DailyPreference.getInstance(mContext).getRemoteConfigOperationLunchTime().split("\\,");
+        String startLunchTime = lunchTimes[0];
+        String endLunchTime = lunchTimes[1];
+
+        conciergeTimeTextView.setText(mContext.getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime));
 
         View conciergeLayout = view.findViewById(R.id.conciergeLayout);
         conciergeLayout.setOnClickListener(new OnClickListener()

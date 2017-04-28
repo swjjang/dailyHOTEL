@@ -36,14 +36,19 @@ import com.facebook.login.LoginManager;
 import com.kakao.usermgmt.UserManagement;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
+
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -59,6 +64,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         void onPositiveButtonClick(View v);
 
         void onNativeButtonClick(View v);
+
+        void onDismissDialog();
+    }
+
+    // showCallDialog 용 interface
+    private interface OnOperatingTimeListener
+    {
+        void onInValidOperatingTime(boolean isInVaildOperatingTime);
     }
 
     Dialog mDialog;
@@ -1120,60 +1133,202 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
     }
 
-    public void showDailyCallDialog(final OnCallDialogListener listener)
+    private void checkInValidOperatingTime(OnOperatingTimeListener operatingTimeListener)
     {
-        View.OnClickListener positiveListener = new View.OnClickListener()
+        if (operatingTimeListener == null)
+        {
+            return;
+        }
+
+        retrofit2.Callback dateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
         {
             @Override
-            public void onClick(View v)
+            public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
             {
-                releaseUiComponent();
+                boolean isInValidOperatingTime = false;
 
-                if (listener != null)
-                {
-                    listener.onPositiveButtonClick(v);
-                }
-
-                String remoteConfigPhoneNumber = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
-                String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
-                    ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
-
-                String noCallMessage = getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
-
-                if (Util.isTelephonyEnabled(BaseActivity.this) == true)
+                if (response != null && response.isSuccessful() && response.body() != null)
                 {
                     try
                     {
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
-                    } catch (ActivityNotFoundException e)
+                        BaseDto<TodayDateTime> baseDto = response.body();
+
+                        if (baseDto.msgCode == 100)
+                        {
+                            TodayDateTime todayDateTime = baseDto.data;
+
+                            Calendar todayCalendar = DailyCalendar.getInstance(todayDateTime.dailyDateTime, false);
+                            int hour = todayCalendar.get(Calendar.HOUR_OF_DAY);
+                            int minute = todayCalendar.get(Calendar.MINUTE);
+
+                            String startHourString = DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+                            String endHourString = DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "H");
+
+                            int startHour = Integer.parseInt(startHourString);
+                            int endHour = Integer.parseInt(endHourString);
+
+                            String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+                            String[] startLunchTime = lunchTimes[0].split(":");
+                            String[] endLunchTime = lunchTimes[1].split(":");
+
+                            int startLunchHour = Integer.parseInt(startLunchTime[0]);
+                            int startLunchMinute = Integer.parseInt(startLunchTime[1]);
+                            int endLunchHour = Integer.parseInt(endLunchTime[0]);
+
+                            boolean isOverStartTime = hour > startLunchHour || (hour == startLunchHour && minute >= startLunchMinute);
+                            boolean isOverEndTime = hour >= endLunchHour;
+
+                            if (hour < startHour && hour > endHour)
+                            {
+                                // 운영 안하는 시간 03:00:01 ~ 08:59:59 - 팝업 발생
+                                isInValidOperatingTime = true;
+                            } else if (isOverStartTime == true && isOverEndTime == false)
+                            {
+                                // 점심시간 11:50:01~12:59:59 - 해피톡의 경우 팝업 발생 안함
+                                isInValidOperatingTime = true;
+                            }
+                        } else
+                        {
+                            isInValidOperatingTime = false;
+                        }
+                    } catch (Exception e)
                     {
-                        DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                        isInValidOperatingTime = false;
                     }
                 } else
                 {
-                    DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                    isInValidOperatingTime = false;
                 }
+
+                operatingTimeListener.onInValidOperatingTime(isInValidOperatingTime);
+            }
+
+            @Override
+            public void onFailure(Call<BaseDto<TodayDateTime>> call, Throwable t)
+            {
+                operatingTimeListener.onInValidOperatingTime(false);
             }
         };
 
-        View.OnClickListener nativeListener = new View.OnClickListener()
+        DailyMobileAPI.getInstance(BaseActivity.this).requestCommonDateTime(mNetworkTag, dateTimeCallback);
+    }
+
+    public void showDailyCallDialog(final OnCallDialogListener listener)
+    {
+        OnOperatingTimeListener operatingTimeListener = new OnOperatingTimeListener()
         {
             @Override
-            public void onClick(View v)
+            public void onInValidOperatingTime(boolean isInVaildOperatingTime)
             {
-                if (listener != null)
+                if (isInVaildOperatingTime == true)
                 {
-                    listener.onNativeButtonClick(v);
+                    showNonOpteratingTimeDialog(listener);
+                } else
+                {
+                    View.OnClickListener positiveListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            releaseUiComponent();
+
+                            if (listener != null)
+                            {
+                                listener.onPositiveButtonClick(v);
+                            }
+
+                            String remoteConfigPhoneNumber = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigCompanyPhoneNumber();
+                            String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
+                                ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
+
+                            String noCallMessage = getResources().getString(R.string.toast_msg_no_call_format, phoneNumber);
+
+                            if (Util.isTelephonyEnabled(BaseActivity.this) == true)
+                            {
+                                try
+                                {
+                                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                                } catch (ActivityNotFoundException e)
+                                {
+                                    DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                                }
+                            } else
+                            {
+                                DailyToast.showToast(BaseActivity.this, noCallMessage, Toast.LENGTH_LONG);
+                            }
+                        }
+                    };
+
+                    View.OnClickListener nativeListener = new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if (listener != null)
+                            {
+                                listener.onNativeButtonClick(v);
+                            }
+                        }
+                    };
+
+                    DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            releaseUiComponent();
+
+                            if (listener != null)
+                            {
+                                listener.onDismissDialog();
+                            }
+                        }
+                    };
+
+                    String[] hour = DailyPreference.getInstance(BaseActivity.this).getOperationTime().split("\\,");
+                    String startHour = hour[0];
+                    String endHour = hour[1];
+
+                    String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+                    String startLunchTime = lunchTimes[0];
+                    String endLunchTime = lunchTimes[1];
+
+                    String operatingTimeMessage = getString(R.string.dialog_msg_call) //
+                        + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour, startLunchTime, endLunchTime);
+
+                    showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
+                        getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
+                        , positiveListener, nativeListener, null, dismissListener, true);
+
+                    if (listener != null)
+                    {
+                        listener.onShowDialog();
+                    }
                 }
             }
         };
 
-        DialogInterface.OnDismissListener dismissListener = new DialogInterface.OnDismissListener()
+        checkInValidOperatingTime(operatingTimeListener);
+    }
+
+    public void showNonOpteratingTimeDialog(final OnCallDialogListener listener)
+    {
+        View.OnClickListener positiveListener = v ->
         {
-            @Override
-            public void onDismiss(DialogInterface dialog)
+            releaseUiComponent();
+
+            if (listener != null)
             {
-                releaseUiComponent();
+                listener.onPositiveButtonClick(v);
+            }
+        };
+
+        DialogInterface.OnDismissListener dismissListener = dialog ->
+        {
+            releaseUiComponent();
+            if (listener != null)
+            {
+                listener.onDismissDialog();
             }
         };
 
@@ -1181,12 +1336,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         String startHour = hour[0];
         String endHour = hour[1];
 
-        String operatingTimeMessage = getString(R.string.dialog_msg_call) //
-            + "\n" + getResources().getString(R.string.message_consult02, startHour, endHour);
+        String[] lunchTimes = DailyPreference.getInstance(BaseActivity.this).getRemoteConfigOperationLunchTime().split("\\,");
+        String startLunchTime = lunchTimes[0];
+        String endLunchTime = lunchTimes[1];
 
-        showSimpleDialog(getString(R.string.dialog_notice2), operatingTimeMessage, //
-            getString(R.string.dialog_btn_call), getString(R.string.dialog_btn_text_cancel) //
-            , positiveListener, nativeListener, null, dismissListener, true);
+        // 우선 점심시간의 경우 로컬에서 시간 픽스
+        String noneOperatingTimeMessage = getResources().getString( //
+            R.string.dialog_message_none_operating_time, startHour, endHour, startLunchTime, endLunchTime);
+
+        showSimpleDialog(getString(R.string.dialog_information), noneOperatingTimeMessage, //
+            getString(R.string.dialog_btn_text_confirm), positiveListener, dismissListener);
 
         if (listener != null)
         {

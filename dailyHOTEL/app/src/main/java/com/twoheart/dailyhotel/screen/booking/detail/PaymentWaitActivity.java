@@ -519,6 +519,12 @@ public class PaymentWaitActivity extends BaseActivity
                     AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
                     AnalyticsManager.Label.CANCEL_, null);
             }
+
+            @Override
+            public void onDismissDialog()
+            {
+                // do nothing!
+            }
         });
     }
 

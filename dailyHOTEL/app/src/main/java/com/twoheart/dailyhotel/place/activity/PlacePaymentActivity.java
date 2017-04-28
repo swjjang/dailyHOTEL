@@ -405,6 +405,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
         if (mFinalCheckDialog != null && mFinalCheckDialog.isShowing() == true)
         {
             mFinalCheckDialog.dismiss();
+            mFinalCheckDialog.cancel();
+            mFinalCheckDialog = null;
         }
 
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
@@ -431,8 +433,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
 
     protected void processAgreeTermDialog()
     {
-        unLockUI();
-
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
         if (mPaymentInformation.isFree == true)
         {
@@ -448,6 +448,8 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 showAgreeTermDialog(mPaymentInformation.paymentType);
             }
         }
+
+        unLockUI();
     }
 
     /**
@@ -491,7 +493,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
         try
         {
             mFinalCheckDialog.show();
-
             recordAnalyticsAgreeTermDialog(mPaymentInformation, mPlaceBookingDay);
         } catch (Exception e)
         {
@@ -587,6 +588,12 @@ public abstract class PlacePaymentActivity extends BaseActivity
                 AnalyticsManager.getInstance(PlacePaymentActivity.this).recordEvent(//
                     AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
                     AnalyticsManager.Action.BOOKING_INITIALISE, Label.CANCEL_, null);
+            }
+
+            @Override
+            public void onDismissDialog()
+            {
+                // do nothing!
             }
         });
     }
