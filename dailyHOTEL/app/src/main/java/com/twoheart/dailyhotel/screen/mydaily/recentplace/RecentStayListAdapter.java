@@ -203,7 +203,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
 
         // VR 여부
-        if (stay.supportTrueVR == true)
+        if (stay.truevr == true)
         {
             if (holder.satisfactionView.getVisibility() == View.VISIBLE)
             {

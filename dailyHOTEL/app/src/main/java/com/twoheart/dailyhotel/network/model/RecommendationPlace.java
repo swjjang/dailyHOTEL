@@ -45,8 +45,8 @@ public abstract class RecommendationPlace
     @JsonField(name = "isSoldOut")
     public boolean isSoldOut;
 
-    @JsonField(name = "supportTrueVR")
-    public boolean supportTrueVR;
+    @JsonField(name = "truevr")
+    public boolean truevr;
 
     @JsonIgnore
     public String imageUrl;
