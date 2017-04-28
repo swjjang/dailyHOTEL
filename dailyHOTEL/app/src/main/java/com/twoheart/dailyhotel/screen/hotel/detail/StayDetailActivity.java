@@ -923,11 +923,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mIsDeepLink == true)
         {
-            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
-            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
-            {
-                stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
-            }
+            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다. - 2017.04.28 알 수 없음으로 안보내기로 함 아이폰도 안보내고 있음.
+//            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
+//            {
+//                stayDetailParams.category = stayDetailParams.getGrade().name();
+//            }
 
             mDailyToolbarLayout.setToolbarText(stayDetailParams.name);
         }

@@ -23,6 +23,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DetailInformation;
+import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
@@ -625,6 +626,18 @@ public class StayDetailListAdapter extends BaseAdapter
                 makeInformationLayout(layoutInflater, childGroup, detailInformation, hasNRD);
 
                 viewGroup.addView(childGroup);
+            }
+
+            String categoryString = stayDetail.getStayDetailParams().category;
+            String gradeString = stayDetail.getStayDetailParams().getGrade().name();
+            String pensionString = mContext.getResources().getString(R.string.code_home_category_pension);
+
+            if (pensionString.equalsIgnoreCase(categoryString) == true //
+                || Stay.Grade.pension.name().equalsIgnoreCase(gradeString) == true)
+            {
+                View pensionOnlyLayout = layoutInflater.inflate(R.layout.list_row_detail_pension_only, viewGroup, false);
+                pensionOnlyLayout.setTranslationY(0 - ScreenUtils.dpToPx(mContext, 6)); // 상위 뷰의 하단 마진이.. 20dp 임으로 상단으로 6만큼 이동하게 되어 하위 마진을 6만큼 빼줌
+                viewGroup.addView(pensionOnlyLayout);
             }
         }
 
