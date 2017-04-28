@@ -106,7 +106,6 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
     public static final class ExecutorCallbackCall<T> implements Call<T>
     {
         private static final int RETRY_COUNT = 3;
-        private static final int DONT_RETRY_COUNT = 10000;
         private int mRetryCount = 0;
 
         final Executor mCallbackExecutor;
@@ -173,7 +172,7 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
                         mQueuedCalls.remove(ExecutorCallbackCall.this);
                     }
 
-                    if (mRetryCount != DONT_RETRY_COUNT && mRetryCount++ < RETRY_COUNT)
+                    if (isCanceled() == false && mRetryCount++ < RETRY_COUNT)
                     {
                         call.clone().enqueue(this);
                         return;
@@ -209,8 +208,6 @@ public class TagCancellableCallAdapterFactory extends CallAdapter.Factory
         @Override
         public void cancel()
         {
-            mRetryCount = DONT_RETRY_COUNT;
-
             mDelegate.cancel();
         }
 
