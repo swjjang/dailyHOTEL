@@ -73,6 +73,12 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
         viewDataBinding.codeCopyView.setOnClickListener(v -> getEventListener().onCodeCopyClick(viewDataBinding.referralTextView.getText().toString()));
     }
 
+    @Override
+    public void setToolbarTitle(String title)
+    {
+
+    }
+
     private void initToolbar(ActivityProfileDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)

@@ -163,7 +163,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
                 {
                     JSONObject jsonObject = DailyPreference.getInstance(this).getDailyRegion(DailyCategoryType.STAY_ALL);
                     isOverSeas = Util.isDailyOverSeas(jsonObject);
-//                    isOverSeas = DailyPreference.getInstance(this).isSelectedOverseaRegion(PlaceType.HOTEL);
+                    //                    isOverSeas = DailyPreference.getInstance(this).isSelectedOverseaRegion(PlaceType.HOTEL);
                 } else
                 {
                     isOverSeas = area.getProvince().isOverseas;

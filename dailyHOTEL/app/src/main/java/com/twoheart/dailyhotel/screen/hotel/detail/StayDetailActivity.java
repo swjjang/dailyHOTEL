@@ -929,7 +929,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
             }
 
-            mDailyToolbarLayout.setToolbarText(stayDetailParams.name);
+            mDailyToolbarLayout.setToolbarTitle(stayDetailParams.name);
         }
 
         if (mPlaceDetailLayout != null)
@@ -1115,7 +1115,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                         trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
 
                         startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList//
-                            , PlaceType.HOTEL, ((StayDetail)mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                            , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1135,7 +1135,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
 
             startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList//
-                , PlaceType.HOTEL, ((StayDetail)mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
 
         try

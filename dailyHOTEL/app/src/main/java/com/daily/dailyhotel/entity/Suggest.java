@@ -35,23 +35,31 @@ public class Suggest
 
         if (DailyTextUtils.isTextEmpty(name) == false)
         {
-            suggest.id = new String(name);
+            suggest.name = new String(name);
         }
 
         if (DailyTextUtils.isTextEmpty(city) == false)
         {
-            suggest.id = new String(city);
+            suggest.city = new String(city);
         }
 
         if (DailyTextUtils.isTextEmpty(country) == false)
         {
-            suggest.id = new String(country);
+            suggest.country = new String(country);
+        }
+
+        if (DailyTextUtils.isTextEmpty(countryCode) == false)
+        {
+            suggest.countryCode = new String(countryCode);
         }
 
         if (DailyTextUtils.isTextEmpty(display) == false)
         {
-            suggest.id = new String(display);
+            suggest.display = new String(display);
         }
+
+        suggest.latitude = latitude;
+        suggest.longitude = longitude;
 
         return suggest;
     }

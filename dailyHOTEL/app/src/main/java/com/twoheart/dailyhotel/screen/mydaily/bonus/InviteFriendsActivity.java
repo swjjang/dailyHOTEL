@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daily.base.widget.DailyToast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.DailyHotel;

@@ -25,9 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyScrollView;
-import com.daily.base.widget.DailyToast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;

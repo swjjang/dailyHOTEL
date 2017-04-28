@@ -10,6 +10,8 @@ public interface BaseViewInterface
 
     void setContentView(int layoutResID, ViewGroup viewGroup);
 
+    void setToolbarTitle(String title);
+
     void hideSimpleDialog();
 
     void showSimpleDialog(String title, String msg, String positive//

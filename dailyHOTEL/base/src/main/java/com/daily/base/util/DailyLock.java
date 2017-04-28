@@ -1,11 +1,13 @@
 package com.daily.base.util;
 
 import android.app.Dialog;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.daily.base.BaseActivity;
@@ -57,19 +59,20 @@ public class DailyLock
         synchronized (this)
         {
             mIsLock = false;
-
-            mProgressBarDialog.hide();
         }
     }
 
     /**
      * 스크린 락을 건다.
      */
-    public boolean screenLock(boolean showProgress)
+    public void screenLock(boolean showProgress)
     {
         mProgressBarDialog.show(showProgress);
+    }
 
-        return lock();
+    public boolean isScreenLock()
+    {
+        return mProgressBarDialog.isShow();
     }
 
     /**
@@ -78,8 +81,6 @@ public class DailyLock
     public void screenUnLock()
     {
         mProgressBarDialog.hide();
-
-        unLock();
     }
 
     /**
@@ -107,9 +108,9 @@ public class DailyLock
                     return;
                 }
 
-                if (mDialog != null && mDialog.isShowing())
+                if (mDialog != null || isShow() == true)
                 {
-                    mDialog.dismiss();
+                    mDialog.cancel();
                 }
             }
         };
@@ -120,16 +121,11 @@ public class DailyLock
 
             mDialog = new Dialog(activity, R.style.TransDialog);
             mProgressBar = new ProgressBar(activity);
+            mProgressBar.getIndeterminateDrawable().setColorFilter(activity.getResources().getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             mDialog.addContentView(mProgressBar, params);
+            mDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             mDialog.setCancelable(false);
-
-            mDialog.setOnCancelListener(dialog ->
-            {
-                hide();
-
-                mActivity.onBackPressed();
-            });
 
             mDialog.setOnKeyListener((dialog, keyCode, event) ->
             {
@@ -169,8 +165,19 @@ public class DailyLock
                     mDialog.show();
                 } catch (Exception e)
                 {
+                    ExLog.e(e.toString());
                 }
             }
+        }
+
+        boolean isShow()
+        {
+            if (mDialog == null)
+            {
+                return false;
+            }
+
+            return mDialog.isShowing();
         }
 
         void hide()
@@ -181,9 +188,11 @@ public class DailyLock
 
         void close()
         {
-            if (mDialog != null && mDialog.isShowing() == true)
+            mHandler.removeMessages(0);
+
+            if (mDialog != null)
             {
-                mDialog.dismiss();
+                mDialog.cancel();
             }
 
             mDialog = null;

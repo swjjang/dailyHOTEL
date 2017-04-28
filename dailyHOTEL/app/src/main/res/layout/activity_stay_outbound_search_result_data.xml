@@ -1,0 +1,242 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_default"/>
+
+        <LinearLayout
+            android:id="@+id/calendarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:layout_margin="8dp"
+                android:background="@color/default_background_cf4f4f6">
+
+                <ImageView
+                    android:id="@+id/calendarImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    app:srcCompat="@drawable/search_ic_01_date"/>
+
+                <ImageView
+                    android:id="@+id/calendarDownArrowView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="9dp"
+                    app:srcCompat="@drawable/navibar_m_ic_v"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/calendarTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toLeftOf="@id/calendarDownArrowView"
+                    android:layout_toRightOf="@id/calendarImageView"
+                    android:gravity="center_vertical"
+                    android:paddingRight="8dp"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/default_line_ce7e7e7"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/personsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/calendarLayout"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/personTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="28dp"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="8dp"
+                    android:background="@color/default_background_cf4f4f6"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="24dp"
+                    android:singleLine="true"
+                    android:text="성인 2명 아동 1명 (만 2세)"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"
+                    app:drawableCompatLeft="@drawable/search_ic_01_surrounding"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="17dp"
+                    app:srcCompat="@drawable/navibar_m_ic_v"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_line_ce7e7e7"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/resultLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/personsLayout"
+            android:visibility="invisible">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"/>
+
+            <LinearLayout
+                android:id="@+id/bottomOptionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/viewTypeOptionImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:background="@drawable/fab_01_map"/>
+
+                <ImageView
+                    android:id="@+id/filterOptionImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_floatingactionview"/>
+            </LinearLayout>
+        </FrameLayout>
+
+        <ScrollView
+            android:id="@+id/emptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/personsLayout"
+            android:fillViewport="true"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/emptyIconImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:minHeight="110dp"
+                    android:scaleType="fitEnd"/>
+
+                <LinearLayout
+                    android:id="@+id/textLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/messageTextView01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_searchresult_empty"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="18dp"
+                        dailyFont:style="Medium"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/messageTextView02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="13dp"
+                        android:gravity="center"
+                        android:text="@string/label_searchresult_text01"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="14dp"/>
+                </LinearLayout>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/researchView"
+                    android:layout_width="125dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_button_common_background"
+                    android:gravity="center"
+                    android:text="@string/label_searchresult_research"
+                    android:textColor="@color/white"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:minHeight="60dp"
+                    android:orientation="vertical">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/callUnderTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="@string/label_searchresult_text02"
+                        android:textColor="@color/default_text_cc5c5c5"
+                        android:textSize="12dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/callTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:gravity="center_horizontal"
+                        android:paddingBottom="15dp"
+                        android:text="@string/label_searchresult_call_customercenter"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="12dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+</layout>

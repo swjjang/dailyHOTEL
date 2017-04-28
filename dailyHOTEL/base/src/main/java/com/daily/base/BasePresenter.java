@@ -39,6 +39,8 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 
+    public abstract void onIntentAfter();
+
     protected abstract void onHandleError(Throwable throwable);
 
     public T1 getActivity()
@@ -99,6 +101,8 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     @Override
     public void onDestroy()
     {
+        mLock.clear();
+
         getViewInterface().hideSimpleDialog();
 
         clearCompositeDisposable();
@@ -152,6 +156,11 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         return mLock.isLock();
     }
 
+    protected boolean isScreenLock()
+    {
+        return mLock.isScreenLock();
+    }
+
     protected boolean lock()
     {
         return mLock.lock();
@@ -162,13 +171,19 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mLock.unLock();
     }
 
-    protected boolean screenLock(boolean showProgress)
+    protected void screenLock(boolean showProgress)
     {
-        return mLock.screenLock(showProgress);
+        mLock.screenLock(showProgress);
     }
 
     protected void screenUnLock()
     {
         mLock.screenUnLock();
+    }
+
+    protected void unLockAll()
+    {
+        unLock();
+        screenUnLock();
     }
 }

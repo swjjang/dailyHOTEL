@@ -1256,18 +1256,13 @@ public class DailyMobileAPI implements IDailyNetwork
 
     public Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(String arrivalDate, String departureDate//
         , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms, String countryCode, String city//
-        , int numberOfResults, String cacheKey, String cacheLocation)
+        , int numberOfResults, String cacheKey, String cacheLocation, String apiExperience, String locale, String sort)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
             : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels"//
-            : "";
-
-        /// 디폴트 인자들
-        final String apiExperience = "ARTNER_MOBILE_APP";
-        final String locale = "ko_KR";
-        final String sort = "DEFAULT";
+            : "NDYkNDckNjckNDAkNzckODUkNDYkMTgkMjYkODckNzMkMzAkMTckNjgkMzkkMTAwJA==$MTlGQkQ3NkNFMENFNVjIk2NjVEMDjkxSQzA4QkMV2NEVEGQkVEQZzVSdCNzI1NEFDOUQwGMUE2OTTGI3NTVBMWkYzMjJNCYRjcyQWw==$";
 
         return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
             , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//

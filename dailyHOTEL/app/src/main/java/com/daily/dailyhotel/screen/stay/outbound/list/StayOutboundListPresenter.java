@@ -11,13 +11,15 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.ListItem;
+import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
-import com.daily.dailyhotel.screen.stay.outbound.StayStayOutboundAnalyticsImpl;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -43,8 +46,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private StayBookDateTime mStayBookDateTime;
 
     private Suggest mSuggest;
-    private int mNumberOfAdults;
-    private ArrayList<String> mChildList;
+    private Persons mPersons;
 
     // 리스트 요청시에 다음이 있는지에 대한 인자들
     private String mCacheKey, mCacheLocation;
@@ -69,12 +71,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void initialize(StayOutboundListActivity activity)
     {
-        setContentView(R.layout.activity_outbound_data);
+        setContentView(R.layout.activity_stay_outbound_search_result_data);
 
-        setAnalytics(new StayStayOutboundAnalyticsImpl());
+        setAnalytics(new StayOutboundListAnalyticsImpl());
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+
+        mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
+
+        setRefresh(true);
     }
 
     @Override
@@ -108,8 +114,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 mSuggest = suggestParcel.getSuggest();
             }
 
-            String checkInDateTime = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
-            String checkOutDateTime = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKOUT);
+            String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
+            String checkOutDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKOUT);
 
             try
             {
@@ -122,8 +128,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return false;
             }
 
-            mNumberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mChildList = intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+            mPersons.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+            mPersons.setChildList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
 
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
@@ -132,8 +138,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mSuggest = new Suggest();
             mSuggest.city = keyword;
 
-            String checkInDateTime = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
-            String checkOutDateTime = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKOUT);
+            String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKIN);
+            String checkOutDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECKOUT);
 
             try
             {
@@ -146,8 +152,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return false;
             }
 
-            mNumberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
-            mChildList = intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+            mPersons.numberOfAdults = intent.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, 2);
+            mPersons.setChildList(intent.getStringArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST));
         } else
         {
             return false;
@@ -157,63 +163,28 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
+    public void onIntentAfter()
+    {
+        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        {
+            // 키워드 검색인 경우
+            getViewInterface().setToolbarTitle(mSuggest.city);
+        } else
+        {
+            // Suggest 검색인 경우
+            getViewInterface().setToolbarTitle(mSuggest.display);
+        }
+    }
+
+    @Override
     public void onStart()
     {
         super.onStart();
 
         if (isRefresh() == true)
         {
-            screenLock(true);
-
-            //            addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime()//
-            //                .subscribe(commonDateTime ->
-            //                {
-            //                    setRefresh(false);
-            //                    onCommonDateTime(commonDateTime);
-            //
-            //                    screenUnLock();
-            //                }, throwable -> onHandleError(throwable)));
-
-
-            Observable<List<StayOutbound>> observable;
-
-            if(DailyTextUtils.isTextEmpty(mSuggest.id) == true)
-            {
-                // 키워드 검색인 경우
-                observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, null, mSuggest.city, mNumberOfAdults, mChildList);
-            } else
-            {
-                // Suggest 검색인 경우
-                observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, mSuggest.countryCode, mSuggest.city, mNumberOfAdults, mChildList);
-            }
-
-            Observable.zip(mCommonRemoteImpl.getCommonDateTime(), observable//
-                , new BiFunction<CommonDateTime, List<StayOutbound>, Object>()
-                {
-                    @Override
-                    public Object apply(CommonDateTime commonDateTime, List<StayOutbound> stayOutBounds) throws Exception
-                    {
-                        onCommonDateTime(commonDateTime);
-                        onStayOutboundList(stayOutBounds);
-
-                        return null;
-                    }
-                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Object>()
-            {
-                @Override
-                public void accept(Object o) throws Exception
-                {
-
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(Throwable throwable) throws Exception
-                {
-                    // 리스트를 호출하다가 에러가 난 경우 처리 방안
-                    onHandleError(throwable);
-                }
-            });
+            clearCache();
+            onRefresh();
         }
     }
 
@@ -221,7 +192,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onResume()
     {
         super.onResume();
-
     }
 
     @Override
@@ -261,6 +231,54 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     }
 
+    @Override
+    protected void onRefresh()
+    {
+        if (getActivity().isFinishing() == true)
+        {
+            return;
+        }
+
+        setRefresh(false);
+        screenLock(true);
+
+        Observable<StayOutbounds> observable;
+
+        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        {
+            // 키워드 검색인 경우
+            observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, null//
+                , mSuggest.city, mPersons, mCacheKey, mCacheLocation);
+        } else
+        {
+            // Suggest 검색인 경우
+            observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
+                , mSuggest.countryCode, mSuggest.city, mPersons, mCacheKey, mCacheLocation);
+        }
+
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), observable//
+            , (commonDateTime, stayOutbounds) ->
+            {
+                onCommonDateTime(commonDateTime);
+
+                return stayOutbounds;
+            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
+        {
+            onStayOutbounds(stayOutbounds);
+            screenUnLock();
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                // 리스트를 호출하다가 에러가 난 경우 처리 방안
+                // 검색 결과 없는 것으로
+
+                onHandleError(throwable);
+            }
+        }));
+    }
+
     private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
@@ -271,12 +289,57 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mCommonDateTime = commonDateTime;
     }
 
-    private void onStayOutboundList(List<StayOutbound> stayOutBounds)
+    private void onStayOutbounds(StayOutbounds stayOutbounds)
     {
-        if (stayOutBounds == null)
+        if (stayOutbounds == null)
         {
             return;
         }
 
+        addCompositeDisposable(Observable.just(stayOutbounds).subscribeOn(Schedulers.io()).map(new Function<StayOutbounds, List<ListItem>>()
+        {
+            @Override
+            public List<ListItem> apply(StayOutbounds stayOutbounds) throws Exception
+            {
+                List<ListItem> listItemList = new ArrayList<>();
+
+                for (StayOutbound stayOutbound : stayOutbounds.getStayOutbound())
+                {
+                    listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound));
+                }
+
+                if (listItemList.size() > 0)
+                {
+                    if (stayOutbounds.moreResultsAvailable == true)
+                    {
+                        listItemList.add(new ListItem(ListItem.TYPE_LOADING_VIEW, null));
+                    } else
+                    {
+                        listItemList.add(new ListItem(ListItem.TYPE_FOOTER_VIEW, null));
+                    }
+                }
+
+                mCacheKey = stayOutbounds.cacheKey;
+                mCacheLocation = stayOutbounds.cacheLocation;
+
+                return listItemList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ListItem>>()
+        {
+            @Override
+            public void accept(List<ListItem> listItems) throws Exception
+            {
+                getViewInterface().setStayOutboundList(listItems);
+            }
+        }));
+    }
+
+    /**
+     * 리스트를 처음부터 호출한다.
+     */
+    private void clearCache()
+    {
+        mCacheKey = null;
+        mCacheLocation = null;
     }
 }

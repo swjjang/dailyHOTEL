@@ -5,8 +5,10 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundInterface;
+import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutbounds;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
 import java.util.ArrayList;
@@ -25,44 +27,54 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<List<StayOutbound>> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
-        , String city, int numberOfAdults, ArrayList<String> childList, String cacheKey, String cacheLocation)
+    public Observable<StayOutbounds> getStayOutBoundList(StayBookDateTime stayBookDateTime, String countryCode//
+        , String city, Persons persons, String cacheKey, String cacheLocation)
     {
-        int numberOfChilds = 0;
+        final int numberOfRooms = 1;
+        final int numberOfResults = 200;
+
+        /// 디폴트 인자들
+        final String apiExperience = "PARTNER_MOBILE_APP";
+        final String locale = "ko_KR";
+        final String sort = "DEFAULT";
+
+        int numberOfAdults = persons.numberOfAdults;
+        int numberOfChildren = 0;
         String childAges = null;
 
-        if (childList != null && childList.size() > 0)
-        {
-            numberOfChilds = childList.size();
-            childAges = null;
+        List<String> childList = persons.getChildList();
 
-            for (String childAge : childList)
+        if (childList != null)
+        {
+            numberOfChildren = childList.size();
+
+            if (numberOfChildren > 0)
             {
-                if (childAges == null)
+                for (String age : childList)
                 {
-                    childAges = childAge;
-                } else
-                {
-                    childAges += "^" + childAge;
+                    if (childAges == null)
+                    {
+                        childAges = age;
+                    } else
+                    {
+                        childAges += "," + age;
+                    }
                 }
             }
         }
 
-        final int numberOfRooms = 1;
-        final int numberOfResults = 200;
-
         return DailyMobileAPI.getInstance(mContext).getStayOutBoundList(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
             , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-            , numberOfAdults, numberOfChilds, childAges, numberOfRooms, countryCode, city//
-            , numberOfResults, cacheKey, cacheLocation).map((stayOutboundDataBaseDto) ->
+            , numberOfAdults, numberOfChildren, childAges, numberOfRooms, countryCode, city//
+            , numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort).map((stayOutboundDataBaseDto) ->
         {
-            List<StayOutbound> list = null;
+            StayOutbounds stayOutbounds = null;
 
             if (stayOutboundDataBaseDto != null)
             {
                 if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
                 {
-                    list = stayOutboundDataBaseDto.data.getStayOutboundList();
+                    stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
                 } else
                 {
                     throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
@@ -72,7 +84,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
                 throw new BaseException(-1, null);
             }
 
-            return list;
+            return stayOutbounds;
         }).observeOn(AndroidSchedulers.mainThread());
     }
 

@@ -101,11 +101,13 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
 
     /**
      * 소지역 이름 뷰의 최대 넓이 셋팅하는 메소드
+     *
      * @param layout
      * @param nameTextView
      * @param countTextView
      */
-    private void setNameTextViewMaxWidth(View layout, TextView nameTextView, TextView countTextView) {
+    private void setNameTextViewMaxWidth(View layout, TextView nameTextView, TextView countTextView)
+    {
         // 전체 레이아웃 넓이
         int layoutWidth = (ScreenUtils.getScreenWidth(mContext) / 2) - 1;
         int widthMeasureSpec1 = View.MeasureSpec.makeMeasureSpec(layoutWidth, View.MeasureSpec.EXACTLY);

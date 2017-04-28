@@ -163,7 +163,7 @@ public class GourmetPaymentLayout extends BaseLayout implements View.OnClickList
 
     public void setToolbarTitle(String title)
     {
-        mDailyToolbarLayout.setToolbarText(title);
+        mDailyToolbarLayout.setToolbarTitle(title);
     }
 
     private void initReservationInformation(View view)

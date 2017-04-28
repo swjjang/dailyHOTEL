@@ -900,7 +900,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (mIsDeepLink == true)
         {
-            mDailyToolbarLayout.setToolbarText(gourmetDetailParams.name);
+            mDailyToolbarLayout.setToolbarTitle(gourmetDetailParams.name);
         }
 
         if (mPlaceDetailLayout != null)

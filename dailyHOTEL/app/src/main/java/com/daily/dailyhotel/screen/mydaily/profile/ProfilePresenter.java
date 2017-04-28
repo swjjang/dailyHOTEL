@@ -106,6 +106,12 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
+    public void onIntentAfter()
+    {
+
+    }
+
+    @Override
     public void onStart()
     {
         super.onStart();
@@ -202,6 +208,12 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
+    protected void onRefresh()
     {
 
     }

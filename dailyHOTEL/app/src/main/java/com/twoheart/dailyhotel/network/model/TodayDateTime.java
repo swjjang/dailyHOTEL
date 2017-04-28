@@ -2,13 +2,11 @@ package com.twoheart.dailyhotel.network.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.CommonDateTime;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.Date;

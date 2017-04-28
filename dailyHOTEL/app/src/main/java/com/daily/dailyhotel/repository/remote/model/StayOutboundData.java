@@ -13,6 +13,9 @@ public class StayOutboundData
     @JsonField(name = "name")
     public String name;
 
+    @JsonField(name = "engName")
+    public String engName;
+
     @JsonField(name = "hotelRating")
     public int hotelRating;
 
@@ -28,11 +31,20 @@ public class StayOutboundData
     @JsonField(name = "longitude")
     public double longitude;
 
+    @JsonField(name = "promo")
+    public boolean promo;
+
     @JsonField(name = "promoDescription")
     public String promoDescription;
 
     @JsonField(name = "totalKrw")
     public String totalKrw;
+
+    @JsonField(name = "nightlyRateKrw")
+    public String nightlyRateKrw;
+
+    @JsonField(name = "nightlyBaseRateKrw")
+    public String nightlyBaseRateKrw;
 
     @JsonField(name = "thumbNailUrl")
     public String thumbNailUrl;
@@ -48,12 +60,20 @@ public class StayOutboundData
 
         stayOutbound.index = hotelId;
         stayOutbound.name = name;
+        stayOutbound.engName = engName;
         stayOutbound.rating = hotelRating;
         stayOutbound.latitude = latitude;
         stayOutbound.longitude = longitude;
-        stayOutbound.promoDescription = promoDescription;
-        stayOutbound.averageKrw = totalKrw;
-        stayOutbound.totalKrw = totalKrw;
+
+        if (promo == true)
+        {
+            stayOutbound.promoDescription = promoDescription;
+        }
+
+        stayOutbound.locationDescription = locationDescription;
+        stayOutbound.nightlyRateKrw = Integer.parseInt(nightlyRateKrw);
+        stayOutbound.nightlyBaseRateKrw = Integer.parseInt(nightlyBaseRateKrw);
+        stayOutbound.totalKrw = Integer.parseInt(totalKrw);
         stayOutbound.thumbNailUrl = thumbNailUrl;
 
         return stayOutbound;

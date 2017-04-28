@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.util;
 
 import android.content.Context;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.Toast;
 

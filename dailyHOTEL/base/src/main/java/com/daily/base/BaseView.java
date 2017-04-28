@@ -156,7 +156,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         hideSimpleDialog();
 
         LayoutInflater layoutInflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), R.layout.dialog_layout_data, null, false);
+        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_layout_data, null, false);
 
         mDialog = new Dialog(mActivity);
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -216,7 +216,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
             dataBinding.twoButtonLayout.setVisibility(View.GONE);
             dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
 
-            dataBinding.positiveTextView.setText(positive);
+            dataBinding.confirmTextView.setText(positive);
             dataBinding.oneButtonLayout.setOnClickListener(v ->
             {
                 if (mDialog != null && mDialog.isShowing())

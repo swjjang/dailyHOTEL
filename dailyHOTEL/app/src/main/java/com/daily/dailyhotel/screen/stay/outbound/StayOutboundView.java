@@ -11,12 +11,12 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityOutboundDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDataBinding;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.List;
 
-public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener, ActivityOutboundDataBinding> implements StayOutboundViewInterface, View.OnClickListener
+public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener, ActivityStayOutboundDataBinding> implements StayOutboundViewInterface, View.OnClickListener
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
@@ -37,7 +37,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
     }
 
     @Override
-    protected void initLayout(final ActivityOutboundDataBinding viewDataBinding)
+    protected void initLayout(final ActivityStayOutboundDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -49,6 +49,17 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
         viewDataBinding.keywrodEditText.addTextChangedListener(mTextWatcher);
         viewDataBinding.deleteKeywrodView.setOnClickListener(this);
         viewDataBinding.calendarTextView.setOnClickListener(this);
+    }
+
+    @Override
+    public void setToolbarTitle(String title)
+    {
+        if (mDailyToolbarLayout == null)
+        {
+            return;
+        }
+
+        mDailyToolbarLayout.setToolbarTitle(title);
     }
 
     @Override
@@ -147,6 +158,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         getViewDataBinding().keywrodEditText.removeTextChangedListener(mTextWatcher);
         getViewDataBinding().keywrodEditText.setText(suggest.display);
+        getViewDataBinding().keywrodEditText.setSelection(getViewDataBinding().keywrodEditText.length());
         getViewDataBinding().keywrodEditText.addTextChangedListener(mTextWatcher);
     }
 
@@ -195,7 +207,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
         }
     }
 
-    private void initToolbar(ActivityOutboundDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayOutboundDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

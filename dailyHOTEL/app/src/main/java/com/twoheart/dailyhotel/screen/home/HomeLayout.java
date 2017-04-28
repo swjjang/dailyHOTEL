@@ -1227,7 +1227,7 @@ public class HomeLayout extends BaseBlurLayout
 
             int maxLayoutTopMargin = ScreenUtils.dpToPx(mContext, 10d);
             int minLayoutTopMargin = 0;
-//            int minLayoutTopMargin = ScreenUtils.dpToPx(mContext, 0d);
+            //            int minLayoutTopMargin = ScreenUtils.dpToPx(mContext, 0d);
 
             View stayButtonLayout = mScrollButtonLayout.findViewById(R.id.stayButtonLayout);
             View gourmetButtonLayout = mScrollButtonLayout.findViewById(R.id.gourmetButtonLayout);
@@ -1272,7 +1272,7 @@ public class HomeLayout extends BaseBlurLayout
 
             // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
             if (scrollY > mEventImageHeight)
-//            if (scrollY > mEventImageHeight + ScreenUtils.dpToPx(mContext, 9d))
+            //            if (scrollY > mEventImageHeight + ScreenUtils.dpToPx(mContext, 9d))
             {
                 // show
                 setActionButtonVisibility(View.VISIBLE);

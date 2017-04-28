@@ -29,7 +29,6 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
     private static final int CHILD_GRID_COLUMN = 2;
 
 
-
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onRegionListResponse(List<RegionViewItem> regionViewList, List<RegionViewItem> subwayViewList);

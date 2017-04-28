@@ -478,9 +478,9 @@ public interface DailyMobileService
     Observable<BaseDto<StayOutboundsData>> getStayOutBoundList(@Url String mobileAPI//
         , @Query(value = "arrivalDate") String arrivalDate//
         , @Query(value = "departureDate") String departureDate//
-        , @Query(value = "numberOfAdults") int numberOfAdults//
-        , @Query(value = "numberOfChildren") int numberOfChildren//
-        , @Query(value = "childAges") String childAges//
+        , @Query(value = "rooms[0].numberOfAdults") int numberOfAdults//
+        , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
+        , @Query(value = "rooms[0].childAges") String childAges //
         , @Query(value = "numberOfRooms") int numberOfRooms//
         , @Query(value = "countryCode") String countryCode//
         , @Query(value = "city") String city//

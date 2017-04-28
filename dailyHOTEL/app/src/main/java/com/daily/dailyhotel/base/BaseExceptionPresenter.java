@@ -7,6 +7,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseException;
 import com.daily.base.BasePresenter;
 import com.daily.base.BaseViewInterface;
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
@@ -21,6 +22,8 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
 {
     private boolean mIsRefresh;
 
+    protected abstract void onRefresh();
+
     public BaseExceptionPresenter(@NonNull T1 activity)
     {
         super(activity);
@@ -28,7 +31,7 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
 
     protected void onHandleError(Throwable throwable)
     {
-        screenUnLock();
+        unLockAll();
 
         if (throwable instanceof BaseException)
         {
@@ -50,6 +53,9 @@ public abstract class BaseExceptionPresenter<T1 extends BaseActivity, T2 extends
                 {
                     Crashlytics.log(httpException.response().raw().request().url().toString());
                     Crashlytics.logException(throwable);
+                } else
+                {
+                    ExLog.e(httpException.response().raw().request().url().toString());
                 }
             }
         } else

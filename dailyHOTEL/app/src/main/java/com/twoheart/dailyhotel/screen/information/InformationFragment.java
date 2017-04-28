@@ -191,7 +191,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
             baseActivity.startActivity(StayOutboundActivity.newInstance(baseActivity));
-//            baseActivity.startActivityForResult(AboutActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
+            //            baseActivity.startActivityForResult(AboutActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_ABOUT);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.DAILY_INFO_CLICK, null, null);

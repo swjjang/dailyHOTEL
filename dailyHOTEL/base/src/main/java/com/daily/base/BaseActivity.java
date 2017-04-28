@@ -30,7 +30,10 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         if(mPresenter.onIntent(getIntent()) == false)
         {
             finish();
+            return;
         }
+
+        mPresenter.onIntentAfter();
     }
 
     protected abstract
