@@ -238,7 +238,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         //        }
 
         // VR 여부
-        if (recommendationGourmet.supportTrueVR == true)
+        if (recommendationGourmet.truevr == true)
         {
             if (holder.satisfactionView.getVisibility() == View.VISIBLE)
             {

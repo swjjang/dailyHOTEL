@@ -111,6 +111,11 @@ public class Stay extends Place
             //            sday = jsonObject.getString("sday");
             distance = jsonObject.getDouble("distance");
 
+            if (jsonObject.has("truevr") == true)
+            {
+                truevr = jsonObject.getBoolean("truevr");
+            }
+
             try
             {
                 JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
