@@ -9,87 +9,91 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <com.daily.base.widget.DailyImageView
-        android:id="@+id/backView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/img_vr_top_gradient"
-        android:scaleType="center"
-        app:srcCompat="@drawable/navibar_ic_x_white"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/img_detail_bottom_gradient"/>
-
-    <com.daily.base.widget.DailyTextView
-        android:id="@+id/productNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/shape_fillrect_b66000000_r3"
-        android:gravity="center_vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:textColor="@color/white"
-        android:textSize="12dp"/>
-
     <RelativeLayout
-        android:id="@+id/pageLayout"
-        android:layout_width="107dp"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/shape_fillrect_b66000000_r3"
-        android:gravity="center_vertical"
-        android:visibility="gone">
+        android:id="@+id/webViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <com.daily.base.widget.DailyImageView
-            android:id="@+id/prevView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            app:srcCompat="@drawable/ic_page_prev"/>
+            android:id="@+id/backView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/img_vr_top_gradient"
+            android:scaleType="center"
+            app:srcCompat="@drawable/navibar_ic_x_white"/>
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/nextView"
-            android:layout_toRightOf="@+id/prevView"
-            android:gravity="center_horizontal">
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/img_detail_bottom_gradient"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/currentPageTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="12dp"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/totalPageTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:textColor="@color/white_a40"
-                android:textSize="12dp"/>
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/nextView"
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/productNameTextView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_fillrect_b66000000_r3"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/white"
+            android:textSize="12dp"/>
+
+        <RelativeLayout
+            android:id="@+id/pageLayout"
+            android:layout_width="107dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            app:srcCompat="@drawable/ic_page_next"/>
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/shape_fillrect_b66000000_r3"
+            android:gravity="center_vertical"
+            android:visibility="gone">
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/prevView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                app:srcCompat="@drawable/ic_page_prev"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/nextView"
+                android:layout_toRightOf="@+id/prevView"
+                android:gravity="center_horizontal">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/currentPageTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/totalPageTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/white_a40"
+                    android:textSize="12dp"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/nextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                app:srcCompat="@drawable/ic_page_next"/>
+        </RelativeLayout>
     </RelativeLayout>
-
-
 </RelativeLayout>

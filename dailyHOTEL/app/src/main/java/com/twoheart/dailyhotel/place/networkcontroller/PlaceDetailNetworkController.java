@@ -37,6 +37,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
 
         void onPlaceReviewScores(PlaceReviewScores placeReviewScores);
 
+        void onHasVRList();
     }
 
     public void requestCommonDatetime()
@@ -68,6 +69,11 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
 
         DailyMobileAPI.getInstance(mContext).requestPlaceReviewScores(mNetworkTag, type, placeIndex, mPlaceReviewScoresCallback);
+    }
+
+    public void requestHasVRList(Constants.PlaceType placeType, int placeIndex)
+    {
+        DailyMobileAPI.getInstance(mContext).requestHasVRList(mNetworkTag, placeType, placeIndex, mVRListCallback);
     }
 
     private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
@@ -241,6 +247,41 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
     };
 
     private retrofit2.Callback mPlaceReviewScoresCallback = new retrofit2.Callback<BaseDto<PlaceReviewScores>>()
+    {
+        @Override
+        public void onResponse(Call<BaseDto<PlaceReviewScores>> call, Response<BaseDto<PlaceReviewScores>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseDto<PlaceReviewScores> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(baseDto.data);
+                    } else
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+                    }
+                } catch (Exception e)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+                }
+            } else
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseDto<PlaceReviewScores>> call, Throwable t)
+        {
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+        }
+    };
+
+    private retrofit2.Callback mVRListCallback = new retrofit2.Callback<BaseDto<PlaceReviewScores>>()
     {
         @Override
         public void onResponse(Call<BaseDto<PlaceReviewScores>> call, Response<BaseDto<PlaceReviewScores>> response)

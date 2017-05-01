@@ -7,6 +7,7 @@ import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
@@ -833,6 +834,30 @@ public class DailyMobileAPI implements IDailyNetwork
         urlParams.put("{restaurantIdx}", Integer.toString(placeIndex));
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCouponList(Crypto.getUrlDecoderEx(URL, urlParams), date);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    public void requestHasVRList(String tag, Constants.PlaceType placeType, int placeIndex, Object listener)
+    {
+        final String URL;
+        Map<String, String> urlParams = new HashMap<>();
+
+        if(Constants.PlaceType.HOTEL == placeType)
+        {
+            URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/vr-list"//
+                : "";
+
+            urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
+        } else
+        {
+            URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/vr-list"//
+                : "";
+
+            urlParams.put("{restaurantIdx}", Integer.toString(placeIndex));
+        }
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHasVRList(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }

@@ -319,6 +319,10 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Call<JSONObject> requestCouponList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("dateSale") String dateSale);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Call<JSONObject> requestHasVRList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
     @FormUrlEncoded
     @POST("{mobileAPI}")
     Call<JSONObject> requestRegisterKeywordCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("keyword") String keyword);
