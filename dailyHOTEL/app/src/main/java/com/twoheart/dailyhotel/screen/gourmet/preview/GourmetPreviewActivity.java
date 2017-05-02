@@ -242,7 +242,7 @@ public class GourmetPreviewActivity extends BaseActivity
             params.put(AnalyticsManager.KeyType.CATEGORY, gourmetDetailParams.category);
 
             AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.PEEK_POP, null, params);
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
