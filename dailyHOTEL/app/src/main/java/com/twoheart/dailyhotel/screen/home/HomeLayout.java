@@ -709,6 +709,8 @@ public class HomeLayout extends BaseBlurLayout
                         mEventHandler.removeMessages(0);
                     }
                 }
+
+                mSwipeRefreshLayout.setEnabled(DailyLoopViewPager.SCROLL_STATE_IDLE == state);
             }
         });
 
@@ -1272,15 +1274,20 @@ public class HomeLayout extends BaseBlurLayout
 
             // globalVisibleRect 로 동작시 android os 4.X 에서 화면을 벗어날때 rect.top 이 증가하는 이슈로 상단 뷰 크기를 고정으로 알아와서 적용!
             if (scrollY > mEventImageHeight)
-            //            if (scrollY > mEventImageHeight + ScreenUtils.dpToPx(mContext, 9d))
             {
                 // show
                 setActionButtonVisibility(View.VISIBLE);
-                mSwipeRefreshLayout.setEnabled(false);
             } else
             {
                 // hide
                 setActionButtonVisibility(View.GONE);
+            }
+
+            if (scrollY > 0)
+            {
+                mSwipeRefreshLayout.setEnabled(false);
+            } else
+            {
                 mSwipeRefreshLayout.setEnabled(true);
             }
         }

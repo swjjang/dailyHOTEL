@@ -239,7 +239,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                     switch (eventName)
                     {
                         case "UNSUPPORTED_BROWSER":
-                            showSimpleDialog(null, getString(R.string.message_truevr_not_support), getString(R.string.dialog_btn_text_confirm), null//
+                            showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null//
                                 , new DialogInterface.OnDismissListener()
                                 {
                                     @Override
@@ -251,7 +251,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                             break;
 
                         case "FAILED_TO_LOAD_PLAYER":
-                            showSimpleDialog(null, arg, getString(R.string.dialog_btn_text_confirm), null//
+                            showSimpleDialog(null, getString(R.string.message_truevr_failed_load_truevr), getString(R.string.dialog_btn_text_confirm), null//
                                 , new DialogInterface.OnDismissListener()
                                 {
                                     @Override
