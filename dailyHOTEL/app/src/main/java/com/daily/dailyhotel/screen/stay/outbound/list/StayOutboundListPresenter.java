@@ -24,10 +24,10 @@ import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -174,6 +174,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             // Suggest 검색인 경우
             getViewInterface().setToolbarTitle(mSuggest.display);
         }
+
+        setCalendarText(mStayBookDateTime);
     }
 
     @Override
@@ -332,6 +334,24 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setStayOutboundList(listItems);
             }
         }));
+    }
+
+    private void setCalendarText(StayBookDateTime stayBookDateTime)
+    {
+        if (stayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     /**

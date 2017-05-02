@@ -9,6 +9,8 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
 {
     void setToolbarTitle(String title);
 
+    void setCalendarText(String calendarText);
+
     void setStayOutboundList(List<ListItem> listItemList);
 
     void addStayOutboundList(List<ListItem> listItemList);

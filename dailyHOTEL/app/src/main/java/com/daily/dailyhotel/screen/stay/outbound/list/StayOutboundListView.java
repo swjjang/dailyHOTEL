@@ -54,6 +54,17 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
+    public void setCalendarText(String calendarText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().calendarTextView.setText(calendarText);
+    }
+
+    @Override
     public void setStayOutboundList(List<ListItem> listItemList)
     {
         if (getViewDataBinding() == null)
