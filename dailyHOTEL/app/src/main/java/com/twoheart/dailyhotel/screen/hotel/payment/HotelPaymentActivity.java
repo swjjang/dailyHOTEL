@@ -31,6 +31,7 @@ import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyToast;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
+import com.twoheart.dailyhotel.model.Booking;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.model.CreditCard;
 import com.twoheart.dailyhotel.model.Customer;
@@ -64,8 +65,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Label;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -1236,6 +1239,35 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             , Action.PAYMENT_CLICKED, label, null);
     }
 
+    private void onCheckOverlapSaty(boolean overlap)
+    {
+        unLockUI();
+
+        if (overlap == true)
+        {
+            showSimpleDialog(null, getString(R.string.dialog_msg_hotel_payment_overlap)//
+                , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
+                , new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        processAgreeTermDialog();
+                    }
+                }, new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+
+                    }
+                }, false);
+        } else
+        {
+            processAgreeTermDialog();
+        }
+    }
+
     private void recordAnalyticsPaymentComplete(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
         try
@@ -1903,7 +1935,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeCallback);
                 } else
                 {
-                    processAgreeTermDialog();
+                    lockUI();
+
+                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestBookingList(mNetworkTag, mReservationListCallback);
                 }
             }
         }
@@ -2674,7 +2708,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             }
                         }
 
-                        processAgreeTermDialog();
+                        lockUI();
+
+                        DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestBookingList(mNetworkTag, mReservationListCallback);
                     } else
                     {
                         onErrorPopupMessage(baseDto.msgCode, baseDto.msg);
@@ -2686,9 +2722,6 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     onError(e);
                     setResult(CODE_RESULT_ACTIVITY_REFRESH);
                     finish();
-                } finally
-                {
-                    unLockUI();
                 }
             } else
             {
@@ -2792,6 +2825,102 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         public void onFailure(Call<JSONObject> call, Throwable t)
         {
             HotelPaymentActivity.this.onError(t);
+        }
+    };
+
+    retrofit2.Callback mReservationListCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msg_code");
+
+                    if (msgCode == 0)
+                    {
+                        JSONArray dataJSONArray = responseJSONObject.getJSONArray("data");
+                        int length = dataJSONArray.length();
+                        ArrayList<Booking> bookingArrayList = null;
+
+                        if (length == 0)
+                        {
+                            onCheckOverlapSaty(false);
+                        } else
+                        {
+                            onCheckOverlapSaty(checkOverlapBookingList(dataJSONArray));
+                        }
+                    } else
+                    {
+                        onCheckOverlapSaty(false);
+                    }
+                } catch (Exception e)
+                {
+                    onCheckOverlapSaty(false);
+                } finally
+                {
+                    unLockUI();
+                }
+            } else
+            {
+                onCheckOverlapSaty(false);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            onCheckOverlapSaty(false);
+        }
+
+        private boolean checkOverlapBookingList(JSONArray jsonArray) throws Exception
+        {
+            if (jsonArray == null || jsonArray.length() == 0)
+            {
+                return false;
+            }
+
+            int length = jsonArray.length();
+            String checkInDateTime = ((StayBookingDay) mPlaceBookingDay).getCheckInDay("yyyy-MM-dd");
+
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                Booking booking = new Booking(jsonObject);
+
+                if (booking.readyForRefund == false)
+                {
+                    switch (booking.payType)
+                    {
+                        case CODE_PAY_TYPE_CARD_COMPLETE:
+                        case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
+                            String bookingCheckInDateTime = DailyCalendar.format(booking.checkinTime, "yyyy-MM-dd", TimeZone.getTimeZone("GMT+09:00"));
+
+                            if(checkInDateTime.compareToIgnoreCase(bookingCheckInDateTime) > 0)
+                            {
+                                return false;
+                            }
+
+                            if (checkInDateTime.equalsIgnoreCase(bookingCheckInDateTime) == true//
+                                && booking.placeName.equalsIgnoreCase(mPlaceName) == true)
+                            {
+                                return true;
+                            }
+
+                            break;
+
+                        case CODE_PAY_TYPE_ACCOUNT_WAIT:
+                            break;
+                    }
+                }
+            }
+
+            return false;
         }
     };
 }
