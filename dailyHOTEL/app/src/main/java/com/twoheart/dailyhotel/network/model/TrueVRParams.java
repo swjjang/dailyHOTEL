@@ -15,6 +15,12 @@ public class TrueVRParams implements Parcelable
     @JsonField(name = "name")
     public String name;
 
+    @JsonField(name = "type")
+    public String type;
+
+    @JsonField(name = "typeIdx")
+    public int typeIdx;
+
     @JsonField(name = "url")
     public String url;
 

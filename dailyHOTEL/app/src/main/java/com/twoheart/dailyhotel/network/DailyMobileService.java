@@ -20,6 +20,7 @@ import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.network.model.TrueVRParams;
 
 import org.json.JSONObject;
 
@@ -321,7 +322,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Call<JSONObject> requestHasVRList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Call<BaseListDto<TrueVRParams>> requestHasVRList(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("type") String type);
 
     @FormUrlEncoded
     @POST("{mobileAPI}")

@@ -35,11 +35,13 @@ import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
+import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.payment.GourmetPaymentActivity;
@@ -57,6 +59,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -353,8 +356,10 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
             initLayout(placeName, mDefaultImageUrl, isFromMap);
         }
-    }
 
+        // VR 여부 판단
+        mPlaceDetailNetworkController.requestHasVRList(PlaceType.FNB, mPlaceDetail.index, "RESTAURANT");
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -1084,7 +1089,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onState(View view, boolean checked)
                     {
-                        //                        startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                        startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mTrueVRParamsList//
+                            , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1097,7 +1103,8 @@ public class GourmetDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            //            startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, trueVRParamsList), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+            startActivityForResult(TrueVRActivity.newInstance(GourmetDetailActivity.this, mTrueVRParamsList//
+                , PlaceType.FNB, ((GourmetDetail) mPlaceDetail).getGourmetDetailParmas().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
 
         try
@@ -1860,6 +1867,12 @@ public class GourmetDetailActivity extends PlaceDetailActivity
             mPlaceReviewScores = placeReviewScores;
 
             mPlaceDetailLayout.setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
+        }
+
+        @Override
+        public void onHasVRList(ArrayList<TrueVRParams> trueVRParamsList)
+        {
+            mTrueVRParamsList = trueVRParamsList;
         }
 
         @Override
