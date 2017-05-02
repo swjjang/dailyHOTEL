@@ -1,9 +1,11 @@
 package com.twoheart.dailyhotel.screen.common;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -25,6 +27,8 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     private TextView mCurrentPageTextView, mTotalPageTextView;
     private View mPageLayout;
     private View mPrevView, mNextView;
+    private View mWebViewLayout;
+
 
     private int mCurrentPage;
 
@@ -103,6 +107,14 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
 
     private void initLayout(final DailyWebView dailyWebView)
     {
+        if (dailyWebView == null)
+        {
+            return;
+        }
+
+        dailyWebView.addJavascriptInterface(new CupixEventListener(), "cupixEventListener");
+
+        mWebViewLayout = findViewById(R.id.webViewLayout);
         mPageLayout = findViewById(R.id.pageLayout);
 
         if (mTrueVRParamsList == null && mTrueVRParamsList.size() == 1)
@@ -199,5 +211,88 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     public void onBackPressed()
     {
         super.onBackPressed();
+    }
+
+    class CupixEventListener
+    {
+        @JavascriptInterface
+        public void update(String eventType, String eventName, String arg)
+        {
+            //            1. Browser spec.을 체크하여 지원하지 않는 경우 넘어옵니다.
+            //            Event Type: "ERROR"
+            //            Event Name: "UNSUPPORTED_BROWSER"
+            //            Argument: reason
+            //
+            //            2. House가 unpublished이거나 존재하지 않는등의 이유로 로드를 할수 없는 경우 넘어옵니다.
+            //            Event Type: "ERROR"
+            //            Event Name: "FAILED_TO_LOAD_PLAYER"
+            //            Argument: errorMessage
+            //
+            //            3. View mode가 변경 되었을 때 넘어옵니다. View mode는 "view-3D", "view-walk", "view-stereo", "view-reset" 4가지 이며 stereo가 VR 모드입니다.
+            //            Event Type: "INFO"
+            //            Event Name: "VIEW_MODE_CHANGED"
+            //            Argument: viewMode
+
+            switch (eventType)
+            {
+                case "ERROR":
+                    switch (eventName)
+                    {
+                        case "UNSUPPORTED_BROWSER":
+                            showSimpleDialog(null, getString(R.string.message_truevr_not_support), getString(R.string.dialog_btn_text_confirm), null//
+                                , new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        TrueVRActivity.this.finish();
+                                    }
+                                });
+                            break;
+
+                        case "FAILED_TO_LOAD_PLAYER":
+                            showSimpleDialog(null, arg, getString(R.string.dialog_btn_text_confirm), null//
+                                , new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        TrueVRActivity.this.finish();
+                                    }
+                                });
+                            break;
+                    }
+                    break;
+
+                case "INFO":
+                    switch (eventName)
+                    {
+                        case "VIEW_MODE_CHANGED":
+                            switch (arg)
+                            {
+                                case "view-stereo":
+                                    if (mWebViewLayout != null)
+                                    {
+                                        mWebViewLayout.setVisibility(View.INVISIBLE);
+                                    }
+                                    break;
+
+                                case "view-reset":
+                                case "view-3D":
+                                case "view-walk":
+                                default:
+                                    if (mWebViewLayout != null)
+                                    {
+                                        mWebViewLayout.setVisibility(View.VISIBLE);
+                                    }
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+            }
+
+            ExLog.d("[CupixEvent][" + eventType + "] " + eventName + ": " + arg);
+        }
     }
 }

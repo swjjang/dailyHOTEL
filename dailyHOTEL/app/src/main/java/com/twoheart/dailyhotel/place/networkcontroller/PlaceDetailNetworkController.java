@@ -5,13 +5,17 @@ import android.content.Context;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -37,6 +41,7 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
 
         void onPlaceReviewScores(PlaceReviewScores placeReviewScores);
 
+        void onHasVRList(ArrayList<TrueVRParams> trueVRParamsList);
     }
 
     public void requestCommonDatetime()
@@ -68,6 +73,16 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         String type = Constants.PlaceType.FNB.equals(placeType) ? "gourmet" : "hotel";
 
         DailyMobileAPI.getInstance(mContext).requestPlaceReviewScores(mNetworkTag, type, placeIndex, mPlaceReviewScoresCallback);
+    }
+
+    /**
+     * @param placeType
+     * @param placeIndex
+     * @param type       HOTEL, ROOM, RESTAURANT, TICKET
+     */
+    public void requestHasVRList(Constants.PlaceType placeType, int placeIndex, String type)
+    {
+        DailyMobileAPI.getInstance(mContext).requestHasVRList(mNetworkTag, placeType, placeIndex, type, mVRListCallback);
     }
 
     private retrofit2.Callback mDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
@@ -272,6 +287,41 @@ public abstract class PlaceDetailNetworkController extends BaseNetworkController
         public void onFailure(Call<BaseDto<PlaceReviewScores>> call, Throwable t)
         {
             ((OnNetworkControllerListener) mOnNetworkControllerListener).onPlaceReviewScores(null);
+        }
+    };
+
+    private retrofit2.Callback mVRListCallback = new retrofit2.Callback<BaseListDto<TrueVRParams>>()
+    {
+        @Override
+        public void onResponse(Call<BaseListDto<TrueVRParams>> call, Response<BaseListDto<TrueVRParams>> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    BaseListDto<TrueVRParams> baseDto = response.body();
+
+                    if (baseDto.msgCode == 100)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasVRList((ArrayList) baseDto.data);
+                    } else
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasVRList(null);
+                    }
+                } catch (Exception e)
+                {
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasVRList(null);
+                }
+            } else
+            {
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasVRList(null);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<BaseListDto<TrueVRParams>> call, Throwable t)
+        {
+            ((OnNetworkControllerListener) mOnNetworkControllerListener).onHasVRList(null);
         }
     };
 }
