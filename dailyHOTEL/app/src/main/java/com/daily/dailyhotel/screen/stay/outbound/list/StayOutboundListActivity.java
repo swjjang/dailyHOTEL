@@ -20,12 +20,12 @@ import java.util.ArrayList;
  */
 public class StayOutboundListActivity extends BaseActivity<StayOutboundListPresenter>
 {
-    static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
-    static final String INTENT_EXTRA_DATA_CHECKIN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
-    static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
-    static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
-    static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
+    private static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    private static final String INTENT_EXTRA_DATA_CHECKIN = "checkIn";
+    private static final String INTENT_EXTRA_DATA_CHECKOUT = "checkOut";
+    private static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    private static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
+    private static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
 
     /**
      * @param context
