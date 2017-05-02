@@ -10,7 +10,6 @@ import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
@@ -826,7 +825,7 @@ public class DailyMobileAPI implements IDailyNetwork
         final String URL;
         Map<String, String> urlParams = new HashMap<>();
 
-        if(Constants.PlaceType.HOTEL == placeType)
+        if (Constants.PlaceType.HOTEL == placeType)
         {
             URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/vr-list"//
                 : "NDgkMzIkNiQzNyQzNiQ3NyQ2MCQ4OSQ4NiQ4MyQ3JDQ1JDQxJDAkNjQkNTkk$JRkNGMEUXRCM0NBQ0EyMDdBRkY5QTJGOTgzTMUXYFwVNjkxBNTk3NDE1LQzPREMEQEQ3Mzc5ODc3MzJFNEIwCMDM4SQjFTEOESY4Mg==$";
