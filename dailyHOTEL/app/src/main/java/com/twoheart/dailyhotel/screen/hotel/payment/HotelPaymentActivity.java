@@ -91,6 +91,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
     boolean mIsChangedPrice; // 가격이 변경된 경우.
     private String mPlaceImageUrl;
     private boolean mIsUnderPrice;
+    private TodayDateTime mTodayDateTime; // 결제 버튼 누르면 체크함.
 
     // 1 : 오후 6시 전 당일 예약, 2 : 오후 6시 후 당일 예약, 3: 새벽 3시 이후 - 오전 9시까지의 당일 예약
     // 10 : 오후 10시 전 사전 예약, 11 : 오후 10시 후 사전 예약 00시 전 12 : 00시 부터 오전 9시
@@ -1268,6 +1269,47 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     }
 
+    private void onPensionPopupMessage(TodayDateTime todayDateTime) throws Exception
+    {
+        if (todayDateTime == null)
+        {
+            return;
+        }
+
+        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+        int openHour = Integer.parseInt(DailyCalendar.convertDateFormatString(todayDateTime.openDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+        int closeHour = Integer.parseInt(DailyCalendar.convertDateFormatString(todayDateTime.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+        int currentHour = Integer.parseInt(DailyCalendar.convertDateFormatString(todayDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
+
+        // 당일인지 아닌지
+        if (todayDateTime.dailyDateTime.equalsIgnoreCase(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)) == true)
+        {
+            if (currentHour >= openHour && currentHour < 18)
+            {
+                mPensionPopupMessageType = 1;
+            } else if (currentHour >= 18 || currentHour < closeHour)
+            {
+                mPensionPopupMessageType = 2;
+            } else
+            {
+                mPensionPopupMessageType = 3;
+            }
+        } else
+        {
+            if (currentHour >= openHour && currentHour < 22)
+            {
+                mPensionPopupMessageType = 10;
+            } else if (currentHour >= 22)
+            {
+                mPensionPopupMessageType = 11;
+            } else
+            {
+                mPensionPopupMessageType = 12;
+            }
+        }
+    }
+
     private void recordAnalyticsPaymentComplete(StayPaymentInformation stayPaymentInformation, StayBookingDay stayBookingDay)
     {
         try
@@ -1927,18 +1969,9 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 releaseUiComponent();
             } else
             {
-                Stay.Grade hotelGrade = stayPaymentInformation.grade;
-                if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
-                {
-                    lockUI();
+                lockUI();
 
-                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mMessageDateTimeCallback);
-                } else
-                {
-                    lockUI();
-
-                    DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestBookingList(mNetworkTag, mReservationListCallback);
-                }
+                DailyMobileAPI.getInstance(HotelPaymentActivity.this).requestCommonDateTime(mNetworkTag, mCommonDateTimeCallback);
             }
         }
 
@@ -2657,7 +2690,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    retrofit2.Callback mMessageDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
+    retrofit2.Callback mCommonDateTimeCallback = new retrofit2.Callback<BaseDto<TodayDateTime>>()
     {
         @Override
         public void onResponse(Call<BaseDto<TodayDateTime>> call, Response<BaseDto<TodayDateTime>> response)
@@ -2675,37 +2708,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
 
                     if (baseDto.msgCode == 100)
                     {
-                        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+                        mTodayDateTime = baseDto.data;
 
-                        int openHour = Integer.parseInt(DailyCalendar.convertDateFormatString(baseDto.data.openDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
-                        int closeHour = Integer.parseInt(DailyCalendar.convertDateFormatString(baseDto.data.closeDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
-                        int currentHour = Integer.parseInt(DailyCalendar.convertDateFormatString(baseDto.data.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "HH"));
-
-                        // 당일인지 아닌지
-                        if (baseDto.data.dailyDateTime.equalsIgnoreCase(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)) == true)
+                        Stay.Grade hotelGrade = ((StayPaymentInformation) mPaymentInformation).grade;
+                        if (Stay.Grade.pension == hotelGrade | Stay.Grade.fullvilla == hotelGrade)
                         {
-                            if (currentHour >= openHour && currentHour < 18)
-                            {
-                                mPensionPopupMessageType = 1;
-                            } else if (currentHour >= 18 || currentHour < closeHour)
-                            {
-                                mPensionPopupMessageType = 2;
-                            } else
-                            {
-                                mPensionPopupMessageType = 3;
-                            }
-                        } else
-                        {
-                            if (currentHour >= openHour && currentHour < 22)
-                            {
-                                mPensionPopupMessageType = 10;
-                            } else if (currentHour >= 22)
-                            {
-                                mPensionPopupMessageType = 11;
-                            } else
-                            {
-                                mPensionPopupMessageType = 12;
-                            }
+                            onPensionPopupMessage(baseDto.data);
                         }
 
                         lockUI();
@@ -2828,7 +2836,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
         }
     };
 
-    retrofit2.Callback mReservationListCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mReservationListCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -2852,7 +2860,7 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                             onCheckOverlapSaty(false);
                         } else
                         {
-                            onCheckOverlapSaty(checkOverlapBookingList(dataJSONArray));
+                            onCheckOverlapSaty(checkOverlapBookingList(mTodayDateTime, dataJSONArray));
                         }
                     } else
                     {
@@ -2877,15 +2885,16 @@ public class HotelPaymentActivity extends PlacePaymentActivity
             onCheckOverlapSaty(false);
         }
 
-        private boolean checkOverlapBookingList(JSONArray jsonArray) throws Exception
+        private boolean checkOverlapBookingList(TodayDateTime todayDateTime, JSONArray jsonArray) throws Exception
         {
-            if (jsonArray == null || jsonArray.length() == 0)
+            if (todayDateTime == null || jsonArray == null || jsonArray.length() == 0)
             {
                 return false;
             }
 
             int length = jsonArray.length();
             String checkInDateTime = ((StayBookingDay) mPlaceBookingDay).getCheckInDay("yyyy-MM-dd");
+            long currentTime = todayDateTime.getCurrentTime();
 
             for (int i = 0; i < length; i++)
             {
@@ -2899,19 +2908,20 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                     {
                         case CODE_PAY_TYPE_CARD_COMPLETE:
                         case CODE_PAY_TYPE_ACCOUNT_COMPLETE:
-                            String bookingCheckInDateTime = DailyCalendar.format(booking.checkinTime, "yyyy-MM-dd", TimeZone.getTimeZone("GMT+09:00"));
-
-                            if(checkInDateTime.compareToIgnoreCase(bookingCheckInDateTime) > 0)
+                            // 이미 이용한 Stay인 경우
+                            if (booking.checkoutTime < currentTime)
                             {
                                 return false;
                             }
+
+                            String bookingCheckInDateTime = DailyCalendar.format(booking.checkinTime, "yyyy-MM-dd", TimeZone.getTimeZone("GMT+09:00"));
+                            String bookingCheckOutDateTime = DailyCalendar.format(booking.checkoutTime, "yyyy-MM-dd", TimeZone.getTimeZone("GMT+09:00"));
 
                             if (checkInDateTime.equalsIgnoreCase(bookingCheckInDateTime) == true//
                                 && booking.placeName.equalsIgnoreCase(mPlaceName) == true)
                             {
                                 return true;
                             }
-
                             break;
 
                         case CODE_PAY_TYPE_ACCOUNT_WAIT:

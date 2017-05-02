@@ -435,8 +435,6 @@ public abstract class PlacePaymentActivity extends BaseActivity
     {
 
 
-
-
         // 실제 결제 금액이 0원인 경우에는 바로 결제로 넘어갈수 있도록 한다.
         if (mPaymentInformation.isFree == true)
         {
