@@ -358,6 +358,9 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             initLayout(placeName, mDefaultImageUrl, grade, isFromMap);
         }
+
+        // VR 여부 판단
+        mPlaceDetailNetworkController.requestHasVRList(PlaceType.HOTEL, mPlaceDetail.index, "HOTEL");
     }
 
     @Override
@@ -923,11 +926,11 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mIsDeepLink == true)
         {
-            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다.
-            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
-            {
-                stayDetailParams.category = stayDetailParams.getGrade().getName(StayDetailActivity.this);
-            }
+            // 딥링크로 진입한 경우에는 카테고리 코드를 알수가 없다. - 2017.04.28 알 수 없음으로 안보내기로 함 아이폰도 안보내고 있음.
+//            if (DailyTextUtils.isTextEmpty(stayDetailParams.category) == true)
+//            {
+//                stayDetailParams.category = stayDetailParams.getGrade().name();
+//            }
 
             mDailyToolbarLayout.setToolbarTitle(stayDetailParams.name);
         }
@@ -953,7 +956,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
         }
 
-        if (DailyPreference.getInstance(this).getTrueVRSupport() > 0)
+        if (DailyPreference.getInstance(this).getTrueVRSupport() > 0 && (mTrueVRParamsList != null && mTrueVRParamsList.size() > 0))
         {
             showTrueViewMenu();
 
@@ -1108,13 +1111,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onState(View view, boolean checked)
                     {
-                        ArrayList<TrueVRParams> trueVRParamsList = new ArrayList<>();
-
-                        trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
-                        trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://players.cupix.com/p/XPvYW7rr"));
-                        trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
-
-                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList//
+                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, mTrueVRParamsList//
                             , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
@@ -1128,13 +1125,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            ArrayList<TrueVRParams> trueVRParamsList = new ArrayList<>();
-
-            trueVRParamsList.add(new TrueVRParams("스위트 더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
-            trueVRParamsList.add(new TrueVRParams("싱글 룸", "http://players.cupix.com/p/XPvYW7rr"));
-            trueVRParamsList.add(new TrueVRParams("더블 룸", "http://players.cupix.com/p/XPvYW7rr"));
-
-            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, trueVRParamsList//
+            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, mTrueVRParamsList//
                 , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
 
@@ -2010,6 +2001,12 @@ public class StayDetailActivity extends PlaceDetailActivity
             mPlaceReviewScores = placeReviewScores;
 
             mPlaceDetailLayout.setTrueReviewCount(mPlaceReviewScores.reviewScoreTotalCount);
+        }
+
+        @Override
+        public void onHasVRList(ArrayList<TrueVRParams> trueVRParamsList)
+        {
+            mTrueVRParamsList = trueVRParamsList;
         }
 
         @Override

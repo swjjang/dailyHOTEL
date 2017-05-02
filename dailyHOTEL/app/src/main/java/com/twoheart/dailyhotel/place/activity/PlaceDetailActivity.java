@@ -25,6 +25,7 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.ImageInformation;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
@@ -36,6 +37,9 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
@@ -71,6 +75,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
     protected int mViewPrice; // Analytics용 리스트 가격
     protected int mProductDetailIndex; // 딥링크로 시작시에 객실/티켓 정보 오픈후에 선택되어있는 인덱스
     protected PlaceReviewScores mPlaceReviewScores;
+    protected ArrayList<TrueVRParams> mTrueVRParamsList;
 
     protected Handler mHandler = new Handler();
 

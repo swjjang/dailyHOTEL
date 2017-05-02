@@ -10,6 +10,7 @@ import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
@@ -28,6 +29,7 @@ import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
+import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -817,6 +819,30 @@ public class DailyMobileAPI implements IDailyNetwork
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCouponList(Crypto.getUrlDecoderEx(URL, urlParams), date);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    public void requestHasVRList(String tag, Constants.PlaceType placeType, int placeIndex, String type, Object listener)
+    {
+        final String URL;
+        Map<String, String> urlParams = new HashMap<>();
+
+        if(Constants.PlaceType.HOTEL == placeType)
+        {
+            URL = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{hotelIdx}/vr-list"//
+                : "NDgkMzIkNiQzNyQzNiQ3NyQ2MCQ4OSQ4NiQ4MyQ3JDQ1JDQxJDAkNjQkNTkk$JRkNGMEUXRCM0NBQ0EyMDdBRkY5QTJGOTgzTMUXYFwVNjkxBNTk3NDE1LQzPREMEQEQ3Mzc5ODc3MzJFNEIwCMDM4SQjFTEOESY4Mg==$";
+
+            urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
+        } else
+        {
+            URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/vr-list"//
+                : "MzckNDckNzgkNTQkNzMkMTAzJDk0JDc2JDExOSQzMCQ2NiQ2NiQ5NyQxMzgkMCQ4NyQ=$IQ0ExNUQ1OTRBNUVDNkY2MjhFNkQ4OTWg0QURCRITk3RkFFNjBQzMTA0ONkFBRkYwRDHZdEODI1OTQg3IODZCBRIDE3QzgzQkYxTMSUQzOUYzMEEZGRkJCRkVFMUJHBQTk5NDQ4N0JEMNENG$";
+
+            urlParams.put("{restaurantIdx}", Integer.toString(placeIndex));
+        }
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHasVRList(Crypto.getUrlDecoderEx(URL, urlParams), type);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<BaseListDto<TrueVRParams>>) listener);
     }
 
     @Override
