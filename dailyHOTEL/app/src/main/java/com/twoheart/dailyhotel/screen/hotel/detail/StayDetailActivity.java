@@ -956,14 +956,26 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
         }
 
-        if (DailyPreference.getInstance(this).getTrueVRSupport() > 0 && (mTrueVRParamsList != null && mTrueVRParamsList.size() > 0))
+        if (DailyPreference.getInstance(this).getTrueVRSupport() > 0)
         {
-            showTrueViewMenu();
-
-            if (mIsShowVR == true)
+            if(mTrueVRParamsList != null && mTrueVRParamsList.size() > 0)
             {
-                unLockUI();
-                onTrueViewClick();
+                showTrueViewMenu();
+
+                if (mIsShowVR == true)
+                {
+                    unLockUI();
+                    onTrueViewClick();
+                }
+            } else
+            {
+                hideTrueViewMenu();
+
+                if (mIsShowVR == true)
+                {
+                    unLockUI();
+                    showSimpleDialog(null, getString(R.string.message_truevr_not_support), getString(R.string.dialog_btn_text_confirm), null);
+                }
             }
         } else
         {
@@ -972,7 +984,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (mIsShowVR == true)
             {
                 unLockUI();
-                showSimpleDialog(null, getString(R.string.message_truevr_not_support), getString(R.string.dialog_btn_text_confirm), null);
+                showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
             }
         }
 
