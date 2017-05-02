@@ -25,9 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyScrollView;
-import com.daily.base.widget.DailyToast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyScrollView;
@@ -1736,12 +1733,12 @@ public class HotelPaymentActivity extends PlacePaymentActivity
                 messageList[2] = R.string.dialog_msg_hotel_payment_message09;
                 break;
 
-            case 10:
-                messageList[2] = R.string.dialog_msg_hotel_payment_message10;
-                break;
-
             case 3:
                 messageList[2] = R.string.dialog_msg_hotel_payment_message11;
+                break;
+
+            case 10:
+                messageList[2] = R.string.dialog_msg_hotel_payment_message10;
                 break;
 
             case 11:
