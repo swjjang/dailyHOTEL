@@ -972,7 +972,7 @@ public class StayDetailActivity extends PlaceDetailActivity
             if (mIsShowVR == true)
             {
                 unLockUI();
-                showSimpleDialog(null, getString(R.string.message_truevr_not_support), null, null);
+                showSimpleDialog(null, getString(R.string.message_truevr_not_support), getString(R.string.dialog_btn_text_confirm), null);
             }
         }
 
