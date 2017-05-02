@@ -92,7 +92,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void finish()
     {
-        onBackPressed();
+        getActivity().onBackPressed();
     }
 
     @Override
