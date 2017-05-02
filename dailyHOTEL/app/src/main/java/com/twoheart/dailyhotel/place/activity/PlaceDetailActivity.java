@@ -39,7 +39,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.DailyToolbarLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class PlaceDetailActivity extends BaseActivity
 {
