@@ -4,12 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.util.VersionUtils;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 
 public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
@@ -18,7 +14,7 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
     public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_START_DATETIME = "startDateTime";
     static final String INTENT_EXTRA_DATA_END_DATETIME = "endDateTime";
-    static final String INTENT_EXTRA_DATA_CHECK_DAYS_COUNT = "checkDaysCount";
+    static final String INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT = "nightsOfMaxCount";
     static final String INTENT_EXTRA_DATA_CALLBYSCREEN = "callByScreen";
     static final String INTENT_EXTRA_DATA_ISSELECTED = "isSelected";
     static final String INTENT_EXTRA_DATA_ISANIMATION = "isAnimation";
@@ -26,7 +22,7 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
     protected PlaceBookingDay mPlaceBookingDay;
 
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
-        , String startDateTime, String endDateTime, int checkDaysCount//
+        , String startDateTime, String endDateTime, int nightsOfMaxCount//
         , String callByScreen, boolean isSelected, boolean isAnimation)
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
@@ -34,7 +30,7 @@ public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_DATETIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_START_DATETIME, startDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_END_DATETIME, endDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_DAYS_COUNT, checkDaysCount);
+        intent.putExtra(INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, nightsOfMaxCount);
         intent.putExtra(INTENT_EXTRA_DATA_CALLBYSCREEN, callByScreen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ISANIMATION, isAnimation);

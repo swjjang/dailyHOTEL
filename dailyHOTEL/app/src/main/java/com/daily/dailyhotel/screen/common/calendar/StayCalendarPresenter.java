@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import io.reactivex.Observable;
@@ -38,7 +39,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
     private String mStartDateTime;
     private String mEndDateTime;
-    private int mCheckDaysCount;
+    private int mNightsOfMaxCount;
 
     private String mCallByScreen;
     private boolean mIsSelected;
@@ -95,7 +96,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
             mStartDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_START_DATETIME);
             mEndDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_END_DATETIME);
-            mCheckDaysCount = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_DAYS_COUNT, -1);
+            mNightsOfMaxCount = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, -1);
 
             mCallByScreen = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CALLBYSCREEN);
             mIsSelected = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISSELECTED, true);
@@ -166,7 +167,11 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                         mCheckInDateTime = mCheckOutDateTime = null;
 
                         getViewInterface().clickDay(checkInDateTime);
-                        getViewInterface().clickDay(chekcOutDateTime);
+
+                        if (mNightsOfMaxCount > 1)
+                        {
+                            getViewInterface().clickDay(chekcOutDateTime);
+                        }
                     }
                 }
             }));
@@ -303,8 +308,24 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                 getViewInterface().setCheckInDay(day.dateTime);
                 getViewInterface().setToolbarTitle(getString(R.string.label_calendar_hotel_select_checkout));
                 getViewInterface().setLastDayEnabled(true);
+
+                if (mNightsOfMaxCount == 1)
+                {
+                    Calendar calendar = DailyCalendar.getInstance();
+                    calendar.setTime(DailyCalendar.convertDate(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT));
+                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+                    unLock();
+                    getViewInterface().clickDay(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
+                }
             } else
             {
+                if(mNightsOfMaxCount < DailyCalendar.compareDateDay(day.dateTime, mCheckInDateTime))
+                {
+                    DailyToast.showToast(getActivity(), getString(R.string.label_calendar_possible_night, mNightsOfMaxCount), DailyToast.LENGTH_SHORT);
+                    return;
+                }
+
                 // selected가 먼저 되어야지 캘린더에서 체크인과 체크아웃 시간까지 범위를 색칠한다.
                 view.setSelected(true);
 

@@ -325,8 +325,6 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_DATETIME, stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
-        intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_DATETIME, stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
 
         setResult(RESULT_OK, intent);
         hideAnimation();

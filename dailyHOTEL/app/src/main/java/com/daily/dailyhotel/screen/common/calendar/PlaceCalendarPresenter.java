@@ -1,29 +1,19 @@
 package com.daily.dailyhotel.screen.common.calendar;
 
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseViewInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon

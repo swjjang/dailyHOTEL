@@ -1288,6 +1288,11 @@
     <string name="message_truevr_not_support">트루VR 정보가 없습니다.</string>
     <string name="message_truevr_failed_load_truevr"> 트루VR 로드 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
 
+
+    <!-- New Calendar -->
+    <string name="label_calendar_possible_night">%1$d박 까지만 가능합니다.</string>
+
+
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
         <item>스테이 쿠폰 보기</item>
