@@ -1,30 +1,17 @@
 package com.daily.dailyhotel.screen.common.calendar;
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.support.v4.util.Pair;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseView;
-import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityCalendarDataBinding;
-import com.twoheart.dailyhotel.databinding.ViewCalendarDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayCalendarViewInterface
 {
@@ -36,6 +23,9 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
 
     public interface OnEventListener extends PlaceCalendarView.OnEventListener
     {
+        void onDayClick(View view);
+
+        void onConfirmClick();
     }
 
     public StayCalendarView(BaseActivity baseActivity, StayCalendarView.OnEventListener listener)
@@ -50,9 +40,8 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
         {
             return;
         }
-        
-        super.initLayout(viewDataBinding);
 
+        super.initLayout(viewDataBinding);
 
 
     }
@@ -71,6 +60,14 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
             case R.id.closeView:
             case R.id.exitView:
                 getEventListener().onBackClick();
+                break;
+
+            case R.id.confirmView:
+                getEventListener().onConfirmClick();
+                break;
+
+            default:
+                getEventListener().onDayClick(v);
                 break;
         }
     }
@@ -91,5 +88,152 @@ public class StayCalendarView extends PlaceCalendarView<StayCalendarView.OnEvent
     public void setVisibility(boolean visibility)
     {
         super.setVisibility(visibility);
+    }
+
+    @Override
+    public void setCheckInDay(String checkInDateTime)
+    {
+        if (mDaysViewList == null || mDaysViewList.size() == 0 || DailyTextUtils.isTextEmpty(checkInDateTime) == true)
+        {
+            return;
+        }
+
+        View view = searchDayView(checkInDateTime);
+
+        if (view != null)
+        {
+            TextView textView = (TextView) view.findViewById(R.id.textView);
+            textView.setText(R.string.act_booking_chkin);
+            textView.setVisibility(View.VISIBLE);
+
+            view.setBackgroundResource(R.drawable.select_date_check_in);
+        }
+    }
+
+    @Override
+    public void setCheckOutDay(String checkOutDateTime)
+    {
+        if (mDaysViewList == null || mDaysViewList.size() == 0 || DailyTextUtils.isTextEmpty(checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        View view = searchDayView(checkOutDateTime);
+
+        if (view != null)
+        {
+            TextView textView = (TextView) view.findViewById(R.id.textView);
+            textView.setText(R.string.act_booking_chkout);
+            textView.setVisibility(View.VISIBLE);
+
+            view.setBackgroundResource(R.drawable.select_date_check_out);
+        }
+
+        setRangeDays();
+    }
+
+    @Override
+    public void clickDay(String checkDateTime)
+    {
+        if (mDaysViewList == null || mDaysViewList.size() == 0 || DailyTextUtils.isTextEmpty(checkDateTime) == true)
+        {
+            return;
+        }
+
+        View view = searchDayView(checkDateTime);
+
+        if (view != null)
+        {
+            view.performClick();
+        }
+    }
+
+    @Override
+    public void setLastDayEnabled(boolean enabled)
+    {
+        if (mDaysViewList == null || mDaysViewList.size() == 0)
+        {
+            return;
+        }
+
+        mDaysViewList.get(mDaysViewList.size() - 1).setEnabled(enabled);
+    }
+
+    @Override
+    public void setConfirmEnabled(boolean enabled)
+    {
+        super.setConfirmEnabled(enabled);
+    }
+
+    @Override
+    public void setConfirmText(String text)
+    {
+        super.setConfirmText(text);
+    }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+
+
+    }
+
+    private View searchDayView(String dateTime)
+    {
+        if (mDaysViewList == null || mDaysViewList.size() == 0 || DailyTextUtils.isTextEmpty(dateTime) == true)
+        {
+            return null;
+        }
+
+        try
+        {
+            String checkDay = DailyCalendar.convertDateFormatString(dateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
+
+            for (View dayView : mDaysViewList)
+            {
+                if (dayView == null)
+                {
+                    continue;
+                }
+
+                PlaceCalendarPresenter.Day day = (PlaceCalendarPresenter.Day) dayView.getTag();
+
+                if (checkDay.equalsIgnoreCase(DailyCalendar.convertDateFormatString(day.dateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd")) == true)
+                {
+                    return dayView;
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return null;
+    }
+
+    private void setRangeDays()
+    {
+        boolean searchStartDay = false;
+
+        for (View dayView : mDaysViewList)
+        {
+            if (searchStartDay == false)
+            {
+                if (dayView.isSelected() == true)
+                {
+                    searchStartDay = true;
+                }
+            } else
+            {
+                if (dayView.isSelected() == true)
+                {
+                    break;
+                }
+
+                dayView.setSelected(true);
+                dayView.setActivated(true);
+            }
+        }
     }
 }

@@ -210,12 +210,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onBackClick()
-    {
-        getActivity().onBackPressed();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
@@ -279,6 +273,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 onHandleError(throwable);
             }
         }));
+    }
+
+    @Override
+    public void onBackClick()
+    {
+        getActivity().onBackPressed();
     }
 
     private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)

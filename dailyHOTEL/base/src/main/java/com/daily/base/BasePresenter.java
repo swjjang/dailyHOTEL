@@ -136,6 +136,16 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mActivity.startActivityForResult(intent, requestCode);
     }
 
+    protected void setResult(int resultCode)
+    {
+        mActivity.setResult(resultCode);
+    }
+
+    protected void setResult(int resultCode, Intent data)
+    {
+        mActivity.setResult(resultCode, data);
+    }
+
     protected void addCompositeDisposable(Disposable disposable)
     {
         if (disposable == null)

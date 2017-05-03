@@ -148,12 +148,6 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     }
 
     @Override
-    public void onBackClick()
-    {
-        getActivity().onBackPressed();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
@@ -219,6 +213,12 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
                 // 처음 시작부터 정보를 못가져오면 종료시킨다.
                 onBackClick();
             }));
+    }
+
+    @Override
+    public void onBackClick()
+    {
+        getActivity().onBackPressed();
     }
 
     @Override

@@ -17,4 +17,18 @@ public interface StayCalendarViewInterface extends BaseViewInterface
     void hideAnimation();
 
     void setVisibility(boolean visibility);
+
+    void setCheckInDay(String checkInDateTime);
+
+    void setCheckOutDay(String checkOutDateTime);
+
+    void clickDay(String checkDateTime);
+
+    void setLastDayEnabled(boolean enabled);
+
+    void setConfirmEnabled(boolean enabled);
+
+    void setConfirmText(String text);
+
+    void reset();
 }

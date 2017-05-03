@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +15,10 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.daily.base.databinding.DialogLayoutDataBinding;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.VersionUtils;
 
 public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> implements BaseViewInterface
 {
@@ -102,6 +104,17 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
     protected String getString(int resId, Object... formatArgs)
     {
         return mActivity.getString(resId, formatArgs);
+    }
+
+    protected Drawable getDrawable(int id)
+    {
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            return mActivity.getDrawable(id);
+        } else
+        {
+            return mActivity.getResources().getDrawable(id);
+        }
     }
 
     @Override

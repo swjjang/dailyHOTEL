@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.support.v4.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -16,6 +18,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
@@ -35,7 +38,7 @@ import java.util.List;
 public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseView<T1, T2> implements View.OnClickListener
 {
     private static final int ANIMATION_DELAY = 200;
-    private List<View> mDaysViewList;
+    protected List<View> mDaysViewList;
 
     private AnimatorSet mAnimatorSet;
 
@@ -71,7 +74,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
     @Override
     public void setToolbarTitle(String title)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -87,6 +90,13 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         }
 
         int size = arrayList.size();
+
+        if (mDaysViewList == null)
+        {
+            mDaysViewList = new ArrayList<>(size);
+        }
+
+        mDaysViewList.clear();
 
         for (int i = 0; i < size; i++)
         {
@@ -179,21 +189,21 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, animationLayout.getBottom());
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(getViewDataBinding().getRoot(), "alpha", 1f, 0f);
 
-        if(VersionUtils.isOverAPI21() == true)
+        if (VersionUtils.isOverAPI21() == true)
         {
             alphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
             {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation)
                 {
-                    if(animation == null)
+                    if (animation == null)
                     {
                         return;
                     }
 
-                    float value = (float)alphaAnimator.getAnimatedValue();
+                    float value = (float) alphaAnimator.getAnimatedValue();
 
-                    int color = (int)(0xab * value);
+                    int color = (int) (0xab * value);
 
                     setStatusBarColor((color << 24) & 0xff000000);
                 }
@@ -247,6 +257,53 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         getViewDataBinding().animationLayout.setVisibility(visibility == true ? View.VISIBLE : View.INVISIBLE);
     }
 
+    void setConfirmEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().confirmView.setEnabled(enabled);
+    }
+
+    void setConfirmText(String text)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().confirmView.setText(text);
+    }
+
+    void reset()
+    {
+        if (mDaysViewList != null)
+        {
+            for (View dayView : mDaysViewList)
+            {
+                if (dayView == null)
+                {
+                    continue;
+                }
+
+                if (dayView.isSelected() == true)
+                {
+                    TextView textView = (TextView) dayView.findViewById(R.id.textView);
+                    textView.setText(null);
+                    textView.setVisibility(View.INVISIBLE);
+
+                    dayView.setBackgroundDrawable(getDrawable(R.drawable.selector_calendar_day_background));
+                }
+
+                dayView.setActivated(false);
+                dayView.setSelected(false);
+                dayView.setEnabled(true);
+            }
+        }
+    }
+
     private ViewCalendarDataBinding getMonthCalendarView(Context context, Pair<String, PlaceCalendarPresenter.Day[]> pair)
     {
         if (context == null || pair == null)
@@ -259,13 +316,6 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         dataBinding.monthTextView.setText(pair.first);
 
         View dayView;
-
-        if (mDaysViewList == null)
-        {
-            mDaysViewList = new ArrayList<>();
-        }
-
-        mDaysViewList.clear();
 
         for (PlaceCalendarPresenter.Day dayClass : pair.second)
         {
@@ -362,6 +412,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         return relativeLayout;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(int color)
     {
         if (VersionUtils.isOverAPI21() == true)
