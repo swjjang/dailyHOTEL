@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.list;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -21,6 +22,9 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onCalendarClick();
+
+        void onScrollList(int listSize, int lastVisibleItemPosition);
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -40,6 +44,40 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         viewDataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
+
+        viewDataBinding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (getViewDataBinding() == null || recyclerView == null)
+                {
+                    return;
+                }
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                // SwipeRefreshLayout
+                if (dy <= 0)
+                {
+                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (firstVisibleItem == 0)
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
+                    } else
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
+                    }
+                } else
+                {
+                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    int itemCount = linearLayoutManager.getItemCount();
+
+                    getEventListener().onScrollList(itemCount, lastVisibleItemPosition);
+                }
+            }
+        });
     }
 
     @Override

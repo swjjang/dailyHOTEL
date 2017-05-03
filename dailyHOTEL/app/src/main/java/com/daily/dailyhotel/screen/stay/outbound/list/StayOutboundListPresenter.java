@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.stay.outbound.list;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,9 +21,13 @@ import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,6 +43,10 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutboundListActivity, StayOutboundListViewInterface> implements StayOutboundListView.OnEventListener
 {
+    private static final int REQUEST_CODE_CALENDAR = 10000;
+    private static final int DAYS_OF_MAXCOUNT = 90;
+    private static final int NIGHTS_OF_MAXCOUNT = 28;
+
     private StayOutboundListAnalyticsInterface mAnalytics;
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
@@ -224,7 +233,31 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockAll();
 
+        switch (requestCode)
+        {
+            case REQUEST_CODE_CALENDAR:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
+                        && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                    {
+                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                        {
+                            return;
+                        }
+
+                        onCalendarDateTime(checkInDateTime, checkOutDateTime);
+                    }
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -279,6 +312,49 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onCalendarClick()
+    {
+        if (lock() == true || mStayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Calendar startCalendar = DailyCalendar.getInstance();
+            startCalendar.setTime(DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+            startCalendar.add(Calendar.DAY_OF_MONTH, -1);
+
+            String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
+
+            String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, true);
+
+            startActivityForResult(intent, REQUEST_CODE_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            unLock();
+        }
+    }
+
+    @Override
+    public void onScrollList(int listSize, int lastVisibleItemPosition)
+    {
+        if (lastVisibleItemPosition > listSize / 3)
+        {
+            onAddList();
+        }
     }
 
     private void onCommonDateTime(@NonNull CommonDateTime commonDateTime)
@@ -352,6 +428,99 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             ExLog.e(e.toString());
         }
+    }
+
+    private void onCalendarDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        setStayBookDateTime(checkInDateTime, checkOutDateTime);
+        onStayBookDateTime(mStayBookDateTime);
+    }
+
+    /**
+     * @param checkInDateTime  ISO-8601
+     * @param checkOutDateTime ISO-8601
+     */
+    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+        {
+            return;
+        }
+
+        if (mStayBookDateTime == null)
+        {
+            mStayBookDateTime = new StayBookDateTime();
+        }
+
+        try
+        {
+            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void onStayBookDateTime(@NonNull StayBookDateTime stayBookDateTime)
+    {
+        if (stayBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getNights()));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void onAddList()
+    {
+        if (getActivity().isFinishing() == true || lock() == true)
+        {
+            return;
+        }
+
+        Observable<StayOutbounds> observable;
+
+        if (DailyTextUtils.isTextEmpty(mSuggest.id) == true)
+        {
+            // 키워드 검색인 경우
+            observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime, null//
+                , mSuggest.city, mPersons, mCacheKey, mCacheLocation);
+        } else
+        {
+            // Suggest 검색인 경우
+            observable = mStayOutboundRemoteImpl.getStayOutBoundList(mStayBookDateTime//
+                , mSuggest.countryCode, mSuggest.city, mPersons, mCacheKey, mCacheLocation);
+        }
+
+        addCompositeDisposable(observable.subscribe(stayOutbounds ->
+        {
+            onStayOutbounds(stayOutbounds);
+            unLockAll();
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                // 리스트를 호출하다가 에러가 난 경우 처리 방안
+                // 검색 결과 없는 것으로
+
+                onHandleError(throwable);
+            }
+        }));
     }
 
     /**

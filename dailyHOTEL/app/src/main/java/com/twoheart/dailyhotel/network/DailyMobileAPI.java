@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
@@ -1292,6 +1293,25 @@ public class DailyMobileAPI implements IDailyNetwork
         return mDailyMobileService.getStayOutBoundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
             , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
             , countryCode, city, numberOfResults, cacheKey, cacheLocation, apiExperience, locale, sort)//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(int index, String arrivalDate, String departureDate//
+        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms, String countryCode, String city//
+        , String apiExperience, String locale)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
+            : "MzAkODEkNDckNjgkNDAkMzkkODckMSQ4OSQyOCQxNCQzMiQ4JDEkMzckNTUk$QAGkRCM0ZGGMkM1MBzkyQTBEOEMxRDgL1OGUWENFMUM3MEWZJEOURDMOEAM1NjY1RjE2MEVDQjc4RTSA5MzQxQjQ2Rjk1VMMHUEyRg==$";
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutBoundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
+            , countryCode, city, apiExperience, locale)//
             .subscribeOn(Schedulers.io());
     }
 }
