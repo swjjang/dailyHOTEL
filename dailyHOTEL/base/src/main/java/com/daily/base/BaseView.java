@@ -84,6 +84,11 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         return mOnEventListener;
     }
 
+    protected Window getWindow()
+    {
+        return mActivity.getWindow();
+    }
+
     protected int getColor(int resId)
     {
         return mActivity.getResources().getColor(resId);

@@ -1,40 +1,57 @@
 package com.daily.dailyhotel.screen.common.calendar;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.support.v4.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityCalendarDataBinding;
 import com.twoheart.dailyhotel.databinding.ViewCalendarDataBinding;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseView<T1, T2> implements View.OnClickListener
 {
-    private View[] mDaysView;
+    private static final int ANIMATION_DELAY = 200;
+    private List<View> mDaysViewList;
+
+    private AnimatorSet mAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onShowAnimationEnd();
+
+        void onHideAnimationEnd();
     }
 
     public PlaceCalendarView(BaseActivity baseActivity, T1 listener)
     {
         super(baseActivity, listener);
+
+        // VersionUtils.isOverAPI21()
+        setStatusBarColor(getColor(R.color.black_a67));
     }
 
     @Override
@@ -54,140 +71,209 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
     @Override
     public void setToolbarTitle(String title)
     {
-
-    }
-
-    /**
-     * 시작 날짜와 끝날짜를 입력한다.
-     *
-     * @param startDateTime
-     * @param endDateTime
-     */
-    protected void setCalendar(String startDateTime, String endDateTime, int[] holidays)
-    {
-        // setDaysCount
-
-        // makeCalendar
-    }
-
-    /**
-     * 체크 가능한 날짜 개수
-     * 0인 경우 당일로 처리한다.
-     *
-     * @param days 0 ~ (endDateTime - startDateTime)
-     */
-    protected void setCheckDaysCount(int days)
-    {
-
-    }
-
-    private void makeCalendar(String startDateTime, String endDateTime, int[] holidays)
-    {
-        try
+        if(getViewDataBinding() == null)
         {
-            Date startDate = DailyCalendar.convertStringToDate(startDateTime);
-            Date endDate = DailyCalendar.convertStringToDate(endDateTime);
+            return;
+        }
 
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.setTime(startDate);
+        getViewDataBinding().titleTextView.setText(title);
+    }
 
-            final int DAYS_OF_MAX = DailyCalendar.compareDateDay(startDateTime, endDateTime) + 1;
-            int remainDay = DAYS_OF_MAX;
-            int maxMonth = getMonthInterval(calendar, DAYS_OF_MAX);
+    void makeCalendarView(ArrayList<Pair<String, PlaceCalendarPresenter.Day[]>> arrayList)
+    {
+        if (arrayList == null)
+        {
+            return;
+        }
 
-            int dayOffset = 0;
+        int size = arrayList.size();
 
-            for (int i = 0; i <= maxMonth; i++)
+        for (int i = 0; i < size; i++)
+        {
+            Pair<String, PlaceCalendarPresenter.Day[]> pair = arrayList.get(i);
+            ViewCalendarDataBinding calendarDataBinding = getMonthCalendarView(getContext(), pair);
+
+            View monthCalendarLayout = calendarDataBinding.getRoot();
+
+            if (i >= 0 && i < size)
             {
-                int maxDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                ViewCalendarDataBinding calendarDataBinding = getMonthCalendarView(getContext(), dayOffset//
-                    , calendar, day + remainDay - 1 > maxDayOfMonth ? maxDayOfMonth : day + remainDay - 1, holidays);
-
-                View monthCalendarLayout = calendarDataBinding.getRoot();
-
-                if (i >= 0 && i < maxMonth)
-                {
-                    monthCalendarLayout.setPadding(monthCalendarLayout.getPaddingLeft(), monthCalendarLayout.getPaddingTop()//
-                        , monthCalendarLayout.getPaddingRight(), monthCalendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(getContext(), 30));
-                }
-
-                getViewDataBinding().calendarLayout.addView(monthCalendarLayout);
-
-                dayOffset += maxDayOfMonth - day + 1;
-                remainDay = DAYS_OF_MAX - dayOffset;
-
-                calendar.set(Calendar.DAY_OF_MONTH, 1);
-                calendar.add(Calendar.MONTH, 1);
+                monthCalendarLayout.setPadding(monthCalendarLayout.getPaddingLeft(), monthCalendarLayout.getPaddingTop()//
+                    , monthCalendarLayout.getPaddingRight(), monthCalendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(getContext(), 30));
             }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
 
-
+            getViewDataBinding().calendarLayout.addView(monthCalendarLayout);
         }
     }
 
-    private int getMonthInterval(final Calendar calendar, int interval)
+    void showAnimation()
     {
-        Calendar lastMonthCalendar = (Calendar) calendar.clone();
-        lastMonthCalendar.add(Calendar.DAY_OF_MONTH, interval - 1);
-
-        int lastMonth = lastMonthCalendar.get(Calendar.MONTH);
-        int currentMonth = calendar.get(Calendar.MONTH);
-
-        if (currentMonth > lastMonth)
+        if (getViewDataBinding() == null)
         {
-            return 12 - currentMonth + lastMonth;
-        } else
-        {
-            return lastMonth - currentMonth;
+            return;
         }
+
+        if (mAnimatorSet != null && mAnimatorSet.isStarted() == true)
+        {
+            return;
+        }
+
+        final View animationLayout = getViewDataBinding().animationLayout;
+        final float y = animationLayout.getBottom();
+
+        int height = animationLayout.getHeight();
+        animationLayout.setTranslationY(ScreenUtils.dpToPx(getContext(), height));
+
+        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, y - height);
+
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.play(transAnimator);
+        mAnimatorSet.setDuration(ANIMATION_DELAY);
+        mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        mAnimatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                setVisibility(true);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mAnimatorSet.removeAllListeners();
+                mAnimatorSet = null;
+
+                getEventListener().onShowAnimationEnd();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mAnimatorSet.start();
     }
 
-    private ViewCalendarDataBinding getMonthCalendarView(Context context, final int dayOffset, final Calendar calendar, final int maxDayOfMonth, int[] holidays)
+    void hideAnimation()
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (mAnimatorSet != null && mAnimatorSet.isStarted() == true)
+        {
+            return;
+        }
+
+        final View animationLayout = getViewDataBinding().animationLayout;
+        final float y = animationLayout.getTop();
+
+        ObjectAnimator transAnimator = ObjectAnimator.ofFloat(animationLayout, "y", y, animationLayout.getBottom());
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(getViewDataBinding().getRoot(), "alpha", 1f, 0f);
+
+        if(VersionUtils.isOverAPI21() == true)
+        {
+            alphaAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+            {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation)
+                {
+                    if(animation == null)
+                    {
+                        return;
+                    }
+
+                    float value = (float)alphaAnimator.getAnimatedValue();
+
+                    int color = (int)(0xab * value);
+
+                    setStatusBarColor((color << 24) & 0xff000000);
+                }
+            });
+        }
+
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.playTogether(transAnimator, alphaAnimator);
+        mAnimatorSet.setDuration(ANIMATION_DELAY);
+        mAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        mAnimatorSet.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                mAnimatorSet.removeAllListeners();
+                mAnimatorSet = null;
+
+                getEventListener().onHideAnimationEnd();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mAnimatorSet.start();
+    }
+
+    void setVisibility(boolean visibility)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().animationLayout.setVisibility(visibility == true ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private ViewCalendarDataBinding getMonthCalendarView(Context context, Pair<String, PlaceCalendarPresenter.Day[]> pair)
+    {
+        if (context == null || pair == null)
+        {
+            return null;
+        }
+
         ViewCalendarDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_calendar_data, null, false);
 
-        dataBinding.monthTextView.setText(DailyCalendar.format(calendar.getTime(), "yyyy.MM"));
-
-        // dayOfMonth
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-
-        int length = maxDayOfMonth - day + 1 + dayOfWeek;
-        final int LENGTH_OF_WEEK = 7;
-
-        if (length % LENGTH_OF_WEEK != 0)
-        {
-            length += (LENGTH_OF_WEEK - (length % LENGTH_OF_WEEK));
-        }
-
-        PlaceCalendarPresenter.Day[] days = new PlaceCalendarPresenter.Day[length];
-
-        Calendar cloneCalendar = (Calendar) calendar.clone();
-
-        for (int i = 0, j = dayOfWeek, k = day; k <= maxDayOfMonth; i++, j++, k++)
-        {
-            days[j] = new PlaceCalendarPresenter.Day();
-            days[j].dayOffset = dayOffset + i;
-            days[j].dateFormat = DailyCalendar.format(cloneCalendar.getTime(), PlaceCalendarPresenter.Day.DATE_FORMAT);
-            days[j].dayOfMonth = Integer.toString(cloneCalendar.get(Calendar.DAY_OF_MONTH));
-            days[j].dayOfWeek = cloneCalendar.get(Calendar.DAY_OF_WEEK);
-
-            cloneCalendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
+        dataBinding.monthTextView.setText(pair.first);
 
         View dayView;
 
-        for (PlaceCalendarPresenter.Day dayClass : days)
+        if (mDaysViewList == null)
         {
-            dayView = getDayView(context, dayClass, holidays);
+            mDaysViewList = new ArrayList<>();
+        }
+
+        mDaysViewList.clear();
+
+        for (PlaceCalendarPresenter.Day dayClass : pair.second)
+        {
+            dayView = getDayView(context, dayClass);
 
             if (dayClass != null)
             {
-                mDaysView[dayClass.dayOffset] = dayView;
+                mDaysViewList.add(dayView);
             }
 
             dataBinding.calendarGridLayout.addView(dayView);
@@ -196,7 +282,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         return dataBinding;
     }
 
-    public View getDayView(Context context, PlaceCalendarPresenter.Day day, int[] holidays)
+    private View getDayView(Context context, PlaceCalendarPresenter.Day day)
     {
         RelativeLayout relativeLayout = new RelativeLayout(context);
 
@@ -247,7 +333,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
                     break;
 
                 case Calendar.SATURDAY:
-                    if (isHoliday(day, holidays) == true)
+                    if (day.isHoliday == true)
                     {
                         dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
                     } else
@@ -257,7 +343,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
                     break;
 
                 default:
-                    if (isHoliday(day, holidays) == true)
+                    if (day.isHoliday == true)
                     {
                         dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
                     } else
@@ -276,48 +362,13 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         return relativeLayout;
     }
 
-    private void setDaysCount(int daysCount)
+    private void setStatusBarColor(int color)
     {
-        if (mDaysView != null)
+        if (VersionUtils.isOverAPI21() == true)
         {
-            int length = mDaysView.length;
-
-            for (int i = 0; i < length; i++)
-            {
-                mDaysView[i] = null;
-            }
-
-            mDaysView = null;
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
         }
-
-        mDaysView = new View[daysCount];
-    }
-
-    private boolean isHoliday(PlaceCalendarPresenter.Day day, int[] holidays)
-    {
-        if (day == null || holidays == null || holidays.length == 0)
-        {
-            return false;
-        }
-
-        Calendar calendar = DailyCalendar.getInstance();
-
-        try
-        {
-            int calendarDay = Integer.parseInt(day.dateFormat);
-
-            for (int holiday : holidays)
-            {
-                if (holiday == calendarDay)
-                {
-                    return true;
-                }
-            }
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return false;
     }
 }

@@ -90,12 +90,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void finish()
-    {
-        getActivity().onBackPressed();
-    }
-
-    @Override
     public boolean onIntent(Intent intent)
     {
         if (intent == null)
@@ -213,6 +207,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public boolean onBackPressed()
     {
         return super.onBackPressed();
+    }
+
+    @Override
+    public void onBackClick()
+    {
+        getActivity().onBackPressed();
     }
 
     @Override

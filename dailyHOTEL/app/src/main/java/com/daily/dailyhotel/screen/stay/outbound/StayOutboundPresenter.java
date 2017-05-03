@@ -17,13 +17,16 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.common.calendar.StayCalendarPresenter;
 import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.util.ConvertFormat;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +38,8 @@ import java.util.concurrent.TimeUnit;
 public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundActivity, StayOutboundViewInterface> implements StayOutboundView.OnEventListener
 {
     private static final int REQUEST_CODE_CALENDAR = 10000;
+    private static final int DAYS_OF_MAXCOUNT = 90;
+    private static final int NIGHTS_OF_MAXCOUNT = 28;
 
     private StayOutboundAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
@@ -82,12 +87,6 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
         mAnalytics = (StayOutboundAnalyticsInterface) analytics;
-    }
-
-    @Override
-    public void finish()
-    {
-        getActivity().onBackPressed();
     }
 
     @Override
@@ -146,6 +145,12 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
     public boolean onBackPressed()
     {
         return super.onBackPressed();
+    }
+
+    @Override
+    public void onBackClick()
+    {
+        getActivity().onBackPressed();
     }
 
     @Override
@@ -212,7 +217,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
                 onHandleError(throwable);
 
                 // 처음 시작부터 정보를 못가져오면 종료시킨다.
-                finish();
+                onBackClick();
             }));
     }
 
@@ -301,9 +306,21 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
 
         try
         {
-            Intent intent = StayCalendarActivity.newInstance(getActivity(), ConvertFormat.convertTodayDateTime(mCommonDateTime)//
-                , ConvertFormat.commonStayBookingDay(mStayBookDateTime), //
-                AnalyticsManager.ValueType.SEARCH, true, true);
+            Calendar startCalendar = DailyCalendar.getInstance();
+            startCalendar.setTime(DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+            startCalendar.add(Calendar.DAY_OF_MONTH, -1);
+
+            String startDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            startCalendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT);
+
+            String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT
+                , AnalyticsManager.ValueType.SEARCH, true, true);
 
             startActivityForResult(intent, REQUEST_CODE_CALENDAR);
         } catch (Exception e)
@@ -338,7 +355,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
             ExLog.e(e.toString());
 
             onHandleError(e);
-            finish();
+            onBackClick();
         }
     }
 

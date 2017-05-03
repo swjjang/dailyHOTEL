@@ -674,6 +674,13 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
         <!--  com.daily.dailyhotel.... -->
 
 

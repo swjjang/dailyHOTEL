@@ -216,7 +216,7 @@ public class StayOutboundView extends BaseView<StayOutboundView.OnEventListener,
 
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
         mDailyToolbarLayout.initToolbar(getString(R.string.label_search_stay_outbound)//
-            , v -> getEventListener().finish());
+            , v -> getEventListener().onBackClick());
 
         mDailyToolbarLayout.setToolbarMenu(getString(R.string.label_search), null);
         mDailyToolbarLayout.setToolbarMenuEnable(false, false);

@@ -88,7 +88,7 @@ public class ProfileView extends BaseView<ProfileView.OnEventListener, ActivityP
 
         DailyToolbarLayout dailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
         dailyToolbarLayout.initToolbar(getString(R.string.actionbar_title_profile_activity)//
-            , v -> getEventListener().finish());
+            , v -> getEventListener().onBackClick());
     }
 
     @Override

@@ -107,6 +107,6 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
         mDailyToolbarLayout = new DailyToolbarLayout(getContext(), viewDataBinding.toolbar);
         mDailyToolbarLayout.initToolbar(null//
-            , v -> getEventListener().finish());
+            , v -> getEventListener().onBackClick());
     }
 }

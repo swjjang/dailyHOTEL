@@ -1,35 +1,25 @@
 package com.daily.dailyhotel.screen.common.calendar;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
-import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.Suggest;
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundActivity;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundView;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundViewInterface;
-import com.daily.dailyhotel.screen.stay.outbound.StayStayOutboundAnalyticsImpl;
-import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
-import com.daily.dailyhotel.util.ConvertFormat;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.util.DailyPreference;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -37,17 +27,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarActivity, StayCalendarViewInterface> implements StayCalendarView.OnEventListener
 {
-    private static final int REQUEST_CODE_CALENDAR = 10000;
-
     private StayCalendarPresenterAnalyticsInterface mAnalytics;
-    private SuggestRemoteImpl mSuggestRemoteImpl;
-    private CommonRemoteImpl mCommonRemoteImpl;
 
-    private CommonDateTime mCommonDateTime;
     private StayBookDateTime mStayBookDateTime;
 
-    private Suggest mSuggest;
-    private Persons mPersons;
+    private String mStartDateTime;
+    private String mEndDateTime;
+    private int mCheckDaysCount;
+
+    private String mCallByScreen;
+    private boolean mIsSelected;
+    private boolean mIsAnimation;
 
     public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -68,15 +58,13 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     @Override
     public void initialize(StayCalendarActivity activity)
     {
+        super.initialize(activity);
+
         setContentView(R.layout.activity_calendar_data);
 
+        getViewInterface().setVisibility(false);
+
         setAnalytics(new StayCalendarAnalyticsImpl());
-
-        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
-
-        // 기본 성인 2명, 아동 0명
-        mPersons = new Persons(Persons.DEFAULT_PERSONS, null);
 
         setRefresh(true);
     }
@@ -88,12 +76,6 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     }
 
     @Override
-    public void finish()
-    {
-        onBackPressed();
-    }
-
-    @Override
     public boolean onIntent(Intent intent)
     {
         if (intent == null)
@@ -101,8 +83,28 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
             return true;
         }
 
-        if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
+        try
         {
+            String checkInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+            String checkOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+            mStayBookDateTime = new StayBookDateTime();
+            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+
+            mStartDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_START_DATETIME);
+            mEndDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_END_DATETIME);
+            mCheckDaysCount = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_DAYS_COUNT, -1);
+
+            mCallByScreen = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CALLBYSCREEN);
+            mIsSelected = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISSELECTED, true);
+            mIsAnimation = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            return false;
         }
 
         return true;
@@ -111,7 +113,105 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     @Override
     public void onIntentAfter()
     {
+        screenLock(false);
 
+        addCompositeDisposable(Observable.empty().subscribeOn(Schedulers.io()).just(DailyPreference.getInstance(getActivity()).getCalendarHolidays())//
+            .map(new Function<String, ArrayList<Pair<String, Day[]>>>()
+            {
+                @Override
+                public ArrayList<Pair<String, Day[]>> apply(String calendarHolidays) throws Exception
+                {
+                    int[] holidays = null;
+
+                    if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
+                    {
+                        String[] holidaysSplit = calendarHolidays.split("\\,");
+                        holidays = new int[holidaysSplit.length];
+
+                        for (int i = 0; i < holidaysSplit.length; i++)
+                        {
+                            try
+                            {
+                                holidays[i] = Integer.parseInt(holidaysSplit[i]);
+                            } catch (NumberFormatException e)
+                            {
+                                ExLog.e(e.toString());
+                            }
+                        }
+                    }
+
+                    return makeCalendar(mStartDateTime, mEndDateTime, holidays);
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Pair<String, Day[]>>>()
+            {
+                @Override
+                public void accept(ArrayList<Pair<String, Day[]>> arrayList) throws Exception
+                {
+                    getViewInterface().makeCalendarView(arrayList);
+
+                    if (mIsAnimation == true)
+                    {
+                        getViewInterface().showAnimation();
+                    } else
+                    {
+
+                    }
+
+                    if (mIsSelected == true)
+                    {
+
+                    }
+                }
+            }));
+
+//        addCompositeDisposable(Observable.just(DailyPreference.getInstance(getActivity()).getCalendarHolidays())//
+//            .subscribeOn(Schedulers.io()).map(new Function<String, ArrayList<Pair<String, Day[]>>>()
+//            {
+//                @Override
+//                public ArrayList<Pair<String, Day[]>> apply(String calendarHolidays) throws Exception
+//                {
+//                    int[] holidays = null;
+//
+//                    if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
+//                    {
+//                        String[] holidaysSplit = calendarHolidays.split("\\,");
+//                        holidays = new int[holidaysSplit.length];
+//
+//                        for (int i = 0; i < holidaysSplit.length; i++)
+//                        {
+//                            try
+//                            {
+//                                holidays[i] = Integer.parseInt(holidaysSplit[i]);
+//                            } catch (NumberFormatException e)
+//                            {
+//                                ExLog.e(e.toString());
+//                            }
+//                        }
+//                    }
+//
+//                    return makeCalendar(mStartDateTime, mEndDateTime, holidays);
+//                }
+//            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Pair<String, Day[]>>>()
+//            {
+//                @Override
+//                public void accept(ArrayList<Pair<String, Day[]>> arrayList) throws Exception
+//                {
+//                    getViewInterface().makeCalendarView(arrayList);
+//
+//                    if (mIsAnimation == true)
+//                    {
+//                        getViewInterface().showAnimation();
+//                    } else
+//                    {
+//
+//                    }
+//
+//                    if (mIsSelected == true)
+//                    {
+//
+//                    }
+//                }
+//            }));
     }
 
     @Override
@@ -145,10 +245,23 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
         super.onDestroy();
     }
 
+    /**
+     * 이 메소드는 activity에서 onBackPressed가 호출되면 호출되는 메소드로
+     * 해당 메소드를 호출한다고 해서 종료되지 않음.
+     * @return
+     */
     @Override
     public boolean onBackPressed()
     {
-        return super.onBackPressed();
+        getViewInterface().hideAnimation();
+
+        return true;
+    }
+
+    @Override
+    public void onBackClick()
+    {
+        getActivity().onBackPressed();
     }
 
     @Override
@@ -175,21 +288,17 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
         {
             return;
         }
+    }
 
-        setRefresh(false);
-        screenLock(true);
+    @Override
+    public void onShowAnimationEnd()
+    {
+        unLockAll();
+    }
 
-        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime()//
-            .subscribe(commonDateTime ->
-            {
-
-                screenUnLock();
-            }, throwable ->
-            {
-                onHandleError(throwable);
-
-                // 처음 시작부터 정보를 못가져오면 종료시킨다.
-                finish();
-            }));
+    @Override
+    public void onHideAnimationEnd()
+    {
+        getActivity().finish();
     }
 }
