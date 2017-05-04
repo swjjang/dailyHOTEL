@@ -1,13 +1,12 @@
 package com.daily.dailyhotel.entity;
 
-public class ImageInformation
+public class StayOutboundDetailImage
 {
     String caption;
     String name;
-    String thumbnailUrl;
     String url;
 
-    public ImageInformation()
+    public StayOutboundDetailImage()
     {
 
     }

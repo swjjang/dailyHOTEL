@@ -16,7 +16,7 @@ public class RoomInformation
     String city;
     String countryCode;
 
-    List<ImageInformation> mImageList;
+    List<StayOutboundDetailImage> mImageList;
     List<StayProduct> mProductList;
 
     String hotelPolicy;

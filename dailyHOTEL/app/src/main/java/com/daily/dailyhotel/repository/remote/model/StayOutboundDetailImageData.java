@@ -7,24 +7,18 @@ import com.daily.dailyhotel.entity.StayOutboundDetail;
 import java.util.List;
 
 @JsonObject
-public class StayOutboundRoomData
+public class StayOutboundDetailImageData
 {
-    @JsonField(name = "hotelId")
-    public int hotelId;
+    @JsonField(name = "name")
+    public String name;
 
-    @JsonField(name = "dailyHotels")
-    public List<StayOutboundData> dailyHotels;
+    @JsonField(name = "caption")
+    public String caption;
 
-    @JsonField(name = "cacheKey")
-    public String cacheKey;
+    @JsonField(name = "url")
+    public String url;
 
-    @JsonField(name = "cacheLocation")
-    public String cacheLocation;
-
-    @JsonField(name = "moreResultsAvailable")
-    public boolean moreResultsAvailable;
-
-    public StayOutboundRoomData()
+    public StayOutboundDetailImageData()
     {
 
     }
