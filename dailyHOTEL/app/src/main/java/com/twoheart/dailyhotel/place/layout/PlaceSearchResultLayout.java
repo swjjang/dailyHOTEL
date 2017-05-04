@@ -163,10 +163,20 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     private void initEmptyLayout(View view)
     {
         ImageView emptyIconImageView = (ImageView) view.findViewById(R.id.emptyIconImageView);
+        View changeDateView = view.findViewById(R.id.changeDateView);
         View researchView = view.findViewById(R.id.researchView);
         TextView callTextView = (TextView) view.findViewById(R.id.callTextView);
 
         emptyIconImageView.setImageResource(getEmptyIconResourceId());
+
+        changeDateView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onDateClick();
+            }
+        });
 
         researchView.setOnClickListener(new View.OnClickListener()
         {
