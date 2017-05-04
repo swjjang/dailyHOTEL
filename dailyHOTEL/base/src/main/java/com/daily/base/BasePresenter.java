@@ -156,6 +156,16 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
         mCompositeDisposable.add(disposable);
     }
 
+    protected void removeCompositeDisposable(Disposable disposable)
+    {
+        if (disposable == null)
+        {
+            return;
+        }
+
+        mCompositeDisposable.remove(disposable);
+    }
+
     protected void clearCompositeDisposable()
     {
         mCompositeDisposable.clear();

@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.RoomInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
@@ -16,5 +17,8 @@ public interface StayOutboundInterface
         , String city, Persons persons, String cacheKey, String cacheLocation);
 
     Observable<StayOutboundDetail> getStayOutBoundDetail(int index, StayBookDateTime stayBookDateTime
+        , String countryCode, String city, Persons persons);
+
+    Observable<RoomInformation> getStayOutBoundRoom(int index, StayBookDateTime stayBookDateTime
         , String countryCode, String city, Persons persons);
 }
