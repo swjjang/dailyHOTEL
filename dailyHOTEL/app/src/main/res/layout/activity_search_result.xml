@@ -190,11 +190,24 @@
             </LinearLayout>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/researchView"
-                android:layout_width="125dp"
+                android:id="@+id/changeDateView"
+                android:layout_width="180dp"
                 android:layout_height="38dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/shape_button_common_background"
+                android:gravity="center"
+                android:text="@string/label_searchresult_change_date"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/researchView"
+                android:layout_width="180dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/shape_button_common_background"
                 android:gravity="center"
                 android:text="@string/label_searchresult_research"
