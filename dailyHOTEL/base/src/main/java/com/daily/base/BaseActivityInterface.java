@@ -15,6 +15,8 @@ public interface BaseActivityInterface
 
     void onDestroy();
 
+    void onFinish();
+
     boolean onBackPressed();
 
     void onSaveInstanceState(Bundle outState);

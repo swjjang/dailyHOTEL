@@ -27,7 +27,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
         mPresenter = createInstancePresenter();
 
-        if(mPresenter.onIntent(getIntent()) == false)
+        if (mPresenter.onIntent(getIntent()) == false)
         {
             finish();
             return;
@@ -130,6 +130,17 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         } else
         {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        if (mPresenter != null)
+        {
+            mPresenter.onFinish();
         }
     }
 

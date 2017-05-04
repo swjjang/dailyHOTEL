@@ -6,14 +6,11 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundInterface;
 import com.daily.dailyhotel.entity.Persons;
-import com.daily.dailyhotel.entity.RoomInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -91,8 +88,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
     }
 
     @Override
-    public Observable<StayOutboundDetail> getStayOutBoundDetail(int index, StayBookDateTime stayBookDateTime
-        , String countryCode, String city, Persons persons)
+    public Observable<StayOutboundDetail> getStayOutBoundDetail(int index, StayBookDateTime stayBookDateTime, Persons persons)
     {
         final int numberOfRooms = 1;
         final int numberOfResults = 200;
@@ -100,7 +96,6 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
         /// 디폴트 인자들
         final String apiExperience = "PARTNER_MOBILE_APP";
         final String locale = "ko_KR";
-        final String sort = "DEFAULT";
 
         int numberOfAdults = persons.numberOfAdults;
         int numberOfChildren = 0;
@@ -129,7 +124,7 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
         return DailyMobileAPI.getInstance(mContext).getStayOutBoundDetail(index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
             , stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")//
-            , numberOfAdults, numberOfChildren, childAges, numberOfRooms, countryCode, city//
+            , numberOfAdults, numberOfChildren, childAges, numberOfRooms//
             , apiExperience, locale).map((stayOutboundDetailDataBaseDto) ->
         {
             StayOutboundDetail stayOutboundDetail = null;
@@ -150,11 +145,5 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             return stayOutboundDetail;
         }).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
-    public Observable<RoomInformation> getStayOutBoundRoom(int index, StayBookDateTime stayBookDateTime, String countryCode, String city, Persons persons)
-    {
-        return null;
     }
 }

@@ -1,44 +1,36 @@
 package com.daily.dailyhotel.screen.stay.outbound.detail;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.base.BaseAsyncPresenter;
 import com.daily.dailyhotel.entity.Persons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.Suggest;
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
-import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundActivity;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundView;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundViewInterface;
-import com.daily.dailyhotel.screen.stay.outbound.StayStayOutboundAnalyticsImpl;
-import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
+import com.daily.dailyhotel.entity.StayOutboundDetail;
+import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+import io.reactivex.Observable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutboundDetailActivity, StayOutboundDetailViewInterface> implements StayOutboundDetailView.OnEventListener
+public class StayOutboundDetailPresenter extends BaseAsyncPresenter<StayOutboundDetailActivity, StayOutboundDetailViewInterface> implements StayOutboundDetailView.OnEventListener
 {
     private StayOutboundDetailAnalyticsInterface mAnalytics;
+
+    private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
+
+    private int mStayIndex;
+    private StayBookDateTime mStayBookDateTime;
+    private Persons mPersons;
 
     public interface StayOutboundDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -62,6 +54,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         setContentView(R.layout.activity_stay_outbound_data);
 
         setAnalytics(new StayStayOutboundDetailAnalyticsImpl());
+
+        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
     }
 
     @Override
@@ -89,6 +83,39 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onIntentAfter()
     {
 
+    }
+
+    @Override
+    protected void startAsync(@NonNull Observable<Boolean> observable)
+    {
+        Observable.zip(observable, mStayOutboundRemoteImpl.getStayOutBoundDetail(mStayIndex, mStayBookDateTime, mPersons), new BiFunction<Boolean, StayOutboundDetail, StayOutboundDetail>()
+        {
+            @Override
+            public StayOutboundDetail apply(Boolean aBoolean, StayOutboundDetail stayOutboundDetail) throws Exception
+            {
+                return stayOutboundDetail;
+            }
+        }).subscribe(new Consumer<StayOutboundDetail>()
+        {
+            @Override
+            public void accept(StayOutboundDetail stayOutboundDetail) throws Exception
+            {
+                if (stayOutboundDetail == null)
+                {
+                    return;
+                }
+
+                // 화면 업데이트.
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+
+                onHandleError(throwable);
+            }
+        });
     }
 
     @Override

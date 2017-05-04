@@ -160,7 +160,7 @@ public class HomeCategoryLayout extends RelativeLayout
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         //        ExLog.d("widthMeasureSpec : " + widthMeasureSpec + " , heightMeasureSpec : " + heightMeasureSpec);
-//        ExLog.d("getMeasuredWidth : " + getMeasuredWidth() + " , getMeasuredHeight : " + getMeasuredHeight());
+        //        ExLog.d("getMeasuredWidth : " + getMeasuredWidth() + " , getMeasuredHeight : " + getMeasuredHeight());
     }
 
     public void setCategoryEnabled(boolean isEnabled)

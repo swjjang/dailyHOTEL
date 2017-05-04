@@ -507,8 +507,6 @@ public interface DailyMobileService
         , @Query(value = "rooms[0].numberOfChildren") int numberOfChildren//
         , @Query(value = "rooms[0].childAges") String childAges //
         , @Query(value = "numberOfRooms") int numberOfRooms//
-        , @Query(value = "countryCode") String countryCode//
-        , @Query(value = "city") String city//
         , @Query(value = "apiExperience") String apiExperience// 디폴트 인자들
         , @Query(value = "locale") String locale// 디폴트 인자들
     );

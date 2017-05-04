@@ -1297,7 +1297,7 @@ public class DailyMobileAPI implements IDailyNetwork
     }
 
     public Observable<BaseDto<StayOutboundDetailData>> getStayOutBoundDetail(int index, String arrivalDate, String departureDate//
-        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms, String countryCode, String city//
+        , int numberOfAdults, int numberOfChildren, String childAges, int numberOfRooms//
         , String apiExperience, String locale)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "https://dev-silo.dailyhotel.me/"//
@@ -1311,7 +1311,7 @@ public class DailyMobileAPI implements IDailyNetwork
 
         return mDailyMobileService.getStayOutBoundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , arrivalDate, departureDate, numberOfAdults, numberOfChildren, childAges, numberOfRooms//
-            , countryCode, city, apiExperience, locale)//
+            , apiExperience, locale)//
             .subscribeOn(Schedulers.io());
     }
 }

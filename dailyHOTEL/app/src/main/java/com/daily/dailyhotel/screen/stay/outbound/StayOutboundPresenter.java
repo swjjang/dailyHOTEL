@@ -18,15 +18,12 @@ import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
-import com.daily.dailyhotel.screen.common.calendar.StayCalendarPresenter;
 import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
-import com.daily.dailyhotel.util.ConvertFormat;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -319,8 +316,7 @@ public class StayOutboundPresenter extends BaseExceptionPresenter<StayOutboundAc
             Intent intent = StayCalendarActivity.newInstance(getActivity()//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT
-                , AnalyticsManager.ValueType.SEARCH, true, true);
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, true);
 
             startActivityForResult(intent, REQUEST_CODE_CALENDAR);
         } catch (Exception e)

@@ -2,11 +2,8 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
-import com.daily.dailyhotel.entity.StayOutbounds;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonObject

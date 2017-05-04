@@ -109,6 +109,12 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     }
 
     @Override
+    public void onFinish()
+    {
+
+    }
+
+    @Override
     public boolean onBackPressed()
     {
         return false;

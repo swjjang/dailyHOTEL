@@ -320,7 +320,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                 }
             } else
             {
-                if(mNightsOfMaxCount < DailyCalendar.compareDateDay(day.dateTime, mCheckInDateTime))
+                if (mNightsOfMaxCount < DailyCalendar.compareDateDay(day.dateTime, mCheckInDateTime))
                 {
                     DailyToast.showToast(getActivity(), getString(R.string.label_calendar_possible_night, mNightsOfMaxCount), DailyToast.LENGTH_SHORT);
                     return;
