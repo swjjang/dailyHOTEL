@@ -315,23 +315,27 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             dot2View = itemView.findViewById(R.id.dot2View);
 
             itemView.setOnClickListener(mOnClickListener);
-            itemView.setOnLongClickListener(new View.OnLongClickListener()
-            {
-                @Override
-                public boolean onLongClick(View v)
-                {
-                    if (mOnLongClickListener == null)
-                    {
-                        return false;
-                    } else
-                    {
-                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(70);
 
-                        return mOnLongClickListener.onLongClick(v);
+            if (Util.supportPeekNPop(mContext) == true)
+            {
+                itemView.setOnLongClickListener(new View.OnLongClickListener()
+                {
+                    @Override
+                    public boolean onLongClick(View v)
+                    {
+                        if (mOnLongClickListener == null)
+                        {
+                            return false;
+                        } else
+                        {
+                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(70);
+
+                            return mOnLongClickListener.onLongClick(v);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 

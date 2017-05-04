@@ -189,25 +189,28 @@ public class HomeCarouselAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener()
+        if (Util.supportPeekNPop(mContext) == true)
         {
-            @Override
-            public boolean onLongClick(View v)
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener()
             {
-                if (mItemClickListener == null)
+                @Override
+                public boolean onLongClick(View v)
                 {
-                    return false;
-                } else
-                {
-                    Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                    vibrator.vibrate(70);
+                    if (mItemClickListener == null)
+                    {
+                        return false;
+                    } else
+                    {
+                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        vibrator.vibrate(70);
 
-                    mItemClickListener.onItemLongClick(v, position);
+                        mItemClickListener.onItemLongClick(v, position);
 
-                    return true;
+                        return true;
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public HomePlace getItem(int position)

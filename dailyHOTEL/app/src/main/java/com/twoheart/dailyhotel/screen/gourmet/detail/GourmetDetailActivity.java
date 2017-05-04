@@ -935,7 +935,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         if (DailyPreference.getInstance(this).getTrueVRSupport() > 0)
         {
-            if(mTrueVRParamsList != null && mTrueVRParamsList.size() > 0)
+            if (mTrueVRParamsList != null && mTrueVRParamsList.size() > 0)
             {
                 showTrueViewMenu();
 
