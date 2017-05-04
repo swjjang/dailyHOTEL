@@ -207,7 +207,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         }
 
         // VR 여부
-        //        if (gourmet.truevr == true)
+        //        if (gourmet.truevr == true && Util.supportPeekNPop(mContext) == true)
         //        {
         //            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
         //            {
