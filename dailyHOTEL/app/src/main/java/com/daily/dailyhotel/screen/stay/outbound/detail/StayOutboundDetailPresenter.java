@@ -51,7 +51,7 @@ public class StayOutboundDetailPresenter extends BaseAsyncPresenter<StayOutbound
     @Override
     public void initialize(StayOutboundDetailActivity activity)
     {
-        setContentView(R.layout.activity_stay_outbound_data);
+        setContentView(R.layout.activity_stay_outbound_detail_data);
 
         setAnalytics(new StayStayOutboundDetailAnalyticsImpl());
 
@@ -195,5 +195,65 @@ public class StayOutboundDetailPresenter extends BaseAsyncPresenter<StayOutbound
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onImageClick()
+    {
+
+    }
+
+    @Override
+    public void onReviewClick()
+    {
+
+    }
+
+    @Override
+    public void onCalendarClick()
+    {
+
+    }
+
+    @Override
+    public void onDownloadCouponClick()
+    {
+
+    }
+
+    @Override
+    public void onMapClick()
+    {
+
+    }
+
+    @Override
+    public void onClipAddressClick(String address)
+    {
+
+    }
+
+    @Override
+    public void onNavigatorClick()
+    {
+
+    }
+
+    @Override
+    public void onWishClick()
+    {
+
+    }
+
+    @Override
+    public void onConciergeClick()
+    {
+
+    }
+
+    @Override
+    public void onBookingClick()
+    {
+
     }
 }

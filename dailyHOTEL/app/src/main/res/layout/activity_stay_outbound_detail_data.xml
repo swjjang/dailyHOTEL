@@ -2,20 +2,20 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-        xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto">
+        xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
-        xmlns:fresco="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/defaultImageLayout"
+            android:id="@+id/horizontalImageLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.twoheart.dailyhotel.widget.DailyLoopViewPager
-                android:id="@+id/defaulLoopViewPager"
+                android:id="@+id/imageLoopViewPager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -34,14 +34,14 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_alignBottom="@id/defaulLoopViewPager"
+                android:layout_alignBottom="@id/imageLoopViewPager"
                 android:background="@drawable/img_detail_bottom_gradient"/>
 
             <View
                 android:id="@+id/viewPagerBottomLine"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@id/defaulLoopViewPager"/>
+                android:layout_below="@id/imageLoopViewPager"/>
 
             <com.twoheart.dailyhotel.widget.DailyLineIndicator
                 android:id="@+id/viewpagerIndicator"
@@ -63,13 +63,13 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp">
 
-                <View
+                <ImageView
                     android:id="@+id/moreIconView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/detail_ic_more_img"/>
+                    android:src="@drawable/detail_ic_more_img"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/descriptionTextView"
@@ -103,7 +103,7 @@
             android:id="@+id/transTitleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/defaultImageLayout"
+            android:layout_below="@+id/horizontalImageLayout"
             android:layout_marginTop="-1dp"
             android:orientation="vertical"
             android:paddingBottom="16dp"
@@ -136,14 +136,13 @@
                 dailyFont:style="Medium"/>
         </LinearLayout>
 
-        <com.twoheart.dailyhotel.widget.DailyPlaceDetailListView
-            android:id="@+id/placeListView"
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottomLayout"
             android:layout_alignParentBottom="false"
             android:cacheColorHint="#00000000"
-            android:divider="@null"
             android:fadingEdge="none"
             android:fadingEdgeLength="0dp"/>
 
@@ -161,7 +160,7 @@
                 app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
             <ImageView
-                android:id="@+id/trueViewView"
+                android:id="@+id/trueVRView"
                 android:layout_width="30dp"
                 android:layout_height="@dimen/toolbar_height"
                 android:layout_centerVertical="true"

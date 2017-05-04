@@ -159,7 +159,7 @@
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
         <ImageView
-            android:id="@+id/trueViewView"
+            android:id="@+id/trueVRView"
             android:layout_width="30dp"
             android:layout_height="@dimen/toolbar_height"
             android:layout_centerVertical="true"

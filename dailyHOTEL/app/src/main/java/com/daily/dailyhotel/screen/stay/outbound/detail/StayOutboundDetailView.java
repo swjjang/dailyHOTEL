@@ -13,8 +13,28 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 {
     private DailyToolbarLayout mDailyToolbarLayout;
 
+
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onImageClick();
+
+        void onReviewClick();
+
+        void onCalendarClick();
+
+        void onDownloadCouponClick();
+
+        void onMapClick();
+
+        void onClipAddressClick(String address);
+
+        void onNavigatorClick();
+
+        void onWishClick();
+
+        void onConciergeClick();
+
+        void onBookingClick();
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -29,6 +49,7 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
         {
             return;
         }
+
 
     }
 
@@ -46,6 +67,18 @@ public class StayOutboundDetailView extends BaseView<StayOutboundDetailView.OnEv
 
     @Override
     public void onClick(View v)
+    {
+
+    }
+
+    @Override
+    public void showRoomList()
+    {
+
+    }
+
+    @Override
+    public void hideRoomList()
     {
 
     }

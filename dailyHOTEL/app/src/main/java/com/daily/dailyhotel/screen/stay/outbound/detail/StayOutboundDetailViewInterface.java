@@ -4,4 +4,7 @@ import com.daily.base.BaseViewInterface;
 
 public interface StayOutboundDetailViewInterface extends BaseViewInterface
 {
+    void showRoomList();
+
+    void hideRoomList();
 }
