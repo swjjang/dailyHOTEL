@@ -318,24 +318,27 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener()
+            if (Util.supportPeekNPop(mContext) == true)
             {
-                @Override
-                public boolean onLongClick(View v)
+                itemView.setOnLongClickListener(new View.OnLongClickListener()
                 {
-                    if (mListener == null)
+                    @Override
+                    public boolean onLongClick(View v)
                     {
-                        return false;
-                    } else
-                    {
-                        Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                        vibrator.vibrate(70);
+                        if (mListener == null)
+                        {
+                            return false;
+                        } else
+                        {
+                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrator.vibrate(70);
 
-                        mListener.onItemLongClick(v);
-                        return true;
+                            mListener.onItemLongClick(v);
+                            return true;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 }
