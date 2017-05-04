@@ -1484,15 +1484,14 @@ public class Util implements Constants
         WebView webView = new WebView(context);
         String webViewVersion = webView.getSettings().getUserAgentString();
 
-        int startIndex = webViewVersion.indexOf("Chrome/") + "Chrome/".length();
-        int endIndex = webViewVersion.indexOf("Mobile Safari/", startIndex);
-
-        String version = webViewVersion.substring(startIndex, endIndex).trim();
-
-        String[] versions = version.split("\\.");
-
         try
         {
+            int startIndex = webViewVersion.indexOf("Chrome/") + "Chrome/".length();
+            int endIndex = webViewVersion.indexOf(" ", startIndex);
+
+            String version = webViewVersion.substring(startIndex, endIndex).trim();
+            String[] versions = version.split("\\.");
+
             if (Integer.parseInt(versions[0]) >= SUPPORT_MIN_VERSION)
             {
                 return true;
@@ -1500,6 +1499,18 @@ public class Util implements Constants
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+
+        return false;
+    }
+
+    public static boolean supportPeekNPop(Context context)
+    {
+        // 화면 사이즈가 작은 단말에서 지원하지 않는다. 실제 새로 길이는 안테나 영역과 하단에 소프트바 버튼 영역이
+        // 있기 때문에 1024x720에서도 높이는 그보다 작다.
+        if (ScreenUtils.getScreenHeight(context) > 800)
+        {
+            return true;
         }
 
         return false;
