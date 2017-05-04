@@ -100,22 +100,26 @@ public abstract class PlaceMainActivity extends BaseActivity
             mPlaceMainNetworkController.requestDateTime();
         }
 
-        if (mPlaceMainLayout.getBlurVisibility() == true)
+        if (Util.supportPeekNPop(this) == true)
         {
-            mPlaceMainLayout.setBlurVisibility(this, false);
-        } else
-        {
-            int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
+            if (mPlaceMainLayout.getBlurVisibility() == true)
+            {
+                mPlaceMainLayout.setBlurVisibility(this, false);
+            } else
+            {
 
-            if (count == 2)
-            {
-                showPreviewGuide();
-            } else if (count > 2)
-            {
-                return;
+                int count = DailyPreference.getInstance(this).getCountPreviewGuide() + 1;
+
+                if (count == 2)
+                {
+                    showPreviewGuide();
+                } else if (count > 2)
+                {
+                    return;
+                }
+
+                DailyPreference.getInstance(this).setCountPreviewGuide(count);
             }
-
-            DailyPreference.getInstance(this).setCountPreviewGuide(count);
         }
     }
 

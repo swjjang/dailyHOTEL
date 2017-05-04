@@ -101,7 +101,12 @@ public abstract class PlaceListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<PlaceViewItem>());
-        mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
+
+        if (Util.supportPeekNPop(mContext) == true)
+        {
+            mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
+        }
+
         mPlaceRecyclerView.setAdapter(mPlaceListAdapter);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
