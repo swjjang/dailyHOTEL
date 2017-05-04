@@ -308,6 +308,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
             hotelGradeView = (TextView) itemView.findViewById(R.id.gradeTextView);
             averageView = itemView.findViewById(R.id.averageTextView);
             distanceTextView = (TextView) itemView.findViewById(R.id.distanceTextView);
+            informationLayout = itemView.findViewById(R.id.informationLayout);
             trueVRView = itemView.findViewById(R.id.trueVRView);
             dot1View = itemView.findViewById(R.id.dot1View);
             dot2View = itemView.findViewById(R.id.dot2View);
