@@ -234,7 +234,7 @@ public class GourmetListAdapter extends PlaceListAdapter
         }
 
         // VR 여부
-        //        if (gourmet.truevr == true && Util.supportPeekNPop(mContext) == true)
+        //        if (gourmet.truevr == true && mTrueVREnabled == true)
         //        {
         //            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
         //            {

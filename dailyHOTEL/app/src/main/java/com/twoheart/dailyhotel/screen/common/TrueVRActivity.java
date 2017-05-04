@@ -117,7 +117,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         mWebViewLayout = findViewById(R.id.webViewLayout);
         mPageLayout = findViewById(R.id.pageLayout);
 
-        if (mTrueVRParamsList == null && mTrueVRParamsList.size() == 1)
+        if (mTrueVRParamsList != null && mTrueVRParamsList.size() == 1)
         {
             mPageLayout.setVisibility(View.GONE);
         } else
@@ -301,8 +301,6 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                             }
                             break;
                     }
-
-                    ExLog.d("[CupixEvent][" + eventType + "] " + eventName + ": " + arg);
                 }
             });
         }

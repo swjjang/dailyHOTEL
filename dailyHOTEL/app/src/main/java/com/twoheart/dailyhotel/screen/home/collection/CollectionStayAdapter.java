@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
 {
     private boolean mIsUsedMultiTransition;
     private int mNights;
+
     View.OnClickListener mOnClickListener;
 
     public CollectionStayAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener)
@@ -242,7 +244,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         //        }
 
         // VR 여부
-        if (recommendationStay.truevr == true && Util.supportPeekNPop(mContext) == true)
+        if (recommendationStay.truevr == true && mTrueVREnabled == true)
         {
             if (holder.satisfactionView.getVisibility() == View.VISIBLE)
             {
