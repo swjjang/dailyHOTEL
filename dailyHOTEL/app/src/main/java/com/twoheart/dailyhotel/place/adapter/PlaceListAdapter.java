@@ -42,6 +42,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     Handler mEventBannerHandler;
     int mLastEventBannerPosition;
     private Constants.SortType mSortType;
+    protected boolean mTrueVREnabled;
 
     public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);
 
@@ -62,6 +63,11 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     public void setOnLongClickListener(View.OnLongClickListener listener)
     {
         mOnLongClickListener = listener;
+    }
+
+    public void setTrueVREnabled(boolean enabled)
+    {
+        mTrueVREnabled = enabled;
     }
 
     @Override

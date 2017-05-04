@@ -13,6 +13,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
@@ -125,6 +126,12 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
         if (mListAdapter == null)
         {
             mListAdapter = getRecentPlacesListAdapter(mContext, list, mItemListener);
+
+            if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
+            {
+                mListAdapter.setTrueVREnabled(true);
+            }
+
             mRecyclerView.setAdapter(mListAdapter);
         } else
         {

@@ -31,6 +31,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
     private Constants.SortType mSortType; // TODO : 추후 제거 필요!
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
+    protected boolean mTrueVREnabled;
 
     public interface OnRecentPlacesItemListener
     {
@@ -147,5 +148,10 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
     public void setShowDistanceIgnoreSort(boolean isShow)
     {
         mShowDistanceIgnoreSort = isShow;
+    }
+
+    public void setTrueVREnabled(boolean enabled)
+    {
+        mTrueVREnabled = enabled;
     }
 }
