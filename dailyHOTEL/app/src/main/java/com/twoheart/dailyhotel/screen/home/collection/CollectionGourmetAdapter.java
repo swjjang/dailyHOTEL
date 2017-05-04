@@ -237,19 +237,19 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         holder.distanceTextView.setVisibility(View.GONE);
         //        }
 
-        // VR 여부
-        if (recommendationGourmet.truevr == true)
-        {
-            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
-            {
-                holder.dot2View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dot2View.setVisibility(View.GONE);
-            }
-
-            holder.trueVRView.setVisibility(View.VISIBLE);
-        } else
+        // VR 여부, 추후 고메가 VR이 생기면 화면에 보여주도록 한다.
+        //        if (recommendationGourmet.truevr == true)
+        //        {
+        //            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dot2View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dot2View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.trueVRView.setVisibility(View.VISIBLE);
+        //        } else
         {
             holder.dot2View.setVisibility(View.GONE);
             holder.trueVRView.setVisibility(View.GONE);

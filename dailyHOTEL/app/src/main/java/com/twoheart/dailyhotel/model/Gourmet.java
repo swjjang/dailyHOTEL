@@ -103,10 +103,13 @@ public class Gourmet extends Place
                 distance = jsonObject.getDouble("distance");
             }
 
-            if (jsonObject.has("truevr") == true)
-            {
-                truevr = jsonObject.getBoolean("truevr");
-            }
+            // 추후에 고메가 VR지원되면 보여지도록 한다.
+            //            if (jsonObject.has("truevr") == true)
+            //            {
+            //                truevr = jsonObject.getBoolean("truevr");
+            //            }
+
+            truevr = false;
 
             JSONObject imageJSONObject = jsonObject.getJSONObject("imgPathMain");
 
