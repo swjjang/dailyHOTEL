@@ -977,7 +977,7 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        if (mScrollChangedListener != null)
+        if (mOnScreenScrollChangeListener != null)
         {
             mOnScreenScrollChangeListener.onScrollState(isShow);
         }
