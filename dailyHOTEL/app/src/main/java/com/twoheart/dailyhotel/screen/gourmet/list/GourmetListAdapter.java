@@ -234,18 +234,18 @@ public class GourmetListAdapter extends PlaceListAdapter
         }
 
         // VR 여부
-        if (gourmet.truevr == true)
-        {
-            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
-            {
-                holder.dot2View.setVisibility(View.VISIBLE);
-            } else
-            {
-                holder.dot2View.setVisibility(View.GONE);
-            }
-
-            holder.trueVRView.setVisibility(View.VISIBLE);
-        } else
+        //        if (gourmet.truevr == true)
+        //        {
+        //            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
+        //            {
+        //                holder.dot2View.setVisibility(View.VISIBLE);
+        //            } else
+        //            {
+        //                holder.dot2View.setVisibility(View.GONE);
+        //            }
+        //
+        //            holder.trueVRView.setVisibility(View.VISIBLE);
+        //        } else
         {
             holder.dot2View.setVisibility(View.GONE);
             holder.trueVRView.setVisibility(View.GONE);
