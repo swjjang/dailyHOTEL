@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
@@ -101,6 +102,11 @@ public abstract class PlaceListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<PlaceViewItem>());
+
+        if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
+        {
+            mPlaceListAdapter.setTrueVREnabled(true);
+        }
 
         if (Util.supportPeekNPop(mContext) == true)
         {

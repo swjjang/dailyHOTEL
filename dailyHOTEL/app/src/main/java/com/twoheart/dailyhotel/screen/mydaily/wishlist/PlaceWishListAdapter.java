@@ -31,6 +31,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
     private Constants.SortType mSortType; // TODO : 추후 제거 필요!
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
+    protected boolean mTrueVREnabled;
 
     public interface OnPlaceWishListItemListener
     {
@@ -147,5 +148,10 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
     public void setShowDistanceIgnoreSort(boolean isShow)
     {
         mShowDistanceIgnoreSort = isShow;
+    }
+
+    public void setTrueVREnabled(boolean enabled)
+    {
+        mTrueVREnabled = enabled;
     }
 }

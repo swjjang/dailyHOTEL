@@ -19,6 +19,7 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -110,6 +111,11 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         if (mPlaceListAdapter == null)
         {
             mPlaceListAdapter = getPlaceListAdapter(mOnItemClickListener);
+        }
+
+        if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
+        {
+            mPlaceListAdapter.setTrueVREnabled(true);
         }
 
         if (Util.supportPeekNPop(mContext) == true)

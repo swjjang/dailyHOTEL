@@ -203,7 +203,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         }
 
         // VR 여부
-        if (stay.truevr == true && Util.supportPeekNPop(mContext) == true)
+        if (stay.truevr == true && mTrueVREnabled == true)
         {
             if (holder.satisfactionView.getVisibility() == View.VISIBLE)
             {
