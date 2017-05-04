@@ -18,17 +18,8 @@ public class StayOutboundDetailData
     @JsonField(name = "name")
     public String name;
 
-    @JsonField(name = "countryCode")
-    public String countryCode;
-
-    @JsonField(name = "cacheLocation")
-    public String cacheLocation;
-
     @JsonField(name = "address")
     public String address;
-
-    @JsonField(name = "city")
-    public String city;
 
     @JsonField(name = "hotelRating")
     public int hotelRating;
@@ -42,8 +33,11 @@ public class StayOutboundDetailData
     @JsonField(name = "longitude")
     public double longitude;
 
-    @JsonField(name = "propertyInformation")
-    public String propertyInformation;
+    @JsonField(name = "checkInTime")
+    public String checkInTime;
+
+    @JsonField(name = "checkOutTime")
+    public String checkOutTime;
 
     @JsonField(name = "areaInformation")
     public String areaInformation;
@@ -63,17 +57,20 @@ public class StayOutboundDetailData
     @JsonField(name = "specialCheckInInstructions")
     public String specialCheckInInstructions;
 
-    @JsonField(name = "amenitiesDescription")
-    public String amenitiesDescription;
-
-    @JsonField(name = "businessAmenitiesDescription")
-    public String businessAmenitiesDescription;
+    @JsonField(name = "diningDescription")
+    public String diningDescription;
 
     @JsonField(name = "roomDetailDescription")
     public String roomDetailDescription;
 
     @JsonField(name = "renovationsDescription")
     public String renovationsDescription;
+
+    @JsonField(name = "dailyHotelDetailImages")
+    public List<ImageData> dailyHotelDetailImages;
+
+    @JsonField(name = "dailyHotelDetailPropertyAmenities")
+    public List<AmenityData> dailyHotelDetailPropertyAmenities;
 
     public StayOutboundDetailData()
     {
@@ -85,5 +82,71 @@ public class StayOutboundDetailData
         StayOutboundDetail stayOutboundDetail = new StayOutboundDetail();
 
         return stayOutboundDetail;
+    }
+
+    @JsonObject
+    static class ImageData
+    {
+        @JsonField(name = "name")
+        public String name;
+
+        @JsonField(name = "caption")
+        public String caption;
+
+        @JsonField(name = "url")
+        public String url;
+
+        public ImageData()
+        {
+
+        }
+    }
+
+    @JsonObject
+    static class AmenityData
+    {
+        @JsonField(name = "amenityId")
+        public int amenityId;
+
+        @JsonField(name = "amenity")
+        public int amenity;
+
+        public AmenityData()
+        {
+
+        }
+    }
+
+    @JsonObject
+    static class RoomData
+    {
+        @JsonField(name = "hotelId")
+        public int hotelId;
+
+        @JsonField(name = "hotelName")
+        public String hotelName;
+
+        @JsonField(name = "roomTypeCode")
+        public String roomTypeCode;
+
+        @JsonField(name = "smokingPreferences")
+        public String smokingPreferences;
+
+        @JsonField(name = "quotedOccupancy")
+        public int quotedOccupancy;
+
+        @JsonField(name = "rateOccupancyPerRoom")
+        public int rateOccupancyPerRoom;
+
+        @JsonField(name = "description")
+        public String description;
+
+        @JsonField(name = "nonRefundable")
+        public boolean nonRefundable;
+
+        public RoomData()
+        {
+
+        }
     }
 }

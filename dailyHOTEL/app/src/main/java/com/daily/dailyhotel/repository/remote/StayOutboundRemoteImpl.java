@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseException;
 import com.daily.dailyhotel.domain.StayOutboundInterface;
 import com.daily.dailyhotel.entity.Persons;
+import com.daily.dailyhotel.entity.RoomInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
@@ -149,5 +150,11 @@ public class StayOutboundRemoteImpl implements StayOutboundInterface
 
             return stayOutboundDetail;
         }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<RoomInformation> getStayOutBoundRoom(int index, StayBookDateTime stayBookDateTime, String countryCode, String city, Persons persons)
+    {
+        return null;
     }
 }
