@@ -358,7 +358,7 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         // VR 여부 판단
-        mPlaceDetailNetworkController.requestHasVRList(PlaceType.FNB, mPlaceDetail.index, "RESTAURANT");
+        //        mPlaceDetailNetworkController.requestHasVRList(PlaceType.FNB, mPlaceDetail.index, "RESTAURANT");
     }
 
     @Override
