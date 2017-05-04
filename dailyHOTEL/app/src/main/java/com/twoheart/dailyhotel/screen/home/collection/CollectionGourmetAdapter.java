@@ -238,7 +238,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         //        }
 
         // VR 여부, 추후 고메가 VR이 생기면 화면에 보여주도록 한다.
-        //        if (recommendationGourmet.truevr == true)
+        //        if (recommendationGourmet.truevr == true && Util.supportPeekNPop(mContext) == true)
         //        {
         //            if (holder.satisfactionView.getVisibility() == View.VISIBLE)
         //            {
