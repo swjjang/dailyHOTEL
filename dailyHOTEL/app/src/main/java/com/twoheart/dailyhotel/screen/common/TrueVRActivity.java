@@ -233,66 +233,78 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
             //            Event Name: "VIEW_MODE_CHANGED"
             //            Argument: viewMode
 
-            switch (eventType)
+            if (mWebViewLayout == null)
             {
-                case "ERROR":
-                    switch (eventName)
-                    {
-                        case "UNSUPPORTED_BROWSER":
-                            showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null//
-                                , new DialogInterface.OnDismissListener()
-                                {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog)
-                                    {
-                                        TrueVRActivity.this.finish();
-                                    }
-                                });
-                            break;
+                return;
+            }
 
-                        case "FAILED_TO_LOAD_PLAYER":
-                            showSimpleDialog(null, getString(R.string.message_truevr_failed_load_truevr), getString(R.string.dialog_btn_text_confirm), null//
-                                , new DialogInterface.OnDismissListener()
-                                {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog)
-                                    {
-                                        TrueVRActivity.this.finish();
-                                    }
-                                });
-                            break;
-                    }
-                    break;
-
-                case "INFO":
-                    switch (eventName)
+            mWebViewLayout.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    switch (eventType)
                     {
-                        case "VIEW_MODE_CHANGED":
-                            switch (arg)
+                        case "ERROR":
+                            switch (eventName)
                             {
-                                case "view-stereo":
-                                    if (mWebViewLayout != null)
-                                    {
-                                        mWebViewLayout.setVisibility(View.INVISIBLE);
-                                    }
+                                case "UNSUPPORTED_BROWSER":
+                                    showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null//
+                                        , new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                TrueVRActivity.this.finish();
+                                            }
+                                        });
                                     break;
 
-                                case "view-reset":
-                                case "view-3D":
-                                case "view-walk":
-                                default:
-                                    if (mWebViewLayout != null)
+                                case "FAILED_TO_LOAD_PLAYER":
+                                    showSimpleDialog(null, getString(R.string.message_truevr_failed_load_truevr), getString(R.string.dialog_btn_text_confirm), null//
+                                        , new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                TrueVRActivity.this.finish();
+                                            }
+                                        });
+                                    break;
+                            }
+                            break;
+
+                        case "INFO":
+                            switch (eventName)
+                            {
+                                case "VIEW_MODE_CHANGED":
+                                    switch (arg)
                                     {
-                                        mWebViewLayout.setVisibility(View.VISIBLE);
+                                        case "view-stereo":
+                                            if (mWebViewLayout != null)
+                                            {
+                                                mWebViewLayout.setVisibility(View.INVISIBLE);
+                                            }
+                                            break;
+
+                                        case "view-reset":
+                                        case "view-3D":
+                                        case "view-walk":
+                                        default:
+                                            if (mWebViewLayout != null)
+                                            {
+                                                mWebViewLayout.setVisibility(View.VISIBLE);
+                                            }
+                                            break;
                                     }
                                     break;
                             }
                             break;
                     }
-                    break;
-            }
 
-            ExLog.d("[CupixEvent][" + eventType + "] " + eventName + ": " + arg);
+                    ExLog.d("[CupixEvent][" + eventType + "] " + eventName + ": " + arg);
+                }
+            });
         }
     }
 }
