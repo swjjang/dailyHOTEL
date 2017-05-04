@@ -112,7 +112,10 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
             mPlaceListAdapter = getPlaceListAdapter(mOnItemClickListener);
         }
 
-        mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
+        if (Util.supportPeekNPop(mContext) == true)
+        {
+            mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
+        }
 
         mRecyclerView.setAdapter(mPlaceListAdapter);
 
