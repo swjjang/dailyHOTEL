@@ -688,6 +688,13 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
+        <activity
+            android:name="com.daily.dailyhotel.screen.stay.outbound.filter.StayOutboundFilterActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
         <!--  com.daily.dailyhotel.... -->
 
 
