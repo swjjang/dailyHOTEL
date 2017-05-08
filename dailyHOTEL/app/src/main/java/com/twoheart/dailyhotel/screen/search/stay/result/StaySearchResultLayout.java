@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -40,10 +41,11 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         try
         {
             int nights = stayBookingDay.getNights();
+            String dateFormat = ScreenUtils.getScreenWidth(mContext) < 720 ? "yyyy.MM.dd" : "yyyy.MM.dd(EEE)";
 
             setCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-                , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)")//
-                , stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights));
+                , stayBookingDay.getCheckInDay(dateFormat)//
+                , stayBookingDay.getCheckOutDay(dateFormat), nights));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

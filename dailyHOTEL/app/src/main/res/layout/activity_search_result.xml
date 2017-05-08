@@ -45,22 +45,34 @@
             android:textSize="15dp"/>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/calendarLayout"
+    <RelativeLayout
+        android:id="@+id/calendarAndDistanceLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:background="@color/white">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_alignParentBottom="true"
             android:background="@color/default_line_ce7e7e7"/>
 
+        <Spinner
+            android:id="@+id/distanceSpinner"
+            android:layout_width="66dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@color/default_background_cf4f4f6"
+            android:dropDownWidth="66dp"
+            android:spinnerMode="dropdown"/>
+
         <RelativeLayout
+            android:id="@+id/calendarLayout"
             android:layout_width="match_parent"
+            android:layout_toLeftOf="@id/distanceSpinner"
+            android:layout_centerVertical="true"
             android:layout_height="28dp"
             android:layout_margin="8dp"
             android:background="@color/default_background_cf4f4f6">
@@ -96,13 +108,15 @@
                 android:textSize="13dp"/>
 
         </RelativeLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
+
 
     <View
         android:id="@+id/calendarUnderLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/calendarLayout"
+        android:layout_below="@+id/calendarAndDistanceLayout"
         android:background="@color/default_line_ce7e7e7"/>
 
     <RelativeLayout
@@ -117,7 +131,6 @@
             android:id="@+id/categoryTabLayout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_toLeftOf="@+id/distanceSpinner"
             android:layout_marginLeft="8dp"
             app:tabIndicatorHeight="2dp"
             app:tabMinWidth="0dp"
@@ -127,23 +140,13 @@
             app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
             app:tabTextColor="@color/default_text_c929292"/>
 
-        <Spinner
-            android:id="@+id/distanceSpinner"
-            android:layout_width="68dp"
-            android:layout_height="28dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/shape_coupon_sorting_button_backround"
-            android:dropDownWidth="73dp"
-            android:spinnerMode="dropdown"/>
     </RelativeLayout>
 
     <ScrollView
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/calendarLayout"
+        android:layout_below="@+id/calendarAndDistanceLayout"
         android:fillViewport="true"
         android:visibility="visible">
 
