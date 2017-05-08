@@ -107,8 +107,8 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
         mMainCategoryArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
         mMainCategorySpinner.setAdapter(mMainCategoryArrayAdapter);
 
-        ArrayList<String> subCategoryList = new ArrayList<>();
-        subCategoryList.add(0, mContext.getString(R.string.label_select_category));
+        ArrayList<Pair<String, String>> subCategoryList = new ArrayList<>();
+        subCategoryList.add(new Pair(mContext.getString(R.string.label_select_category), mContext.getString(R.string.label_select_category)));
         mSubCategoryArrayAdapter = new CategoryArrayAdapter(mContext, R.layout.spinner_row_happytalk, subCategoryList);
         mSubCategoryArrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_row_happytalk);
         mSubCategorySpinner.setAdapter(mSubCategoryArrayAdapter);
