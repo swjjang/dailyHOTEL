@@ -17,9 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
@@ -35,7 +37,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     private NestedScrollView mNestedScrollView;
     private ViewGroup mScrollLayout;
     private SimpleDraweeView mPlaceImageView;
-    private TextView mPlaceNameTextView, mPeriodTextView;
+    private TextView mPlaceNameTextView, mPeriodTextView, mThankyouTextView;
     private TextView mToolbarTitle, mToolbarSubTitle;
     private TextView mConfirmTextView;
 
@@ -92,6 +94,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
         mPeriodTextView = (TextView) view.findViewById(R.id.periodTextView);
+        mThankyouTextView = (TextView) view.findViewById(R.id.thankyouTextView);
 
         mNestedScrollView.setOnScrollChangeListener(this);
 
@@ -129,7 +132,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         Util.requestImageResize(context, mPlaceImageView, imageUrl);
     }
 
-    public void setPlaceInformation(String placeName, String period)
+    public void setPlaceInformation(String placeName, String period, String reviewGrade)
     {
         if (mPlaceNameTextView == null || mPeriodTextView == null)
         {
@@ -138,6 +141,24 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
         mPlaceNameTextView.setText(placeName);
         mPeriodTextView.setText(period);
+
+        if (DailyTextUtils.isTextEmpty(reviewGrade) == false)
+        {
+            switch (reviewGrade)
+            {
+                case Review.GRADE_GOOD:
+                    mThankyouTextView.setText(R.string.message_review_toast_satisfied);
+                    break;
+
+                case Review.GRADE_BAD:
+                    mThankyouTextView.setText(R.string.message_review_toast_dissatisfied);
+                    break;
+
+                default:
+                    mThankyouTextView.setVisibility(View.INVISIBLE);
+                    break;
+            }
+        }
 
         mToolbarTitle.setText(placeName);
         mToolbarSubTitle.setText(period);
@@ -518,9 +539,12 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
                 textAlphaValue = textAlphaValue < 0 ? 0 : textAlphaValue;
                 mPlaceNameTextView.setAlpha(textAlphaValue);
                 mPeriodTextView.setAlpha(textAlphaValue);
+                mThankyouTextView.setAlpha(textAlphaValue);
 
                 mToolbarTitle.setAlpha(0.0f);
                 mToolbarSubTitle.setAlpha(0.0f);
+
+                mImageDimView.setAlpha(0.0f);
             } else
             {
                 float vectorValue = (float) (scrollY - halfToolbarHeight) / halfToolbarHeight;
@@ -530,9 +554,12 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
                 mPlaceNameTextView.setAlpha(0.0f);
                 mPeriodTextView.setAlpha(0.0f);
+                mThankyouTextView.setAlpha(0.0f);
 
                 mToolbarTitle.setAlpha(vectorValue);
                 mToolbarSubTitle.setAlpha(vectorValue);
+
+                mImageDimView.setAlpha(vectorValue);
             }
         } else
         {
@@ -541,23 +568,26 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
             mPlaceNameTextView.setAlpha(0.0f);
             mPeriodTextView.setAlpha(0.0f);
+            mThankyouTextView.setAlpha(0.0f);
 
             mToolbarTitle.setAlpha(1.0f);
             mToolbarSubTitle.setAlpha(1.0f);
+
+            mImageDimView.setAlpha(1.0f);
         }
 
         // 배경 없어지는 애니메이션
-        int scrollTopY = mScrollLayout.getPaddingTop() - ScreenUtils.dpToPx(mContext, 15);
-
-        if (scrollTopY >= scrollY)
-        {
-            float vectorValue = (float) scrollY / scrollTopY;
-
-            mImageDimView.setAlpha(vectorValue);
-        } else
-        {
-            mImageDimView.setAlpha(1.0f);
-        }
+        //        int scrollTopY = mScrollLayout.getPaddingTop() - ScreenUtils.dpToPx(mContext, 15);
+        //
+        //        if (scrollTopY >= scrollY)
+        //        {
+        //            float vectorValue = (float) scrollY / scrollTopY;
+        //
+        //            mImageDimView.setAlpha(vectorValue);
+        //        } else
+        //        {
+        //            mImageDimView.setAlpha(1.0f);
+        //        }
 
         mHandler.sendEmptyMessageDelayed(REQUEST_START_ANIMATION, 300);
     }
