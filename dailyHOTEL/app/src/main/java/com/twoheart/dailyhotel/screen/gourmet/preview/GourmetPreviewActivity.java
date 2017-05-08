@@ -170,10 +170,23 @@ public class GourmetPreviewActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
+        if (isLockUiComponent() == true)
+        {
+            return;
+        }
+
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.BACKKEY, null);
 
-        super.onBackPressed();
+        mPreviewLayout.hidePopAnimation();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.hold);
     }
 
     @Override
@@ -427,11 +440,28 @@ public class GourmetPreviewActivity extends BaseActivity
         }
 
         @Override
-        public void finish()
+        public void onHideAnimation()
         {
+            finish();
+        }
+
+        @Override
+        public void onCloseClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            mPreviewLayout.hidePopAnimation();
+
             AnalyticsManager.getInstance(GourmetPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.CLOSE, null);
+        }
 
+        @Override
+        public void finish()
+        {
             GourmetPreviewActivity.this.finish();
         }
     };
@@ -469,6 +499,16 @@ public class GourmetPreviewActivity extends BaseActivity
             {
                 lockUI(false);
                 mPreviewLayout.addWish();
+
+                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
+
+                if (gourmetDetailParams != null)
+                {
+                    gourmetDetailParams.myWish = true;
+                    gourmetDetailParams.wishCount++;
+
+                    mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, gourmetDetailParams.wishCount, gourmetDetailParams.myWish);
+                }
             } else
             {
                 DailyToast.showToast(GourmetPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
@@ -482,6 +522,16 @@ public class GourmetPreviewActivity extends BaseActivity
             {
                 lockUI(false);
                 mPreviewLayout.removeWish();
+
+                GourmetDetailParams gourmetDetailParams = mPlaceDetail.getGourmetDetailParmas();
+
+                if (gourmetDetailParams != null)
+                {
+                    gourmetDetailParams.myWish = false;
+                    gourmetDetailParams.wishCount--;
+
+                    mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, gourmetDetailParams.wishCount, gourmetDetailParams.myWish);
+                }
             } else
             {
                 DailyToast.showToast(GourmetPreviewActivity.this, message, DailyToast.LENGTH_SHORT);

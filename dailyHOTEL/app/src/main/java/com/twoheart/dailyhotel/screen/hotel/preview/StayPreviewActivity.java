@@ -169,10 +169,23 @@ public class StayPreviewActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
+        if (isLockUiComponent() == true)
+        {
+            return;
+        }
+
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.BACKKEY, null);
 
-        super.onBackPressed();
+        mPreviewLayout.hidePopAnimation();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.hold);
     }
 
     @Override
@@ -426,11 +439,28 @@ public class StayPreviewActivity extends BaseActivity
         }
 
         @Override
-        public void finish()
+        public void onHideAnimation()
         {
+            finish();
+        }
+
+        @Override
+        public void onCloseClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            mPreviewLayout.hidePopAnimation();
+
             AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_CLOSE, AnalyticsManager.Label.CLOSE, null);
+        }
 
+        @Override
+        public void finish()
+        {
             StayPreviewActivity.this.finish();
         }
     };
@@ -467,6 +497,16 @@ public class StayPreviewActivity extends BaseActivity
             {
                 lockUI(false);
                 mPreviewLayout.addWish();
+
+                StayDetailParams stayDetailParams = mPlaceDetail.getStayDetailParams();
+
+                if (stayDetailParams != null)
+                {
+                    stayDetailParams.myWish = true;
+                    stayDetailParams.wishCount++;
+
+                    mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
+                }
             } else
             {
                 DailyToast.showToast(StayPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
@@ -480,6 +520,16 @@ public class StayPreviewActivity extends BaseActivity
             {
                 lockUI(false);
                 mPreviewLayout.removeWish();
+
+                StayDetailParams stayDetailParams = mPlaceDetail.getStayDetailParams();
+
+                if (stayDetailParams != null)
+                {
+                    stayDetailParams.myWish = false;
+                    stayDetailParams.wishCount--;
+
+                    mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
+                }
             } else
             {
                 DailyToast.showToast(StayPreviewActivity.this, message, DailyToast.LENGTH_SHORT);
