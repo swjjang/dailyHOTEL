@@ -282,6 +282,7 @@
                 android:drawableTop="@drawable/ic_lp_01_wishlist_off"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="-5dp"
+                android:paddingBottom="5dp"
                 android:text="@string/label_preview_add_wish"
                 android:textColor="@color/white"
                 android:textSize="12dp"/>
@@ -296,6 +297,7 @@
                 android:drawableTop="@drawable/ic_lp_02_share"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="-5dp"
+                android:paddingBottom="5dp"
                 android:text="@string/label_preview_kakao"
                 android:textColor="@color/white"
                 android:textSize="12dp"/>
@@ -309,6 +311,7 @@
                 android:drawableTop="@drawable/ic_lp_03_direction"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="-5dp"
+                android:paddingBottom="5dp"
                 android:text="@string/label_preview_map"
                 android:textColor="@color/white"
                 android:textSize="12dp"/>
