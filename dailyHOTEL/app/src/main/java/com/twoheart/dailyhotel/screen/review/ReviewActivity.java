@@ -338,7 +338,7 @@ public class ReviewActivity extends BaseActivity
                         , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
                         , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
 
-                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate), mReviewGrade);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -352,7 +352,7 @@ public class ReviewActivity extends BaseActivity
                 {
                     String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
 
-                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate));
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate), mReviewGrade);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -620,7 +620,7 @@ public class ReviewActivity extends BaseActivity
                         break;
                 }
 
-                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_satisfied, Toast.LENGTH_LONG);
+                //                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_satisfied, Toast.LENGTH_LONG);
             }
         });
 
@@ -695,7 +695,7 @@ public class ReviewActivity extends BaseActivity
                         break;
                 }
 
-                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_dissatisfied, Toast.LENGTH_LONG);
+                //                DailyToast.showToast(ReviewActivity.this, R.string.message_review_toast_dissatisfied, Toast.LENGTH_LONG);
             }
         });
 

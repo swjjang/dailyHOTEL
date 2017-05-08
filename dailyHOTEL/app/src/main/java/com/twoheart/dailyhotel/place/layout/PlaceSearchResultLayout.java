@@ -137,19 +137,13 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         calendarLayout.setOnClickListener(this);
 
         mCalendarTextView = (TextView) view.findViewById(R.id.calendarTextView);
-    }
 
-    private void initCategoryTabLayout(View view)
-    {
-        mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
-        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mDistanceFilterSpinner = (Spinner) view.findViewById(R.id.distanceSpinner);
 
         CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
-        mDistanceFilterAdapter = new DistanceFilterAdapter(mContext, R.layout.list_row_coupon_spinner, strings);
+        mDistanceFilterAdapter = new DistanceFilterAdapter(mContext, R.layout.list_row_search_result_spinner, strings);
 
-        mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_coupon_sort_dropdown_item);
+        mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
         mDistanceFilterSpinner.setAdapter(mDistanceFilterAdapter);
 
         mDistanceFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
@@ -168,6 +162,13 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
             }
         });
+    }
+
+    private void initCategoryTabLayout(View view)
+    {
+        mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
+        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
     }
 
     public void setCalendarText(String date)
@@ -644,46 +645,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mDistanceFilterAdapter.setSelection(position);
         mDistanceFilterSpinner.setSelection(position);
     }
-
-    //    public void setSelectionSpinner(PlaceSearchResultActivity.DistanceFilterType distanceFilterType)
-    //    {
-    //        if (mDistanceFilterSpinner == null || distanceFilterType == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        int position;
-    //
-    //        switch (distanceFilterType)
-    //        {
-    //            case DISTANCE_Half_1KM:
-    //                position = 0;
-    //                break;
-    //
-    //            case DISTANCE_1KM:
-    //                position = 1;
-    //                break;
-    //
-    //            case DISTANCE_3KM:
-    //                position = 2;
-    //                break;
-    //
-    //            case DISTANCE_5KM:
-    //                position = 3;
-    //                break;
-    //
-    //            case DISTANCE_10KM:
-    //                position = 4;
-    //                break;
-    //
-    //            default:
-    //                position = 2; // default 3km
-    //                break;
-    //        }
-    //
-    //        mDistanceFilterAdapter.setSelection(position);
-    //        mDistanceFilterSpinner.setSelection(position);
-    //    }
 
     public void showEmptyLayout()
     {
