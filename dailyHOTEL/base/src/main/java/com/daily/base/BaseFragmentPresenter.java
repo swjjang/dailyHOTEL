@@ -1,72 +1,58 @@
 package com.daily.base;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-
-import com.daily.base.util.DailyLock;
+import android.support.v4.app.Fragment;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseViewInterface> implements BaseActivityInterface
+public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends BaseViewInterface> implements BaseFragmentInterface
 {
-    private T1 mActivity;
+    private T1 mFragment;
 
     private T2 mOnViewInterface;
 
-    private DailyLock mLock;
-
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public BasePresenter(@NonNull T1 activity)
+    public BaseFragmentPresenter(@NonNull T1 fragment)
     {
-        mActivity = activity;
-
-        mLock = new DailyLock(activity);
+        mFragment = fragment;
 
         mOnViewInterface = createInstanceViewInterface();
 
-        initialize(activity);
+        initialize();
     }
 
     protected abstract
     @NonNull
     T2 createInstanceViewInterface();
 
-    public abstract void initialize(T1 activity);
+    public abstract void initialize();
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 
-    public abstract void onIntentAfter();
-
     protected abstract void onHandleError(Throwable throwable);
 
-    public T1 getActivity()
+    public BaseActivity getActivity()
     {
-        return mActivity;
+        return (BaseActivity) mFragment.getActivity();
+    }
+
+    public BasePresenter getActivityPresenter()
+    {
+        return getActivity().getPresenter();
     }
 
     protected String getString(int resId)
     {
-        return mActivity.getString(resId);
+        return mFragment.getString(resId);
     }
 
     protected String getString(int resId, Object... formatArgs)
     {
-        return mActivity.getString(resId, formatArgs);
-    }
-
-    public void setContentView(@LayoutRes int layoutResID)
-    {
-        if (mOnViewInterface == null)
-        {
-            throw new NullPointerException("mOnViewInterface is null");
-        } else
-        {
-            mOnViewInterface.setContentView(layoutResID);
-        }
+        return mFragment.getString(resId, formatArgs);
     }
 
     public
@@ -101,55 +87,31 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
     @Override
     public void onDestroy()
     {
-        clearLock();
+        getActivityPresenter().clearLock();
 
         getViewInterface().hideSimpleDialog();
 
         clearCompositeDisposable();
     }
 
-    @Override
-    public void onFinish()
-    {
-
-    }
-
-    @Override
-    public boolean onBackPressed()
-    {
-        return false;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-
-    }
-
     protected void startActivity(Intent intent)
     {
-        mActivity.startActivity(intent);
+        mFragment.startActivity(intent);
     }
 
     protected void startActivityForResult(Intent intent, int requestCode)
     {
-        mActivity.startActivityForResult(intent, requestCode);
+        mFragment.startActivityForResult(intent, requestCode);
     }
 
-    protected void setResult(int resultCode)
+    protected void startActivity(Activity activity, Intent intent)
     {
-        mActivity.setResult(resultCode);
+        activity.startActivity(intent);
     }
 
-    protected void setResult(int resultCode, Intent data)
+    protected void startActivityForResult(Activity activity, Intent intent, int requestCode)
     {
-        mActivity.setResult(resultCode, data);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     protected void addCompositeDisposable(Disposable disposable)
@@ -179,37 +141,32 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseView
 
     protected boolean isLock()
     {
-        return mLock.isLock();
+        return getActivityPresenter().isLock();
     }
 
     protected boolean isScreenLock()
     {
-        return mLock.isScreenLock();
+        return getActivityPresenter().isScreenLock();
     }
 
     protected boolean lock()
     {
-        return mLock.lock();
+        return getActivityPresenter().lock();
     }
 
     protected void unLock()
     {
-        mLock.unLock();
-    }
-
-    void clearLock()
-    {
-        mLock.clear();
+        getActivityPresenter().unLock();
     }
 
     protected void screenLock(boolean showProgress)
     {
-        mLock.screenLock(showProgress);
+        getActivityPresenter().screenLock(showProgress);
     }
 
     protected void screenUnLock()
     {
-        mLock.screenUnLock();
+        getActivityPresenter().screenUnLock();
     }
 
     protected void unLockAll()

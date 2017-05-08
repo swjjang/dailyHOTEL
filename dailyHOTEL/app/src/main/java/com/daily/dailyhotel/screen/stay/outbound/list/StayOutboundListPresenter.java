@@ -22,6 +22,7 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.stay.outbound.list.map.StayOutboundMapFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -375,24 +376,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        if (isCurrentPage == true && mPlaceListMapFragment == null)
-        {
-            try
-            {
-                mPlaceListMapFragment = new StayListMapFragment();
-                mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
-            } catch (IllegalStateException e)
-            {
-                Crashlytics.log("StayListLayout");
-                Crashlytics.logException(e);
-            }
-        }
-
-        mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
-        ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-        ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+        StayOutboundMapFragment stayOutboundMapFragment = new StayOutboundMapFragment();
+        getActivity().addFragment(getViewInterface().getMapRootLayoutResourceId(), stayOutboundMapFragment, "MAP");
     }
 
     @Override

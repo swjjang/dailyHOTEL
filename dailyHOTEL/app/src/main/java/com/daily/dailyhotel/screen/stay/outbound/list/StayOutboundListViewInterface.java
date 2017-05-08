@@ -14,4 +14,6 @@ public interface StayOutboundListViewInterface extends BaseViewInterface
     void setStayOutboundList(List<ListItem> listItemList);
 
     void addStayOutboundList(List<ListItem> listItemList);
+
+    int getMapRootLayoutResourceId();
 }

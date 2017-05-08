@@ -142,6 +142,12 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
 
     }
 
+    @Override
+    public int getMapRootLayoutResourceId()
+    {
+        return 0;
+    }
+
     private void initToolbar(ActivityStayOutboundSearchResultDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
