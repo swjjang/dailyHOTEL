@@ -175,6 +175,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         }
 
         mWebView.loadUrl(trueVRParams.url);
+        mWebView.setBackgroundColor(getResources().getColor(R.color.black));
 
         if (DailyTextUtils.isTextEmpty(trueVRParams.name) == true)
         {
