@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.RecentPlaces;
@@ -50,6 +52,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -469,6 +472,24 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                     if (Util.isUsedMultiTransition() == true)
                     {
+                        mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
+                        {
+                            @Override
+                            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                            {
+                                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                                for (View view : sharedElements)
+                                {
+                                    if (view instanceof SimpleDraweeView)
+                                    {
+                                        view.setVisibility(View.VISIBLE);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity, stayBookingDay, place, true);
 
                         if (intent == null)
@@ -507,6 +528,24 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                     if (Util.isUsedMultiTransition() == true)
                     {
+                        mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
+                        {
+                            @Override
+                            public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                            {
+                                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                                for (View view : sharedElements)
+                                {
+                                    if (view instanceof SimpleDraweeView)
+                                    {
+                                        view.setVisibility(View.VISIBLE);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
                         Intent intent = GourmetDetailActivity.newInstance(mBaseActivity, gourmetBookingDay, place, true);
 
                         if (intent == null)
@@ -828,6 +867,24 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             if (Util.isUsedMultiTransition() == true)
             {
+                mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                    {
+                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                        for (View view : sharedElements)
+                        {
+                            if (view instanceof SimpleDraweeView)
+                            {
+                                view.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                        }
+                    }
+                });
+
                 switch (recommendation.serviceType)
                 {
                     case "GOURMET":
