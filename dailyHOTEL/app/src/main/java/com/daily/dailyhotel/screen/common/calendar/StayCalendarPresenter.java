@@ -22,6 +22,8 @@ import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -119,7 +121,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     {
         screenLock(false);
 
-        Observable.defer(new Callable<ObservableSource<String>>()
+        addCompositeDisposable(Observable.defer(new Callable<ObservableSource<String>>()
         {
             @Override
             public ObservableSource<String> call() throws Exception
@@ -182,7 +184,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                     }
                 }
             }
-        });
+        }));
     }
 
     @Override
