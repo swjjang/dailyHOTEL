@@ -330,6 +330,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
                 ExLog.d(TAG + "recordScreen : " + screenName + " | " + screenViewBuilder.build().toString());
             }
         }
+
     }
 
     @Override

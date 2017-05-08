@@ -590,7 +590,7 @@ public class StayMainActivity extends PlaceMainActivity
             }
 
             Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this, //
-                mStayCuration.getProvince(), mStayCuration.getStayBookingDay());
+                mStayCuration.getProvince(), mStayCuration.getStayBookingDay(), mStayCuration.getCategory().code);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
             switch (mViewType)

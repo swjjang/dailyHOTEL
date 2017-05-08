@@ -183,7 +183,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 mGourmetCuration.setLocation(location);
 
                 String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
-                String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
+                String callByScreen = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
 
                 if (PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
                 {

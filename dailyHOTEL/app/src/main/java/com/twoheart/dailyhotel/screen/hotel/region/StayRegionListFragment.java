@@ -30,7 +30,7 @@ public class StayRegionListFragment extends PlaceRegionListFragment
                     }
 
                     params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-                    params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.ALL);
+                    params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
 
                     AnalyticsManager.getInstance(getContext()).recordScreen(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
                     break;

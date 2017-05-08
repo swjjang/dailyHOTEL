@@ -11,6 +11,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyViewPager;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
@@ -34,8 +35,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -54,22 +57,25 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     StayBookingDay mStayBookingDay;
     Province mSelectedProvince;
     private TabLayout mTabLayout;
+    private String mCategoryCode;
 
-    public static Intent newInstance(Context context, Province province, StayBookingDay stayBookingDay)
+    public static Intent newInstance(Context context, Province province, StayBookingDay stayBookingDay, String categoryCode)
     {
         Intent intent = new Intent(context, StayRegionListActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVINCE, province);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, categoryCode);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, StayBookingDay stayBookingDay)
+    public static Intent newInstance(Context context, int provinceIndex, int areaIndex, StayBookingDay stayBookingDay, String categoryCode)
     {
         Intent intent = new Intent(context, StayRegionListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_PROVINCE_INDEX, provinceIndex);
         intent.putExtra(INTENT_EXTRA_DATA_AREA_INDEX, areaIndex);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, categoryCode);
 
         return intent;
     }
@@ -85,6 +91,7 @@ public class StayRegionListActivity extends PlaceRegionListActivity
     {
         mSelectedProvince = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
         mStayBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+        mCategoryCode = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CATEGORY);
     }
 
     @Override
@@ -174,12 +181,12 @@ public class StayRegionListActivity extends PlaceRegionListActivity
             }
         }
 
-        regionListFragment01.setInformation(Region.DOMESTIC, isOverSeas ? null : mSelectedProvince);
+        regionListFragment01.setInformation(Region.DOMESTIC, isOverSeas ? null : mSelectedProvince, mCategoryCode);
         regionListFragment01.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment01);
 
         StayRegionListFragment regionListFragment02 = new StayRegionListFragment();
-        regionListFragment02.setInformation(Region.GLOBAL, isOverSeas ? mSelectedProvince : null);
+        regionListFragment02.setInformation(Region.GLOBAL, isOverSeas ? mSelectedProvince : null, mCategoryCode);
         regionListFragment02.setOnPlaceRegionListFragmentListener(mOnPlaceRegionListFragment);
         fragmentList.add(regionListFragment02);
 
@@ -196,7 +203,26 @@ public class StayRegionListActivity extends PlaceRegionListActivity
             AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
         } else
         {
-            AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
+            try
+            {
+                Map<String, String> params = new HashMap<>();
+
+                if (DailyHotel.isLogin() == false)
+                {
+                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                }
+
+                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
+
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
+            } catch (Exception e)
+            {
+
+            }
         }
     }
 
@@ -460,7 +486,26 @@ public class StayRegionListActivity extends PlaceRegionListActivity
         {
             if (position == 0)
             {
-                AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(StayRegionListActivity.this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null);
+                try
+                {
+                    Map<String, String> params = new HashMap<>();
+
+                    if (DailyHotel.isLogin() == false)
+                    {
+                        params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.GUEST);
+                    } else
+                    {
+                        params.put(AnalyticsManager.KeyType.IS_SIGNED, AnalyticsManager.ValueType.MEMBER);
+                    }
+
+                    params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                    params.put(AnalyticsManager.KeyType.CATEGORY, mCategoryCode);
+
+                    AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(StayRegionListActivity.this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC, null, params);
+                } catch (Exception e)
+                {
+
+                }
             } else
             {
                 AnalyticsManager.getInstance(StayRegionListActivity.this).recordScreen(StayRegionListActivity.this, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL, null);
