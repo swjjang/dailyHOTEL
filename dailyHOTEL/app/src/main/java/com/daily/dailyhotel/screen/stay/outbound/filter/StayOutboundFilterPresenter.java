@@ -1,36 +1,14 @@
 package com.daily.dailyhotel.screen.stay.outbound.filter;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.Persons;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.Suggest;
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
-import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundActivity;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundView;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundViewInterface;
-import com.daily.dailyhotel.screen.stay.outbound.StayStayOutboundAnalyticsImpl;
-import com.daily.dailyhotel.screen.stay.outbound.list.StayOutboundListActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sheldon

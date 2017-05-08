@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.screen.stay.outbound.StayOutboundPresenter;
 import com.twoheart.dailyhotel.R;
 
 /**

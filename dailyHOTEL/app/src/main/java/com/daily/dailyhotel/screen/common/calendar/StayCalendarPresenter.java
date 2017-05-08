@@ -19,8 +19,10 @@ import com.twoheart.dailyhotel.util.DailyPreference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -117,64 +119,70 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     {
         screenLock(false);
 
-        addCompositeDisposable(Observable.empty().subscribeOn(Schedulers.io()).just(DailyPreference.getInstance(getActivity()).getCalendarHolidays())//
-            .map(new Function<String, ArrayList<Pair<String, Day[]>>>()
+        Observable.defer(new Callable<ObservableSource<String>>()
+        {
+            @Override
+            public ObservableSource<String> call() throws Exception
             {
-                @Override
-                public ArrayList<Pair<String, Day[]>> apply(String calendarHolidays) throws Exception
-                {
-                    int[] holidays = null;
-
-                    if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
-                    {
-                        String[] holidaysSplit = calendarHolidays.split("\\,");
-                        holidays = new int[holidaysSplit.length];
-
-                        for (int i = 0; i < holidaysSplit.length; i++)
-                        {
-                            try
-                            {
-                                holidays[i] = Integer.parseInt(holidaysSplit[i]);
-                            } catch (NumberFormatException e)
-                            {
-                                ExLog.e(e.toString());
-                            }
-                        }
-                    }
-
-                    return makeCalendar(mStartDateTime, mEndDateTime, holidays);
-                }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Pair<String, Day[]>>>()
+                return Observable.just(DailyPreference.getInstance(getActivity()).getCalendarHolidays());
+            }
+        }).subscribeOn(Schedulers.io()).map(new Function<String, ArrayList<Pair<String, Day[]>>>()
+        {
+            @Override
+            public ArrayList<Pair<String, Day[]>> apply(String calendarHolidays) throws Exception
             {
-                @Override
-                public void accept(ArrayList<Pair<String, Day[]>> arrayList) throws Exception
+                int[] holidays = null;
+
+                if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
                 {
-                    getViewInterface().makeCalendarView(arrayList);
+                    String[] holidaysSplit = calendarHolidays.split("\\,");
+                    holidays = new int[holidaysSplit.length];
 
-                    if (mIsAnimation == true)
+                    for (int i = 0; i < holidaysSplit.length; i++)
                     {
-                        getViewInterface().showAnimation();
-                    } else
-                    {
-                        getViewInterface().setVisibility(true);
-                    }
-
-                    if (mIsSelected == true)
-                    {
-                        String checkInDateTime = mCheckInDateTime;
-                        String chekcOutDateTime = mCheckOutDateTime;
-
-                        mCheckInDateTime = mCheckOutDateTime = null;
-
-                        getViewInterface().clickDay(checkInDateTime);
-
-                        if (mNightsOfMaxCount > 1)
+                        try
                         {
-                            getViewInterface().clickDay(chekcOutDateTime);
+                            holidays[i] = Integer.parseInt(holidaysSplit[i]);
+                        } catch (NumberFormatException e)
+                        {
+                            ExLog.e(e.toString());
                         }
                     }
                 }
-            }));
+
+                return makeCalendar(mStartDateTime, mEndDateTime, holidays);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Pair<String, Day[]>>>()
+        {
+            @Override
+            public void accept(ArrayList<Pair<String, Day[]>> arrayList) throws Exception
+            {
+                getViewInterface().makeCalendarView(arrayList);
+
+                if (mIsAnimation == true)
+                {
+                    getViewInterface().showAnimation();
+                } else
+                {
+                    getViewInterface().setVisibility(true);
+                }
+
+                if (mIsSelected == true)
+                {
+                    String checkInDateTime = mCheckInDateTime;
+                    String chekcOutDateTime = mCheckOutDateTime;
+
+                    mCheckInDateTime = mCheckOutDateTime = null;
+
+                    getViewInterface().clickDay(checkInDateTime);
+
+                    if (mNightsOfMaxCount > 1)
+                    {
+                        getViewInterface().clickDay(chekcOutDateTime);
+                    }
+                }
+            }
+        });
     }
 
     @Override

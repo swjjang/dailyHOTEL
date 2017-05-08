@@ -291,7 +291,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 onCommonDateTime(commonDateTime);
 
                 return stayOutbounds;
-            }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
+            }).subscribe(stayOutbounds ->
         {
             onStayOutbounds(stayOutbounds);
             screenUnLock();
