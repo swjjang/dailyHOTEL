@@ -24,6 +24,12 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     {
         void onCalendarClick();
 
+        void onFilterClick();
+
+        void onMapClick();
+
+        void onListClick();
+
         void onScrollList(int listSize, int lastVisibleItemPosition);
     }
 

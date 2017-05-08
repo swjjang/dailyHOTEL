@@ -61,6 +61,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private String mCacheKey, mCacheLocation;
     private boolean mMoreResultsAvailable;
 
+    private ViewState mViewState;
+
+    enum ViewState
+    {
+        MAP,
+        LIST
+    }
+
     public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
@@ -83,6 +91,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         setContentView(R.layout.activity_stay_outbound_search_result_data);
 
         setAnalytics(new StayOutboundListAnalyticsImpl());
+
+        mViewState = ViewState.LIST;
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
@@ -345,6 +355,52 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             ExLog.e(e.toString());
 
             unLock();
+        }
+    }
+
+    @Override
+    public void onFilterClick()
+    {
+        if(lock() == true)
+        {
+            return;
+        }
+    }
+
+    @Override
+    public void onMapClick()
+    {
+        if(lock() == true || mViewState == ViewState.MAP)
+        {
+            return;
+        }
+
+        if (isCurrentPage == true && mPlaceListMapFragment == null)
+        {
+            try
+            {
+                mPlaceListMapFragment = new StayListMapFragment();
+                mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+            } catch (IllegalStateException e)
+            {
+                Crashlytics.log("StayListLayout");
+                Crashlytics.logException(e);
+            }
+        }
+
+        mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+        ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+        ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+    }
+
+    @Override
+    public void onListClick()
+    {
+        if(lock() == true)
+        {
+            return;
         }
     }
 
