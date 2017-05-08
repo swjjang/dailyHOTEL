@@ -208,4 +208,20 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
         }
     }
+
+    public void removeFragment(Fragment fragment)
+    {
+        if (isFinishing() == true || mFragmentManager == null || fragment == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
+        } catch (Exception e)
+        {
+
+        }
+    }
 }

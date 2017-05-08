@@ -143,9 +143,27 @@ public class StayOutboundListView extends BaseView<StayOutboundListView.OnEventL
     }
 
     @Override
-    public int getMapRootLayoutResourceId()
+    public int getMapLayoutResourceId()
     {
         return 0;
+    }
+
+    @Override
+    public void removeAllMapLayout()
+    {
+
+    }
+
+    @Override
+    public void setMapOptionLayout(boolean enabled)
+    {
+
+    }
+
+    @Override
+    public void setFilterOptonLayout(boolean enabled)
+    {
+
     }
 
     private void initToolbar(ActivityStayOutboundSearchResultDataBinding viewDataBinding)

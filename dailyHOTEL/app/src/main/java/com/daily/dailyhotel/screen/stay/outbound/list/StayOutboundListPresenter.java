@@ -58,6 +58,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private Suggest mSuggest;
     private Persons mPersons;
 
+    private StayOutboundMapFragment mStayOutboundMapFragment;
+
     // 리스트 요청시에 다음이 있는지에 대한 인자들
     private String mCacheKey, mCacheLocation;
     private boolean mMoreResultsAvailable;
@@ -376,16 +378,30 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        StayOutboundMapFragment stayOutboundMapFragment = new StayOutboundMapFragment();
-        getActivity().addFragment(getViewInterface().getMapRootLayoutResourceId(), stayOutboundMapFragment, "MAP");
+        mViewState = ViewState.MAP;
+
+        if(mStayOutboundMapFragment == null)
+        {
+            mStayOutboundMapFragment = new StayOutboundMapFragment();
+            getActivity().addFragment(getViewInterface().getMapLayoutResourceId(), mStayOutboundMapFragment, "MAP");
+        }
     }
 
     @Override
     public void onListClick()
     {
-        if(lock() == true)
+        if(lock() == true || mViewState == ViewState.LIST)
         {
             return;
+        }
+
+        mViewState = ViewState.LIST;
+
+        if(mStayOutboundMapFragment != null)
+        {
+            getActivity().removeFragment(mStayOutboundMapFragment);
+            getViewInterface().removeAllMapLayout();
+            mStayOutboundMapFragment = null;
         }
     }
 
